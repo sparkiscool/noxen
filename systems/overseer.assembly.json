@@ -1418,23 +1418,19 @@
 "color": "#555555"
 },
 {
-"name": "sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
+"name": "head mount (L2 + both cameras + node 17)",
 "role": "structure",
-"mesh": "parts/sensor_head_mount_printed_drawn_bolt_and/part.stl",
+"mesh": "parts/overseer_head_mount/part.stl",
 "material": "PETG",
-"mass_g": 143.7,
-"cg": [
-363.64,
--0.0,
-77.34
-],
+"mass_g": 76.2,
 "tag": "E",
 "owner": "overseer",
-"version": "layout v5 / cage v5",
-"source": "nox/overseer/layout_v5.py",
-"id": "sensor_head_mount_printed_drawn_bolt_and",
+"version": "v6 setup (one piece, node 17 merged)",
+"source": "parts/overseer_head_mount/part.py",
+"id": "overseer_head_mount",
 "group": "printed",
-"color": "#aab4c0"
+"color": "#aab4c0",
+"budget_g": 90
 },
 {
 "name": "Unitree L2",
