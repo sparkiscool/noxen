@@ -83,12 +83,13 @@ jobs:
         with: { python-version: '3.12', cache: pip }
       - run: pip install -r requirements.txt
 
-      # a checkpoint from a previous attempt of this same part.py (if any) lets the run continue where it stopped
+      # a checkpoint from a previous attempt of this same part.py and libs (if any) lets the run continue where it stopped; a lib
+      # change (parts/*.py) is a new setup, its old checkpoint would not fit (28 Oct, the rear arm's mask mismatch)
       - name: restore checkpoint
         uses: actions/cache/restore@v4
         with:
           path: parts/${{ matrix.part }}/ck*.npz
-          key: ck-${{ matrix.part }}-${{ hashFiles(format('parts/{0}/part.py', matrix.part)) }}
+          key: ck-${{ matrix.part }}-${{ hashFiles(format('parts/{0}/part.py', matrix.part), 'parts/*.py') }}
 
       - name: optimise
         id: opt
@@ -104,7 +105,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: parts/${{ matrix.part }}/ck*.npz
-          key: ck-${{ matrix.part }}-${{ hashFiles(format('parts/{0}/part.py', matrix.part)) }}-${{ github.run_id }}
+          key: ck-${{ matrix.part }}-${{ hashFiles(format('parts/{0}/part.py', matrix.part), 'parts/*.py') }}-${{ github.run_id }}
 
       - name: results
         if: always()

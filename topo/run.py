@@ -223,11 +223,13 @@ def main(argv=None):
         src = os.path.join(out, f"{name}.stl")
         if os.path.exists(src):
             shutil.copy(src, os.path.join(out, "part.stl"))
-        import hashlib                                  # the site builder compares this with part.py to flag stale results
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
+        from part_sha import part_sha, lib_sha          # the site builder compares these with part.py and its libs to flag stale results
         rj = os.path.join(out, "result.json")
         with open(rj) as fh:
             r = json.load(fh)
-        r["part_sha"] = hashlib.sha256(open(os.path.join(out, "part.py"), "rb").read()).hexdigest()[:12]
+        r["part_sha"] = part_sha(os.path.join(out, "part.py"))
+        r["lib_sha"] = lib_sha(os.path.join(out, "part.py"))
         # strength gate: SPEC["max_worst"] (default 0.5). Above it the part is failed like a solid-check fail.
         mw = float(spec.get("max_worst", 0.5))
         r["max_worst"] = mw
