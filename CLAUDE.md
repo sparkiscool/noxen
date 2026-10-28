@@ -28,3 +28,9 @@ python tools/dim.py <section>                                     # one section 
 - Supports are the faces it really bolts to. Loads are the masses it carries at their CG plus the joint reactions from the system, each as its own case (flight, crash, handling). No guessed loads: if a case is missing, say so.
 - PETG, nothing under 2 mm, 3 mm and 6 mm carbon only (socket bores 3.2 / 6.2), Bambu A1 mini 180 cube, largest flat face down.
 - Numbers come from `systems/dimensions.md`, tagged M measured, C CAD, E estimate.
+
+## Runs and check-ins (how Spark hears about results)
+- Runs start only from a design session's push or a rerun Spark asked for. After starting one: `python3 tools/predict.py <parts>` prints one line with the latest predicted finish and a check-in delay. Schedule ONE check-in for then with send_later (message: "check runs: <parts>"), then end the turn. No polling, no waiting.
+- A check-in turn: `git pull -q`; for each part, if `parts/<part>/result.json` changed (new `part_sha`) send Spark `parts/<part>/preview.png` with SendUserFile and one line: PASS/FAIL, mass g, worst index and case, minutes; link https://sparkiscool.github.io/noxen/. If a part is not done: rerun `predict.py --started <run start>` and schedule one more check-in. Read nothing else.
+- Engine change (`topo/` edited): `python3 tools/predict.py --engine <new tag>` in that commit, so old timings are ignored.
+- Spark's reply in that session: "rerun <part>" dispatches `parts.yml` for it; "<part>: <notes>" goes to `parts/<part>/feedback.md`, then the fix per "What you do in a part session". Then predict and schedule the check-in again.
