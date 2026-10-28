@@ -70,12 +70,18 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0):
     vols = np.bincount(lab.ravel())[1:] * pitch ** 3
     keep = np.where(vols >= min_cc_mm3)[0] + 1
     main = keep[np.argmax(vols[keep - 1])] if len(keep) else 0
-    info = dict(bodies_plain=int(n0), bodies_eroded=int(len(keep)), eroded_volumes_mm3=sorted([round(float(v), 1) for v in vols[keep - 1]], reverse=True)[:6])
+    # a body is a piece of at least min_cc_mm3: a speck of a few voxels (a sliver at an acute edge, the 0.5 mm core thread of a
+    # O5 arm at the 2 mm erosion) is voxel dust, not a body (28 Oct: node 7 "3 bodies" were two single voxels, node 21's drawn
+    # core was "0.3 % off" in 41 pieces under 0.4 mm3)
+    n_plain = int((np.bincount(lab0.ravel())[1:] * pitch ** 3 >= min_cc_mm3).sum())
+    info = dict(bodies_plain=n_plain, specks_plain=int(n0 - n_plain), bodies_eroded=int(len(keep)),
+                eroded_volumes_mm3=sorted([round(float(v), 1) for v in vols[keep - 1]], reverse=True)[:6])
     bad = []
+    big = np.r_[False, vols >= min_cc_mm3]                           # by label: is this eroded component a body
     for i, t in enumerate(drawn):
         Dv = voxels(t, pitch, lo, shape) & E
         if Dv.sum() == 0: continue                                   # a drawn feature thinner than 2 x erode: judged by its own size check
-        share = float((lab[Dv] == main).mean())
+        share = 1.0 - float(((lab[Dv] != main) & big[lab[Dv]]).mean())
         if share < 0.999: bad.append((i, round(share, 3)))
     # neck test (Spark 20 Oct 14:19, bracket_e v8 pads on ~2 mm necks passed the 0.9 test): erode deeper; a blob that splits
     # off and is clearly thicker than the neck it hung on (max inscribed radius >= e + NECK_MARGIN) is a sliver attachment.
@@ -104,7 +110,8 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0):
             core = Dv & (d > ef)
             if core.sum() == 0: continue
             ve = np.bincount(Le.ravel())[1:]; mn = int(np.argmax(ve)) + 1
-            share = float((Le[core] == mn).mean())
+            bige = np.r_[False, ve * pitch ** 3 >= min_cc_mm3]
+            share = 1.0 - float(((Le[core] != mn) & bige[Le[core]]).mean())
             if share < 0.999: bad.append((f"{i}.{j}", round(share, 3), f"erode {ef:.1f}"))
     info["drawn_not_in_main"] = bad
     # thin walls: material an opening with a ball of r erode_mm removes, keeping only blobs with an inscribed radius
@@ -129,7 +136,7 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0):
                              span=np.round(ev, 1).tolist()))
     info["thin_walls"] = sorted([t for t in thin if t["kind"] == "wall"], key=lambda t: -t["core_mm3"])[:12]
     info["acute_edges"] = len([t for t in thin if t["kind"] == "edge"])
-    ok = n0 == 1 and len(keep) == 1 and not bad and not info["thin_walls"] and not necks
+    ok = n_plain == 1 and len(keep) == 1 and not bad and not info["thin_walls"] and not necks
     info["ok"] = bool(ok)
     return ok, info
 
