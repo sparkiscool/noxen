@@ -6,7 +6,6 @@ Drawn (attachments only, nothing between them):
     stadium over the two bolts (top bolt u 63.17 v +-15, bottom bolt u 63.74 v +-10, O section M row), 2 locating pegs (u 57.66, v +-11);
   * the motor pad (disc 36 x 6, level with the arm top z 45) with 4 bolt slots r 8..9.5 on the 45 deg lines, shaft bore 8.6;
   * 3 socket collars for the 3 mm carbon spokes (bore 3.2, 10 deep, 3.0 floor, wall 2.0) aimed at their cage node;
-  * the ESC seat pad (30 x 16 x 3, the ESC rides on the arm per the brief; dimensions.md O row says none on the arms: CONFLICT, reported).
 Cut through the whole envelope: bolt shanks, nut pockets, motor-bolt tool sweeps, the shaft bore, the own spokes beyond their
 collars, every other cage tube / node / link near the envelope, the prop disc, the pack / cartridge / receiver zone.
 Generated: everything else, in a hull of the root block, the motor disc and the spoke node (z 0..45, between the plates' inner faces).
@@ -16,7 +15,7 @@ Supports: "plates" = the plate contact lips of the 4 stadiums (stiffness, bolt a
 axis-only dofs along an oblique rod), so the three 3 mm rods that meet at the arm node are taken as a rigid pin there (EA/L of each
 rod is 100x the arm's own tip stiffness, printed in the log); the stiffness case, the spoke check cases and the bolt cases do not lean on it.
 Cases (each separate): flight 4 g with thrust and +-0.5 N m motor torque, landing 6 g, crash 35 g in 14 directions at the motor
-and ESC CGs, STIFFNESS (arm alone, no spokes: thrust 21 N + 4 g of the 96 g motor and 25 g ESC, all up), each spoke's axial force
+CG, STIFFNESS (arm alone, no spokes: thrust 21 N + 4 g of the 96 g motor, all up), each spoke's axial force
 (node_loads at the node it reaches, pull and push, sockets as loads, plates only), each bolt's pull and shear (joint reactions of
 the cases above by least norm over the 4 bolts, top bolts at z 45, bottom at z 0).
 """
@@ -48,7 +47,7 @@ HEAD_D, HEAD_T = 6.2, 2.6                        # M3 pan head counterbore under
 SWEEP_D = 7.0                                    # driver sweep under each motor bolt, through the whole envelope
 BORE_D = 8.6                                     # shaft / clip bore (arms section, CHECK P)
 ESC_SEAT = (30.0, 16.0, 3.0)                     # pad on the arm top (E)
-M_MOTOR, M_ESC = 96.0, 25.0                      # g: motor 81 + prop 10 + screws 5 (arms section, M); ESC 25 g each (brief, E)
+M_MOTOR, M_ESC = 96.0, 0.0                       # g: motor 81 + prop 10 + screws 5 (arms section, M); no ESC on the arms (arms section)
 Z_MOTOR_CG = 60.0                                # motor CG (arms section)
 THRUST_N, TORQUE_NM = 21.0, 0.5                  # arms section (E)
 E_CARBON, E_PETG = 120e3, 2780.0                 # MPa (arms section)
@@ -185,10 +184,7 @@ class Arm:
             cuts.append(stadium(p0, p1, Z_PAD - PAD_T - 0.5, Z_PAD + 1.0, SLOT_D / 2))                  # shank slot through the pad
             cuts.append(stadium(p0, p1, Z_PAD - PAD_T - 0.5, Z_PAD - PAD_T + HEAD_T, HEAD_D / 2))       # head seat under it
             cuts.append(stadium(p0, p1, Z_BOT - 1.0, Z_PAD - PAD_T + HEAD_T, SWEEP_D / 2))              # driver sweep, whole envelope
-        # --- ESC seat
-        c = self.esc_c(); ang = np.degrees(np.arctan2(self.a[1], self.a[0]))
-        drawn.append(box(-ESC_SEAT[0] / 2, ESC_SEAT[0] / 2, -ESC_SEAT[1] / 2, ESC_SEAT[1] / 2, Z_PAD - ESC_SEAT[2], Z_PAD)
-                     .rotate([0, 0, ang]).translate([c[0], c[1], 0]))
+        # (no ESC seat: the 4-in-1 ESC sits under the FC, none on the arms; dimensions.md System Overseer: arms, Spark 27 Oct)
         # --- spoke sockets (cage_node_lib rule: bore from NODE_R out, 10 deep, 3.0 floor, wall 2.0), aimed at their node
         for sp in self.spokes:
             u, P0 = sp["u"], self.node
@@ -263,10 +259,7 @@ def build(arm, h, log=print):
     mreg = [cyl(q[0], q[1], Z_PAD - 2.0, Z_PAD + 0.2, 4.0) for q in mb]
     mpts = np.array([[q[0], q[1], Z_PAD] for q in mb])
     c_m = np.array([arm.M[0], arm.M[1], Z_MOTOR_CG])
-    ec = arm.esc_c(); ez = Z_PAD + 3.0                                     # ESC CG 3 above the seat (6 tall, E)
-    corners = [ec + sx * 0.5 * (ESC_SEAT[0] - 8.0) * arm.a + sy * 0.5 * (ESC_SEAT[1] - 6.0) * arm.n for sx in (1, -1) for sy in (1, -1)]
-    ereg = [cyl(q[0], q[1], Z_PAD - 2.0, Z_PAD + 0.2, 3.0) for q in corners]
-    epts = np.array([[q[0], q[1], Z_PAD] for q in corners]); c_e = np.array([ec[0], ec[1], ez])
+    ereg, epts, c_e = mreg, mpts, c_m                                     # no ESC on the arm (M_ESC 0): its load terms vanish
 
     def payload(F_m, F_e, M_m=None):
         """parts list: motor loads (force at its CG, optional pure moment about it) and ESC force at its CG"""
