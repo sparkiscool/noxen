@@ -10,6 +10,8 @@ the run reported. These checks make it visible and, for the clear cases, stop th
 Checks (hard = raises, soft = logged + in the report):
   drawn_share    hard  drawn solid > 30 % of (drawn + design) volume: the part is mostly hand-drawn, not generated.
                        Attachments are small: pads, collars, seats. Over 30 % means a patch.
+  gusset         hard  a loaded or supporting drawn body under 7 mm thick everywhere (a lone collar, pad or key): the solid gate
+                       erodes it by up to 2 mm and splits it off its generated joint; draw its gusset into a thicker drawn body.
   drawn_blocks   hard  a drawn body whose inscribed diameter > 3 x min member and which touches no cut and no support:
                        a block drawn into the open, not an attachment (a collar touches a bore, a pad touches a bolt
                        hole or the support face).
@@ -32,6 +34,9 @@ S26 = np.ones((3, 3, 3), bool)
 
 class SetupError(ValueError):
     pass
+
+
+GUSSET_MM = 7.0      # a loaded drawn body must be this thick somewhere: 2 x the solid gate's 2 mm drawn-body erosion + a member (28 Oct, the v6 node runs)
 
 
 def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
@@ -114,6 +119,11 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
                            room_depth_mm=round(depth * h, 1),
                            at=[round(float(v), 1) for v in (np.argwhere(cells).mean(0) + 0.5) * h + np.asarray(part.origin)]))
         bodies[-1]["core_mm"] = round(core_mm, 1)
+        if (is_loaded or touch_sup) and inscribed < GUSSET_MM:
+            fails.append(f"gusset: loaded drawn body {b} at {bodies[-1]['at']} is {inscribed:.1f} mm thick at most (need "
+                         f"{GUSSET_MM:.0f} mm: the solid gate erodes drawn bodies by up to 2 mm and splits a thin one off its "
+                         f"generated joint). Draw its gusset into the body: an arm or stem to a drawn body over "
+                         f"{GUSSET_MM:.0f} mm thick, as one body (parts/cage_node_lib.py ARM_R).")
         if core_mm > 2.5 * floor_mm:
             fails.append(f"drawn_blocks: drawn body {b} at {bodies[-1]['at']} has a solid core {core_mm:.0f} mm thick "
                          f"away from every hole and face (limit {2.5 * floor_mm:.0f} mm): a drawn block, not an "

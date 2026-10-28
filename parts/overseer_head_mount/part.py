@@ -169,6 +169,10 @@ def bodies():
         phi = np.radians(90.0 * k)
         rad, tan = np.cos(phi) * CABLE + np.sin(phi) * Y, -np.sin(phi) * CABLE + np.cos(phi) * Y
         keys.append(fbox(B + KEY_R * rad, A, rad, tan, (-KEY_BACK, KEY_H), (-KEY_L / 2, KEY_L / 2), (-KEY_W / 2, KEY_W / 2)))
+        # gusset (28 Oct, the v6 run split the keys off): a 7 x 7 stem behind the key and a 6 x 6 bar to the nearest bolt pad, one body
+        keys.append(fbox(B + KEY_R * rad, A, rad, tan, (-KEY_BACK - 2.0, -2.0), (-3.5, 3.5), (-3.5, 3.5)))
+        q = min(bolts, key=lambda q: np.linalg.norm(q - (B + KEY_R * rad)))
+        keys.append(along(B + KEY_R * rad - A * (KEY_BACK - 1.0), q - A * (L2_PAD_T - 1.0), 3.0))
     drawn += keys
     # --- camera insert bosses: O12 x 10 behind the board back plane, insert hole O3.2 x 5.7 from the front; the camera body is a cut
     envs_cam = []
@@ -176,6 +180,7 @@ def bodies():
         pts, base = cam_boss_pts(c)
         for q in pts:
             drawn.append(along(q, q - c["f"] * CAM_BOSS_L, 6.0))
+            drawn.append(along(q - c["f"] * (CAM_BOSS_L - 0.5), q - c["f"] * (CAM_BOSS_L + 5.0), 8.0))   # gusset pad O16 x 5 behind the boss (28 Oct)
             cuts.append(along(q + c["f"] * 1.0, q - c["f"] * 5.7, 1.6))
         cuts.append(fbox(base, c["f"], c["r"], c["u"], (0.0, 25.0), (-22.0, 22.0), (-22.0, 22.0)))          # board + body (38 x 38 + clearance)
         cuts.append(frustum(c))

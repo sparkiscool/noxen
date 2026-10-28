@@ -93,6 +93,7 @@ def bodies():
     pts, base = cam_boss_pts()
     for q in pts:
         drawn.append(along(q, q - F * CAM_BOSS_L, BOSS_R))
+        drawn.append(along(q - F * (CAM_BOSS_L - 0.5), q - F * (CAM_BOSS_L + 5.0), 8.0))   # gusset pad O16 x 5 behind the boss (28 Oct: necks of 2.4 and 3.0 there)
         cuts.append(along(q + F * 1.0, q - F * 5.7, 1.6))
     cuts.append(fbox(base, F, RT, UP, (0.0, 25.0), (-22.0, 22.0), (-22.0, 22.0)))
     cuts.append(frustum())
