@@ -270,7 +270,7 @@ def build(arm, h, log=print):
     reactions = []                                                           # (F, point) pairs for the joint reactions
 
     def note(F_m, F_e, M_z=0.0):
-        reactions.append((np.r_[arm.M, Z_MOTOR_CG], F_m, M_z)); reactions.append((np.r_[ec, ez], F_e, 0.0))
+        reactions.append((np.r_[arm.M, Z_MOTOR_CG], F_m, M_z))                # no ESC on the arm: F_e is zero
 
     thrust = np.array([0, 0, THRUST_N])
     for tag, sgn in (("+", 1), ("-", -1)):

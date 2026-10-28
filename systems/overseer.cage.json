@@ -1,5 +1,5 @@
 {
- "note": "Overseer cage v5 geometry and the frame model socket loads, for node, head mount and arm setups. Frame: x fwd, y left, z up, mm, z 0 = bottom plate top. nodes: 24 node centres (index = node id; mirrors: 0<->4, 1<->3, 8<->6, 9<->10, 12<->11, 14<->13, 16<->15, 19<->18, 22<->23 share a design, the design is the lower-numbered of each pair except 0->4, 1->3, 8->6, 9->10, 12->11, 14->13, 16->15, 19->18, 22->23 where the design is the second). rods: cage tubes as node index pairs (6/4 carbon, r 3.0, socket bore 6.2, 15 deep). tubes/links: from runs/overseer_layout/v5/result.json in nox (C). node_loads: per node, per member, axial N and side N from the frame model (runs/overseer_frame/v1, F).",
+ "note": "Overseer cage v6 geometry (Spark 28 Oct, rod cut: v5 nodes 21, 22, 23 removed, their 12 tubes replaced by 7-9, 7-10, 7-20; 54 tubes, 21 nodes, shell closed, crash probes as v5) and the frame model socket loads, for node, head mount and arm setups. Frame: x fwd, y left, z up, mm, z 0 = bottom plate top. nodes: 24 node centres (index = node id; mirrors: 0<->4, 1<->3, 8<->6, 9<->10, 12<->11, 14<->13, 16<->15, 19<->18, 22<->23 share a design, the design is the lower-numbered of each pair except 0->4, 1->3, 8->6, 9->10, 12->11, 14->13, 16->15, 19->18, 22->23 where the design is the second). rods: cage tubes as node index pairs (6/4 carbon, r 3.0, socket bore 6.2, 15 deep). tubes/links: from runs/overseer_layout/v5/result.json in nox (C). node_loads: per node, per member, axial N and side N from the frame model (runs/overseer_frame/v1, F). node_loads of tubes 7-9, 7-10, 7-20: taken from the v5 members they replace (7-22/9-22, 7-23/10-23, the larger of 7-21/20-21), tag E until the frame model reruns on v6.",
  "nodes": [
   [
    -98.857,
@@ -105,21 +105,6 @@
    -171.791,
    0.0,
    107.927
-  ],
-  [
-   -57.841,
-   0.0,
-   129.097
-  ],
-  [
-   72.764,
-   -168.082,
-   130.996
-  ],
-  [
-   72.764,
-   168.082,
-   130.996
   ]
  ],
  "rods": [
@@ -216,12 +201,16 @@
    18
   ],
   [
-   6,
-   23
+   7,
+   8
   ],
   [
    7,
-   8
+   9
+  ],
+  [
+   7,
+   10
   ],
   [
    7,
@@ -233,15 +222,7 @@
   ],
   [
    7,
-   21
-  ],
-  [
-   7,
-   22
-  ],
-  [
-   7,
-   23
+   20
   ],
   [
    8,
@@ -260,10 +241,6 @@
    19
   ],
   [
-   8,
-   22
-  ],
-  [
    9,
    12
   ],
@@ -276,14 +253,6 @@
    20
   ],
   [
-   9,
-   21
-  ],
-  [
-   9,
-   22
-  ],
-  [
    10,
    11
   ],
@@ -294,14 +263,6 @@
   [
    10,
    20
-  ],
-  [
-   10,
-   21
-  ],
-  [
-   10,
-   23
   ],
   [
    11,
@@ -362,18 +323,6 @@
   [
    18,
    19
-  ],
-  [
-   20,
-   21
-  ],
-  [
-   21,
-   22
-  ],
-  [
-   21,
-   23
   ]
  ],
  "node_r_mm": 10.15,
@@ -1228,10 +1177,6 @@
    "tube 6-18": {
     "axial": 184.49566301134655,
     "side": 0.9520439059474703
-   },
-   "tube 6-23": {
-    "axial": 130.29976203129536,
-    "side": 1.4728867805721846
    }
   },
   "7": {
@@ -1251,21 +1196,24 @@
     "axial": 354.4032083714702,
     "side": 2.115167367131337
    },
-   "tube 7-21": {
-    "axial": 271.0748034361891,
-    "side": 1.6688866540310563
-   },
-   "tube 7-22": {
-    "axial": 293.2439277892645,
-    "side": 1.321571218521654
-   },
-   "tube 7-23": {
-    "axial": 293.2439277857384,
-    "side": 1.321571218598396
-   },
    "core tie front.1": {
     "axial": 1460.87787707965,
     "side": 10.71624538852156
+   },
+   "tube 7-9": {
+    "axial": 293.2439277892645,
+    "side": 1.321571218521654,
+    "tag": "E"
+   },
+   "tube 7-10": {
+    "axial": 293.2439277857384,
+    "side": 1.321571218598396,
+    "tag": "E"
+   },
+   "tube 7-20": {
+    "axial": 271.0748034361891,
+    "side": 1.6688866540310563,
+    "tag": "E"
    }
   },
   "10": {
@@ -1285,13 +1233,10 @@
     "axial": 401.3516080326606,
     "side": 0.6975550867229372
    },
-   "tube 10-21": {
-    "axial": 367.9948368726375,
-    "side": 1.027740145607378
-   },
-   "tube 10-23": {
+   "tube 7-10": {
     "axial": 296.45966467399785,
-    "side": 1.128603888221573
+    "side": 1.128603888221573,
+    "tag": "E"
    }
   },
   "15": {
@@ -1320,24 +1265,6 @@
     "side": 9.562064838151075
    }
   },
-  "23": {
-   "tube 6-23": {
-    "axial": 130.29976203129536,
-    "side": 1.4728867805721846
-   },
-   "tube 7-23": {
-    "axial": 293.2439277857384,
-    "side": 1.321571218598396
-   },
-   "tube 10-23": {
-    "axial": 296.45966467399785,
-    "side": 1.128603888221573
-   },
-   "tube 21-23": {
-    "axial": 133.86869529772707,
-    "side": 2.8867096109123547
-   }
-  },
   "8": {
    "tube 7-8": {
     "axial": 114.446349543819,
@@ -1358,10 +1285,6 @@
    "tube 8-19": {
     "axial": 184.49566293641215,
     "side": 0.9520439062055641
-   },
-   "tube 8-22": {
-    "axial": 130.29976203718684,
-    "side": 1.472886780608275
    }
   },
   "16": {
@@ -1390,50 +1313,6 @@
     "side": 9.56206483834899
    }
   },
-  "21": {
-   "tube 7-21": {
-    "axial": 271.0748034361891,
-    "side": 1.6688866540310563
-   },
-   "tube 9-21": {
-    "axial": 367.9948368720004,
-    "side": 1.0277401455891297
-   },
-   "tube 10-21": {
-    "axial": 367.9948368726375,
-    "side": 1.027740145607378
-   },
-   "tube 20-21": {
-    "axial": 103.43943597398811,
-    "side": 6.074260534565677
-   },
-   "tube 21-22": {
-    "axial": 133.86869530398872,
-    "side": 2.8867096109710575
-   },
-   "tube 21-23": {
-    "axial": 133.86869529772707,
-    "side": 2.8867096109123547
-   }
-  },
-  "22": {
-   "tube 7-22": {
-    "axial": 293.2439277892645,
-    "side": 1.321571218521654
-   },
-   "tube 8-22": {
-    "axial": 130.29976203718684,
-    "side": 1.472886780608275
-   },
-   "tube 9-22": {
-    "axial": 296.45966467758126,
-    "side": 1.128603888325961
-   },
-   "tube 21-22": {
-    "axial": 133.86869530398872,
-    "side": 2.8867096109710575
-   }
-  },
   "9": {
    "tube 8-9": {
     "axial": 248.91364873006387,
@@ -1451,13 +1330,10 @@
     "axial": 401.3516080317122,
     "side": 0.6975550867186526
    },
-   "tube 9-21": {
-    "axial": 367.9948368720004,
-    "side": 1.0277401455891297
-   },
-   "tube 9-22": {
+   "tube 7-9": {
     "axial": 296.45966467758126,
-    "side": 1.128603888325961
+    "side": 1.128603888325961,
+    "tag": "E"
    }
   },
   "20": {
@@ -1477,9 +1353,10 @@
     "axial": 310.06861135215354,
     "side": 0.7484714788288568
    },
-   "tube 20-21": {
-    "axial": 103.43943597398811,
-    "side": 6.074260534565677
+   "tube 7-20": {
+    "axial": 271.0748034361891,
+    "side": 6.074260534565677,
+    "tag": "E"
    }
   },
   "17": {
