@@ -27,6 +27,9 @@ CABLE = -P                                                      # cable notch do
 L2_R_BOLT, L2_ROT = 25.5, 22.5      # Unitree L2: 4 x M3, 6 deep, on a O51 circle, 22.5 deg off the cable axis (dimensions.md, spec P);
                                     # which side of the cable axis the 22.5 deg goes is E (positive about +y here)
 L2_PAD_R, L2_PAD_T = 8.0, 8.0       # O16 pads (v5 row), 8 deep behind the base plane; M3 hole O3.4, head/driver tunnel O6.5 from 5 behind
+KEY_R, KEY_W, KEY_L, KEY_H, KEY_BACK = 30.0, 3.3, 3.3, 2.0, 6.0   # L2 manual drawing p8 (28 Oct): 4 positioning slots 3.5 wide on a O60 circle at the
+                                    # body axes (0/90/180/270 deg from the cable axis): keys 3.5 - 0.2 fit = 3.3 wide, 3.3 long (radial, E), 2.0 tall
+                                    # ahead of the base plane. SLOT DEPTH IS NOT IN THE MANUAL: the 2.0 key height is E (check on the unit).
 CAM_SQ = 14.0                       # DECXIN 2633V2: M2.5 on 28 x 28 (P); heat-set insert hole O3.2 x 5.7 (E, dimensions.md); boss O12 (v5 row)
 CAM_BOARD_BACK = 12.0               # board back face 12 behind the lens plane (E placeholder: lens and thickness open, Q3); body 38 x 38 (P)
 CAM_BOSS_L = 10.0
@@ -160,6 +163,13 @@ def bodies():
         drawn.append(along(q - A * L2_PAD_T, q, L2_PAD_R))
         cuts.append(along(q - A * 80.0, q + A * 1.0, 1.7))
         cuts.append(along(q - A * 80.0, q - A * 5.0, 3.25))
+    # --- L2 positioning keys: small drawn bodies in the slots (they stand 2.0 ahead of the base plane, so the field cut leaves them out)
+    keys = []
+    for k in range(4):
+        phi = np.radians(90.0 * k)
+        rad, tan = np.cos(phi) * CABLE + np.sin(phi) * Y, -np.sin(phi) * CABLE + np.cos(phi) * Y
+        keys.append(fbox(B + KEY_R * rad, A, rad, tan, (-KEY_BACK, KEY_H), (-KEY_L / 2, KEY_L / 2), (-KEY_W / 2, KEY_W / 2)))
+    drawn += keys
     # --- camera insert bosses: O12 x 10 behind the board back plane, insert hole O3.2 x 5.7 from the front; the camera body is a cut
     envs_cam = []
     for c in cs:
@@ -178,7 +188,7 @@ def bodies():
     # --- L2 field: half ball R 220 ahead of the base plane; cable slot below the L2 flange (the cable leaves the base downward)
     half = fbox(B, A, Y, P, (0.0, FIELD_R + 5), (-FIELD_R - 5, FIELD_R + 5), (-FIELD_R - 5, FIELD_R + 5))
     ball = mf.Manifold.sphere(FIELD_R, 96).translate(list(B))
-    cuts.append(ball ^ half)
+    cuts.append((ball ^ half) - U(keys))
     cuts.append(fbox(B, A, Y, P, (-60.0, 1.0), (-7.0, 7.0), (-120.0, -32.5)))
     # --- envelope: slab behind the base (O80 x 46), camera blocks behind the boards, the head rod seat cylinders, one hull over all
     slab = along(B - A * 46.0, B, 40.0, 48)
