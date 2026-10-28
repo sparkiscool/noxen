@@ -28,7 +28,8 @@ NODES = np.array(CAGE["nodes"], float)
 NODE_R = float(CAGE["node_r_mm"])                     # 10.15: where the bores start
 BASE = {0, 1, 2, 3, 4, 5}                             # the base loop, z -79.9
 WALL, FLOOR, MARGIN = 2.0, 3.0, 8.0
-ARM_R = 3.5                                           # drawn gusset: O7 arms from the node centre to every collar root (v5 rule; a 2 mm gate erosion leaves a O3 core), one body
+ARM_R = 2.75                                          # drawn gusset: O5.5 arms from the node centre to every collar root, one body (a 2 mm gate erosion leaves a O1.5 core;
+                                                      # O7 made the arms' junction a 9 mm core, over the audit's 8 mm block limit)
 KIND = {"tube": dict(bore_r=3.1, depth=15.0), "link": dict(bore_r=1.6, depth=10.0)}   # bore 6.2 / 3.2
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
 LAND_FEET = 3                                         # a flat landing may rest on 3 of the 6 feet (E)

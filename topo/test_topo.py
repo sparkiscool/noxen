@@ -438,7 +438,7 @@ def t_end_to_end():
 
 
 def t_audit_gusset():
-    """audit: a loaded drawn pad 4 mm thick with no gusset is refused; the same pad on an 8 mm drawn stem passes that rule."""
+    """audit: a loaded drawn pad 4 mm thick with no gusset is refused (GUSSET_MM 5); the same pad on an 8 mm drawn stem passes that rule."""
     from .audit import audit, SetupError
     import manifold3d as mf
     from .part import Part

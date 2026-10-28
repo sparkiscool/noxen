@@ -180,7 +180,7 @@ def bodies():
         pts, base = cam_boss_pts(c)
         for q in pts:
             drawn.append(along(q, q - c["f"] * CAM_BOSS_L, 6.0))
-            drawn.append(along(q - c["f"] * (CAM_BOSS_L - 0.5), q - c["f"] * (CAM_BOSS_L + 5.0), 8.0))   # gusset pad O16 x 5 behind the boss (28 Oct)
+            drawn.append(along(q - c["f"] * (CAM_BOSS_L - 0.5), q - c["f"] * (CAM_BOSS_L + 2.5), 8.0))   # gusset flange O16 x 2.5 behind the boss (28 Oct; x 5 made a 10 mm block)
             cuts.append(along(q + c["f"] * 1.0, q - c["f"] * 5.7, 1.6))
         cuts.append(fbox(base, c["f"], c["r"], c["u"], (0.0, 25.0), (-22.0, 22.0), (-22.0, 22.0)))          # board + body (38 x 38 + clearance)
         cuts.append(frustum(c))
