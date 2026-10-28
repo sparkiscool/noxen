@@ -12,7 +12,7 @@ from topo.part import man
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage.json")))
-SPEC = dict(h=1.5, gen_cm3=60.0, max_worst=0.5)
+SPEC = dict(h=2.5, gen_cm3=60.0, max_worst=0.5)      # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB runner); refine once the shape is accepted
 
 G = 9.81e-3                                                    # N per g per g of mass
 NODES = np.array(CAGE["nodes"], float)
