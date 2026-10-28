@@ -14,7 +14,8 @@ python tools/dim.py <section>                                     # one section 
 - Write or edit `parts/<name>/part.py`: `setup(h) -> Part` and `SPEC = dict(h=..., gen_cm3=..., max_worst=0.5)`. Pattern: `parts/motor_mount/part.py` (small), `parts/hub_deck/part.py` (large, with `inputs/`). The runner has 7 GB: keep the grid under ~300k cells at the SPEC h (the smoke prints it; hub deck 283k x 20 cases peaks 5.7 GB), else the runner dies without a result.
 - Give the part a line in `systems/<drone>.assembly.json` (id = folder name, placeholder shape, pose).
 - Commit, push to main. A push with Spark's credentials starts the runs; one with the app token does not, so always then: `gh api -X POST repos/sparkiscool/noxen/actions/workflows/parts.yml/dispatches -f ref=main -f 'inputs[parts]=<names>'` (the workflow skips parts already running). Stop. CI runs the engine, commits `result.json` + `part.stl`, rebuilds the page.
-- To fix or change a part: read `parts/<name>/feedback.md` (Spark's notes from the page) and `parts/<name>/result.json` (solid check, worst index, mass). Nothing else. Change the setup, push.
+- To fix or change a part: read `parts/<name>/feedback.md` (Spark's notes from the page) and `parts/<name>/result.json` (solid check, worst index, mass). Nothing else.
+- A failed gate or strength index is a class of setup, not one part (Spark, 28 Oct): name the cause, add the check to `topo/audit.py` (with a `test_topo` case) that would have refused this setup before the run, apply the fix to every part that shares the cause, then push. Fixing only the part is a patch and the fail comes back.
 - Never rerun or re-version a part on your own. Spark reviews every result on the page and asks for the next step.
 
 ## Setup audit (runs before every solve, `topo/audit.py`)
@@ -26,7 +27,7 @@ audit report; `python -m topo.run parts/<name> --h 2.5 --maxit 2 --no-coarse` ru
 
 ## Never
 - Run a full optimisation in a session. Never read meshes, logs, images or `inputs/`.
-- Edit `topo/` in a part session (engine changes are their own session, with `python -m topo.test_topo`).
+- Edit `topo/` in a part session, except the audit check a failure calls for (other engine changes are their own session, with `python -m topo.test_topo`).
 - Patch a failed run by drawing more solid. Fix the setup: room, cuts, loads, volume.
 
 ## Design rules
