@@ -1,23 +1,23 @@
 {
- "mass_g": 3255.25,
- "tw": 2.03,
+ "mass_g": 3234.75,
+ "tw": 2.04,
  "cg": [
-  68.46,
-  -0.06,
-  14.92
+  68.62,
+  -0.05,
+  15.38
  ],
  "requirements": {
   "hub deck": {
-   "worst_case": "braces pull alone (E)",
-   "max_bolt_N": 194.8,
-   "max_shear_N": 175.1,
-   "max_axial_N": 85.3
+   "worst_case": "crash 35 g 4",
+   "max_bolt_N": 14.8,
+   "max_shear_N": 13.4,
+   "max_axial_N": 14.8
   },
   "hub deck, front 4 feet alone (compliant deck bound)": {
-   "worst_case": "braces pull alone (E)",
-   "max_bolt_N": 296.3,
-   "max_shear_N": 233.5,
-   "max_axial_N": 182.4
+   "worst_case": "crash 35 g 4",
+   "max_bolt_N": 5.1,
+   "max_shear_N": 3.4,
+   "max_axial_N": 5.1
   },
   "flow clip": {
    "worst_case": "crash 35 g 4",
@@ -39,114 +39,28 @@
   }
  },
  "wash_pct": {
-  "hub deck + Pi + bays": 0.93,
+  "hub deck + Pi + bays": 0.95,
   "flow clip": 0.0,
-  "battery slot": 1.83
+  "battery slot": 1.85
  },
- "keels": {
-  "1": [
-   [
-    96.0,
-    12.0,
-    8.0
-   ],
-   [
-    379.7,
-    46.0,
-    54.23
-   ]
+ "arm_top_screws": [
+  [
+   24.5,
+   24.5
   ],
-  "-1": [
-   [
-    96.0,
-    -12.0,
-    8.0
-   ],
-   [
-    379.7,
-    -46.0,
-    54.23
-   ]
+  [
+   24.5,
+   -24.5
+  ],
+  [
+   -24.5,
+   24.5
+  ],
+  [
+   -24.5,
+   -24.5
   ]
- },
- "keel_n": [
-  274.2,
-  387.3
  ],
- "braces": {
-  "lo 1": [
-   [
-    97.0,
-    26.0,
-    12.0
-   ],
-   [
-    379.7,
-    46.0,
-    54.23
-   ]
-  ],
-  "lo -1": [
-   [
-    97.0,
-    -26.0,
-    12.0
-   ],
-   [
-    379.7,
-    -46.0,
-    54.23
-   ]
-  ],
-  "hi 1": [
-   [
-    97.0,
-    14.0,
-    18.0
-   ],
-   [
-    383.32,
-    46.0,
-    67.75
-   ]
-  ],
-  "hi -1": [
-   [
-    97.0,
-    -14.0,
-    18.0
-   ],
-   [
-    383.32,
-    -46.0,
-    67.75
-   ]
-  ]
- },
- "brace_n": {
-  "lo": 433.9734513274336,
-  "hi": 278.0265486725664
- },
- "brace_socket": {
-  "d": 6.2,
-  "l": 15.0,
-  "lead": 0.6,
-  "wall": 2.5
- },
- "tipping": {
-  "fwd_N_m": 6.4,
-  "fwd_case": "crash 4 [0.0, 0.0, 1.0] via head guard",
-  "back_N_m": 8.0,
-  "back_case": "crash 0 [1.0, 0.0, 0.0] via head guard",
-  "mid_insert_pull_N": 77.0,
-  "front_insert_pull_N": 238.0
- },
- "socket": {
-  "d": 6.2,
-  "l": 15.0,
-  "off": 5.0,
-  "od": 13.0
- },
  "insert": [
   4.0,
   5.7
@@ -225,14 +139,6 @@
   [
    96.0,
    -17.0
-  ],
-  [
-   60.0,
-   17.0
-  ],
-  [
-   60.0,
-   -17.0
   ]
  ],
  "pi_holes": [
@@ -288,10 +194,10 @@
   ]
  ],
  "budget_g": {
-  "hub deck": 55,
+  "hub deck": 30,
   "flow clip": 5
  },
- "system": "System: Overseer core v3, cage first 7.7 mm (E) at (+0.90, +0.01, +0.43) (camera left) (field cones open: Unitree L2 75 deg, out 67.48 mm, camera left 55 deg, out 0.27 mm, camera right 55 deg, out 0.01 mm), shell 63 rods closed, h/w 0.28, fit 28.0 mm\u00b3 (E) (spokes, ties, keels, braces, head struts/flow clip) FAIL, bbox 124 L (E), extents 771 x 675 x 239 mm (E), mass 3255 of 2200 g (148 %) (E) over budget (total, hub deck 68.0 of 55 g), CG 2.0 mm off thrust axis (E) [+2.0, -0.1, -67.1], 29.7 mm without swap parts (reported, L exception), probes -210.0 mm (E) edge at -X (receiver, unshielded) FAIL, access 37/37 clear",
+ "system": "System: Overseer core v4, cage first 9.6 mm (E) at (+0.90, +0.01, +0.43) (camera left) (field cones open: Unitree L2 75 deg, out 67 mm, camera left 55 deg, out 0 mm, camera right 55 deg, out 0.17 mm), shell 63 rods closed, h/w 0.32, fit 0.0 mm\u00b3 (E), bbox 126 L (E), extents 771 x 675 x 242 mm (E), mass 3235 of 2200 g (147 %) (E) over budget (total, hub deck 37.1 of 30 g), CG 0.3 mm off thrust axis (E) [+0.2, -0.1, -66.6], 28.2 mm without swap parts (reported, L exception), probes 8.5 mm (E) edge at (-0.70, -0.06, -0.71) (cartridge), access 39/39 clear",
  "coupon": {
   "floor_t": 4.0,
   "post_h": 5.0,
@@ -323,8 +229,8 @@
   "rx_tp": [
    -30.0,
    -18.0,
-   24.0,
-   40.0
+   30.0,
+   46.0
   ],
   "flow": [
    94.0,

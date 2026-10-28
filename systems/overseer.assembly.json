@@ -1,9 +1,9 @@
 {
 "name": "Overseer",
 "machine": "overseer",
-"note": "Layout v5 / cage v5 (26-27 Oct, Spark: the v2 drone with a triangulated shell formed to it; the L2 and the two cameras (27 Oct: no down camera, the pair beside the L2) outside it with nothing in their views, a guard ring behind the L2; funnel redesigned later) from nox/overseer/layout_v5.py; supersedes layout v4 / cage v2. Rough layout: C geometry on E sizes. Drone frame: x fwd, y left, z up, z 0 bottom plate top. Left out: ESC bodies (25 g each in the arm masses), catch features (the new funnel's), scan stick mount, XT60 and leads; the latch set is drawn as v2's cartridge envelope.",
+"note": "Layout v5 / cage v5 (26-27 Oct, Spark: the v2 drone with a triangulated shell formed to it; the L2 and the two cameras (27 Oct: no down camera, the pair beside the L2) outside it with nothing in their views, on 3 rods to the cage; funnel redesigned later) from nox/overseer/layout_v5.py; supersedes layout v4 / cage v2. Rough layout: C geometry on E sizes. Drone frame: x fwd, y left, z up, z 0 bottom plate top. Left out: ESC bodies (25 g each in the arm masses), catch features (the new funnel's), scan stick mount, XT60 and leads; the latch set is drawn as v2's cartridge envelope.",
 "cg_ref": [
-67.028,
+66.47,
 0.0,
 82.0
 ],
@@ -107,43 +107,43 @@
 "cage shell nodes"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "cage shell nodes"
 ],
 [
-"spokes, ties, keels, braces, head struts",
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+"spokes, ties, head rods",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "cage shell tubes"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "bottom plate"
 ],
 [
-"spokes, ties, keels, braces, head struts",
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+"spokes, ties, head rods",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)"
 ],
 [
 "Unitree L2",
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)"
 ],
 [
 "camera left",
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)"
 ],
 [
 "camera right",
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)"
 ],
 [
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
 "bottom plate"
 ],
 [
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
 "top plate"
 ],
 [
@@ -159,7 +159,7 @@
 "arm 1"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "arm 1"
 ],
 [
@@ -175,7 +175,7 @@
 "arm 2"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "arm 2"
 ],
 [
@@ -191,7 +191,7 @@
 "arm 3"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "arm 3"
 ],
 [
@@ -207,15 +207,15 @@
 "arm 4"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "arm 4"
 ],
 [
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
 "cage shell nodes"
 ],
 [
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
 "cage shell tubes"
 ],
 [
@@ -261,10 +261,6 @@
 [
 "flow MTF-02P",
 "bottom plate"
-],
-[
-"hub deck",
-"spokes, ties, keels, braces, head struts"
 ],
 [
 "receiver",
@@ -357,10 +353,6 @@
 [
 "wires",
 "receiver"
-],
-[
-"wires",
-"spokes, ties, keels, braces, head struts"
 ],
 [
 "wires",
@@ -1369,34 +1361,34 @@
 "role": "cage",
 "mesh": "parts/cage_shell_nodes/part.stl",
 "material": "PETG",
-"mass_g": 108.0,
+"mass_g": 289.35,
 "cg": [
-48.39,
--0.0,
-44.21
+43.43,
+0.0,
+38.91
 ],
-"tag": "E",
+"tag": "M",
 "owner": "overseer",
 "version": "layout v5 / cage v5",
 "source": "nox/overseer/layout_v5.py",
 "id": "cage_shell_nodes"
 },
 {
-"name": "spokes, ties, keels, braces, head struts",
+"name": "spokes, ties, head rods",
 "role": "cage",
-"mesh": "parts/spokes_ties_keels_braces_head_struts/part.stl",
+"mesh": "parts/spokes_ties_head_rods/part.stl",
 "material": "carbon",
-"mass_g": 174.37,
+"mass_g": 124.79,
 "cg": [
-86.87,
--0.0,
-16.77
+20.28,
+0.0,
+10.55
 ],
 "tag": "C",
 "owner": "overseer",
 "version": "layout v5 / cage v5",
 "source": "nox/overseer/layout_v5.py",
-"id": "spokes_ties_keels_braces_head_struts"
+"id": "spokes_ties_head_rods"
 },
 {
 "name": "TPU feet",
@@ -1416,21 +1408,21 @@
 "id": "tpu_feet"
 },
 {
-"name": "sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"name": "sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
 "role": "structure",
-"mesh": "parts/sensor_head_mount_printed_drawn_seat_lug/part.stl",
+"mesh": "parts/sensor_head_mount_printed_drawn_bolt_and/part.stl",
 "material": "PETG",
-"mass_g": 98.98,
+"mass_g": 143.7,
 "cg": [
-370.49,
+363.64,
 -0.0,
-65.66
+77.34
 ],
 "tag": "E",
 "owner": "overseer",
 "version": "layout v5 / cage v5",
 "source": "nox/overseer/layout_v5.py",
-"id": "sensor_head_mount_printed_drawn_seat_lug"
+"id": "sensor_head_mount_printed_drawn_bolt_and"
 },
 {
 "name": "Unitree L2",
@@ -1515,9 +1507,9 @@
 "role": "structure",
 "mesh": "parts/arm_1/part.stl",
 "material": "PETG",
-"mass_g": 180.57,
+"mass_g": 180.21,
 "cg": [
-122.39,
+122.12,
 90.96,
 24.35
 ],
@@ -1556,11 +1548,11 @@
 "role": "structure",
 "mesh": "parts/arm_2/part.stl",
 "material": "PETG",
-"mass_g": 83.95,
+"mass_g": 84.02,
 "cg": [
--57.51,
+-57.73,
 83.45,
-27.93
+27.94
 ],
 "tag": "E",
 "owner": "overseer",
@@ -1597,11 +1589,11 @@
 "role": "structure",
 "mesh": "parts/arm_3/part.stl",
 "material": "PETG",
-"mass_g": 83.95,
+"mass_g": 84.02,
 "cg": [
--57.51,
+-57.73,
 -83.45,
-27.93
+27.94
 ],
 "tag": "E",
 "owner": "overseer",
@@ -1638,9 +1630,9 @@
 "role": "structure",
 "mesh": "parts/arm_4/part.stl",
 "material": "PETG",
-"mass_g": 180.57,
+"mass_g": 180.21,
 "cg": [
-122.39,
+122.12,
 -90.96,
 24.35
 ],

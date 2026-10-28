@@ -1,7 +1,7 @@
 {
 "machine": "overseer",
 "cg_ref": [
-66.408,
+68.368,
 0.0,
 82.0
 ],
@@ -13,7 +13,7 @@
 "cg_tol_mm": 3.0,
 "cage_margin_mm": 3.0,
 "guard_offsets": {
-"shell tubes to prop disks, 3D (G)": 20.3
+"shell tubes to prop disks, 3D (G)": 19.0
 },
 "mass_budget_g": 2200,
 "cage_shell": {
@@ -21,32 +21,32 @@
 [
 -98.857,
 -119.695,
--57.0
+-79.9
 ],
 [
 55.805,
 -116.056,
--57.0
+-79.9
 ],
 [
 161.159,
 0.0,
--57.0
+-79.9
 ],
 [
 55.805,
 116.056,
--57.0
+-79.9
 ],
 [
 -98.857,
 119.695,
--57.0
+-79.9
 ],
 [
 -242.566,
 0.0,
--57.0
+-79.9
 ],
 [
 170.184,
@@ -410,19 +410,19 @@
 "rod_r_mm": 3.0
 },
 "balance_no_swap_gate": false,
-"name": "Overseer core v3",
-"note": "Overseer core v2 (27 Oct, Spark: everything inside the cage except the arms and the nodes, the keel roots of the L2 head included; the battery side an empty rectangular slot; latch mechanism, cameras and the head not this session's; screwdriver access, fewest pieces): v5 / cage v5 context parts unchanged (nox/overseer/overseer.assembly.json); the core, the latch set in pose (masses only: the slot's contents, latch later) and the feet placeholders from nox/overseer/core_v2.py.",
+"name": "Overseer core v4",
+"note": "Overseer core v4 (27 Oct, Spark: everything inside the cage except the arms and the nodes; no head load on the core since the cage's 3 head rods; the battery side an empty rectangular slot; latch mechanism, cameras and the head not this session's; screwdriver access, fewest pieces): v5 / cage v5 context parts unchanged (nox/overseer/overseer.assembly.json); the core, the latch set in pose (masses only: the slot's contents, latch later) and the feet placeholders from nox/overseer/core_v2.py.",
 "parts": [
 {
 "name": "cage shell tubes",
 "role": "cage",
 "mesh": "core/cage_shell_tubes.stl",
 "material": "carbon",
-"mass_g": 387.29,
+"mass_g": 389.25,
 "cg": [
-57.53,
+56.7,
 -0.0,
-53.87
+49.69
 ],
 "tag": "E",
 "owner": "overseer",
@@ -438,7 +438,7 @@
 "cg": [
 48.39,
 -0.0,
-49.94
+44.21
 ],
 "tag": "E",
 "owner": "overseer",
@@ -446,15 +446,15 @@
 "source": "nox/overseer/layout_v5.py"
 },
 {
-"name": "spokes, ties, keels, braces, head struts",
+"name": "spokes, ties, head rods",
 "role": "cage",
-"mesh": "core/spokes_ties_keels_braces_head_struts.stl",
+"mesh": "core/spokes_ties_head_rods.stl",
 "material": "carbon",
-"mass_g": 156.78,
+"mass_g": 124.9,
 "cg": [
-114.85,
+21.07,
 -0.0,
-18.7
+10.58
 ],
 "tag": "C",
 "owner": "overseer",
@@ -462,21 +462,21 @@
 "source": "nox/overseer/layout_v5.py"
 },
 {
-"name": "sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"name": "sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
 "role": "structure",
-"mesh": "core/sensor_head_mount_printed_drawn_seat_lugs_camera_pads_guards_topology_joins_them.stl",
+"mesh": "core/sensor_head_mount_printed_drawn_bolt_and_insert_bosses_and_3_rod_sockets_topology_joins_them.stl",
 "material": "PETG",
-"mass_g": 98.98,
+"mass_g": 143.7,
 "cg": [
-370.49,
+363.64,
 -0.0,
-65.66
+77.34
 ],
 "tag": "E",
 "owner": "overseer",
 "version": "layout v5 / cage v5",
 "source": "nox/overseer/layout_v5.py",
-"note": "v5 head mount without its front hub block (x 86..99 on the bottom plate): the keel sockets are the hub deck's now (Spark 27 Oct)"
+"note": "v5 head mount without its front hub block (x 86..99 on the bottom plate): dropped from the context (core v4: the head hangs on 3 rods to the cage)"
 },
 {
 "name": "Unitree L2",
@@ -556,10 +556,10 @@
 "role": "structure",
 "mesh": "core/arm_1.stl",
 "material": "PETG",
-"mass_g": 180.17,
+"mass_g": 181.43,
 "cg": [
-122.09,
-90.96,
+123.03,
+90.97,
 24.35
 ],
 "tag": "E",
@@ -594,11 +594,11 @@
 "role": "structure",
 "mesh": "core/arm_2.stl",
 "material": "PETG",
-"mass_g": 84.03,
+"mass_g": 83.77,
 "cg": [
--57.75,
-83.45,
-27.94
+-56.99,
+83.44,
+27.93
 ],
 "tag": "E",
 "owner": "overseer",
@@ -632,11 +632,11 @@
 "role": "structure",
 "mesh": "core/arm_3.stl",
 "material": "PETG",
-"mass_g": 84.03,
+"mass_g": 83.77,
 "cg": [
--57.75,
--83.45,
-27.94
+-56.99,
+-83.44,
+27.93
 ],
 "tag": "E",
 "owner": "overseer",
@@ -670,10 +670,10 @@
 "role": "structure",
 "mesh": "core/arm_4.stl",
 "material": "PETG",
-"mass_g": 180.17,
+"mass_g": 181.43,
 "cg": [
-122.09,
--90.96,
+123.03,
+-90.97,
 24.35
 ],
 "tag": "E",
@@ -710,8 +710,8 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "core v4",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 24.0,
 "protect": true
 },
@@ -722,8 +722,8 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "core v4",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 5.0,
 "protect": true
 },
@@ -734,8 +734,8 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "core v4",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 55.0,
 "protect": true
 },
@@ -746,8 +746,8 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "core v4",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 15.0,
 "protect": true
 },
@@ -758,8 +758,8 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "core v4",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 6.0,
 "protect": true
 },
@@ -770,8 +770,8 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "core v4",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 2.0,
 "protect": true
 },
@@ -782,8 +782,8 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "core v4",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 1.5,
 "protect": true
 },
@@ -794,8 +794,8 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "core v4",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 80.0
 },
 {
@@ -805,8 +805,8 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "core v4",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 650.0,
 "protect": true,
 "swap": true
@@ -819,7 +819,7 @@
 "tag": "M",
 "owner": "box swap (battery latch, later: the slot's contents)",
 "version": "cartridge v6 + sliders v6",
-"source": "nox/overseer/core_v1.py",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 105.6,
 "protect": true,
 "swap": true
@@ -832,7 +832,7 @@
 "tag": "M",
 "owner": "box swap (battery latch, later: the slot's contents)",
 "version": "receiver v2 + carrier v1 + cap + strips",
-"source": "nox/overseer/core_v1.py",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 229.3,
 "protect": true
 },
@@ -843,8 +843,8 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "core v4",
+"source": "nox/overseer/core_v4.py",
 "mass_g": 15.0,
 "protect": true
 },
@@ -855,33 +855,22 @@
 "material": "PETG",
 "tag": "M",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
-"mass_g": 68.0,
-"budget_g": 55
+"version": "hub deck v12",
+"source": "nox/overseer/core_topo_v4.py",
+"mass_g": 37.1,
+"budget_g": 30
 },
 {
 "name": "flow clip",
 "role": "structure",
 "mesh": "core/flow_clip.stl",
 "material": "PETG",
-"tag": "E",
+"tag": "M",
 "owner": "overseer core",
-"version": "core v2",
-"source": "nox/overseer/core_v1.py",
+"version": "flow clip v1",
+"source": "nox/overseer/core_coupons_v2.py",
 "mass_g": 5.0,
 "budget_g": 5
-},
-{
-"name": "TPU feet (cage session, placeholders)",
-"role": "cage",
-"mesh": "core/tpu_feet_cage_session_placeholders.stl",
-"material": "TPU",
-"tag": "E",
-"owner": "overseer cage",
-"version": "placeholder",
-"source": "nox/overseer/core_v1.py",
-"mass_g": 6.4
 }
 ],
 "contact_pairs": [
@@ -890,43 +879,43 @@
 "cage shell nodes"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "cage shell nodes"
 ],
 [
-"spokes, ties, keels, braces, head struts",
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+"spokes, ties, head rods",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "cage shell tubes"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "bottom plate"
 ],
 [
-"spokes, ties, keels, braces, head struts",
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+"spokes, ties, head rods",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)"
 ],
 [
 "Unitree L2",
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)"
 ],
 [
 "camera left",
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)"
 ],
 [
 "camera right",
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)"
 ],
 [
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
 "bottom plate"
 ],
 [
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
 "top plate"
 ],
 [
@@ -942,7 +931,7 @@
 "arm 1"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "arm 1"
 ],
 [
@@ -958,7 +947,7 @@
 "arm 2"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "arm 2"
 ],
 [
@@ -974,7 +963,7 @@
 "arm 3"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "arm 3"
 ],
 [
@@ -990,16 +979,52 @@
 "arm 4"
 ],
 [
-"spokes, ties, keels, braces, head struts",
+"spokes, ties, head rods",
 "arm 4"
 ],
 [
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
 "cage shell nodes"
 ],
 [
-"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
 "cage shell tubes"
+],
+[
+"FC stack (MicoAir743-Lite on 55A 4-in-1)",
+"top plate"
+],
+[
+"ESC cap",
+"top plate"
+],
+[
+"RX XR2",
+"top plate"
+],
+[
+"hub deck",
+"bottom plate"
+],
+[
+"hub deck",
+"Pi 5 + Active Cooler"
+],
+[
+"hub deck",
+"UBEC 5 V"
+],
+[
+"hub deck",
+"buck 12 V"
+],
+[
+"ESC cap",
+"FC stack (MicoAir743-Lite on 55A 4-in-1)"
+],
+[
+"flow clip",
+"bottom plate"
 ],
 [
 "FC stack (MicoAir743-Lite on 55A 4-in-1)",
@@ -1046,10 +1071,6 @@
 "bottom plate"
 ],
 [
-"hub deck",
-"spokes, ties, keels, braces, head struts"
-],
-[
 "receiver",
 "bottom plate"
 ],
@@ -1092,10 +1113,6 @@
 [
 "wires",
 "RX XR2"
-],
-[
-"wires",
-"TPU feet (cage session, placeholders)"
 ],
 [
 "wires",
@@ -1155,7 +1172,7 @@
 ],
 [
 "wires",
-"spokes, ties, keels, braces, head struts"
+"spokes, ties, head rods"
 ],
 [
 "wires",
@@ -1752,6 +1769,122 @@
 ]
 },
 {
+"name": "arm top screw 0: M3 down through the top plate into the arm (\u00d88 driver + 1, after the core)",
+"part": "top plate",
+"from": [
+24.5,
+24.5,
+47.1
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 9
+},
+"ignore": [
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"wires",
+"cage shell tubes",
+"cage shell nodes",
+"spokes, ties, head rods"
+]
+},
+{
+"name": "arm top screw 1: M3 down through the top plate into the arm (\u00d88 driver + 1, after the core)",
+"part": "top plate",
+"from": [
+24.5,
+-24.5,
+47.1
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 9
+},
+"ignore": [
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"wires",
+"cage shell tubes",
+"cage shell nodes",
+"spokes, ties, head rods"
+]
+},
+{
+"name": "arm top screw 2: M3 down through the top plate into the arm (\u00d88 driver + 1, after the core)",
+"part": "top plate",
+"from": [
+-24.5,
+24.5,
+47.1
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 9
+},
+"ignore": [
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"wires",
+"cage shell tubes",
+"cage shell nodes",
+"spokes, ties, head rods"
+]
+},
+{
+"name": "arm top screw 3: M3 down through the top plate into the arm (\u00d88 driver + 1, after the core)",
+"part": "top plate",
+"from": [
+-24.5,
+-24.5,
+47.1
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 9
+},
+"ignore": [
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"wires",
+"cage shell tubes",
+"cage shell nodes",
+"spokes, ties, head rods"
+]
+},
+{
 "name": "step 1: M3 x 8 up from under the plate into the hub deck insert, foot 0 (screwdriver from below, the battery slot empty)",
 "part": "bottom plate",
 "from": [
@@ -1898,62 +2031,6 @@
 96.0,
 -17.0,
 -5.6
-],
-"dir": [
-0,
-0,
--1
-],
-"length_mm": 150.0,
-"tool": {
-"type": "cylinder",
-"d": 6
-},
-"ignore": [
-"pack",
-"cartridge",
-"receiver",
-"XT60 pair",
-"cage shell tubes",
-"cage shell nodes",
-"TPU feet (cage session, placeholders)"
-]
-},
-{
-"name": "step 1: M3 x 8 up from under the plate into the hub deck insert, foot 6 (screwdriver from below, the battery slot empty)",
-"part": "bottom plate",
-"from": [
-60.0,
-17.0,
--2.6
-],
-"dir": [
-0,
-0,
--1
-],
-"length_mm": 150.0,
-"tool": {
-"type": "cylinder",
-"d": 6
-},
-"ignore": [
-"pack",
-"cartridge",
-"receiver",
-"XT60 pair",
-"cage shell tubes",
-"cage shell nodes",
-"TPU feet (cage session, placeholders)"
-]
-},
-{
-"name": "step 1: M3 x 8 up from under the plate into the hub deck insert, foot 7 (screwdriver from below, the battery slot empty)",
-"part": "bottom plate",
-"from": [
-60.0,
--17.0,
--2.6
 ],
 "dir": [
 0,

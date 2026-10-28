@@ -1,6 +1,6 @@
-"""Large test part: Overseer hub deck (v9 setup, 368k cells at h 1.25, 5.3 GB peak, 0.9 h on 4 cores).
-Copied from nox/overseer/core_topo_v3.py with the command-line handling removed; its inputs live in inputs/."""
-import json, os, sys
+"""Overseer hub deck (v12 setup: core v4, payload loads only, 11 cm3). Copied from nox/overseer/core_topo_v4.py with the
+command-line handling removed; its inputs live in inputs/."""
+import json, os
 import numpy as np, trimesh, manifold3d as mf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -8,7 +8,7 @@ INP = os.path.join(HERE, "inputs")
 from topo import Part
 from topo.part import man
 
-SPEC = dict(h=1.25, gen_cm3=24.0, max_worst=0.5)
+SPEC = dict(h=1.0, gen_cm3=11.0, max_worst=0.5)
 LEAN = False
 
 R = json.load(open(os.path.join(INP, "core_result.json")))
@@ -57,12 +57,7 @@ def rigid_split(pts, F, P):
 
 
 # ================================================================ hub deck
-KEELS = {int(k): (np.array(v[0], float), np.array(v[1], float)) for k, v in R["keels"].items()}
-SK = R["socket"]; INS = R["insert"]; T = R["foot_h"]
-KEEL_N = R["keel_n"]                                                       # max pull / push per keel (F)
-RF = json.load(open(os.path.join(INP, "core_root_forces_low.json")))
-ROOTS = {k: (np.array(v["core"], float), np.array(v["lug"], float)) for k, v in RF["points"].items()}   # core = the tube end
-BS = R["brace_socket"]
+INS = R["insert"]; T = R["foot_h"]
 Z_UNDER = 45.0                                                             # the top plate underside (S500 STEP)
 FOOT_R = 7.0                                                               # feet Ø14: 5 of wall round the Ø4.0 insert hole (the gate erodes 2.0; v3's Ø12 left 4.0)
 
@@ -80,66 +75,27 @@ def arm_env(deg):
     return box(58.0, 400.0, -21.0, 21.0, -1.0, 20.0).rotate([0, 0, deg])
 
 
-def root_axis(name):
-    a, b = ROOTS[name]; return a, (b - a) / np.linalg.norm(b - a)
-
-
-def keel_axis(sy):
-    a, b = KEELS[sy]; return a, (b - a) / np.linalg.norm(b - a)
-
-
 def hub_deck_bodies():
     feet = [tuple(f) for f in R["feet_xy"]]
     ph = [tuple(p) for p in R["pi_holes"]]
     zp = C["z_pi"]
-    # bay seats (hub deck v2): rails under the UBEC and the buck, inside the arm envelopes
+    # bay seats (v12, concept review 27 Oct: drawn is attachment only): 4 pads Ø12 x 6.5 under each bay's corners for its VHB tape
+    # (~450 mm² a bay against ~9 N in a 35 g crash, E); v2..v11's continuous seat rails were load-carrying bars (7.6 cm³ drawn)
     ub, bk = M["UBEC 5 V"].bounds, M["buck 12 V"].bounds
-    rails = [box(ub[0][0], ub[1][0], y - 3, y + 3, 0, T) for y in (ub[0][1] + 3, ub[1][1] - 3)]
-    rails += [box(bk[0][0], bk[1][0], y - 3, y + 3, 0, T) for y in (bk[0][1] + 3, min(bk[1][1] - 3, 17.0))]
-    rails += [box(ub[1][0] - 6, ub[1][0], ub[0][1], ub[1][1], 0, T), box(bk[0][0], bk[0][0] + 6, ub[0][1], bk[1][1], 0, T)]
-    # zip-tie channels 3 x 2.5 open on the plate side (the tie runs between deck and plate), 4.0 of deck above: v2's tunnels at z 2..4.5
-    # left 2.0 skins across the whole deck, and the smoke (27 Oct) found the front hub cut off from the rest at a 3.2 member
-    # v4: no zip-tie channels: the UBEC and the buck sit on the seat rails on 3M VHB foam tape (DEFAULT; ~576 mm² a bay against ~5 N in
-    # a 35 g crash). Any channel under the bays crosses the whole deck and leaves < 6.25 of it above, which cut the front hub off from
-    # the rest at the solid gate's member (v4 smoke 27 Oct: gate members capped at 4.96)
+    rails = [cyl(x, y, 0, T, 6.0) for b_ in (ub, bk) for x in (b_[0][0] + 6.0, b_[1][0] - 6.0) for y in (b_[0][1] + 6.0, b_[1][1] - 6.0)]
     slots = []
-    # keel front hub: bosses on the keel axes, seated on the front feet (the keels' 387 N go into the plate at (96, ±17))
-    bosses = [along(*keel_axis(sy), -2.0, SK["off"] + SK["l"], SK["od"] / 2) for sy in (1, -1)]
-    # v7 (hub deck v6 FAILED strength: worst 2.72 in the top hit at the +y keel boss / front foot joint (94, 16, 8), 18 cm3 generated):
-    # a drawn solid core round the keel bosses and the front feet (both sides), so that joint can't thin out
-    # v10 (28 Oct, Spark: "a bunch of material stacked at the sockets, nothing at the rear"): the v7 seat blocks and the v9
-    # bars are gone. The audit (topo/audit.py) now refuses them: one drawn body held 84 % of the drawn material with a
-    # 9 mm core and 1.2 mm of room behind it. Attachments only; the room behind the sockets is opened instead (hub_env).
-    seats = []
-    # v9 (hub deck v8: strength 0.34 but the build's drawn test cut the +y tower off at the 2.0 erosion: its only thick joint ran through
-    # the centreline, where the cage's tie tubes and two wire routes cut): drawn bars from each tower core back to its mid feet beside
-    # the bays (the -y one outside the UBEC's y -18), so both sides join the deck through solid
-    ub_y0 = M["UBEC 5 V"].bounds[0][1]
-    braces = [k for k in ROOTS if k.startswith("L2 brace")]
-    bosses += [along(*root_axis(k), -BS["wall"], BS["l"] + BS["lead"], BS["d"] / 2 + BS["wall"]) for k in braces]
     # v5 (PR 148 review): a root web Ø12 x 6.0 under every Pi post (a gusset into the body; v4's bare Ø7 posts were 99.8 % in the main
     # body at the gate's 2.0 erosion, under its 99.9 % bar); 6.0 stays under the board's underside parts (z 6.5..8)
     roots = [cyl(x, y, 0, 6.0, 6.0) for x, y in ph]
-    drawn = U([cyl(x, y, 0, T, FOOT_R) for x, y in feet] + [cyl(x, y, 0, zp, 3.5) for x, y in ph] + roots + rails + bosses + seats)
-    bores = [along(*keel_axis(sy), SK["off"], SK["off"] + SK["l"] + 1.0, SK["d"] / 2) for sy in (1, -1)]
-    tubes = [along(*keel_axis(sy), SK["off"] + SK["l"] - 0.5, 400.0, 3.5) for sy in (1, -1)]
-    bores += [along(*root_axis(k), 0.0, BS["l"] + BS["lead"] + 1.0, BS["d"] / 2) for k in braces]
-    tubes += [along(*root_axis(k), BS["l"] + BS["lead"] - 0.5, 400.0, 3.5) for k in braces]
+    drawn = U([cyl(x, y, 0, T, FOOT_R) for x, y in feet] + [cyl(x, y, 0, zp, 3.5) for x, y in ph] + roots + rails)
     wires = [U([man(b) for b in M["wires"].split(only_watertight=False) if len(b.faces) > 3])]   # the core's wire routes, exact tubes (a hull per
-    # route would be a slab across the hub room); the flow lead crosses it   # the keel tube past the socket mouth + 0.5 (0.5 lead-in: no end slivers)
-    ties = json.load(open(os.path.join(INP, "layout_result.json")))["links"]   # the cage's front core ties (parked body node)
-    tie_cut = [man(trimesh.creation.cylinder(4.0, np.linalg.norm(np.subtract(b, a)), sections=24, segment=np.array([a, b], float)))
-               for k, (a, b) in ties.items() if k.startswith("core tie front")]
-    hub_env = box(56.0, 118.0, -34.0, 34.0, 0, 30.0)        # v10: back to x 56 (was 80) so a web can grow from the sockets to the mid feet
+    # route would be a slab across the deck); the flow lead crosses it
     plates = [man(M["top plate"])]
     bays = [box(m.bounds[0][0] - 1, m.bounds[1][0] + 1, m.bounds[0][1] - 1, m.bounds[1][1] + 1, T, Z_UNDER) for m in (M["UBEC 5 V"], M["buck 12 V"])]
-    cuts = U(plates + bays + [cyl(x, y, -1, T + 1, INS[0] / 2) for x, y in feet] + tie_cut + [cyl(x, y, zp - 4.0, zp + 1, 1.1) for x, y in ph] + slots + bores + tubes + wires
+    cuts = U(plates + bays + [cyl(x, y, -1, T + 1, INS[0] / 2) for x, y in feet] + [cyl(x, y, zp - 4.0, zp + 1, 1.1) for x, y in ph] + slots + wires
              + [grown(f"arm {i}", 1.0) for i in (1, 2, 3, 4)]
              + [arm_env(a_) for a_ in (45, -45, 135, -135)])                                   # the arm session's root envelopes (u >= 58, |v| <= 21)
-    # core v3 round 3: deep side webs from the tower back to the mid feet (60, ±17), (65, ±22.5) beside the bays (their columns stay
-    # open for placing the UBEC and buck straight down; the arm root envelopes and grown arms trim the outer side)
-    web_env = [box(58.0, 92.0, sy * 18.0, sy * 34.0, 0, 30.0) for sy in (1, -1)]
-    env = U([box(-76, 100, -42, 42, 0, T), hub_env] + web_env)
+    env = box(-76, 100, -42, 42, 0, T)
     return drawn, cuts, env, feet, ph
 
 
@@ -152,30 +108,22 @@ def hub_deck_setup(h):
     posts = [np.array([x, y, C["z_pi"]]) for x, y in ph]
     post_reg = [cyl(x, y, C["z_pi"] - 3.0, C["z_pi"] + 0.5, 4.0) for x, y in ph]
     ub, bk = M["UBEC 5 V"], M["buck 12 V"]
-    bay = lambda m: box(m.bounds[0][0], m.bounds[1][0], m.bounds[0][1], m.bounds[1][1], 0, 6.5)
-    walls = {sy: along(*keel_axis(sy), SK["off"], SK["off"] + SK["l"], SK["d"] / 2 + 1.0) for sy in (1, -1)}   # the bore wall (epoxy)
+    bay = lambda m: U([cyl(x, y, T - 2.0, T + 0.5, 6.0) for x in (m.bounds[0][0] + 6.0, m.bounds[1][0] - 6.0) for y in (m.bounds[0][1] + 6.0, m.bounds[1][1] - 6.0)])   # its 4 pads' tops (VHB)
 
-    walls = {k: along(*root_axis(k), 0.0 if k.startswith("L2") else SK["off"], (BS["l"] + BS["lead"]) if k.startswith("L2") else SK["off"] + SK["l"],
-                      (BS["d"] if k.startswith("L2") else SK["d"]) / 2 + 1.0) for k in ROOTS}       # the bore walls (epoxy)
-
-    def payload(name, a, cls, roots=None):
+    def payload(name, a, cls):
         f = rigid_split(posts, -55 * G * a, pi_c)
-        reg = [(post_reg[i], f[i]) for i in range(4)] + [(bay(ub), -15 * G * a), (bay(bk), -6 * G * a)]
-        for k, n_ in (roots or {}).items():
-            reg.append((walls[k], root_axis(k)[1] * n_))            # + tension pulls the socket toward the head
+        reg = [(post_reg[i], f[i]) for i in range(4)] + [(bay(ub), -(15 + 10) * G * a), (bay(bk), -(6 + 10) * G * a)]   # + the deck wires' 20 g, half on each bay (E)
         p.load_multi(name, reg, cls=cls, accel=-a)
-    rc = RF["cases"]
     for k, d in enumerate(DIRS14):
-        nm = next(c for c in rc if c.startswith(f"crash {k} "))
-        payload(f"{nm} (35 g + the keel / brace forces, F)", 35 * d, "crash", rc[nm])
+        payload(f"crash {k} (35 g)", 35 * d, "crash")
     if not LEAN:
-        payload("flight 4 g down (+ the keel / brace forces, F)", FLIGHT["flight 4 g"], "flight", rc["flight 4 g down"])
-        for nm in ("flight 2 g x", "flight 2 g y", "landing 6 g"):
-            payload(nm, FLIGHT[nm], "flight")
+        for nm, a in FLIGHT.items():
+            payload(nm, a, "flight")
     usb = rigid_split(posts, np.array([20.0, 0, 0]), (C["pi_x"][0] - 2, 0, C["z_pi"] + 9))           # plug pushed in at the aft ports
     p.load_multi("USB plug 20 N into the Pi's aft ports", [(post_reg[i], usb[i]) for i in range(4)], cls="misuse")
     p.load_multi("press 50 N on the Pi (assembly)", [(post_reg[i], np.array([0, 0, -12.5])) for i in range(4)], cls="misuse")
     return p
+
 
 
 setup = hub_deck_setup

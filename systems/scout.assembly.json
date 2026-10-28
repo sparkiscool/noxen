@@ -1,0 +1,2011 @@
+{
+"name": "Scout v3",
+"machine": "scout",
+"note": "v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
+"cg_ref": [
+0.0,
+0.0,
+41.2
+],
+"thrust_axis": [
+0,
+0,
+1
+],
+"cg_tol_mm": 3.0,
+"cage_margin_mm": 3.0,
+"openings": [
+{
+"part": "cartridge v6 (latch)",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"min_mm": 0.0,
+"skip_probes": true
+},
+{
+"part": "pack 4S 1500",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"min_mm": 0.0,
+"skip_probes": true
+},
+{
+"part": "slider +y (latch)",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"min_mm": 0.0,
+"skip_probes": true
+},
+{
+"part": "slider -y (latch)",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"min_mm": 0.0,
+"skip_probes": true
+},
+{
+"part": "pack XT60 plug",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"min_mm": 0.0,
+"skip_probes": true
+},
+{
+"part": "receiver v3 (latch)",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"min_mm": 0.0,
+"skip_probes": true
+},
+{
+"part": "receiver lid (latch)",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"min_mm": 0.0,
+"skip_probes": true
+},
+{
+"part": "flow MTF-02P",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"min_mm": 0.0,
+"skip_probes": true
+},
+{
+"part": "camera",
+"axis": [
+1.0,
+0.0,
+0.0
+],
+"half_angle_deg": 55.0,
+"field": true,
+"note": "Spark 26 Oct rule: the front camera outside the cage, nothing of the drone in its view; cage first gated outside this cone"
+}
+],
+"contact_pairs": [
+[
+"motor 1",
+"prop 1",
+1000000000.0
+],
+[
+"motor 2",
+"prop 2",
+1000000000.0
+],
+[
+"motor 3",
+"prop 3",
+1000000000.0
+],
+[
+"motor 4",
+"prop 4",
+1000000000.0
+],
+[
+"motor 1",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"motor 2",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"motor 3",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"motor 4",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"cage shell tubes",
+"cage shell nodes",
+1000000000.0
+],
+[
+"spokes, bay ties, core ties, camera guard",
+"cage shell nodes",
+1000000000.0
+],
+[
+"spokes, bay ties, core ties, camera guard",
+"cage shell tubes",
+1000000000.0
+],
+[
+"spokes, bay ties, core ties, camera guard",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"spokes, bay ties, core ties, camera guard",
+"receiver v3 (latch)",
+1000000000.0
+],
+[
+"spokes, bay ties, core ties, camera guard",
+"mount + nose legs (Scout)",
+1000000000.0
+],
+[
+"spokes, bay ties, core ties, camera guard",
+"receiver TPU end pieces (latch, E)",
+1000000000.0
+],
+[
+"spokes, bay ties, core ties, camera guard",
+"camera mount (printed)",
+1000000000.0
+],
+[
+"camera mount (printed)",
+"camera",
+1000000000.0
+],
+[
+"camera mount (printed)",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"camera mount (printed)",
+"mount + nose legs (Scout)",
+1000000000.0
+],
+[
+"receiver TPU end pieces (latch, E)",
+"receiver v3 (latch)",
+1000000000.0
+],
+[
+"receiver TPU end pieces (latch, E)",
+"receiver lid (latch)",
+1000000000.0
+],
+[
+"receiver TPU end pieces (latch, E)",
+"receiver TPU strips (latch)",
+1000000000.0
+],
+[
+"receiver TPU end pieces (latch, E)",
+"mount + nose legs (Scout)",
+1000000000.0
+],
+[
+"receiver TPU end pieces (latch, E)",
+"cartridge v6 strips (latch, TPU)",
+1000000000.0
+],
+[
+"cartridge v6 strips (latch, TPU)",
+"cartridge v6 (latch)",
+1000000000.0
+],
+[
+"cartridge v6 strips (latch, TPU)",
+"slider +y (latch)",
+1000000000.0
+],
+[
+"cartridge v6 strips (latch, TPU)",
+"slider -y (latch)",
+1000000000.0
+],
+[
+"cartridge v6 strips (latch, TPU)",
+"pack 4S 1500",
+1000000000.0
+],
+[
+"cartridge v6 (latch)",
+"receiver TPU strips (latch)",
+5.0
+],
+[
+"pack 4S 1500",
+"cartridge v6 (latch)",
+1.0
+],
+[
+"pack XT60 plug",
+"cartridge v6 (latch)",
+5.0
+],
+[
+"XT60E1-M",
+"receiver v3 (latch)",
+5.0
+],
+[
+"XT60E1-M",
+"receiver lid (latch)",
+5.0
+],
+[
+"receiver TPU strips (latch)",
+"receiver v3 (latch)",
+5.0
+],
+[
+"pack XT60 plug",
+"XT60E1-M",
+1.0
+],
+[
+"mount + nose legs (Scout)",
+"receiver v3 (latch)",
+1000000000.0
+],
+[
+"mount + nose legs (Scout)",
+"receiver lid (latch)",
+1000000000.0
+],
+[
+"mount + nose legs (Scout)",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"mount + nose legs (Scout)",
+"XT60E1-M",
+1000000000.0
+],
+[
+"mount + nose legs (Scout)",
+"FC",
+1000000000.0
+],
+[
+"mount + nose legs (Scout)",
+"UBEC",
+1000000000.0
+],
+[
+"FC",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"Radxa Zero 3W",
+"mount + nose legs (Scout)",
+1000000000.0
+],
+[
+"flow MTF-02P",
+"mount + nose legs (Scout)",
+1000000000.0
+],
+[
+"UBEC",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"XR2",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"wires",
+"FC",
+1000000000.0
+],
+[
+"wires",
+"mount + nose legs (Scout)",
+1000000000.0
+],
+[
+"wires",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"wires",
+"UBEC",
+1000000000.0
+],
+[
+"wires",
+"receiver v3 (latch)",
+1000000000.0
+],
+[
+"spokes, bay ties, core ties, camera guard",
+"tie saddle (printed)",
+1000000000.0
+],
+[
+"tie saddle (printed)",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"Radxa Zero 3W",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"flow MTF-02P",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"cage shell nodes",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"camera",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"wires",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"tie saddle (printed)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"motor 4",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"slider -y (latch)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"cartridge skid closed end (latch, TPU)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"mount + nose legs (Scout)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"prop 3",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"motor 1",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"receiver v3 (latch)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"receiver TPU strips (latch)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"prop 4",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"cartridge skid lead end (latch, TPU)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"spokes, bay ties, core ties, camera guard",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"UBEC",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"XR2",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"cartridge v6 strips (latch, TPU)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"tail bay mount block (Scout electronics, E)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"XT60E1-M",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"slider +y (latch)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"receiver lid (latch)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"prop 1",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"pack XT60 plug",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"tail bay carrier (Scout electronics, E)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"prop 2",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"cage shell tubes",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"motor 3",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"receiver TPU end pieces (latch, E)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"camera mount (printed)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"FC",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"motor 2",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"cartridge v6 (latch)",
+1000000000.0
+],
+[
+"tail bay cables (Scout electronics, E)",
+"pack 4S 1500",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"Radxa Zero 3W",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"flow MTF-02P",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"cage shell nodes",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"camera",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"wires",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"tie saddle (printed)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"motor 4",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"slider -y (latch)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"cartridge skid closed end (latch, TPU)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"mount + nose legs (Scout)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"prop 3",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"motor 1",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"tail bay cables (Scout electronics, E)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"receiver v3 (latch)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"receiver TPU strips (latch)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"prop 4",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"cartridge skid lead end (latch, TPU)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"spokes, bay ties, core ties, camera guard",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"UBEC",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"XR2",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"cartridge v6 strips (latch, TPU)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"XT60E1-M",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"slider +y (latch)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"receiver lid (latch)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"prop 1",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"pack XT60 plug",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"tail bay carrier (Scout electronics, E)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"prop 2",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"cage shell tubes",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"motor 3",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"receiver TPU end pieces (latch, E)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"camera mount (printed)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"FC",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"motor 2",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"cartridge v6 (latch)",
+1000000000.0
+],
+[
+"tail bay mount block (Scout electronics, E)",
+"pack 4S 1500",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"Radxa Zero 3W",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"flow MTF-02P",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"cage shell nodes",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"camera",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"wires",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"tie saddle (printed)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"motor 4",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"slider -y (latch)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"cartridge skid closed end (latch, TPU)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"mount + nose legs (Scout)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"prop 3",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"motor 1",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"tail bay cables (Scout electronics, E)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"receiver v3 (latch)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"receiver TPU strips (latch)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"prop 4",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"cartridge skid lead end (latch, TPU)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"spokes, bay ties, core ties, camera guard",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"UBEC",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"XR2",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"cartridge v6 strips (latch, TPU)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"tail bay mount block (Scout electronics, E)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"XT60E1-M",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"slider +y (latch)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"receiver lid (latch)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"prop 1",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"pack XT60 plug",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"prop 2",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"cage shell tubes",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"motor 3",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"receiver TPU end pieces (latch, E)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"camera mount (printed)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"FC",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"motor 2",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"cartridge v6 (latch)",
+1000000000.0
+],
+[
+"tail bay carrier (Scout electronics, E)",
+"pack 4S 1500",
+1000000000.0
+]
+],
+"guard_offsets": {
+"shell tubes to prop disks, 3D (G)": 13.9
+},
+"access": [
+{
+"name": "swap: cartridge v6 (latch) down",
+"part": "cartridge v6 (latch)",
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": "part",
+"ignore": [
+"cartridge v6 (latch)",
+"cartridge v6 strips (latch, TPU)",
+"pack 4S 1500",
+"slider +y (latch)",
+"slider -y (latch)",
+"pack XT60 plug",
+"cartridge skid closed end (latch, TPU)",
+"cartridge skid lead end (latch, TPU)",
+"receiver TPU strips (latch)"
+]
+},
+{
+"name": "swap: pack 4S 1500 down",
+"part": "pack 4S 1500",
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": "part",
+"ignore": [
+"cartridge v6 (latch)",
+"cartridge v6 strips (latch, TPU)",
+"pack 4S 1500",
+"slider +y (latch)",
+"slider -y (latch)",
+"pack XT60 plug",
+"cartridge skid closed end (latch, TPU)",
+"cartridge skid lead end (latch, TPU)",
+"receiver TPU strips (latch)"
+]
+},
+{
+"name": "swap: pack XT60 plug down",
+"part": "pack XT60 plug",
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": "part",
+"ignore": [
+"cartridge v6 (latch)",
+"cartridge v6 strips (latch, TPU)",
+"pack 4S 1500",
+"slider +y (latch)",
+"slider -y (latch)",
+"pack XT60 plug",
+"cartridge skid closed end (latch, TPU)",
+"cartridge skid lead end (latch, TPU)",
+"receiver TPU strips (latch)"
+]
+},
+{
+"name": "M3 key, receiver bolt (-45.1, -26.6)",
+"part": "receiver v3 (latch)",
+"from": [
+-45.15,
+-26.55,
+9.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 4
+},
+"ignore": [
+"cartridge v6 (latch)",
+"cartridge v6 strips (latch, TPU)",
+"pack 4S 1500",
+"slider +y (latch)",
+"slider -y (latch)",
+"pack XT60 plug",
+"cartridge skid closed end (latch, TPU)",
+"cartridge skid lead end (latch, TPU)",
+"receiver TPU strips (latch)",
+"receiver lid (latch)",
+"mount + nose legs (Scout)",
+"XT60E1-M",
+"receiver TPU end pieces (latch, E)"
+]
+},
+{
+"name": "M3 key, receiver bolt (-45.1, +26.6)",
+"part": "receiver v3 (latch)",
+"from": [
+-45.15,
+26.55,
+9.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 4
+},
+"ignore": [
+"cartridge v6 (latch)",
+"cartridge v6 strips (latch, TPU)",
+"pack 4S 1500",
+"slider +y (latch)",
+"slider -y (latch)",
+"pack XT60 plug",
+"cartridge skid closed end (latch, TPU)",
+"cartridge skid lead end (latch, TPU)",
+"receiver TPU strips (latch)",
+"receiver lid (latch)",
+"mount + nose legs (Scout)",
+"XT60E1-M",
+"receiver TPU end pieces (latch, E)"
+]
+},
+{
+"name": "M3 key, receiver bolt (+40.8, -26.6)",
+"part": "receiver v3 (latch)",
+"from": [
+40.75,
+-26.55,
+9.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 4
+},
+"ignore": [
+"cartridge v6 (latch)",
+"cartridge v6 strips (latch, TPU)",
+"pack 4S 1500",
+"slider +y (latch)",
+"slider -y (latch)",
+"pack XT60 plug",
+"cartridge skid closed end (latch, TPU)",
+"cartridge skid lead end (latch, TPU)",
+"receiver TPU strips (latch)",
+"receiver lid (latch)",
+"mount + nose legs (Scout)",
+"XT60E1-M",
+"receiver TPU end pieces (latch, E)"
+]
+},
+{
+"name": "M3 key, receiver bolt (+40.8, +26.6)",
+"part": "receiver v3 (latch)",
+"from": [
+40.75,
+26.55,
+9.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 4
+},
+"ignore": [
+"cartridge v6 (latch)",
+"cartridge v6 strips (latch, TPU)",
+"pack 4S 1500",
+"slider +y (latch)",
+"slider -y (latch)",
+"pack XT60 plug",
+"cartridge skid closed end (latch, TPU)",
+"cartridge skid lead end (latch, TPU)",
+"receiver TPU strips (latch)",
+"receiver lid (latch)",
+"mount + nose legs (Scout)",
+"XT60E1-M",
+"receiver TPU end pieces (latch, E)"
+]
+},
+{
+"name": "FC USB-C cable (12 x 7, searched path, E)",
+"part": "FC",
+"from": [
+-20.06,
+0.0,
+13.5
+],
+"dir": [
+-0.6618,
+-0.7496,
+0.0083
+],
+"length_mm": 250.0,
+"tool": {
+"type": "box",
+"w": 12,
+"h": 7,
+"w_axis": [
+0.7496,
+-0.6618,
+0.0
+]
+},
+"ignore": [
+"mount + nose legs (Scout)",
+"wires"
+]
+}
+],
+"parts": [
+{
+"name": "cage shell tubes",
+"role": "cage",
+"mesh": "parts/cage_shell_tubes/part.stl",
+"material": "carbon",
+"mass_g": 69.77,
+"cg": [
+-3.31,
+0.0,
+16.47
+],
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "cage_shell_tubes"
+},
+{
+"name": "cage shell nodes",
+"role": "cage",
+"mesh": "parts/cage_shell_nodes/part.stl",
+"material": "PETG",
+"mass_g": 203.42,
+"cg": [
+17.81,
+0.0,
+14.55
+],
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "cage_shell_nodes"
+},
+{
+"name": "spokes, bay ties, core ties, camera guard",
+"role": "cage",
+"mesh": "parts/spokes_bay_ties_core_ties_camera_guard/part.stl",
+"material": "carbon",
+"mass_g": 8.39,
+"cg": [
+19.2,
+-0.0,
+1.97
+],
+"tag": "C",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "spokes_bay_ties_core_ties_camera_guard"
+},
+{
+"name": "frame plate (Bee35 carbon)",
+"role": "structure",
+"mesh": "parts/frame_plate_bee35_carbon/part.stl",
+"material": "carbon",
+"mass_g": 28.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "frame_plate_bee35_carbon"
+},
+{
+"name": "motor 1",
+"role": "bought",
+"protect": true,
+"mesh": "parts/motor_1/part.stl",
+"mass_g": 18.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "motor_1"
+},
+{
+"name": "prop 1",
+"role": "bought",
+"protect": true,
+"mesh": "parts/prop_1/part.stl",
+"mass_g": 1.8,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "prop_1"
+},
+{
+"name": "motor 2",
+"role": "bought",
+"protect": true,
+"mesh": "parts/motor_2/part.stl",
+"mass_g": 18.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "motor_2"
+},
+{
+"name": "prop 2",
+"role": "bought",
+"protect": true,
+"mesh": "parts/prop_2/part.stl",
+"mass_g": 1.8,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "prop_2"
+},
+{
+"name": "motor 3",
+"role": "bought",
+"protect": true,
+"mesh": "parts/motor_3/part.stl",
+"mass_g": 18.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "motor_3"
+},
+{
+"name": "prop 3",
+"role": "bought",
+"protect": true,
+"mesh": "parts/prop_3/part.stl",
+"mass_g": 1.8,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "prop_3"
+},
+{
+"name": "motor 4",
+"role": "bought",
+"protect": true,
+"mesh": "parts/motor_4/part.stl",
+"mass_g": 18.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "motor_4"
+},
+{
+"name": "prop 4",
+"role": "bought",
+"protect": true,
+"mesh": "parts/prop_4/part.stl",
+"mass_g": 1.8,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "prop_4"
+},
+{
+"name": "FC",
+"role": "bought",
+"protect": true,
+"mesh": "parts/fc/part.stl",
+"mass_g": 10.0,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "fc"
+},
+{
+"name": "UBEC",
+"role": "bought",
+"protect": true,
+"mesh": "parts/ubec/part.stl",
+"mass_g": 15.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "ubec"
+},
+{
+"name": "XR2",
+"role": "bought",
+"protect": true,
+"mesh": "parts/xr2/part.stl",
+"mass_g": 1.0,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "xr2"
+},
+{
+"name": "Radxa Zero 3W",
+"role": "bought",
+"protect": true,
+"mesh": "parts/radxa_zero_3w/part.stl",
+"mass_g": 10.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "radxa_zero_3w"
+},
+{
+"name": "flow MTF-02P",
+"role": "bought",
+"protect": true,
+"mesh": "parts/flow_mtf_02p/part.stl",
+"mass_g": 1.5,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "flow_mtf_02p"
+},
+{
+"name": "mount + nose legs (Scout)",
+"role": "structure",
+"mesh": "parts/mount_nose_legs_scout/part.stl",
+"material": "PETG",
+"mass_g": 25.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "mount_nose_legs_scout"
+},
+{
+"name": "receiver v3 (latch)",
+"role": "protected",
+"protect": true,
+"mesh": "parts/receiver_v3_latch/part.stl",
+"material": "PETG",
+"mass_g": 94.4,
+"tag": "M",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "receiver_v3_latch"
+},
+{
+"name": "receiver lid (latch)",
+"role": "protected",
+"protect": true,
+"mesh": "parts/receiver_lid_latch/part.stl",
+"material": "PETG",
+"mass_g": 10.3,
+"tag": "M",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "receiver_lid_latch"
+},
+{
+"name": "receiver TPU strips (latch)",
+"role": "structure",
+"protect": true,
+"mesh": "parts/receiver_tpu_strips_latch/part.stl",
+"material": "TPU",
+"mass_g": 2.0,
+"tag": "M",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "receiver_tpu_strips_latch"
+},
+{
+"name": "receiver TPU end pieces (latch, E)",
+"role": "cage",
+"mesh": "parts/receiver_tpu_end_pieces_latch_e/part.stl",
+"material": "TPU",
+"mass_g": 8.2,
+"tag": "M",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "receiver_tpu_end_pieces_latch_e"
+},
+{
+"name": "XT60E1-M",
+"role": "bought",
+"protect": true,
+"mesh": "parts/xt60e1_m/part.stl",
+"mass_g": 6.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "xt60e1_m"
+},
+{
+"name": "cartridge v6 (latch)",
+"role": "protected",
+"protect": true,
+"swap": true,
+"mesh": "parts/cartridge_v6_latch/part.stl",
+"material": "PETG",
+"mass_g": 37.9,
+"tag": "M",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "cartridge_v6_latch"
+},
+{
+"name": "slider +y (latch)",
+"role": "protected",
+"protect": true,
+"swap": true,
+"mesh": "parts/slider_y_latch/part.stl",
+"material": "PETG",
+"mass_g": 2.9,
+"tag": "M",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "slider_y_latch"
+},
+{
+"name": "slider -y (latch)",
+"role": "protected",
+"protect": true,
+"swap": true,
+"mesh": "parts/slider_y_latch/part.stl",
+"material": "PETG",
+"mass_g": 2.9,
+"tag": "M",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "slider_y_latch"
+},
+{
+"name": "cartridge v6 strips (latch, TPU)",
+"role": "cage",
+"swap": true,
+"mesh": "parts/cartridge_v6_strips_latch_tpu/part.stl",
+"material": "TPU",
+"mass_g": 2.2,
+"tag": "M",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "cartridge_v6_strips_latch_tpu"
+},
+{
+"name": "cartridge skid closed end (latch, TPU)",
+"role": "cage",
+"swap": true,
+"mesh": "parts/cartridge_skid_closed_end_latch_tpu/part.stl",
+"material": "TPU",
+"mass_g": 1.4,
+"tag": "M",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "cartridge_skid_closed_end_latch_tpu"
+},
+{
+"name": "cartridge skid lead end (latch, TPU)",
+"role": "cage",
+"swap": true,
+"mesh": "parts/cartridge_skid_lead_end_latch_tpu/part.stl",
+"material": "TPU",
+"mass_g": 3.2,
+"tag": "M",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "cartridge_skid_lead_end_latch_tpu"
+},
+{
+"name": "pack 4S 1500",
+"role": "protected",
+"protect": true,
+"swap": true,
+"mesh": "parts/pack_4s_1500/part.stl",
+"mass_g": 155.0,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "pack_4s_1500"
+},
+{
+"name": "pack XT60 plug",
+"role": "bought",
+"protect": true,
+"swap": true,
+"mesh": "parts/pack_xt60_plug/part.stl",
+"mass_g": 10.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "pack_xt60_plug"
+},
+{
+"name": "tail bay mount block (Scout electronics, E)",
+"role": "structure",
+"mesh": "parts/tail_bay_mount_block_scout_electronics_e/part.stl",
+"material": "PETG",
+"mass_g": 15.92,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "tail_bay_mount_block_scout_electronics_e"
+},
+{
+"name": "tail bay carrier (Scout electronics, E)",
+"role": "structure",
+"mesh": "parts/tail_bay_carrier_scout_electronics_e/part.stl",
+"material": "PETG",
+"mass_g": 33.28,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "tail_bay_carrier_scout_electronics_e"
+},
+{
+"name": "tail bay cables (Scout electronics, E)",
+"role": "structure",
+"mesh": "parts/tail_bay_cables_scout_electronics_e/part.stl",
+"mass_g": 6.27,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "tail_bay_cables_scout_electronics_e"
+},
+{
+"name": "camera",
+"role": "bought",
+"protect": true,
+"mesh": "parts/camera/part.stl",
+"mass_g": 10.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "camera"
+},
+{
+"name": "tie saddle (printed)",
+"role": "cage",
+"mesh": "parts/tie_saddle_printed/part.stl",
+"material": "PETG",
+"mass_g": 17.01,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "nox/scout/v3/layout_v3.py",
+"id": "tie_saddle_printed"
+},
+{
+"name": "wires",
+"role": "structure",
+"box": [
+-26.06,
+24.86,
+-25.46,
+25.46,
+9.5,
+17.5
+],
+"mass_g": 20.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3",
+"source": "nox/scout/v3/layout_v3.py",
+"note": "envelope = the FC's (E)",
+"id": "wires"
+},
+{
+"name": "camera mount (printed)",
+"role": "cage",
+"mesh": "parts/camera_mount_printed/part.stl",
+"material": "PETG",
+"mass_g": 21.75,
+"tag": "M",
+"owner": "scout camera mount",
+"version": "v1",
+"source": "nox/scout/v3/camera_mount.py",
+"id": "camera_mount_printed"
+},
+{
+"name": "camera mount stop collar +y",
+"role": "cage",
+"mesh": "parts/camera_mount_stop_collar_y/part.stl",
+"material": "PETG",
+"mass_g": 0.25,
+"tag": "M",
+"owner": "scout camera mount",
+"version": "v1",
+"source": "nox/scout/v3/camera_mount.py",
+"id": "camera_mount_stop_collar_y"
+},
+{
+"name": "camera mount stop collar -y",
+"role": "cage",
+"mesh": "parts/camera_mount_stop_collar_y/part.stl",
+"material": "PETG",
+"mass_g": 0.25,
+"tag": "M",
+"owner": "scout camera mount",
+"version": "v1",
+"source": "nox/scout/v3/camera_mount.py",
+"id": "camera_mount_stop_collar_y"
+}
+],
+"mass_budget_g": 500,
+"cage_shell": {
+"nodes": [
+[
+83.3,
+116.1,
+-49.621
+],
+[
+-71.4,
+119.7,
+-49.621
+],
+[
+-71.4,
+-119.7,
+-49.621
+],
+[
+83.3,
+-116.1,
+-49.621
+],
+[
+-166.338,
+0.0,
+61.473
+],
+[
+-1.018,
+125.052,
+-11.894
+],
+[
+-1.018,
+-125.052,
+-11.894
+],
+[
+110.506,
+-96.335,
+61.119
+],
+[
+110.506,
+96.335,
+61.119
+],
+[
+-239.044,
+0.0,
+41.473
+],
+[
+-93.12,
+-116.91,
+61.473
+],
+[
+-93.12,
+116.91,
+61.473
+],
+[
+44.808,
+132.776,
+44.145
+],
+[
+44.808,
+-132.776,
+44.145
+],
+[
+122.589,
+62.163,
+11.536
+],
+[
+122.589,
+-62.163,
+11.536
+],
+[
+-26.313,
+0.0,
+61.332
+],
+[
+116.548,
+0.0,
+36.328
+],
+[
+102.945,
+0.0,
+-19.043
+]
+],
+"rods": [
+[
+0,
+1
+],
+[
+0,
+3
+],
+[
+0,
+5
+],
+[
+0,
+8
+],
+[
+0,
+12
+],
+[
+0,
+14
+],
+[
+0,
+18
+],
+[
+1,
+2
+],
+[
+1,
+5
+],
+[
+1,
+9
+],
+[
+1,
+11
+],
+[
+1,
+12
+],
+[
+2,
+3
+],
+[
+2,
+6
+],
+[
+2,
+9
+],
+[
+2,
+10
+],
+[
+2,
+13
+],
+[
+3,
+6
+],
+[
+3,
+7
+],
+[
+3,
+13
+],
+[
+3,
+15
+],
+[
+3,
+18
+],
+[
+4,
+9
+],
+[
+4,
+10
+],
+[
+4,
+11
+],
+[
+4,
+16
+],
+[
+5,
+12
+],
+[
+6,
+13
+],
+[
+7,
+8
+],
+[
+7,
+10
+],
+[
+7,
+13
+],
+[
+7,
+15
+],
+[
+7,
+16
+],
+[
+7,
+17
+],
+[
+8,
+11
+],
+[
+8,
+12
+],
+[
+8,
+14
+],
+[
+8,
+16
+],
+[
+8,
+17
+],
+[
+9,
+10
+],
+[
+9,
+11
+],
+[
+10,
+13
+],
+[
+10,
+16
+],
+[
+11,
+12
+],
+[
+11,
+16
+],
+[
+14,
+15
+],
+[
+14,
+17
+],
+[
+14,
+18
+],
+[
+15,
+17
+],
+[
+15,
+18
+]
+],
+"links": 8,
+"link_r_mm": 1.5,
+"total_rods": 58,
+"open": [
+{
+"name": "bottom opening (pack + swap): the Overseer cage v5 base loop's 4 side nodes",
+"ring": [
+0,
+1,
+2,
+3
+]
+}
+],
+"node_r_mm": 6.0,
+"rod_r_mm": 1.5
+}
+}
