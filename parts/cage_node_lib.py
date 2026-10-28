@@ -113,8 +113,10 @@ def verify_cuts(n, ms, cuts, log=print):
     log(f"  members check: {len(ms)} sockets, every member lands in a bore of node {n} (bore from {NODE_R} mm)")
 
 
-def build(n, h, log=print):
+def build(n, h, log=print, extra=None):
+    """extra(c, ms) -> dict(drawn=[...], cuts=[...], env=[...], loads=fn(p)): what a node carries besides its sockets (node 21: the camera)"""
     ms = check_members(n, log)
+    ex = extra(NODES[n], ms) if extra else {}
     c = NODES[n]
     base = n in BASE
     # ---- drawn: collars (wall + floor) and the landing face; cuts: bores, and a keep-out round each member beyond its collar
@@ -145,12 +147,14 @@ def build(n, h, log=print):
     box = mf.Manifold.cube((hi - lo).tolist()).translate(lo.tolist())
     ball = mf.Manifold.sphere(max(np.linalg.norm(pts - c, axis=1)) + MARGIN * 0.75, 48).translate(c.tolist())
     env = box ^ ball
-    drawn = U(collars + arms + ([foot] if base else []))
-    cuts = U(bores + keep)
+    drawn = U(collars + arms + ([foot] if base else []) + ex.get("drawn", []))
+    cuts = U(bores + keep + ex.get("cuts", []))
+    if ex.get("env"):
+        env = U([env] + ex["env"])
     verify_cuts(n, ms, cuts, log)
     p = Part(f"overseer_cage_node_{n}", h, drawn, cuts, env, build="+z", material="PETG")
     # ---- supports: the sockets of the two tubes with the largest frame-model axial force
-    tubes = sorted([m for m in ms if m["kind"] == "tube"], key=lambda m: -m["axial"])
+    tubes = sorted([m for m in ms if m["kind"] == "tube"] or ms, key=lambda m: -m["axial"])     # a node on rods only (21): its rods hold it
     sup = tubes[:2]
     lining = lambda m, grow=1.0: along(c, m["u"], NODE_R - FLOOR - 0.5, m["s_end"], m["bore_r"] + grow)   # bore wall + floor
     p.support("default", U([lining(m, 1.4) for m in sup]))
@@ -174,8 +178,10 @@ def build(n, h, log=print):
         face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb - 0.5, zb + 1.0, FOOT_R + 0.5)
         fz = LAND_G * DRONE_G * GN / LAND_FEET
         p.load_multi(f"landing 6 g on the foot ({fz:.0f} N up, 3 of 6 feet)", [(face, np.array([0, 0, fz]))], cls="flight")
+    if ex.get("loads"):
+        ex["loads"](p)
     return p
 
 
-def make(n):
-    return lambda h: build(n, h)
+def make(n, extra=None):
+    return lambda h: build(n, h, extra=extra)

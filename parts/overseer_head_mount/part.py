@@ -180,9 +180,9 @@ def bodies():
         pts, base = cam_boss_pts(c)
         for q in pts:
             drawn.append(along(q, q - c["f"] * CAM_BOSS_L, 6.0))
-            drawn.append(along(q - c["f"] * (CAM_BOSS_L - 0.5), q - c["f"] * (CAM_BOSS_L + 2.5), 8.0))   # gusset flange O16 x 2.5 behind the boss (28 Oct; x 5 made a 10 mm block)
             cuts.append(along(q + c["f"] * 1.0, q - c["f"] * 5.7, 1.6))
         cuts.append(fbox(base, c["f"], c["r"], c["u"], (0.0, 25.0), (-22.0, 22.0), (-22.0, 22.0)))          # board + body (38 x 38 + clearance)
+        drawn.append(fbox(base, c["f"], c["r"], c["u"], (-CAM_BOSS_L - 3.0, -CAM_BOSS_L + 0.5), (-19.0, 19.0), (-19.0, 19.0)))   # back plate 38 x 38 x 3 joining the 4 bosses: one wide seat for the body to grow on (28 Oct, the v6 run split single bosses off)
         cuts.append(frustum(c))
         envs_cam.append(fbox(base, c["f"], c["r"], c["u"], (-34.0, 0.0), (-22.0, 22.0), (-22.0, 22.0)))
     # --- sockets

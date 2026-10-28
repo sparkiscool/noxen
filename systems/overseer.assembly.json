@@ -1978,7 +1978,7 @@
    "role": "cage",
    "mesh": "parts/cage_shell_tubes/part.stl",
    "material": "carbon",
-   "mass_g": 364.9,
+   "mass_g": 370.1,
    "cg": [
     56.7,
     -0.0,
@@ -1986,7 +1986,7 @@
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "cage v6 (rod cut: 54 tubes, 21 nodes)",
+   "version": "cage v6 (rod cut: 54 tubes, 21 nodes) + 3 camera rods 3 mm to node 21",
    "source": "systems/overseer.cage.json rods, r 3 cylinders node centre to node centre",
    "id": "cage_shell_tubes",
    "group": "cage",
@@ -2467,6 +2467,28 @@
    "id": "overseer_cage_node_20",
    "group": "cage",
    "color": "#7d8a99"
+  },
+  {
+   "name": "cage node 21 (rear camera node)",
+   "role": "cage",
+   "mesh": "parts/overseer_cage_node_21/part.stl",
+   "material": "PETG",
+   "mass_g": 16.0,
+   "tag": "E",
+   "owner": "overseer",
+   "version": "v6 setup (sunk camera node on three 3 mm rods to 13, 14, 5)",
+   "id": "overseer_cage_node_21",
+   "group": "cage",
+   "color": "#7d8a99",
+   "sphere": {
+    "center": [
+     -243.8,
+     0.0,
+     39.41
+    ],
+    "r": 14.0
+   },
+   "budget_g": 18
   },
   {
    "name": "spokes, ties, head rods",
@@ -3045,19 +3067,6 @@
    "color": "#aab4c0"
   },
   {
-   "id": "overseer_rear_camera_mount",
-   "name": "rear camera mount (floor and behind)",
-   "role": "structure",
-   "group": "printed",
-   "color": "#aab4c0",
-   "material": "PETG",
-   "mass_g": 11.4,
-   "tag": "E",
-   "version": "v1 setup (clamp on tube 13-14, camera pitched 40 deg down, lens 11 inside the rear facet)",
-   "mesh": "parts/overseer_rear_camera_mount/part.stl",
-   "budget_g": 12
-  },
-  {
    "id": "camera_rear",
    "name": "camera rear (floor and behind)",
    "role": "bought",
@@ -3066,15 +3075,15 @@
    "mass_g": 15.0,
    "tag": "E",
    "box": [
-    -294.7,
-    -278.7,
-    -14,
-    14,
-    44.554,
-    72.554
+    -265.12,
+    -249.12,
+    -14.0,
+    14.0,
+    12.55,
+    40.55
    ],
    "pose": null,
-   "note": "DECXIN 2633V2 at the tail, facing -x, 40 deg down (C)"
+   "note": "DECXIN 2633V2 on cage node 21, facing -x, 40 deg down, lens 26 mm inside the rear facet (C)"
   }
  ],
  "mass_budget_g": 2200,
@@ -3507,9 +3516,9 @@
    },
    {
     "lens": [
-     -288.7,
+     -259.121,
      0.0,
-     58.554
+     26.554
     ],
     "f": [
      -0.766,
@@ -3523,7 +3532,7 @@
     ],
     "r": [
      0.0,
-     -1.0,
+     1.0,
      0.0
     ],
     "ha": 44.5,

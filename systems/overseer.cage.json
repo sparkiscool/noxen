@@ -1,5 +1,5 @@
 {
- "note": "Overseer cage v6 geometry (Spark 28 Oct, rod cut: v5 nodes 21, 22, 23 removed, their 12 tubes replaced by 7-9, 7-10, 7-20; 54 tubes, 21 nodes, shell closed, crash probes as v5) and the frame model socket loads, for node, head mount and arm setups. Frame: x fwd, y left, z up, mm, z 0 = bottom plate top. nodes: 24 node centres (index = node id; mirrors: 0<->4, 1<->3, 8<->6, 9<->10, 12<->11, 14<->13, 16<->15, 19<->18, 22<->23 share a design, the design is the lower-numbered of each pair except 0->4, 1->3, 8->6, 9->10, 12->11, 14->13, 16->15, 19->18, 22->23 where the design is the second). rods: cage tubes as node index pairs (6/4 carbon, r 3.0, socket bore 6.2, 15 deep). tubes/links: from runs/overseer_layout/v5/result.json in nox (C). node_loads: per node, per member, axial N and side N from the frame model (runs/overseer_frame/v1, F). node_loads of tubes 7-9, 7-10, 7-20: taken from the v5 members they replace (7-22/9-22, 7-23/10-23, the larger of 7-21/20-21), tag E until the frame model reruns on v6.",
+ "note": "Overseer cage v6 geometry (Spark 28 Oct, rod cut: v5 nodes 21, 22, 23 removed, their 12 tubes replaced by 7-9, 7-10, 7-20; 54 tubes, 21 nodes, shell closed, crash probes as v5) and the frame model socket loads, for node, head mount and arm setups. Frame: x fwd, y left, z up, mm, z 0 = bottom plate top. nodes: 24 node centres (index = node id; mirrors: 0<->4, 1<->3, 8<->6, 9<->10, 12<->11, 14<->13, 16<->15, 19<->18, 22<->23 share a design, the design is the lower-numbered of each pair except 0->4, 1->3, 8->6, 9->10, 12->11, 14->13, 16->15, 19->18, 22->23 where the design is the second). rods: cage tubes as node index pairs (6/4 carbon, r 3.0, socket bore 6.2, 15 deep). tubes/links: from runs/overseer_layout/v5/result.json in nox (C). node_loads: per node, per member, axial N and side N from the frame model (runs/overseer_frame/v1, F). node_loads of tubes 7-9, 7-10, 7-20: taken from the v5 members they replace (7-22/9-22, 7-23/10-23, the larger of 7-21/20-21), tag E until the frame model reruns on v6. Node 21 (Spark 28 Oct): the rear camera node, sunk 45 mm inside the rear facet 13-14-5 on three 3 mm rods ('camera rod 13/14/5' in links, 1.6 bore) so a tail-first hit lands on the facet tubes, lens 26 mm inside the plane; its rod loads are 100 N / 3 N estimates (E, no frame model yet).",
  "nodes": [
   [
    -98.857,
@@ -105,6 +105,11 @@
    -171.791,
    0.0,
    107.927
+  ],
+  [
+   -243.8,
+   0.0,
+   39.41
   ]
  ],
  "rods": [
@@ -700,6 +705,42 @@
     -222.96,
     128.72
    ]
+  ],
+  "camera rod 13": [
+   [
+    -312.468,
+    150.8,
+    86.788
+   ],
+   [
+    -243.8,
+    0.0,
+    39.41
+   ]
+  ],
+  "camera rod 14": [
+   [
+    -312.468,
+    -150.8,
+    86.788
+   ],
+   [
+    -243.8,
+    0.0,
+    39.41
+   ]
+  ],
+  "camera rod 5": [
+   [
+    -242.566,
+    0.0,
+    -79.9
+   ],
+   [
+    -243.8,
+    0.0,
+    39.41
+   ]
   ]
  },
  "l2_axis": [
@@ -865,6 +906,11 @@
    "tube 5-14": {
     "axial": 415.0398534722226,
     "side": 2.010022477590004
+   },
+   "camera rod 5": {
+    "axial": 100.0,
+    "side": 3.0,
+    "tag": "E"
    }
   },
   "12": {
@@ -1125,6 +1171,11 @@
    "core tie left.2": {
     "axial": 670.4657080809893,
     "side": 0.9898004642055046
+   },
+   "camera rod 13": {
+    "axial": 100.0,
+    "side": 3.0,
+    "tag": "E"
    }
   },
   "14": {
@@ -1155,6 +1206,11 @@
    "core tie right.2": {
     "axial": 333.3265333365286,
     "side": 0.9898004642268448
+   },
+   "camera rod 14": {
+    "axial": 100.0,
+    "side": 3.0,
+    "tag": "E"
    }
   },
   "6": {
@@ -1383,6 +1439,23 @@
    "head rod c": {
     "axial": 115.69142200423994,
     "side": 125.91773626882382
+   }
+  },
+  "21": {
+   "camera rod 13": {
+    "axial": 100.0,
+    "side": 3.0,
+    "tag": "E"
+   },
+   "camera rod 14": {
+    "axial": 100.0,
+    "side": 3.0,
+    "tag": "E"
+   },
+   "camera rod 5": {
+    "axial": 100.0,
+    "side": 3.0,
+    "tag": "E"
    }
   }
  }
