@@ -2,8 +2,8 @@
 
 Drawn: ONLY the socket walls and floors (a collar of 2.0 mm round each bore, 3.0 mm floor behind it) and, on the six base nodes,
 a small flat PETG landing face at the node's lowest point. Everything joining them is generated inside a compact envelope
-(the sockets' box + 8 mm, cut to a ball). The tubes/rods themselves are cuts, through the whole envelope. Drawn gusset (28 Oct, v6 runs
-split every collar off in the solid gate): O7 arms from the centre to each collar root and a stem to the foot, one drawn body.
+(the sockets' box + 8 mm, cut to a ball). The tubes/rods themselves are cuts, through the whole envelope. (28 Oct: drawn arms from the
+centre to every collar were added when the solid gate "split every collar off", and removed when that turned out to be voxel dust in the gate.)
 
 Members of node n come from systems/overseer.cage.json: the cage tubes (rods) that end at n and the named links whose endpoint
 is n. Socket axis = the direction from the node centre to the member's far end; the bore starts node_r_mm (10.15) from the node
@@ -28,8 +28,6 @@ NODES = np.array(CAGE["nodes"], float)
 NODE_R = float(CAGE["node_r_mm"])                     # 10.15: where the bores start
 BASE = {0, 1, 2, 3, 4, 5}                             # the base loop, z -79.9
 WALL, FLOOR, MARGIN = 2.0, 3.0, 8.0
-ARM_R = 2.5                                           # drawn gusset: O5 arms from the node centre to every collar root, one body (a 2 mm gate erosion leaves a O1 core; O5.5 put node 13 (8 members) at the block limit,
-                                                      # O7 made the arms' junction a 9 mm core, over the audit's 8 mm block limit)
 KIND = {"tube": dict(bore_r=3.1, depth=15.0), "link": dict(bore_r=1.6, depth=10.0)}   # bore 6.2 / 3.2
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
 LAND_FEET = 3                                         # a flat landing may rest on 3 of the 6 feet (E)
@@ -136,18 +134,16 @@ def build(n, h, log=print, extra=None):
                 pts.append(c + m["u"] * s + ro * (np.cos(a) * e1 + np.sin(a) * e2))
     pts = np.array(pts)
     lo, hi = pts.min(0) - MARGIN, pts.max(0) + MARGIN
-    arms = [along(c, m["u"], 0.0, NODE_R - FLOOR + 0.5, ARM_R) for m in ms]       # gusset: every collar joined to the centre
     foot = None
     if base:
         zb = c[2] - NODE_R - WALL                                # landing face bottom (z -92.05 on the base loop)
         foot = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + FOOT_T, FOOT_R)
-        arms.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb + FOOT_T - 0.5, c[2], ARM_R))   # stem to the foot
         lo[2] = min(lo[2], zb - 0.5)
     import manifold3d as mf
     box = mf.Manifold.cube((hi - lo).tolist()).translate(lo.tolist())
     ball = mf.Manifold.sphere(max(np.linalg.norm(pts - c, axis=1)) + MARGIN * 0.75, 48).translate(c.tolist())
     env = box ^ ball
-    drawn = U(collars + arms + ([foot] if base else []) + ex.get("drawn", []))
+    drawn = U(collars + ([foot] if base else []) + ex.get("drawn", []))
     cuts = U(bores + keep + ex.get("cuts", []))
     if ex.get("env"):
         env = U([env] + ex["env"])

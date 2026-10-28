@@ -437,37 +437,28 @@ def t_end_to_end():
         check("end to end", False, str(e))
 
 
-def t_audit_gusset():
-    """audit: a loaded drawn pad 4 mm thick with no gusset is refused (GUSSET_MM 5); the same pad on an 8 mm drawn stem passes that rule."""
-    from .audit import audit, SetupError
-    import manifold3d as mf
-    from .part import Part
-    box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
-    def part(stem):
-        base = box(0, 3, 0, 20, 0, 20)
-        pad = box(20, 24, 7, 13, 7, 13) + (box(12, 21, 6, 14, 6, 14) if stem else mf.Manifold())
-        p = Part("gusset", 1.0, base + pad, box(100, 101, 100, 101, 100, 101), box(0, 24, 0, 20, 0, 20), log=lambda s: None)
-        p.support("default", box(-1, 1.5, -1, 21, -1, 21))
-        p.load("down", pad, (0, 0, -10.0))
-        return p
-    try:
-        audit(part(False), 3.2, log=lambda s: None)
-        ok, msg = False, "thin loaded pad without a gusset passed"
-    except SetupError as e:
-        ok, msg = "gusset:" in str(e), str(e).splitlines()[1][:60]
-    if ok:
-        try:
-            rep = audit(part(True), 3.2, log=lambda s: None)
-            ok, msg = True, f"refused without, ok with a stem ({len(rep['bodies'])} bodies)"
-        except SetupError as e:
-            ok, msg = False, "pad with an 8 mm stem refused: " + str(e)[:80]
-    RESULTS.append(("audit_gusset", ok)); print(f"audit gusset: {'ok' if ok else 'FAIL'} {msg}")
+def t_gate_specks():
+    """solid gate (tools/solid_check.py): a detached piece under 1 mm3 is voxel dust, not a body (28 Oct: node 7 "3 bodies" were two
+    single voxels, node 21's drawn core was "0.3 % off" in 41 pieces under 0.4 mm3, the head mount's "split-off" bosses the same);
+    a detached piece of 3 mm3 is still a body, and a detached drawn body is still caught by the drawn-core rule."""
+    import sys, os, trimesh
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools"))
+    from solid_check import solid_check
+    body = trimesh.creation.box((20.0, 20.0, 20.0))
+    speck = trimesh.creation.box((0.45, 0.45, 0.45)).apply_translation((14.0, 0.0, 0.0))     # 0.09 mm3, detached
+    blob = trimesh.creation.box((1.5, 1.5, 1.5)).apply_translation((14.0, 0.0, 0.0))        # 3.4 mm3, detached
+    pad = trimesh.creation.box((4.0, 4.0, 4.0)).apply_translation((14.0, 0.0, 0.0))         # a drawn pad left floating
+    ok1, i1 = solid_check(trimesh.util.concatenate([body, speck]))
+    ok2, i2 = solid_check(trimesh.util.concatenate([body, blob]))
+    ok3, i3 = solid_check(trimesh.util.concatenate([body, pad]), drawn=[pad])
+    ok = ok1 and i1["specks_plain"] == 1 and not ok2 and i2["bodies_plain"] == 2 and not ok3 and bool(i3["drawn_not_in_main"])
+    RESULTS.append(("gate_specks", ok)); print(f"gate specks: {'ok' if ok else 'FAIL'} speck {ok1}/{i1['specks_plain']} blob {ok2}/{i2['bodies_plain']} pad {ok3}/{i3['drawn_not_in_main']}")
 
 
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_audit_gusset):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_gate_specks):
         t()
     if not quick:
         t_end_to_end()
