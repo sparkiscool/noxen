@@ -66,8 +66,12 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
     hook = git_checkpoint(out_dir, log) if git else None
     ck = os.path.join(out_dir, "ck.npz")
     log(f"=== {name}: h {h}, generated {gen_cm3} cm3, min member {s.min_member_mm} mm, cores {os.cpu_count()}")
+    part0 = setup(h)
     if s.gate_member:
-        s = replace(s, min_member_mm=round(gate_member_mm(setup(h), s.min_member_mm, log=log), 2))
+        s = replace(s, min_member_mm=round(gate_member_mm(part0, s.min_member_mm, log=log), 2))
+    from .audit import audit
+    rep_audit = audit(part0, s.min_member_mm, log=log, hard=s.audit == "raise", floor_mm=settings.min_member_mm if settings else Settings.min_member_mm)
+    del part0
     xh_c = part_c = None
     if coarse and not os.path.exists(ck):
         part_c = setup(2.0 * h)
@@ -86,7 +90,7 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
     L.save(os.path.join(out_dir, "density.npz"))
     t_layout = time.time() - t0
     log(f"layout done: {t_layout:.0f} s, peak {peak_gb()} GB")
-    ex = dict(layout_s=round(t_layout), peak_gb=peak_gb(), gen_cm3=gen_cm3, h=h)
+    ex = dict(layout_s=round(t_layout), peak_gb=peak_gb(), gen_cm3=gen_cm3, h=h, audit=rep_audit)
     if extra:
         ex.update(extra)
     res, P = build_and_check(L, out_dir, name, log=log, extra=ex)

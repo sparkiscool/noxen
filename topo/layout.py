@@ -84,6 +84,7 @@ class Settings:
     fillet_mm: float = 2.5              # blend radius between generated material and the skins (and off keep-outs)
     skin_round_mm: float = 1.0          # the skins' free rims rounded with this radius (they never meet a cut there)
     reach_check: str = "raise"          # "raise" | "warn" | "off"
+    audit: str = "raise"                # setup audit (topo/audit.py): "raise" | "warn" | "off"
     auto_sym: bool = True
     backend: str = "auto"               # "auto" | "direct" | "mg"
     mg_tol: float = 1e-5

@@ -107,12 +107,14 @@ def hub_deck_bodies():
     bosses = [along(*keel_axis(sy), -2.0, SK["off"] + SK["l"], SK["od"] / 2) for sy in (1, -1)]
     # v7 (hub deck v6 FAILED strength: worst 2.72 in the top hit at the +y keel boss / front foot joint (94, 16, 8), 18 cm3 generated):
     # a drawn solid core round the keel bosses and the front feet (both sides), so that joint can't thin out
-    seats = [box(88.0, 104.0, sy * 8.0, sy * 24.0, 0, 14.0) for sy in (1, -1)]
+    # v10 (28 Oct, Spark: "a bunch of material stacked at the sockets, nothing at the rear"): the v7 seat blocks and the v9
+    # bars are gone. The audit (topo/audit.py) now refuses them: one drawn body held 84 % of the drawn material with a
+    # 9 mm core and 1.2 mm of room behind it. Attachments only; the room behind the sockets is opened instead (hub_env).
+    seats = []
     # v9 (hub deck v8: strength 0.34 but the build's drawn test cut the +y tower off at the 2.0 erosion: its only thick joint ran through
     # the centreline, where the cage's tie tubes and two wire routes cut): drawn bars from each tower core back to its mid feet beside
     # the bays (the -y one outside the UBEC's y -18), so both sides join the deck through solid
     ub_y0 = M["UBEC 5 V"].bounds[0][1]
-    seats += [box(58.0, 92.0, 17.0, 24.0, 0, 10.0), box(58.0, 92.0, ub_y0 - 1.5, ub_y0 - 8.5, 0, 10.0)]
     braces = [k for k in ROOTS if k.startswith("L2 brace")]
     bosses += [along(*root_axis(k), -BS["wall"], BS["l"] + BS["lead"], BS["d"] / 2 + BS["wall"]) for k in braces]
     # v5 (PR 148 review): a root web Ø12 x 6.0 under every Pi post (a gusset into the body; v4's bare Ø7 posts were 99.8 % in the main
@@ -128,7 +130,7 @@ def hub_deck_bodies():
     ties = json.load(open(os.path.join(INP, "layout_result.json")))["links"]   # the cage's front core ties (parked body node)
     tie_cut = [man(trimesh.creation.cylinder(4.0, np.linalg.norm(np.subtract(b, a)), sections=24, segment=np.array([a, b], float)))
                for k, (a, b) in ties.items() if k.startswith("core tie front")]
-    hub_env = box(80.0, 118.0, -34.0, 34.0, 0, 30.0)        # v8: the low roots (z 12 / 18) need z <= 30        # the front hub tower's room: keels and braces, gussets back to the feet and across
+    hub_env = box(56.0, 118.0, -34.0, 34.0, 0, 30.0)        # v10: back to x 56 (was 80) so a web can grow from the sockets to the mid feet
     plates = [man(M["top plate"])]
     bays = [box(m.bounds[0][0] - 1, m.bounds[1][0] + 1, m.bounds[0][1] - 1, m.bounds[1][1] + 1, T, Z_UNDER) for m in (M["UBEC 5 V"], M["buck 12 V"])]
     cuts = U(plates + bays + [cyl(x, y, -1, T + 1, INS[0] / 2) for x, y in feet] + tie_cut + [cyl(x, y, zp - 4.0, zp + 1, 1.1) for x, y in ph] + slots + bores + tubes + wires

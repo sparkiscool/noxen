@@ -17,6 +17,13 @@ python tools/dim.py <section>                                     # one section 
 - To fix or change a part: read `parts/<name>/feedback.md` (Spark's notes from the page) and `parts/<name>/result.json` (solid check, worst index, mass). Nothing else. Change the setup, push.
 - Never rerun or re-version a part on your own. Spark reviews every result on the page and asks for the next step.
 
+## Setup audit (runs before every solve, `topo/audit.py`)
+A run refuses to start when: drawn solid is over 30 % of the part; one drawn body holds over 60 % of the drawn
+material with a thick core (a drawn structure); any drawn body has a core over 8 mm away from every hole and face (a
+block); a loaded drawn body has less than one member of design room behind it. The fix is always the setup, never a
+`--set audit=warn`: delete the block, open the envelope behind the feature, move the cut. `result.json` carries the
+audit report; `python -m topo.run parts/<name> --h 2.5 --maxit 2 --no-coarse` runs it in a minute.
+
 ## Never
 - Run a full optimisation in a session. Never read meshes, logs, images or `inputs/`.
 - Edit `topo/` in a part session (engine changes are their own session, with `python -m topo.test_topo`).
