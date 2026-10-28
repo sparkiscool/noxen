@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nox assembly</title>
+<style>
+  :root { --bg:#111418; --panel:#1b2026; --text:#e6e8eb; --muted:#8a94a0; --line:#2a313a;
+          --done:#3fb950; --stale:#d29922; --failed:#f85149; --pending:#6e7681; --placed:#8b949e; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--text); font:14px/1.4 system-ui, sans-serif; }
+  #app { display:grid; grid-template-columns: 300px 1fr; height:100%; }
+  #side { background:var(--panel); border-right:1px solid var(--line); overflow:auto; padding:12px; }
+  #view { position:relative; }
+  canvas { display:block; }
+  h1 { font-size:16px; margin:4px 0 10px; }
+  .sys { margin-bottom:14px; }
+  .sys h2 { font-size:13px; color:var(--muted); margin:8px 0 4px; text-transform:uppercase; letter-spacing:.04em; }
+  .part { display:flex; align-items:center; gap:8px; padding:4px 6px; border-radius:4px; cursor:pointer; }
+  .part:hover { background:#232a32; }
+  .part.off { opacity:.4; }
+  .dot { width:9px; height:9px; border-radius:50%; flex:none; }
+  .nm { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .st { color:var(--muted); font-size:11px; }
+  #legend { position:absolute; left:12px; bottom:12px; background:rgba(27,32,38,.9); padding:8px 10px; border-radius:6px; font-size:12px; display:flex; gap:12px; flex-wrap:wrap; }
+  #legend span { display:inline-flex; align-items:center; gap:5px; }
+  #ctl { position:absolute; right:12px; top:12px; display:flex; gap:6px; }
+  button { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:4px; padding:5px 9px; cursor:pointer; }
+  input[type=range] { width:120px; }
+  @media (max-width:700px) { #app { grid-template-columns:1fr; grid-template-rows: 40% 60%; } #side { border-right:0; border-bottom:1px solid var(--line);} }
+</style>
+<script>/*INLINE*/</script>
+</head>
+<body>
+<div id="app">
+  <div id="side"><h1>Nox assembly</h1><div id="list"></div></div>
+  <div id="view">
+    <div id="ctl"><button id="fit">fit</button><button id="allon">all</button><button id="gen">generated only</button>
+      <label>explode <input id="explode" type="range" min="0" max="2" step="0.01" value="0"></label></div>
+    <div id="legend">
+      <span><i class="dot" style="background:var(--done)"></i>done</span>
+      <span><i class="dot" style="background:var(--stale)"></i>stale</span>
+      <span><i class="dot" style="background:var(--failed)"></i>failed</span>
+      <span><i class="dot" style="background:var(--pending)"></i>pending</span>
+      <span><i class="dot" style="background:var(--placed)"></i>bought / drawn</span>
+    </div>
+  </div>
+</div>
+<script type="importmap">{"imports":{"three":"https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const COLORS = { done:0x3fb950, stale:0xd29922, failed:0xf85149, pending:0x6e7681, placed:0x8b949e };
+const view = document.getElementById('view');
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(devicePixelRatio); view.appendChild(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x111418);
+const camera = new THREE.PerspectiveCamera(45, 1, 1, 20000);
+const controls = new OrbitControls(camera, renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x334455, 1.1));
+const dl = new THREE.DirectionalLight(0xffffff, 1.2); dl.position.set(1, 2, 3); scene.add(dl);
+scene.add(new THREE.GridHelper(600, 30, 0x2a313a, 0x1f252c).rotateX(Math.PI/2));
+
+const root = new THREE.Group(); scene.add(root);
+const groups = {};
+const loader = new GLTFLoader();
+const list = document.getElementById('list');
+
+async function load() {
+  const data = window.INLINE || await (await fetch('assembly.json', { cache:'no-store' })).json();
+  for (const s of data.systems) {
+    const sec = document.createElement('div'); sec.className = 'sys'; sec.innerHTML = `<h2>${s.name}</h2>`; list.appendChild(sec);
+    for (const p of s.parts) {
+      const g = new THREE.Group(); g.userData = p; root.add(g); groups[s.name + '/' + p.id] = g;
+      const row = document.createElement('div'); row.className = 'part';
+      row.innerHTML = `<i class="dot" style="background:var(--${p.status})"></i><span class="nm" title="${p.name}">${p.name}</span><span class="st">${p.mass_g ? Math.round(p.mass_g)+' g' : ''}</span>`;
+      row.onclick = () => { g.visible = !g.visible; row.classList.toggle('off', !g.visible); };
+      sec.appendChild(row);
+      loader.load(p.glb, (gltf) => {
+        const mat = new THREE.MeshStandardMaterial({ color: COLORS[p.status] || 0x888888, roughness:.6, metalness:.05,
+          transparent: p.kind === 'placeholder', opacity: p.kind === 'placeholder' ? .45 : 1 });
+        gltf.scene.traverse(o => { if (o.isMesh) { o.material = mat; } });
+        g.add(gltf.scene);
+        const b = new THREE.Box3().setFromObject(gltf.scene); b.getCenter(g.userData.center = new THREE.Vector3());
+        fit();
+      });
+    }
+  }
+}
+function fit() {
+  const b = new THREE.Box3().setFromObject(root); if (b.isEmpty()) return;
+  const c = b.getCenter(new THREE.Vector3()), r = b.getSize(new THREE.Vector3()).length() / 2;
+  controls.target.copy(c); camera.position.copy(c).add(new THREE.Vector3(1, -1.4, 0.9).normalize().multiplyScalar(r * 2.2));
+  camera.near = r / 100; camera.far = r * 20; camera.updateProjectionMatrix(); controls.update();
+}
+function resize() { const w = view.clientWidth, h = view.clientHeight; renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+document.getElementById('fit').onclick = fit;
+document.getElementById('allon').onclick = () => { for (const g of Object.values(groups)) g.visible = true; document.querySelectorAll('.part').forEach(r => r.classList.remove('off')); };
+document.getElementById('gen').onclick = () => { for (const g of Object.values(groups)) g.visible = g.userData.status !== 'placed'; };
+document.getElementById('explode').oninput = (e) => {
+  const k = +e.target.value; const c = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
+  for (const g of Object.values(groups)) { if (!g.userData.center) continue; g.position.copy(g.userData.center).sub(c).multiplyScalar(k); }
+};
+(function loop() { requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); })();
+load();
+</script>
+</body>
+</html>

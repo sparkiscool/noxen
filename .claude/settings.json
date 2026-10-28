@@ -1,0 +1,11 @@
+{
+  "model": "sonnet",
+  "autoCompactWindow": "100k",
+  "permissions": {
+    "deny": [
+      "Read(parts/**/*.stl)", "Read(parts/**/*.glb)", "Read(parts/**/*.npz)", "Read(parts/**/*.png)",
+      "Read(parts/**/log.txt)", "Read(parts/**/inputs/**)", "Read(site/meshes/**)",
+      "Bash(git push --force*)", "Bash(git push -f*)"
+    ]
+  }
+}

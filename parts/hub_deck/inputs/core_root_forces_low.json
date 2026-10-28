@@ -1,0 +1,199 @@
+{
+ "note": "WHAT-IF (core session, 27 Oct): brace tube ends lo (97, \u00b126, 12), hi (97, \u00b114, 18); axial N (+ tension), no SF, F on E; head mode 155.3 Hz on PETG nodes; worst member buckling (2.33, 'tube 1-19')",
+ "points": {
+  "L2 brace lo +1": {
+   "core": [
+    97.0,
+    26.0,
+    12.0
+   ],
+   "lug": [
+    379.7,
+    46.0,
+    54.23
+   ]
+  },
+  "L2 brace hi +1": {
+   "core": [
+    97.0,
+    14.0,
+    18.0
+   ],
+   "lug": [
+    383.32,
+    46.0,
+    67.75
+   ]
+  },
+  "L2 brace lo -1": {
+   "core": [
+    97.0,
+    -26.0,
+    12.0
+   ],
+   "lug": [
+    379.7,
+    -46.0,
+    54.23
+   ]
+  },
+  "L2 brace hi -1": {
+   "core": [
+    97.0,
+    -14.0,
+    18.0
+   ],
+   "lug": [
+    383.32,
+    -46.0,
+    67.75
+   ]
+  },
+  "keel +1": {
+   "core": [
+    100.9,
+    12.59,
+    8.8
+   ],
+   "lug": [
+    379.7,
+    46.0,
+    54.23
+   ]
+  },
+  "keel -1": {
+   "core": [
+    100.9,
+    -12.59,
+    8.8
+   ],
+   "lug": [
+    379.7,
+    -46.0,
+    54.23
+   ]
+  }
+ },
+ "cases": {
+  "crash 0 [1.0, 0.0, 0.0] via head guard": {
+   "L2 brace lo +1": -186.7,
+   "L2 brace hi +1": -181.8,
+   "L2 brace lo -1": -186.7,
+   "L2 brace hi -1": -181.8,
+   "keel +1": -159.5,
+   "keel -1": -159.5
+  },
+  "crash 1 [-1.0, 0.0, 0.0] via node 13": {
+   "L2 brace lo +1": 18.9,
+   "L2 brace hi +1": 118.5,
+   "L2 brace lo -1": -30.1,
+   "L2 brace hi -1": 136.2,
+   "keel +1": -37.6,
+   "keel -1": -11.5
+  },
+  "crash 2 [0.0, 1.0, 0.0] via node 10": {
+   "L2 brace lo +1": 34.4,
+   "L2 brace hi +1": -19.1,
+   "L2 brace lo -1": -35.5,
+   "L2 brace hi -1": 17.7,
+   "keel +1": -21.5,
+   "keel -1": 19.7
+  },
+  "crash 3 [0.0, -1.0, 0.0] via node 9": {
+   "L2 brace lo +1": -35.5,
+   "L2 brace hi +1": 17.7,
+   "L2 brace lo -1": 34.4,
+   "L2 brace hi -1": -19.1,
+   "keel +1": 19.7,
+   "keel -1": -21.5
+  },
+  "crash 4 [0.0, 0.0, 1.0] via head guard": {
+   "L2 brace lo +1": 177.8,
+   "L2 brace hi +1": 176.6,
+   "L2 brace lo -1": 177.8,
+   "L2 brace hi -1": 176.6,
+   "keel +1": 20.4,
+   "keel -1": 20.4
+  },
+  "crash 5 [0.0, 0.0, -1.0] via node 0": {
+   "L2 brace lo +1": -5.2,
+   "L2 brace hi +1": 21.4,
+   "L2 brace lo -1": 2.9,
+   "L2 brace hi -1": 18.2,
+   "keel +1": -2.4,
+   "keel -1": -5.7
+  },
+  "crash 6 [0.58, 0.58, 0.58] via node 15": {
+   "L2 brace lo +1": 76.4,
+   "L2 brace hi +1": -39.6,
+   "L2 brace lo -1": 50.9,
+   "L2 brace hi -1": -24.7,
+   "keel +1": -8.7,
+   "keel -1": 21.3
+  },
+  "crash 7 [0.58, 0.58, -0.58] via node 18": {
+   "L2 brace lo +1": 2.0,
+   "L2 brace hi +1": -79.7,
+   "L2 brace lo -1": -93.7,
+   "L2 brace hi -1": -35.4,
+   "keel +1": -6.6,
+   "keel -1": 46.3
+  },
+  "crash 8 [0.58, -0.58, 0.58] via node 16": {
+   "L2 brace lo +1": 50.9,
+   "L2 brace hi +1": -24.7,
+   "L2 brace lo -1": 76.4,
+   "L2 brace hi -1": -39.6,
+   "keel +1": 21.3,
+   "keel -1": -8.7
+  },
+  "crash 9 [0.58, -0.58, -0.58] via node 19": {
+   "L2 brace lo +1": -93.7,
+   "L2 brace hi +1": -35.4,
+   "L2 brace lo -1": 2.0,
+   "L2 brace hi -1": -79.7,
+   "keel +1": 46.3,
+   "keel -1": -6.6
+  },
+  "crash 10 [-0.58, 0.58, 0.58] via node 13": {
+   "L2 brace lo +1": -9.1,
+   "L2 brace hi +1": -164.6,
+   "L2 brace lo -1": 25.8,
+   "L2 brace hi -1": -176.3,
+   "keel +1": 42.2,
+   "keel -1": 26.4
+  },
+  "crash 11 [-0.58, 0.58, -0.58] via node 11": {
+   "L2 brace lo +1": 38.2,
+   "L2 brace hi +1": 136.8,
+   "L2 brace lo -1": -95.6,
+   "L2 brace hi -1": 189.9,
+   "keel +1": -60.2,
+   "keel -1": 3.4
+  },
+  "crash 12 [-0.58, -0.58, 0.58] via node 14": {
+   "L2 brace lo +1": 25.8,
+   "L2 brace hi +1": -176.3,
+   "L2 brace lo -1": -9.1,
+   "L2 brace hi -1": -164.6,
+   "keel +1": 26.4,
+   "keel -1": 42.2
+  },
+  "crash 13 [-0.58, -0.58, -0.58] via node 12": {
+   "L2 brace lo +1": -95.6,
+   "L2 brace hi +1": 189.9,
+   "L2 brace lo -1": 38.2,
+   "L2 brace hi -1": 136.8,
+   "keel +1": 3.4,
+   "keel -1": -60.2
+  },
+  "flight 4 g down": {
+   "L2 brace lo +1": 3.1,
+   "L2 brace hi +1": 0.3,
+   "L2 brace lo -1": 3.1,
+   "L2 brace hi -1": 0.3,
+   "keel +1": 0.6,
+   "keel -1": 0.6
+  }
+ }
+}

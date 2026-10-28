@@ -1,0 +1,10 @@
+__pycache__/
+*.npz
+parts/*/log.txt
+parts/*/*_view.stl
+# the engine writes <name>.stl and copies it to part.stl; only part.stl is kept
+parts/*/*.stl
+!parts/*/part.stl
+site/meshes/
+site/assembly.json
+site/standalone.html

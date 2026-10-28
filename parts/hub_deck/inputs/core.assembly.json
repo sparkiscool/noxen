@@ -1,0 +1,2223 @@
+{
+"machine": "overseer",
+"cg_ref": [
+66.408,
+0.0,
+82.0
+],
+"thrust_axis": [
+0,
+0,
+1
+],
+"cg_tol_mm": 3.0,
+"cage_margin_mm": 3.0,
+"guard_offsets": {
+"shell tubes to prop disks, 3D (G)": 20.3
+},
+"mass_budget_g": 2200,
+"cage_shell": {
+"nodes": [
+[
+-98.857,
+-119.695,
+-57.0
+],
+[
+55.805,
+-116.056,
+-57.0
+],
+[
+161.159,
+0.0,
+-57.0
+],
+[
+55.805,
+116.056,
+-57.0
+],
+[
+-98.857,
+119.695,
+-57.0
+],
+[
+-242.566,
+0.0,
+-57.0
+],
+[
+170.184,
+323.658,
+114.988
+],
+[
+198.139,
+0.0,
+131.482
+],
+[
+170.184,
+-323.658,
+114.988
+],
+[
+-53.997,
+-327.4,
+125.899
+],
+[
+-53.997,
+327.4,
+125.899
+],
+[
+-65.244,
+326.855,
+4.09
+],
+[
+-65.244,
+-326.855,
+4.09
+],
+[
+-312.468,
+150.8,
+86.788
+],
+[
+-312.468,
+-150.8,
+86.788
+],
+[
+353.976,
+222.965,
+128.718
+],
+[
+353.976,
+-222.965,
+128.718
+],
+[
+357.076,
+0.0,
+47.645
+],
+[
+336.454,
+218.966,
+-29.319
+],
+[
+336.454,
+-218.966,
+-29.319
+],
+[
+-171.791,
+0.0,
+107.927
+],
+[
+-57.841,
+0.0,
+129.097
+],
+[
+72.764,
+-168.082,
+130.996
+],
+[
+72.764,
+168.082,
+130.996
+]
+],
+"rods": [
+[
+0,
+1
+],
+[
+0,
+5
+],
+[
+0,
+12
+],
+[
+1,
+2
+],
+[
+1,
+12
+],
+[
+1,
+19
+],
+[
+2,
+3
+],
+[
+2,
+18
+],
+[
+2,
+19
+],
+[
+3,
+4
+],
+[
+3,
+11
+],
+[
+3,
+18
+],
+[
+4,
+5
+],
+[
+4,
+11
+],
+[
+5,
+11
+],
+[
+5,
+12
+],
+[
+5,
+13
+],
+[
+5,
+14
+],
+[
+6,
+7
+],
+[
+6,
+10
+],
+[
+6,
+11
+],
+[
+6,
+15
+],
+[
+6,
+18
+],
+[
+6,
+23
+],
+[
+7,
+8
+],
+[
+7,
+15
+],
+[
+7,
+16
+],
+[
+7,
+21
+],
+[
+7,
+22
+],
+[
+7,
+23
+],
+[
+8,
+9
+],
+[
+8,
+12
+],
+[
+8,
+16
+],
+[
+8,
+19
+],
+[
+8,
+22
+],
+[
+9,
+12
+],
+[
+9,
+14
+],
+[
+9,
+20
+],
+[
+9,
+21
+],
+[
+9,
+22
+],
+[
+10,
+11
+],
+[
+10,
+13
+],
+[
+10,
+20
+],
+[
+10,
+21
+],
+[
+10,
+23
+],
+[
+11,
+13
+],
+[
+11,
+18
+],
+[
+12,
+14
+],
+[
+12,
+19
+],
+[
+13,
+14
+],
+[
+13,
+20
+],
+[
+14,
+20
+],
+[
+15,
+16
+],
+[
+15,
+17
+],
+[
+15,
+18
+],
+[
+16,
+17
+],
+[
+16,
+19
+],
+[
+17,
+18
+],
+[
+17,
+19
+],
+[
+18,
+19
+],
+[
+20,
+21
+],
+[
+21,
+22
+],
+[
+21,
+23
+]
+],
+"open": [
+{
+"name": "bottom opening (pack + swap)",
+"ring": [
+0,
+1,
+2,
+3,
+4,
+5
+]
+}
+],
+"node_r_mm": 10.15,
+"rod_r_mm": 3.0
+},
+"balance_no_swap_gate": false,
+"name": "Overseer core v3",
+"note": "Overseer core v2 (27 Oct, Spark: everything inside the cage except the arms and the nodes, the keel roots of the L2 head included; the battery side an empty rectangular slot; latch mechanism, cameras and the head not this session's; screwdriver access, fewest pieces): v5 / cage v5 context parts unchanged (nox/overseer/overseer.assembly.json); the core, the latch set in pose (masses only: the slot's contents, latch later) and the feet placeholders from nox/overseer/core_v2.py.",
+"parts": [
+{
+"name": "cage shell tubes",
+"role": "cage",
+"mesh": "core/cage_shell_tubes.stl",
+"material": "carbon",
+"mass_g": 387.29,
+"cg": [
+57.53,
+-0.0,
+53.87
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "cage shell nodes",
+"role": "cage",
+"mesh": "core/cage_shell_nodes.stl",
+"material": "PETG",
+"mass_g": 108.0,
+"cg": [
+48.39,
+-0.0,
+49.94
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "spokes, ties, keels, braces, head struts",
+"role": "cage",
+"mesh": "core/spokes_ties_keels_braces_head_struts.stl",
+"material": "carbon",
+"mass_g": 156.78,
+"cg": [
+114.85,
+-0.0,
+18.7
+],
+"tag": "C",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"role": "structure",
+"mesh": "core/sensor_head_mount_printed_drawn_seat_lugs_camera_pads_guards_topology_joins_them.stl",
+"material": "PETG",
+"mass_g": 98.98,
+"cg": [
+370.49,
+-0.0,
+65.66
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py",
+"note": "v5 head mount without its front hub block (x 86..99 on the bottom plate): the keel sockets are the hub deck's now (Spark 27 Oct)"
+},
+{
+"name": "Unitree L2",
+"role": "bought",
+"protect": true,
+"mesh": "core/unitree_l2.stl",
+"mass_g": 230.0,
+"tag": "P",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "camera left",
+"role": "bought",
+"protect": true,
+"mesh": "core/camera_left.stl",
+"mass_g": 15.0,
+"cg": [
+383.65,
+68.73,
+123.45
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "camera right",
+"role": "bought",
+"protect": true,
+"mesh": "core/camera_right.stl",
+"mass_g": 15.0,
+"cg": [
+383.65,
+-68.73,
+123.45
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "top plate",
+"role": "bought",
+"mesh": "core/top_plate.stl",
+"mass_g": 23.0,
+"cg": [
+0.0,
+0.0,
+45.8
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "bottom plate",
+"role": "bought",
+"mesh": "core/bottom_plate.stl",
+"mass_g": 61.0,
+"cg": [
+2.5,
+-0.0,
+-1.05
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "arm 1",
+"role": "structure",
+"mesh": "core/arm_1.stl",
+"material": "PETG",
+"mass_g": 180.17,
+"cg": [
+122.09,
+90.96,
+24.35
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "motor 1",
+"role": "bought",
+"protect": true,
+"mesh": "core/motor_1.stl",
+"mass_g": 81.0,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "prop 1",
+"role": "bought",
+"protect": true,
+"mesh": "core/prop_1.stl",
+"mass_g": 10.0,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "arm 2",
+"role": "structure",
+"mesh": "core/arm_2.stl",
+"material": "PETG",
+"mass_g": 84.03,
+"cg": [
+-57.75,
+83.45,
+27.94
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "motor 2",
+"role": "bought",
+"protect": true,
+"mesh": "core/motor_2.stl",
+"mass_g": 81.0,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "prop 2",
+"role": "bought",
+"protect": true,
+"mesh": "core/prop_2.stl",
+"mass_g": 10.0,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "arm 3",
+"role": "structure",
+"mesh": "core/arm_3.stl",
+"material": "PETG",
+"mass_g": 84.03,
+"cg": [
+-57.75,
+-83.45,
+27.94
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "motor 3",
+"role": "bought",
+"protect": true,
+"mesh": "core/motor_3.stl",
+"mass_g": 81.0,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "prop 3",
+"role": "bought",
+"protect": true,
+"mesh": "core/prop_3.stl",
+"mass_g": 10.0,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "arm 4",
+"role": "structure",
+"mesh": "core/arm_4.stl",
+"material": "PETG",
+"mass_g": 180.17,
+"cg": [
+122.09,
+-90.96,
+24.35
+],
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "motor 4",
+"role": "bought",
+"protect": true,
+"mesh": "core/motor_4.stl",
+"mass_g": 81.0,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "prop 4",
+"role": "bought",
+"protect": true,
+"mesh": "core/prop_4.stl",
+"mass_g": 10.0,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "nox/overseer/layout_v5.py"
+},
+{
+"name": "FC stack (MicoAir743-Lite on 55A 4-in-1)",
+"role": "bought",
+"mesh": "core/fc_stack_micoair743_lite_on_55a_4_in_1.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 24.0,
+"protect": true
+},
+{
+"name": "ESC cap",
+"role": "bought",
+"mesh": "core/esc_cap.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 5.0,
+"protect": true
+},
+{
+"name": "Pi 5 + Active Cooler",
+"role": "bought",
+"mesh": "core/pi_5_active_cooler.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 55.0,
+"protect": true
+},
+{
+"name": "UBEC 5 V",
+"role": "bought",
+"mesh": "core/ubec_5_v.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 15.0,
+"protect": true
+},
+{
+"name": "buck 12 V",
+"role": "bought",
+"mesh": "core/buck_12_v.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 6.0,
+"protect": true
+},
+{
+"name": "RX XR2",
+"role": "bought",
+"mesh": "core/rx_xr2.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 2.0,
+"protect": true
+},
+{
+"name": "flow MTF-02P",
+"role": "bought",
+"mesh": "core/flow_mtf_02p.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 1.5,
+"protect": true
+},
+{
+"name": "wires",
+"role": "bought",
+"mesh": "core/wires.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 80.0
+},
+{
+"name": "pack",
+"role": "bought",
+"mesh": "core/pack.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 650.0,
+"protect": true,
+"swap": true
+},
+{
+"name": "cartridge",
+"role": "protected",
+"mesh": "core/cartridge.stl",
+"material": "PETG",
+"tag": "M",
+"owner": "box swap (battery latch, later: the slot's contents)",
+"version": "cartridge v6 + sliders v6",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 105.6,
+"protect": true,
+"swap": true
+},
+{
+"name": "receiver",
+"role": "protected",
+"mesh": "core/receiver.stl",
+"material": "PETG",
+"tag": "M",
+"owner": "box swap (battery latch, later: the slot's contents)",
+"version": "receiver v2 + carrier v1 + cap + strips",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 229.3,
+"protect": true
+},
+{
+"name": "XT60 pair",
+"role": "bought",
+"mesh": "core/xt60_pair.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 15.0,
+"protect": true
+},
+{
+"name": "hub deck",
+"role": "structure",
+"mesh": "core/hub_deck.stl",
+"material": "PETG",
+"tag": "M",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 68.0,
+"budget_g": 55
+},
+{
+"name": "flow clip",
+"role": "structure",
+"mesh": "core/flow_clip.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "overseer core",
+"version": "core v2",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 5.0,
+"budget_g": 5
+},
+{
+"name": "TPU feet (cage session, placeholders)",
+"role": "cage",
+"mesh": "core/tpu_feet_cage_session_placeholders.stl",
+"material": "TPU",
+"tag": "E",
+"owner": "overseer cage",
+"version": "placeholder",
+"source": "nox/overseer/core_v1.py",
+"mass_g": 6.4
+}
+],
+"contact_pairs": [
+[
+"cage shell tubes",
+"cage shell nodes"
+],
+[
+"spokes, ties, keels, braces, head struts",
+"cage shell nodes"
+],
+[
+"spokes, ties, keels, braces, head struts",
+"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+],
+[
+"spokes, ties, keels, braces, head struts",
+"cage shell tubes"
+],
+[
+"spokes, ties, keels, braces, head struts",
+"bottom plate"
+],
+[
+"spokes, ties, keels, braces, head struts",
+"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+],
+[
+"Unitree L2",
+"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+],
+[
+"camera left",
+"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+],
+[
+"camera right",
+"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)"
+],
+[
+"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"bottom plate"
+],
+[
+"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"top plate"
+],
+[
+"arm 1",
+"top plate"
+],
+[
+"arm 1",
+"bottom plate"
+],
+[
+"motor 1",
+"arm 1"
+],
+[
+"spokes, ties, keels, braces, head struts",
+"arm 1"
+],
+[
+"arm 2",
+"top plate"
+],
+[
+"arm 2",
+"bottom plate"
+],
+[
+"motor 2",
+"arm 2"
+],
+[
+"spokes, ties, keels, braces, head struts",
+"arm 2"
+],
+[
+"arm 3",
+"top plate"
+],
+[
+"arm 3",
+"bottom plate"
+],
+[
+"motor 3",
+"arm 3"
+],
+[
+"spokes, ties, keels, braces, head struts",
+"arm 3"
+],
+[
+"arm 4",
+"top plate"
+],
+[
+"arm 4",
+"bottom plate"
+],
+[
+"motor 4",
+"arm 4"
+],
+[
+"spokes, ties, keels, braces, head struts",
+"arm 4"
+],
+[
+"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"cage shell nodes"
+],
+[
+"sensor head mount (printed: drawn seat, lugs, camera pads, guards; topology joins them)",
+"cage shell tubes"
+],
+[
+"FC stack (MicoAir743-Lite on 55A 4-in-1)",
+"top plate"
+],
+[
+"ESC cap",
+"top plate"
+],
+[
+"RX XR2",
+"top plate"
+],
+[
+"hub deck",
+"bottom plate"
+],
+[
+"hub deck",
+"Pi 5 + Active Cooler"
+],
+[
+"hub deck",
+"UBEC 5 V"
+],
+[
+"hub deck",
+"buck 12 V"
+],
+[
+"ESC cap",
+"FC stack (MicoAir743-Lite on 55A 4-in-1)"
+],
+[
+"flow clip",
+"bottom plate"
+],
+[
+"flow clip",
+"flow MTF-02P"
+],
+[
+"flow MTF-02P",
+"bottom plate"
+],
+[
+"hub deck",
+"spokes, ties, keels, braces, head struts"
+],
+[
+"receiver",
+"bottom plate"
+],
+[
+"pack",
+"cartridge"
+],
+[
+"pack",
+"receiver"
+],
+[
+"cartridge",
+"receiver"
+],
+[
+"receiver",
+"XT60 pair"
+],
+[
+"cartridge",
+"XT60 pair"
+],
+[
+"pack",
+"XT60 pair"
+],
+[
+"wires",
+"ESC cap"
+],
+[
+"wires",
+"FC stack (MicoAir743-Lite on 55A 4-in-1)"
+],
+[
+"wires",
+"Pi 5 + Active Cooler"
+],
+[
+"wires",
+"RX XR2"
+],
+[
+"wires",
+"TPU feet (cage session, placeholders)"
+],
+[
+"wires",
+"UBEC 5 V"
+],
+[
+"wires",
+"XT60 pair"
+],
+[
+"wires",
+"arm 1"
+],
+[
+"wires",
+"arm 2"
+],
+[
+"wires",
+"arm 3"
+],
+[
+"wires",
+"arm 4"
+],
+[
+"wires",
+"bottom plate"
+],
+[
+"wires",
+"buck 12 V"
+],
+[
+"wires",
+"cartridge"
+],
+[
+"wires",
+"flow MTF-02P"
+],
+[
+"wires",
+"flow clip"
+],
+[
+"wires",
+"hub deck"
+],
+[
+"wires",
+"pack"
+],
+[
+"wires",
+"receiver"
+],
+[
+"wires",
+"spokes, ties, keels, braces, head struts"
+],
+[
+"wires",
+"top plate"
+]
+],
+"openings": [
+{
+"part": "Unitree L2",
+"axis": [
+0.9659,
+0.0,
+-0.2588
+],
+"half_angle_deg": 75.0,
+"field": true,
+"note": "Spark 26 Oct: outside the cage, nothing in its view; guarded only outside its field (cage first gated outside this cone)"
+},
+{
+"part": "camera left",
+"axis": [
+0.6964,
+0.6964,
+-0.1736
+],
+"half_angle_deg": 55.0,
+"field": true,
+"note": "Spark 27 Oct: the pair beside the L2, nothing of the drone in its view (diagonal 51); cage first gated outside this cone"
+},
+{
+"part": "camera right",
+"axis": [
+0.6964,
+-0.6964,
+-0.1736
+],
+"half_angle_deg": 55.0,
+"field": true,
+"note": "Spark 27 Oct: the pair beside the L2, nothing of the drone in its view (diagonal 51); cage first gated outside this cone"
+},
+{
+"part": "pack",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"skip_probes": true
+},
+{
+"part": "cartridge",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"skip_probes": true
+},
+{
+"part": "receiver",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"skip_probes": true
+},
+{
+"part": "XT60 pair",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"skip_probes": true
+},
+{
+"part": "flow MTF-02P",
+"axis": [
+0,
+0,
+-1
+],
+"half_angle_deg": 40.0,
+"skip_probes": true
+}
+],
+"access": [
+{
+"name": "M3 key, arm 1 top screw v +15",
+"part": "top plate",
+"from": [
+34.06,
+55.27,
+46.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 1",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4"
+]
+},
+{
+"name": "M3 key, arm 1 top screw v -15",
+"part": "top plate",
+"from": [
+55.27,
+34.06,
+46.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 1",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4"
+]
+},
+{
+"name": "M3 key, arm 1 bottom screw v +10",
+"part": "bottom plate",
+"from": [
+38.0,
+52.14,
+-1.7
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 1"
+]
+},
+{
+"name": "M3 key, arm 1 bottom screw v -10",
+"part": "bottom plate",
+"from": [
+52.14,
+38.0,
+-1.7
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 1"
+]
+},
+{
+"name": "M3 L-key short leg, arm 2 top screw v +15",
+"part": "top plate",
+"from": [
+-55.27,
+34.06,
+46.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 30.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 2",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4"
+]
+},
+{
+"name": "M3 L-key long leg, arm 2 top screw v +15",
+"part": "top plate",
+"from": [
+-55.27,
+34.06,
+76.6
+],
+"dir": [
+-0.7389,
+0.6718,
+0.0525
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 4
+},
+"ignore": [
+"arm 2",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4"
+]
+},
+{
+"name": "M3 key, arm 2 top screw v -15",
+"part": "top plate",
+"from": [
+-34.06,
+55.27,
+46.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 2",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4"
+]
+},
+{
+"name": "M3 key, arm 2 bottom screw v +10",
+"part": "bottom plate",
+"from": [
+-52.14,
+38.0,
+-1.7
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 2"
+]
+},
+{
+"name": "M3 key, arm 2 bottom screw v -10",
+"part": "bottom plate",
+"from": [
+-38.0,
+52.14,
+-1.7
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 2"
+]
+},
+{
+"name": "M3 key, arm 3 top screw v +15",
+"part": "top plate",
+"from": [
+-34.06,
+-55.27,
+46.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 3",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4"
+]
+},
+{
+"name": "M3 L-key short leg, arm 3 top screw v -15",
+"part": "top plate",
+"from": [
+-55.27,
+-34.06,
+46.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 30.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 3",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4"
+]
+},
+{
+"name": "M3 L-key long leg, arm 3 top screw v -15",
+"part": "top plate",
+"from": [
+-55.27,
+-34.06,
+76.6
+],
+"dir": [
+-0.6373,
+-0.7695,
+-0.0425
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 4
+},
+"ignore": [
+"arm 3",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4"
+]
+},
+{
+"name": "M3 key, arm 3 bottom screw v +10",
+"part": "bottom plate",
+"from": [
+-38.0,
+-52.14,
+-1.7
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 3"
+]
+},
+{
+"name": "M3 key, arm 3 bottom screw v -10",
+"part": "bottom plate",
+"from": [
+-52.14,
+-38.0,
+-1.7
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 3"
+]
+},
+{
+"name": "M3 key, arm 4 top screw v +15",
+"part": "top plate",
+"from": [
+55.27,
+-34.06,
+46.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 4",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4"
+]
+},
+{
+"name": "M3 key, arm 4 top screw v -15",
+"part": "top plate",
+"from": [
+34.06,
+-55.27,
+46.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 4",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4"
+]
+},
+{
+"name": "M3 key, arm 4 bottom screw v +10",
+"part": "bottom plate",
+"from": [
+52.14,
+-38.0,
+-1.7
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 4"
+]
+},
+{
+"name": "M3 key, arm 4 bottom screw v -10",
+"part": "bottom plate",
+"from": [
+38.0,
+-52.14,
+-1.7
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 400.0,
+"tool": {
+"type": "cylinder",
+"d": 8
+},
+"ignore": [
+"arm 4"
+]
+},
+{
+"name": "pack swap: cartridge + pack down through the opening",
+"part": "cartridge",
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": "part",
+"ignore": [
+"pack",
+"receiver",
+"XT60 pair"
+]
+},
+{
+"name": "FC USB-C (an edge of the turned FC: plug straight in 30 along the arm, then the cable bends up)",
+"part": "FC stack (MicoAir743-Lite on 55A 4-in-1)",
+"from": [
+12.7,
+-12.7,
+63.099999999999994
+],
+"dir": [
+0.7071,
+-0.7071,
+0.0
+],
+"length_mm": 30.0,
+"tool": {
+"type": "box",
+"w": 12,
+"h": 7
+},
+"ignore": [
+"wires"
+]
+},
+{
+"name": "Pi USB-A / RJ45 plugs (aft, in the open)",
+"part": "Pi 5 + Active Cooler",
+"from": [
+-73.5,
+0,
+17.0
+],
+"dir": [
+-1,
+0,
+0
+],
+"length_mm": 40.0,
+"tool": {
+"type": "box",
+"w": 40,
+"h": 14,
+"w_axis": [
+0,
+1,
+0
+]
+},
+"ignore": [
+"wires"
+]
+},
+{
+"name": "step 1: M3 x 8 up from under the plate into the hub deck insert, foot 0 (screwdriver from below, the battery slot empty)",
+"part": "bottom plate",
+"from": [
+-24.0,
+36.5,
+-2.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"pack",
+"cartridge",
+"receiver",
+"XT60 pair",
+"cage shell tubes",
+"cage shell nodes",
+"TPU feet (cage session, placeholders)"
+]
+},
+{
+"name": "step 1: M3 x 8 up from under the plate into the hub deck insert, foot 1 (screwdriver from below, the battery slot empty)",
+"part": "bottom plate",
+"from": [
+-24.0,
+-36.5,
+-2.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"pack",
+"cartridge",
+"receiver",
+"XT60 pair",
+"cage shell tubes",
+"cage shell nodes",
+"TPU feet (cage session, placeholders)"
+]
+},
+{
+"name": "step 1: M3 x 8 up from under the plate into the hub deck insert, foot 2 (screwdriver from below, the battery slot empty)",
+"part": "bottom plate",
+"from": [
+65.0,
+22.5,
+-2.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"pack",
+"cartridge",
+"receiver",
+"XT60 pair",
+"cage shell tubes",
+"cage shell nodes",
+"TPU feet (cage session, placeholders)"
+]
+},
+{
+"name": "step 1: M3 x 8 up from under the plate into the hub deck insert, foot 3 (screwdriver from below, the battery slot empty)",
+"part": "bottom plate",
+"from": [
+65.0,
+-22.5,
+-2.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"pack",
+"cartridge",
+"receiver",
+"XT60 pair",
+"cage shell tubes",
+"cage shell nodes",
+"TPU feet (cage session, placeholders)"
+]
+},
+{
+"name": "step 2: M3 x 10 up from under the plate through the flow clip flange into the hub deck insert, foot 4 (screwdriver from below, the battery slot empty)",
+"part": "flow clip",
+"from": [
+96.0,
+17.0,
+-5.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"pack",
+"cartridge",
+"receiver",
+"XT60 pair",
+"cage shell tubes",
+"cage shell nodes",
+"TPU feet (cage session, placeholders)"
+]
+},
+{
+"name": "step 2: M3 x 10 up from under the plate through the flow clip flange into the hub deck insert, foot 5 (screwdriver from below, the battery slot empty)",
+"part": "flow clip",
+"from": [
+96.0,
+-17.0,
+-5.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"pack",
+"cartridge",
+"receiver",
+"XT60 pair",
+"cage shell tubes",
+"cage shell nodes",
+"TPU feet (cage session, placeholders)"
+]
+},
+{
+"name": "step 1: M3 x 8 up from under the plate into the hub deck insert, foot 6 (screwdriver from below, the battery slot empty)",
+"part": "bottom plate",
+"from": [
+60.0,
+17.0,
+-2.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"pack",
+"cartridge",
+"receiver",
+"XT60 pair",
+"cage shell tubes",
+"cage shell nodes",
+"TPU feet (cage session, placeholders)"
+]
+},
+{
+"name": "step 1: M3 x 8 up from under the plate into the hub deck insert, foot 7 (screwdriver from below, the battery slot empty)",
+"part": "bottom plate",
+"from": [
+60.0,
+-17.0,
+-2.6
+],
+"dir": [
+0,
+0,
+-1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"pack",
+"cartridge",
+"receiver",
+"XT60 pair",
+"cage shell tubes",
+"cage shell nodes",
+"TPU feet (cage session, placeholders)"
+]
+},
+{
+"name": "step 2: M2.5 Pi screw 0 (screwdriver, top plate not on yet)",
+"part": "Pi 5 + Active Cooler",
+"from": [
+-30.0,
+24.5,
+10.1
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 5
+},
+"ignore": [
+"top plate",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"cage shell tubes",
+"cage shell nodes",
+"spokes, ties, keels, L2 guard ring",
+"wires",
+"RX XR2",
+"ESC cap",
+"FC stack (MicoAir743-Lite on 55A 4-in-1)"
+]
+},
+{
+"name": "step 2: M2.5 Pi screw 1 (screwdriver, top plate not on yet)",
+"part": "Pi 5 + Active Cooler",
+"from": [
+-30.0,
+-24.5,
+10.1
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 5
+},
+"ignore": [
+"top plate",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"cage shell tubes",
+"cage shell nodes",
+"spokes, ties, keels, L2 guard ring",
+"wires",
+"RX XR2",
+"ESC cap",
+"FC stack (MicoAir743-Lite on 55A 4-in-1)"
+]
+},
+{
+"name": "step 2: M2.5 Pi screw 2 (screwdriver, top plate not on yet)",
+"part": "Pi 5 + Active Cooler",
+"from": [
+28.0,
+24.5,
+10.1
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 5
+},
+"ignore": [
+"top plate",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"cage shell tubes",
+"cage shell nodes",
+"spokes, ties, keels, L2 guard ring",
+"wires",
+"RX XR2",
+"ESC cap",
+"FC stack (MicoAir743-Lite on 55A 4-in-1)"
+]
+},
+{
+"name": "step 2: M2.5 Pi screw 3 (screwdriver, top plate not on yet)",
+"part": "Pi 5 + Active Cooler",
+"from": [
+28.0,
+-24.5,
+10.1
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 5
+},
+"ignore": [
+"top plate",
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"cage shell tubes",
+"cage shell nodes",
+"spokes, ties, keels, L2 guard ring",
+"wires",
+"RX XR2",
+"ESC cap",
+"FC stack (MicoAir743-Lite on 55A 4-in-1)"
+]
+},
+{
+"name": "step 6: M3 nylon nut 0 on its stud over the FC (nut driver from above, before the cage shell; v5's top tubes cross the x-axis nut lines)",
+"part": "FC stack (MicoAir743-Lite on 55A 4-in-1)",
+"from": [
+21.5667568261897,
+0.0,
+67.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"wires",
+"cage shell tubes",
+"cage shell nodes"
+]
+},
+{
+"name": "step 6: M3 nylon nut 1 on its stud over the FC (nut driver from above, before the cage shell; v5's top tubes cross the x-axis nut lines)",
+"part": "FC stack (MicoAir743-Lite on 55A 4-in-1)",
+"from": [
+-21.5667568261897,
+0.0,
+67.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"wires",
+"cage shell tubes",
+"cage shell nodes"
+]
+},
+{
+"name": "step 6: M3 nylon nut 2 on its stud over the FC (nut driver from above, before the cage shell; v5's top tubes cross the x-axis nut lines)",
+"part": "FC stack (MicoAir743-Lite on 55A 4-in-1)",
+"from": [
+0.0,
+21.5667568261897,
+67.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"wires",
+"cage shell tubes",
+"cage shell nodes"
+]
+},
+{
+"name": "step 6: M3 nylon nut 3 on its stud over the FC (nut driver from above, before the cage shell; v5's top tubes cross the x-axis nut lines)",
+"part": "FC stack (MicoAir743-Lite on 55A 4-in-1)",
+"from": [
+0.0,
+-21.5667568261897,
+67.6
+],
+"dir": [
+0,
+0,
+1
+],
+"length_mm": 150.0,
+"tool": {
+"type": "cylinder",
+"d": 6
+},
+"ignore": [
+"prop 1",
+"prop 2",
+"prop 3",
+"prop 4",
+"wires",
+"cage shell tubes",
+"cage shell nodes"
+]
+}
+]
+}

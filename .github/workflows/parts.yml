@@ -1,0 +1,152 @@
+# Runs the topology engine for every part whose part.py changed in the push, one runner per part, all at once.
+# A run that does not finish inside the runner's 6 h cap saves its checkpoint and re-launches itself, so no run is
+# ever lost. Results are committed back to main by the last job. Nothing here involves Claude.
+name: parts
+
+on:
+  push:
+    branches: [main]
+    paths: ['parts/*/part.py', 'parts/*/inputs/**']
+  workflow_dispatch:
+    inputs:
+      parts:
+        description: 'part names, space separated (empty = every part whose result is missing or stale)'
+        required: false
+        default: ''
+      attempt:
+        description: 'resume attempt number (set by the workflow itself)'
+        required: false
+        default: '1'
+
+permissions:
+  contents: write
+  actions: write
+
+env:
+  ENGINE_LIMIT_S: 16200      # 4.5 h: the engine checks the limit between iterations, so leave room for a slow one
+  JOB_LIMIT_MIN: 330         # 5.5 h: runner hard cap is 6 h
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    outputs:
+      parts: ${{ steps.p.outputs.parts }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - id: p
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ inputs.parts }}" ]; then list="${{ inputs.parts }}"
+            else list=$(python3 tools/stale_parts.py); fi
+          else
+            # every commit of the push, not only the last one; deleted parts excluded
+            list=$(git diff --name-only --diff-filter=AM ${{ github.event.before }} ${{ github.sha }} -- 'parts/*/part.py' 'parts/*/inputs/*' \
+                   | cut -d/ -f2 | sort -u | tr '\n' ' ')
+          fi
+          echo "parts=$(echo $list | xargs -n1 | jq -R . | jq -s -c .)" >> "$GITHUB_OUTPUT"
+          echo "will run: $list"
+
+  run:
+    needs: find
+    if: needs.find.outputs.parts != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        part: ${{ fromJson(needs.find.outputs.parts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip }
+      - run: pip install -r requirements.txt
+
+      # a checkpoint from a previous attempt of this same part.py (if any) lets the run continue where it stopped
+      - name: restore checkpoint
+        uses: actions/cache/restore@v4
+        with:
+          path: parts/${{ matrix.part }}/ck*.npz
+          key: ck-${{ matrix.part }}-${{ hashFiles(format('parts/{0}/part.py', matrix.part)) }}
+
+      - name: optimise
+        id: opt
+        shell: bash
+        run: |
+          set +e
+          python -m topo.run parts/${{ matrix.part }} --time-limit $ENGINE_LIMIT_S
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+
+      # always save the checkpoint (even on timeout or failure), so the next attempt resumes
+      - name: save checkpoint
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: parts/${{ matrix.part }}/ck*.npz
+          key: ck-${{ matrix.part }}-${{ hashFiles(format('parts/{0}/part.py', matrix.part)) }}-${{ github.run_id }}
+
+      - name: results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: result-${{ matrix.part }}
+          path: |
+            parts/${{ matrix.part }}/result.json
+            parts/${{ matrix.part }}/part.stl
+            parts/${{ matrix.part }}/preview.png
+            parts/${{ matrix.part }}/log.txt
+          if-no-files-found: ignore
+
+      # the job hit its time cap (step cancelled) and left no result: launch this workflow again for this part only.
+      # It resumes from the checkpoint. A crash (non-zero exit, step not cancelled) is NOT relaunched: it needs a fix.
+      - name: relaunch if cut off
+        if: always() && steps.opt.outcome == 'cancelled'
+        shell: bash
+        run: |
+          n=$(( ${{ inputs.attempt || 1 }} + 1 ))
+          if [ -f parts/${{ matrix.part }}/result.json ]; then exit 0; fi
+          if [ "$n" -gt 4 ]; then echo "::error::${{ matrix.part }}: 4 attempts (22 h) without finishing; coarsen h or cut cases"; exit 1; fi
+          echo "::warning::${{ matrix.part }} cut off at the time cap; relaunching attempt $n from checkpoint"
+          gh workflow run parts.yml -f parts="${{ matrix.part }}" -f attempt="$n"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  commit:
+    needs: [find, run]
+    if: always() && needs.find.outputs.parts != '[]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/download-artifact@v4
+        with:
+          path: _results
+          pattern: result-*
+      - name: place results
+        shell: bash
+        run: |
+          for d in _results/result-*; do
+            [ -d "$d" ] || continue
+            p=$(basename "$d" | sed 's/^result-//')
+            mkdir -p "parts/$p"
+            cp -f "$d"/result.json "$d"/part.stl "$d"/preview.png "parts/$p/" 2>/dev/null || true
+          done
+          rm -rf _results
+      - name: commit and push (retry on race)
+        shell: bash
+        run: |
+          git config user.name nox-ci
+          git config user.email ci@users.noreply.github.com
+          git add parts
+          git diff --cached --quiet && { echo "nothing to commit"; exit 0; }
+          git commit -m "results: ${{ needs.find.outputs.parts }}"
+          for i in 1 2 3 4 5; do
+            git push && break
+            git pull --rebase origin main || exit 1
+          done
+          # a push made with the workflow token does not trigger other workflows, so start the site build by hand
+          gh workflow run site.yml
+        env:
+          GH_TOKEN: ${{ github.token }}

@@ -1,0 +1,257 @@
+{
+ "name": "motor_mount",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   8853.1
+  ],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "acute_edges": 0,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 2815.7,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.0,
+  "outside_env_mm3": -0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "thrust 13 N up",
+    "cls": "flight",
+    "inlayer": 0.011,
+    "across": 0.024,
+    "at": [
+     -7.2,
+     -5.6,
+     23.0
+    ]
+   },
+   {
+    "case": "max thrust 20 N up",
+    "cls": "misuse",
+    "inlayer": 0.011,
+    "across": 0.023,
+    "at": [
+     -7.2,
+     -5.6,
+     23.0
+    ]
+   },
+   {
+    "case": "yaw torque 0.35 Nm",
+    "cls": "flight",
+    "inlayer": 0.057,
+    "across": 0.124,
+    "at": [
+     5.6,
+     -10.4,
+     16.6
+    ]
+   },
+   {
+    "case": "crash push 40 N +X on the motor",
+    "cls": "crash",
+    "inlayer": 0.034,
+    "across": 0.068,
+    "at": [
+     -10.4,
+     -5.6,
+     19.8
+    ]
+   },
+   {
+    "case": "crash push 40 N -X on the motor",
+    "cls": "crash",
+    "inlayer": 0.034,
+    "across": 0.068,
+    "at": [
+     10.4,
+     5.6,
+     19.8
+    ]
+   },
+   {
+    "case": "crash push 40 N +Y on the motor",
+    "cls": "crash",
+    "inlayer": 0.044,
+    "across": 0.102,
+    "at": [
+     5.6,
+     -10.4,
+     16.6
+    ]
+   },
+   {
+    "case": "crash push 40 N -Y on the motor",
+    "cls": "crash",
+    "inlayer": 0.044,
+    "across": 0.102,
+    "at": [
+     -5.6,
+     10.4,
+     16.6
+    ]
+   },
+   {
+    "case": "landing on the motor 60 N down",
+    "cls": "crash",
+    "inlayer": 0.014,
+    "across": 0.006,
+    "at": [
+     8.8,
+     4.0,
+     23.0
+    ]
+   },
+   {
+    "case": "vibration 30 g + thrust",
+    "cls": "vibration",
+    "inlayer": 0.022,
+    "across": 0.048,
+    "at": [
+     -7.2,
+     -5.6,
+     23.0
+    ]
+   }
+  ],
+  "worst": 0.124,
+  "worst_case": "yaw torque 0.35 Nm",
+  "worst_at": [
+   5.6,
+   -10.4,
+   16.6
+  ]
+ },
+ "mass_g": 18.0,
+ "watertight": true,
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 14173.9,
+ "drawn_g": 8.35,
+ "stl": "motor_mount.stl",
+ "view_stl": "motor_mount_view.stl",
+ "view_faces": 120000,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "auto_sym": true,
+   "backend": "auto",
+   "mg_tol": 1e-05,
+   "time_limit_s": 19800.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 4.026604296328349,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.1792383856951871,
+  "nd": 10472,
+  "sym_axes": [
+   0,
+   1
+  ],
+  "n_real": 9,
+  "n_ties": 30,
+  "backend": "direct",
+  "iterations": 60,
+  "stopped": null
+ },
+ "grid": {
+  "name": "motor_mount",
+  "h": 1.6,
+  "shape": [
+   32,
+   32,
+   32
+  ],
+  "origin": [
+   -25.6,
+   -25.6,
+   -6.6
+  ],
+  "cells": 32768,
+  "design": 10304,
+  "drawn": 1632,
+  "cases": [
+   "thrust 13 N up",
+   "max thrust 20 N up",
+   "yaw torque 0.35 Nm",
+   "crash push 40 N +X on the motor",
+   "crash push 40 N -X on the motor",
+   "crash push 40 N +Y on the motor",
+   "crash push 40 N -Y on the motor",
+   "landing on the motor 60 N down",
+   "vibration 30 g + thrust"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 54.3,
+ "gen_cm3": 7.0,
+ "h": 1.6,
+ "rebuilt_from": "mm_density",
+ "baseline": null,
+ "total_s": 60,
+ "part_sha": "93d806172073"
+}
