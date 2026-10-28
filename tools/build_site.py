@@ -169,9 +169,10 @@ def build(inline=False, offline=False):
              "artifact": a.get("artifact"), "note": a.get("note", ""), "mass_budget_g": a.get("mass_budget_g"), "parts": []}
         for p in a["parts"]:
             pid = p.get("id") or p["name"]
-            st, r = status(pid)
+            src = p.get("part", pid)             # a mirror or a second placing of another part's folder: its mesh and status, this pose
+            st, r = status(src)
             mesh = None
-            cand = os.path.join(ROOT, "parts", pid, "part.stl")
+            cand = os.path.join(ROOT, "parts", src, "part.stl")
             if st in ("done", "stale", "pending", "failed") and os.path.exists(cand):
                 mesh = cand
             elif st == "placed" and "mesh" in p and os.path.exists(os.path.join(ROOT, p["mesh"])):
@@ -191,20 +192,20 @@ def build(inline=False, offline=False):
             m.export(glb)
             if inline:
                 meshes[pid] = m
-            prev = os.path.join(ROOT, "parts", pid, "preview.png")
+            prev = os.path.join(ROOT, "parts", src, "preview.png")
             if os.path.exists(prev):
                 os.makedirs(os.path.join(SITE, "previews"), exist_ok=True)
-                import shutil; shutil.copy(prev, os.path.join(SITE, "previews", f"{pid}.png"))
-            fb = os.path.join(ROOT, "parts", pid, "feedback.md")
+                import shutil; shutil.copy(prev, os.path.join(SITE, "previews", f"{src}.png"))
+            fb = os.path.join(ROOT, "parts", src, "feedback.md")
             stg = (r or {}).get("strength") or {}
             S["parts"].append(dict(id=pid, name=p["name"], role=p.get("role", ""), status=st, kind=kind,
                                    glb=os.path.relpath(glb, SITE), mass_g=(r or {}).get("mass_g", p.get("mass_g")),
                                    worst=stg.get("worst"), worst_case=stg.get("worst_case"),
                                    max_worst=(r or {}).get("max_worst"), strength_ok=(r or {}).get("strength_ok"),
                                    solid_ok=(r or {}).get("solid_ok"), total_s=(r or {}).get("total_s"),
-                                   preview=f"previews/{pid}.png" if os.path.exists(prev) else None,
+                                   preview=f"previews/{src}.png" if os.path.exists(prev) else None,
                                    feedback=open(fb).read() if os.path.exists(fb) else "",
-                                   has_script=os.path.exists(os.path.join(ROOT, "parts", pid, "part.py"))))
+                                   has_script=os.path.exists(os.path.join(ROOT, "parts", src, "part.py"))))
             S["parts"][-1]["_result"] = r
         out["systems"].append(S)
         if inline:
