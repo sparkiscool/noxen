@@ -41,9 +41,18 @@ jobs:
             if [ -n "${{ inputs.parts }}" ]; then list="${{ inputs.parts }}"
             else list=$(python3 tools/stale_parts.py); fi
             # a push made with Spark's own credentials already started these runs: skip every part that another run
-            # of this workflow is still working on (the dispatch is then only for the ones it missed)
-            busy=$(gh run list --workflow parts.yml --status in_progress --json databaseId --jq '.[].databaseId' \
-                   | grep -v "^${{ github.run_id }}$" \
+            # of this workflow is still working on (the dispatch is then only for the ones it missed). A run whose
+            # own find job is still going has no matrix yet (28 Oct: the dispatch 9 s after the push doubled 5 parts),
+            # so first wait for every other run's find to finish.
+            others() { gh run list --workflow parts.yml --limit 30 --json databaseId,status \
+                       --jq '.[] | select(.status == "in_progress" or .status == "queued" or .status == "waiting" or .status == "pending" or .status == "requested") | .databaseId' \
+                       | grep -v "^${{ github.run_id }}$"; }
+            for i in $(seq 1 24); do
+              pending=$(for id in $(others); do gh run view "$id" --json jobs --jq 'if (.jobs | length) == 0 then "none yet" else (.jobs[] | select(.name == "find" and .status != "completed") | .name) end'; done)
+              [ -z "$pending" ] && break
+              echo "another run is still finding its parts, waiting"; sleep 10
+            done
+            busy=$(others \
                    | while read id; do gh run view "$id" --json jobs --jq '.jobs[] | select(.status != "completed") | .name'; done \
                    | sed -n 's/^run (\(.*\))$/\1/p' | sort -u)
             for b in $busy; do list=$(echo " $list " | sed "s/ $b / /g"); done
