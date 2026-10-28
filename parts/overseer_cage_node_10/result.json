@@ -1,9 +1,10 @@
 {
  "name": "overseer_cage_node_10",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
-  "bodies_plain": 3,
+  "bodies_plain": 1,
+  "specks_plain": 2,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
    5294.7
@@ -12,7 +13,7 @@
   "drawn_not_in_main": [],
   "thin_walls": [],
   "acute_edges": 1,
-  "ok": false
+  "ok": true
  },
  "function_check": {
   "skin_mm3": 1503.7,
@@ -221,9 +222,9 @@
    "default"
   ]
  },
- "build_s": 36.7,
- "layout_s": 1649,
- "peak_gb": 4.70578,
+ "build_s": 38.0,
+ "layout_s": 38,
+ "peak_gb": 4.606876,
  "gen_cm3": 4.3,
  "h": 1.0,
  "audit": {
@@ -269,7 +270,7 @@
   "fails": []
  },
  "baseline": null,
- "total_s": 1686,
+ "total_s": 76,
  "part_sha": "459f28af4455",
  "max_worst": 0.5,
  "strength_ok": true
