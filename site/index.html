@@ -41,7 +41,7 @@
 </head>
 <body>
 <div id="app">
-  <div id="side"><h1>Nox assembly</h1><div id="list"></div></div>
+  <div id="side"><h1 id="h1">Nox assembly</h1><div class="st" id="commit"></div><div id="list"></div></div>
   <div id="view">
     <div id="ctl"><button id="fit">fit</button><button id="allon">all</button><button id="gen">generated only</button>
       <label>explode <input id="explode" type="range" min="0" max="2" step="0.01" value="0"></label></div>
@@ -74,6 +74,15 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const REPO = (window.INLINE && window.INLINE.repo) || (location.hostname.endsWith('github.io') ? location.hostname.split('.')[0] + '/' + location.pathname.split('/')[1] : 'sparkiscool/noxen');
 const API = 'https://api.github.com/repos/' + REPO;
+const ON_PAGES = location.hostname.endsWith('github.io') || location.hostname === 'localhost';   // the artifact's frame cannot reach GitHub
+function b64(s, T) { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new T(u.buffer); }
+function geometryOf(m) {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(b64(m.pos, Float32Array), 3));
+  g.setIndex(new THREE.BufferAttribute(b64(m.idx, Uint32Array), 1));
+  g.computeVertexNormals();
+  return g;
+}
 function token() { try { return localStorage.getItem('gh_token') || ''; } catch (e) { return ''; } }
 async function gh(path, opts = {}) {
   const r = await fetch(API + path, { ...opts, headers: { 'Authorization': 'Bearer ' + token(), 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json', ...(opts.headers || {}) } });
@@ -94,8 +103,8 @@ function showCard(p) {
   if (p.total_s) kv.push(['run time', Math.round(p.total_s / 60) + ' min']);
   document.getElementById('c-kv').innerHTML = kv.map(([k, v]) => `<b>${k}</b><span>${v}</span>`).join('');
   document.getElementById('c-fb').value = p.feedback || '';
-  document.getElementById('c-fb').disabled = document.getElementById('c-save').disabled = document.getElementById('c-rerun').disabled = !p.has_script;
-  document.getElementById('c-msg').textContent = p.has_script ? '' : 'bought or hand-drawn part: nothing to rerun';
+  document.getElementById('c-fb').disabled = document.getElementById('c-save').disabled = document.getElementById('c-rerun').disabled = !p.has_script || !ON_PAGES;
+  document.getElementById('c-msg').textContent = !p.has_script ? 'bought or hand-drawn part: nothing to rerun' : ON_PAGES ? '' : 'feedback and reruns: on the GitHub Pages copy of this page';
   card.style.display = 'block';
 }
 document.getElementById('cardx').onclick = () => card.style.display = 'none';
@@ -136,6 +145,8 @@ const list = document.getElementById('list');
 
 async function load() {
   const data = window.INLINE || await (await fetch('assembly.json', { cache:'no-store' })).json();
+  document.getElementById('h1').textContent = data.title || (data.systems.length === 1 ? data.systems[0].title : 'Nox assembly');
+  document.getElementById('commit').textContent = data.commit ? REPO + ' @ ' + data.commit : '';
   for (const s of data.systems) {
     const sec = document.createElement('div'); sec.className = 'sys'; sec.innerHTML = `<h2>${s.name}</h2>`; list.appendChild(sec);
     for (const p of s.parts) {
@@ -145,14 +156,12 @@ async function load() {
       row.querySelector('.dot').onclick = (e) => { e.stopPropagation(); g.visible = !g.visible; row.classList.toggle('off', !g.visible); };
       row.onclick = () => showCard(p);
       sec.appendChild(row);
-      loader.load(p.glb, (gltf) => {
-        const mat = new THREE.MeshStandardMaterial({ color: COLORS[p.status] || 0x888888, roughness:.6, metalness:.05,
-          transparent: p.kind === 'placeholder', opacity: p.kind === 'placeholder' ? .45 : 1 });
-        gltf.scene.traverse(o => { if (o.isMesh) { o.material = mat; } });
-        g.add(gltf.scene);
-        const b = new THREE.Box3().setFromObject(gltf.scene); b.getCenter(g.userData.center = new THREE.Vector3());
-        fit();
-      });
+      const mat = new THREE.MeshStandardMaterial({ color: COLORS[p.status] || 0x888888, roughness:.6, metalness:.05,
+        transparent: p.kind === 'placeholder', opacity: p.kind === 'placeholder' ? .45 : 1 });
+      const place = (obj) => { g.add(obj); new THREE.Box3().setFromObject(obj).getCenter(g.userData.center = new THREE.Vector3()); fit(); };
+      const packed = data.meshes && data.meshes[s.file + '__' + p.id];
+      if (packed) place(new THREE.Mesh(geometryOf(packed), mat));       // a self-contained page: geometry embedded
+      else loader.load(p.glb, (gltf) => { gltf.scene.traverse(o => { if (o.isMesh) o.material = mat; }); place(gltf.scene); });
     }
   }
 }

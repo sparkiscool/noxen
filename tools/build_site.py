@@ -1,7 +1,12 @@
 """Build the viewer page from systems/*.assembly.json and parts/*/.
 
     python tools/build_site.py            -> site/assembly.json + site/meshes/<id>.glb
-    python tools/build_site.py --inline   -> also site/standalone.html (one file, meshes embedded, for sending)
+    python tools/build_site.py --inline   -> also site/<drone>.html, one self-contained file per system with every current
+                                             part embedded: the drone's artifact. A session publishes it at the system's
+                                             `artifact` URL (systems/<drone>.assembly.json), never a hand-built page.
+    python tools/build_site.py --offline  -> skip the origin/main check (no network)
+
+Outside CI the build refuses a checkout behind origin/main: a page built from an old checkout shows old parts.
 
 Status is computed, never stored:
   done     parts/<id>/result.json exists, solid_ok true, and its part_sha matches the current part.py
@@ -11,7 +16,7 @@ Status is computed, never stored:
   placed   no part.py: a bought part or a hand-drawn mesh, shown as is
 Nothing here is ever read by Claude; CI runs it.
 """
-import base64, hashlib, json, os, sys, glob
+import base64, hashlib, json, os, sys, glob, subprocess
 import numpy as np, trimesh
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,6 +26,30 @@ MAX_FACES = 40000
 
 def sha(path):
     return hashlib.sha256(open(path, "rb").read()).hexdigest()[:12]
+
+
+def git(*args, **kw):
+    return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, **kw)
+
+
+def head(offline=False):
+    """The commit this build shows. Outside CI the checkout must be at origin/main (the gate behind every page and artifact)."""
+    commit = git("rev-parse", "--short", "HEAD").stdout.strip()
+    if os.environ.get("GITHUB_ACTIONS") or offline:
+        return commit
+    f = git("fetch", "-q", "origin", "main", timeout=120)
+    if f.returncode:
+        sys.exit(f"build_site: git fetch failed ({f.stderr.strip()}); --offline builds this checkout as is")
+    behind = git("rev-list", "--count", "HEAD..origin/main").stdout.strip()
+    if behind != "0":
+        sys.exit(f"build_site: this checkout is {behind} commit(s) behind origin/main; git pull first, the page must show the current parts")
+    return commit
+
+
+def packed(m):
+    """A mesh as base64 float32 positions + uint32 faces: the viewer builds the geometry itself (no loader, no blob URLs)."""
+    return {"pos": base64.b64encode(np.asarray(m.vertices, np.float32).tobytes()).decode(),
+            "idx": base64.b64encode(np.asarray(m.faces, np.uint32).tobytes()).decode()}
 
 
 def status(pid):
@@ -65,13 +94,15 @@ def placeholder(p):
     return None
 
 
-def build(inline=False):
+def build(inline=False, offline=False):
     os.makedirs(os.path.join(SITE, "meshes"), exist_ok=True)
-    out = {"systems": [], "repo": os.environ.get("GITHUB_REPOSITORY", "sparkiscool/noxen")}
+    out = {"systems": [], "repo": os.environ.get("GITHUB_REPOSITORY", "sparkiscool/noxen"), "commit": head(offline)}
+    meshes = {}
     for f in sorted(glob.glob(os.path.join(ROOT, "systems", "*.assembly.json"))):
         a = json.load(open(f))
         sysname = os.path.basename(f).split(".")[0]
-        S = {"name": a.get("name", sysname), "parts": []}
+        S = {"name": a.get("name", sysname), "file": sysname, "title": a.get("title") or a.get("name", sysname),
+             "artifact": a.get("artifact"), "note": a.get("note", ""), "mass_budget_g": a.get("mass_budget_g"), "parts": []}
         for p in a["parts"]:
             pid = p.get("id") or p["name"]
             st, r = status(pid)
@@ -94,6 +125,8 @@ def build(inline=False):
             m.apply_transform(pose_matrix(p.get("pose")))
             glb = os.path.join(SITE, "meshes", f"{sysname}__{pid}.glb")
             m.export(glb)
+            if inline:
+                meshes[f"{sysname}__{pid}"] = packed(m)
             prev = os.path.join(ROOT, "parts", pid, "preview.png")
             if os.path.exists(prev):
                 os.makedirs(os.path.join(SITE, "previews"), exist_ok=True)
@@ -114,15 +147,24 @@ def build(inline=False):
     print(f"site: {len(out['systems'])} systems, {n} parts, meshes {sum(os.path.getsize(os.path.join(SITE,'meshes',x)) for x in os.listdir(os.path.join(SITE,'meshes')))/1e6:.1f} MB")
     if inline:
         html = open(os.path.join(SITE, "index.html")).read()
-        data = json.loads(json.dumps(out))
-        for s in data["systems"]:
-            for p in s["parts"]:
-                b = open(os.path.join(SITE, p["glb"]), "rb").read()
-                p["glb"] = "data:model/gltf-binary;base64," + base64.b64encode(b).decode()
-        html = html.replace("/*INLINE*/", "window.INLINE=" + json.dumps(data) + ";")
-        open(os.path.join(SITE, "standalone.html"), "w").write(html)
-        print("site/standalone.html", round(os.path.getsize(os.path.join(SITE, "standalone.html")) / 1e6, 1), "MB")
+
+        def page(systems, title, path):
+            data = json.loads(json.dumps({"systems": systems, "repo": out["repo"], "commit": out["commit"], "title": title}))
+            data["meshes"] = {k: v for k, v in meshes.items() if k.split("__")[0] in {s["file"] for s in systems}}
+            for s in data["systems"]:
+                for p in s["parts"]:
+                    if p["preview"]:                    # the page stands alone: previews travel with it
+                        b = open(os.path.join(SITE, p["preview"]), "rb").read()
+                        p["preview"] = "data:image/png;base64," + base64.b64encode(b).decode()
+            h = html.replace("<title>Nox assembly</title>", f"<title>{title}</title>", 1)
+            h = h.replace("/*INLINE*/", "window.INLINE=" + json.dumps(data) + ";", 1)
+            open(path, "w").write(h)
+            print(os.path.relpath(path, ROOT), round(os.path.getsize(path) / 1e6, 1), "MB")
+
+        page(out["systems"], "Nox assembly", os.path.join(SITE, "standalone.html"))
+        for s in out["systems"]:
+            page([s], s["title"], os.path.join(SITE, f"{s['file']}.html"))
 
 
 if __name__ == "__main__":
-    build(inline="--inline" in sys.argv)
+    build(inline="--inline" in sys.argv, offline="--offline" in sys.argv)
