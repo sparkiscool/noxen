@@ -40,6 +40,14 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             if [ -n "${{ inputs.parts }}" ]; then list="${{ inputs.parts }}"
             else list=$(python3 tools/stale_parts.py); fi
+            # a push made with Spark's own credentials already started these runs: skip every part that another run
+            # of this workflow is still working on (the dispatch is then only for the ones it missed)
+            busy=$(gh run list --workflow parts.yml --status in_progress --json databaseId --jq '.[].databaseId' \
+                   | grep -v "^${{ github.run_id }}$" \
+                   | while read id; do gh run view "$id" --json jobs --jq '.jobs[] | select(.status != "completed") | .name'; done \
+                   | sed -n 's/^run (\(.*\))$/\1/p' | sort -u)
+            for b in $busy; do list=$(echo " $list " | sed "s/ $b / /g"); done
+            [ -n "$busy" ] && echo "already running elsewhere, skipped: $busy"
           else
             # every commit of the push, not only the last one; deleted parts excluded
             list=$(git diff --name-only --diff-filter=AM ${{ github.event.before }} ${{ github.sha }} -- 'parts/*/part.py' 'parts/*/inputs/*' \
@@ -47,6 +55,8 @@ jobs:
           fi
           echo "parts=$(echo $list | xargs -n1 | jq -R . | jq -s -c .)" >> "$GITHUB_OUTPUT"
           echo "will run: $list"
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   run:
     needs: find

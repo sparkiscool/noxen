@@ -11,9 +11,9 @@ python tools/dim.py <section>                                     # one section 
 ```
 
 ## What you do in a part session
-- Write or edit `parts/<name>/part.py`: `setup(h) -> Part` and `SPEC = dict(h=..., gen_cm3=..., max_worst=0.5)`. Pattern: `parts/motor_mount/part.py` (small), `parts/hub_deck/part.py` (large, with `inputs/`).
+- Write or edit `parts/<name>/part.py`: `setup(h) -> Part` and `SPEC = dict(h=..., gen_cm3=..., max_worst=0.5)`. Pattern: `parts/motor_mount/part.py` (small), `parts/hub_deck/part.py` (large, with `inputs/`). The runner has 7 GB: keep the grid under ~300k cells at the SPEC h (the smoke prints it; hub deck 283k x 20 cases peaks 5.7 GB), else the runner dies without a result.
 - Give the part a line in `systems/<drone>.assembly.json` (id = folder name, placeholder shape, pose).
-- Commit, push to main. From a cloud session the push does not start the runs itself, so then: `gh api -X POST repos/sparkiscool/noxen/actions/workflows/parts.yml/dispatches -f ref=main -f 'inputs[parts]=<names>'`. Stop. CI runs the engine, commits `result.json` + `part.stl`, rebuilds the page.
+- Commit, push to main. A push with Spark's credentials starts the runs; one with the app token does not, so always then: `gh api -X POST repos/sparkiscool/noxen/actions/workflows/parts.yml/dispatches -f ref=main -f 'inputs[parts]=<names>'` (the workflow skips parts already running). Stop. CI runs the engine, commits `result.json` + `part.stl`, rebuilds the page.
 - To fix or change a part: read `parts/<name>/feedback.md` (Spark's notes from the page) and `parts/<name>/result.json` (solid check, worst index, mass). Nothing else. Change the setup, push.
 - Never rerun or re-version a part on your own. Spark reviews every result on the page and asks for the next step.
 
