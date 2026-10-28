@@ -32,7 +32,7 @@ KEY_R, KEY_W, KEY_L, KEY_H, KEY_BACK = 30.0, 3.3, 3.3, 2.0, 6.0   # L2 manual dr
                                     # ahead of the base plane. SLOT DEPTH IS NOT IN THE MANUAL: the 2.0 key height is E (check on the unit).
 CAM_SQ = 14.0                       # DECXIN 2633V2: M2.5 on 28 x 28 (P); heat-set insert hole O3.2 x 5.7 (E, dimensions.md); boss O12 (v5 row)
 CAM_BOARD_BACK = 12.0               # board back face 12 behind the lens plane (E placeholder: lens and thickness open, Q3); body 38 x 38 (P)
-CAM_BOSS_L = 10.0
+CAM_BOSS_L = 6.0                    # boss O10 x 6 round the O3.2 x 5.7 insert (28 Oct, lighter; was O12 x 10)
 TUBE_BORE_R, TUBE_DEPTH = 3.1, 15.0 # 6/4 carbon: bore 6.2, 15 deep (Spark 27 Oct, coupons v2)
 ROD_BORE_R, ROD_DEPTH = 1.6, 10.0   # 3.0 rod: bore 3.2, 10 deep
 WALL, FLOOR = 2.0, 3.0              # wall 2.0 (28 Oct), floor 3.0
@@ -179,10 +179,11 @@ def bodies():
     for c in cs:
         pts, base = cam_boss_pts(c)
         for q in pts:
-            drawn.append(along(q, q - c["f"] * CAM_BOSS_L, 6.0))
+            drawn.append(along(q, q - c["f"] * CAM_BOSS_L, 5.0))
             cuts.append(along(q + c["f"] * 1.0, q - c["f"] * 5.7, 1.6))
         cuts.append(fbox(base, c["f"], c["r"], c["u"], (0.0, 25.0), (-22.0, 22.0), (-22.0, 22.0)))          # board + body (38 x 38 + clearance)
-        drawn.append(fbox(base, c["f"], c["r"], c["u"], (-CAM_BOSS_L - 3.0, -CAM_BOSS_L + 0.5), (-19.0, 19.0), (-19.0, 19.0)))   # back plate 38 x 38 x 3 joining the 4 bosses: one wide seat for the body to grow on (28 Oct, the v6 run split single bosses off)
+        drawn.append(fbox(base, c["f"], c["r"], c["u"], (-CAM_BOSS_L - 2.0, -CAM_BOSS_L + 0.5), (-19.0, 19.0), (-19.0, 19.0))
+                     - fbox(base, c["f"], c["r"], c["u"], (-CAM_BOSS_L - 3.0, -CAM_BOSS_L + 1.5), (-13.0, 13.0), (-13.0, 13.0)))   # 38 x 38 frame 6 wide x 2 thick joining the 4 bosses: one wide seat for the body to grow on (28 Oct, the v6 run split single bosses off; 2 g)
         cuts.append(frustum(c))
         envs_cam.append(fbox(base, c["f"], c["r"], c["u"], (-34.0, 0.0), (-22.0, 22.0), (-22.0, 22.0)))
     # --- sockets
@@ -221,7 +222,7 @@ def setup(h):
     cam_reg = []
     for c in cs:
         pts, _ = cam_boss_pts(c)
-        cam_reg.append((pts, [along(q - c["f"] * 3.0, q + c["f"] * 0.3, 6.0) for q in pts]))
+        cam_reg.append((pts, [along(q - c["f"] * 3.0, q + c["f"] * 0.3, 5.0) for q in pts]))
 
     def rigid_split(pts, F, Pt):
         pts = np.asarray(pts, float); c0 = pts.mean(0); n = len(pts); Am = np.zeros((6, 3 * n))
