@@ -1,0 +1,276 @@
+{
+ "name": "overseer_cage_node_10",
+ "engine": "nox/topo",
+ "solid_ok": false,
+ "solid": {
+  "bodies_plain": 3,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   5294.7
+  ],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "acute_edges": 1,
+  "ok": false
+ },
+ "function_check": {
+  "skin_mm3": 1503.7,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "frame tube 6-10 axial 330 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.141,
+    "across": 0.075,
+    "at": [
+     -49.4,
+     327.6,
+     129.3
+    ]
+   },
+   {
+    "case": "frame tube 6-10 side 0.4 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.0,
+    "at": [
+     -42.4,
+     321.6,
+     124.3
+    ]
+   },
+   {
+    "case": "frame tube 7-10 axial 296 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.086,
+    "across": 0.042,
+    "at": [
+     -52.4,
+     318.6,
+     130.3
+    ]
+   },
+   {
+    "case": "frame tube 7-10 side 1.1 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.0,
+    "at": [
+     -47.4,
+     309.6,
+     125.3
+    ]
+   },
+   {
+    "case": "frame tube 10-11 axial 70 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.026,
+    "across": 0.045,
+    "at": [
+     -60.4,
+     325.6,
+     119.3
+    ]
+   },
+   {
+    "case": "frame tube 10-11 side 6.4 N",
+    "cls": "crash",
+    "inlayer": 0.003,
+    "across": 0.005,
+    "at": [
+     -62.4,
+     328.6,
+     121.3
+    ]
+   },
+   {
+    "case": "crash 35 g through the longest tube tube 7-10 (413 mm), axial + side",
+    "cls": "crash",
+    "inlayer": 0.086,
+    "across": 0.047,
+    "at": [
+     -52.4,
+     318.6,
+     130.3
+    ]
+   }
+  ],
+  "worst": 0.141,
+  "worst_case": "frame tube 6-10 axial 330 N (pull-out)",
+  "worst_at": [
+   -49.4,
+   327.6,
+   129.3
+  ]
+ },
+ "mass_g": 11.7,
+ "watertight": false,
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 9212.1,
+ "drawn_g": 6.24,
+ "stl": "overseer_cage_node_10.stl",
+ "view_stl": "overseer_cage_node_10_view.stl",
+ "view_faces": 91326,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "backend": "auto",
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 6.44256687412536,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.058799692020910156,
+  "nd": 74031,
+  "sym_axes": [],
+  "n_real": 7,
+  "n_ties": 6,
+  "backend": "direct",
+  "iterations": 47,
+  "stopped": "grey"
+ },
+ "grid": {
+  "name": "overseer_cage_node_10",
+  "h": 1.0,
+  "shape": [
+   72,
+   48,
+   48
+  ],
+  "origin": [
+   -89.9074,
+   294.1031,
+   92.7877
+  ],
+  "cells": 165888,
+  "design": 73978,
+  "drawn": 4923,
+  "cases": [
+   "frame tube 6-10 axial 330 N (pull-out)",
+   "frame tube 6-10 side 0.4 N",
+   "frame tube 7-10 axial 296 N (pull-out)",
+   "frame tube 7-10 side 1.1 N",
+   "frame tube 10-11 axial 70 N (pull-out)",
+   "frame tube 10-11 side 6.4 N",
+   "crash 35 g through the longest tube tube 7-10 (413 mm), axial + side"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 22.8,
+ "layout_s": 23,
+ "peak_gb": 4.607104,
+ "gen_cm3": 4.3,
+ "h": 1.0,
+ "audit": {
+  "drawn_share": 0.062,
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 3899,
+    "inscribed_mm": 4.0,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.93,
+    "room_depth_mm": 55.0,
+    "at": [
+     -52.0,
+     318.4,
+     125.1
+    ],
+    "core_mm": 3.5,
+    "share_of_drawn": 0.79
+   },
+   {
+    "id": 2,
+    "cells": 1024,
+    "inscribed_mm": 4.0,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.93,
+    "room_depth_mm": 38.0,
+    "at": [
+     -55.4,
+     327.3,
+     110.4
+    ],
+    "core_mm": 3.5
+   }
+  ],
+  "envelope_waste": 0.0,
+  "cases": 7,
+  "supports": 1,
+  "fails": []
+ },
+ "baseline": null,
+ "total_s": 46,
+ "part_sha": "459f28af4455",
+ "max_worst": 0.5,
+ "strength_ok": true
+}
