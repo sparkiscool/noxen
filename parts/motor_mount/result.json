@@ -6,19 +6,19 @@
   "bodies_plain": 1,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   8853.1
+   9040.8
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
-  "acute_edges": 0,
+  "acute_edges": 2,
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 2815.7,
+  "skin_mm3": 2974.9,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": 0.0,
-  "outside_env_mm3": -0.0,
+  "in_cuts_mm3": -0.0,
+  "outside_env_mm3": 0.0,
   "ok": true
  },
  "strength": {
@@ -26,112 +26,112 @@
    {
     "case": "thrust 13 N up",
     "cls": "flight",
-    "inlayer": 0.011,
-    "across": 0.024,
+    "inlayer": 0.012,
+    "across": 0.028,
     "at": [
-     -7.2,
-     -5.6,
-     23.0
+     -5.2,
+     -2.8,
+     25.0
     ]
    },
    {
     "case": "max thrust 20 N up",
     "cls": "misuse",
-    "inlayer": 0.011,
-    "across": 0.023,
+    "inlayer": 0.012,
+    "across": 0.027,
     "at": [
-     -7.2,
-     -5.6,
-     23.0
+     -5.2,
+     -2.8,
+     25.0
     ]
    },
    {
     "case": "yaw torque 0.35 Nm",
     "cls": "flight",
-    "inlayer": 0.057,
-    "across": 0.124,
+    "inlayer": 0.068,
+    "across": 0.116,
     "at": [
-     5.6,
-     -10.4,
-     16.6
+     3.6,
+     10.8,
+     30.6
     ]
    },
    {
     "case": "crash push 40 N +X on the motor",
     "cls": "crash",
-    "inlayer": 0.034,
-    "across": 0.068,
+    "inlayer": 0.052,
+    "across": 0.117,
     "at": [
-     -10.4,
-     -5.6,
-     19.8
+     -12.4,
+     -7.6,
+     8.2
     ]
    },
    {
     "case": "crash push 40 N -X on the motor",
     "cls": "crash",
-    "inlayer": 0.034,
-    "across": 0.068,
+    "inlayer": 0.052,
+    "across": 0.117,
     "at": [
-     10.4,
-     5.6,
-     19.8
+     12.4,
+     -7.6,
+     8.2
     ]
    },
    {
     "case": "crash push 40 N +Y on the motor",
     "cls": "crash",
-    "inlayer": 0.044,
-    "across": 0.102,
+    "inlayer": 0.055,
+    "across": 0.122,
     "at": [
-     5.6,
-     -10.4,
-     16.6
+     -7.6,
+     -7.6,
+     15.4
     ]
    },
    {
     "case": "crash push 40 N -Y on the motor",
     "cls": "crash",
-    "inlayer": 0.044,
-    "across": 0.102,
+    "inlayer": 0.055,
+    "across": 0.116,
     "at": [
-     -5.6,
-     10.4,
-     16.6
+     -6.8,
+     6.8,
+     15.4
     ]
    },
    {
     "case": "landing on the motor 60 N down",
     "cls": "crash",
-    "inlayer": 0.014,
-    "across": 0.006,
+    "inlayer": 0.016,
+    "across": 0.011,
     "at": [
-     8.8,
-     4.0,
-     23.0
+     -5.2,
+     -2.8,
+     25.0
     ]
    },
    {
     "case": "vibration 30 g + thrust",
     "cls": "vibration",
-    "inlayer": 0.022,
-    "across": 0.048,
+    "inlayer": 0.027,
+    "across": 0.059,
     "at": [
-     -7.2,
-     -5.6,
-     23.0
+     -12.4,
+     7.6,
+     8.2
     ]
    }
   ],
-  "worst": 0.124,
-  "worst_case": "yaw torque 0.35 Nm",
+  "worst": 0.122,
+  "worst_case": "crash push 40 N +Y on the motor",
   "worst_at": [
-   5.6,
-   -10.4,
-   16.6
+   -7.6,
+   -7.6,
+   15.4
   ]
  },
- "mass_g": 18.0,
+ "mass_g": 18.03,
  "watertight": true,
  "bodies": {
   "bodies_raw": 1,
@@ -139,7 +139,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 14173.9,
+ "volume_mm3": 14197.8,
  "drawn_g": 8.35,
  "stl": "motor_mount.stl",
  "view_stl": "motor_mount_view.stl",
@@ -191,11 +191,11 @@
    "auto_sym": true,
    "backend": "auto",
    "mg_tol": 1e-05,
-   "time_limit_s": 19800.0,
+   "time_limit_s": 16200.0,
    "checkpoint_every": 10
   },
   "R_mm": 6.44256687412536,
-  "R_cells": 4.026604296328349,
+  "R_cells": 8.053208592656699,
   "calibration": {
    "rod": 0.9701102250255644,
    "plate": 0.8809289894691206,
@@ -204,34 +204,31 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.1792383856951871,
-  "nd": 10472,
-  "sym_axes": [
-   0,
-   1
-  ],
+  "volfrac": 0.1808595953186689,
+  "nd": 85104,
+  "sym_axes": [],
   "n_real": 9,
   "n_ties": 30,
   "backend": "direct",
-  "iterations": 60,
-  "stopped": null
+  "iterations": 97,
+  "stopped": "max_stage"
  },
  "grid": {
   "name": "motor_mount",
-  "h": 1.6,
+  "h": 0.8,
   "shape": [
-   32,
-   32,
-   32
+   56,
+   56,
+   56
   ],
   "origin": [
-   -25.6,
-   -25.6,
-   -6.6
+   -22.4,
+   -22.4,
+   -3.4
   ],
-  "cells": 32768,
-  "design": 10304,
-  "drawn": 1632,
+  "cells": 175616,
+  "design": 83384,
+  "drawn": 13728,
   "cases": [
    "thrust 13 N up",
    "max thrust 20 N up",
@@ -247,11 +244,12 @@
    "default"
   ]
  },
- "build_s": 54.3,
+ "build_s": 43.9,
+ "layout_s": 7993,
+ "peak_gb": 6.26646,
  "gen_cm3": 7.0,
- "h": 1.6,
- "rebuilt_from": "mm_density",
+ "h": 0.8,
  "baseline": null,
- "total_s": 60,
+ "total_s": 8037,
  "part_sha": "93d806172073"
 }

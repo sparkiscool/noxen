@@ -1,0 +1,387 @@
+{
+ "name": "hub_deck",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   35918.8
+  ],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "acute_edges": 0,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 18080.3,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.0,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "crash 0 [1.0, 0.0, 0.0] via head guard (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.166,
+    "across": 0.3,
+    "at": [
+     104.1,
+     -19.4,
+     4.4
+    ]
+   },
+   {
+    "case": "crash 1 [-1.0, 0.0, 0.0] via node 13 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.068,
+    "across": 0.134,
+    "at": [
+     94.1,
+     -18.1,
+     15.6
+    ]
+   },
+   {
+    "case": "crash 2 [0.0, 1.0, 0.0] via node 10 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.023,
+    "across": 0.025,
+    "at": [
+     104.1,
+     23.1,
+     6.9
+    ]
+   },
+   {
+    "case": "crash 3 [0.0, -1.0, 0.0] via node 9 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.023,
+    "across": 0.024,
+    "at": [
+     104.1,
+     -23.1,
+     6.9
+    ]
+   },
+   {
+    "case": "crash 4 [0.0, 0.0, 1.0] via head guard (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.153,
+    "across": 0.232,
+    "at": [
+     94.1,
+     18.1,
+     15.6
+    ]
+   },
+   {
+    "case": "crash 5 [0.0, 0.0, -1.0] via node 0 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.018,
+    "across": 0.02,
+    "at": [
+     94.1,
+     18.1,
+     15.6
+    ]
+   },
+   {
+    "case": "crash 6 [0.58, 0.58, 0.58] via node 15 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.047,
+    "across": 0.046,
+    "at": [
+     95.4,
+     25.6,
+     6.9
+    ]
+   },
+   {
+    "case": "crash 7 [0.58, 0.58, -0.58] via node 18 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.065,
+    "across": 0.091,
+    "at": [
+     104.1,
+     19.4,
+     4.4
+    ]
+   },
+   {
+    "case": "crash 8 [0.58, -0.58, 0.58] via node 16 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.047,
+    "across": 0.044,
+    "at": [
+     94.1,
+     -25.6,
+     6.9
+    ]
+   },
+   {
+    "case": "crash 9 [0.58, -0.58, -0.58] via node 19 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.063,
+    "across": 0.093,
+    "at": [
+     104.1,
+     -19.4,
+     4.4
+    ]
+   },
+   {
+    "case": "crash 10 [-0.58, 0.58, 0.58] via node 13 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.085,
+    "across": 0.177,
+    "at": [
+     104.1,
+     -19.4,
+     4.4
+    ]
+   },
+   {
+    "case": "crash 11 [-0.58, 0.58, -0.58] via node 11 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.102,
+    "across": 0.177,
+    "at": [
+     94.1,
+     -18.1,
+     15.6
+    ]
+   },
+   {
+    "case": "crash 12 [-0.58, -0.58, 0.58] via node 14 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.084,
+    "across": 0.173,
+    "at": [
+     104.1,
+     19.4,
+     4.4
+    ]
+   },
+   {
+    "case": "crash 13 [-0.58, -0.58, -0.58] via node 12 (35 g + the keel / brace forces, F)",
+    "cls": "crash",
+    "inlayer": 0.102,
+    "across": 0.176,
+    "at": [
+     94.1,
+     18.1,
+     15.6
+    ]
+   },
+   {
+    "case": "flight 4 g down (+ the keel / brace forces, F)",
+    "cls": "flight",
+    "inlayer": 0.007,
+    "across": 0.008,
+    "at": [
+     92.9,
+     -24.4,
+     13.1
+    ]
+   },
+   {
+    "case": "flight 2 g x",
+    "cls": "flight",
+    "inlayer": 0.004,
+    "across": 0.003,
+    "at": [
+     -24.6,
+     -28.1,
+     4.4
+    ]
+   },
+   {
+    "case": "flight 2 g y",
+    "cls": "flight",
+    "inlayer": 0.002,
+    "across": 0.002,
+    "at": [
+     -29.6,
+     31.9,
+     4.4
+    ]
+   },
+   {
+    "case": "landing 6 g",
+    "cls": "flight",
+    "inlayer": 0.011,
+    "across": 0.009,
+    "at": [
+     -28.4,
+     -30.6,
+     5.6
+    ]
+   },
+   {
+    "case": "USB plug 20 N into the Pi's aft ports",
+    "cls": "misuse",
+    "inlayer": 0.031,
+    "across": 0.022,
+    "at": [
+     -24.6,
+     -28.1,
+     4.4
+    ]
+   },
+   {
+    "case": "press 50 N on the Pi (assembly)",
+    "cls": "misuse",
+    "inlayer": 0.063,
+    "across": 0.056,
+    "at": [
+     -28.4,
+     -30.6,
+     5.6
+    ]
+   }
+  ],
+  "worst": 0.3,
+  "worst_case": "crash 0 [1.0, 0.0, 0.0] via head guard (35 g + the keel / brace forces, F)",
+  "worst_at": [
+   104.1,
+   -19.4,
+   4.4
+  ]
+ },
+ "mass_g": 68.03,
+ "watertight": true,
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 53570.3,
+ "drawn_g": 38.65,
+ "stl": "hub_deck.stl",
+ "view_stl": "hub_deck_view.stl",
+ "view_faces": 120000,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "auto_sym": true,
+   "backend": "auto",
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 5.1540534993002876,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.184960047793294,
+  "nd": 66955,
+  "sym_axes": [],
+  "n_real": 20,
+  "n_ties": 30,
+  "backend": "direct",
+  "iterations": 77,
+  "stopped": "max_stage"
+ },
+ "grid": {
+  "name": "overseer_hub_deck",
+  "h": 1.25,
+  "shape": [
+   160,
+   72,
+   32
+  ],
+  "origin": [
+   -79.0,
+   -45.0,
+   -5.0
+  ],
+  "cells": 368640,
+  "design": 66859,
+  "drawn": 15138,
+  "cases": [
+   "crash 0 [1.0, 0.0, 0.0] via head guard (35 g + the keel / brace forces, F)",
+   "crash 1 [-1.0, 0.0, 0.0] via node 13 (35 g + the keel / brace forces, F)",
+   "crash 2 [0.0, 1.0, 0.0] via node 10 (35 g + the keel / brace forces, F)",
+   "crash 3 [0.0, -1.0, 0.0] via node 9 (35 g + the keel / brace forces, F)",
+   "crash 4 [0.0, 0.0, 1.0] via head guard (35 g + the keel / brace forces, F)",
+   "crash 5 [0.0, 0.0, -1.0] via node 0 (35 g + the keel / brace forces, F)",
+   "crash 6 [0.58, 0.58, 0.58] via node 15 (35 g + the keel / brace forces, F)",
+   "crash 7 [0.58, 0.58, -0.58] via node 18 (35 g + the keel / brace forces, F)",
+   "crash 8 [0.58, -0.58, 0.58] via node 16 (35 g + the keel / brace forces, F)",
+   "crash 9 [0.58, -0.58, -0.58] via node 19 (35 g + the keel / brace forces, F)",
+   "crash 10 [-0.58, 0.58, 0.58] via node 13 (35 g + the keel / brace forces, F)",
+   "crash 11 [-0.58, 0.58, -0.58] via node 11 (35 g + the keel / brace forces, F)",
+   "crash 12 [-0.58, -0.58, 0.58] via node 14 (35 g + the keel / brace forces, F)",
+   "crash 13 [-0.58, -0.58, -0.58] via node 12 (35 g + the keel / brace forces, F)",
+   "flight 4 g down (+ the keel / brace forces, F)",
+   "flight 2 g x",
+   "flight 2 g y",
+   "landing 6 g",
+   "USB plug 20 N into the Pi's aft ports",
+   "press 50 N on the Pi (assembly)"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 143.6,
+ "layout_s": 1817,
+ "peak_gb": 5.6525,
+ "gen_cm3": 24.0,
+ "h": 1.25,
+ "baseline": null,
+ "total_s": 1960,
+ "part_sha": "c8f1407f5235"
+}
