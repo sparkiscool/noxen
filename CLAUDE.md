@@ -41,3 +41,10 @@ audit report; `python -m topo.run parts/<name> --h 2.5 --maxit 2 --no-coarse` ru
 - A check-in turn: `git pull -q`; for each part, if `parts/<part>/result.json` changed (new `part_sha`) send Spark `parts/<part>/preview.png` with SendUserFile and one line: PASS/FAIL, mass g, worst index and case, minutes; link https://sparkiscool.github.io/noxen/. If a part is not done: rerun `predict.py --started <run start>` and schedule one more check-in. Read nothing else.
 - Engine change (`topo/` edited): `python3 tools/predict.py --engine <new tag>` in that commit, so old timings are ignored.
 - Spark's reply in that session: "rerun <part>" dispatches `parts.yml` for it; "<part>: <notes>" goes to `parts/<part>/feedback.md`, then the fix per "What you do in a part session". Then predict and schedule the check-in again.
+
+## Adding to the workflow (Spark, 28 Oct)
+A new rule or feature is merged into the process, never stacked on top of it. In order of preference:
+1. Code, where it can be: a check in `topo/audit.py`, a gate in `topo/run.py`, a step in `parts.yml`. It runs every time without anyone remembering it.
+2. A change to an existing line here, when it only guides what a session writes.
+3. A new line here only when neither fits, and only after reading this file to see what it replaces.
+Every addition removes or replaces whatever it supersedes. This file stays under 60 lines; a session that would push it over moves something into code first. No rulebooks, no docs folder, no agents or skills that restate rules.
