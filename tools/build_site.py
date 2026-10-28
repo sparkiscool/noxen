@@ -33,7 +33,8 @@ def status(pid):
     r = json.load(open(rj))
     if r.get("part_sha") != sha(py):
         return "stale", r
-    return ("done" if r.get("solid_ok") else "failed"), r
+    ok = r.get("solid_ok") and r.get("strength_ok", True)
+    return ("done" if ok else "failed"), r
 
 
 def pose_matrix(pose):
@@ -66,7 +67,7 @@ def placeholder(p):
 
 def build(inline=False):
     os.makedirs(os.path.join(SITE, "meshes"), exist_ok=True)
-    out = {"systems": []}
+    out = {"systems": [], "repo": os.environ.get("GITHUB_REPOSITORY", "sparkiscool/noxen")}
     for f in sorted(glob.glob(os.path.join(ROOT, "systems", "*.assembly.json"))):
         a = json.load(open(f))
         sysname = os.path.basename(f).split(".")[0]
@@ -93,9 +94,20 @@ def build(inline=False):
             m.apply_transform(pose_matrix(p.get("pose")))
             glb = os.path.join(SITE, "meshes", f"{sysname}__{pid}.glb")
             m.export(glb)
+            prev = os.path.join(ROOT, "parts", pid, "preview.png")
+            if os.path.exists(prev):
+                os.makedirs(os.path.join(SITE, "previews"), exist_ok=True)
+                import shutil; shutil.copy(prev, os.path.join(SITE, "previews", f"{pid}.png"))
+            fb = os.path.join(ROOT, "parts", pid, "feedback.md")
+            stg = (r or {}).get("strength") or {}
             S["parts"].append(dict(id=pid, name=p["name"], role=p.get("role", ""), status=st, kind=kind,
                                    glb=os.path.relpath(glb, SITE), mass_g=(r or {}).get("mass_g", p.get("mass_g")),
-                                   worst=((r or {}).get("strength") or {}).get("worst")))
+                                   worst=stg.get("worst"), worst_case=stg.get("worst_case"),
+                                   max_worst=(r or {}).get("max_worst"), strength_ok=(r or {}).get("strength_ok"),
+                                   solid_ok=(r or {}).get("solid_ok"), total_s=(r or {}).get("total_s"),
+                                   preview=f"previews/{pid}.png" if os.path.exists(prev) else None,
+                                   feedback=open(fb).read() if os.path.exists(fb) else "",
+                                   has_script=os.path.exists(os.path.join(ROOT, "parts", pid, "part.py"))))
         out["systems"].append(S)
     json.dump(out, open(os.path.join(SITE, "assembly.json"), "w"), indent=1)
     n = sum(len(s["parts"]) for s in out["systems"])

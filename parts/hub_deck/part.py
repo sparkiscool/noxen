@@ -8,7 +8,7 @@ INP = os.path.join(HERE, "inputs")
 from topo import Part
 from topo.part import man
 
-SPEC = dict(h=1.25, gen_cm3=24.0)
+SPEC = dict(h=1.25, gen_cm3=24.0, max_worst=0.5)
 LEAN = False
 
 R = json.load(open(os.path.join(INP, "core_result.json")))

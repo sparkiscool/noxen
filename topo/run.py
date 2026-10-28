@@ -224,8 +224,15 @@ def main(argv=None):
         with open(rj) as fh:
             r = json.load(fh)
         r["part_sha"] = hashlib.sha256(open(os.path.join(out, "part.py"), "rb").read()).hexdigest()[:12]
+        # strength gate: SPEC["max_worst"] (default 0.5). Above it the part is failed like a solid-check fail.
+        mw = float(spec.get("max_worst", 0.5))
+        r["max_worst"] = mw
+        r["strength_ok"] = bool(res["strength"]["worst"] is not None and res["strength"]["worst"] <= mw)
         with open(rj, "w") as fh:
             json.dump(r, fh, indent=1, default=str)
+        if not r["strength_ok"]:
+            print(f"STRENGTH FAIL: worst index {res['strength']['worst']} > max_worst {mw}")
+            return 1
     print(json.dumps(dict(name=res["name"], solid_ok=res["solid_ok"], mass_g=res["mass_g"],
                           worst=res["strength"]["worst"], total_s=res["total_s"]), indent=1))
     return 0 if res["solid_ok"] else 1
