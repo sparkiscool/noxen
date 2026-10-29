@@ -62,7 +62,8 @@ jobs:
             list=$(git diff --name-only --diff-filter=AM ${{ github.event.before }} ${{ github.sha }} -- 'parts/*/part.py' 'parts/*/inputs/*' \
                    | cut -d/ -f2 | sort -u | tr '\n' ' ')
           fi
-          echo "parts=$(echo $list | xargs -n1 | jq -R . | jq -s -c .)" >> "$GITHUB_OUTPUT"
+          # xargs -r: an empty list gives [] and no run job (29 Oct: a dispatch for a part already running elsewhere ran a job with no part and went red)
+          echo "parts=$(echo $list | xargs -r -n1 | jq -R . | jq -s -c .)" >> "$GITHUB_OUTPUT"
           echo "will run: $list"
         env:
           GH_TOKEN: ${{ github.token }}
