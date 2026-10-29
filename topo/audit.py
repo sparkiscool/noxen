@@ -19,6 +19,8 @@ Checks (hard = raises, soft = logged + in the report):
                        Under 3 x min member: a web cannot form behind it; expect a thin bar.
   envelope_waste soft  design cells that are > 8 x min member from every drawn body and every support: unreachable
                        by any sensible load path, they only cost solve time. Reported as a share.
+  plate          hard  the envelope (plan hull's smallest rectangle x height) does not fit the printer's 180 mm cube at any
+                       rotation (Spark 29 Oct): the part must be split into bolted pieces that each fit.
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -32,6 +34,31 @@ S26 = np.ones((3, 3, 3), bool)
 
 class SetupError(ValueError):
     pass
+
+
+PLATE_MM = 180.0      # Bambu A1 mini: 180 x 180 plate, 180 tall (CLAUDE.md design rules)
+
+
+def plate_fit(env, h):
+    """(L, W, H, fits): the smallest rectangle round the envelope's plan hull, its height, and whether some rotation on the plate
+    fits (the rotated rectangle's bounding square inside the plate, a sufficient test)."""
+    from scipy.spatial import ConvexHull
+    ij = np.argwhere(env.any(axis=2)).astype(float)
+    kz = np.where(env.any(axis=(0, 1)))[0]
+    H = float(kz.max() - kz.min() + 1) * h if len(kz) else 0.0
+    if len(ij) < 3:
+        return 0.0, 0.0, H, H <= PLATE_MM
+    pts = ij[ConvexHull(ij).vertices] * h
+    best = None
+    for ang in np.radians(np.arange(0.0, 90.0, 1.0)):
+        c, s_ = np.cos(ang), np.sin(ang)
+        r = pts @ np.array([[c, -s_], [s_, c]]); ext = r.max(0) - r.min(0) + h
+        if best is None or ext.prod() < best.prod():
+            best = ext
+    L, W = float(max(best)), float(min(best))
+    fits = H <= PLATE_MM and any(L * abs(np.cos(t)) + W * abs(np.sin(t)) <= PLATE_MM and L * abs(np.sin(t)) + W * abs(np.cos(t)) <= PLATE_MM
+                                 for t in np.radians(np.arange(0.0, 90.5, 0.5)))
+    return L, W, H, bool(fits)
 
 
 
@@ -152,6 +179,13 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
             if waste > 0.25:
                 log(f"audit: WARNING {waste:.0%} of the design room is over {8 * mm:.0f} mm from every drawn body and "
                     f"support: it will stay empty and only costs solve time. Trim the envelope.")
+
+    L, W, H, fits = plate_fit(in_env, h)
+    rep["plate"] = dict(L_mm=round(L, 1), W_mm=round(W, 1), H_mm=round(H, 1), fits=fits)
+    if not fits:
+        fails.append(f"plate: the envelope is {L:.0f} x {W:.0f} x {H:.0f} mm and does not fit the {PLATE_MM:.0f} mm plate at any "
+                     f"rotation: split the part into bolted pieces that each fit, joined so the positions it sets are kept "
+                     f"(Spark 29 Oct).")
 
     rep["cases"] = len(part.cases)
     rep["supports"] = len(part.supports)

@@ -4,7 +4,7 @@ spokes 2.1 / 2.2 / 2.3 end in drawn 3.2 x 10 sockets at (-53.26, 119.7, 25). See
 from parts.overseer_arm_lib import Arm, build
 
 ARM = Arm("rear", 135.0, 1, ["spoke 2.1", "spoke 2.2", "spoke 2.3"], [-53.26, 119.7, 25.0])
-SPEC = dict(h=1.2, gen_cm3=30.0, max_worst=0.5)
+SPEC = dict(h=2.0, gen_cm3=30.0, max_worst=0.5)   # h 2.0 (29 Oct): at 1.2 the grid was 1.0 M / 0.4 M cells, multigrid never converged, no attempt reached a fine iteration
 
 
 def setup(h):

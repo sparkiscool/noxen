@@ -20,6 +20,10 @@ from dataclasses import replace
 
 from .layout import Layout, Settings, gate_member_mm
 from .build import build_and_check
+from .audit import SetupError
+
+MAX_CELLS = 300_000      # the grid the GitHub runner solves direct (16 GB, direct estimate 6 (n/4.5e5)^(4/3) GB): over it the multigrid
+                         # fallback stalls (the arms at 1.0 M cells, 28-29 Oct: 300 CG iterations without converging, no attempt did one iteration)
 
 
 class Tee:
@@ -67,6 +71,9 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
     ck = os.path.join(out_dir, "ck.npz")
     log(f"=== {name}: h {h}, generated {gen_cm3} cm3, min member {s.min_member_mm} mm, cores {os.cpu_count()}")
     part0 = setup(h)
+    if part0.nel > MAX_CELLS:
+        raise SetupError(f"{name}: {part0.nel:,} cells at h {h} (limit {MAX_CELLS:,}): coarsen h (cells scale with 1/h^3) or trim the "
+                         f"envelope (the audit's envelope_waste says where); the multigrid fallback does not converge on grids this size.")
     if s.gate_member:
         s = replace(s, min_member_mm=round(gate_member_mm(part0, s.min_member_mm, log=log), 2))
     from .audit import audit

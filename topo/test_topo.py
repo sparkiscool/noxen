@@ -455,10 +455,21 @@ def t_gate_specks():
     RESULTS.append(("gate_specks", ok)); print(f"gate specks: {'ok' if ok else 'FAIL'} speck {ok1}/{i1['specks_plain']} blob {ok2}/{i2['bodies_plain']} pad {ok3}/{i3['drawn_not_in_main']}")
 
 
+def t_audit_plate():
+    """audit: an envelope longer than the 180 mm plate at every rotation is refused (the front arm, 225 x 63: 29 Oct); a 170 x 170 one passes."""
+    from topo.audit import plate_fit
+    import numpy as np
+    def env(L, W, H, h=2.0):
+        e = np.zeros((int(L / h), int(W / h), int(H / h)), bool); e[:] = True; return e
+    a = plate_fit(env(224, 64, 44), 2.0); b = plate_fit(env(170, 170, 40), 2.0); c = plate_fit(env(200, 40, 40), 2.0)
+    ok = (not a[3]) and b[3] and c[3] and abs(a[0] - 224) < 3 and abs(a[1] - 64) < 3      # 200 x 40 fits on the diagonal
+    RESULTS.append(("audit_plate", ok)); print(f"audit plate: {'ok' if ok else 'FAIL'} 224x64 {a[3]} 170x170 {b[3]} 200x40 {c[3]}")
+
+
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_gate_specks):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_gate_specks, t_audit_plate):
         t()
     if not quick:
         t_end_to_end()
