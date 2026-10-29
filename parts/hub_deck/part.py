@@ -1,5 +1,12 @@
-"""Overseer hub deck (v12 setup: core v4, payload loads only, 11 cm3). Copied from nox/overseer/core_topo_v4.py with the
-command-line handling removed; its inputs live in inputs/."""
+"""Overseer hub deck (v13 setup: core v4 payloads + the nose node, 14 cm3). Copied from nox/overseer/core_topo_v4.py with the
+command-line handling removed; its inputs live in inputs/.
+v13 (29 Oct, Spark: the two front core ties floated in the air at the deleted tower's point (114, 0, 20); they belong to the
+electronics mount, and the rods may grow): the deck's nose carries a node for core tie front.1 (to cage node 7) and front.2 (to
+node 17, printed into the head mount, so that rod keeps its line). Node convention as parts/cage_node_lib.py: the link's end point
+in systems/overseer.cage.json is the virtual node centre, the rod stops NODE_R short of it, the coupon socket (bore 3.2 x 10, resin
+grooves, lead-in, crown) runs from there toward the cage node, a 2.5 wall and 3.0 floor drawn round it. Loads: the frame model's
+member forces per crash case (systems/overseer.cage_loads.json), each added to the deck's own payload case of the same direction,
+plus a pull-out at the largest axial force per tie."""
 import json, os
 import numpy as np, trimesh, manifold3d as mf
 
@@ -7,8 +14,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 INP = os.path.join(HERE, "inputs")
 from topo import Part
 from topo.part import man
+from parts.cage_node_lib import CAGE, socket_cuts, collar_shape, KIND, WALL, FLOOR, NODE_R
 
-SPEC = dict(h=1.0, gen_cm3=11.0, max_worst=0.5)
+SPEC = dict(h=1.25, gen_cm3=14.0, max_worst=0.5)    # v12: h 1.0, 11 cm3; v13: the nose node lifts the grid to z 24 (h 1.0 would be 350k cells, 1.2 307k, limit 300k) and adds its collars + bracing (E)
 LEAN = False
 
 R = json.load(open(os.path.join(INP, "core_result.json")))
@@ -75,6 +83,45 @@ def arm_env(deg):
     return box(58.0, 400.0, -21.0, 21.0, -1.0, 20.0).rotate([0, 0, deg])
 
 
+# ================================================================ nose node (v13): the two front core ties end in the deck
+NOSE_ENV = (80.0, 105.0, -24.0, 24.0, 0.0, 24.0)                           # room for the collars and their bracing to the front feet (96, ±17)
+TIE_CASES = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage_loads.json")))["cases"]
+
+
+def nose_sockets():
+    """the deck's sockets: dicts name, c (virtual node centre = the link's hub end), u (unit toward the cage node), s0, depth, bore_r,
+    lining (the load region: bore wall + floor), axial (largest |N| over the frame cases)"""
+    out = []
+    for nm, (p, q) in CAGE["links"].items():
+        if not nm.startswith("core tie front"):
+            continue
+        c, q = np.array(p, float), np.array(q, float); u = (q - c) / np.linalg.norm(q - c)
+        k = KIND["link"]
+        out.append(dict(name=nm, c=c, u=u, s0=NODE_R, depth=k["depth"], bore_r=k["bore_r"],
+                        lining=along(c, u, NODE_R - FLOOR - 0.5, NODE_R + k["depth"], k["bore_r"] + 1.0),
+                        axial=max(abs(cs["members"][nm]["N"]) for cs in TIE_CASES)))
+    assert len(out) == 2, [s_["name"] for s_ in out]
+    # the two bores clear each other by WALL at their grooves (cage_node_lib's rule), measured between the two bore axes
+    a, b = out
+    sa = [a["c"] + a["u"] * t for t in np.linspace(a["s0"] - FLOOR, a["s0"] + a["depth"], 30)]
+    sb = [b["c"] + b["u"] * t for t in np.linspace(b["s0"] - FLOOR, b["s0"] + b["depth"], 30)]
+    dmin = min(np.linalg.norm(x - y) for x in sa for y in sb)
+    need = a["bore_r"] + b["bore_r"] + 2 * 0.5 + WALL
+    assert dmin >= need, f"nose sockets {dmin:.1f} mm apart, need {need:.1f}"
+    return out
+
+
+def nose_bodies(socks):
+    """drawn collars, cuts (bores and the rod keep-out beyond the mouth) and the envelope box of the nose node"""
+    collars, cuts = [], []
+    for s_ in socks:
+        s_end = s_["s0"] + s_["depth"]
+        collars.append(collar_shape(s_["c"], s_["u"], s_["s0"] - FLOOR, s_end, s_["bore_r"], WALL))
+        cuts += socket_cuts(s_["c"], s_["u"], s_["s0"], s_["depth"], s_["bore_r"])
+        cuts.append(along(s_["c"], s_["u"], s_end, s_end + 60.0, s_["bore_r"] + 0.6))        # the rod: nothing grows on it
+    return collars, cuts, box(*NOSE_ENV)
+
+
 def hub_deck_bodies():
     feet = [tuple(f) for f in R["feet_xy"]]
     ph = [tuple(p) for p in R["pi_holes"]]
@@ -87,20 +134,31 @@ def hub_deck_bodies():
     # v5 (PR 148 review): a root web Ø12 x 6.0 under every Pi post (a gusset into the body; v4's bare Ø7 posts were 99.8 % in the main
     # body at the gate's 2.0 erosion, under its 99.9 % bar); 6.0 stays under the board's underside parts (z 6.5..8)
     roots = [cyl(x, y, 0, 6.0, 6.0) for x, y in ph]
-    drawn = U([cyl(x, y, 0, T, FOOT_R) for x, y in feet] + [cyl(x, y, 0, zp, 3.5) for x, y in ph] + roots + rails)
+    socks = nose_sockets()
+    collars, nose_cuts, nose_env = nose_bodies(socks)
+    drawn = U([cyl(x, y, 0, T, FOOT_R) for x, y in feet] + [cyl(x, y, 0, zp, 3.5) for x, y in ph] + roots + rails + collars)
     wires = [U([man(b) for b in M["wires"].split(only_watertight=False) if len(b.faces) > 3])]   # the core's wire routes, exact tubes (a hull per
     # route would be a slab across the deck); the flow lead crosses it
     plates = [man(M["top plate"])]
     bays = [box(m.bounds[0][0] - 1, m.bounds[1][0] + 1, m.bounds[0][1] - 1, m.bounds[1][1] + 1, T, Z_UNDER) for m in (M["UBEC 5 V"], M["buck 12 V"])]
-    cuts = U(plates + bays + [cyl(x, y, -1, T + 1, INS[0] / 2) for x, y in feet] + [cyl(x, y, zp - 4.0, zp + 1, 1.1) for x, y in ph] + slots + wires
+    # the insert holes are cut 2.5 above the feet (v13): the nose node may grow over the front feet, and the M3 x 8 from below ends
+    # up to 0.2 above a foot
+    cuts = U(plates + bays + [cyl(x, y, -1, T + 2.5, INS[0] / 2) for x, y in feet] + [cyl(x, y, zp - 4.0, zp + 1, 1.1) for x, y in ph] + slots + wires + nose_cuts
              + [grown(f"arm {i}", 1.0) for i in (1, 2, 3, 4)]
              + [arm_env(a_) for a_ in (45, -45, 135, -135)])                                   # the arm session's root envelopes (u >= 58, |v| <= 21)
-    env = box(-76, 100, -42, 42, 0, T)
-    return drawn, cuts, env, feet, ph
+    env = U([box(-76, 100, -42, 42, 0, T), nose_env])
+    # every nose bore is open and no floor is cut (the wire routes cross the deck): as cage_node_lib.verify_cuts
+    for s_ in socks:
+        for t in (s_["s0"] + 0.5, s_["s0"] + s_["depth"] - 0.5):
+            probe = mf.Manifold.sphere(0.25, 8).translate((s_["c"] + s_["u"] * t).tolist())
+            assert (cuts ^ probe).volume() > 0.9 * probe.volume(), f"{s_['name']}: bore not cut at {t:.1f}"
+        probe = mf.Manifold.sphere(0.25, 8).translate((s_["c"] + s_["u"] * (s_["s0"] - FLOOR / 2)).tolist())
+        assert (cuts ^ probe).volume() < 0.1 * probe.volume(), f"{s_['name']}: the socket floor is cut (a wire route?)"
+    return drawn, cuts, env, feet, ph, socks
 
 
 def hub_deck_setup(h):
-    drawn, cuts, env, feet, ph = hub_deck_bodies()
+    drawn, cuts, env, feet, ph, socks = hub_deck_bodies()
     p = Part("overseer_hub_deck", h, drawn, cuts, env, build="+z", material="PETG")
     foot_sup = [cyl(x, y, -0.5, 3.0, FOOT_R + 0.5) for x, y in feet]
     p.support("default", U(foot_sup))
@@ -110,15 +168,36 @@ def hub_deck_setup(h):
     ub, bk = M["UBEC 5 V"], M["buck 12 V"]
     bay = lambda m: U([cyl(x, y, T - 2.0, T + 0.5, 6.0) for x in (m.bounds[0][0] + 6.0, m.bounds[1][0] - 6.0) for y in (m.bounds[0][1] + 6.0, m.bounds[1][1] - 6.0)])   # its 4 pads' tops (VHB)
 
-    def payload(name, a, cls):
+    def tie_forces(case):
+        """the frame model's forces on the two nose sockets in one of its cases: N along the rod toward the cage node (tension pulls
+        the deck toward the node, compression pushes into the floor), the small end shear across it"""
+        out = []
+        for s_ in socks:
+            m = case["members"][s_["name"]]
+            side = np.cross(s_["u"], [0, 0, 1.0]); side /= np.linalg.norm(side)
+            out.append((s_["lining"], m["N"] * s_["u"] + m["shear_j"] * side))
+        return out
+
+    def frame_case(d):
+        """the frame model case decelerating along d, or None (the model ran the 11 hull faces the CG ray leaves through)"""
+        for cs in TIE_CASES:
+            if cs["name"].startswith("crash") and np.allclose(cs["d"], d / np.linalg.norm(d), atol=0.02):
+                return cs
+        return None
+
+    def payload(name, a, cls, extra=()):
         f = rigid_split(posts, -55 * G * a, pi_c)
         reg = [(post_reg[i], f[i]) for i in range(4)] + [(bay(ub), -(15 + 10) * G * a), (bay(bk), -(6 + 10) * G * a)]   # + the deck wires' 20 g, half on each bay (E)
-        p.load_multi(name, reg, cls=cls, accel=-a)
+        p.load_multi(name, reg + list(extra), cls=cls, accel=-a)
     for k, d in enumerate(DIRS14):
-        payload(f"crash {k} (35 g)", 35 * d, "crash")
+        cs = frame_case(d)
+        payload(f"crash {k} (35 g)" + (" + frame ties" if cs else ""), 35 * d, "crash", tie_forces(cs) if cs else ())
     if not LEAN:
+        land = [cs for cs in TIE_CASES if cs["name"].startswith("landing")]
         for nm, a in FLIGHT.items():
-            payload(nm, a, "flight")
+            payload(nm, a, "flight", tie_forces(land[0]) if (nm.startswith("landing") and land) else ())
+    for s_ in socks:                                                                       # the glue line: pull-out at the largest axial force
+        p.load_multi(f"frame {s_['name']} axial {s_['axial']:.0f} N (pull-out)", [(s_["lining"], s_["axial"] * s_["u"])], cls="crash")
     usb = rigid_split(posts, np.array([20.0, 0, 0]), (C["pi_x"][0] - 2, 0, C["z_pi"] + 9))           # plug pushed in at the aft ports
     p.load_multi("USB plug 20 N into the Pi's aft ports", [(post_reg[i], usb[i]) for i in range(4)], cls="misuse")
     p.load_multi("press 50 N on the Pi (assembly)", [(post_reg[i], np.array([0, 0, -12.5])) for i in range(4)], cls="misuse")
