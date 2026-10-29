@@ -32,6 +32,7 @@ E_CARBON, E_PETG, NU = 120e3, 2780.0, 0.3
 TUBE = dict(E=E_CARBON, A=np.pi * (3.0 ** 2 - 2.0 ** 2), I=np.pi / 4 * (3.0 ** 4 - 2.0 ** 4))     # 6/4 carbon tube
 RODS = dict(E=E_CARBON, A=np.pi * 1.5 ** 2, I=np.pi / 4 * 1.5 ** 4)                               # 3.0 solid carbon
 ARM = dict(E=E_CARBON, A=2 * np.pi * (3.0 ** 2 - 2.0 ** 2), I=1200.0)                             # two 6/4 tubes 22 apart (29 Oct):
+PETG_ARM = dict(E=2780.0, A=300.0, I=2.5e4)                   # a printed one-piece arm (rear arms, 29 Oct): PETG, ~20 x 15 section (E)
 #   I 3242 mm4 in the thrust plane, 102 across; one I for the round-section beam element: their geometric mean (E)
 STIFF = dict(E=200e3, A=2000.0, I=2.0e6)                                                          # rigid-body links
 CRASH_G, LAND_G = 35.0, 6.0
@@ -224,10 +225,16 @@ def build(cage, mg):
     for k in range(4):
         M = np.r_[cage["motors_xy"][k], Z_MOTOR]; th = np.radians(45 + 90 * k)
         Rk = np.array([ROOT_R * np.cos(th), ROOT_R * np.sin(th), ROOT_Z])
-        sp = cage["links"][f"spoke {k + 1}.1"]; P = np.asarray(sp[0] if fr.node(sp[0]) >= nnode else sp[1], float)
-        ir, ip, im = fr.node(Rk), fr.node(P), fr.node(M)
-        arm_nodes[k] = ip
+        sp = cage["links"].get(f"spoke {k + 1}.1")
+        ir, im = fr.node(Rk), fr.node(M)
         fr.member(f"arm {k + 1} root", ic, ir, STIFF, "stiff")
+        if sp is None:                                              # a printed cantilever arm, no spokes (rear arms, Spark 29 Oct)
+            arm_nodes[k] = im
+            fr.member(f"arm {k + 1} inboard", ir, im, PETG_ARM, "arm")
+            add(im, mg["arms"][k]["motor"] + mg["arms"][k]["arm"] / 2); add(ir, mg["arms"][k]["arm"] / 2)
+            continue
+        P = np.asarray(sp[0] if fr.node(sp[0]) >= nnode else sp[1], float); ip = fr.node(P)
+        arm_nodes[k] = ip
         fr.member(f"arm {k + 1} inboard", ir, ip, ARM, "arm")
         fr.member(f"arm {k + 1} outboard", ip, im, ARM, "arm")
         add(im, mg["arms"][k]["motor"]); add(ip, mg["arms"][k]["arm"] / 2); add(ir, mg["arms"][k]["arm"] / 2)

@@ -2424,7 +2424,7 @@
    ],
    "tag": "C",
    "owner": "overseer",
-   "version": "cage v6 links from systems/overseer.cage.json, cut to the socket starts (tools/cage_tubes.py, 29 Oct); the front core ties run on into the hub deck nose (29 Oct)",
+   "version": "cage v6 links from systems/overseer.cage.json, cut to the socket starts (tools/cage_tubes.py, 29 Oct); the front core ties run on into the hub deck nose (29 Oct); rear spokes and rear arm tubes gone (29 Oct: the rear arms are one printed piece)",
    "source": "nox/overseer/layout_v5.py",
    "id": "spokes_ties_head_rods",
    "group": "cage",
@@ -2601,40 +2601,21 @@
    "color": "#d9a400"
   },
   {
-   "name": "arm 2 root",
+   "name": "arm 2",
    "role": "structure",
-   "mesh": "parts/overseer_arm_rear_root/part.stl",
+   "mesh": "parts/overseer_arm_rear/part.stl",
    "material": "PETG",
-   "mass_g": 12.0,
+   "mass_g": 40.0,
    "cg": [
-    -50.0,
-    52.0,
+    -60.0,
+    95.0,
     22.5
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
-   "source": "parts/overseer_tube_arm_lib.py",
-   "id": "overseer_arm_rear_root",
-   "group": "printed",
-   "color": "#8899aa"
-  },
-  {
-   "name": "arm 2 pad",
-   "role": "structure",
-   "mesh": "parts/overseer_arm_rear_pad/part.stl",
-   "material": "PETG",
-   "mass_g": 12.0,
-   "cg": [
-    -68.0,
-    122.0,
-    28.0
-   ],
-   "tag": "E",
-   "owner": "overseer",
-   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
-   "source": "parts/overseer_tube_arm_lib.py",
-   "id": "overseer_arm_rear_pad",
+   "version": "v9 setup (29 Oct, Spark: spoke 2.3 ran through the rear pad, the rear end is close anyway: no rods there): one printed PETG piece from the plates to the motor, no tubes, no spokes; run pending",
+   "source": "parts/overseer_arm_lib.py",
+   "id": "overseer_arm_rear",
    "group": "printed",
    "color": "#8899aa"
   },
@@ -2667,70 +2648,24 @@
    "color": "#d9a400"
   },
   {
-   "name": "arm 3 root",
+   "name": "arm 3",
    "role": "structure",
-   "mesh": "parts/overseer_arm_rear_root/part.stl",
+   "mesh": "parts/overseer_arm_rear/part.stl",
    "material": "PETG",
-   "mass_g": 12.0,
+   "mass_g": 40.0,
    "cg": [
-    -50.0,
-    -52.0,
+    -60.0,
+    -95.0,
     22.5
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
-   "source": "parts/overseer_tube_arm_lib.py",
-   "id": "arm_3_root",
+   "version": "v9 setup (29 Oct, Spark: spoke 2.3 ran through the rear pad, the rear end is close anyway: no rods there): one printed PETG piece from the plates to the motor, no tubes, no spokes; run pending",
+   "source": "parts/overseer_arm_lib.py",
+   "id": "arm_3",
    "group": "printed",
    "color": "#8899aa",
-   "part": "overseer_arm_rear_root",
-   "pose": [
-    [
-     1,
-     0,
-     0,
-     0
-    ],
-    [
-     0,
-     -1,
-     0,
-     0
-    ],
-    [
-     0,
-     0,
-     1,
-     0
-    ],
-    [
-     0,
-     0,
-     0,
-     1
-    ]
-   ]
-  },
-  {
-   "name": "arm 3 pad",
-   "role": "structure",
-   "mesh": "parts/overseer_arm_rear_pad/part.stl",
-   "material": "PETG",
-   "mass_g": 12.0,
-   "cg": [
-    -68.0,
-    -122.0,
-    28.0
-   ],
-   "tag": "E",
-   "owner": "overseer",
-   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
-   "source": "parts/overseer_tube_arm_lib.py",
-   "id": "arm_3_pad",
-   "group": "printed",
-   "color": "#8899aa",
-   "part": "overseer_arm_rear_pad",
+   "part": "overseer_arm_rear",
    "pose": [
     [
      1,

@@ -319,7 +319,7 @@ def build(arm, h, log=print):
     for name, cls, a, sp in frame_cases(arm):
         Fm, Fe = M_MOTOR * G * a, M_ESC * G * a
         p.load_multi(name, payload(Fm, Fe) + [(s_["lining"], sp[s_["name"]]) for s_ in arm.spokes], cls=cls, support="plates", accel=a)
-        Fs = sum(sp.values()); note(Fm + Fs, Fe, np.cross(arm.node - np.r_[arm.M, Z_MOTOR_CG], Fs))
+        Fs = sum(sp.values(), np.zeros(3)); note(Fm + Fs, Fe, np.cross(arm.node - np.r_[arm.M, Z_MOTOR_CG], Fs))   # no spokes (rear arms, 29 Oct): Fs = 0
 
     # ---- HANDLING: the arm alone (no spokes glued yet), the motor at 2 g, no thrust: the arm is the jig that holds the motor in place
     # at the bench; in flight the spokes always carry it (29 Oct, Spark: super light arms that still bolt to the plates; the old case,
