@@ -24,6 +24,23 @@ for nm, (p, q) in CAGE["links"].items():
     L = float(np.linalg.norm(q - p)) - s0 - s1; cuts[nm] = round(L, 1)
     out.append(trimesh.creation.cylinder(KIND["link"]["bore_r"] - 0.1, L, sections=16, segment=np.vstack([p + u * s0, q - u * s1])))
 m = trimesh.util.concatenate(out); m.export(os.path.join(ROOT, "parts", "cage_shell_tubes", "part.stl"))
+# the 3 mm rods with one end off the cage (spokes to the arm nodes, core and bay ties to the hub, head rods): parts/spokes_ties_head_rods
+# (29 Oct: the page still drew the v5 layout model's rods, through tubes that moved in v6). Far end: the rod ends NODE_R into its
+# socket there (the arm lib's rule; the hub and head sockets likewise, E).
+rods = []
+for nm, (p, q) in CAGE["links"].items():
+    p, q = np.array(p, float), np.array(q, float)
+    da, db = np.linalg.norm(NODES - p, axis=1), np.linalg.norm(NODES - q, axis=1)
+    if da.min() < 0.6 and db.min() < 0.6:
+        continue                                                     # both ends on cage nodes: in the tube mesh above
+    if db.min() < 0.6:
+        p, q, da, db = q, p, db, da                                  # p is the cage-node end (if any)
+    s0 = SOCKET_START[(int(np.argmin(da)), nm)] if da.min() < 0.6 else float(CAGE["node_r_mm"])
+    s1 = float(CAGE["node_r_mm"]); u = (q - p) / np.linalg.norm(q - p)
+    L = float(np.linalg.norm(q - p)) - s0 - s1; cuts[nm] = round(L, 1)
+    rods.append(trimesh.creation.cylinder(KIND["link"]["bore_r"] - 0.1, L, sections=16, segment=np.vstack([p + u * s0, q - u * s1])))
+mr = trimesh.util.concatenate(rods); mr.export(os.path.join(ROOT, "parts", "spokes_ties_head_rods", "part.stl"))
+print(f"{len(rods)} rods off the cage -> parts/spokes_ties_head_rods/part.stl ({len(mr.faces)} faces)")
 path = os.path.join(ROOT, "systems", "overseer.cage.json"); s = open(path).read(); c = json.loads(s)
 block = json.dumps(cuts, indent=1).replace("\n", "\n ")
 if '"rod_cuts_mm"' in s:
