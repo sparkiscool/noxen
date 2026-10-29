@@ -11,8 +11,8 @@ The joint, in the arm frame (s along the axis a, v across it, z up; parts/overse
     3.0 floor (the cage socket rule): they set the tip's position and angles (6.0 in 6.2 over 26 mm between the pins: ~0.1 mm at the motor);
   * 2 x M3 along the axis at v +-JB_V, z JB_Z: head in the root piece (counterbore behind its pad, driver sweep straight back through
     the root envelope), nut in a hex pocket open at the tip piece's joint face. They clamp the two contact pads together;
-  * contact faces: the ends of the 2 bolt bosses (O11, 3.0 floor + 2.6 nut pocket / head seat, the plate boss rule) and of the 2 pin
-    collars at the joint plane, 4 spots on each piece (a full pad is a drawn block to the audit).
+  * contact faces: on the tip the ends of the 2 bolt bosses (O11, 3.0 floor + 2.6 nut pocket, the plate boss rule) and of the 2 pin
+    collars at the joint plane, 4 spots; on the root one joint block 8 thick round all four (29 Oct: four spots never stayed joined).
 Loads: the TIP piece carries every case of the one-piece arm (flight, landing, stiffness, the cage frame's crash set with the three
 spokes loaded together, tools/cage_loads.py) on the joint as its support (pins + contact face; "+spokes" for the flight cases), plus
 the joint bolts' pull / pin shear from the joint reactions (least norm over the 4 joint points). The ROOT piece carries those same
@@ -31,6 +31,8 @@ PIN_V, PIN_Z = 13.0, 31.0                        # the two pins, across the axis
 JB_V, JB_Z = 13.0, 13.0                          # the two joint bolts (M3 along the axis)
 PAD_V, PAD_Z0, PAD_Z1 = 20.0, 3.0, 42.0          # the joint face region (support selector on the tip piece)
 PAD_T = NUT_T + FLOOR                            # 5.6: floor + nut pocket (tip) or head seat (root)
+JB_T, JB_W = 7.0, PIN_V + 6.0                    # the root's joint block: 7 thick at the face, |v| <= 19, z 7..37, a O10 window in its
+#   middle (29 Oct; 8 thick without the window read as a 10 mm drawn block to the audit at the coarse pitch)
 SWEEP_BACK = 160.0                               # driver sweep from the root pad back through the whole root envelope
 
 
@@ -92,10 +94,14 @@ class SplitArm(Arm):
             env = hull_xy([(c[0], c[1], 0.0) for c in corners] + [(self.M[0], self.M[1], 27.0), (self.node[0], self.node[1], 17.0)], Z_BOT, Z_PAD)
             self.env_pts = [np.array(c) for c in corners]
         else:
-            for v in (JB_V, -JB_V):
-                drawn.append(self.axial(sJ - PAD_T, sJ, v, JB_Z, BOSS_R))                                # bolt boss, head side
+            # one joint block at the face (29 Oct): the two bolt bosses and two pin collars were four small bodies the engine never
+            # kept joined (three root runs: bosses off, 56 eroded bodies, the ties stuck at 6e4); as the plate boss blocks, a
+            # block 8 thick round all four fasteners keeps a core the gate holds and one body to join. The pin collars run on
+            # behind it to the pins' full depth.
+            drawn.append(self.slab(sJ - JB_T, sJ, -JB_W, JB_W, JB_Z - 6.0, PIN_Z + 6.0))
+            cuts.append(self.axial(sJ - JB_T - 0.5, sJ + 0.5, 0.0, 0.5 * (JB_Z + PIN_Z), 5.0))            # window: no solid core far from a face
             for v in (PIN_V, -PIN_V):
-                drawn.append(self.axial(sJ - PIN_HALF - FLOOR, sJ, v, PIN_Z, PIN_BORE_R + SOCK_WALL))
+                drawn.append(self.axial(sJ - PIN_HALF - FLOOR, sJ - JB_T + 0.5, v, PIN_Z, PIN_BORE_R + SOCK_WALL))
                 cuts.append(self.axial(sJ - PIN_HALF, sJ + 1.0, v, PIN_Z, PIN_BORE_R))
             for v in (JB_V, -JB_V):
                 cuts.append(self.axial(sJ - 14.0, sJ + 2.0, v, JB_Z, HOLE_D / 2))                        # shank
