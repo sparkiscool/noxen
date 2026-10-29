@@ -466,6 +466,36 @@ def t_audit_plate():
     RESULTS.append(("audit_plate", ok)); print(f"audit plate: {'ok' if ok else 'FAIL'} 224x64 {a[3]} 170x170 {b[3]} 200x40 {c[3]}")
 
 
+def t_near_symmetry():
+    """a part mirrored but for a detail (29 Oct, the head mount's L2 key slot: its camera arms came out different left and right)
+    is held symmetric on the design cells whose mirror is design too; the detail's cells stay free; an exact mirror still gives
+    the plain symmetry."""
+    try:
+        import manifold3d as mf
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        base, pad = box(0, 3, 0, 12, 0, 12), box(20, 24, 3, 9, 3, 9)
+        detail = box(10, 12, 9.5, 11.5, 5, 7)                                    # a small cut on one side (+y) only, centred in z
+        res = {}
+        for name, cuts in (("exact", box(100, 101, 100, 101, 100, 101)), ("near", detail)):
+            p = Part("sym", 1.0, base + pad, cuts, box(0, 24, 0, 12, 0, 12), log=lambda s_: None)
+            p.support("default", box(-1, 1.5, -1, 13, -1, 13)); p.load("down", pad, (0, 0, -10.0))
+            s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", finish="drawn", near_sym=True)
+            L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+            rng = np.random.default_rng(3); x = rng.uniform(0.0, 1.0, L.nd); xs = L.symmetrise_design(x)
+            full = np.zeros(L.nel); full[L.design] = xs; f3 = full.reshape(L.shape)
+            d3 = L.design.reshape(L.shape); both = d3 & np.flip(d3, 1)
+            held = L.sym_mask[1].reshape(L.shape) if 1 in L.sym_mask else both
+            asym = float(np.abs(f3 - np.flip(f3, 1))[held].max())
+            res[name] = dict(axes=list(L.sym_axes), masked=1 in L.sym_mask, asym=asym, held=int(held.sum()), free=int((d3 & ~held).sum()))
+        ok = (1 in res["exact"]["axes"] and not res["exact"]["masked"] and res["exact"]["asym"] < 1e-12
+              and 1 in res["near"]["axes"] and res["near"]["masked"] and res["near"]["asym"] < 1e-12 and res["near"]["free"] > 0)
+        check("near symmetry: a detail on one side no longer costs the whole part its mirror", ok, str(res))
+    except Exception as e:
+        traceback.print_exc()
+        check("near symmetry", False, str(e))
+
+
 def t_skin_core():
     """masked erosion with thick drawn skins eroding (29 Oct): an 8 mm drawn pad keeps only the core the solid gate keeps and its
     skin erodes with the design, so a 5 mm member meeting the pad at its rim leaves the pad's core outside the engine's eroded body
@@ -509,7 +539,7 @@ def t_skin_core():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_gate_specks, t_audit_plate):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_audit_plate):
         t()
     if not quick:
         t_end_to_end()

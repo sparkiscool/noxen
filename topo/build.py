@@ -227,6 +227,22 @@ def assemble(layout, gen_mesh, speck_mm3=20.0, log=print):
                    bodies=len([b for b in P.decompose() if b.volume() > 0]))
 
 
+def clean_mesh(m, log=print, min_mm3=1.0):
+    """the exported STL: only shells with volume (the head mount's STL, 29 Oct, carried 8 zero-volume shells beside the part,
+    which a slicer prints as loose scraps), merged vertices, outward normals."""
+    import trimesh
+    parts = m.split(only_watertight=False)
+    if len(parts) > 1:
+        keep = [p for p in parts if abs(p.volume) >= min_mm3]
+        dropped = len(parts) - len(keep)
+        if dropped:
+            log(f"build: {dropped} zero-volume shells dropped from the STL")
+        m = trimesh.util.concatenate(keep) if keep else m
+    m.merge_vertices()
+    trimesh.repair.fix_normals(m)
+    return m
+
+
 # -------------------------------------------------------------------------------------------------------- checks
 def _solid_check_module():
     spec = importlib.util.spec_from_file_location("nox_solid_check", os.path.join(HERE, "..", "tools", "solid_check.py"))
@@ -384,7 +400,7 @@ def build_and_check(layout, out_dir, name, clip_margin=0.5, pitch=None, log=prin
     t0 = time.time()
     gm = surface(layout, pitch=pitch, clip_margin=clip_margin, log=log)
     P, bod = assemble(layout, gm, log=log)
-    PT = tm(P)
+    PT = clean_mesh(tm(P), log=log)
     drawn_fin = tm(part.drawn_m - part.cuts_m)
     ok_solid, solid = solid_check(PT, [drawn_fin])
     log(f"solid check: {'PASS' if ok_solid else 'FAIL'} {json.dumps(solid)[:600]}")

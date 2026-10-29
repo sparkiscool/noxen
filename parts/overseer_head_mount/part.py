@@ -13,7 +13,9 @@ from topo.part import man
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage.json")))
-SPEC = dict(h=2.5, gen_cm3=60.0, max_worst=0.5)      # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB runner); refine once the shape is accepted
+SPEC = dict(h=2.5, gen_cm3=60.0, max_worst=0.5, settings=dict(near_sym=True))      # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB
+#   runner); refine once the shape is accepted. near_sym (29 Oct, Spark: the camera arms came out different left and right): the part
+#   mirrors about y but for the L2's key slot, so the design is held symmetric away from it
 
 G = 9.81e-3                                                    # N per g per g of mass
 NODES = np.array(CAGE["nodes"], float)

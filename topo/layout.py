@@ -45,6 +45,7 @@ S26 = np.ones((3, 3, 3), bool)
 S6 = ndi.generate_binary_structure(3, 1)
 
 
+NEAR_SYM = 0.02                          # near_sym: a part mirrored but for details (under 2 % of passive cells) is held symmetric away from them
 CORE_MIN_HALF_MM = 3.0                   # a drawn body erodes to its gate core only if at least 6 mm thick (core >= 2 mm): thinner
 #   bodies (organic 2.5 mm skins, collar floors, a node's landing foot) keep slivers for cores, and ties on a sliver can never
 #   be met (node 5, 29 Oct: 280 core cells, 3,468 skin cells, "tie b1 mx" 1.7e5, foot off)
@@ -95,6 +96,7 @@ class Settings:
     reach_check: str = "raise"          # "raise" | "warn" | "off"
     audit: str = "raise"                # setup audit (topo/audit.py): "raise" | "warn" | "off"
     auto_sym: bool = True
+    near_sym: bool = False              # a part's own choice (SPEC settings): hold a nearly mirrored part symmetric away from its odd detail
     backend: str = "auto"               # "auto" | "direct" | "mg"
     mg_tol: float = 1e-5
     time_limit_s: float = 5.5 * 3600
@@ -308,15 +310,29 @@ class Layout:
         ker = np.maximum(0.0, self.R - np.sqrt(I * I + J * J + K * K))
         self.ker = ker / ker.sum()
         # ---- symmetry
-        self.sym_axes = []
+        self.sym_axes, self.sym_mask = [], {}
         if s.auto_sym:
             axes, near = auto_symmetry(solid.reshape(shape), void.reshape(shape))
-            self.sym_axes = axes
+            self.sym_axes = list(axes)
             if axes:
                 log(f"layout: drawn bodies and keep-outs mirror about {', '.join('xyz'[a] for a in axes)}: the design is "
                     f"held symmetric there")
+            d3, s3, v3 = design.reshape(shape), solid.reshape(shape), void.reshape(shape)
             for a, miss in near:
-                log(f"layout: WARNING nearly mirrored in {'xyz'[a]} ({miss:.1%} of passive cells differ): no symmetry")
+                if s.near_sym and miss < NEAR_SYM:
+                    # a part that is mirrored but for a detail (the head mount, 29 Oct: the L2's key slot, 0.6 % of the
+                    # cells; its camera arms came out different left and right) is held symmetric wherever a design cell's
+                    # mirror is also a design cell, except within two members of the detail on either side: there the
+                    # design stays free to join it (the e2e holder's one odd body came loose when its neighbourhood was
+                    # averaged with the other side)
+                    odd = (s3 ^ np.flip(s3, a)) | (v3 ^ np.flip(v3, a))
+                    zone = ndi.binary_dilation(odd, iterations=max(1, int(round(2 * s.min_member_mm / h))))
+                    m = d3 & np.flip(d3, a) & ~zone & ~np.flip(zone, a)
+                    self.sym_axes.append(a); self.sym_mask[a] = m.ravel()
+                    log(f"layout: nearly mirrored in {'xyz'[a]} ({miss:.1%} of passive cells differ): the design is held "
+                        f"symmetric on {int(m.sum()):,} design cells, free within {2 * s.min_member_mm:.0f} mm of the odd detail")
+                else:
+                    log(f"layout: WARNING nearly mirrored in {'xyz'[a]} ({miss:.1%} of passive cells differ): no symmetry")
         # ---- material, anchors, loads
         mat = MATERIALS[part.material]
         self.mat = mat
@@ -596,7 +612,8 @@ class Layout:
             return v
         a = v.reshape(self.shape)
         for ax in self.sym_axes:
-            a = 0.5 * (a + np.flip(a, ax))
+            m = self.sym_mask.get(ax)
+            a = 0.5 * (a + np.flip(a, ax)) if m is None else np.where(m.reshape(self.shape), 0.5 * (a + np.flip(a, ax)), a)
         return a.ravel()
 
     def fields(self, x, beta):
