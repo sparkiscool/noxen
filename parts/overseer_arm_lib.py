@@ -5,7 +5,8 @@ Drawn (attachments only, nothing between them):
   * 4 plate bosses: per side a top-face block and a bottom-face block (u 57.5..72, |v| 3..22, 8 tall; nut pocket or relief 2.6 in
     the face) round the two bolts (top bolt u 63.17 v +-15, bottom bolt u 63.74 v +-10, O section M row), 2 locating pegs (u 57.66,
     v +-11); 29 Oct: was a stadium r 5.5, 5.6 thick, whose core at the gate's 2 mm erosion was slivers between the shank holes;
-  * the motor pad (disc 36 x 6, level with the arm top z 45) with 4 bolt slots r 8..9.5 on the 45 deg lines, shaft bore 8.6;
+  * the motor pad (4 lugs, level with the arm top z 45) with 4 exact M3 holes on the 45 deg lines, one pair at r 8 (16 across) and one
+    at r 9.5 (19 across; 29 Oct, was slots 8..9.5), shaft bore 8.6;
   * 3 socket collars for the 3 mm carbon spokes (bore 3.2, 10 deep, 3.0 floor, wall 2.0) aimed at their cage node;
 Cut through the whole envelope: bolt shanks, nut pockets, motor-bolt tool sweeps, the shaft bore, the own spokes beyond their
 collars, every other cage tube / node / link near the envelope, the prop disc, the pack / cartridge / receiver zone.
@@ -50,7 +51,7 @@ BOSS_U, BOSS_V, BOSS_T = (57.5, 72.0), (3.0, 22.0), 8.0   # plate boss block per
 RELIEF_R = 3.0                                   # round the neighbour's shank in the nut layer, merges with the pocket (no sliver)
 PAD_D, PAD_T = 36.0, 6.0                         # motor pad (arms section, C): Ø36 reach, 6 thick
 LUG_R = 5.5                                      # lug radius round each slot (slot 1.6 + 2.0 wall + 1.9)
-MOTOR_SLOT = (8.0, 9.5)                          # X2216 base pattern radii 16 / 19, 45 deg to the leads (O motor row, spec)
+MOTOR_SLOT = (8.0, 9.5)                          # X2216 base pattern: one pair across at 16 (r 8), the other at 19 (r 9.5), 45 deg to the leads (O motor row, spec)
 SLOT_D = 3.2                                     # M3 into the motor's tapped base (2.8 deep: no nut exists on a motor)
 HEAD_D, HEAD_T = 6.2, 2.6                        # M3 pan head counterbore under the pad, leaves 3.4 of pad
 SWEEP_D = 7.0                                    # driver sweep under each motor bolt, through the whole envelope
@@ -175,9 +176,9 @@ class Arm:
         return out
 
     def motor_bolts(self):
-        """4 slots at 45, 135, 225, 315 deg to the arm axis; returns centre points at r 8.75 (middle of the slot)"""
-        r = 0.5 * (MOTOR_SLOT[0] + MOTOR_SLOT[1])
-        return [self.M + r * (np.cos(np.radians(t)) * self.a + np.sin(np.radians(t)) * self.n) for t in (45, 135, 225, 315)]
+        """the 4 motor bolt points: at 45 / 225 deg to the arm axis r 8 (16 across), at 135 / 315 deg r 9.5 (19 across)"""
+        return [self.M + rk * (np.cos(np.radians(t)) * self.a + np.sin(np.radians(t)) * self.n)
+                for t, rk in ((45, MOTOR_SLOT[0]), (135, MOTOR_SLOT[1]), (225, MOTOR_SLOT[0]), (315, MOTOR_SLOT[1]))]
 
     def esc_c(self):
         s = 0.5 * (24.0 + self.len - PAD_D / 2 - 2.0)            # between the root block end (s 24) and the pad
@@ -207,12 +208,13 @@ class Arm:
             e = np.cos(np.radians(t)) * self.a + np.sin(np.radians(t)) * self.n
             drawn.append(stadium(M + 4.0 * e, M + (PAD_D / 2 - LUG_R) * e, Z_PAD - PAD_T, Z_PAD, LUG_R))
         cuts.append(cyl(M[0], M[1], Z_BOT - 1.0, Z_PAD + 1.0, BORE_D / 2, 32))
-        for t in (45, 135, 225, 315):
+        for t, rk in ((45, MOTOR_SLOT[0]), (135, MOTOR_SLOT[1]), (225, MOTOR_SLOT[0]), (315, MOTOR_SLOT[1])):
+            # exact holes (29 Oct, Spark: the X2216 pattern is 16 x 19): one pair across at r 8, the other at r 9.5 (was a slot 8..9.5 at all four)
             e = np.cos(np.radians(t)) * self.a + np.sin(np.radians(t)) * self.n
-            p0, p1 = M + MOTOR_SLOT[0] * e, M + MOTOR_SLOT[1] * e
-            cuts.append(stadium(p0, p1, Z_PAD - PAD_T - 0.5, Z_PAD + 1.0, SLOT_D / 2))                  # shank slot through the pad
-            cuts.append(stadium(p0, p1, Z_PAD - PAD_T - 0.5, Z_PAD - PAD_T + HEAD_T, HEAD_D / 2))       # head seat under it
-            cuts.append(stadium(p0, p1, Z_BOT - 1.0, Z_PAD - PAD_T + HEAD_T, SWEEP_D / 2))              # driver sweep, whole envelope
+            q = M + rk * e
+            cuts.append(cyl(q[0], q[1], Z_PAD - PAD_T - 0.5, Z_PAD + 1.0, SLOT_D / 2, 24))             # M3 shank through the pad
+            cuts.append(cyl(q[0], q[1], Z_PAD - PAD_T - 0.5, Z_PAD - PAD_T + HEAD_T, HEAD_D / 2, 24))  # head seat under it
+            cuts.append(cyl(q[0], q[1], Z_BOT - 1.0, Z_PAD - PAD_T + HEAD_T, SWEEP_D / 2, 24))         # driver sweep, whole envelope
         # (no ESC seat: the 4-in-1 ESC sits under the FC, none on the arms; dimensions.md System Overseer: arms, Spark 27 Oct)
         # --- spoke sockets (cage_node_lib rule: bore from NODE_R out, 10 deep, 3.0 floor, wall 2.0), aimed at their node
         for sp in self.spokes:
