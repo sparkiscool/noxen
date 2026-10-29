@@ -10,6 +10,7 @@ import json, os
 import numpy as np, trimesh, manifold3d as mf
 from topo import Part
 from topo.part import man
+from parts.cage_node_lib import socket_cuts, collar_shape, cone, U as UNION
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage.json")))
@@ -35,13 +36,15 @@ KEY_R, KEY_W, KEY_L, KEY_H, KEY_BACK = 30.0, 3.3, 3.3, 2.0, 6.0   # L2 manual dr
                                     # ahead of the base plane. SLOT DEPTH IS NOT IN THE MANUAL: the 2.0 key height is E (check on the unit).
 CAM_SQ = 14.0                       # DECXIN 2633V2: M2.5 on 28 x 28 (P); heat-set insert hole O3.2 x 5.7 (E, dimensions.md); boss O12 (v5 row)
 CAM_BOARD_BACK = 12.0               # board back face 12 behind the lens plane (E placeholder: lens and thickness open, Q3); body 38 x 38 (P)
-CAM_BOSS_L = 6.0                    # boss O10 x 6 round the O3.2 x 5.7 insert (28 Oct, lighter; was O12 x 10)
+CAM_BOSS_L = 10.0                   # standoff length (29 Oct, Spark: the board's plugs sit on its back near the holes, so the board stands
+CAM_TIP_R, CAM_BASE_R = 3.8, 5.5     #   10 off the body on 4 cones: O7.6 at the board (2.2 wall round the O3.2 x 5.7 insert) flaring to O11)
+CAM_PLUG_BACK = 8.0                 # keep-out behind the whole board between the standoffs: the plugs (nothing grows there)
 TUBE_BORE_R, TUBE_DEPTH = 3.1, 15.0 # 6/4 carbon: bore 6.2, 15 deep (Spark 27 Oct, coupons v2)
 ROD_BORE_R, ROD_DEPTH = 1.6, 10.0   # 3.0 rod: bore 3.2, 10 deep
-WALL, FLOOR = 2.0, 3.0              # wall 2.0 (28 Oct), floor 3.0
+WALL, FLOOR = 2.5, 3.0              # wall 2.5 (29 Oct, was 2.0: 2.0 is left at the resin grooves), floor 3.0
 TUBE_MOUTH, ROD_MOUTH = FLOOR + TUBE_DEPTH, FLOOR + ROD_DEPTH   # mouth distance from the node centre: bore bottom 3.0 from the centre (E)
 L2_MASS, L2_CG = 230.0, np.array([411.3, 0.0, 46.0])            # P; CG from dimensions.md "Sensor head requirements" (C)
-CAM_MASS = 15.0                                                  # E
+CAM_MASS = 25.0                                                  # E: board 15 + a heatsink on its back 10 (Spark 29 Oct)
 FIELD_R = 220.0                                                  # L2 field half ball
 
 DIRS14 = [np.array(v, float) / np.linalg.norm(v) for v in
@@ -98,10 +101,11 @@ class Sock:
         return self.end + self.d * t
 
     def collar(self):
-        return along(self.pt(self.t_floor), self.pt(self.t_mouth), self.collar_r)
+        return collar_shape(self.end, self.d, self.t_floor, self.t_mouth, self.bore_r, WALL)      # follows the bore's crown
 
-    def bore(self):
-        return along(self.pt(self.t_mouth - self.depth), self.pt(self.t_mouth + 1.0), self.bore_r)
+    def bores(self):
+        """the coupon socket (cage_node_lib.socket_cuts): bore, resin grooves, lead-in, teardrop crown"""
+        return socket_cuts(self.pt(self.t_mouth - self.depth), self.d, 0.0, self.depth, self.bore_r)
 
     def clear(self, length=300.0):
         """the member outside its mouth: nothing of the mount may grow into the carbon (r + 1.0)"""
@@ -177,22 +181,25 @@ def bodies():
         q = min(bolts, key=lambda q: np.linalg.norm(q - (B + KEY_R * rad)))
         keys.append(along(B + KEY_R * rad - A * (KEY_BACK - 1.0), q - A * (L2_PAD_T - 1.0), 3.0))
     drawn += keys
-    # --- camera insert bosses: O12 x 10 behind the board back plane, insert hole O3.2 x 5.7 from the front; the camera body is a cut
+    # --- camera standoffs: 4 cones 10 long behind the board back plane, insert hole O3.2 x 5.7 from the front; the board, its body and
+    # the plugs behind it are cuts (29 Oct)
     envs_cam = []
     for c in cs:
         pts, base = cam_boss_pts(c)
+        cones = []
         for q in pts:
-            drawn.append(along(q, q - c["f"] * CAM_BOSS_L, 5.0))
+            cones.append(cone(q, -c["f"], 0.0, CAM_BOSS_L, CAM_TIP_R, CAM_BASE_R))                              # standoff cone
             cuts.append(along(q + c["f"] * 1.0, q - c["f"] * 5.7, 1.6))
+        drawn += cones
         cuts.append(fbox(base, c["f"], c["r"], c["u"], (0.0, 25.0), (-22.0, 22.0), (-22.0, 22.0)))          # board + body (38 x 38 + clearance)
-        drawn.append(fbox(base, c["f"], c["r"], c["u"], (-CAM_BOSS_L - 2.0, -CAM_BOSS_L + 0.5), (-19.0, 19.0), (-19.0, 19.0))
-                     - fbox(base, c["f"], c["r"], c["u"], (-CAM_BOSS_L - 3.0, -CAM_BOSS_L + 1.5), (-13.0, 13.0), (-13.0, 13.0)))   # 38 x 38 frame 6 wide x 2 thick joining the 4 bosses: one wide seat for the body to grow on (28 Oct, the v6 run split single bosses off; 2 g)
+        cuts.append(fbox(base, c["f"], c["r"], c["u"], (-CAM_PLUG_BACK, 0.0), (-19.0, 19.0), (-19.0, 19.0)) - UNION(cones))   # plugs behind the board
+        # (29 Oct: the drawn 38 x 38 frame joining the 4 camera bosses is gone, as on node 21; the topology joins them)
         cuts.append(frustum(c))
         envs_cam.append(fbox(base, c["f"], c["r"], c["u"], (-34.0, 0.0), (-22.0, 22.0), (-22.0, 22.0)))
     # --- sockets
     for s in S.values():
         drawn.append(s.collar())
-        cuts.append(s.bore())
+        cuts += s.bores()
         cuts.append(s.clear())
     # --- L2 field: half ball R 220 ahead of the base plane; cable slot below the L2 flange (the cable leaves the base downward)
     half = fbox(B, A, Y, P, (0.0, FIELD_R + 5), (-FIELD_R - 5, FIELD_R + 5), (-FIELD_R - 5, FIELD_R + 5))
@@ -208,6 +215,9 @@ def bodies():
         pts.append(np.asarray(m.to_mesh().vert_properties)[:, :3])
     bridge = hull(np.vstack(pts))
     env = U([slab, bridge] + envs_cam + head_c)
+    # the 180 mm plate (29 Oct): the head rod seats at y +-80 with their 2.5 collars and crowns span 177 drawn; the envelope is
+    # clipped to |y| <= 89.9 so the generated part cannot outgrow the plate (the audit refuses an envelope over 180)
+    env = env ^ mf.Manifold.cube([600.0, 2 * 89.9, 400.0]).translate([100.0, -89.9, -100.0])
     return U(drawn), U(cuts), env, dict(S=S, cs=cs, bolts=bolts)
 
 
