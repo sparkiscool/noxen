@@ -1,49 +1,19 @@
 {
  "name": "overseer_cage_node_2",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
   "specks_plain": 0,
-  "bodies_eroded": 3,
+  "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   2435.8,
-   347.8,
-   346.1
+   3475.1
   ],
-  "necks": [
-   {
-    "neck_under_mm": 1.8,
-    "blob_thick_mm": 3.9,
-    "joint_mm2": 38.9,
-    "blob_mm3": 347.8,
-    "at": [
-     167.5,
-     -11.0,
-     -76.0
-    ]
-   },
-   {
-    "neck_under_mm": 1.8,
-    "blob_thick_mm": 3.9,
-    "joint_mm2": 40.8,
-    "blob_mm3": 346.1,
-    "at": [
-     167.5,
-     11.0,
-     -76.0
-    ]
-   }
-  ],
-  "drawn_not_in_main": [
-   [
-    0,
-    0.567
-   ]
-  ],
+  "necks": [],
+  "drawn_not_in_main": [],
   "thin_walls": [],
   "acute_edges": 0,
-  "ok": false
+  "ok": true
  },
  "function_check": {
   "skin_mm3": 1489.4,
@@ -55,114 +25,125 @@
  "strength": {
   "rows": [
    {
-    "case": "frame tube 1-2 axial 282 N (pull-out)",
+    "case": "frame tube 2-18 axial 257 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.424,
-    "across": 0.411,
+    "inlayer": 0.446,
+    "across": 0.353,
     "at": [
-     153.3,
-     -1.5,
-     -83.1
+     163.3,
+     5.5,
+     -82.1
     ]
    },
    {
-    "case": "frame tube 1-2 side 1.5 N",
-    "cls": "crash",
-    "inlayer": 0.005,
-    "across": 0.004,
-    "at": [
-     153.3,
-     -1.5,
-     -83.1
-    ]
-   },
-   {
-    "case": "frame tube 2-3 axial 282 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.424,
-    "across": 0.411,
-    "at": [
-     153.3,
-     1.5,
-     -83.1
-    ]
-   },
-   {
-    "case": "frame tube 2-3 side 1.5 N",
-    "cls": "crash",
-    "inlayer": 0.005,
-    "across": 0.006,
-    "at": [
-     152.3,
-     -2.5,
-     -83.1
-    ]
-   },
-   {
-    "case": "frame spoke 1.1 axial 361 N (pull-out)",
+    "case": "frame tube 2-18 side 4.4 N",
     "cls": "crash",
     "inlayer": 0.016,
-    "across": 0.022,
+    "across": 0.011,
     "at": [
-     156.3,
-     2.5,
-     -82.1
+     160.3,
+     11.5,
+     -79.1
     ]
    },
    {
-    "case": "frame spoke 1.1 side 0.9 N",
+    "case": "frame tube 2-19 axial 242 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.0,
-    "across": 0.0,
+    "inlayer": 0.42,
+    "across": 0.332,
     "at": [
-     156.3,
-     2.5,
+     163.3,
+     -5.5,
      -82.1
     ]
    },
    {
-    "case": "frame spoke 4.1 axial 361 N (pull-out)",
+    "case": "frame tube 2-19 side 4.4 N",
     "cls": "crash",
     "inlayer": 0.016,
-    "across": 0.022,
+    "across": 0.01,
     "at": [
-     156.3,
-     -2.5,
-     -82.1
+     160.3,
+     -11.5,
+     -79.1
     ]
    },
    {
-    "case": "frame spoke 4.1 side 0.9 N",
+    "case": "frame spoke 1.1 axial 164 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.0,
-    "across": 0.0,
+    "inlayer": 0.207,
+    "across": 0.227,
     "at": [
-     157.3,
-     -9.5,
-     -85.1
+     162.3,
+     4.5,
+     -81.1
+    ]
+   },
+   {
+    "case": "frame spoke 1.1 side 2.1 N",
+    "cls": "crash",
+    "inlayer": 0.006,
+    "across": 0.007,
+    "at": [
+     158.3,
+     10.5,
+     -75.1
+    ]
+   },
+   {
+    "case": "frame spoke 4.1 axial 165 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.208,
+    "across": 0.227,
+    "at": [
+     162.3,
+     -4.5,
+     -81.1
+    ]
+   },
+   {
+    "case": "frame spoke 4.1 side 2.1 N",
+    "cls": "crash",
+    "inlayer": 0.006,
+    "across": 0.005,
+    "at": [
+     158.3,
+     -10.5,
+     -75.1
+    ]
+   },
+   {
+    "case": "crash 35 g through the longest tube tube 2-18 (285 mm), axial + side",
+    "cls": "crash",
+    "inlayer": 0.456,
+    "across": 0.325,
+    "at": [
+     163.3,
+     5.5,
+     -82.1
     ]
    },
    {
     "case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
     "cls": "flight",
-    "inlayer": 0.293,
-    "across": 0.353,
+    "inlayer": 0.154,
+    "across": 0.163,
     "at": [
-     151.3,
-     -4.5,
-     -84.1
+     162.3,
+     1.5,
+     -89.1
     ]
    }
   ],
-  "worst": 0.424,
-  "worst_case": "frame tube 1-2 axial 282 N (pull-out)",
+  "worst": 0.456,
+  "worst_case": "crash 35 g through the longest tube tube 2-18 (285 mm), axial + side",
   "worst_at": [
-   153.3,
-   -1.5,
-   -83.1
+   163.3,
+   5.5,
+   -82.1
   ]
  },
- "mass_g": 9.58,
+ "mass_g": 9.72,
  "watertight": false,
  "bodies": {
   "bodies_raw": 1,
@@ -170,11 +151,11 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 7541.7,
+ "volume_mm3": 7650.5,
  "drawn_g": 6.8,
  "stl": "overseer_cage_node_2.stl",
  "view_stl": "overseer_cage_node_2_view.stl",
- "view_faces": 114746,
+ "view_faces": 104922,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -241,10 +222,10 @@
   "sym_axes": [
    1
   ],
-  "n_real": 9,
+  "n_real": 10,
   "n_ties": 18,
   "backend": "direct",
-  "iterations": 72,
+  "iterations": 79,
   "stopped": "grey"
  },
  "grid": {
@@ -264,23 +245,24 @@
   "design": 86510,
   "drawn": 5274,
   "cases": [
-   "frame tube 1-2 axial 282 N (pull-out)",
-   "frame tube 1-2 side 1.5 N",
-   "frame tube 2-3 axial 282 N (pull-out)",
-   "frame tube 2-3 side 1.5 N",
-   "frame spoke 1.1 axial 361 N (pull-out)",
-   "frame spoke 1.1 side 0.9 N",
-   "frame spoke 4.1 axial 361 N (pull-out)",
-   "frame spoke 4.1 side 0.9 N",
+   "frame tube 2-18 axial 257 N (pull-out)",
+   "frame tube 2-18 side 4.4 N",
+   "frame tube 2-19 axial 242 N (pull-out)",
+   "frame tube 2-19 side 4.4 N",
+   "frame spoke 1.1 axial 164 N (pull-out)",
+   "frame spoke 1.1 side 2.1 N",
+   "frame spoke 4.1 axial 165 N (pull-out)",
+   "frame spoke 4.1 side 2.1 N",
+   "crash 35 g through the longest tube tube 2-18 (285 mm), axial + side",
    "landing 6 g on the foot (67 N up, 3 of 6 feet)"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 51.1,
- "layout_s": 6397,
- "peak_gb": 5.920044,
+ "build_s": 42.9,
+ "layout_s": 6430,
+ "peak_gb": 6.043032,
  "gen_cm3": 2.3,
  "h": 1.0,
  "audit": {
@@ -343,12 +325,12 @@
    "H_mm": 34.0,
    "fits": true
   },
-  "cases": 9,
+  "cases": 10,
   "supports": 1,
   "fails": []
  },
  "baseline": null,
- "total_s": 6448,
+ "total_s": 6473,
  "part_sha": "8b76ff977d03",
  "lib_sha": "421d0dd2fb1a",
  "max_worst": 0.5,
