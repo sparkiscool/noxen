@@ -156,12 +156,22 @@ jobs:
       - name: place results
         shell: bash
         run: |
-          for d in _results/result-*; do
-            [ -d "$d" ] || continue
-            p=$(basename "$d" | sed 's/^result-//')
-            mkdir -p "parts/$p"
-            cp -f "$d"/result.json "$d"/part.stl "$d"/preview.png "parts/$p/" 2>/dev/null || true
-          done
+          # a run that ends late must not put an older result over a newer one (29 Oct: the 07:41 node batch, ending at 12:22,
+          # put the tip's and root's results from 07:41 back over the ones a later run had committed at 10:52): a result that is
+          # stale against the tree never replaces one that is current
+          python3 - <<'PY'
+          import glob, json, os, shutil, sys
+          sys.path.insert(0, "tools"); from part_sha import stale
+          for d in sorted(glob.glob("_results/result-*")):
+              p = os.path.basename(d)[len("result-"):]; dst = os.path.join("parts", p); py = os.path.join(dst, "part.py")
+              new = os.path.join(d, "result.json"); old = os.path.join(dst, "result.json")
+              if os.path.exists(new) and os.path.exists(old) and os.path.exists(py):
+                  if stale(py, json.load(open(new))) and not stale(py, json.load(open(old))):
+                      print(f"{p}: the run's result is older than the one in the tree, kept the tree's"); continue
+              os.makedirs(dst, exist_ok=True)
+              for f in ("result.json", "part.stl", "preview.png"):
+                  if os.path.exists(os.path.join(d, f)): shutil.copyfile(os.path.join(d, f), os.path.join(dst, f))
+          PY
           rm -rf _results
           python3 tools/predict.py --update
       - name: commit and push (retry on race)
