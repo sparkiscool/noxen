@@ -84,15 +84,14 @@ jobs:
       - run: pip install -r requirements.txt
 
       # a checkpoint from a previous attempt of this same part.py and libs (if any) lets the run continue where it stopped; a lib
-      # change (parts/*.py) is a new setup, its old checkpoint would not fit (28 Oct, the rear arm's mask mismatch). restore-keys:
-      # checkpoints saved under the older key (part.py only, 28 Oct runs), so the arms' attempts carry on across that change
+      # change (parts/*.py) is a new setup, its old checkpoint would not fit (28 Oct, the rear arm's mask mismatch; 29 Oct: a
+      # fallback to the older key resumed nine nodes from checkpoints of the previous socket layout). The engine also checks
+      # the checkpoint's own setup hash (topo/run.py) and ignores one from another setup.
       - name: restore checkpoint
         uses: actions/cache/restore@v4
         with:
           path: parts/${{ matrix.part }}/ck*.npz
           key: ck-${{ matrix.part }}-${{ hashFiles(format('parts/{0}/part.py', matrix.part), 'parts/*.py') }}
-          restore-keys: |
-            ck-${{ matrix.part }}-${{ hashFiles(format('parts/{0}/part.py', matrix.part)) }}-
 
       - name: optimise
         id: opt

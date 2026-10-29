@@ -61,6 +61,33 @@ def peak_gb():
         return None
 
 
+def _setup_hash(out_dir):
+    """part.py + its libs (tools/part_sha.py), or None for a demo part"""
+    py = os.path.join(out_dir, "part.py")
+    if not os.path.exists(py):
+        return None
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
+    from part_sha import part_sha, lib_sha
+    return part_sha(py) + lib_sha(py)
+
+
+def _own_checkpoints(out_dir, log):
+    """a checkpoint resumes only the setup it came from: ck_setup.npz beside ck*.npz holds the setup hash; a checkpoint from
+    another setup (part.py or a lib changed) is deleted here, not resumed (29 Oct: nine nodes resumed checkpoints of the
+    previous socket layout and reported in two minutes)"""
+    import glob, numpy as np
+    want = _setup_hash(out_dir)
+    tag = os.path.join(out_dir, "ck_setup.npz")
+    cks = [f for f in glob.glob(os.path.join(out_dir, "ck*.npz")) if f != tag]
+    have = str(np.load(tag)["setup"]) if os.path.exists(tag) else None
+    if cks and want is not None and have != want:
+        for f in cks:
+            os.remove(f)
+        log(f"checkpoint: {len(cks)} file(s) from another setup ({have or 'untagged'}), ignored: this run starts fresh")
+    if want is not None:
+        np.savez(tag, setup=np.array(want))
+
+
 def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=False, log=None, maxit=400,
              extra=None):
     os.makedirs(out_dir, exist_ok=True)
@@ -79,6 +106,7 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
     from .audit import audit
     rep_audit = audit(part0, s.min_member_mm, log=log, hard=s.audit == "raise", floor_mm=settings.min_member_mm if settings else Settings.min_member_mm)
     del part0
+    _own_checkpoints(out_dir, log)
     xh_c = part_c = None
     if coarse and not os.path.exists(ck):
         part_c = setup(2.0 * h)
