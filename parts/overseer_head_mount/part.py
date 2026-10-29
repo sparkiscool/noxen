@@ -3,7 +3,8 @@ node 17 (the cage node nearest the L2), so node 17 is no longer a separate part.
 
 Drawn = attachments only: 4 L2 bolt pads, 2 x 4 camera insert bosses, the socket collars of node 17 (4 tubes 6/4 + the front core
 tie 3.0) and of the head rods +1 / -1 (6/4). Everything between them is generated. The L2 field (half ball R 220 ahead of its
-base plane) and both camera frustums are CUTS (void), so nothing can grow into them. Frame: x fwd, y left, z up, mm, z 0 = bottom
+base plane) and both camera frustums are CUTS (void), so nothing can grow into them. Cameras yawed 20 out (29 Oct, was 45: one solid
+window ahead; poses from systems/overseer.cage.json cams). Frame: x fwd, y left, z up, mm, z 0 = bottom
 plate top; geometry from systems/overseer.cage.json (C), forces from its node_loads (F)."""
 import json, os
 import numpy as np, trimesh, manifold3d as mf
