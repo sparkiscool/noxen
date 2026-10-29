@@ -1,23 +1,24 @@
 {
  "name": "overseer_cage_node_13",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
-  "bodies_plain": 2,
+  "bodies_plain": 1,
+  "specks_plain": 1,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   8106.6
+   8199.8
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
-  "acute_edges": 3,
-  "ok": false
+  "acute_edges": 0,
+  "ok": true
  },
  "function_check": {
-  "skin_mm3": 1735.5,
+  "skin_mm3": 1958.5,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
   "outside_env_mm3": 0.0,
   "ok": true
  },
@@ -26,12 +27,12 @@
    {
     "case": "frame tube 11-13 axial 409 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.046,
-    "across": 0.036,
+    "inlayer": 0.131,
+    "across": 0.149,
     "at": [
-     -302.8,
-     158.6,
-     77.7
+     -288.2,
+     169.3,
+     84.2
     ]
    },
    {
@@ -40,20 +41,20 @@
     "inlayer": 0.0,
     "across": 0.0,
     "at": [
-     -290.8,
-     160.6,
-     84.7
+     -300.2,
+     165.3,
+     85.2
     ]
    },
    {
     "case": "frame tube 13-14 axial 66 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.012,
-    "across": 0.01,
+    "inlayer": 0.061,
+    "across": 0.068,
     "at": [
-     -311.8,
-     138.6,
-     81.7
+     -311.2,
+     143.3,
+     83.2
     ]
    },
    {
@@ -62,64 +63,64 @@
     "inlayer": 0.0,
     "across": 0.0,
     "at": [
-     -300.8,
-     133.6,
-     74.7
+     -307.2,
+     133.3,
+     86.2
     ]
    },
    {
     "case": "frame tube 13-20 axial 310 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.054,
-    "across": 0.041,
+    "inlayer": 0.106,
+    "across": 0.209,
     "at": [
-     -303.8,
-     149.6,
-     89.7
+     -311.2,
+     143.3,
+     83.2
     ]
    },
    {
     "case": "frame tube 13-20 side 0.8 N",
     "cls": "crash",
-    "inlayer": 0.0,
+    "inlayer": 0.001,
     "across": 0.0,
     "at": [
-     -304.8,
-     140.6,
-     82.7
+     -296.2,
+     141.3,
+     91.2
     ]
    },
    {
     "case": "frame core tie rear.1 axial 856 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.133,
-    "across": 0.122,
+    "inlayer": 0.432,
+    "across": 0.288,
     "at": [
-     -302.8,
-     141.6,
-     78.7
+     -301.2,
+     140.3,
+     78.2
     ]
    },
    {
     "case": "frame core tie rear.1 side 2.3 N",
     "cls": "crash",
-    "inlayer": 0.0,
-    "across": 0.0,
+    "inlayer": 0.001,
+    "across": 0.001,
     "at": [
-     -302.8,
-     140.6,
-     78.7
+     -292.2,
+     142.3,
+     77.2
     ]
    },
    {
     "case": "frame core tie left.2 axial 670 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.108,
-    "across": 0.088,
+    "inlayer": 0.192,
+    "across": 0.173,
     "at": [
-     -300.8,
-     151.6,
-     84.7
+     -303.2,
+     145.3,
+     80.2
     ]
    },
    {
@@ -128,21 +129,43 @@
     "inlayer": 0.0,
     "across": 0.0,
     "at": [
-     -300.8,
-     151.6,
-     85.7
+     -285.2,
+     148.3,
+     80.2
+    ]
+   },
+   {
+    "case": "frame camera rod 13 axial 100 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.029,
+    "across": 0.03,
+    "at": [
+     -305.2,
+     134.3,
+     86.2
+    ]
+   },
+   {
+    "case": "frame camera rod 13 side 3.0 N",
+    "cls": "crash",
+    "inlayer": 0.002,
+    "across": 0.001,
+    "at": [
+     -301.2,
+     136.3,
+     82.2
     ]
    }
   ],
-  "worst": 0.133,
+  "worst": 0.432,
   "worst_case": "frame core tie rear.1 axial 856 N (pull-out)",
   "worst_at": [
-   -302.8,
-   141.6,
-   78.7
+   -301.2,
+   140.3,
+   78.2
   ]
  },
- "mass_g": 15.42,
+ "mass_g": 16.77,
  "watertight": false,
  "bodies": {
   "bodies_raw": 1,
@@ -150,11 +173,11 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 12138.5,
- "drawn_g": 6.5,
+ "volume_mm3": 13207.9,
+ "drawn_g": 7.88,
  "stl": "overseer_cage_node_13.stl",
  "view_stl": "overseer_cage_node_13_view.stl",
- "view_faces": 89968,
+ "view_faces": 119460,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -216,31 +239,31 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.09290966525974888,
-  "nd": 75342,
+  "volfrac": 0.04836792791796799,
+  "nd": 144724,
   "sym_axes": [],
-  "n_real": 10,
-  "n_ties": 0,
+  "n_real": 12,
+  "n_ties": 6,
   "backend": "direct",
-  "iterations": 42,
+  "iterations": 45,
   "stopped": "grey"
  },
  "grid": {
   "name": "overseer_cage_node_13",
   "h": 1.0,
   "shape": [
-   48,
-   64,
-   48
+   56,
+   72,
+   56
   ],
   "origin": [
-   -327.2766,
-   116.1139,
-   56.1722
+   -326.75,
+   112.7877,
+   51.7065
   ],
-  "cells": 147456,
-  "design": 75342,
-  "drawn": 5124,
+  "cells": 225792,
+  "design": 144724,
+  "drawn": 6221,
   "cases": [
    "frame tube 11-13 axial 409 N (pull-out)",
    "frame tube 11-13 side 0.5 N",
@@ -251,46 +274,71 @@
    "frame core tie rear.1 axial 856 N (pull-out)",
    "frame core tie rear.1 side 2.3 N",
    "frame core tie left.2 axial 670 N (pull-out)",
-   "frame core tie left.2 side 1.0 N"
+   "frame core tie left.2 side 1.0 N",
+   "frame camera rod 13 axial 100 N (pull-out)",
+   "frame camera rod 13 side 3.0 N"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 42.9,
- "layout_s": 1678,
- "peak_gb": 4.951372,
+ "build_s": 69.5,
+ "layout_s": 10793,
+ "peak_gb": 10.03282,
  "gen_cm3": 7.0,
  "h": 1.0,
  "audit": {
-  "drawn_share": 0.064,
+  "drawn_share": 0.041,
   "bodies": [
    {
     "id": 1,
-    "cells": 5124,
+    "cells": 4249,
     "inscribed_mm": 4.5,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
-    "room": 0.92,
-    "room_depth_mm": 50.0,
+    "room": 0.93,
+    "room_depth_mm": 59.0,
     "at": [
-     -304.0,
-     146.2,
-     84.1
+     -303.6,
+     137.1,
+     82.4
     ],
     "core_mm": 4.0,
-    "share_of_drawn": 1.0
+    "share_of_drawn": 0.68
+   },
+   {
+    "id": 2,
+    "cells": 1972,
+    "inscribed_mm": 4.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.94,
+    "room_depth_mm": 54.0,
+    "at": [
+     -291.0,
+     165.7,
+     85.0
+    ],
+    "core_mm": 3.5
    }
   ],
   "envelope_waste": 0.0,
-  "cases": 10,
+  "plate": {
+   "L_mm": 68.0,
+   "W_mm": 54.0,
+   "H_mm": 50.0,
+   "fits": true
+  },
+  "cases": 12,
   "supports": 1,
   "fails": []
  },
  "baseline": null,
- "total_s": 1721,
+ "total_s": 10862,
  "part_sha": "f29efd400153",
+ "lib_sha": "421d0dd2fb1a",
  "max_worst": 0.5,
  "strength_ok": true
 }

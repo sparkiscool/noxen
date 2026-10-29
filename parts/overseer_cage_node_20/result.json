@@ -4,10 +4,10 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 3,
+  "specks_plain": 2,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   2806.3
+   2775.4
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -16,9 +16,9 @@
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 1528.3,
+  "skin_mm3": 1527.5,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
   "outside_env_mm3": 0.0,
   "ok": true
  },
@@ -27,19 +27,8 @@
    {
     "case": "frame tube 7-20 axial 271 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.105,
-    "across": 0.029,
-    "at": [
-     -162.9,
-     5.5,
-     109.0
-    ]
-   },
-   {
-    "case": "frame tube 7-20 side 6.1 N",
-    "cls": "crash",
-    "inlayer": 0.009,
-    "across": 0.004,
+    "inlayer": 0.106,
+    "across": 0.026,
     "at": [
      -162.9,
      5.5,
@@ -47,14 +36,25 @@
     ]
    },
    {
+    "case": "frame tube 7-20 side 6.1 N",
+    "cls": "crash",
+    "inlayer": 0.01,
+    "across": 0.003,
+    "at": [
+     -162.9,
+     -5.5,
+     110.0
+    ]
+   },
+   {
     "case": "frame tube 13-20 axial 310 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.11,
-    "across": 0.046,
+    "inlayer": 0.112,
+    "across": 0.045,
     "at": [
-     -180.9,
+     -178.9,
      1.5,
-     107.0
+     104.0
     ]
    },
    {
@@ -63,20 +63,20 @@
     "inlayer": 0.001,
     "across": 0.0,
     "at": [
-     -180.9,
-     1.5,
+     -181.9,
+     2.5,
      107.0
     ]
    },
    {
     "case": "frame tube 14-20 axial 310 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.11,
-    "across": 0.046,
+    "inlayer": 0.112,
+    "across": 0.045,
     "at": [
-     -180.9,
+     -178.9,
      -1.5,
-     107.0
+     104.0
     ]
    },
    {
@@ -85,32 +85,32 @@
     "inlayer": 0.001,
     "across": 0.0,
     "at": [
-     -180.9,
-     -1.5,
+     -181.9,
+     -2.5,
      107.0
     ]
    },
    {
     "case": "crash 35 g through the longest tube tube 7-20 (371 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.113,
-    "across": 0.022,
+    "inlayer": 0.116,
+    "across": 0.029,
     "at": [
      -162.9,
      -5.5,
-     109.0
+     110.0
     ]
    }
   ],
-  "worst": 0.113,
+  "worst": 0.116,
   "worst_case": "crash 35 g through the longest tube tube 7-20 (371 mm), axial + side",
   "worst_at": [
    -162.9,
    -5.5,
-   109.0
+   110.0
   ]
  },
- "mass_g": 8.57,
+ "mass_g": 8.54,
  "watertight": false,
  "bodies": {
   "bodies_raw": 1,
@@ -118,11 +118,11 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 6748.4,
+ "volume_mm3": 6725.9,
  "drawn_g": 6.43,
  "stl": "overseer_cage_node_20.stl",
  "view_stl": "overseer_cage_node_20_view.stl",
- "view_faces": 91668,
+ "view_faces": 91760,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -184,15 +184,15 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.02201616245337754,
-  "nd": 77216,
+  "volfrac": 0.02193774841273938,
+  "nd": 77492,
   "sym_axes": [
    1
   ],
   "n_real": 7,
   "n_ties": 0,
   "backend": "direct",
-  "iterations": 86,
+  "iterations": 90,
   "stopped": "grey"
  },
  "grid": {
@@ -204,13 +204,13 @@
    40
   ],
   "origin": [
-   -202.3578,
+   -202.3503,
    -36.0,
-   87.452
+   87.451
   ],
   "cells": 184320,
-  "design": 77216,
-  "drawn": 5072,
+  "design": 77492,
+  "drawn": 5054,
   "cases": [
    "frame tube 7-20 axial 271 N (pull-out)",
    "frame tube 7-20 side 6.1 N",
@@ -224,17 +224,17 @@
    "default"
   ]
  },
- "build_s": 38.6,
- "layout_s": 30,
- "peak_gb": 4.492452,
+ "build_s": 44.5,
+ "layout_s": 2826,
+ "peak_gb": 4.656468,
  "gen_cm3": 1.7,
  "h": 1.0,
  "audit": {
-  "drawn_share": 0.062,
+  "drawn_share": 0.061,
   "bodies": [
    {
     "id": 1,
-    "cells": 5072,
+    "cells": 5054,
     "inscribed_mm": 4.0,
     "touches_cut": true,
     "touches_support": true,
@@ -251,13 +251,20 @@
    }
   ],
   "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 64.0,
+   "W_mm": 60.0,
+   "H_mm": 30.0,
+   "fits": true
+  },
   "cases": 7,
   "supports": 1,
   "fails": []
  },
  "baseline": null,
- "total_s": 68,
+ "total_s": 2871,
  "part_sha": "8802800a9ef8",
+ "lib_sha": "421d0dd2fb1a",
  "max_worst": 0.5,
  "strength_ok": true
 }
