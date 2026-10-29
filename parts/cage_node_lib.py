@@ -7,7 +7,8 @@ centre to every collar were added when the solid gate "split every collar off", 
 
 Members of node n come from systems/overseer.cage.json: the cage tubes (rods) that end at n and the named links whose endpoint
 is n. Socket axis = the direction from the node centre to the member's far end; the bore starts node_r_mm (10.15) from the node
-centre (where the cage model ends the member), 15 deep for a 6/4 tube (bore 6.2), 10 deep for a 3 mm rod (bore 3.2), 3.0 floor.
+centre (where the cage model ends the member), 15 deep for a 6/4 tube (bore 6.2), 10 deep for a 3 mm rod (bore 3.2), 3.0 floor;
+every bore as the coupon socket (socket_cuts: resin grooves, lead-in, teardrop crown toward the build direction; 29 Oct).
 `check_members` fails the setup when a member of the node has no socket, the far node lacks the matching socket on the same
 axis, the frame model has loads for a member that is not there (or none for one that is), or the built cuts do not hold the bore.
 
@@ -27,8 +28,10 @@ CAGE = json.load(open(os.path.join(HERE, "..", "systems", "overseer.cage.json"))
 NODES = np.array(CAGE["nodes"], float)
 NODE_R = float(CAGE["node_r_mm"])                     # 10.15: where a bore starts unless a neighbour forces it further out (SOCKET_START)
 BASE = {0, 1, 2, 3, 4, 5}                             # the base loop, z -79.9
-WALL, FLOOR, MARGIN = 2.0, 3.0, 8.0
+WALL, FLOOR, MARGIN = 2.5, 3.0, 8.0                   # wall 2.5 (29 Oct, was 2.0): 2.0 is left at the resin grooves
 KIND = {"tube": dict(bore_r=3.1, depth=15.0), "link": dict(bore_r=1.6, depth=10.0)}   # bore 6.2 / 3.2
+GROOVE_D, GROOVE_H, LEAD_IN = 0.5, 1.5, 1.0            # the coupon socket (socket_cuts below): resin grooves, lead-in
+CROWN_MIN_SIN = 0.3                                    # a bore within ~17 deg of vertical prints without a crown
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
 LAND_FEET = 3                                         # a flat landing may rest on 3 of the 6 feet (E)
 FOOT_R, FOOT_T = 8.0, 2.4                             # landing face: Ø16 x 2.4, bottom 2.0 under the node sphere's lowest point
@@ -71,7 +74,7 @@ def _socket_starts():
                 t = float(np.arccos(np.clip(m["u"] @ o["u"], -1.0, 1.0)))
                 if t < 1e-6:
                     continue
-                s0 = max(s0, (m["bore_r"] + o["bore_r"] + WALL) / (2.0 * np.sin(t / 2.0)))
+                s0 = max(s0, (m["bore_r"] + o["bore_r"] + 2 * GROOVE_D + WALL) / (2.0 * np.sin(t / 2.0)))   # at the grooves too
             st[(n, m["name"])] = float(np.ceil(s0 * 10.0) / 10.0)          # up to the next 0.1 mm: the check below is exact
     return st
 
@@ -103,6 +106,73 @@ def U(ms):
     return mf.Manifold.batch_boolean(list(ms), mf.OpType.Add)
 
 
+# ---- the epoxied socket, as the coupons that fit (parts/rod_coupon_6mm, rod_coupon_3mm; Spark 29 Oct: "the one I said worked in
+# the coupon", with the resin reservoir): the bore (6.2 / 3.2), two resin grooves 0.5 deep x 1.5 tall at a third and two thirds
+# of the depth, a 1.0 x 45 deg lead-in at the mouth; and, for printing, a teardrop crown on the overhanging side of every bore
+# that is not near-vertical on the build plate, so no support is ever printed inside a hole (Spark 29 Oct). The coupon's vent
+# hole through the floor is not drawn: in a node every floor backs onto the body; a notch filed in the rod end vents instead.
+
+
+def _prism(poly, c, u, s0, s1, e1, e2):
+    """the 2D polygon poly (in the e1, e2 plane) extruded along u from s0 to s1"""
+    import manifold3d as mf
+    cs = mf.CrossSection([[(float(x), float(y)) for x, y in poly]])
+    m = mf.Manifold.extrude(cs, float(s1 - s0))                       # along local z from 0 to s1 - s0
+    R = np.column_stack([e1, e2, u]); t = c + u * s0
+    return m.transform(np.column_stack([R, t]).astype(np.float64))
+
+
+def socket_cuts(c, u, s0, depth, r, build=(0.0, 0.0, 1.0), beyond=1.0):
+    """cuts of one socket whose bore bottom is at c + u s0 and mouth at c + u (s0 + depth), bore radius r: the bore (to beyond past
+    the mouth), two resin grooves, the lead-in cone, and the teardrop crown toward the build direction where the bore overhangs"""
+    u = np.asarray(u, float) / np.linalg.norm(u); z = np.asarray(build, float)
+    s_end = s0 + depth
+    cuts = [along(c, u, s0, s_end + beyond, r)]
+    for f in (1.0 / 3.0, 2.0 / 3.0):
+        sg = s0 + f * depth - 0.5 * GROOVE_H
+        cuts.append(along(c, u, sg, sg + GROOVE_H, r + GROOVE_D))
+    cuts.append(cone(c, u, s_end - LEAD_IN, s_end + beyond, r, r + LEAD_IN + beyond))
+    d = crown_dir(u, build)
+    if d is not None:                                                  # overhanging bore: a teardrop, apex r*sqrt(2) up the overhang side
+        e1 = d; e2 = np.cross(u, e1)
+        a = np.linspace(np.pi / 4, 2 * np.pi - np.pi / 4, 40)        # the circle from +45 deg round the bottom to -45 deg
+        poly = [(r * np.cos(t), r * np.sin(t)) for t in a] + [(r * np.sqrt(2.0), 0.0)]
+        cuts.append(_prism(poly, c, u, s0, s_end + beyond, e1, e2))
+    return cuts
+
+
+def crown_dir(u, build=(0.0, 0.0, 1.0)):
+    """unit vector of the teardrop crown for a bore along u, or None when the bore is near-vertical on the plate"""
+    u = np.asarray(u, float) / np.linalg.norm(u); z = np.asarray(build, float); d = z - (z @ u) * u
+    return None if np.linalg.norm(d) <= CROWN_MIN_SIN else d / np.linalg.norm(d)
+
+
+def collar_shape(c, u, s0, s1, r, wall, build=(0.0, 0.0, 1.0)):
+    """the drawn collar round a socket: a cylinder of r + wall, grown to the same teardrop as the bore's crown (+ wall) where the
+    bore has one, so the wall is kept all round the crown too"""
+    u = np.asarray(u, float) / np.linalg.norm(u); ro = r + wall
+    d = crown_dir(u, build)
+    if d is None:
+        return along(c, u, s0, s1, ro)
+    e1 = d; e2 = np.cross(u, e1)
+    a = np.linspace(np.pi / 4, 2 * np.pi - np.pi / 4, 40)
+    poly = [(ro * np.cos(t), ro * np.sin(t)) for t in a] + [(ro * np.sqrt(2.0), 0.0)]
+    return _prism(poly, c, u, s0, s1, e1, e2)
+
+
+def cone(c, u, s0, s1, r0, r1, n=40):
+    """frustum on the axis c + u s from radius r0 at s0 to r1 at s1"""
+    import manifold3d as mf
+    u = np.asarray(u, float) / np.linalg.norm(u)
+    m = mf.Manifold.cylinder(float(s1 - s0), float(r0), float(r1), n)
+    z = np.array([0, 0, 1.0]); v = np.cross(z, u); sn = np.linalg.norm(v); cs = float(z @ u)
+    if sn < 1e-9:
+        R = np.eye(3) if cs > 0 else np.diag([1.0, -1.0, -1.0])
+    else:
+        v /= sn; K = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]]); R = np.eye(3) + sn * K + (1 - cs) * K @ K
+    return m.transform(np.column_stack([R, c + u * s0]).astype(np.float64))
+
+
 def check_members(n, log=print):
     """every member of node n lands in a socket of n: same axis as the member, bore from node_r_mm out, and the member's far
     end has the matching socket on the same line (tubes). Raises ValueError listing what is wrong."""
@@ -124,7 +194,7 @@ def check_members(n, log=print):
     for i, a in enumerate(ms):
         for b in ms[i + 1:]:
             t = np.arccos(np.clip(a["u"] @ b["u"], -1, 1)); r = max(a["s0"], b["s0"])
-            if 2 * r * np.sin(t / 2) < a["bore_r"] + b["bore_r"] + WALL - 1e-6:
+            if 2 * r * np.sin(t / 2) < a["bore_r"] + b["bore_r"] + 2 * GROOVE_D + WALL - 1e-6:
                 bad.append(f"{a['name']} / {b['name']}: {np.degrees(t):.0f} deg apart, bores overlap at {r:.1f} mm (carbon would touch carbon)")
     far = [f"{m['name']} from {m['s0']:.1f}" for m in ms if m["s0"] > NODE_R + 1e-6]
     if far:
@@ -162,8 +232,8 @@ def build(n, h, log=print, extra=None):
     for m in ms:
         ro = m["bore_r"] + WALL
         s_end = m["s0"] + m["depth"]
-        collars.append(along(c, m["u"], m["s0"] - FLOOR, s_end, ro))
-        bores.append(along(c, m["u"], m["s0"], s_end + 1.0, m["bore_r"]))
+        collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL))
+        bores += socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"])     # bore, resin grooves, lead-in, teardrop crown
         keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))     # the member itself, and room to wrap it: no growth
         m["ro"], m["s_end"] = ro, s_end
         for s in (m["s0"] - FLOOR, s_end):

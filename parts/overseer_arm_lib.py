@@ -26,6 +26,7 @@ import json, os
 import numpy as np, trimesh, manifold3d as mf
 from topo import Part
 from topo.part import man
+from parts.cage_node_lib import socket_cuts, collar_shape
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "systems", "overseer.cage.json")))
@@ -59,7 +60,7 @@ M_MOTOR, M_ESC = 96.0, 0.0                       # g: motor 81 + prop 10 + screw
 Z_MOTOR_CG = 60.0                                # motor CG (arms section)
 THRUST_N, TORQUE_NM = 21.0, 0.5                  # arms section (E)
 E_CARBON, E_PETG = 120e3, 2780.0                 # MPa (arms section)
-NODE_R, SOCK_BORE_R, SOCK_DEPTH, SOCK_WALL = 10.15, 1.6, 10.0, 2.0     # cage v5 node rule (cage_node_lib)
+NODE_R, SOCK_BORE_R, SOCK_DEPTH, SOCK_WALL = 10.15, 1.6, 10.0, 2.5     # cage node rule (cage_node_lib); wall 2.5 (29 Oct): 2.0 at the resin grooves
 ROD_A = 7.07                                     # 3.0 solid carbon area, mm2 (dimensions.md C)
 
 
@@ -217,8 +218,8 @@ class Arm:
         for sp in self.spokes:
             u, P0 = sp["u"], self.node
             ro, s_end = SOCK_BORE_R + SOCK_WALL, NODE_R + SOCK_DEPTH
-            drawn.append(along(P0, u, NODE_R - FLOOR, s_end, ro))
-            cuts.append(along(P0, u, NODE_R, s_end + 1.0, SOCK_BORE_R))
+            drawn.append(collar_shape(P0, u, NODE_R - FLOOR, s_end, SOCK_BORE_R, SOCK_WALL))
+            cuts += socket_cuts(P0, u, NODE_R, SOCK_DEPTH, SOCK_BORE_R)                 # coupon socket: grooves, lead-in, crown
             cuts.append(along(P0, u, s_end, s_end + 70.0, SOCK_BORE_R + 0.6))          # the rod beyond its collar: nothing grows on it
             sp["lining"] = along(P0, u, NODE_R - FLOOR - 0.5, s_end, SOCK_BORE_R + 1.4)
         # --- neighbours: prop disc, pack / cartridge / receiver zone, every other cage member near the envelope

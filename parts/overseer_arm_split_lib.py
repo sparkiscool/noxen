@@ -21,6 +21,7 @@ plate lips, and the plate bolts' pull / shear from them as in the one-piece arm.
 """
 import numpy as np, manifold3d as mf
 from topo import Part
+from parts.cage_node_lib import socket_cuts, collar_shape
 from parts.overseer_arm_lib import (Arm, cyl, box, U, along, hull_xy, stadium, rigid_split, frame_cases, mvec, G, Z_BOT, Z_PAD, Z_THRUST, BOLT_TOP, BOLT_BOT,
                                     HOLE_D, NUT_AF, NUT_T, FLOOR, BOSS_R, HEAD_D, HEAD_T, SWEEP_D, M_MOTOR, M_ESC, Z_MOTOR_CG, THRUST_N,
                                     TORQUE_NM, NODE_R, SOCK_BORE_R, SOCK_DEPTH, SOCK_WALL, CAGE)
@@ -85,8 +86,8 @@ class SplitArm(Arm):
             for v in (JB_V, -JB_V):
                 drawn.append(self.axial(sJ, sJ + PAD_T, v, JB_Z, BOSS_R))                                # bolt boss, nut side (a pad is a block)
             for v in (PIN_V, -PIN_V):
-                drawn.append(self.axial(sJ, sJ + PIN_HALF + FLOOR, v, PIN_Z, PIN_BORE_R + SOCK_WALL))    # pin collar + floor
-                cuts.append(self.axial(sJ - 1.0, sJ + PIN_HALF, v, PIN_Z, PIN_BORE_R))                  # pin bore
+                drawn.append(collar_shape(self.p(0.0, v, PIN_Z), self.A3, sJ, sJ + PIN_HALF + FLOOR, PIN_BORE_R, SOCK_WALL))   # pin collar + floor
+                cuts += socket_cuts(self.p(0.0, v, PIN_Z), -self.A3, -(sJ + PIN_HALF), PIN_HALF, PIN_BORE_R)   # pin socket (coupon)
             for v in (JB_V, -JB_V):
                 cuts.append(self.hexa(sJ - 0.5, sJ + NUT_T, v, JB_Z))                                    # nut pocket, open at the face
                 cuts.append(self.axial(sJ - 2.0, sJ + 14.0, v, JB_Z, HOLE_D / 2))                        # shank + bolt end clearance
@@ -101,8 +102,8 @@ class SplitArm(Arm):
             drawn.append(self.slab(sJ - JB_T, sJ, -JB_W, JB_W, JB_Z - 6.0, PIN_Z + 6.0))
             cuts.append(self.axial(sJ - JB_T - 0.5, sJ + 0.5, 0.0, 0.5 * (JB_Z + PIN_Z), 5.0))            # window: no solid core far from a face
             for v in (PIN_V, -PIN_V):
-                drawn.append(self.axial(sJ - PIN_HALF - FLOOR, sJ - JB_T + 0.5, v, PIN_Z, PIN_BORE_R + SOCK_WALL))
-                cuts.append(self.axial(sJ - PIN_HALF, sJ + 1.0, v, PIN_Z, PIN_BORE_R))
+                drawn.append(collar_shape(self.p(0.0, v, PIN_Z), self.A3, sJ - PIN_HALF - FLOOR, sJ - JB_T + 0.5, PIN_BORE_R, SOCK_WALL))
+                cuts += socket_cuts(self.p(0.0, v, PIN_Z), self.A3, sJ - PIN_HALF, PIN_HALF, PIN_BORE_R)       # pin socket (coupon)
             for v in (JB_V, -JB_V):
                 cuts.append(self.axial(sJ - 14.0, sJ + 2.0, v, JB_Z, HOLE_D / 2))                        # shank
                 cuts.append(self.axial(sJ - PAD_T - 0.5, sJ - PAD_T + HEAD_T, v, JB_Z, HEAD_D / 2))      # head counterbore
