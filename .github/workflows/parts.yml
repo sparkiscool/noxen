@@ -107,6 +107,12 @@ jobs:
           path: parts/${{ matrix.part }}/ck*.npz
           key: ck-${{ matrix.part }}-${{ hashFiles(format('parts/{0}/part.py', matrix.part), 'parts/*.py') }}-${{ github.run_id }}
 
+      # a cut-off or crashed run leaves only its checkpoint: a mesh written before the result (28 Oct: the rear arm's cap-time
+      # mesh, in grid coordinates at the origin, was committed and placed on the page as the part)
+      - name: no result, no files
+        if: always()
+        run: |
+          if [ ! -f parts/${{ matrix.part }}/result.json ]; then rm -f parts/${{ matrix.part }}/part.stl parts/${{ matrix.part }}/preview.png; fi
       - name: results
         if: always()
         uses: actions/upload-artifact@v4
