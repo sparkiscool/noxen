@@ -3,8 +3,7 @@
 Why a new one: the first frame model (runs/overseer_frame/v1, not in this repo) held the core rigid, so a crash force entering at
 a corner node ran through a spoke, across the core and out the other arms: 1465 N in one 3 mm spoke, index 4..10 on every arm
 piece, 2 kN shear on an M3 in a 1.5 mm plate. Here the core is a free rigid body with its mass, hung on its core ties, bay ties
-and the four PETG arms at their own stiffness (a spoke rod is ~100x stiffer than the arm it ends on, so the arm gives and the
-cage carries its load round it); the head (L2, cameras, mount, node 17) is a rigid body on nodes 15 / 16 and the tubes at 17;
+and the four arms as beams: two 6/4 carbon tubes each since 29 Oct (before: a PETG arm, A 300 mm2, I 2.5e4 mm4); the head (L2, cameras, mount, node 17) is a rigid body on nodes 15 / 16 and the tubes at 17;
 the cage is 6/4 carbon tubes and 3 mm rods with rigid joints.
 
 Cases: a 35 g stop in each of 14 directions (6 axes, 8 diagonals): the drone moving along d meets a flat surface and rocks
@@ -32,7 +31,8 @@ G = 9.81e-3                                                  # N per g per g
 E_CARBON, E_PETG, NU = 120e3, 2780.0, 0.3
 TUBE = dict(E=E_CARBON, A=np.pi * (3.0 ** 2 - 2.0 ** 2), I=np.pi / 4 * (3.0 ** 4 - 2.0 ** 4))     # 6/4 carbon tube
 RODS = dict(E=E_CARBON, A=np.pi * 1.5 ** 2, I=np.pi / 4 * 1.5 ** 4)                               # 3.0 solid carbon
-ARM = dict(E=E_PETG, A=300.0, I=2.5e4)                                                            # generated PETG arm (E)
+ARM = dict(E=E_CARBON, A=2 * np.pi * (3.0 ** 2 - 2.0 ** 2), I=1200.0)                             # two 6/4 tubes 22 apart (29 Oct):
+#   I 3242 mm4 in the thrust plane, 102 across; one I for the round-section beam element: their geometric mean (E)
 STIFF = dict(E=200e3, A=2000.0, I=2.0e6)                                                          # rigid-body links
 CRASH_G, LAND_G = 35.0, 6.0
 ROOT_R, ROOT_Z, Z_MOTOR = 66.5, 22.5, 60.0                   # arm root on the diagonal, mid-height; motor CG (arm lib)
@@ -260,14 +260,29 @@ def selftest():
     assert abs(u[j][0] - 50.0 * 200.0 / (TUBE["E"] * TUBE["A"])) < 1e-6 and abs(mem[0]["N"] - 50.0) < 1e-6, mem[0]
 
 
-def run(dry=False, log=print):
+_ROWS = {}
+
+
+def mass_rows():
+    """the assembly's placed masses (slow: loads every mesh), cached per process"""
+    if "rows" not in _ROWS:
+        asm = A.load(ASM_PATH)
+        rows = sc.mass_cg(asm.parts, asm.meshes())["parts"]
+        by_name = {p["name"]: p["id"] for p in asm.parts}
+        for r in rows:
+            r["id"] = by_name[r["name"]]
+        _ROWS["rows"] = rows
+    return _ROWS["rows"]
+
+
+def run(dry=False, log=print, drop=()):
+    """drop: link names left out of the model (a what-if, dry only)"""
     selftest()
     cage = json.load(open(CAGE_PATH))
-    asm = A.load(ASM_PATH)
-    rows = sc.mass_cg(asm.parts, asm.meshes())["parts"]
-    by_name = {p["name"]: p["id"] for p in asm.parts}
-    for r in rows:
-        r["id"] = by_name[r["name"]]
+    for k in drop:
+        assert dry, "drop is for what-ifs"
+        del cage["links"][k]
+    rows = mass_rows()
     mg = masses(rows, cage)
     fr, load, lengths, nnode = build(cage, mg)
     n = len(fr.pts); total = sum(load.values())

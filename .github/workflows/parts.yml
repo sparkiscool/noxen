@@ -165,7 +165,9 @@ jobs:
           for d in sorted(glob.glob("_results/result-*")):
               p = os.path.basename(d)[len("result-"):]; dst = os.path.join("parts", p); py = os.path.join(dst, "part.py")
               new = os.path.join(d, "result.json"); old = os.path.join(dst, "result.json")
-              if os.path.exists(new) and os.path.exists(old) and os.path.exists(py):
+              if not os.path.exists(py):
+                  print(f"{p}: no part.py in the tree any more (deleted while it ran), result dropped"); continue
+              if os.path.exists(new) and os.path.exists(old):
                   if stale(py, json.load(open(new))) and not stale(py, json.load(open(old))):
                       print(f"{p}: the run's result is older than the one in the tree, kept the tree's"); continue
               os.makedirs(dst, exist_ok=True)

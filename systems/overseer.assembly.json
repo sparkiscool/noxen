@@ -334,70 +334,6 @@
    "top plate"
   ],
   [
-   "arm 1",
-   "top plate"
-  ],
-  [
-   "arm 1",
-   "bottom plate"
-  ],
-  [
-   "motor 1",
-   "arm 1"
-  ],
-  [
-   "spokes, ties, head rods",
-   "arm 1"
-  ],
-  [
-   "arm 2",
-   "top plate"
-  ],
-  [
-   "arm 2",
-   "bottom plate"
-  ],
-  [
-   "motor 2",
-   "arm 2"
-  ],
-  [
-   "spokes, ties, head rods",
-   "arm 2"
-  ],
-  [
-   "arm 3",
-   "top plate"
-  ],
-  [
-   "arm 3",
-   "bottom plate"
-  ],
-  [
-   "motor 3",
-   "arm 3"
-  ],
-  [
-   "spokes, ties, head rods",
-   "arm 3"
-  ],
-  [
-   "arm 4",
-   "top plate"
-  ],
-  [
-   "arm 4",
-   "bottom plate"
-  ],
-  [
-   "motor 4",
-   "arm 4"
-  ],
-  [
-   "spokes, ties, head rods",
-   "arm 4"
-  ],
-  [
    "sensor head mount (printed: drawn bolt and insert bosses and 3 rod sockets; topology joins them)",
    "cage node 0"
   ],
@@ -580,22 +516,6 @@
   [
    "wires",
    "XT60 pair"
-  ],
-  [
-   "wires",
-   "arm 1"
-  ],
-  [
-   "wires",
-   "arm 2"
-  ],
-  [
-   "wires",
-   "arm 3"
-  ],
-  [
-   "wires",
-   "arm 4"
   ],
   [
    "wires",
@@ -2619,36 +2539,36 @@
    "role": "structure",
    "mesh": "parts/overseer_arm_front_root/part.stl",
    "material": "PETG",
-   "mass_g": 36.0,
+   "mass_g": 12.0,
    "cg": [
-    103.2,
-    79.7,
-    22.0
+    52.0,
+    50.0,
+    22.5
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v7 setup: the front arm in two bolted prints, joint 130 out along the arm axis (2 x 6.0 carbon pins + 2 x M3), each fits the 180 plate",
-   "source": "parts/overseer_arm_split_lib.py",
+   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
+   "source": "parts/overseer_tube_arm_lib.py",
    "id": "overseer_arm_front_root",
    "group": "printed",
    "color": "#8899aa"
   },
   {
-   "name": "arm 1 tip",
+   "name": "arm 1 pad",
    "role": "structure",
-   "mesh": "parts/overseer_arm_front_tip/part.stl",
+   "mesh": "parts/overseer_arm_front_pad/part.stl",
    "material": "PETG",
-   "mass_g": 25.0,
+   "mass_g": 12.0,
    "cg": [
-    189.6,
-    130.0,
-    25.0
+    185.0,
+    128.0,
+    28.0
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v7 setup: the front arm in two bolted prints, joint 130 out along the arm axis (2 x 6.0 carbon pins + 2 x M3), each fits the 180 plate",
-   "source": "parts/overseer_arm_split_lib.py",
-   "id": "overseer_arm_front_tip",
+   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
+   "source": "parts/overseer_tube_arm_lib.py",
+   "id": "overseer_arm_front_pad",
    "group": "printed",
    "color": "#8899aa"
   },
@@ -2681,21 +2601,40 @@
    "color": "#d9a400"
   },
   {
-   "name": "arm 2",
+   "name": "arm 2 root",
    "role": "structure",
-   "mesh": "parts/overseer_arm_rear/part.stl",
+   "mesh": "parts/overseer_arm_rear_root/part.stl",
    "material": "PETG",
-   "mass_g": 38.1,
+   "mass_g": 12.0,
    "cg": [
-    -57.73,
-    83.45,
-    27.94
+    -50.0,
+    52.0,
+    22.5
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v6 setup (one piece, spokes end on the arm, every bolt a case)",
-   "source": "parts/overseer_arm_lib.py",
-   "id": "overseer_arm_rear",
+   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
+   "source": "parts/overseer_tube_arm_lib.py",
+   "id": "overseer_arm_rear_root",
+   "group": "printed",
+   "color": "#8899aa"
+  },
+  {
+   "name": "arm 2 pad",
+   "role": "structure",
+   "mesh": "parts/overseer_arm_rear_pad/part.stl",
+   "material": "PETG",
+   "mass_g": 12.0,
+   "cg": [
+    -68.0,
+    122.0,
+    28.0
+   ],
+   "tag": "E",
+   "owner": "overseer",
+   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
+   "source": "parts/overseer_tube_arm_lib.py",
+   "id": "overseer_arm_rear_pad",
    "group": "printed",
    "color": "#8899aa"
   },
@@ -2728,24 +2667,70 @@
    "color": "#d9a400"
   },
   {
-   "name": "arm 3",
+   "name": "arm 3 root",
    "role": "structure",
-   "mesh": "parts/overseer_arm_rear/part.stl",
+   "mesh": "parts/overseer_arm_rear_root/part.stl",
    "material": "PETG",
-   "mass_g": 38.1,
+   "mass_g": 12.0,
    "cg": [
-    -57.73,
-    -83.45,
-    27.94
+    -50.0,
+    -52.0,
+    22.5
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v6 setup (one piece, spokes end on the arm, every bolt a case)",
-   "source": "parts/overseer_arm_lib.py",
-   "id": "arm_3",
+   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
+   "source": "parts/overseer_tube_arm_lib.py",
+   "id": "arm_3_root",
    "group": "printed",
    "color": "#8899aa",
-   "part": "overseer_arm_rear",
+   "part": "overseer_arm_rear_root",
+   "pose": [
+    [
+     1,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     -1,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     1,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "arm 3 pad",
+   "role": "structure",
+   "mesh": "parts/overseer_arm_rear_pad/part.stl",
+   "material": "PETG",
+   "mass_g": 12.0,
+   "cg": [
+    -68.0,
+    -122.0,
+    28.0
+   ],
+   "tag": "E",
+   "owner": "overseer",
+   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
+   "source": "parts/overseer_tube_arm_lib.py",
+   "id": "arm_3_pad",
+   "group": "printed",
+   "color": "#8899aa",
+   "part": "overseer_arm_rear_pad",
    "pose": [
     [
      1,
@@ -2806,16 +2791,16 @@
    "role": "structure",
    "mesh": "parts/overseer_arm_front_root/part.stl",
    "material": "PETG",
-   "mass_g": 36.0,
+   "mass_g": 12.0,
    "cg": [
-    103.2,
-    -79.7,
-    22.0
+    52.0,
+    -50.0,
+    22.5
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v7 setup: the front arm in two bolted prints, joint 130 out along the arm axis (2 x 6.0 carbon pins + 2 x M3), each fits the 180 plate",
-   "source": "parts/overseer_arm_split_lib.py",
+   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
+   "source": "parts/overseer_tube_arm_lib.py",
    "id": "arm_4_root",
    "group": "printed",
    "color": "#8899aa",
@@ -2848,24 +2833,24 @@
    ]
   },
   {
-   "name": "arm 4 tip",
+   "name": "arm 4 pad",
    "role": "structure",
-   "mesh": "parts/overseer_arm_front_tip/part.stl",
+   "mesh": "parts/overseer_arm_front_pad/part.stl",
    "material": "PETG",
-   "mass_g": 25.0,
+   "mass_g": 12.0,
    "cg": [
-    189.6,
-    -130.0,
-    25.0
+    185.0,
+    -128.0,
+    28.0
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v7 setup: the front arm in two bolted prints, joint 130 out along the arm axis (2 x 6.0 carbon pins + 2 x M3), each fits the 180 plate",
-   "source": "parts/overseer_arm_split_lib.py",
-   "id": "arm_4_tip",
+   "version": "v8 setup (29 Oct, Spark: tube arms, as light as possible, glued): a printed ROOT between the plates and a printed motor PAD on two 6/4 tubes stacked at z 14 / 36 along the arm axis; spokes end on the pad",
+   "source": "parts/overseer_tube_arm_lib.py",
+   "id": "arm_4_pad",
    "group": "printed",
    "color": "#8899aa",
-   "part": "overseer_arm_front_tip",
+   "part": "overseer_arm_front_pad",
    "pose": [
     [
      1,

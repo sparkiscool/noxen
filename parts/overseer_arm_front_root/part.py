@@ -1,10 +1,10 @@
-"""Overseer front arm, ROOT piece (plate bosses to the joint, ~144 mm): the front arm in two bolted prints (Spark 29 Oct: one piece is 226 x 65 mm, over
-the A1 mini's 180 plate at every rotation). Geometry, joint, cases and numbers: parts/overseer_arm_split_lib.py on parts/overseer_arm_lib.py.
-Motor pad at motors_xy[0] (205.97, 139.5), arm top z 45, thrust plane z 82; spokes 1.1 / 1.2 / 1.3 end in drawn 3.2 x 10 sockets at
-(178.94, 146.7, 8); joint plane 130 mm out along the arm axis: 2 x 6.0 carbon pins + 2 x M3 along the axis, contact pads."""
-from parts.overseer_arm_split_lib import SplitArm, build_piece
-ARM = SplitArm("front", 45.0, 0, ["spoke 1.1", "spoke 1.2", "spoke 1.3"], [178.94, 146.7, 8.0], "root")
-SPEC = dict(h=2.0, gen_cm3=22.0, max_worst=0.5)      # 28 (10 % of the design space, ten attachments at the plates) ended with a plate boss off and a bolt case at 2.5e4 of solid (29 Oct); the tip gave back 18; 50 (29 Oct): 40 with the joint block passed the solid gate at 0.72 in the stiffness case at the top plate block edge; 22 (29 Oct, Spark: super light): the arm-alone case is handling at 2 g, no thrust
+"""Overseer front arm, ROOT: the printed block between the plates that the two 6/4 tubes of the arm glue into (29 Oct, Spark: tube
+arms, as light as possible, no clamps). Geometry, cases and numbers: parts/overseer_tube_arm_lib.py on parts/overseer_arm_lib.py.
+Motor at motors_xy[0] (205.97, 139.5); spokes 1.1 / 1.2 / 1.3 end on the PAD at (178.94, 146.7, 8); tubes at z 14 and 36 along the
+arm axis from this block (socket floors 12 out from the root centre) to the pad. Arm 4 is the y-mirror."""
+from parts.overseer_tube_arm_lib import TubeArm, build_piece
+ARM = TubeArm("front", 45.0, 0, ["spoke 1.1", "spoke 1.2", "spoke 1.3"], [178.94, 146.7, 8.0], "root")
+SPEC = dict(h=1.5, gen_cm3=6.0, max_worst=0.5)      # a block ~45 x 45 x 45 joining two plate blocks, two pegs and two tube collars (E)
 
 
 def setup(h):
