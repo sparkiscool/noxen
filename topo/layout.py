@@ -21,6 +21,10 @@ Anchored-core erosion (option, erosion = "anchored", round 1 default): only the 
 design; their skins are projected like design material and loads on them move to the nearest core node. It isolated
 thin drawn plates next to cuts (bracket_jA topo-v1: 3 bodies off from beta 8, tie compliance ratio ~1e5).
 erosion = "frozen": drawn cells 1, eroded field = the nominal filter (the classic robust formulation).
+In "masked" (29 Oct) a thick drawn body is held only at the core the solid gate keeps (the part eroded by
+clip(0.8 x its half thickness, 0.9, 2.0) mm): its skin takes the nominal filter's density and erodes with the design, so a
+member that meets the body at its rim is seen to come off, as the gate sees it; loads on a skin move to the nearest core
+node. A body too thin for a core stays whole, as before (the gate judges it by its own size).
 
 The minimum member (rod diameter of the blueprint) is set in mm; the filter radius follows from a calibration of the
 robust thresholds for a cone filter in 3D (rods and plates), so the engine, not the part script, owns the length scale.
@@ -343,8 +347,24 @@ class Layout:
         sol3 = self.solid.reshape(shape)
         if s.erosion not in ("masked", "anchored", "frozen"):
             raise ValueError(f"layout: erosion must be masked, anchored or frozen, not {s.erosion!r}")
-        if s.erosion != "anchored":
-            self.anchor = self.solid.copy()
+        if s.erosion == "frozen":
+            self.anchor = self.solid.copy()                     # the classic formulation: drawn cells held whole
+        elif s.erosion == "masked":
+            # a thick drawn body keeps only the core the solid gate keeps (tools/solid_check.py: the part eroded by
+            # clip(0.8 x the body's half thickness, 0.9, 2.0) mm must still hold the body's core); its skin erodes with the
+            # design, so a member meeting the body at its rim is seen to come off, as the gate sees it (29 Oct: the rear
+            # arm's plate bosses and a tip spoke collar passed the engine's eroded check held whole and failed the gate).
+            # A body too thin for a core stays whole (the gate skips it: judged by its own size check).
+            din = ndi.distance_transform_edt(sol3) * self.h
+            lab, nb = ndi.label(sol3, S26)
+            anchor = sol3.copy()
+            for b in range(1, nb + 1):
+                m = lab == b
+                ef = float(np.clip(0.8 * din[m].max(), 0.9, s.gate_thin_mm))
+                core = m & (din > ef)
+                if core.any():
+                    anchor[m] = core[m]
+            self.anchor = anchor.ravel()
         else:
             din = ndi.distance_transform_edt(sol3)
             core = sol3 & (din > self.erode_cells + 0.5)
@@ -370,9 +390,9 @@ class Layout:
         ins3 = getattr(part, "insert_cells", np.zeros(self.nel, bool)).reshape(shape)
         lab, nb = ndi.label(sol3 & ~ins3, S26)
         self.body_lab, self.nbody = lab.ravel(), nb
-        if s.erosion == "anchored":
+        if s.erosion == "anchored" or self.skin.any():
             self.log(f"layout: {nb} drawn bodies; anchored cores {int(self.anchor.sum()):,} cells, skins "
-                     f"{int(self.skin.sum()):,} cells (eroded with the design)")
+                     f"{int(self.skin.sum()):,} cells (eroded with the design); eroded filter: {s.erosion}")
         else:
             self.log(f"layout: {nb} drawn bodies ({int(self.solid.sum()):,} cells), held solid in every realization; "
                      f"eroded filter: {s.erosion}")
@@ -395,7 +415,7 @@ class Layout:
         anc_n = self._node_mask(self.anchor)
         sol_n = self._node_mask(self.solid)
         remap = None
-        if s.erosion == "anchored" and anc_n.any():
+        if anc_n.any() and self.skin.any():
             _, ind = ndi.distance_transform_edt(~anc_n, return_indices=True)
             nid = np.ravel_multi_index(tuple(ind), nshape).ravel()
             move = (sol_n & ~anc_n).ravel()
@@ -592,11 +612,15 @@ class Layout:
         Hn, dHn = project(xt, beta, en)
         Hd, dHd = project(xt, beta, ed)
         rho_e = np.where(self.anchor, 1.0, np.where(self.void, 0.0, He))
+        dHs = None
+        if self.s.erosion == "masked" and self.skin.any():
+            Hs, dHs = project(xt, beta, ee)
+            rho_e = np.where(self.skin, Hs, rho_e)
         # gate realization (gate ties only): the thin held bodies count by their cover; everywhere else = rho_e
         rho_g = None if dHc is None else np.where(self.cover, Hc, rho_e)
         rho_n = np.where(self.solid, 1.0, np.where(self.void, 0.0, Hn))
         rho_d = np.where(self.solid, 1.0, np.where(self.void, 0.0, Hd))
-        return dict(xt=xt, xte=xte, dHc=dHc, rho_e=rho_e, rho_g=rho_g, rho_n=rho_n, rho_d=rho_d, dHe=dHe, dHn=dHn, dHd=dHd, Hn=Hn)
+        return dict(xt=xt, xte=xte, dHc=dHc, dHs=dHs, rho_e=rho_e, rho_g=rho_g, rho_n=rho_n, rho_d=rho_d, dHe=dHe, dHn=dHn, dHd=dHd, Hn=Hn)
 
     def _back(self, g_xt):
         """d/dx_tilde -> d/dx on the design cells (filter transpose; the kernel is symmetric)."""
@@ -620,6 +644,8 @@ class Layout:
         d = self._back_e(np.where(m_e, g_all * f["dHe"], 0.0))
         if g_g is not None:
             d = d + self.filt(np.where(self.cover, g_g * f["dHc"], 0.0) / self.den_c)[self.design]
+        if f.get("dHs") is not None:
+            d = d + self.filt(np.where(self.skin, g_all * f["dHs"], 0.0))[self.design]     # skins: nominal filter, symmetric
         return d
 
     @property

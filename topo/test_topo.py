@@ -466,10 +466,50 @@ def t_audit_plate():
     RESULTS.append(("audit_plate", ok)); print(f"audit plate: {'ok' if ok else 'FAIL'} 224x64 {a[3]} 170x170 {b[3]} 200x40 {c[3]}")
 
 
+def t_skin_core():
+    """masked erosion with thick drawn skins eroding (29 Oct): a 6 x 6 x 4 drawn pad keeps only the core the solid gate keeps and its
+    skin erodes with the design, so a 5 mm member meeting the pad at its rim leaves the pad's core outside the engine's eroded body
+    (the gate's verdict on the rear arm's plate bosses, which the engine passed with the pad held whole), while a member on the
+    pad's centre joins it; the rim member's tie compliance is far above the centre one's."""
+    try:
+        import manifold3d as mf
+        from scipy import ndimage as ndi
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        base, pad = box(0, 3, 0, 12, 0, 12), box(20, 24, 2, 8, 2, 8)
+        p = Part("rim", 1.0, base + pad, box(100, 101, 100, 101, 100, 101), box(0, 24, 0, 12, 0, 12), log=lambda s_: None)
+        p.support("default", box(-1, 1.5, -1, 13, -1, 13))
+        p.load("down", pad, (0, 0, -10.0))
+        p.load("side", pad, (0, 5.0, 0))
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn")
+        L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+        cen = p.cell_centres()[L.design]
+        padc = (L.anchor & (np.arange(L.nel) >= 0)).reshape(L.shape)
+        xs = p.cell_centres()[:, 0].reshape(L.shape)
+        padc &= xs > 19                                              # the pad's anchored core
+        off, ratio = {}, {}
+        for kind, (y0, y1, z0, z1) in (("centre", (2.5, 7.5, 2.5, 7.5)), ("rim", (5.5, 10.5, 5.5, 10.5))):
+            lnk = (cen[:, 0] < 20) & (cen[:, 1] > y0) & (cen[:, 1] < y1) & (cen[:, 2] > z0) & (cen[:, 2] < z1)
+            f = L.fields(np.where(lnk, 1.0, 0.0), 32.0)
+            B = ((f["rho_e"] > 0.5) | L.anchor).reshape(L.shape)
+            lab, n = ndi.label(B, ndi.generate_binary_structure(3, 1))
+            sizes = np.bincount(lab.ravel()); sizes[0] = 0; main = int(np.argmax(sizes))
+            off[kind] = float((lab[padc] != main).mean())
+            comp, _ = L._compliance(f["rho_e"], need_grad=False)
+            ratio[kind] = float((comp[:2] / L.c_ref[:2]).max())
+        ok = L.skin.any() and padc.sum() > 0 and off["centre"] < 0.01 and off["rim"] > 0.5 and ratio["rim"] > 20 * ratio["centre"]
+        check("thick drawn skins erode: a rim-mounted member leaves the pad's core off, a centred one joins it", ok,
+              f"skin cells {int(L.skin.sum())}, pad core {int(padc.sum())}; core off main: centre {off['centre']:.2f}, rim {off['rim']:.2f}; "
+              f"tie ratio rim / centre {ratio['rim'] / max(ratio['centre'], 1e-12):.0f}")
+    except Exception as e:
+        traceback.print_exc()
+        check("thick drawn skins erode", False, str(e))
+
+
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_gate_specks, t_audit_plate):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_gate_specks, t_audit_plate):
         t()
     if not quick:
         t_end_to_end()
