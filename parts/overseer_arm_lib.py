@@ -14,10 +14,12 @@ Supports: "plates" = the plate contact lips of the 4 stadiums (stiffness, bolt a
 "plates+spokes" = the same + the 3 spoke sockets, fully fixed (main cases). The engine has fixed supports only (no spring, no
 axis-only dofs along an oblique rod), so the three 3 mm rods that meet at the arm node are taken as a rigid pin there (EA/L of each
 rod is 100x the arm's own tip stiffness, printed in the log); the stiffness case, the spoke check cases and the bolt cases do not lean on it.
-Cases (each separate): flight 4 g with thrust and +-0.5 N m motor torque, landing 6 g, crash 35 g in 14 directions at the motor
-CG, STIFFNESS (arm alone, no spokes: thrust 21 N + 4 g of the 96 g motor, all up), each spoke's axial force
-(node_loads at the node it reaches, pull and push, sockets as loads, plates only), each bolt's pull and shear (joint reactions of
-the cases above by least norm over the 4 bolts, top bolts at z 45, bottom at z 0).
+Cases (each separate): flight 4 g with thrust and +-0.5 N m motor torque, landing 6 g (plates + spokes); STIFFNESS (arm alone, no
+spokes: thrust 21 N + 4 g of the 96 g motor, all up); the cage frame model's crash set (tools/cage_loads.py, 29 Oct: the drone
+decelerating 35 g onto each cage face it can land on, and landing 6 g: the three spokes loaded together as the frame finds them
+with the arm at its own stiffness, the motor's and the arm's inertia with them, plates only; replaces the 14 crash directions at
+the motor and each spoke's pull / push alone at a rigid-core maximum, which put 1465 N through one socket); each bolt's pull and
+shear (joint reactions of the cases above by least norm over the 4 bolts, top bolts at z 45, bottom at z 0).
 """
 import json, os
 import numpy as np, trimesh, manifold3d as mf
@@ -26,6 +28,7 @@ from topo.part import man
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "systems", "overseer.cage.json")))
+FRAME = json.load(open(os.path.join(HERE, "..", "systems", "overseer.cage_loads.json")))   # tools/cage_loads.py: the crash set
 G = 9.81e-3                                      # N per g per g
 
 # ---- numbers (dimensions.md; tags in the setup docstring of each arm)
@@ -54,8 +57,6 @@ E_CARBON, E_PETG = 120e3, 2780.0                 # MPa (arms section)
 NODE_R, SOCK_BORE_R, SOCK_DEPTH, SOCK_WALL = 10.15, 1.6, 10.0, 2.0     # cage v5 node rule (cage_node_lib)
 ROD_A = 7.07                                     # 3.0 solid carbon area, mm2 (dimensions.md C)
 
-DIRS14 = [np.array(v, float) / np.linalg.norm(v) for v in
-          [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)] + [(a, b, c) for a in (1, -1) for b in (1, -1) for c in (1, -1)]]
 
 
 def cyl(x, y, z0, z1, r, n=40):
@@ -96,6 +97,27 @@ def stadium(a, b, z0, z1, r):
     return hull_xy([(a[0], a[1], r), (b[0], b[1], r)], z0, z1)
 
 
+def mvec(M):
+    """a moment given as a z scalar or a vector"""
+    return np.array([0, 0, M], float) if np.isscalar(M) else np.asarray(M, float)
+
+
+def frame_cases(arm):
+    """the cage frame model's cases on this arm (tools/cage_loads.py, systems/overseer.cage_loads.json): [(name, cls, inertial
+    body force direction x g, {spoke name: force on the arm node, N})]: in each case the three spokes carry what the cage
+    frame puts through them while the whole drone decelerates, the arm holding at its root"""
+    out = []
+    for c in FRAME["cases"]:
+        a = float(c["g"]) * np.array(c["d"], float); sp = {}
+        for s_ in arm.spokes:
+            r = c["arms"][str(arm.motor_idx + 1)]["spokes"][s_["name"]]
+            side = np.cross(s_["u"], [0, 0, 1.0]); side /= np.linalg.norm(side)
+            sp[s_["name"]] = r["N"] * s_["u"] + r["side"] * side                 # N > 0: the rod pulls the node toward its far end
+        tag = ", ".join(f"{k.split()[1]} {v['N']:+.0f}" for k, v in c["arms"][str(arm.motor_idx + 1)]["spokes"].items())
+        out.append((f"cage {c['name']} (spokes {tag} N)", "crash" if c["name"].startswith("crash") else "flight", a, sp))
+    return out
+
+
 def rigid_split(pts, F, M, c):
     """least-norm forces at pts (n,3) that carry force F and moment M about c (a payload on a rigid link)"""
     pts = np.asarray(pts, float); n = len(pts); Am = np.zeros((6, 3 * n))
@@ -108,7 +130,7 @@ class Arm:
     """geometry of one arm in the drone frame (x fwd, y left, z up, mm), left side (+y)"""
 
     def __init__(self, name, theta_deg, motor_idx, spokes, node):
-        self.name, self.theta = name, np.radians(theta_deg)
+        self.name, self.theta, self.motor_idx = name, np.radians(theta_deg), motor_idx
         self.ud = np.array([np.cos(self.theta), np.sin(self.theta)])            # plate-frame u (outward along the diagonal)
         self.vd = np.array([-np.sin(self.theta), np.cos(self.theta)])
         self.M = np.array(CAGE["motors_xy"][motor_idx], float)
@@ -282,11 +304,12 @@ def build(arm, h, log=print):
     a = np.array([0, 0, 6.0])
     p.load_multi("landing 6 g", payload(-M_MOTOR * G * a, -M_ESC * G * a), cls="flight", support="plates+spokes", accel=-a)
     note(-M_MOTOR * G * a, -M_ESC * G * a)
-    for k, d in enumerate(DIRS14):
-        a = 35.0 * d
-        p.load_multi(f"crash {k} (35 g) dir ({d[0]:+.2f} {d[1]:+.2f} {d[2]:+.2f}) at the motor", payload(-M_MOTOR * G * a, -M_ESC * G * a),
-                     cls="crash", support="plates+spokes", accel=-a)
-        note(-M_MOTOR * G * a, -M_ESC * G * a)
+    # ---- the cage frame's crash set: the drone decelerating on a cage face, the three spokes loaded as the frame model finds them
+    # (tools/cage_loads.py, the arm at its own stiffness there), the motor's inertia with them, the arm alone holding at the plates
+    for name, cls, a, sp in frame_cases(arm):
+        Fm, Fe = M_MOTOR * G * a, M_ESC * G * a
+        p.load_multi(name, payload(Fm, Fe) + [(s_["lining"], sp[s_["name"]]) for s_ in arm.spokes], cls=cls, support="plates", accel=a)
+        Fs = sum(sp.values()); note(Fm + Fs, Fe, np.cross(arm.node - np.r_[arm.M, Z_MOTOR_CG], Fs))
 
     # ---- STIFFNESS: the arm alone (no spokes), thrust 21 N + 4 g of motor and ESC, all up
     a = np.array([0, 0, 4.0])
@@ -294,20 +317,12 @@ def build(arm, h, log=print):
     p.load_multi("STIFFNESS arm alone: motor 96 g + ESC 25 g, 4 g and 21 N thrust up", payload(Fm, Fe), cls="flight", support="plates", accel=a)
     F_stiff = float(Fm[2] + Fe[2])
 
-    # ---- spokes: axial (+ side) force at the node it reaches, pull and push, the socket as the load, plates only
-    for sp in arm.spokes:
-        side = np.cross(sp["u"], [0, 0, 1.0]); side /= np.linalg.norm(side)
-        for tag, sg in (("pull", 1), ("push", -1)):
-            F = sg * sp["axial"] * sp["u"] + sp["side"] * side
-            p.load_multi(f"{sp['name']} {tag} {sp['axial']:.0f} N (node {sp['far']}) + side {sp['side']:.1f} N", [(sp["lining"], F)], cls="crash", support="plates")
-            reactions.append((arm.node, F, 0.0))
-
     # ---- bolts: pull and shear at each boss from the joint reactions (least norm over the 4 bolts)
     B = arm.bolts()
     bpts = np.array([[b["xy"][0], b["xy"][1], b["z"]] for b in B]); cB = bpts.mean(0)
     worst = [dict(pull=0.0, shear=np.zeros(3)) for _ in B]
     for P_, F, Mz in reactions:
-        Mx = np.cross(P_ - cB, F) + np.array([0, 0, Mz])
+        Mx = np.cross(P_ - cB, F) + mvec(Mz)
         f = rigid_split(bpts, F, Mx, cB)
         for i, b in enumerate(B):
             tens = f[i][2] * (1.0 if b["nut"] == "bot" else -1.0)          # + : the nut presses its seat toward the plate (bolt in tension)

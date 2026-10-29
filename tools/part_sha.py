@@ -38,7 +38,8 @@ def lib_sha(py):
 
 def stale(py, r):
     """r = result.json dict: made from an older part.py, or from an older lib when it recorded one"""
-    return r.get("part_sha") != part_sha(py) or ("lib_sha" in r and r["lib_sha"] != lib_sha(py))
+    ls = lib_sha(py)                                     # a result with no lib_sha from a part that imports a lib is of unknown make: stale
+    return r.get("part_sha") != part_sha(py) or (bool(ls) and r.get("lib_sha") != ls)
 
 
 if __name__ == "__main__":

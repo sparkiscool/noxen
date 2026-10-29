@@ -1,0 +1,8646 @@
+{
+ "note": "Overseer cage frame model (29 Oct): the 35 g crash set behind node_loads in systems/overseer.cage.json.",
+ "engine": "tools/cage_loads.py",
+ "model": {
+  "points": 51,
+  "members": 115,
+  "sections": {
+   "tube": {
+    "E": 120000.0,
+    "A": 15.707963267948966,
+    "I": 51.050880620834135
+   },
+   "rod": {
+    "E": 120000.0,
+    "A": 7.0685834705770345,
+    "I": 3.9760782021995817
+   },
+   "arm": {
+    "E": 2780.0,
+    "A": 300.0,
+    "I": 25000.0
+   }
+  },
+  "masses_g": {
+   "core": 1345.4,
+   "core_cg": [
+    -18.6,
+    -0.1,
+    -26.9
+   ],
+   "head": 336.2,
+   "head_cg": [
+    399.5,
+    0.0,
+    61.4
+   ],
+   "cage_nodes": 268.2,
+   "tubes": 370.1,
+   "rods": 124.8,
+   "arms": {
+    "1": {
+     "arm": 61.0,
+     "motor": 91.0
+    },
+    "2": {
+     "arm": 38.1,
+     "motor": 91.0
+    },
+    "3": {
+     "arm": 38.1,
+     "motor": 91.0
+    },
+    "4": {
+     "arm": 61.0,
+     "motor": 91.0
+    }
+   },
+   "camera_rear": 15.0,
+   "total": 3021.9
+  },
+  "crash_g": 35.0,
+  "landing_g": 6.0
+ },
+ "cases": [
+  {
+   "name": "crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17",
+   "d": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "n": [
+    0.9659,
+    0.0,
+    -0.2588
+   ],
+   "g": 35.0,
+   "touch": [
+    18,
+    19,
+    17
+   ],
+   "reactions": {
+    "18": -233.7,
+    "19": -234.0,
+    "17": -534.5
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": -10.7,
+       "side": 0.1
+      },
+      "spoke 1.2": {
+       "N": 9.7,
+       "side": 0.3
+      },
+      "spoke 1.3": {
+       "N": -56.6,
+       "side": 0.2
+      }
+     },
+     "root": {
+      "N": -21.0,
+      "shear": 11.2,
+      "moment_Nmm": 619.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": 19.3,
+       "side": 0.3
+      },
+      "spoke 2.2": {
+       "N": -44.3,
+       "side": 0.1
+      },
+      "spoke 2.3": {
+       "N": -7.6,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": -6.1,
+      "shear": 13.9,
+      "moment_Nmm": 1280.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": 19.4,
+       "side": 0.3
+      },
+      "spoke 3.2": {
+       "N": -44.3,
+       "side": 0.1
+      },
+      "spoke 3.3": {
+       "N": -7.6,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": -6.1,
+      "shear": 13.9,
+      "moment_Nmm": 1276.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": -10.7,
+       "side": 0.1
+      },
+      "spoke 4.2": {
+       "N": 9.8,
+       "side": 0.3
+      },
+      "spoke 4.3": {
+       "N": -56.6,
+       "side": 0.2
+      }
+     },
+     "root": {
+      "N": -21.1,
+      "shear": 11.1,
+      "moment_Nmm": 618.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": -29.7,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "tube 0-5": {
+     "N": 3.5,
+     "shear_i": 0.85,
+     "shear_j": 0.85
+    },
+    "tube 0-12": {
+     "N": -11.5,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "tube 1-2": {
+     "N": 28.9,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "tube 1-12": {
+     "N": 76.0,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 1-19": {
+     "N": -88.6,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "tube 2-3": {
+     "N": 29.0,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "tube 2-18": {
+     "N": 26.9,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "tube 2-19": {
+     "N": 27.0,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "tube 3-4": {
+     "N": -29.5,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "tube 3-11": {
+     "N": 75.9,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 3-18": {
+     "N": -88.3,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "tube 4-5": {
+     "N": 3.4,
+     "shear_i": 0.85,
+     "shear_j": 0.85
+    },
+    "tube 4-11": {
+     "N": -11.5,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "tube 5-11": {
+     "N": -15.4,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 5-12": {
+     "N": -15.5,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 5-13": {
+     "N": 1.0,
+     "shear_i": 0.39,
+     "shear_j": 0.39
+    },
+    "tube 5-14": {
+     "N": 1.0,
+     "shear_i": 0.39,
+     "shear_j": 0.39
+    },
+    "tube 6-7": {
+     "N": 9.8,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 6-10": {
+     "N": -30.4,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 6-11": {
+     "N": 27.5,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 6-15": {
+     "N": -0.6,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "tube 6-18": {
+     "N": -22.0,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "tube 7-8": {
+     "N": 9.8,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 7-9": {
+     "N": 24.8,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 7-10": {
+     "N": 24.8,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 7-15": {
+     "N": 17.7,
+     "shear_i": 0.4,
+     "shear_j": 0.4
+    },
+    "tube 7-16": {
+     "N": 17.7,
+     "shear_i": 0.4,
+     "shear_j": 0.4
+    },
+    "tube 7-20": {
+     "N": 4.2,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "tube 8-9": {
+     "N": -30.4,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 8-12": {
+     "N": 27.5,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 8-16": {
+     "N": -0.6,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "tube 8-19": {
+     "N": -22.0,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "tube 9-12": {
+     "N": 2.4,
+     "shear_i": 0.59,
+     "shear_j": 0.59
+    },
+    "tube 9-14": {
+     "N": 3.2,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 9-20": {
+     "N": -22.9,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "tube 10-11": {
+     "N": 2.4,
+     "shear_i": 0.59,
+     "shear_j": 0.59
+    },
+    "tube 10-13": {
+     "N": 3.2,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 10-20": {
+     "N": -22.9,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "tube 11-13": {
+     "N": -15.9,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 11-18": {
+     "N": -104.6,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 12-14": {
+     "N": -15.9,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 12-19": {
+     "N": -104.7,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 13-14": {
+     "N": -21.7,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "tube 13-20": {
+     "N": -1.8,
+     "shear_i": 0.57,
+     "shear_j": 0.57
+    },
+    "tube 14-20": {
+     "N": -1.8,
+     "shear_i": 0.57,
+     "shear_j": 0.57
+    },
+    "tube 15-16": {
+     "N": 116.9,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "tube 15-17": {
+     "N": -174.7,
+     "shear_i": 0.65,
+     "shear_j": 0.65
+    },
+    "tube 15-18": {
+     "N": 65.1,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "tube 16-17": {
+     "N": -174.7,
+     "shear_i": 0.65,
+     "shear_j": 0.65
+    },
+    "tube 16-19": {
+     "N": 65.1,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "tube 17-18": {
+     "N": 83.7,
+     "shear_i": 1.06,
+     "shear_j": 1.06
+    },
+    "tube 17-19": {
+     "N": 83.7,
+     "shear_i": 1.06,
+     "shear_j": 1.06
+    },
+    "tube 18-19": {
+     "N": -81.2,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "spoke 1.1": {
+     "N": -10.7,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "spoke 1.2": {
+     "N": 9.7,
+     "shear_i": 0.25,
+     "shear_j": 0.25
+    },
+    "spoke 1.3": {
+     "N": -56.6,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "spoke 2.1": {
+     "N": 19.3,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "spoke 2.2": {
+     "N": -44.3,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "spoke 2.3": {
+     "N": -7.6,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "spoke 3.1": {
+     "N": 19.4,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "spoke 3.2": {
+     "N": -44.3,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "spoke 3.3": {
+     "N": -7.6,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "spoke 4.1": {
+     "N": -10.7,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "spoke 4.2": {
+     "N": 9.8,
+     "shear_i": 0.25,
+     "shear_j": 0.25
+    },
+    "spoke 4.3": {
+     "N": -56.6,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "core tie front.1": {
+     "N": -1.5,
+     "shear_i": 0.24,
+     "shear_j": 0.24
+    },
+    "core tie front.2": {
+     "N": -423.6,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "core tie rear.1": {
+     "N": 23.2,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "core tie rear.2": {
+     "N": 23.2,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "core tie left.1": {
+     "N": 5.6,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "core tie left.2": {
+     "N": -29.6,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "core tie right.1": {
+     "N": 5.7,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "core tie right.2": {
+     "N": -29.5,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "bay tie +1+1.1": {
+     "N": 40.8,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "bay tie +1+1.2": {
+     "N": 27.8,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "bay tie +1-1.1": {
+     "N": 41.0,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "bay tie +1-1.2": {
+     "N": 28.1,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "bay tie -1+1.1": {
+     "N": -36.3,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "bay tie -1+1.2": {
+     "N": -35.5,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "bay tie -1-1.1": {
+     "N": -36.5,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "bay tie -1-1.2": {
+     "N": -35.8,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "head rod +1": {
+     "N": 32.1,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "head rod -1": {
+     "N": 32.1,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "camera rod 13": {
+     "N": 13.0,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "camera rod 14": {
+     "N": 13.0,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "camera rod 5": {
+     "N": 7.1,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "core link 26": {
+     "N": -412.5,
+     "shear_i": 93.84,
+     "shear_j": 93.84
+    },
+    "core link 27": {
+     "N": 20.6,
+     "shear_i": 9.04,
+     "shear_j": 9.04
+    },
+    "core link 28": {
+     "N": 20.5,
+     "shear_i": 9.08,
+     "shear_j": 9.08
+    },
+    "core link 29": {
+     "N": 2.6,
+     "shear_i": 29.34,
+     "shear_j": 29.34
+    },
+    "core link 30": {
+     "N": 2.7,
+     "shear_i": 29.17,
+     "shear_j": 29.17
+    },
+    "core link 31": {
+     "N": 16.0,
+     "shear_i": 37.58,
+     "shear_j": 37.58
+    },
+    "core link 32": {
+     "N": -8.8,
+     "shear_i": 25.88,
+     "shear_j": 25.88
+    },
+    "core link 33": {
+     "N": 16.1,
+     "shear_i": 37.78,
+     "shear_j": 37.78
+    },
+    "core link 34": {
+     "N": -9.0,
+     "shear_i": 26.11,
+     "shear_j": 26.11
+    },
+    "core link 35": {
+     "N": -10.3,
+     "shear_i": 34.81,
+     "shear_j": 34.81
+    },
+    "core link 36": {
+     "N": 18.9,
+     "shear_i": 29.46,
+     "shear_j": 29.46
+    },
+    "core link 37": {
+     "N": -10.3,
+     "shear_i": 35.05,
+     "shear_j": 35.05
+    },
+    "core link 38": {
+     "N": 19.1,
+     "shear_i": 29.6,
+     "shear_j": 29.6
+    },
+    "arm 1 root": {
+     "N": -3.6,
+     "shear_i": 19.72,
+     "shear_j": 19.72
+    },
+    "arm 1 inboard": {
+     "N": -21.0,
+     "shear_i": 11.15,
+     "shear_j": 11.15
+    },
+    "arm 1 outboard": {
+     "N": 14.3,
+     "shear_i": 27.78,
+     "shear_j": 27.78
+    },
+    "arm 2 root": {
+     "N": 2.2,
+     "shear_i": 16.63,
+     "shear_j": 16.63
+    },
+    "arm 2 inboard": {
+     "N": -6.1,
+     "shear_i": 13.91,
+     "shear_j": 13.91
+    },
+    "arm 2 outboard": {
+     "N": -13.8,
+     "shear_i": 28.04,
+     "shear_j": 28.04
+    },
+    "arm 3 root": {
+     "N": 2.2,
+     "shear_i": 16.61,
+     "shear_j": 16.61
+    },
+    "arm 3 inboard": {
+     "N": -6.1,
+     "shear_i": 13.89,
+     "shear_j": 13.89
+    },
+    "arm 3 outboard": {
+     "N": -13.8,
+     "shear_i": 28.04,
+     "shear_j": 28.04
+    },
+    "arm 4 root": {
+     "N": -3.6,
+     "shear_i": 19.74,
+     "shear_j": 19.74
+    },
+    "arm 4 inboard": {
+     "N": -21.1,
+     "shear_i": 11.15,
+     "shear_j": 11.15
+    },
+    "arm 4 outboard": {
+     "N": 14.3,
+     "shear_i": 27.78,
+     "shear_j": 27.78
+    },
+    "head link 17": {
+     "N": 90.2,
+     "shear_i": 39.16,
+     "shear_j": 39.16
+    },
+    "head link +1": {
+     "N": 16.8,
+     "shear_i": 27.2,
+     "shear_j": 27.2
+    },
+    "head link -1": {
+     "N": 16.8,
+     "shear_i": 27.2,
+     "shear_j": 27.2
+    }
+   }
+  },
+  {
+   "name": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
+   "d": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "n": [
+    -0.9222,
+    -0.0,
+    -0.3867
+   ],
+   "g": 35.0,
+   "touch": [
+    13,
+    14,
+    5
+   ],
+   "reactions": {
+    "13": -262.8,
+    "14": -263.2,
+    "5": -430.9
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": -54.0,
+       "side": 0.7
+      },
+      "spoke 1.2": {
+       "N": -1.1,
+       "side": 0.4
+      },
+      "spoke 1.3": {
+       "N": 223.8,
+       "side": 0.4
+      }
+     },
+     "root": {
+      "N": 212.0,
+      "shear": 12.2,
+      "moment_Nmm": 2033.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": -136.2,
+       "side": 0.2
+      },
+      "spoke 2.2": {
+       "N": 25.0,
+       "side": 0.4
+      },
+      "spoke 2.3": {
+       "N": 38.2,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 38.2,
+      "shear": 107.6,
+      "moment_Nmm": 7562.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": -136.3,
+       "side": 0.2
+      },
+      "spoke 3.2": {
+       "N": 25.0,
+       "side": 0.4
+      },
+      "spoke 3.3": {
+       "N": 38.2,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 38.3,
+      "shear": 107.6,
+      "moment_Nmm": 7565.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": -54.0,
+       "side": 0.7
+      },
+      "spoke 4.2": {
+       "N": -1.1,
+       "side": 0.4
+      },
+      "spoke 4.3": {
+       "N": 223.8,
+       "side": 0.4
+      }
+     },
+     "root": {
+      "N": 212.0,
+      "shear": 12.2,
+      "moment_Nmm": 2032.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": -62.0,
+     "shear_i": 1.65,
+     "shear_j": 1.65
+    },
+    "tube 0-5": {
+     "N": -179.6,
+     "shear_i": 5.37,
+     "shear_j": 5.37
+    },
+    "tube 0-12": {
+     "N": -4.9,
+     "shear_i": 1.79,
+     "shear_j": 1.79
+    },
+    "tube 1-2": {
+     "N": 167.5,
+     "shear_i": 5.63,
+     "shear_j": 5.63
+    },
+    "tube 1-12": {
+     "N": 140.5,
+     "shear_i": 1.54,
+     "shear_j": 1.54
+    },
+    "tube 1-19": {
+     "N": -89.4,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "tube 2-3": {
+     "N": 167.4,
+     "shear_i": 5.63,
+     "shear_j": 5.63
+    },
+    "tube 2-18": {
+     "N": 194.8,
+     "shear_i": 1.43,
+     "shear_j": 1.43
+    },
+    "tube 2-19": {
+     "N": 194.7,
+     "shear_i": 1.43,
+     "shear_j": 1.43
+    },
+    "tube 3-4": {
+     "N": -62.1,
+     "shear_i": 1.65,
+     "shear_j": 1.65
+    },
+    "tube 3-11": {
+     "N": 140.5,
+     "shear_i": 1.54,
+     "shear_j": 1.54
+    },
+    "tube 3-18": {
+     "N": -89.6,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "tube 4-5": {
+     "N": -179.4,
+     "shear_i": 5.37,
+     "shear_j": 5.37
+    },
+    "tube 4-11": {
+     "N": -4.9,
+     "shear_i": 1.79,
+     "shear_j": 1.79
+    },
+    "tube 5-11": {
+     "N": -148.9,
+     "shear_i": 0.39,
+     "shear_j": 0.39
+    },
+    "tube 5-12": {
+     "N": -148.8,
+     "shear_i": 0.39,
+     "shear_j": 0.39
+    },
+    "tube 5-13": {
+     "N": -61.1,
+     "shear_i": 1.18,
+     "shear_j": 1.18
+    },
+    "tube 5-14": {
+     "N": -61.1,
+     "shear_i": 1.18,
+     "shear_j": 1.18
+    },
+    "tube 6-7": {
+     "N": 18.4,
+     "shear_i": 0.9,
+     "shear_j": 0.9
+    },
+    "tube 6-10": {
+     "N": -56.5,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 6-11": {
+     "N": 17.2,
+     "shear_i": 0.39,
+     "shear_j": 0.39
+    },
+    "tube 6-15": {
+     "N": -22.7,
+     "shear_i": 0.29,
+     "shear_j": 0.29
+    },
+    "tube 6-18": {
+     "N": -19.7,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 7-8": {
+     "N": 18.4,
+     "shear_i": 0.9,
+     "shear_j": 0.9
+    },
+    "tube 7-9": {
+     "N": 22.2,
+     "shear_i": 0.51,
+     "shear_j": 0.51
+    },
+    "tube 7-10": {
+     "N": 22.2,
+     "shear_i": 0.51,
+     "shear_j": 0.51
+    },
+    "tube 7-15": {
+     "N": -16.4,
+     "shear_i": 2.16,
+     "shear_j": 2.16
+    },
+    "tube 7-16": {
+     "N": -16.4,
+     "shear_i": 2.16,
+     "shear_j": 2.16
+    },
+    "tube 7-20": {
+     "N": -74.3,
+     "shear_i": 1.4,
+     "shear_j": 1.4
+    },
+    "tube 8-9": {
+     "N": -56.6,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 8-12": {
+     "N": 17.2,
+     "shear_i": 0.39,
+     "shear_j": 0.39
+    },
+    "tube 8-16": {
+     "N": -22.7,
+     "shear_i": 0.29,
+     "shear_j": 0.29
+    },
+    "tube 8-19": {
+     "N": -19.8,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 9-12": {
+     "N": 11.5,
+     "shear_i": 1.5,
+     "shear_j": 1.5
+    },
+    "tube 9-14": {
+     "N": -76.6,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 9-20": {
+     "N": 26.6,
+     "shear_i": 0.74,
+     "shear_j": 0.74
+    },
+    "tube 10-11": {
+     "N": 11.5,
+     "shear_i": 1.5,
+     "shear_j": 1.5
+    },
+    "tube 10-13": {
+     "N": -76.5,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 10-20": {
+     "N": 26.5,
+     "shear_i": 0.74,
+     "shear_j": 0.74
+    },
+    "tube 11-13": {
+     "N": -103.2,
+     "shear_i": 0.33,
+     "shear_j": 0.33
+    },
+    "tube 11-18": {
+     "N": -252.0,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "tube 12-14": {
+     "N": -103.3,
+     "shear_i": 0.33,
+     "shear_j": 0.33
+    },
+    "tube 12-19": {
+     "N": -252.1,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "tube 13-14": {
+     "N": -7.5,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "tube 13-20": {
+     "N": -46.9,
+     "shear_i": 2.45,
+     "shear_j": 2.45
+    },
+    "tube 14-20": {
+     "N": -47.0,
+     "shear_i": 2.45,
+     "shear_j": 2.45
+    },
+    "tube 15-16": {
+     "N": 152.9,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "tube 15-17": {
+     "N": -123.3,
+     "shear_i": 1.19,
+     "shear_j": 1.19
+    },
+    "tube 15-18": {
+     "N": 36.8,
+     "shear_i": 1.07,
+     "shear_j": 1.07
+    },
+    "tube 16-17": {
+     "N": -123.3,
+     "shear_i": 1.19,
+     "shear_j": 1.19
+    },
+    "tube 16-19": {
+     "N": 36.8,
+     "shear_i": 1.07,
+     "shear_j": 1.07
+    },
+    "tube 17-18": {
+     "N": -101.3,
+     "shear_i": 1.08,
+     "shear_j": 1.08
+    },
+    "tube 17-19": {
+     "N": -101.2,
+     "shear_i": 1.08,
+     "shear_j": 1.08
+    },
+    "tube 18-19": {
+     "N": -187.6,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "spoke 1.1": {
+     "N": -54.0,
+     "shear_i": 0.71,
+     "shear_j": 0.71
+    },
+    "spoke 1.2": {
+     "N": -1.1,
+     "shear_i": 0.41,
+     "shear_j": 0.41
+    },
+    "spoke 1.3": {
+     "N": 223.8,
+     "shear_i": 0.37,
+     "shear_j": 0.37
+    },
+    "spoke 2.1": {
+     "N": -136.2,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "spoke 2.2": {
+     "N": 25.0,
+     "shear_i": 0.36,
+     "shear_j": 0.36
+    },
+    "spoke 2.3": {
+     "N": 38.2,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "spoke 3.1": {
+     "N": -136.3,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "spoke 3.2": {
+     "N": 25.0,
+     "shear_i": 0.36,
+     "shear_j": 0.36
+    },
+    "spoke 3.3": {
+     "N": 38.2,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "spoke 4.1": {
+     "N": -54.0,
+     "shear_i": 0.71,
+     "shear_j": 0.71
+    },
+    "spoke 4.2": {
+     "N": -1.1,
+     "shear_i": 0.41,
+     "shear_j": 0.41
+    },
+    "spoke 4.3": {
+     "N": 223.8,
+     "shear_i": 0.37,
+     "shear_j": 0.37
+    },
+    "core tie front.1": {
+     "N": 14.3,
+     "shear_i": 0.62,
+     "shear_j": 0.62
+    },
+    "core tie front.2": {
+     "N": -74.0,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "core tie rear.1": {
+     "N": 82.0,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "core tie rear.2": {
+     "N": 82.0,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "core tie left.1": {
+     "N": 107.6,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "core tie left.2": {
+     "N": -186.5,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "core tie right.1": {
+     "N": 107.5,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "core tie right.2": {
+     "N": -186.7,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "bay tie +1+1.1": {
+     "N": -81.8,
+     "shear_i": 1.3,
+     "shear_j": 1.3
+    },
+    "bay tie +1+1.2": {
+     "N": -40.0,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "bay tie +1-1.1": {
+     "N": -82.0,
+     "shear_i": 1.3,
+     "shear_j": 1.3
+    },
+    "bay tie +1-1.2": {
+     "N": -40.3,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "bay tie -1+1.1": {
+     "N": 185.1,
+     "shear_i": 1.91,
+     "shear_j": 1.91
+    },
+    "bay tie -1+1.2": {
+     "N": 20.6,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "bay tie -1-1.1": {
+     "N": 185.3,
+     "shear_i": 1.91,
+     "shear_j": 1.91
+    },
+    "bay tie -1-1.2": {
+     "N": 20.8,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "head rod +1": {
+     "N": -38.7,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "head rod -1": {
+     "N": -38.7,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "camera rod 13": {
+     "N": -12.3,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "camera rod 14": {
+     "N": -12.3,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "camera rod 5": {
+     "N": -6.5,
+     "shear_i": 0.45,
+     "shear_j": 0.45
+    },
+    "core link 26": {
+     "N": -61.1,
+     "shear_i": 24.71,
+     "shear_j": 24.71
+    },
+    "core link 27": {
+     "N": 76.7,
+     "shear_i": 31.07,
+     "shear_j": 31.07
+    },
+    "core link 28": {
+     "N": 76.6,
+     "shear_i": 31.35,
+     "shear_j": 31.35
+    },
+    "core link 29": {
+     "N": 69.7,
+     "shear_i": 145.77,
+     "shear_j": 145.77
+    },
+    "core link 30": {
+     "N": 69.7,
+     "shear_i": 145.96,
+     "shear_j": 145.96
+    },
+    "core link 31": {
+     "N": -31.4,
+     "shear_i": 75.68,
+     "shear_j": 75.68
+    },
+    "core link 32": {
+     "N": 13.3,
+     "shear_i": 37.24,
+     "shear_j": 37.24
+    },
+    "core link 33": {
+     "N": -31.4,
+     "shear_i": 75.88,
+     "shear_j": 75.88
+    },
+    "core link 34": {
+     "N": 13.5,
+     "shear_i": 37.44,
+     "shear_j": 37.44
+    },
+    "core link 35": {
+     "N": 52.5,
+     "shear_i": 177.51,
+     "shear_j": 177.51
+    },
+    "core link 36": {
+     "N": -10.5,
+     "shear_i": 17.13,
+     "shear_j": 17.13
+    },
+    "core link 37": {
+     "N": 52.3,
+     "shear_i": 177.84,
+     "shear_j": 177.84
+    },
+    "core link 38": {
+     "N": -10.7,
+     "shear_i": 17.28,
+     "shear_j": 17.28
+    },
+    "arm 1 root": {
+     "N": 163.1,
+     "shear_i": 123.43,
+     "shear_j": 123.43
+    },
+    "arm 1 inboard": {
+     "N": 212.0,
+     "shear_i": 12.24,
+     "shear_j": 12.24
+    },
+    "arm 1 outboard": {
+     "N": -14.3,
+     "shear_i": 27.78,
+     "shear_j": 27.78
+    },
+    "arm 2 root": {
+     "N": 83.7,
+     "shear_i": 75.31,
+     "shear_j": 75.31
+    },
+    "arm 2 inboard": {
+     "N": 38.2,
+     "shear_i": 107.58,
+     "shear_j": 107.58
+    },
+    "arm 2 outboard": {
+     "N": 13.8,
+     "shear_i": 28.04,
+     "shear_j": 28.04
+    },
+    "arm 3 root": {
+     "N": 83.8,
+     "shear_i": 75.29,
+     "shear_j": 75.29
+    },
+    "arm 3 inboard": {
+     "N": 38.3,
+     "shear_i": 107.63,
+     "shear_j": 107.63
+    },
+    "arm 3 outboard": {
+     "N": 13.8,
+     "shear_i": 28.04,
+     "shear_j": 28.04
+    },
+    "arm 4 root": {
+     "N": 162.9,
+     "shear_i": 123.65,
+     "shear_j": 123.65
+    },
+    "arm 4 inboard": {
+     "N": 212.0,
+     "shear_i": 12.23,
+     "shear_j": 12.23
+    },
+    "arm 4 outboard": {
+     "N": -14.3,
+     "shear_i": 27.78,
+     "shear_j": 27.78
+    },
+    "head link 17": {
+     "N": -85.7,
+     "shear_i": 39.2,
+     "shear_j": 39.2
+    },
+    "head link +1": {
+     "N": -20.4,
+     "shear_i": 32.72,
+     "shear_j": 32.72
+    },
+    "head link -1": {
+     "N": -20.4,
+     "shear_i": 32.72,
+     "shear_j": 32.72
+    }
+   }
+  },
+  {
+   "name": "crash 35 g dir (+0.00 +1.00 +0.00) on face 6-11-18",
+   "d": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "n": [
+    0.2048,
+    0.8892,
+    -0.4091
+   ],
+   "g": 35.0,
+   "touch": [
+    6,
+    11,
+    18
+   ],
+   "reactions": {
+    "6": -125.1,
+    "11": -593.4,
+    "18": -204.2
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": 70.9,
+       "side": 0.5
+      },
+      "spoke 1.2": {
+       "N": -44.9,
+       "side": 0.3
+      },
+      "spoke 1.3": {
+       "N": -64.0,
+       "side": 0.2
+      }
+     },
+     "root": {
+      "N": -43.0,
+      "shear": 9.7,
+      "moment_Nmm": 1436.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": 70.0,
+       "side": 0.2
+      },
+      "spoke 2.2": {
+       "N": 21.3,
+       "side": 0.1
+      },
+      "spoke 2.3": {
+       "N": -199.8,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -160.5,
+      "shear": 55.3,
+      "moment_Nmm": 4955.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": -11.4,
+       "side": 0.2
+      },
+      "spoke 3.2": {
+       "N": 5.8,
+       "side": 0.2
+      },
+      "spoke 3.3": {
+       "N": -1.7,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": -42.0,
+      "shear": 9.6,
+      "moment_Nmm": 1663.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": -40.1,
+       "side": 0.2
+      },
+      "spoke 4.2": {
+       "N": 40.4,
+       "side": 0.3
+      },
+      "spoke 4.3": {
+       "N": -4.4,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -36.7,
+      "shear": 6.0,
+      "moment_Nmm": 200.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": 58.7,
+     "shear_i": 0.35,
+     "shear_j": 0.35
+    },
+    "tube 0-5": {
+     "N": 64.4,
+     "shear_i": 0.81,
+     "shear_j": 0.81
+    },
+    "tube 0-12": {
+     "N": 47.2,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 1-2": {
+     "N": -33.7,
+     "shear_i": 1.47,
+     "shear_j": 1.47
+    },
+    "tube 1-12": {
+     "N": -57.8,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "tube 1-19": {
+     "N": 39.3,
+     "shear_i": 0.26,
+     "shear_j": 0.26
+    },
+    "tube 2-3": {
+     "N": -65.9,
+     "shear_i": 1.68,
+     "shear_j": 1.68
+    },
+    "tube 2-18": {
+     "N": -107.5,
+     "shear_i": 0.48,
+     "shear_j": 0.48
+    },
+    "tube 2-19": {
+     "N": -4.2,
+     "shear_i": 0.52,
+     "shear_j": 0.52
+    },
+    "tube 3-4": {
+     "N": -2.2,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "tube 3-11": {
+     "N": -67.9,
+     "shear_i": 0.24,
+     "shear_j": 0.24
+    },
+    "tube 3-18": {
+     "N": 66.5,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 4-5": {
+     "N": 24.7,
+     "shear_i": 1.02,
+     "shear_j": 1.02
+    },
+    "tube 4-11": {
+     "N": -39.1,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "tube 5-11": {
+     "N": -96.7,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 5-12": {
+     "N": -29.5,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 5-13": {
+     "N": 75.2,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 5-14": {
+     "N": -37.0,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 6-7": {
+     "N": -121.3,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 6-10": {
+     "N": 8.2,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "tube 6-11": {
+     "N": -85.7,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "tube 6-15": {
+     "N": -35.1,
+     "shear_i": 0.87,
+     "shear_j": 0.87
+    },
+    "tube 6-18": {
+     "N": -132.6,
+     "shear_i": 0.46,
+     "shear_j": 0.46
+    },
+    "tube 7-8": {
+     "N": -17.5,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "tube 7-9": {
+     "N": -28.9,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 7-10": {
+     "N": 37.2,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 7-15": {
+     "N": 34.9,
+     "shear_i": 0.4,
+     "shear_j": 0.4
+    },
+    "tube 7-16": {
+     "N": -7.7,
+     "shear_i": 0.74,
+     "shear_j": 0.74
+    },
+    "tube 7-20": {
+     "N": 19.4,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "tube 8-9": {
+     "N": 9.4,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "tube 8-12": {
+     "N": 2.5,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "tube 8-16": {
+     "N": 15.6,
+     "shear_i": 0.74,
+     "shear_j": 0.74
+    },
+    "tube 8-19": {
+     "N": -0.4,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "tube 9-12": {
+     "N": 0.3,
+     "shear_i": 0.29,
+     "shear_j": 0.29
+    },
+    "tube 9-14": {
+     "N": -20.7,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "tube 9-20": {
+     "N": 25.3,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "tube 10-11": {
+     "N": -5.0,
+     "shear_i": 0.52,
+     "shear_j": 0.52
+    },
+    "tube 10-13": {
+     "N": 62.2,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 10-20": {
+     "N": -58.2,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "tube 11-13": {
+     "N": -62.7,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 11-18": {
+     "N": 106.6,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "tube 12-14": {
+     "N": -39.9,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 12-19": {
+     "N": -24.3,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 13-14": {
+     "N": -34.7,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 13-20": {
+     "N": 53.7,
+     "shear_i": 0.55,
+     "shear_j": 0.55
+    },
+    "tube 14-20": {
+     "N": -42.0,
+     "shear_i": 0.5,
+     "shear_j": 0.5
+    },
+    "tube 15-16": {
+     "N": -2.0,
+     "shear_i": 0.44,
+     "shear_j": 0.44
+    },
+    "tube 15-17": {
+     "N": -20.9,
+     "shear_i": 3.99,
+     "shear_j": 3.99
+    },
+    "tube 15-18": {
+     "N": 9.9,
+     "shear_i": 1.01,
+     "shear_j": 1.01
+    },
+    "tube 16-17": {
+     "N": -10.3,
+     "shear_i": 4.13,
+     "shear_j": 4.13
+    },
+    "tube 16-19": {
+     "N": 2.8,
+     "shear_i": 1.03,
+     "shear_j": 1.03
+    },
+    "tube 17-18": {
+     "N": -60.9,
+     "shear_i": 4.38,
+     "shear_j": 4.38
+    },
+    "tube 17-19": {
+     "N": 27.1,
+     "shear_i": 4.41,
+     "shear_j": 4.41
+    },
+    "tube 18-19": {
+     "N": -53.7,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "spoke 1.1": {
+     "N": 70.9,
+     "shear_i": 0.47,
+     "shear_j": 0.47
+    },
+    "spoke 1.2": {
+     "N": -44.9,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "spoke 1.3": {
+     "N": -64.0,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "spoke 2.1": {
+     "N": 70.0,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "spoke 2.2": {
+     "N": 21.3,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "spoke 2.3": {
+     "N": -199.8,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "spoke 3.1": {
+     "N": -11.4,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "spoke 3.2": {
+     "N": 5.8,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "spoke 3.3": {
+     "N": -1.7,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "spoke 4.1": {
+     "N": -40.1,
+     "shear_i": 0.25,
+     "shear_j": 0.25
+    },
+    "spoke 4.2": {
+     "N": 40.4,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "spoke 4.3": {
+     "N": -4.4,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "core tie front.1": {
+     "N": 5.3,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "core tie front.2": {
+     "N": 2.8,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "core tie rear.1": {
+     "N": -59.8,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "core tie rear.2": {
+     "N": 38.9,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "core tie left.1": {
+     "N": -259.5,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "core tie left.2": {
+     "N": -11.4,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "core tie right.1": {
+     "N": 43.5,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "core tie right.2": {
+     "N": 58.9,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "bay tie +1+1.1": {
+     "N": 37.2,
+     "shear_i": 0.97,
+     "shear_j": 0.97
+    },
+    "bay tie +1+1.2": {
+     "N": 7.3,
+     "shear_i": 0.24,
+     "shear_j": 0.24
+    },
+    "bay tie +1-1.1": {
+     "N": -29.3,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "bay tie +1-1.2": {
+     "N": -13.9,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "bay tie -1+1.1": {
+     "N": -70.5,
+     "shear_i": 1.07,
+     "shear_j": 1.07
+    },
+    "bay tie -1+1.2": {
+     "N": -11.1,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "bay tie -1-1.1": {
+     "N": -0.4,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "bay tie -1-1.2": {
+     "N": 22.0,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "head rod +1": {
+     "N": -15.5,
+     "shear_i": 1.86,
+     "shear_j": 1.86
+    },
+    "head rod -1": {
+     "N": 16.9,
+     "shear_i": 1.84,
+     "shear_j": 1.84
+    },
+    "camera rod 13": {
+     "N": -5.9,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "camera rod 14": {
+     "N": 5.7,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "camera rod 5": {
+     "N": -0.1,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "core link 26": {
+     "N": 7.1,
+     "shear_i": 2.54,
+     "shear_j": 2.54
+    },
+    "core link 27": {
+     "N": -55.1,
+     "shear_i": 21.8,
+     "shear_j": 21.8
+    },
+    "core link 28": {
+     "N": 35.7,
+     "shear_i": 13.96,
+     "shear_j": 13.96
+    },
+    "core link 29": {
+     "N": -205.8,
+     "shear_i": 164.08,
+     "shear_j": 164.08
+    },
+    "core link 30": {
+     "N": 37.5,
+     "shear_i": 78.79,
+     "shear_j": 78.79
+    },
+    "core link 31": {
+     "N": 14.1,
+     "shear_i": 34.64,
+     "shear_j": 34.64
+    },
+    "core link 32": {
+     "N": -2.2,
+     "shear_i": 7.17,
+     "shear_j": 7.17
+    },
+    "core link 33": {
+     "N": -11.4,
+     "shear_i": 27.24,
+     "shear_j": 27.24
+    },
+    "core link 34": {
+     "N": 4.2,
+     "shear_i": 13.46,
+     "shear_j": 13.46
+    },
+    "core link 35": {
+     "N": -20.0,
+     "shear_i": 67.32,
+     "shear_j": 67.32
+    },
+    "core link 36": {
+     "N": 6.3,
+     "shear_i": 8.89,
+     "shear_j": 8.89
+    },
+    "core link 37": {
+     "N": -0.1,
+     "shear_i": 0.63,
+     "shear_j": 0.63
+    },
+    "core link 38": {
+     "N": -12.4,
+     "shear_i": 17.92,
+     "shear_j": 17.92
+    },
+    "arm 1 root": {
+     "N": -29.9,
+     "shear_i": 21.24,
+     "shear_j": 21.24
+    },
+    "arm 1 inboard": {
+     "N": -43.0,
+     "shear_i": 9.68,
+     "shear_j": 9.68
+    },
+    "arm 1 outboard": {
+     "N": -3.8,
+     "shear_i": 31.01,
+     "shear_j": 31.01
+    },
+    "arm 2 root": {
+     "N": -136.1,
+     "shear_i": 90.69,
+     "shear_j": 90.69
+    },
+    "arm 2 inboard": {
+     "N": -160.5,
+     "shear_i": 55.27,
+     "shear_j": 55.27
+    },
+    "arm 2 outboard": {
+     "N": 13.8,
+     "shear_i": 28.03,
+     "shear_j": 28.03
+    },
+    "arm 3 root": {
+     "N": -29.6,
+     "shear_i": 39.59,
+     "shear_j": 39.59
+    },
+    "arm 3 inboard": {
+     "N": -42.0,
+     "shear_i": 9.6,
+     "shear_j": 9.6
+    },
+    "arm 3 outboard": {
+     "N": -13.8,
+     "shear_i": 28.03,
+     "shear_j": 28.03
+    },
+    "arm 4 root": {
+     "N": -37.6,
+     "shear_i": 22.06,
+     "shear_j": 22.06
+    },
+    "arm 4 inboard": {
+     "N": -36.7,
+     "shear_i": 5.97,
+     "shear_j": 5.97
+    },
+    "arm 4 outboard": {
+     "N": 3.8,
+     "shear_i": 31.01,
+     "shear_j": 31.01
+    },
+    "head link 17": {
+     "N": -0.4,
+     "shear_i": 86.61,
+     "shear_j": 86.61
+    },
+    "head link +1": {
+     "N": -8.2,
+     "shear_i": 12.68,
+     "shear_j": 12.68
+    },
+    "head link -1": {
+     "N": 9.0,
+     "shear_i": 13.84,
+     "shear_j": 13.84
+    }
+   }
+  },
+  {
+   "name": "crash 35 g dir (+0.00 -1.00 +0.00) on face 12-8-19",
+   "d": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "n": [
+    0.2048,
+    -0.8892,
+    -0.4091
+   ],
+   "g": 35.0,
+   "touch": [
+    12,
+    8,
+    19
+   ],
+   "reactions": {
+    "12": -593.4,
+    "8": -125.1,
+    "19": -204.2
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": -40.1,
+       "side": 0.2
+      },
+      "spoke 1.2": {
+       "N": 40.4,
+       "side": 0.3
+      },
+      "spoke 1.3": {
+       "N": -4.6,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -36.9,
+      "shear": 6.0,
+      "moment_Nmm": 201.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": -11.4,
+       "side": 0.2
+      },
+      "spoke 2.2": {
+       "N": 5.8,
+       "side": 0.2
+      },
+      "spoke 2.3": {
+       "N": -1.7,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": -42.1,
+      "shear": 9.6,
+      "moment_Nmm": 1664.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": 69.9,
+       "side": 0.2
+      },
+      "spoke 3.2": {
+       "N": 21.4,
+       "side": 0.1
+      },
+      "spoke 3.3": {
+       "N": -200.1,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -160.7,
+      "shear": 55.2,
+      "moment_Nmm": 4953.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": 70.8,
+       "side": 0.5
+      },
+      "spoke 4.2": {
+       "N": -44.9,
+       "side": 0.3
+      },
+      "spoke 4.3": {
+       "N": -63.6,
+       "side": 0.2
+      }
+     },
+     "root": {
+      "N": -42.5,
+      "shear": 9.7,
+      "moment_Nmm": 1439.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": -2.4,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "tube 0-5": {
+     "N": 24.4,
+     "shear_i": 1.02,
+     "shear_j": 1.02
+    },
+    "tube 0-12": {
+     "N": -39.2,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "tube 1-2": {
+     "N": -65.6,
+     "shear_i": 1.68,
+     "shear_j": 1.68
+    },
+    "tube 1-12": {
+     "N": -67.6,
+     "shear_i": 0.24,
+     "shear_j": 0.24
+    },
+    "tube 1-19": {
+     "N": 66.2,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 2-3": {
+     "N": -33.8,
+     "shear_i": 1.47,
+     "shear_j": 1.47
+    },
+    "tube 2-18": {
+     "N": -4.1,
+     "shear_i": 0.52,
+     "shear_j": 0.52
+    },
+    "tube 2-19": {
+     "N": -107.5,
+     "shear_i": 0.48,
+     "shear_j": 0.48
+    },
+    "tube 3-4": {
+     "N": 58.6,
+     "shear_i": 0.35,
+     "shear_j": 0.35
+    },
+    "tube 3-11": {
+     "N": -57.9,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "tube 3-18": {
+     "N": 39.2,
+     "shear_i": 0.26,
+     "shear_j": 0.26
+    },
+    "tube 4-5": {
+     "N": 64.2,
+     "shear_i": 0.81,
+     "shear_j": 0.81
+    },
+    "tube 4-11": {
+     "N": 47.1,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 5-11": {
+     "N": -29.3,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 5-12": {
+     "N": -96.3,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 5-13": {
+     "N": -37.0,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 5-14": {
+     "N": 75.0,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 6-7": {
+     "N": -17.6,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "tube 6-10": {
+     "N": 9.4,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "tube 6-11": {
+     "N": 2.5,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "tube 6-15": {
+     "N": 15.6,
+     "shear_i": 0.74,
+     "shear_j": 0.74
+    },
+    "tube 6-18": {
+     "N": -0.4,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "tube 7-8": {
+     "N": -121.3,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 7-9": {
+     "N": 37.2,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 7-10": {
+     "N": -28.9,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 7-15": {
+     "N": -7.7,
+     "shear_i": 0.74,
+     "shear_j": 0.74
+    },
+    "tube 7-16": {
+     "N": 34.8,
+     "shear_i": 0.4,
+     "shear_j": 0.4
+    },
+    "tube 7-20": {
+     "N": 19.3,
+     "shear_i": 0.26,
+     "shear_j": 0.26
+    },
+    "tube 8-9": {
+     "N": 8.0,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "tube 8-12": {
+     "N": -98.2,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "tube 8-16": {
+     "N": -35.0,
+     "shear_i": 0.87,
+     "shear_j": 0.87
+    },
+    "tube 8-19": {
+     "N": -132.7,
+     "shear_i": 0.46,
+     "shear_j": 0.46
+    },
+    "tube 9-12": {
+     "N": -4.9,
+     "shear_i": 0.52,
+     "shear_j": 0.52
+    },
+    "tube 9-14": {
+     "N": 61.9,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 9-20": {
+     "N": -58.1,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "tube 10-11": {
+     "N": 0.3,
+     "shear_i": 0.29,
+     "shear_j": 0.29
+    },
+    "tube 10-13": {
+     "N": -20.7,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "tube 10-20": {
+     "N": 25.3,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "tube 11-13": {
+     "N": -39.9,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 11-18": {
+     "N": -24.2,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 12-14": {
+     "N": -62.6,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 12-19": {
+     "N": 106.6,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "tube 13-14": {
+     "N": -34.6,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 13-20": {
+     "N": -42.0,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "tube 14-20": {
+     "N": 53.5,
+     "shear_i": 0.54,
+     "shear_j": 0.54
+    },
+    "tube 15-16": {
+     "N": -2.0,
+     "shear_i": 0.44,
+     "shear_j": 0.44
+    },
+    "tube 15-17": {
+     "N": -10.3,
+     "shear_i": 4.13,
+     "shear_j": 4.13
+    },
+    "tube 15-18": {
+     "N": 2.9,
+     "shear_i": 1.03,
+     "shear_j": 1.03
+    },
+    "tube 16-17": {
+     "N": -20.8,
+     "shear_i": 3.99,
+     "shear_j": 3.99
+    },
+    "tube 16-19": {
+     "N": 9.9,
+     "shear_i": 1.01,
+     "shear_j": 1.01
+    },
+    "tube 17-18": {
+     "N": 27.2,
+     "shear_i": 4.41,
+     "shear_j": 4.41
+    },
+    "tube 17-19": {
+     "N": -60.9,
+     "shear_i": 4.38,
+     "shear_j": 4.38
+    },
+    "tube 18-19": {
+     "N": -53.8,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "spoke 1.1": {
+     "N": -40.1,
+     "shear_i": 0.25,
+     "shear_j": 0.25
+    },
+    "spoke 1.2": {
+     "N": 40.4,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "spoke 1.3": {
+     "N": -4.6,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "spoke 2.1": {
+     "N": -11.4,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "spoke 2.2": {
+     "N": 5.8,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "spoke 2.3": {
+     "N": -1.7,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "spoke 3.1": {
+     "N": 69.9,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "spoke 3.2": {
+     "N": 21.4,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "spoke 3.3": {
+     "N": -200.1,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "spoke 4.1": {
+     "N": 70.8,
+     "shear_i": 0.47,
+     "shear_j": 0.47
+    },
+    "spoke 4.2": {
+     "N": -44.9,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "spoke 4.3": {
+     "N": -63.6,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "core tie front.1": {
+     "N": 5.3,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "core tie front.2": {
+     "N": 2.8,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "core tie rear.1": {
+     "N": 38.8,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "core tie rear.2": {
+     "N": -59.6,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "core tie left.1": {
+     "N": 43.5,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "core tie left.2": {
+     "N": 59.0,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "core tie right.1": {
+     "N": -259.8,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "core tie right.2": {
+     "N": -11.2,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "bay tie +1+1.1": {
+     "N": -29.3,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "bay tie +1+1.2": {
+     "N": -13.9,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "bay tie +1-1.1": {
+     "N": 37.1,
+     "shear_i": 0.97,
+     "shear_j": 0.97
+    },
+    "bay tie +1-1.2": {
+     "N": 7.3,
+     "shear_i": 0.24,
+     "shear_j": 0.24
+    },
+    "bay tie -1+1.1": {
+     "N": -0.3,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "bay tie -1+1.2": {
+     "N": 22.1,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "bay tie -1-1.1": {
+     "N": -70.4,
+     "shear_i": 1.07,
+     "shear_j": 1.07
+    },
+    "bay tie -1-1.2": {
+     "N": -11.2,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "head rod +1": {
+     "N": 16.9,
+     "shear_i": 1.84,
+     "shear_j": 1.84
+    },
+    "head rod -1": {
+     "N": -15.5,
+     "shear_i": 1.86,
+     "shear_j": 1.86
+    },
+    "camera rod 13": {
+     "N": 5.7,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "camera rod 14": {
+     "N": -5.9,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "camera rod 5": {
+     "N": -0.1,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "core link 26": {
+     "N": 7.1,
+     "shear_i": 2.55,
+     "shear_j": 2.55
+    },
+    "core link 27": {
+     "N": 35.7,
+     "shear_i": 13.79,
+     "shear_j": 13.79
+    },
+    "core link 28": {
+     "N": -54.9,
+     "shear_i": 21.94,
+     "shear_j": 21.94
+    },
+    "core link 29": {
+     "N": 37.6,
+     "shear_i": 78.8,
+     "shear_j": 78.8
+    },
+    "core link 30": {
+     "N": -205.6,
+     "shear_i": 164.49,
+     "shear_j": 164.49
+    },
+    "core link 31": {
+     "N": -11.4,
+     "shear_i": 27.18,
+     "shear_j": 27.18
+    },
+    "core link 32": {
+     "N": 4.2,
+     "shear_i": 13.5,
+     "shear_j": 13.5
+    },
+    "core link 33": {
+     "N": 14.0,
+     "shear_i": 34.59,
+     "shear_j": 34.59
+    },
+    "core link 34": {
+     "N": -2.2,
+     "shear_i": 7.15,
+     "shear_j": 7.15
+    },
+    "core link 35": {
+     "N": -0.1,
+     "shear_i": 0.55,
+     "shear_j": 0.55
+    },
+    "core link 36": {
+     "N": -12.4,
+     "shear_i": 17.98,
+     "shear_j": 17.98
+    },
+    "core link 37": {
+     "N": -19.9,
+     "shear_i": 67.26,
+     "shear_j": 67.26
+    },
+    "core link 38": {
+     "N": 6.4,
+     "shear_i": 8.92,
+     "shear_j": 8.92
+    },
+    "arm 1 root": {
+     "N": -37.8,
+     "shear_i": 22.13,
+     "shear_j": 22.13
+    },
+    "arm 1 inboard": {
+     "N": -36.9,
+     "shear_i": 5.97,
+     "shear_j": 5.97
+    },
+    "arm 1 outboard": {
+     "N": 3.8,
+     "shear_i": 31.01,
+     "shear_j": 31.01
+    },
+    "arm 2 root": {
+     "N": -29.8,
+     "shear_i": 39.54,
+     "shear_j": 39.54
+    },
+    "arm 2 inboard": {
+     "N": -42.1,
+     "shear_i": 9.61,
+     "shear_j": 9.61
+    },
+    "arm 2 outboard": {
+     "N": -13.8,
+     "shear_i": 28.03,
+     "shear_j": 28.03
+    },
+    "arm 3 root": {
+     "N": -136.1,
+     "shear_i": 91.27,
+     "shear_j": 91.27
+    },
+    "arm 3 inboard": {
+     "N": -160.7,
+     "shear_i": 55.24,
+     "shear_j": 55.24
+    },
+    "arm 3 outboard": {
+     "N": 13.8,
+     "shear_i": 28.03,
+     "shear_j": 28.03
+    },
+    "arm 4 root": {
+     "N": -29.5,
+     "shear_i": 20.99,
+     "shear_j": 20.99
+    },
+    "arm 4 inboard": {
+     "N": -42.5,
+     "shear_i": 9.69,
+     "shear_j": 9.69
+    },
+    "arm 4 outboard": {
+     "N": -3.8,
+     "shear_i": 31.01,
+     "shear_j": 31.01
+    },
+    "head link 17": {
+     "N": -0.4,
+     "shear_i": 86.61,
+     "shear_j": 86.61
+    },
+    "head link +1": {
+     "N": 9.0,
+     "shear_i": 13.85,
+     "shear_j": 13.85
+    },
+    "head link -1": {
+     "N": -8.2,
+     "shear_i": 12.67,
+     "shear_j": 12.67
+    }
+   }
+  },
+  {
+   "name": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
+   "d": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "n": [
+    -0.0221,
+    -0.0,
+    0.9998
+   ],
+   "g": 35.0,
+   "touch": [
+    7,
+    9,
+    10
+   ],
+   "reactions": {
+    "7": -450.8,
+    "9": -293.4,
+    "10": -293.2
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": 54.8,
+       "side": 0.1
+      },
+      "spoke 1.2": {
+       "N": 41.8,
+       "side": 0.1
+      },
+      "spoke 1.3": {
+       "N": -101.2,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -161.4,
+      "shear": 1.6,
+      "moment_Nmm": 356.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": 90.9,
+       "side": 0.0
+      },
+      "spoke 2.2": {
+       "N": 28.4,
+       "side": 0.2
+      },
+      "spoke 2.3": {
+       "N": 82.1,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": 79.8,
+      "shear": 75.7,
+      "moment_Nmm": 4857.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": 91.2,
+       "side": 0.0
+      },
+      "spoke 3.2": {
+       "N": 28.6,
+       "side": 0.2
+      },
+      "spoke 3.3": {
+       "N": 82.6,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": 80.3,
+      "shear": 76.1,
+      "moment_Nmm": 4887.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": 54.8,
+       "side": 0.1
+      },
+      "spoke 4.2": {
+       "N": 41.8,
+       "side": 0.1
+      },
+      "spoke 4.3": {
+       "N": -101.1,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -161.3,
+      "shear": 1.6,
+      "moment_Nmm": 347.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": 82.4,
+     "shear_i": 1.84,
+     "shear_j": 1.84
+    },
+    "tube 0-5": {
+     "N": -35.2,
+     "shear_i": 3.38,
+     "shear_j": 3.38
+    },
+    "tube 0-12": {
+     "N": -75.7,
+     "shear_i": 1.3,
+     "shear_j": 1.3
+    },
+    "tube 1-2": {
+     "N": -167.2,
+     "shear_i": 1.51,
+     "shear_j": 1.51
+    },
+    "tube 1-12": {
+     "N": -242.0,
+     "shear_i": 0.7,
+     "shear_j": 0.7
+    },
+    "tube 1-19": {
+     "N": 188.1,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "tube 2-3": {
+     "N": -167.0,
+     "shear_i": 1.5,
+     "shear_j": 1.5
+    },
+    "tube 2-18": {
+     "N": -190.7,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "tube 2-19": {
+     "N": -190.5,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "tube 3-4": {
+     "N": 82.7,
+     "shear_i": 1.84,
+     "shear_j": 1.84
+    },
+    "tube 3-11": {
+     "N": -241.9,
+     "shear_i": 0.7,
+     "shear_j": 0.7
+    },
+    "tube 3-18": {
+     "N": 188.5,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "tube 4-5": {
+     "N": -35.0,
+     "shear_i": 3.38,
+     "shear_j": 3.38
+    },
+    "tube 4-11": {
+     "N": -75.4,
+     "shear_i": 1.3,
+     "shear_j": 1.3
+    },
+    "tube 5-11": {
+     "N": 33.6,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 5-12": {
+     "N": 33.6,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 5-13": {
+     "N": -29.7,
+     "shear_i": 0.96,
+     "shear_j": 0.96
+    },
+    "tube 5-14": {
+     "N": -29.5,
+     "shear_i": 0.96,
+     "shear_j": 0.96
+    },
+    "tube 6-7": {
+     "N": 50.3,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 6-10": {
+     "N": -239.7,
+     "shear_i": 0.35,
+     "shear_j": 0.35
+    },
+    "tube 6-11": {
+     "N": 180.3,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 6-15": {
+     "N": 8.6,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "tube 6-18": {
+     "N": -129.5,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 7-8": {
+     "N": 50.3,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 7-9": {
+     "N": 129.2,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 7-10": {
+     "N": 129.2,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 7-15": {
+     "N": -63.7,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "tube 7-16": {
+     "N": -63.8,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "tube 7-20": {
+     "N": 86.6,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 8-9": {
+     "N": -239.7,
+     "shear_i": 0.35,
+     "shear_j": 0.35
+    },
+    "tube 8-12": {
+     "N": 180.3,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 8-16": {
+     "N": 8.6,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "tube 8-19": {
+     "N": -129.5,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 9-12": {
+     "N": -249.6,
+     "shear_i": 2.18,
+     "shear_j": 2.18
+    },
+    "tube 9-14": {
+     "N": -157.2,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 9-20": {
+     "N": -7.8,
+     "shear_i": 0.32,
+     "shear_j": 0.32
+    },
+    "tube 10-11": {
+     "N": -249.4,
+     "shear_i": 2.17,
+     "shear_j": 2.17
+    },
+    "tube 10-13": {
+     "N": -157.4,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 10-20": {
+     "N": -7.6,
+     "shear_i": 0.32,
+     "shear_j": 0.32
+    },
+    "tube 11-13": {
+     "N": 211.2,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "tube 11-18": {
+     "N": 145.5,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 12-14": {
+     "N": 211.2,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "tube 12-19": {
+     "N": 145.6,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 13-14": {
+     "N": 67.4,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "tube 13-20": {
+     "N": 59.7,
+     "shear_i": 0.4,
+     "shear_j": 0.4
+    },
+    "tube 14-20": {
+     "N": 59.9,
+     "shear_i": 0.4,
+     "shear_j": 0.4
+    },
+    "tube 15-16": {
+     "N": 169.4,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "tube 15-17": {
+     "N": -27.1,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "tube 15-18": {
+     "N": 5.7,
+     "shear_i": 0.35,
+     "shear_j": 0.35
+    },
+    "tube 16-17": {
+     "N": -27.0,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "tube 16-19": {
+     "N": 5.7,
+     "shear_i": 0.35,
+     "shear_j": 0.35
+    },
+    "tube 17-18": {
+     "N": 192.3,
+     "shear_i": 1.07,
+     "shear_j": 1.07
+    },
+    "tube 17-19": {
+     "N": 192.2,
+     "shear_i": 1.07,
+     "shear_j": 1.07
+    },
+    "tube 18-19": {
+     "N": -74.3,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "spoke 1.1": {
+     "N": 54.8,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "spoke 1.2": {
+     "N": 41.8,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "spoke 1.3": {
+     "N": -101.2,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "spoke 2.1": {
+     "N": 90.9,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "spoke 2.2": {
+     "N": 28.4,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "spoke 2.3": {
+     "N": 82.1,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "spoke 3.1": {
+     "N": 91.2,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "spoke 3.2": {
+     "N": 28.6,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "spoke 3.3": {
+     "N": 82.6,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "spoke 4.1": {
+     "N": 54.8,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "spoke 4.2": {
+     "N": 41.8,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "spoke 4.3": {
+     "N": -101.1,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "core tie front.1": {
+     "N": -562.8,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "core tie front.2": {
+     "N": 20.2,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "core tie rear.1": {
+     "N": -149.6,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "core tie rear.2": {
+     "N": -149.8,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "core tie left.1": {
+     "N": -5.4,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "core tie left.2": {
+     "N": 55.5,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "core tie right.1": {
+     "N": -5.7,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "core tie right.2": {
+     "N": 55.3,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "bay tie +1+1.1": {
+     "N": -97.4,
+     "shear_i": 0.5,
+     "shear_j": 0.5
+    },
+    "bay tie +1+1.2": {
+     "N": -168.5,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "bay tie +1-1.1": {
+     "N": -97.3,
+     "shear_i": 0.5,
+     "shear_j": 0.5
+    },
+    "bay tie +1-1.2": {
+     "N": -168.4,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "bay tie -1+1.1": {
+     "N": 27.3,
+     "shear_i": 1.07,
+     "shear_j": 1.07
+    },
+    "bay tie -1+1.2": {
+     "N": 159.3,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "bay tie -1-1.1": {
+     "N": 27.1,
+     "shear_i": 1.08,
+     "shear_j": 1.08
+    },
+    "bay tie -1-1.2": {
+     "N": 159.1,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "head rod +1": {
+     "N": -93.0,
+     "shear_i": 0.35,
+     "shear_j": 0.35
+    },
+    "head rod -1": {
+     "N": -93.0,
+     "shear_i": 0.35,
+     "shear_j": 0.35
+    },
+    "camera rod 13": {
+     "N": -0.2,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "camera rod 14": {
+     "N": -0.2,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "camera rod 5": {
+     "N": 10.2,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "core link 26": {
+     "N": -449.4,
+     "shear_i": 313.55,
+     "shear_j": 313.55
+    },
+    "core link 27": {
+     "N": -138.0,
+     "shear_i": 56.91,
+     "shear_j": 56.91
+    },
+    "core link 28": {
+     "N": -138.0,
+     "shear_i": 57.47,
+     "shear_j": 57.47
+    },
+    "core link 29": {
+     "N": 1.0,
+     "shear_i": 53.71,
+     "shear_j": 53.71
+    },
+    "core link 30": {
+     "N": 0.8,
+     "shear_i": 53.35,
+     "shear_j": 53.35
+    },
+    "core link 31": {
+     "N": -37.9,
+     "shear_i": 90.01,
+     "shear_j": 90.01
+    },
+    "core link 32": {
+     "N": 55.8,
+     "shear_i": 159.24,
+     "shear_j": 159.24
+    },
+    "core link 33": {
+     "N": -37.7,
+     "shear_i": 90.0,
+     "shear_j": 90.0
+    },
+    "core link 34": {
+     "N": 56.2,
+     "shear_i": 159.0,
+     "shear_j": 159.0
+    },
+    "core link 35": {
+     "N": 7.2,
+     "shear_i": 26.11,
+     "shear_j": 26.11
+    },
+    "core link 36": {
+     "N": -86.9,
+     "shear_i": 133.18,
+     "shear_j": 133.18
+    },
+    "core link 37": {
+     "N": 7.1,
+     "shear_i": 25.89,
+     "shear_j": 25.89
+    },
+    "core link 38": {
+     "N": -87.2,
+     "shear_i": 132.77,
+     "shear_j": 132.77
+    },
+    "arm 1 root": {
+     "N": -125.0,
+     "shear_i": 103.87,
+     "shear_j": 103.87
+    },
+    "arm 1 inboard": {
+     "N": -161.4,
+     "shear_i": 1.56,
+     "shear_j": 1.56
+    },
+    "arm 1 outboard": {
+     "N": 27.5,
+     "shear_i": 14.8,
+     "shear_j": 14.8
+    },
+    "arm 2 root": {
+     "N": 15.9,
+     "shear_i": 104.62,
+     "shear_j": 104.62
+    },
+    "arm 2 inboard": {
+     "N": 79.8,
+     "shear_i": 75.65,
+     "shear_j": 75.65
+    },
+    "arm 2 outboard": {
+     "N": 24.4,
+     "shear_i": 19.51,
+     "shear_j": 19.51
+    },
+    "arm 3 root": {
+     "N": 15.6,
+     "shear_i": 105.3,
+     "shear_j": 105.3
+    },
+    "arm 3 inboard": {
+     "N": 80.3,
+     "shear_i": 76.07,
+     "shear_j": 76.07
+    },
+    "arm 3 outboard": {
+     "N": 24.4,
+     "shear_i": 19.51,
+     "shear_j": 19.51
+    },
+    "arm 4 root": {
+     "N": -124.9,
+     "shear_i": 103.88,
+     "shear_j": 103.88
+    },
+    "arm 4 inboard": {
+     "N": -161.3,
+     "shear_i": 1.59,
+     "shear_j": 1.59
+    },
+    "arm 4 outboard": {
+     "N": 27.5,
+     "shear_i": 14.8,
+     "shear_j": 14.8
+    },
+    "head link 17": {
+     "N": 96.5,
+     "shear_i": 119.35,
+     "shear_j": 119.35
+    },
+    "head link +1": {
+     "N": -48.5,
+     "shear_i": 79.47,
+     "shear_j": 79.47
+    },
+    "head link -1": {
+     "N": -48.5,
+     "shear_i": 79.47,
+     "shear_j": 79.47
+    }
+   }
+  },
+  {
+   "name": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
+   "d": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "n": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "g": 35.0,
+   "touch": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "reactions": {
+    "0": -34.3,
+    "1": -435.7,
+    "2": -98.1,
+    "3": -435.4,
+    "4": -34.0
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": -75.4,
+       "side": 0.2
+      },
+      "spoke 1.2": {
+       "N": -42.0,
+       "side": 0.1
+      },
+      "spoke 1.3": {
+       "N": 159.1,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 228.9,
+      "shear": 5.6,
+      "moment_Nmm": 357.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": -51.9,
+       "side": 0.1
+      },
+      "spoke 2.2": {
+       "N": -51.0,
+       "side": 0.0
+      },
+      "spoke 2.3": {
+       "N": 58.1,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 61.7,
+      "shear": 38.2,
+      "moment_Nmm": 2182.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": -52.2,
+       "side": 0.1
+      },
+      "spoke 3.2": {
+       "N": -51.1,
+       "side": 0.0
+      },
+      "spoke 3.3": {
+       "N": 57.9,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 61.5,
+      "shear": 38.5,
+      "moment_Nmm": 2202.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": -75.4,
+       "side": 0.2
+      },
+      "spoke 4.2": {
+       "N": -42.0,
+       "side": 0.1
+      },
+      "spoke 4.3": {
+       "N": 159.1,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 228.9,
+      "shear": 5.6,
+      "moment_Nmm": 364.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": 3.3,
+     "shear_i": 0.92,
+     "shear_j": 0.92
+    },
+    "tube 0-5": {
+     "N": -1.1,
+     "shear_i": 1.0,
+     "shear_j": 1.0
+    },
+    "tube 0-12": {
+     "N": 12.8,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "tube 1-2": {
+     "N": -34.8,
+     "shear_i": 1.17,
+     "shear_j": 1.17
+    },
+    "tube 1-12": {
+     "N": -181.8,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 1-19": {
+     "N": -242.6,
+     "shear_i": 0.42,
+     "shear_j": 0.42
+    },
+    "tube 2-3": {
+     "N": -34.9,
+     "shear_i": 1.17,
+     "shear_j": 1.17
+    },
+    "tube 2-18": {
+     "N": -26.4,
+     "shear_i": 0.62,
+     "shear_j": 0.62
+    },
+    "tube 2-19": {
+     "N": -26.5,
+     "shear_i": 0.62,
+     "shear_j": 0.62
+    },
+    "tube 3-4": {
+     "N": 3.0,
+     "shear_i": 0.92,
+     "shear_j": 0.92
+    },
+    "tube 3-11": {
+     "N": -181.7,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 3-18": {
+     "N": -242.8,
+     "shear_i": 0.42,
+     "shear_j": 0.42
+    },
+    "tube 4-5": {
+     "N": -1.2,
+     "shear_i": 1.0,
+     "shear_j": 1.0
+    },
+    "tube 4-11": {
+     "N": 12.8,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "tube 5-11": {
+     "N": 12.8,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "tube 5-12": {
+     "N": 12.8,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "tube 5-13": {
+     "N": 13.7,
+     "shear_i": 1.12,
+     "shear_j": 1.12
+    },
+    "tube 5-14": {
+     "N": 13.6,
+     "shear_i": 1.12,
+     "shear_j": 1.12
+    },
+    "tube 6-7": {
+     "N": -37.4,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "tube 6-10": {
+     "N": 76.7,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 6-11": {
+     "N": -10.9,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 6-15": {
+     "N": 75.9,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 6-18": {
+     "N": 4.9,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "tube 7-8": {
+     "N": -37.3,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "tube 7-9": {
+     "N": -33.4,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 7-10": {
+     "N": -33.4,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 7-15": {
+     "N": -55.0,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "tube 7-16": {
+     "N": -55.0,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "tube 7-20": {
+     "N": -7.7,
+     "shear_i": 1.02,
+     "shear_j": 1.02
+    },
+    "tube 8-9": {
+     "N": 76.6,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 8-12": {
+     "N": -10.9,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 8-16": {
+     "N": 75.9,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 8-19": {
+     "N": 4.9,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "tube 9-12": {
+     "N": -24.6,
+     "shear_i": 1.16,
+     "shear_j": 1.16
+    },
+    "tube 9-14": {
+     "N": 79.8,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "tube 9-20": {
+     "N": -21.7,
+     "shear_i": 0.95,
+     "shear_j": 0.95
+    },
+    "tube 10-11": {
+     "N": -24.6,
+     "shear_i": 1.16,
+     "shear_j": 1.16
+    },
+    "tube 10-13": {
+     "N": 79.9,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "tube 10-20": {
+     "N": -21.8,
+     "shear_i": 0.95,
+     "shear_j": 0.95
+    },
+    "tube 11-13": {
+     "N": -9.9,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "tube 11-18": {
+     "N": 84.0,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 12-14": {
+     "N": -10.0,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "tube 12-19": {
+     "N": 84.0,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 13-14": {
+     "N": 57.6,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "tube 13-20": {
+     "N": -17.1,
+     "shear_i": 2.69,
+     "shear_j": 2.69
+    },
+    "tube 14-20": {
+     "N": -17.3,
+     "shear_i": 2.69,
+     "shear_j": 2.69
+    },
+    "tube 15-16": {
+     "N": -108.4,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "tube 15-17": {
+     "N": 107.3,
+     "shear_i": 0.35,
+     "shear_j": 0.35
+    },
+    "tube 15-18": {
+     "N": -39.2,
+     "shear_i": 0.77,
+     "shear_j": 0.77
+    },
+    "tube 16-17": {
+     "N": 107.3,
+     "shear_i": 0.35,
+     "shear_j": 0.35
+    },
+    "tube 16-19": {
+     "N": -39.2,
+     "shear_i": 0.77,
+     "shear_j": 0.77
+    },
+    "tube 17-18": {
+     "N": -106.1,
+     "shear_i": 0.82,
+     "shear_j": 0.82
+    },
+    "tube 17-19": {
+     "N": -106.0,
+     "shear_i": 0.82,
+     "shear_j": 0.82
+    },
+    "tube 18-19": {
+     "N": 159.5,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "spoke 1.1": {
+     "N": -75.4,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "spoke 1.2": {
+     "N": -42.0,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "spoke 1.3": {
+     "N": 159.1,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "spoke 2.1": {
+     "N": -51.9,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "spoke 2.2": {
+     "N": -51.0,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "spoke 2.3": {
+     "N": 58.1,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "spoke 3.1": {
+     "N": -52.2,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "spoke 3.2": {
+     "N": -51.1,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "spoke 3.3": {
+     "N": 57.9,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "spoke 4.1": {
+     "N": -75.4,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "spoke 4.2": {
+     "N": -42.0,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "spoke 4.3": {
+     "N": 159.1,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "core tie front.1": {
+     "N": -13.8,
+     "shear_i": 0.37,
+     "shear_j": 0.37
+    },
+    "core tie front.2": {
+     "N": -39.9,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "core tie rear.1": {
+     "N": -1.4,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "core tie rear.2": {
+     "N": -1.2,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "core tie left.1": {
+     "N": 55.2,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "core tie left.2": {
+     "N": -54.2,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "core tie right.1": {
+     "N": 55.5,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "core tie right.2": {
+     "N": -54.0,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "bay tie +1+1.1": {
+     "N": -292.7,
+     "shear_i": 0.54,
+     "shear_j": 0.54
+    },
+    "bay tie +1+1.2": {
+     "N": 17.1,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "bay tie +1-1.1": {
+     "N": -293.0,
+     "shear_i": 0.54,
+     "shear_j": 0.54
+    },
+    "bay tie +1-1.2": {
+     "N": 16.9,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "bay tie -1+1.1": {
+     "N": 8.0,
+     "shear_i": 0.36,
+     "shear_j": 0.36
+    },
+    "bay tie -1+1.2": {
+     "N": -105.4,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "bay tie -1-1.1": {
+     "N": 7.9,
+     "shear_i": 0.36,
+     "shear_j": 0.36
+    },
+    "bay tie -1-1.2": {
+     "N": -105.3,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "head rod +1": {
+     "N": 95.9,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "head rod -1": {
+     "N": 95.9,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "camera rod 13": {
+     "N": -0.1,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "camera rod 14": {
+     "N": -0.1,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "camera rod 5": {
+     "N": -10.6,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "core link 26": {
+     "N": -50.7,
+     "shear_i": 0.28,
+     "shear_j": 0.28
+    },
+    "core link 27": {
+     "N": -1.6,
+     "shear_i": 1.11,
+     "shear_j": 1.11
+    },
+    "core link 28": {
+     "N": -1.4,
+     "shear_i": 1.08,
+     "shear_j": 1.08
+    },
+    "core link 29": {
+     "N": 38.6,
+     "shear_i": 40.41,
+     "shear_j": 40.41
+    },
+    "core link 30": {
+     "N": 38.9,
+     "shear_i": 40.27,
+     "shear_j": 40.27
+    },
+    "core link 31": {
+     "N": -113.7,
+     "shear_i": 269.39,
+     "shear_j": 269.39
+    },
+    "core link 32": {
+     "N": -5.7,
+     "shear_i": 16.39,
+     "shear_j": 16.39
+    },
+    "core link 33": {
+     "N": -113.5,
+     "shear_i": 269.82,
+     "shear_j": 269.82
+    },
+    "core link 34": {
+     "N": -5.7,
+     "shear_i": 16.22,
+     "shear_j": 16.22
+    },
+    "core link 35": {
+     "N": 2.3,
+     "shear_i": 7.9,
+     "shear_j": 7.9
+    },
+    "core link 36": {
+     "N": 57.4,
+     "shear_i": 88.04,
+     "shear_j": 88.04
+    },
+    "core link 37": {
+     "N": 2.3,
+     "shear_i": 7.87,
+     "shear_j": 7.87
+    },
+    "core link 38": {
+     "N": 57.6,
+     "shear_i": 87.79,
+     "shear_j": 87.79
+    },
+    "arm 1 root": {
+     "N": 181.9,
+     "shear_i": 140.53,
+     "shear_j": 140.53
+    },
+    "arm 1 inboard": {
+     "N": 228.9,
+     "shear_i": 5.57,
+     "shear_j": 5.57
+    },
+    "arm 1 outboard": {
+     "N": -27.5,
+     "shear_i": 14.8,
+     "shear_j": 14.8
+    },
+    "arm 2 root": {
+     "N": 65.8,
+     "shear_i": 22.19,
+     "shear_j": 22.19
+    },
+    "arm 2 inboard": {
+     "N": 61.7,
+     "shear_i": 38.23,
+     "shear_j": 38.23
+    },
+    "arm 2 outboard": {
+     "N": -24.4,
+     "shear_i": 19.51,
+     "shear_j": 19.51
+    },
+    "arm 3 root": {
+     "N": 65.8,
+     "shear_i": 22.07,
+     "shear_j": 22.07
+    },
+    "arm 3 inboard": {
+     "N": 61.5,
+     "shear_i": 38.53,
+     "shear_j": 38.53
+    },
+    "arm 3 outboard": {
+     "N": -24.4,
+     "shear_i": 19.51,
+     "shear_j": 19.51
+    },
+    "arm 4 root": {
+     "N": 181.8,
+     "shear_i": 140.67,
+     "shear_j": 140.67
+    },
+    "arm 4 inboard": {
+     "N": 228.9,
+     "shear_i": 5.61,
+     "shear_j": 5.61
+    },
+    "arm 4 outboard": {
+     "N": -27.5,
+     "shear_i": 14.8,
+     "shear_j": 14.8
+    },
+    "head link 17": {
+     "N": -98.2,
+     "shear_i": 119.65,
+     "shear_j": 119.65
+    },
+    "head link +1": {
+     "N": 50.1,
+     "shear_i": 81.89,
+     "shear_j": 81.89
+    },
+    "head link -1": {
+     "N": 50.1,
+     "shear_i": 81.89,
+     "shear_j": 81.89
+    }
+   }
+  },
+  {
+   "name": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
+   "d": [
+    0.5774,
+    0.5774,
+    0.5774
+   ],
+   "n": [
+    -0.0032,
+    0.0146,
+    0.9999
+   ],
+   "g": 35.0,
+   "touch": [
+    7,
+    10,
+    15
+   ],
+   "reactions": {
+    "7": -348.6,
+    "10": -134.8,
+    "15": -122.4
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": 73.0,
+       "side": 0.1
+      },
+      "spoke 1.2": {
+       "N": 0.5,
+       "side": 0.2
+      },
+      "spoke 1.3": {
+       "N": -175.3,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -177.4,
+      "shear": 9.4,
+      "moment_Nmm": 497.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": 102.9,
+       "side": 0.1
+      },
+      "spoke 2.2": {
+       "N": -9.7,
+       "side": 0.2
+      },
+      "spoke 2.3": {
+       "N": 10.1,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 33.1,
+      "shear": 70.7,
+      "moment_Nmm": 5138.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": 61.1,
+       "side": 0.2
+      },
+      "spoke 3.2": {
+       "N": -15.2,
+       "side": 0.2
+      },
+      "spoke 3.3": {
+       "N": 82.8,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 59.8,
+      "shear": 35.1,
+      "moment_Nmm": 1593.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": -1.3,
+       "side": 0.3
+      },
+      "spoke 4.2": {
+       "N": 52.9,
+       "side": 0.2
+      },
+      "spoke 4.3": {
+       "N": -108.2,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -138.8,
+      "shear": 8.1,
+      "moment_Nmm": 1313.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": 22.7,
+     "shear_i": 1.79,
+     "shear_j": 1.79
+    },
+    "tube 0-5": {
+     "N": -58.3,
+     "shear_i": 2.73,
+     "shear_j": 2.73
+    },
+    "tube 0-12": {
+     "N": -64.9,
+     "shear_i": 0.91,
+     "shear_j": 0.91
+    },
+    "tube 1-2": {
+     "N": -121.7,
+     "shear_i": 0.32,
+     "shear_j": 0.32
+    },
+    "tube 1-12": {
+     "N": -130.9,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "tube 1-19": {
+     "N": 61.5,
+     "shear_i": 0.34,
+     "shear_j": 0.34
+    },
+    "tube 2-3": {
+     "N": -74.4,
+     "shear_i": 0.37,
+     "shear_j": 0.37
+    },
+    "tube 2-18": {
+     "N": -183.9,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "tube 2-19": {
+     "N": -49.6,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 3-4": {
+     "N": 14.9,
+     "shear_i": 1.87,
+     "shear_j": 1.87
+    },
+    "tube 3-11": {
+     "N": -89.4,
+     "shear_i": 0.44,
+     "shear_j": 0.44
+    },
+    "tube 3-18": {
+     "N": 80.3,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "tube 4-5": {
+     "N": -46.4,
+     "shear_i": 3.02,
+     "shear_j": 3.02
+    },
+    "tube 4-11": {
+     "N": -92.6,
+     "shear_i": 1.22,
+     "shear_j": 1.22
+    },
+    "tube 5-11": {
+     "N": 55.3,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 5-12": {
+     "N": 51.6,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 5-13": {
+     "N": -46.2,
+     "shear_i": 1.46,
+     "shear_j": 1.46
+    },
+    "tube 5-14": {
+     "N": -19.5,
+     "shear_i": 1.49,
+     "shear_j": 1.49
+    },
+    "tube 6-7": {
+     "N": 63.5,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "tube 6-10": {
+     "N": -88.6,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 6-11": {
+     "N": -7.6,
+     "shear_i": 0.37,
+     "shear_j": 0.37
+    },
+    "tube 6-15": {
+     "N": -120.8,
+     "shear_i": 0.41,
+     "shear_j": 0.41
+    },
+    "tube 6-18": {
+     "N": -1.0,
+     "shear_i": 0.4,
+     "shear_j": 0.4
+    },
+    "tube 7-8": {
+     "N": -48.6,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "tube 7-9": {
+     "N": -154.1,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "tube 7-10": {
+     "N": 74.2,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 7-15": {
+     "N": 181.8,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 7-16": {
+     "N": -22.4,
+     "shear_i": 0.6,
+     "shear_j": 0.6
+    },
+    "tube 7-20": {
+     "N": -35.5,
+     "shear_i": 0.8,
+     "shear_j": 0.8
+    },
+    "tube 8-9": {
+     "N": 141.8,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "tube 8-12": {
+     "N": -76.5,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "tube 8-16": {
+     "N": 23.6,
+     "shear_i": 0.63,
+     "shear_j": 0.63
+    },
+    "tube 8-19": {
+     "N": 74.6,
+     "shear_i": 0.36,
+     "shear_j": 0.36
+    },
+    "tube 9-12": {
+     "N": -10.7,
+     "shear_i": 1.26,
+     "shear_j": 1.26
+    },
+    "tube 9-14": {
+     "N": 21.9,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 9-20": {
+     "N": 109.4,
+     "shear_i": 0.82,
+     "shear_j": 0.82
+    },
+    "tube 10-11": {
+     "N": -92.0,
+     "shear_i": 3.24,
+     "shear_j": 3.24
+    },
+    "tube 10-13": {
+     "N": -208.0,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "tube 10-20": {
+     "N": -63.2,
+     "shear_i": 1.02,
+     "shear_j": 1.02
+    },
+    "tube 11-13": {
+     "N": 178.9,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "tube 11-18": {
+     "N": 219.7,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 12-14": {
+     "N": -106.0,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "tube 12-19": {
+     "N": 29.6,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 13-14": {
+     "N": -6.1,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "tube 13-20": {
+     "N": 97.7,
+     "shear_i": 2.36,
+     "shear_j": 2.36
+    },
+    "tube 14-20": {
+     "N": -118.0,
+     "shear_i": 2.46,
+     "shear_j": 2.46
+    },
+    "tube 15-16": {
+     "N": -58.6,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 15-17": {
+     "N": -107.5,
+     "shear_i": 2.0,
+     "shear_j": 2.0
+    },
+    "tube 15-18": {
+     "N": -74.9,
+     "shear_i": 1.11,
+     "shear_j": 1.11
+    },
+    "tube 16-17": {
+     "N": 114.2,
+     "shear_i": 2.73,
+     "shear_j": 2.73
+    },
+    "tube 16-19": {
+     "N": -39.7,
+     "shear_i": 0.63,
+     "shear_j": 0.63
+    },
+    "tube 17-18": {
+     "N": 196.5,
+     "shear_i": 1.7,
+     "shear_j": 1.7
+    },
+    "tube 17-19": {
+     "N": 31.3,
+     "shear_i": 3.51,
+     "shear_j": 3.51
+    },
+    "tube 18-19": {
+     "N": 63.1,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "spoke 1.1": {
+     "N": 73.0,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "spoke 1.2": {
+     "N": 0.5,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "spoke 1.3": {
+     "N": -175.3,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "spoke 2.1": {
+     "N": 102.9,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "spoke 2.2": {
+     "N": -9.7,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "spoke 2.3": {
+     "N": 10.1,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "spoke 3.1": {
+     "N": 61.1,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "spoke 3.2": {
+     "N": -15.2,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "spoke 3.3": {
+     "N": 82.8,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "spoke 4.1": {
+     "N": -1.3,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "spoke 4.2": {
+     "N": 52.9,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "spoke 4.3": {
+     "N": -108.2,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "core tie front.1": {
+     "N": -418.5,
+     "shear_i": 0.71,
+     "shear_j": 0.71
+    },
+    "core tie front.2": {
+     "N": 67.6,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "core tie rear.1": {
+     "N": -134.3,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "core tie rear.2": {
+     "N": -2.4,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "core tie left.1": {
+     "N": -52.2,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "core tie left.2": {
+     "N": 82.2,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "core tie right.1": {
+     "N": 83.4,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "core tie right.2": {
+     "N": 153.6,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "bay tie +1+1.1": {
+     "N": -29.2,
+     "shear_i": 0.52,
+     "shear_j": 0.52
+    },
+    "bay tie +1+1.2": {
+     "N": -98.2,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "bay tie +1-1.1": {
+     "N": -51.3,
+     "shear_i": 0.24,
+     "shear_j": 0.24
+    },
+    "bay tie +1-1.2": {
+     "N": -108.7,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "bay tie -1+1.1": {
+     "N": -18.2,
+     "shear_i": 1.13,
+     "shear_j": 1.13
+    },
+    "bay tie -1+1.2": {
+     "N": 87.5,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "bay tie -1-1.1": {
+     "N": 25.2,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "bay tie -1-1.2": {
+     "N": 104.4,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "head rod +1": {
+     "N": -43.6,
+     "shear_i": 1.1,
+     "shear_j": 1.1
+    },
+    "head rod -1": {
+     "N": -24.5,
+     "shear_i": 1.02,
+     "shear_j": 1.02
+    },
+    "camera rod 13": {
+     "N": 3.9,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "camera rod 14": {
+     "N": 10.7,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "camera rod 5": {
+     "N": 10.1,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "core link 26": {
+     "N": -282.5,
+     "shear_i": 245.04,
+     "shear_j": 245.04
+    },
+    "core link 27": {
+     "N": -124.5,
+     "shear_i": 50.48,
+     "shear_j": 50.48
+    },
+    "core link 28": {
+     "N": -2.6,
+     "shear_i": 1.51,
+     "shear_j": 1.51
+    },
+    "core link 29": {
+     "N": -32.9,
+     "shear_i": 63.53,
+     "shear_j": 63.53
+    },
+    "core link 30": {
+     "N": 78.7,
+     "shear_i": 190.45,
+     "shear_j": 190.45
+    },
+    "core link 31": {
+     "N": -11.3,
+     "shear_i": 26.94,
+     "shear_j": 26.94
+    },
+    "core link 32": {
+     "N": 32.9,
+     "shear_i": 92.82,
+     "shear_j": 92.82
+    },
+    "core link 33": {
+     "N": -19.7,
+     "shear_i": 47.61,
+     "shear_j": 47.61
+    },
+    "core link 34": {
+     "N": 36.2,
+     "shear_i": 103.04,
+     "shear_j": 103.04
+    },
+    "core link 35": {
+     "N": -5.6,
+     "shear_i": 17.33,
+     "shear_j": 17.33
+    },
+    "core link 36": {
+     "N": -47.8,
+     "shear_i": 73.57,
+     "shear_j": 73.57
+    },
+    "core link 37": {
+     "N": 6.6,
+     "shear_i": 24.04,
+     "shear_j": 24.04
+    },
+    "core link 38": {
+     "N": -57.7,
+     "shear_i": 87.04,
+     "shear_j": 87.04
+    },
+    "arm 1 root": {
+     "N": -127.0,
+     "shear_i": 113.39,
+     "shear_j": 113.39
+    },
+    "arm 1 inboard": {
+     "N": -177.4,
+     "shear_i": 9.41,
+     "shear_j": 9.41
+    },
+    "arm 1 outboard": {
+     "N": 21.9,
+     "shear_i": 22.24,
+     "shear_j": 22.24
+    },
+    "arm 2 root": {
+     "N": -9.4,
+     "shear_i": 74.89,
+     "shear_j": 74.89
+    },
+    "arm 2 inboard": {
+     "N": 33.1,
+     "shear_i": 70.7,
+     "shear_j": 70.7
+    },
+    "arm 2 outboard": {
+     "N": 14.1,
+     "shear_i": 27.88,
+     "shear_j": 27.88
+    },
+    "arm 3 root": {
+     "N": 22.4,
+     "shear_i": 59.44,
+     "shear_j": 59.44
+    },
+    "arm 3 inboard": {
+     "N": 59.8,
+     "shear_i": 35.07,
+     "shear_j": 35.07
+    },
+    "arm 3 outboard": {
+     "N": -1.8,
+     "shear_i": 31.19,
+     "shear_j": 31.19
+    },
+    "arm 4 root": {
+     "N": -103.5,
+     "shear_i": 92.51,
+     "shear_j": 92.51
+    },
+    "arm 4 inboard": {
+     "N": -138.8,
+     "shear_i": 8.13,
+     "shear_j": 8.13
+    },
+    "arm 4 outboard": {
+     "N": 26.3,
+     "shear_i": 16.8,
+     "shear_j": 16.8
+    },
+    "head link 17": {
+     "N": 106.7,
+     "shear_i": 68.04,
+     "shear_j": 68.04
+    },
+    "head link +1": {
+     "N": -22.8,
+     "shear_i": 37.01,
+     "shear_j": 37.01
+    },
+    "head link -1": {
+     "N": -12.6,
+     "shear_i": 21.56,
+     "shear_j": 21.56
+    }
+   }
+  },
+  {
+   "name": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
+   "d": [
+    0.5774,
+    0.5774,
+    -0.5774
+   ],
+   "n": [
+    0.133,
+    0.1208,
+    -0.9837
+   ],
+   "g": 35.0,
+   "touch": [
+    2,
+    18,
+    3
+   ],
+   "reactions": {
+    "2": -300.5,
+    "18": -108.9,
+    "3": -331.8
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": -79.8,
+       "side": 1.8
+      },
+      "spoke 1.2": {
+       "N": -26.8,
+       "side": 0.2
+      },
+      "spoke 1.3": {
+       "N": 99.1,
+       "side": 1.0
+      }
+     },
+     "root": {
+      "N": 194.5,
+      "shear": 37.0,
+      "moment_Nmm": 5265.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": -10.6,
+       "side": 0.5
+      },
+      "spoke 2.2": {
+       "N": -83.9,
+       "side": 0.5
+      },
+      "spoke 2.3": {
+       "N": 151.0,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 179.4,
+      "shear": 35.5,
+      "moment_Nmm": 1451.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": -116.8,
+       "side": 0.6
+      },
+      "spoke 3.2": {
+       "N": -98.4,
+       "side": 0.4
+      },
+      "spoke 3.3": {
+       "N": 3.4,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -11.6,
+      "shear": 152.1,
+      "moment_Nmm": 11351.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": -164.8,
+       "side": 2.1
+      },
+      "spoke 4.2": {
+       "N": 17.8,
+       "side": 0.5
+      },
+      "spoke 4.3": {
+       "N": 155.2,
+       "side": 1.4
+      }
+     },
+     "root": {
+      "N": 233.7,
+      "shear": 54.0,
+      "moment_Nmm": 8176.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": -39.4,
+     "shear_i": 3.25,
+     "shear_j": 3.25
+    },
+    "tube 0-5": {
+     "N": -61.5,
+     "shear_i": 2.44,
+     "shear_j": 2.44
+    },
+    "tube 0-12": {
+     "N": 51.1,
+     "shear_i": 0.98,
+     "shear_j": 0.98
+    },
+    "tube 1-2": {
+     "N": -461.0,
+     "shear_i": 14.72,
+     "shear_j": 14.72
+    },
+    "tube 1-12": {
+     "N": -321.7,
+     "shear_i": 3.05,
+     "shear_j": 3.05
+    },
+    "tube 1-19": {
+     "N": 121.2,
+     "shear_i": 0.64,
+     "shear_j": 0.64
+    },
+    "tube 2-3": {
+     "N": -154.0,
+     "shear_i": 13.31,
+     "shear_j": 13.31
+    },
+    "tube 2-18": {
+     "N": 225.5,
+     "shear_i": 4.44,
+     "shear_j": 4.44
+    },
+    "tube 2-19": {
+     "N": -242.2,
+     "shear_i": 4.23,
+     "shear_j": 4.23
+    },
+    "tube 3-4": {
+     "N": -113.1,
+     "shear_i": 3.02,
+     "shear_j": 3.02
+    },
+    "tube 3-11": {
+     "N": -157.2,
+     "shear_i": 2.57,
+     "shear_j": 2.57
+    },
+    "tube 3-18": {
+     "N": -230.2,
+     "shear_i": 0.42,
+     "shear_j": 0.42
+    },
+    "tube 4-5": {
+     "N": -116.4,
+     "shear_i": 1.93,
+     "shear_j": 1.93
+    },
+    "tube 4-11": {
+     "N": -54.2,
+     "shear_i": 0.78,
+     "shear_j": 0.78
+    },
+    "tube 5-11": {
+     "N": 109.4,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "tube 5-12": {
+     "N": 138.5,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "tube 5-13": {
+     "N": 10.4,
+     "shear_i": 0.46,
+     "shear_j": 0.46
+    },
+    "tube 5-14": {
+     "N": -73.4,
+     "shear_i": 0.37,
+     "shear_j": 0.37
+    },
+    "tube 6-7": {
+     "N": -31.0,
+     "shear_i": 0.76,
+     "shear_j": 0.76
+    },
+    "tube 6-10": {
+     "N": 34.3,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 6-11": {
+     "N": 44.7,
+     "shear_i": 0.26,
+     "shear_j": 0.26
+    },
+    "tube 6-15": {
+     "N": 105.9,
+     "shear_i": 0.36,
+     "shear_j": 0.36
+    },
+    "tube 6-18": {
+     "N": -30.5,
+     "shear_i": 0.38,
+     "shear_j": 0.38
+    },
+    "tube 7-8": {
+     "N": -31.4,
+     "shear_i": 0.76,
+     "shear_j": 0.76
+    },
+    "tube 7-9": {
+     "N": -17.0,
+     "shear_i": 0.48,
+     "shear_j": 0.48
+    },
+    "tube 7-10": {
+     "N": 7.6,
+     "shear_i": 0.47,
+     "shear_j": 0.47
+    },
+    "tube 7-15": {
+     "N": -111.7,
+     "shear_i": 1.68,
+     "shear_j": 1.68
+    },
+    "tube 7-16": {
+     "N": -76.4,
+     "shear_i": 1.3,
+     "shear_j": 1.3
+    },
+    "tube 7-20": {
+     "N": -94.3,
+     "shear_i": 0.69,
+     "shear_j": 0.69
+    },
+    "tube 8-9": {
+     "N": 5.5,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 8-12": {
+     "N": 54.2,
+     "shear_i": 0.37,
+     "shear_j": 0.37
+    },
+    "tube 8-16": {
+     "N": 91.0,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "tube 8-19": {
+     "N": -40.9,
+     "shear_i": 0.36,
+     "shear_j": 0.36
+    },
+    "tube 9-12": {
+     "N": -7.7,
+     "shear_i": 2.46,
+     "shear_j": 2.46
+    },
+    "tube 9-14": {
+     "N": 1.2,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 9-20": {
+     "N": 4.7,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 10-11": {
+     "N": -15.4,
+     "shear_i": 2.15,
+     "shear_j": 2.15
+    },
+    "tube 10-13": {
+     "N": 77.4,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 10-20": {
+     "N": -48.9,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 11-13": {
+     "N": -246.3,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 11-18": {
+     "N": -171.5,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 12-14": {
+     "N": -225.0,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 12-19": {
+     "N": -69.3,
+     "shear_i": 0.29,
+     "shear_j": 0.29
+    },
+    "tube 13-14": {
+     "N": -142.2,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 13-20": {
+     "N": -45.2,
+     "shear_i": 0.64,
+     "shear_j": 0.64
+    },
+    "tube 14-20": {
+     "N": -107.4,
+     "shear_i": 0.72,
+     "shear_j": 0.72
+    },
+    "tube 15-16": {
+     "N": -12.2,
+     "shear_i": 0.26,
+     "shear_j": 0.26
+    },
+    "tube 15-17": {
+     "N": 104.8,
+     "shear_i": 2.6,
+     "shear_j": 2.6
+    },
+    "tube 15-18": {
+     "N": -40.4,
+     "shear_i": 1.11,
+     "shear_j": 1.11
+    },
+    "tube 16-17": {
+     "N": 35.6,
+     "shear_i": 2.14,
+     "shear_j": 2.14
+    },
+    "tube 16-19": {
+     "N": -15.2,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 17-18": {
+     "N": -135.2,
+     "shear_i": 2.26,
+     "shear_j": 2.26
+    },
+    "tube 17-19": {
+     "N": -8.9,
+     "shear_i": 3.13,
+     "shear_j": 3.13
+    },
+    "tube 18-19": {
+     "N": 46.3,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "spoke 1.1": {
+     "N": -79.8,
+     "shear_i": 1.85,
+     "shear_j": 1.85
+    },
+    "spoke 1.2": {
+     "N": -26.8,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "spoke 1.3": {
+     "N": 99.1,
+     "shear_i": 1.0,
+     "shear_j": 1.0
+    },
+    "spoke 2.1": {
+     "N": -10.6,
+     "shear_i": 0.48,
+     "shear_j": 0.48
+    },
+    "spoke 2.2": {
+     "N": -83.9,
+     "shear_i": 0.55,
+     "shear_j": 0.55
+    },
+    "spoke 2.3": {
+     "N": 151.0,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "spoke 3.1": {
+     "N": -116.8,
+     "shear_i": 0.56,
+     "shear_j": 0.56
+    },
+    "spoke 3.2": {
+     "N": -98.4,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "spoke 3.3": {
+     "N": 3.4,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "spoke 4.1": {
+     "N": -164.8,
+     "shear_i": 2.13,
+     "shear_j": 2.13
+    },
+    "spoke 4.2": {
+     "N": 17.8,
+     "shear_i": 0.47,
+     "shear_j": 0.47
+    },
+    "spoke 4.3": {
+     "N": 155.2,
+     "shear_i": 1.36,
+     "shear_j": 1.36
+    },
+    "core tie front.1": {
+     "N": 10.5,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "core tie front.2": {
+     "N": 36.7,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "core tie rear.1": {
+     "N": 127.1,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "core tie rear.2": {
+     "N": 176.7,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "core tie left.1": {
+     "N": 133.8,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "core tie left.2": {
+     "N": 49.9,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "core tie right.1": {
+     "N": 238.3,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "core tie right.2": {
+     "N": 126.2,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "bay tie +1+1.1": {
+     "N": -173.9,
+     "shear_i": 1.62,
+     "shear_j": 1.62
+    },
+    "bay tie +1+1.2": {
+     "N": 35.7,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "bay tie +1-1.1": {
+     "N": 140.6,
+     "shear_i": 3.07,
+     "shear_j": 3.07
+    },
+    "bay tie +1-1.2": {
+     "N": 20.2,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "bay tie -1+1.1": {
+     "N": 25.5,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "bay tie -1+1.2": {
+     "N": -104.1,
+     "shear_i": 0.33,
+     "shear_j": 0.33
+    },
+    "bay tie -1-1.1": {
+     "N": 112.4,
+     "shear_i": 2.11,
+     "shear_j": 2.11
+    },
+    "bay tie -1-1.2": {
+     "N": 55.8,
+     "shear_i": 0.55,
+     "shear_j": 0.55
+    },
+    "head rod +1": {
+     "N": 66.5,
+     "shear_i": 0.94,
+     "shear_j": 0.94
+    },
+    "head rod -1": {
+     "N": 85.1,
+     "shear_i": 1.22,
+     "shear_j": 1.22
+    },
+    "camera rod 13": {
+     "N": 4.2,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "camera rod 14": {
+     "N": 10.9,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "camera rod 5": {
+     "N": -1.8,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "core link 26": {
+     "N": 45.0,
+     "shear_i": 3.34,
+     "shear_j": 3.34
+    },
+    "core link 27": {
+     "N": 116.9,
+     "shear_i": 49.0,
+     "shear_j": 49.0
+    },
+    "core link 28": {
+     "N": 162.4,
+     "shear_i": 67.36,
+     "shear_j": 67.36
+    },
+    "core link 29": {
+     "N": 111.7,
+     "shear_i": 120.65,
+     "shear_j": 120.65
+    },
+    "core link 30": {
+     "N": 198.8,
+     "shear_i": 247.82,
+     "shear_j": 247.82
+    },
+    "core link 31": {
+     "N": -67.1,
+     "shear_i": 160.05,
+     "shear_j": 160.05
+    },
+    "core link 32": {
+     "N": -11.3,
+     "shear_i": 33.85,
+     "shear_j": 33.85
+    },
+    "core link 33": {
+     "N": 56.0,
+     "shear_i": 129.11,
+     "shear_j": 129.11
+    },
+    "core link 34": {
+     "N": -6.4,
+     "shear_i": 18.86,
+     "shear_j": 18.86
+    },
+    "core link 35": {
+     "N": 7.0,
+     "shear_i": 24.8,
+     "shear_j": 24.8
+    },
+    "core link 36": {
+     "N": 56.9,
+     "shear_i": 86.46,
+     "shear_j": 86.46
+    },
+    "core link 37": {
+     "N": 31.8,
+     "shear_i": 107.79,
+     "shear_j": 107.79
+    },
+    "core link 38": {
+     "N": -30.7,
+     "shear_i": 46.96,
+     "shear_j": 46.96
+    },
+    "arm 1 root": {
+     "N": 177.0,
+     "shear_i": 106.03,
+     "shear_j": 106.03
+    },
+    "arm 1 inboard": {
+     "N": 194.5,
+     "shear_i": 36.97,
+     "shear_j": 36.97
+    },
+    "arm 1 outboard": {
+     "N": -9.8,
+     "shear_i": 29.66,
+     "shear_j": 29.66
+    },
+    "arm 2 root": {
+     "N": 146.2,
+     "shear_i": 113.66,
+     "shear_j": 113.66
+    },
+    "arm 2 inboard": {
+     "N": 179.4,
+     "shear_i": 35.48,
+     "shear_j": 35.48
+    },
+    "arm 2 outboard": {
+     "N": -14.1,
+     "shear_i": 27.89,
+     "shear_j": 27.89
+    },
+    "arm 3 root": {
+     "N": 84.9,
+     "shear_i": 122.81,
+     "shear_j": 122.81
+    },
+    "arm 3 inboard": {
+     "N": -11.6,
+     "shear_i": 152.12,
+     "shear_j": 152.12
+    },
+    "arm 3 outboard": {
+     "N": -30.0,
+     "shear_i": 8.66,
+     "shear_j": 8.66
+    },
+    "arm 4 root": {
+     "N": 207.9,
+     "shear_i": 118.87,
+     "shear_j": 118.87
+    },
+    "arm 4 inboard": {
+     "N": 233.7,
+     "shear_i": 53.95,
+     "shear_j": 53.95
+    },
+    "arm 4 outboard": {
+     "N": -5.4,
+     "shear_i": 30.77,
+     "shear_j": 30.77
+    },
+    "head link 17": {
+     "N": -6.0,
+     "shear_i": 104.69,
+     "shear_j": 104.69
+    },
+    "head link +1": {
+     "N": 34.6,
+     "shear_i": 57.12,
+     "shear_j": 57.12
+    },
+    "head link -1": {
+     "N": 44.5,
+     "shear_i": 72.14,
+     "shear_j": 72.14
+    }
+   }
+  },
+  {
+   "name": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
+   "d": [
+    0.5774,
+    -0.5774,
+    0.5774
+   ],
+   "n": [
+    -0.0032,
+    -0.0146,
+    0.9999
+   ],
+   "g": 35.0,
+   "touch": [
+    7,
+    9,
+    16
+   ],
+   "reactions": {
+    "7": -348.3,
+    "9": -134.9,
+    "16": -122.6
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": -1.2,
+       "side": 0.3
+      },
+      "spoke 1.2": {
+       "N": 52.9,
+       "side": 0.2
+      },
+      "spoke 1.3": {
+       "N": -108.4,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -139.0,
+      "shear": 8.1,
+      "moment_Nmm": 1313.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": 60.9,
+       "side": 0.2
+      },
+      "spoke 2.2": {
+       "N": -15.2,
+       "side": 0.2
+      },
+      "spoke 2.3": {
+       "N": 82.6,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 59.6,
+      "shear": 34.9,
+      "moment_Nmm": 1582.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": 103.2,
+       "side": 0.1
+      },
+      "spoke 3.2": {
+       "N": -9.7,
+       "side": 0.2
+      },
+      "spoke 3.3": {
+       "N": 10.4,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 33.4,
+      "shear": 71.0,
+      "moment_Nmm": 5163.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": 73.0,
+       "side": 0.1
+      },
+      "spoke 4.2": {
+       "N": 0.6,
+       "side": 0.2
+      },
+      "spoke 4.3": {
+       "N": -175.2,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -177.4,
+      "shear": 9.4,
+      "moment_Nmm": 488.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": 14.5,
+     "shear_i": 1.87,
+     "shear_j": 1.87
+    },
+    "tube 0-5": {
+     "N": -46.4,
+     "shear_i": 3.02,
+     "shear_j": 3.02
+    },
+    "tube 0-12": {
+     "N": -92.8,
+     "shear_i": 1.22,
+     "shear_j": 1.22
+    },
+    "tube 1-2": {
+     "N": -74.7,
+     "shear_i": 0.38,
+     "shear_j": 0.38
+    },
+    "tube 1-12": {
+     "N": -89.5,
+     "shear_i": 0.44,
+     "shear_j": 0.44
+    },
+    "tube 1-19": {
+     "N": 79.9,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "tube 2-3": {
+     "N": -121.7,
+     "shear_i": 0.32,
+     "shear_j": 0.32
+    },
+    "tube 2-18": {
+     "N": -49.9,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 2-19": {
+     "N": -183.9,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "tube 3-4": {
+     "N": 22.9,
+     "shear_i": 1.79,
+     "shear_j": 1.79
+    },
+    "tube 3-11": {
+     "N": -131.0,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "tube 3-18": {
+     "N": 61.7,
+     "shear_i": 0.34,
+     "shear_j": 0.34
+    },
+    "tube 4-5": {
+     "N": -58.2,
+     "shear_i": 2.74,
+     "shear_j": 2.74
+    },
+    "tube 4-11": {
+     "N": -64.8,
+     "shear_i": 0.91,
+     "shear_j": 0.91
+    },
+    "tube 5-11": {
+     "N": 51.6,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 5-12": {
+     "N": 55.3,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 5-13": {
+     "N": -19.7,
+     "shear_i": 1.49,
+     "shear_j": 1.49
+    },
+    "tube 5-14": {
+     "N": -46.1,
+     "shear_i": 1.46,
+     "shear_j": 1.46
+    },
+    "tube 6-7": {
+     "N": -48.5,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 6-10": {
+     "N": 141.7,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "tube 6-11": {
+     "N": -76.5,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "tube 6-15": {
+     "N": 23.6,
+     "shear_i": 0.63,
+     "shear_j": 0.63
+    },
+    "tube 6-18": {
+     "N": 74.6,
+     "shear_i": 0.36,
+     "shear_j": 0.36
+    },
+    "tube 7-8": {
+     "N": 63.5,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "tube 7-9": {
+     "N": 74.1,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 7-10": {
+     "N": -154.1,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "tube 7-15": {
+     "N": -22.3,
+     "shear_i": 0.6,
+     "shear_j": 0.6
+    },
+    "tube 7-16": {
+     "N": 181.9,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 7-20": {
+     "N": -35.4,
+     "shear_i": 0.8,
+     "shear_j": 0.8
+    },
+    "tube 8-9": {
+     "N": -88.4,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 8-12": {
+     "N": -7.8,
+     "shear_i": 0.38,
+     "shear_j": 0.38
+    },
+    "tube 8-16": {
+     "N": -120.8,
+     "shear_i": 0.41,
+     "shear_j": 0.41
+    },
+    "tube 8-19": {
+     "N": -0.9,
+     "shear_i": 0.4,
+     "shear_j": 0.4
+    },
+    "tube 9-12": {
+     "N": -92.1,
+     "shear_i": 3.25,
+     "shear_j": 3.25
+    },
+    "tube 9-14": {
+     "N": -208.0,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "tube 9-20": {
+     "N": -63.3,
+     "shear_i": 1.02,
+     "shear_j": 1.02
+    },
+    "tube 10-11": {
+     "N": -10.7,
+     "shear_i": 1.27,
+     "shear_j": 1.27
+    },
+    "tube 10-13": {
+     "N": 21.8,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 10-20": {
+     "N": 109.4,
+     "shear_i": 0.82,
+     "shear_j": 0.82
+    },
+    "tube 11-13": {
+     "N": -105.9,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "tube 11-18": {
+     "N": 29.8,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 12-14": {
+     "N": 179.0,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "tube 12-19": {
+     "N": 220.0,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 13-14": {
+     "N": -6.0,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "tube 13-20": {
+     "N": -118.1,
+     "shear_i": 2.45,
+     "shear_j": 2.45
+    },
+    "tube 14-20": {
+     "N": 97.9,
+     "shear_i": 2.36,
+     "shear_j": 2.36
+    },
+    "tube 15-16": {
+     "N": -58.7,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 15-17": {
+     "N": 114.2,
+     "shear_i": 2.73,
+     "shear_j": 2.73
+    },
+    "tube 15-18": {
+     "N": -39.7,
+     "shear_i": 0.63,
+     "shear_j": 0.63
+    },
+    "tube 16-17": {
+     "N": -107.4,
+     "shear_i": 2.0,
+     "shear_j": 2.0
+    },
+    "tube 16-19": {
+     "N": -75.1,
+     "shear_i": 1.11,
+     "shear_j": 1.11
+    },
+    "tube 17-18": {
+     "N": 31.4,
+     "shear_i": 3.51,
+     "shear_j": 3.51
+    },
+    "tube 17-19": {
+     "N": 196.5,
+     "shear_i": 1.7,
+     "shear_j": 1.7
+    },
+    "tube 18-19": {
+     "N": 63.3,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "spoke 1.1": {
+     "N": -1.2,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "spoke 1.2": {
+     "N": 52.9,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "spoke 1.3": {
+     "N": -108.4,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "spoke 2.1": {
+     "N": 60.9,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "spoke 2.2": {
+     "N": -15.2,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "spoke 2.3": {
+     "N": 82.6,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "spoke 3.1": {
+     "N": 103.2,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "spoke 3.2": {
+     "N": -9.7,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "spoke 3.3": {
+     "N": 10.4,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "spoke 4.1": {
+     "N": 73.0,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "spoke 4.2": {
+     "N": 0.6,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "spoke 4.3": {
+     "N": -175.2,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "core tie front.1": {
+     "N": -418.1,
+     "shear_i": 0.71,
+     "shear_j": 0.71
+    },
+    "core tie front.2": {
+     "N": 67.6,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "core tie rear.1": {
+     "N": -2.4,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "core tie rear.2": {
+     "N": -134.6,
+     "shear_i": 0.12,
+     "shear_j": 0.12
+    },
+    "core tie left.1": {
+     "N": 83.5,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "core tie left.2": {
+     "N": 153.7,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "core tie right.1": {
+     "N": -52.4,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "core tie right.2": {
+     "N": 82.2,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "bay tie +1+1.1": {
+     "N": -51.3,
+     "shear_i": 0.24,
+     "shear_j": 0.24
+    },
+    "bay tie +1+1.2": {
+     "N": -108.8,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "bay tie +1-1.1": {
+     "N": -29.0,
+     "shear_i": 0.52,
+     "shear_j": 0.52
+    },
+    "bay tie +1-1.2": {
+     "N": -97.8,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "bay tie -1+1.1": {
+     "N": 25.4,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "bay tie -1+1.2": {
+     "N": 104.5,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "bay tie -1-1.1": {
+     "N": -18.6,
+     "shear_i": 1.14,
+     "shear_j": 1.14
+    },
+    "bay tie -1-1.2": {
+     "N": 87.1,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "head rod +1": {
+     "N": -24.5,
+     "shear_i": 1.02,
+     "shear_j": 1.02
+    },
+    "head rod -1": {
+     "N": -43.6,
+     "shear_i": 1.1,
+     "shear_j": 1.1
+    },
+    "camera rod 13": {
+     "N": 10.7,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "camera rod 14": {
+     "N": 3.9,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "camera rod 5": {
+     "N": 10.1,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "core link 26": {
+     "N": -282.2,
+     "shear_i": 244.84,
+     "shear_j": 244.84
+    },
+    "core link 27": {
+     "N": -2.6,
+     "shear_i": 1.5,
+     "shear_j": 1.5
+    },
+    "core link 28": {
+     "N": -124.6,
+     "shear_i": 51.04,
+     "shear_j": 51.04
+    },
+    "core link 29": {
+     "N": 78.9,
+     "shear_i": 190.43,
+     "shear_j": 190.43
+    },
+    "core link 30": {
+     "N": -33.0,
+     "shear_i": 63.41,
+     "shear_j": 63.41
+    },
+    "core link 31": {
+     "N": -19.7,
+     "shear_i": 47.6,
+     "shear_j": 47.6
+    },
+    "core link 32": {
+     "N": 36.0,
+     "shear_i": 103.2,
+     "shear_j": 103.2
+    },
+    "core link 33": {
+     "N": -11.2,
+     "shear_i": 26.7,
+     "shear_j": 26.7
+    },
+    "core link 34": {
+     "N": 33.0,
+     "shear_i": 92.42,
+     "shear_j": 92.42
+    },
+    "core link 35": {
+     "N": 6.7,
+     "shear_i": 24.16,
+     "shear_j": 24.16
+    },
+    "core link 36": {
+     "N": -57.5,
+     "shear_i": 87.29,
+     "shear_j": 87.29
+    },
+    "core link 37": {
+     "N": -5.7,
+     "shear_i": 17.75,
+     "shear_j": 17.75
+    },
+    "core link 38": {
+     "N": -47.8,
+     "shear_i": 73.11,
+     "shear_j": 73.11
+    },
+    "arm 1 root": {
+     "N": -103.7,
+     "shear_i": 92.5,
+     "shear_j": 92.5
+    },
+    "arm 1 inboard": {
+     "N": -139.0,
+     "shear_i": 8.13,
+     "shear_j": 8.13
+    },
+    "arm 1 outboard": {
+     "N": 26.3,
+     "shear_i": 16.8,
+     "shear_j": 16.8
+    },
+    "arm 2 root": {
+     "N": 22.5,
+     "shear_i": 59.11,
+     "shear_j": 59.11
+    },
+    "arm 2 inboard": {
+     "N": 59.6,
+     "shear_i": 34.9,
+     "shear_j": 34.9
+    },
+    "arm 2 outboard": {
+     "N": -1.8,
+     "shear_i": 31.19,
+     "shear_j": 31.19
+    },
+    "arm 3 root": {
+     "N": -9.6,
+     "shear_i": 75.3,
+     "shear_j": 75.3
+    },
+    "arm 3 inboard": {
+     "N": 33.4,
+     "shear_i": 71.04,
+     "shear_j": 71.04
+    },
+    "arm 3 outboard": {
+     "N": 14.1,
+     "shear_i": 27.88,
+     "shear_j": 27.88
+    },
+    "arm 4 root": {
+     "N": -126.9,
+     "shear_i": 113.46,
+     "shear_j": 113.46
+    },
+    "arm 4 inboard": {
+     "N": -177.4,
+     "shear_i": 9.36,
+     "shear_j": 9.36
+    },
+    "arm 4 outboard": {
+     "N": 21.9,
+     "shear_i": 22.24,
+     "shear_j": 22.24
+    },
+    "head link 17": {
+     "N": 106.7,
+     "shear_i": 68.04,
+     "shear_j": 68.04
+    },
+    "head link +1": {
+     "N": -12.6,
+     "shear_i": 21.56,
+     "shear_j": 21.56
+    },
+    "head link -1": {
+     "N": -22.8,
+     "shear_i": 37.01,
+     "shear_j": 37.01
+    }
+   }
+  },
+  {
+   "name": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
+   "d": [
+    0.5774,
+    -0.5774,
+    -0.5774
+   ],
+   "n": [
+    0.133,
+    -0.1208,
+    -0.9837
+   ],
+   "g": 35.0,
+   "touch": [
+    2,
+    19,
+    1
+   ],
+   "reactions": {
+    "2": -299.9,
+    "19": -109.1,
+    "1": -332.2
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": -164.5,
+       "side": 2.1
+      },
+      "spoke 1.2": {
+       "N": 17.8,
+       "side": 0.5
+      },
+      "spoke 1.3": {
+       "N": 154.8,
+       "side": 1.4
+      }
+     },
+     "root": {
+      "N": 233.2,
+      "shear": 53.8,
+      "moment_Nmm": 8153.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": -116.6,
+       "side": 0.6
+      },
+      "spoke 2.2": {
+       "N": -98.3,
+       "side": 0.4
+      },
+      "spoke 2.3": {
+       "N": 3.5,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": -11.5,
+      "shear": 151.8,
+      "moment_Nmm": 11324.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": -10.5,
+       "side": 0.5
+      },
+      "spoke 3.2": {
+       "N": -83.9,
+       "side": 0.5
+      },
+      "spoke 3.3": {
+       "N": 150.7,
+       "side": 0.1
+      }
+     },
+     "root": {
+      "N": 179.1,
+      "shear": 35.5,
+      "moment_Nmm": 1454.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": -79.5,
+       "side": 1.8
+      },
+      "spoke 4.2": {
+       "N": -26.9,
+       "side": 0.2
+      },
+      "spoke 4.3": {
+       "N": 98.5,
+       "side": 1.0
+      }
+     },
+     "root": {
+      "N": 193.9,
+      "shear": 36.9,
+      "moment_Nmm": 5249.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": -112.9,
+     "shear_i": 3.01,
+     "shear_j": 3.01
+    },
+    "tube 0-5": {
+     "N": -116.0,
+     "shear_i": 1.93,
+     "shear_j": 1.93
+    },
+    "tube 0-12": {
+     "N": -54.0,
+     "shear_i": 0.78,
+     "shear_j": 0.78
+    },
+    "tube 1-2": {
+     "N": -153.4,
+     "shear_i": 13.27,
+     "shear_j": 13.27
+    },
+    "tube 1-12": {
+     "N": -156.9,
+     "shear_i": 2.56,
+     "shear_j": 2.56
+    },
+    "tube 1-19": {
+     "N": -230.5,
+     "shear_i": 0.42,
+     "shear_j": 0.42
+    },
+    "tube 2-3": {
+     "N": -460.3,
+     "shear_i": 14.67,
+     "shear_j": 14.67
+    },
+    "tube 2-18": {
+     "N": -241.8,
+     "shear_i": 4.22,
+     "shear_j": 4.22
+    },
+    "tube 2-19": {
+     "N": 226.1,
+     "shear_i": 4.42,
+     "shear_j": 4.42
+    },
+    "tube 3-4": {
+     "N": -39.5,
+     "shear_i": 3.24,
+     "shear_j": 3.24
+    },
+    "tube 3-11": {
+     "N": -321.1,
+     "shear_i": 3.04,
+     "shear_j": 3.04
+    },
+    "tube 3-18": {
+     "N": 120.9,
+     "shear_i": 0.64,
+     "shear_j": 0.64
+    },
+    "tube 4-5": {
+     "N": -61.5,
+     "shear_i": 2.43,
+     "shear_j": 2.43
+    },
+    "tube 4-11": {
+     "N": 51.0,
+     "shear_i": 0.98,
+     "shear_j": 0.98
+    },
+    "tube 5-11": {
+     "N": 138.3,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "tube 5-12": {
+     "N": 109.0,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "tube 5-13": {
+     "N": -73.1,
+     "shear_i": 0.37,
+     "shear_j": 0.37
+    },
+    "tube 5-14": {
+     "N": 10.3,
+     "shear_i": 0.46,
+     "shear_j": 0.46
+    },
+    "tube 6-7": {
+     "N": -31.4,
+     "shear_i": 0.76,
+     "shear_j": 0.76
+    },
+    "tube 6-10": {
+     "N": 5.6,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 6-11": {
+     "N": 54.1,
+     "shear_i": 0.37,
+     "shear_j": 0.37
+    },
+    "tube 6-15": {
+     "N": 90.9,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "tube 6-18": {
+     "N": -40.8,
+     "shear_i": 0.36,
+     "shear_j": 0.36
+    },
+    "tube 7-8": {
+     "N": -30.9,
+     "shear_i": 0.75,
+     "shear_j": 0.75
+    },
+    "tube 7-9": {
+     "N": 7.5,
+     "shear_i": 0.47,
+     "shear_j": 0.47
+    },
+    "tube 7-10": {
+     "N": -17.1,
+     "shear_i": 0.48,
+     "shear_j": 0.48
+    },
+    "tube 7-15": {
+     "N": -76.2,
+     "shear_i": 1.29,
+     "shear_j": 1.29
+    },
+    "tube 7-16": {
+     "N": -111.5,
+     "shear_i": 1.68,
+     "shear_j": 1.68
+    },
+    "tube 7-20": {
+     "N": -94.1,
+     "shear_i": 0.68,
+     "shear_j": 0.68
+    },
+    "tube 8-9": {
+     "N": 34.3,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 8-12": {
+     "N": 44.7,
+     "shear_i": 0.26,
+     "shear_j": 0.26
+    },
+    "tube 8-16": {
+     "N": 105.8,
+     "shear_i": 0.36,
+     "shear_j": 0.36
+    },
+    "tube 8-19": {
+     "N": -30.5,
+     "shear_i": 0.38,
+     "shear_j": 0.38
+    },
+    "tube 9-12": {
+     "N": -15.4,
+     "shear_i": 2.15,
+     "shear_j": 2.15
+    },
+    "tube 9-14": {
+     "N": 77.3,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 9-20": {
+     "N": -48.8,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 10-11": {
+     "N": -7.7,
+     "shear_i": 2.45,
+     "shear_j": 2.45
+    },
+    "tube 10-13": {
+     "N": 1.4,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 10-20": {
+     "N": 4.6,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 11-13": {
+     "N": -224.4,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 11-18": {
+     "N": -69.0,
+     "shear_i": 0.29,
+     "shear_j": 0.29
+    },
+    "tube 12-14": {
+     "N": -245.7,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 12-19": {
+     "N": -171.3,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 13-14": {
+     "N": -141.8,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 13-20": {
+     "N": -107.1,
+     "shear_i": 0.72,
+     "shear_j": 0.72
+    },
+    "tube 14-20": {
+     "N": -45.2,
+     "shear_i": 0.64,
+     "shear_j": 0.64
+    },
+    "tube 15-16": {
+     "N": -12.3,
+     "shear_i": 0.26,
+     "shear_j": 0.26
+    },
+    "tube 15-17": {
+     "N": 35.5,
+     "shear_i": 2.14,
+     "shear_j": 2.14
+    },
+    "tube 15-18": {
+     "N": -15.2,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 16-17": {
+     "N": 104.8,
+     "shear_i": 2.6,
+     "shear_j": 2.6
+    },
+    "tube 16-19": {
+     "N": -40.4,
+     "shear_i": 1.11,
+     "shear_j": 1.11
+    },
+    "tube 17-18": {
+     "N": -8.9,
+     "shear_i": 3.13,
+     "shear_j": 3.13
+    },
+    "tube 17-19": {
+     "N": -135.3,
+     "shear_i": 2.26,
+     "shear_j": 2.26
+    },
+    "tube 18-19": {
+     "N": 46.3,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "spoke 1.1": {
+     "N": -164.5,
+     "shear_i": 2.12,
+     "shear_j": 2.12
+    },
+    "spoke 1.2": {
+     "N": 17.8,
+     "shear_i": 0.47,
+     "shear_j": 0.47
+    },
+    "spoke 1.3": {
+     "N": 154.8,
+     "shear_i": 1.36,
+     "shear_j": 1.36
+    },
+    "spoke 2.1": {
+     "N": -116.6,
+     "shear_i": 0.56,
+     "shear_j": 0.56
+    },
+    "spoke 2.2": {
+     "N": -98.3,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "spoke 2.3": {
+     "N": 3.5,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "spoke 3.1": {
+     "N": -10.5,
+     "shear_i": 0.48,
+     "shear_j": 0.48
+    },
+    "spoke 3.2": {
+     "N": -83.9,
+     "shear_i": 0.55,
+     "shear_j": 0.55
+    },
+    "spoke 3.3": {
+     "N": 150.7,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "spoke 4.1": {
+     "N": -79.5,
+     "shear_i": 1.84,
+     "shear_j": 1.84
+    },
+    "spoke 4.2": {
+     "N": -26.9,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "spoke 4.3": {
+     "N": 98.5,
+     "shear_i": 1.0,
+     "shear_j": 1.0
+    },
+    "core tie front.1": {
+     "N": 10.5,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "core tie front.2": {
+     "N": 36.7,
+     "shear_i": 0.31,
+     "shear_j": 0.31
+    },
+    "core tie rear.1": {
+     "N": 176.3,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "core tie rear.2": {
+     "N": 126.7,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "core tie left.1": {
+     "N": 237.7,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "core tie left.2": {
+     "N": 125.8,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "core tie right.1": {
+     "N": 133.6,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "core tie right.2": {
+     "N": 49.8,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "bay tie +1+1.1": {
+     "N": 140.5,
+     "shear_i": 3.06,
+     "shear_j": 3.06
+    },
+    "bay tie +1+1.2": {
+     "N": 20.1,
+     "shear_i": 0.49,
+     "shear_j": 0.49
+    },
+    "bay tie +1-1.1": {
+     "N": -174.2,
+     "shear_i": 1.61,
+     "shear_j": 1.61
+    },
+    "bay tie +1-1.2": {
+     "N": 35.8,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "bay tie -1+1.1": {
+     "N": 112.2,
+     "shear_i": 2.1,
+     "shear_j": 2.1
+    },
+    "bay tie -1+1.2": {
+     "N": 55.6,
+     "shear_i": 0.54,
+     "shear_j": 0.54
+    },
+    "bay tie -1-1.1": {
+     "N": 25.2,
+     "shear_i": 0.48,
+     "shear_j": 0.48
+    },
+    "bay tie -1-1.2": {
+     "N": -104.4,
+     "shear_i": 0.33,
+     "shear_j": 0.33
+    },
+    "head rod +1": {
+     "N": 85.1,
+     "shear_i": 1.22,
+     "shear_j": 1.22
+    },
+    "head rod -1": {
+     "N": 66.5,
+     "shear_i": 0.94,
+     "shear_j": 0.94
+    },
+    "camera rod 13": {
+     "N": 10.9,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "camera rod 14": {
+     "N": 4.2,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "camera rod 5": {
+     "N": -1.8,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "core link 26": {
+     "N": 45.0,
+     "shear_i": 3.39,
+     "shear_j": 3.39
+    },
+    "core link 27": {
+     "N": 162.2,
+     "shear_i": 66.62,
+     "shear_j": 66.62
+    },
+    "core link 28": {
+     "N": 116.4,
+     "shear_i": 49.29,
+     "shear_j": 49.29
+    },
+    "core link 29": {
+     "N": 198.6,
+     "shear_i": 246.7,
+     "shear_j": 246.7
+    },
+    "core link 30": {
+     "N": 111.4,
+     "shear_i": 120.68,
+     "shear_j": 120.68
+    },
+    "core link 31": {
+     "N": 56.1,
+     "shear_i": 128.87,
+     "shear_j": 128.87
+    },
+    "core link 32": {
+     "N": -6.4,
+     "shear_i": 18.86,
+     "shear_j": 18.86
+    },
+    "core link 33": {
+     "N": -67.1,
+     "shear_i": 160.46,
+     "shear_j": 160.46
+    },
+    "core link 34": {
+     "N": -11.5,
+     "shear_i": 33.96,
+     "shear_j": 33.96
+    },
+    "core link 35": {
+     "N": 31.9,
+     "shear_i": 107.54,
+     "shear_j": 107.54
+    },
+    "core link 36": {
+     "N": -30.5,
+     "shear_i": 46.92,
+     "shear_j": 46.92
+    },
+    "core link 37": {
+     "N": 6.9,
+     "shear_i": 24.57,
+     "shear_j": 24.57
+    },
+    "core link 38": {
+     "N": 57.3,
+     "shear_i": 86.52,
+     "shear_j": 86.52
+    },
+    "arm 1 root": {
+     "N": 207.7,
+     "shear_i": 118.28,
+     "shear_j": 118.28
+    },
+    "arm 1 inboard": {
+     "N": 233.2,
+     "shear_i": 53.81,
+     "shear_j": 53.81
+    },
+    "arm 1 outboard": {
+     "N": -5.4,
+     "shear_i": 30.77,
+     "shear_j": 30.77
+    },
+    "arm 2 root": {
+     "N": 84.4,
+     "shear_i": 122.7,
+     "shear_j": 122.7
+    },
+    "arm 2 inboard": {
+     "N": -11.5,
+     "shear_i": 151.75,
+     "shear_j": 151.75
+    },
+    "arm 2 outboard": {
+     "N": -30.0,
+     "shear_i": 8.66,
+     "shear_j": 8.66
+    },
+    "arm 3 root": {
+     "N": 145.6,
+     "shear_i": 113.84,
+     "shear_j": 113.84
+    },
+    "arm 3 inboard": {
+     "N": 179.1,
+     "shear_i": 35.51,
+     "shear_j": 35.51
+    },
+    "arm 3 outboard": {
+     "N": -14.1,
+     "shear_i": 27.89,
+     "shear_j": 27.89
+    },
+    "arm 4 root": {
+     "N": 176.3,
+     "shear_i": 105.98,
+     "shear_j": 105.98
+    },
+    "arm 4 inboard": {
+     "N": 193.9,
+     "shear_i": 36.88,
+     "shear_j": 36.88
+    },
+    "arm 4 outboard": {
+     "N": -9.8,
+     "shear_i": 29.66,
+     "shear_j": 29.66
+    },
+    "head link 17": {
+     "N": -6.0,
+     "shear_i": 104.69,
+     "shear_j": 104.69
+    },
+    "head link +1": {
+     "N": 44.5,
+     "shear_i": 72.14,
+     "shear_j": 72.14
+    },
+    "head link -1": {
+     "N": 34.6,
+     "shear_i": 57.12,
+     "shear_j": 57.12
+    }
+   }
+  },
+  {
+   "name": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
+   "d": [
+    -0.5774,
+    0.5774,
+    0.5774
+   ],
+   "n": [
+    -0.1496,
+    -0.0,
+    0.9887
+   ],
+   "g": 35.0,
+   "touch": [
+    13,
+    10,
+    9,
+    20
+   ],
+   "reactions": {
+    "13": -8.8,
+    "10": -450.8,
+    "9": -218.5,
+    "20": -3.7
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": 87.2,
+       "side": 1.0
+      },
+      "spoke 1.2": {
+       "N": -4.4,
+       "side": 0.4
+      },
+      "spoke 1.3": {
+       "N": -26.7,
+       "side": 0.5
+      }
+     },
+     "root": {
+      "N": -77.1,
+      "shear": 23.3,
+      "moment_Nmm": 3255.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": 84.6,
+       "side": 0.4
+      },
+      "spoke 2.2": {
+       "N": 52.0,
+       "side": 0.2
+      },
+      "spoke 2.3": {
+       "N": 32.9,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": 52.6,
+      "shear": 97.2,
+      "moment_Nmm": 7358.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": 55.2,
+       "side": 0.3
+      },
+      "spoke 3.2": {
+       "N": 56.7,
+       "side": 0.3
+      },
+      "spoke 3.3": {
+       "N": 114.3,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": 86.9,
+      "shear": 81.4,
+      "moment_Nmm": 5067.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": 23.3,
+       "side": 0.8
+      },
+      "spoke 4.2": {
+       "N": 48.2,
+       "side": 0.1
+      },
+      "spoke 4.3": {
+       "N": 15.1,
+       "side": 0.4
+      }
+     },
+     "root": {
+      "N": -68.7,
+      "shear": 25.0,
+      "moment_Nmm": 2832.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": 16.6,
+     "shear_i": 1.04,
+     "shear_j": 1.04
+    },
+    "tube 0-5": {
+     "N": 24.2,
+     "shear_i": 3.29,
+     "shear_j": 3.29
+    },
+    "tube 0-12": {
+     "N": -23.6,
+     "shear_i": 1.23,
+     "shear_j": 1.23
+    },
+    "tube 1-2": {
+     "N": -198.8,
+     "shear_i": 6.16,
+     "shear_j": 6.16
+    },
+    "tube 1-12": {
+     "N": -218.1,
+     "shear_i": 1.65,
+     "shear_j": 1.65
+    },
+    "tube 1-19": {
+     "N": 61.9,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "tube 2-3": {
+     "N": -197.5,
+     "shear_i": 6.32,
+     "shear_j": 6.32
+    },
+    "tube 2-18": {
+     "N": -257.1,
+     "shear_i": 1.54,
+     "shear_j": 1.54
+    },
+    "tube 2-19": {
+     "N": -178.4,
+     "shear_i": 1.58,
+     "shear_j": 1.58
+    },
+    "tube 3-4": {
+     "N": 9.9,
+     "shear_i": 1.1,
+     "shear_j": 1.1
+    },
+    "tube 3-11": {
+     "N": -211.5,
+     "shear_i": 1.95,
+     "shear_j": 1.95
+    },
+    "tube 3-18": {
+     "N": 102.8,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "tube 4-5": {
+     "N": 34.4,
+     "shear_i": 3.42,
+     "shear_j": 3.42
+    },
+    "tube 4-11": {
+     "N": -44.3,
+     "shear_i": 1.51,
+     "shear_j": 1.51
+    },
+    "tube 5-11": {
+     "N": -56.3,
+     "shear_i": 0.29,
+     "shear_j": 0.29
+    },
+    "tube 5-12": {
+     "N": -31.9,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "tube 5-13": {
+     "N": 11.3,
+     "shear_i": 0.73,
+     "shear_j": 0.73
+    },
+    "tube 5-14": {
+     "N": -1.6,
+     "shear_i": 0.76,
+     "shear_j": 0.76
+    },
+    "tube 6-7": {
+     "N": 145.3,
+     "shear_i": 0.82,
+     "shear_j": 0.82
+    },
+    "tube 6-10": {
+     "N": -484.6,
+     "shear_i": 0.55,
+     "shear_j": 0.55
+    },
+    "tube 6-11": {
+     "N": 281.0,
+     "shear_i": 0.56,
+     "shear_j": 0.56
+    },
+    "tube 6-15": {
+     "N": -91.1,
+     "shear_i": 0.44,
+     "shear_j": 0.44
+    },
+    "tube 6-18": {
+     "N": -230.9,
+     "shear_i": 0.38,
+     "shear_j": 0.38
+    },
+    "tube 7-8": {
+     "N": 29.2,
+     "shear_i": 0.71,
+     "shear_j": 0.71
+    },
+    "tube 7-9": {
+     "N": 108.2,
+     "shear_i": 0.45,
+     "shear_j": 0.45
+    },
+    "tube 7-10": {
+     "N": -169.5,
+     "shear_i": 0.67,
+     "shear_j": 0.67
+    },
+    "tube 7-15": {
+     "N": 74.5,
+     "shear_i": 1.35,
+     "shear_j": 1.35
+    },
+    "tube 7-16": {
+     "N": -41.6,
+     "shear_i": 1.7,
+     "shear_j": 1.7
+    },
+    "tube 7-20": {
+     "N": 38.7,
+     "shear_i": 0.62,
+     "shear_j": 0.62
+    },
+    "tube 8-9": {
+     "N": -169.6,
+     "shear_i": 0.23,
+     "shear_j": 0.23
+    },
+    "tube 8-12": {
+     "N": 122.0,
+     "shear_i": 0.29,
+     "shear_j": 0.29
+    },
+    "tube 8-16": {
+     "N": 5.3,
+     "shear_i": 0.44,
+     "shear_j": 0.44
+    },
+    "tube 8-19": {
+     "N": -89.2,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "tube 9-12": {
+     "N": -191.1,
+     "shear_i": 2.29,
+     "shear_j": 2.29
+    },
+    "tube 9-14": {
+     "N": -47.2,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 9-20": {
+     "N": -63.5,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 10-11": {
+     "N": -342.8,
+     "shear_i": 4.88,
+     "shear_j": 4.88
+    },
+    "tube 10-13": {
+     "N": -301.0,
+     "shear_i": 0.43,
+     "shear_j": 0.43
+    },
+    "tube 10-20": {
+     "N": -34.6,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "tube 11-13": {
+     "N": 477.7,
+     "shear_i": 0.24,
+     "shear_j": 0.24
+    },
+    "tube 11-18": {
+     "N": 261.4,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "tube 12-14": {
+     "N": 134.3,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 12-19": {
+     "N": 103.9,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 13-14": {
+     "N": 74.1,
+     "shear_i": 0.1,
+     "shear_j": 0.1
+    },
+    "tube 13-20": {
+     "N": -21.9,
+     "shear_i": 0.53,
+     "shear_j": 0.53
+    },
+    "tube 14-20": {
+     "N": 22.8,
+     "shear_i": 0.4,
+     "shear_j": 0.4
+    },
+    "tube 15-16": {
+     "N": 53.1,
+     "shear_i": 0.25,
+     "shear_j": 0.25
+    },
+    "tube 15-17": {
+     "N": -79.0,
+     "shear_i": 2.15,
+     "shear_j": 2.15
+    },
+    "tube 15-18": {
+     "N": 30.6,
+     "shear_i": 1.24,
+     "shear_j": 1.24
+    },
+    "tube 16-17": {
+     "N": 41.8,
+     "shear_i": 2.57,
+     "shear_j": 2.57
+    },
+    "tube 16-19": {
+     "N": -18.4,
+     "shear_i": 0.64,
+     "shear_j": 0.64
+    },
+    "tube 17-18": {
+     "N": 160.2,
+     "shear_i": 2.35,
+     "shear_j": 2.35
+    },
+    "tube 17-19": {
+     "N": 96.1,
+     "shear_i": 2.85,
+     "shear_j": 2.85
+    },
+    "tube 18-19": {
+     "N": -0.6,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "spoke 1.1": {
+     "N": 87.2,
+     "shear_i": 1.04,
+     "shear_j": 1.04
+    },
+    "spoke 1.2": {
+     "N": -4.4,
+     "shear_i": 0.44,
+     "shear_j": 0.44
+    },
+    "spoke 1.3": {
+     "N": -26.7,
+     "shear_i": 0.46,
+     "shear_j": 0.46
+    },
+    "spoke 2.1": {
+     "N": 84.6,
+     "shear_i": 0.37,
+     "shear_j": 0.37
+    },
+    "spoke 2.2": {
+     "N": 52.0,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "spoke 2.3": {
+     "N": 32.9,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "spoke 3.1": {
+     "N": 55.2,
+     "shear_i": 0.33,
+     "shear_j": 0.33
+    },
+    "spoke 3.2": {
+     "N": 56.7,
+     "shear_i": 0.26,
+     "shear_j": 0.26
+    },
+    "spoke 3.3": {
+     "N": 114.3,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "spoke 4.1": {
+     "N": 23.3,
+     "shear_i": 0.77,
+     "shear_j": 0.77
+    },
+    "spoke 4.2": {
+     "N": 48.2,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "spoke 4.3": {
+     "N": 15.1,
+     "shear_i": 0.44,
+     "shear_j": 0.44
+    },
+    "core tie front.1": {
+     "N": -10.3,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "core tie front.2": {
+     "N": -50.4,
+     "shear_i": 0.3,
+     "shear_j": 0.3
+    },
+    "core tie rear.1": {
+     "N": -306.5,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "core tie rear.2": {
+     "N": -87.8,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "core tie left.1": {
+     "N": -109.7,
+     "shear_i": 0.15,
+     "shear_j": 0.15
+    },
+    "core tie left.2": {
+     "N": -129.9,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "core tie right.1": {
+     "N": -3.7,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "core tie right.2": {
+     "N": -1.6,
+     "shear_i": 0.08,
+     "shear_j": 0.08
+    },
+    "bay tie +1+1.1": {
+     "N": 28.3,
+     "shear_i": 1.35,
+     "shear_j": 1.35
+    },
+    "bay tie +1+1.2": {
+     "N": 3.0,
+     "shear_i": 0.34,
+     "shear_j": 0.34
+    },
+    "bay tie +1-1.1": {
+     "N": -8.3,
+     "shear_i": 1.01,
+     "shear_j": 1.01
+    },
+    "bay tie +1-1.2": {
+     "N": -8.1,
+     "shear_i": 0.26,
+     "shear_j": 0.26
+    },
+    "bay tie -1+1.1": {
+     "N": -85.4,
+     "shear_i": 1.51,
+     "shear_j": 1.51
+    },
+    "bay tie -1+1.2": {
+     "N": -1.4,
+     "shear_i": 0.27,
+     "shear_j": 0.27
+    },
+    "bay tie -1-1.1": {
+     "N": -53.0,
+     "shear_i": 1.09,
+     "shear_j": 1.09
+    },
+    "bay tie -1-1.2": {
+     "N": 5.7,
+     "shear_i": 0.22,
+     "shear_j": 0.22
+    },
+    "head rod +1": {
+     "N": -82.9,
+     "shear_i": 1.23,
+     "shear_j": 1.23
+    },
+    "head rod -1": {
+     "N": -63.9,
+     "shear_i": 0.89,
+     "shear_j": 0.89
+    },
+    "camera rod 13": {
+     "N": -11.1,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "camera rod 14": {
+     "N": -4.3,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "camera rod 5": {
+     "N": 1.6,
+     "shear_i": 0.21,
+     "shear_j": 0.21
+    },
+    "core link 26": {
+     "N": -58.4,
+     "shear_i": 6.58,
+     "shear_j": 6.58
+    },
+    "core link 27": {
+     "N": -282.6,
+     "shear_i": 116.22,
+     "shear_j": 116.22
+    },
+    "core link 28": {
+     "N": -80.4,
+     "shear_i": 34.32,
+     "shear_j": 34.32
+    },
+    "core link 29": {
+     "N": -97.0,
+     "shear_i": 180.57,
+     "shear_j": 180.57
+    },
+    "core link 30": {
+     "N": -4.2,
+     "shear_i": 3.59,
+     "shear_j": 3.59
+    },
+    "core link 31": {
+     "N": 10.5,
+     "shear_i": 26.25,
+     "shear_j": 26.25
+    },
+    "core link 32": {
+     "N": -1.2,
+     "shear_i": 3.01,
+     "shear_j": 3.01
+    },
+    "core link 33": {
+     "N": -3.8,
+     "shear_i": 7.81,
+     "shear_j": 7.81
+    },
+    "core link 34": {
+     "N": 2.1,
+     "shear_i": 7.91,
+     "shear_j": 7.91
+    },
+    "core link 35": {
+     "N": -24.1,
+     "shear_i": 81.93,
+     "shear_j": 81.93
+    },
+    "core link 36": {
+     "N": 1.1,
+     "shear_i": 1.36,
+     "shear_j": 1.36
+    },
+    "core link 37": {
+     "N": -14.9,
+     "shear_i": 51.15,
+     "shear_j": 51.15
+    },
+    "core link 38": {
+     "N": -3.1,
+     "shear_i": 4.02,
+     "shear_j": 4.02
+    },
+    "arm 1 root": {
+     "N": -71.0,
+     "shear_i": 36.82,
+     "shear_j": 36.82
+    },
+    "arm 1 inboard": {
+     "N": -77.1,
+     "shear_i": 23.3,
+     "shear_j": 23.3
+    },
+    "arm 1 outboard": {
+     "N": 5.4,
+     "shear_i": 30.77,
+     "shear_j": 30.77
+    },
+    "arm 2 root": {
+     "N": -13.6,
+     "shear_i": 109.2,
+     "shear_j": 109.2
+    },
+    "arm 2 inboard": {
+     "N": 52.6,
+     "shear_i": 97.16,
+     "shear_j": 97.16
+    },
+    "arm 2 outboard": {
+     "N": 30.0,
+     "shear_i": 8.66,
+     "shear_j": 8.66
+    },
+    "arm 3 root": {
+     "N": 9.8,
+     "shear_i": 113.81,
+     "shear_j": 113.81
+    },
+    "arm 3 inboard": {
+     "N": 86.9,
+     "shear_i": 81.44,
+     "shear_j": 81.44
+    },
+    "arm 3 outboard": {
+     "N": 14.1,
+     "shear_i": 27.89,
+     "shear_j": 27.89
+    },
+    "arm 4 root": {
+     "N": -73.4,
+     "shear_i": 32.43,
+     "shear_j": 32.43
+    },
+    "arm 4 inboard": {
+     "N": -68.7,
+     "shear_i": 24.95,
+     "shear_j": 24.95
+    },
+    "arm 4 outboard": {
+     "N": 9.8,
+     "shear_i": 29.66,
+     "shear_j": 29.66
+    },
+    "head link 17": {
+     "N": 4.4,
+     "shear_i": 104.25,
+     "shear_j": 104.25
+    },
+    "head link +1": {
+     "N": -43.4,
+     "shear_i": 70.23,
+     "shear_j": 70.23
+    },
+    "head link -1": {
+     "N": -33.3,
+     "shear_i": 54.9,
+     "shear_j": 54.9
+    }
+   }
+  },
+  {
+   "name": "landing 6 g on the base",
+   "d": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "n": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "g": 6.0,
+   "touch": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "reactions": {
+    "0": -5.9,
+    "1": -74.7,
+    "2": -16.8,
+    "3": -74.6,
+    "4": -5.8
+   },
+   "arms": {
+    "1": {
+     "spokes": {
+      "spoke 1.1": {
+       "N": -12.9,
+       "side": 0.0
+      },
+      "spoke 1.2": {
+       "N": -7.2,
+       "side": 0.0
+      },
+      "spoke 1.3": {
+       "N": 27.3,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": 39.2,
+      "shear": 1.0,
+      "moment_Nmm": 61.0
+     }
+    },
+    "2": {
+     "spokes": {
+      "spoke 2.1": {
+       "N": -8.9,
+       "side": 0.0
+      },
+      "spoke 2.2": {
+       "N": -8.7,
+       "side": 0.0
+      },
+      "spoke 2.3": {
+       "N": 10.0,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": 10.6,
+      "shear": 6.6,
+      "moment_Nmm": 374.0
+     }
+    },
+    "3": {
+     "spokes": {
+      "spoke 3.1": {
+       "N": -8.9,
+       "side": 0.0
+      },
+      "spoke 3.2": {
+       "N": -8.8,
+       "side": 0.0
+      },
+      "spoke 3.3": {
+       "N": 9.9,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": 10.5,
+      "shear": 6.6,
+      "moment_Nmm": 377.0
+     }
+    },
+    "4": {
+     "spokes": {
+      "spoke 4.1": {
+       "N": -12.9,
+       "side": 0.0
+      },
+      "spoke 4.2": {
+       "N": -7.2,
+       "side": 0.0
+      },
+      "spoke 4.3": {
+       "N": 27.3,
+       "side": 0.0
+      }
+     },
+     "root": {
+      "N": 39.2,
+      "shear": 1.0,
+      "moment_Nmm": 62.0
+     }
+    }
+   },
+   "members": {
+    "tube 0-1": {
+     "N": 0.6,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "tube 0-5": {
+     "N": -0.2,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 0-12": {
+     "N": 2.2,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 1-2": {
+     "N": -6.0,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "tube 1-12": {
+     "N": -31.2,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "tube 1-19": {
+     "N": -41.6,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 2-3": {
+     "N": -6.0,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "tube 2-18": {
+     "N": -4.5,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "tube 2-19": {
+     "N": -4.5,
+     "shear_i": 0.11,
+     "shear_j": 0.11
+    },
+    "tube 3-4": {
+     "N": 0.5,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "tube 3-11": {
+     "N": -31.1,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "tube 3-18": {
+     "N": -41.6,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 4-5": {
+     "N": -0.2,
+     "shear_i": 0.17,
+     "shear_j": 0.17
+    },
+    "tube 4-11": {
+     "N": 2.2,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 5-11": {
+     "N": 2.2,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "tube 5-12": {
+     "N": 2.2,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "tube 5-13": {
+     "N": 2.4,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "tube 5-14": {
+     "N": 2.3,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "tube 6-7": {
+     "N": -6.4,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "tube 6-10": {
+     "N": 13.1,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 6-11": {
+     "N": -1.9,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 6-15": {
+     "N": 13.0,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 6-18": {
+     "N": 0.8,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 7-8": {
+     "N": -6.4,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "tube 7-9": {
+     "N": -5.7,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "tube 7-10": {
+     "N": -5.7,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "tube 7-15": {
+     "N": -9.4,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 7-16": {
+     "N": -9.4,
+     "shear_i": 0.07,
+     "shear_j": 0.07
+    },
+    "tube 7-20": {
+     "N": -1.3,
+     "shear_i": 0.18,
+     "shear_j": 0.18
+    },
+    "tube 8-9": {
+     "N": 13.1,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 8-12": {
+     "N": -1.9,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 8-16": {
+     "N": 13.0,
+     "shear_i": 0.03,
+     "shear_j": 0.03
+    },
+    "tube 8-19": {
+     "N": 0.8,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 9-12": {
+     "N": -4.2,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "tube 9-14": {
+     "N": 13.7,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "tube 9-20": {
+     "N": -3.7,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "tube 10-11": {
+     "N": -4.2,
+     "shear_i": 0.2,
+     "shear_j": 0.2
+    },
+    "tube 10-13": {
+     "N": 13.7,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "tube 10-20": {
+     "N": -3.7,
+     "shear_i": 0.16,
+     "shear_j": 0.16
+    },
+    "tube 11-13": {
+     "N": -1.7,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 11-18": {
+     "N": 14.4,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "tube 12-14": {
+     "N": -1.7,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "tube 12-19": {
+     "N": 14.4,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "tube 13-14": {
+     "N": 9.9,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "tube 13-20": {
+     "N": -2.9,
+     "shear_i": 0.46,
+     "shear_j": 0.46
+    },
+    "tube 14-20": {
+     "N": -3.0,
+     "shear_i": 0.46,
+     "shear_j": 0.46
+    },
+    "tube 15-16": {
+     "N": -18.6,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "tube 15-17": {
+     "N": 18.4,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 15-18": {
+     "N": -6.7,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 16-17": {
+     "N": 18.4,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "tube 16-19": {
+     "N": -6.7,
+     "shear_i": 0.13,
+     "shear_j": 0.13
+    },
+    "tube 17-18": {
+     "N": -18.2,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "tube 17-19": {
+     "N": -18.2,
+     "shear_i": 0.14,
+     "shear_j": 0.14
+    },
+    "tube 18-19": {
+     "N": 27.3,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "spoke 1.1": {
+     "N": -12.9,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "spoke 1.2": {
+     "N": -7.2,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "spoke 1.3": {
+     "N": 27.3,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "spoke 2.1": {
+     "N": -8.9,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "spoke 2.2": {
+     "N": -8.7,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "spoke 2.3": {
+     "N": 10.0,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "spoke 3.1": {
+     "N": -8.9,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "spoke 3.2": {
+     "N": -8.8,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "spoke 3.3": {
+     "N": 9.9,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "spoke 4.1": {
+     "N": -12.9,
+     "shear_i": 0.04,
+     "shear_j": 0.04
+    },
+    "spoke 4.2": {
+     "N": -7.2,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "spoke 4.3": {
+     "N": 27.3,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "core tie front.1": {
+     "N": -2.4,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "core tie front.2": {
+     "N": -6.8,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "core tie rear.1": {
+     "N": -0.2,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "core tie rear.2": {
+     "N": -0.2,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "core tie left.1": {
+     "N": 9.5,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "core tie left.2": {
+     "N": -9.3,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "core tie right.1": {
+     "N": 9.5,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "core tie right.2": {
+     "N": -9.3,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "bay tie +1+1.1": {
+     "N": -50.2,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "bay tie +1+1.2": {
+     "N": 2.9,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "bay tie +1-1.1": {
+     "N": -50.2,
+     "shear_i": 0.09,
+     "shear_j": 0.09
+    },
+    "bay tie +1-1.2": {
+     "N": 2.9,
+     "shear_i": 0.01,
+     "shear_j": 0.01
+    },
+    "bay tie -1+1.1": {
+     "N": 1.4,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "bay tie -1+1.2": {
+     "N": -18.1,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "bay tie -1-1.1": {
+     "N": 1.4,
+     "shear_i": 0.06,
+     "shear_j": 0.06
+    },
+    "bay tie -1-1.2": {
+     "N": -18.0,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "head rod +1": {
+     "N": 16.4,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "head rod -1": {
+     "N": 16.4,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "camera rod 13": {
+     "N": -0.0,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "camera rod 14": {
+     "N": -0.0,
+     "shear_i": 0.02,
+     "shear_j": 0.02
+    },
+    "camera rod 5": {
+     "N": -1.8,
+     "shear_i": 0.0,
+     "shear_j": 0.0
+    },
+    "core link 26": {
+     "N": -8.7,
+     "shear_i": 0.05,
+     "shear_j": 0.05
+    },
+    "core link 27": {
+     "N": -0.3,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "core link 28": {
+     "N": -0.2,
+     "shear_i": 0.19,
+     "shear_j": 0.19
+    },
+    "core link 29": {
+     "N": 6.6,
+     "shear_i": 6.93,
+     "shear_j": 6.93
+    },
+    "core link 30": {
+     "N": 6.7,
+     "shear_i": 6.9,
+     "shear_j": 6.9
+    },
+    "core link 31": {
+     "N": -19.5,
+     "shear_i": 46.18,
+     "shear_j": 46.18
+    },
+    "core link 32": {
+     "N": -1.0,
+     "shear_i": 2.81,
+     "shear_j": 2.81
+    },
+    "core link 33": {
+     "N": -19.5,
+     "shear_i": 46.25,
+     "shear_j": 46.25
+    },
+    "core link 34": {
+     "N": -1.0,
+     "shear_i": 2.78,
+     "shear_j": 2.78
+    },
+    "core link 35": {
+     "N": 0.4,
+     "shear_i": 1.35,
+     "shear_j": 1.35
+    },
+    "core link 36": {
+     "N": 9.8,
+     "shear_i": 15.09,
+     "shear_j": 15.09
+    },
+    "core link 37": {
+     "N": 0.4,
+     "shear_i": 1.35,
+     "shear_j": 1.35
+    },
+    "core link 38": {
+     "N": 9.9,
+     "shear_i": 15.05,
+     "shear_j": 15.05
+    },
+    "arm 1 root": {
+     "N": 31.2,
+     "shear_i": 24.09,
+     "shear_j": 24.09
+    },
+    "arm 1 inboard": {
+     "N": 39.2,
+     "shear_i": 0.96,
+     "shear_j": 0.96
+    },
+    "arm 1 outboard": {
+     "N": -4.7,
+     "shear_i": 2.54,
+     "shear_j": 2.54
+    },
+    "arm 2 root": {
+     "N": 11.3,
+     "shear_i": 3.8,
+     "shear_j": 3.8
+    },
+    "arm 2 inboard": {
+     "N": 10.6,
+     "shear_i": 6.55,
+     "shear_j": 6.55
+    },
+    "arm 2 outboard": {
+     "N": -4.2,
+     "shear_i": 3.34,
+     "shear_j": 3.34
+    },
+    "arm 3 root": {
+     "N": 11.3,
+     "shear_i": 3.78,
+     "shear_j": 3.78
+    },
+    "arm 3 inboard": {
+     "N": 10.5,
+     "shear_i": 6.61,
+     "shear_j": 6.61
+    },
+    "arm 3 outboard": {
+     "N": -4.2,
+     "shear_i": 3.34,
+     "shear_j": 3.34
+    },
+    "arm 4 root": {
+     "N": 31.2,
+     "shear_i": 24.12,
+     "shear_j": 24.12
+    },
+    "arm 4 inboard": {
+     "N": 39.2,
+     "shear_i": 0.96,
+     "shear_j": 0.96
+    },
+    "arm 4 outboard": {
+     "N": -4.7,
+     "shear_i": 2.54,
+     "shear_j": 2.54
+    },
+    "head link 17": {
+     "N": -16.8,
+     "shear_i": 20.51,
+     "shear_j": 20.51
+    },
+    "head link +1": {
+     "N": 8.6,
+     "shear_i": 14.04,
+     "shear_j": 14.04
+    },
+    "head link -1": {
+     "N": 8.6,
+     "shear_i": 14.04,
+     "shear_j": 14.04
+    }
+   }
+  }
+ ],
+ "buckling": {
+  "tube 0-1": {
+   "L": 154.7,
+   "Pcr": 2526.3,
+   "compression": 112.9,
+   "ratio": 0.04
+  },
+  "tube 0-5": {
+   "L": 187.0,
+   "Pcr": 1728.5,
+   "compression": 179.6,
+   "ratio": 0.1
+  },
+  "tube 0-12": {
+   "L": 226.1,
+   "Pcr": 1183.2,
+   "compression": 92.8,
+   "ratio": 0.08
+  },
+  "tube 1-2": {
+   "L": 156.7,
+   "Pcr": 2461.0,
+   "compression": 461.0,
+   "ratio": 0.19
+  },
+  "tube 1-12": {
+   "L": 257.2,
+   "Pcr": 914.1,
+   "compression": 321.7,
+   "ratio": 0.35
+  },
+  "tube 1-19": {
+   "L": 303.2,
+   "Pcr": 657.8,
+   "compression": 242.6,
+   "ratio": 0.37
+  },
+  "tube 2-3": {
+   "L": 156.7,
+   "Pcr": 2461.0,
+   "compression": 460.3,
+   "ratio": 0.19
+  },
+  "tube 2-18": {
+   "L": 285.0,
+   "Pcr": 744.3,
+   "compression": 257.1,
+   "ratio": 0.35
+  },
+  "tube 2-19": {
+   "L": 285.0,
+   "Pcr": 744.3,
+   "compression": 242.2,
+   "ratio": 0.33
+  },
+  "tube 3-4": {
+   "L": 154.7,
+   "Pcr": 2526.3,
+   "compression": 113.1,
+   "ratio": 0.04
+  },
+  "tube 3-11": {
+   "L": 257.2,
+   "Pcr": 914.1,
+   "compression": 321.1,
+   "ratio": 0.35
+  },
+  "tube 3-18": {
+   "L": 303.2,
+   "Pcr": 657.8,
+   "compression": 242.8,
+   "ratio": 0.37
+  },
+  "tube 4-5": {
+   "L": 187.0,
+   "Pcr": 1728.5,
+   "compression": 179.4,
+   "ratio": 0.1
+  },
+  "tube 4-11": {
+   "L": 226.1,
+   "Pcr": 1183.2,
+   "compression": 92.6,
+   "ratio": 0.08
+  },
+  "tube 5-11": {
+   "L": 381.2,
+   "Pcr": 416.0,
+   "compression": 148.9,
+   "ratio": 0.36
+  },
+  "tube 5-12": {
+   "L": 381.2,
+   "Pcr": 416.0,
+   "compression": 148.8,
+   "ratio": 0.36
+  },
+  "tube 5-13": {
+   "L": 235.4,
+   "Pcr": 1091.1,
+   "compression": 73.1,
+   "ratio": 0.07
+  },
+  "tube 5-14": {
+   "L": 235.4,
+   "Pcr": 1091.1,
+   "compression": 73.4,
+   "ratio": 0.07
+  },
+  "tube 6-7": {
+   "L": 325.3,
+   "Pcr": 571.4,
+   "compression": 121.3,
+   "ratio": 0.21
+  },
+  "tube 6-10": {
+   "L": 224.5,
+   "Pcr": 1199.9,
+   "compression": 484.6,
+   "ratio": 0.4
+  },
+  "tube 6-11": {
+   "L": 260.3,
+   "Pcr": 892.6,
+   "compression": 85.7,
+   "ratio": 0.1
+  },
+  "tube 6-15": {
+   "L": 210.0,
+   "Pcr": 1370.8,
+   "compression": 120.8,
+   "ratio": 0.09
+  },
+  "tube 6-18": {
+   "L": 243.8,
+   "Pcr": 1017.4,
+   "compression": 230.9,
+   "ratio": 0.23
+  },
+  "tube 7-8": {
+   "L": 325.3,
+   "Pcr": 571.4,
+   "compression": 121.3,
+   "ratio": 0.21
+  },
+  "tube 7-9": {
+   "L": 413.3,
+   "Pcr": 354.0,
+   "compression": 154.1,
+   "ratio": 0.44
+  },
+  "tube 7-10": {
+   "L": 413.3,
+   "Pcr": 354.0,
+   "compression": 169.5,
+   "ratio": 0.48
+  },
+  "tube 7-15": {
+   "L": 272.0,
+   "Pcr": 817.0,
+   "compression": 111.7,
+   "ratio": 0.14
+  },
+  "tube 7-16": {
+   "L": 272.0,
+   "Pcr": 817.0,
+   "compression": 111.5,
+   "ratio": 0.14
+  },
+  "tube 7-20": {
+   "L": 370.7,
+   "Pcr": 440.0,
+   "compression": 94.3,
+   "ratio": 0.21
+  },
+  "tube 8-9": {
+   "L": 224.5,
+   "Pcr": 1199.9,
+   "compression": 239.7,
+   "ratio": 0.2
+  },
+  "tube 8-12": {
+   "L": 260.3,
+   "Pcr": 892.6,
+   "compression": 98.2,
+   "ratio": 0.11
+  },
+  "tube 8-16": {
+   "L": 210.0,
+   "Pcr": 1370.8,
+   "compression": 120.8,
+   "ratio": 0.09
+  },
+  "tube 8-19": {
+   "L": 243.8,
+   "Pcr": 1017.4,
+   "compression": 132.7,
+   "ratio": 0.13
+  },
+  "tube 9-12": {
+   "L": 122.3,
+   "Pcr": 4040.5,
+   "compression": 249.6,
+   "ratio": 0.06
+  },
+  "tube 9-14": {
+   "L": 315.5,
+   "Pcr": 607.5,
+   "compression": 208.0,
+   "ratio": 0.34
+  },
+  "tube 9-20": {
+   "L": 348.4,
+   "Pcr": 498.1,
+   "compression": 63.5,
+   "ratio": 0.13
+  },
+  "tube 10-11": {
+   "L": 122.3,
+   "Pcr": 4040.5,
+   "compression": 342.8,
+   "ratio": 0.08
+  },
+  "tube 10-13": {
+   "L": 315.5,
+   "Pcr": 607.5,
+   "compression": 301.0,
+   "ratio": 0.5
+  },
+  "tube 10-20": {
+   "L": 348.4,
+   "Pcr": 498.1,
+   "compression": 63.2,
+   "ratio": 0.13
+  },
+  "tube 11-13": {
+   "L": 314.6,
+   "Pcr": 611.0,
+   "compression": 246.3,
+   "ratio": 0.4
+  },
+  "tube 11-18": {
+   "L": 417.3,
+   "Pcr": 347.2,
+   "compression": 252.0,
+   "ratio": 0.73
+  },
+  "tube 12-14": {
+   "L": 314.6,
+   "Pcr": 611.0,
+   "compression": 245.7,
+   "ratio": 0.4
+  },
+  "tube 12-19": {
+   "L": 417.3,
+   "Pcr": 347.2,
+   "compression": 252.1,
+   "ratio": 0.73
+  },
+  "tube 13-14": {
+   "L": 301.6,
+   "Pcr": 664.7,
+   "compression": 142.2,
+   "ratio": 0.21
+  },
+  "tube 13-20": {
+   "L": 207.3,
+   "Pcr": 1406.8,
+   "compression": 118.1,
+   "ratio": 0.08
+  },
+  "tube 14-20": {
+   "L": 207.3,
+   "Pcr": 1406.8,
+   "compression": 118.0,
+   "ratio": 0.08
+  },
+  "tube 15-16": {
+   "L": 445.9,
+   "Pcr": 304.1,
+   "compression": 108.4,
+   "ratio": 0.36
+  },
+  "tube 15-17": {
+   "L": 237.3,
+   "Pcr": 1074.0,
+   "compression": 174.7,
+   "ratio": 0.16
+  },
+  "tube 15-18": {
+   "L": 159.1,
+   "Pcr": 2389.9,
+   "compression": 74.9,
+   "ratio": 0.03
+  },
+  "tube 16-17": {
+   "L": 237.3,
+   "Pcr": 1074.0,
+   "compression": 174.7,
+   "ratio": 0.16
+  },
+  "tube 16-19": {
+   "L": 159.1,
+   "Pcr": 2389.9,
+   "compression": 75.1,
+   "ratio": 0.03
+  },
+  "tube 17-18": {
+   "L": 233.0,
+   "Pcr": 1113.6,
+   "compression": 135.2,
+   "ratio": 0.12
+  },
+  "tube 17-19": {
+   "L": 233.0,
+   "Pcr": 1113.6,
+   "compression": 135.3,
+   "ratio": 0.12
+  },
+  "tube 18-19": {
+   "L": 437.9,
+   "Pcr": 315.3,
+   "compression": 187.6,
+   "ratio": 0.6
+  }
+ }
+}

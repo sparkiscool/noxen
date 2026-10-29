@@ -13,17 +13,17 @@ The joint, in the arm frame (s along the axis a, v across it, z up; parts/overse
     the root envelope), nut in a hex pocket open at the tip piece's joint face. They clamp the two contact pads together;
   * contact faces: the ends of the 2 bolt bosses (O11, 3.0 floor + 2.6 nut pocket / head seat, the plate boss rule) and of the 2 pin
     collars at the joint plane, 4 spots on each piece (a full pad is a drawn block to the audit).
-Loads: the TIP piece carries every motor case of the one-piece arm (flight, landing, 14 crash, stiffness, spokes) on the joint as its
-support (pins + contact face; "+spokes" for the main cases), plus the joint bolts' pull / pin shear from the joint reactions (least norm
-over the 4 joint points). The ROOT piece carries those same cases as the joint reactions (force and moment of the motor load about the
-joint, applied over the 4 joint points) on the plate lips, with no help from the spokes (they brace the tip piece; E, conservative), and
-the plate bolts' pull / shear from them as in the one-piece arm.
+Loads: the TIP piece carries every case of the one-piece arm (flight, landing, stiffness, the cage frame's crash set with the three
+spokes loaded together, tools/cage_loads.py) on the joint as its support (pins + contact face; "+spokes" for the flight cases), plus
+the joint bolts' pull / pin shear from the joint reactions (least norm over the 4 joint points). The ROOT piece carries those same
+cases as the joint reactions (force and moment of the motor and spoke loads about the joint, applied over the 4 joint points) on the
+plate lips, and the plate bolts' pull / shear from them as in the one-piece arm.
 """
 import numpy as np, manifold3d as mf
 from topo import Part
-from parts.overseer_arm_lib import (Arm, cyl, box, U, along, hull_xy, stadium, rigid_split, G, Z_BOT, Z_PAD, Z_THRUST, BOLT_TOP, BOLT_BOT,
+from parts.overseer_arm_lib import (Arm, cyl, box, U, along, hull_xy, stadium, rigid_split, frame_cases, mvec, G, Z_BOT, Z_PAD, Z_THRUST, BOLT_TOP, BOLT_BOT,
                                     HOLE_D, NUT_AF, NUT_T, FLOOR, BOSS_R, HEAD_D, HEAD_T, SWEEP_D, M_MOTOR, M_ESC, Z_MOTOR_CG, THRUST_N,
-                                    TORQUE_NM, NODE_R, SOCK_BORE_R, SOCK_DEPTH, SOCK_WALL, DIRS14, CAGE)
+                                    TORQUE_NM, NODE_R, SOCK_BORE_R, SOCK_DEPTH, SOCK_WALL, CAGE)
 
 JOINT_S = 130.0                                  # the joint plane, mm out along the arm axis from the root centre (C)
 PIN_R, PIN_BORE_R, PIN_HALF = 3.0, 3.1, 20.0     # 6.0 carbon pin, 6.2 bore, 20 into each piece
@@ -136,18 +136,6 @@ def motor_cases(arm):
         out.append((f"flight 4 g, thrust 21 N, motor torque {tag}0.5 N m", "flight", -M_MOTOR * G * a + thrust, sgn * TORQUE_NM * 1000.0, -a))
     a = np.array([0, 0, 6.0])
     out.append(("landing 6 g", "flight", -M_MOTOR * G * a, 0.0, -a))
-    for k, d in enumerate(DIRS14):
-        a = 35.0 * d
-        out.append((f"crash {k} (35 g) dir ({d[0]:+.2f} {d[1]:+.2f} {d[2]:+.2f}) at the motor", "crash", -M_MOTOR * G * a, 0.0, -a))
-    return out
-
-
-def spoke_cases(arm):
-    out = []
-    for sp in arm.spokes:
-        side = np.cross(sp["u"], [0, 0, 1.0]); side /= np.linalg.norm(side)
-        for tag, sg in (("pull", 1), ("push", -1)):
-            out.append((f"{sp['name']} {tag} {sp['axial']:.0f} N (node {sp['far']}) + side {sp['side']:.1f} N", sp, sg * sp["axial"] * sp["u"] + sp["side"] * side))
     return out
 
 
@@ -170,16 +158,17 @@ def build_piece(arm, h, log=print):
         mpts = np.array([[q[0], q[1], Z_PAD] for q in mb])
 
         def payload(F_m, M_z=0.0):
-            fm = rigid_split(mpts, F_m, np.cross(c_m - mpts.mean(0), F_m) + np.array([0, 0, M_z]), mpts.mean(0))
+            fm = rigid_split(mpts, F_m, np.cross(c_m - mpts.mean(0), F_m) + mvec(M_z), mpts.mean(0))
             return [(mreg[i], fm[i]) for i in range(4)]
         reactions = []
         for name, cls, F, Mz, acc in motor_cases(arm):
             p.load_multi(name, payload(F, Mz), cls=cls, support="joint+spokes", accel=acc)
             reactions.append((c_m, F, Mz))
         p.load_multi("STIFFNESS tip alone on the joint: motor 96 g, 4 g and 21 N thrust up", payload(F_stiff), cls="flight", support="joint", accel=stiff_a)
-        for name, sp, F in spoke_cases(arm):
-            p.load_multi(name, [(sp["lining"], F)], cls="crash", support="joint")
-            reactions.append((arm.node, F, 0.0))
+        for name, cls, a, sp in frame_cases(arm):                    # the cage frame's crash set: spokes + motor inertia, the joint holds
+            Fm = M_MOTOR * G * a; Fs = sum(sp.values())
+            p.load_multi(name, payload(Fm) + [(s_["lining"], sp[s_["name"]]) for s_ in arm.spokes], cls=cls, support="joint", accel=a)
+            reactions.append((c_m, Fm + Fs, np.cross(arm.node - c_m, Fs)))
     else:
         # ---- supports: the plate lips, as the one-piece arm
         lips = []
@@ -190,22 +179,23 @@ def build_piece(arm, h, log=print):
 
         def via_joint(P_, F, Mz=0.0):
             """the tip's load (F at P_, moment Mz) carried into the root piece over its 4 joint regions"""
-            f = rigid_split(jpts, F, np.cross(P_ - cJ, F) + np.array([0, 0, Mz]), cJ)
+            f = rigid_split(jpts, F, np.cross(P_ - cJ, F) + mvec(Mz), cJ)
             return [(jp[i][1], f[i]) for i in range(4)]
         reactions = []
         for name, cls, F, Mz, acc in motor_cases(arm):
             p.load_multi(name + " (via the joint)", via_joint(c_m, F, Mz), cls=cls, support="plates", accel=acc)
             reactions.append((c_m, F, Mz))
         p.load_multi("STIFFNESS arm alone: motor 96 g, 4 g and 21 N thrust up (via the joint)", via_joint(c_m, F_stiff), cls="flight", support="plates", accel=stiff_a)
-        for name, sp, F in spoke_cases(arm):
-            p.load_multi(name + " (via the joint)", via_joint(arm.node, F), cls="crash", support="plates")
-            reactions.append((arm.node, F, 0.0))
+        for name, cls, a, sp in frame_cases(arm):                    # the cage frame's crash set, arriving over the joint
+            Fm = M_MOTOR * G * a; Fs = sum(sp.values()); Ms = np.cross(arm.node - c_m, Fs)
+            p.load_multi(name + " (via the joint)", via_joint(c_m, Fm + Fs, Ms), cls=cls, support="plates", accel=a)
+            reactions.append((c_m, Fm + Fs, Ms))
         # ---- plate bolts: pull and shear from the reactions (the one-piece arm's rule)
         B = arm.bolts()
         bpts = np.array([[b["xy"][0], b["xy"][1], b["z"]] for b in B]); cB = bpts.mean(0)
         worst = [dict(pull=0.0, shear=np.zeros(3)) for _ in B]
         for P_, F, Mz in reactions:
-            f = rigid_split(bpts, F, np.cross(P_ - cB, F) + np.array([0, 0, Mz]), cB)
+            f = rigid_split(bpts, F, np.cross(P_ - cB, F) + mvec(Mz), cB)
             for i, b in enumerate(B):
                 tens = f[i][2] * (1.0 if b["nut"] == "bot" else -1.0)
                 worst[i]["pull"] = max(worst[i]["pull"], tens)
@@ -228,7 +218,7 @@ def build_piece(arm, h, log=print):
     sg = 1.0 if arm.piece == "tip" else -1.0
     worst_pull, worst_shear = [0.0, 0.0], [np.zeros(3), np.zeros(3)]
     for P_, F, Mz in reactions:
-        f = rigid_split(jpts, F, np.cross(P_ - cJ, F) + np.array([0, 0, Mz]), cJ)
+        f = rigid_split(jpts, F, np.cross(P_ - cJ, F) + mvec(Mz), cJ)
         for i in range(2):                                           # pins: the part across the axis
             sh = f[i] - (f[i] @ arm.A3) * arm.A3
             if np.linalg.norm(sh) > np.linalg.norm(worst_shear[i]):
