@@ -24,7 +24,7 @@ import numpy as np, trimesh
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = os.path.join(ROOT, "site")
-MAX_FACES = 40000
+MAX_FACES = 24000                        # the inline page must stay under the 16 MB artifact limit (29 Oct: 16.8 MB at 40k)
 
 
 def sha(path):
