@@ -152,7 +152,7 @@ def build_piece(arm, h, log=print):
     jp = arm.joint_points()
     jpts = np.array([q for q, _ in jp]); cJ = jpts.mean(0)
     c_m = np.array([arm.M[0], arm.M[1], Z_MOTOR_CG])
-    stiff_a = np.array([0, 0, 4.0]); F_stiff = np.array([0, 0, THRUST_N]) + M_MOTOR * G * stiff_a
+    stiff_a = np.array([0, 0, 2.0]); F_stiff = M_MOTOR * G * stiff_a        # HANDLING: motor at 2 g, no thrust, no spokes (29 Oct)
 
     if arm.piece == "tip":
         # ---- supports: the joint (pins + contact face), and + the 3 spoke sockets
@@ -171,7 +171,7 @@ def build_piece(arm, h, log=print):
         for name, cls, F, Mz, acc in motor_cases(arm):
             p.load_multi(name, payload(F, Mz), cls=cls, support="joint+spokes", accel=acc)
             reactions.append((c_m, F, Mz))
-        p.load_multi("STIFFNESS tip alone on the joint: motor 96 g, 4 g and 21 N thrust up", payload(F_stiff), cls="flight", support="joint", accel=stiff_a)
+        p.load_multi("HANDLING tip alone on the joint: motor 96 g at 2 g, no spokes", payload(F_stiff), cls="flight", support="joint", accel=stiff_a)
         for name, cls, a, sp in frame_cases(arm):                    # the cage frame's crash set: spokes + motor inertia, the joint holds
             Fm = M_MOTOR * G * a; Fs = sum(sp.values())
             p.load_multi(name, payload(Fm) + [(s_["lining"], sp[s_["name"]]) for s_ in arm.spokes], cls=cls, support="joint", accel=a)
@@ -192,7 +192,7 @@ def build_piece(arm, h, log=print):
         for name, cls, F, Mz, acc in motor_cases(arm):
             p.load_multi(name + " (via the joint)", via_joint(c_m, F, Mz), cls=cls, support="plates", accel=acc)
             reactions.append((c_m, F, Mz))
-        p.load_multi("STIFFNESS arm alone: motor 96 g, 4 g and 21 N thrust up (via the joint)", via_joint(c_m, F_stiff), cls="flight", support="plates", accel=stiff_a)
+        p.load_multi("HANDLING arm alone: motor 96 g at 2 g, no spokes (via the joint)", via_joint(c_m, F_stiff), cls="flight", support="plates", accel=stiff_a)
         for name, cls, a, sp in frame_cases(arm):                    # the cage frame's crash set, arriving over the joint
             Fm = M_MOTOR * G * a; Fs = sum(sp.values()); Ms = np.cross(arm.node - c_m, Fs)
             p.load_multi(name + " (via the joint)", via_joint(c_m, Fm + Fs, Ms), cls=cls, support="plates", accel=a)

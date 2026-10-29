@@ -5,8 +5,8 @@ Drawn (attachments only, nothing between them):
   * 4 plate bosses: per side a top-face block and a bottom-face block (u 57.5..72, |v| 3..22, 8 tall; nut pocket or relief 2.6 in
     the face) round the two bolts (top bolt u 63.17 v +-15, bottom bolt u 63.74 v +-10, O section M row), 2 locating pegs (u 57.66,
     v +-11); 29 Oct: was a stadium r 5.5, 5.6 thick, whose core at the gate's 2 mm erosion was slivers between the shank holes;
-  * the motor pad (4 lugs, level with the arm top z 45) with 4 exact M3 holes on the 45 deg lines, one pair at r 8 (16 across) and one
-    at r 9.5 (19 across; 29 Oct, was slots 8..9.5), shaft bore 8.6;
+  * the motor pad (4 lugs, level with the arm top z 45) with 4 bolt slots r 8..9.5 on the 45 deg lines (both the 16 and the 19 pair of
+    the X2216 land in them), shaft bore 8.6;
   * 3 socket collars for the 3 mm carbon spokes (bore 3.2, 10 deep, 3.0 floor, wall 2.0) aimed at their cage node;
 Cut through the whole envelope: bolt shanks, nut pockets, motor-bolt tool sweeps, the shaft bore, the own spokes beyond their
 collars, every other cage tube / node / link near the envelope, the prop disc, the pack / cartridge / receiver zone.
@@ -16,8 +16,8 @@ Supports: "plates" = the plate contact lips of the 4 stadiums (stiffness, bolt a
 "plates+spokes" = the same + the 3 spoke sockets, fully fixed (main cases). The engine has fixed supports only (no spring, no
 axis-only dofs along an oblique rod), so the three 3 mm rods that meet at the arm node are taken as a rigid pin there (EA/L of each
 rod is 100x the arm's own tip stiffness, printed in the log); the stiffness case, the spoke check cases and the bolt cases do not lean on it.
-Cases (each separate): flight 4 g with thrust and +-0.5 N m motor torque, landing 6 g (plates + spokes); STIFFNESS (arm alone, no
-spokes: thrust 21 N + 4 g of the 96 g motor, all up); the cage frame model's crash set (tools/cage_loads.py, 29 Oct: the drone
+Cases (each separate): flight 4 g with thrust and +-0.5 N m motor torque, landing 6 g (plates + spokes); HANDLING (arm alone, no
+spokes: the 96 g motor at 2 g, no thrust; 29 Oct, was 4 g + 21 N thrust: the arm never flies without its spokes); the cage frame model's crash set (tools/cage_loads.py, 29 Oct: the drone
 decelerating 35 g onto each cage face it can land on, and landing 6 g: the three spokes loaded together as the frame finds them
 with the arm at its own stiffness, the motor's and the arm's inertia with them, plates only; replaces the 14 crash directions at
 the motor and each spoke's pull / push alone at a rigid-core maximum, which put 1465 N through one socket); each bolt's pull and
@@ -176,9 +176,9 @@ class Arm:
         return out
 
     def motor_bolts(self):
-        """the 4 motor bolt points: at 45 / 225 deg to the arm axis r 8 (16 across), at 135 / 315 deg r 9.5 (19 across)"""
-        return [self.M + rk * (np.cos(np.radians(t)) * self.a + np.sin(np.radians(t)) * self.n)
-                for t, rk in ((45, MOTOR_SLOT[0]), (135, MOTOR_SLOT[1]), (225, MOTOR_SLOT[0]), (315, MOTOR_SLOT[1]))]
+        """4 slots at 45, 135, 225, 315 deg to the arm axis; returns centre points at r 8.75 (middle of the slot)"""
+        r = 0.5 * (MOTOR_SLOT[0] + MOTOR_SLOT[1])
+        return [self.M + r * (np.cos(np.radians(t)) * self.a + np.sin(np.radians(t)) * self.n) for t in (45, 135, 225, 315)]
 
     def esc_c(self):
         s = 0.5 * (24.0 + self.len - PAD_D / 2 - 2.0)            # between the root block end (s 24) and the pad
@@ -208,13 +208,14 @@ class Arm:
             e = np.cos(np.radians(t)) * self.a + np.sin(np.radians(t)) * self.n
             drawn.append(stadium(M + 4.0 * e, M + (PAD_D / 2 - LUG_R) * e, Z_PAD - PAD_T, Z_PAD, LUG_R))
         cuts.append(cyl(M[0], M[1], Z_BOT - 1.0, Z_PAD + 1.0, BORE_D / 2, 32))
-        for t, rk in ((45, MOTOR_SLOT[0]), (135, MOTOR_SLOT[1]), (225, MOTOR_SLOT[0]), (315, MOTOR_SLOT[1])):
-            # exact holes (29 Oct, Spark: the X2216 pattern is 16 x 19): one pair across at r 8, the other at r 9.5 (was a slot 8..9.5 at all four)
+        for t in (45, 135, 225, 315):
+            # slots r 8..9.5: both the 16 and the 19 pair of the X2216 land in them and the opposing slot ends centre the motor
+            # (Spark 29 Oct: the slots are fine as long as the motor mounts; exact 16 / 19 holes were drawn and dropped the same day)
             e = np.cos(np.radians(t)) * self.a + np.sin(np.radians(t)) * self.n
-            q = M + rk * e
-            cuts.append(cyl(q[0], q[1], Z_PAD - PAD_T - 0.5, Z_PAD + 1.0, SLOT_D / 2, 24))             # M3 shank through the pad
-            cuts.append(cyl(q[0], q[1], Z_PAD - PAD_T - 0.5, Z_PAD - PAD_T + HEAD_T, HEAD_D / 2, 24))  # head seat under it
-            cuts.append(cyl(q[0], q[1], Z_BOT - 1.0, Z_PAD - PAD_T + HEAD_T, SWEEP_D / 2, 24))         # driver sweep, whole envelope
+            p0, p1 = M + MOTOR_SLOT[0] * e, M + MOTOR_SLOT[1] * e
+            cuts.append(stadium(p0, p1, Z_PAD - PAD_T - 0.5, Z_PAD + 1.0, SLOT_D / 2))                  # shank slot through the pad
+            cuts.append(stadium(p0, p1, Z_PAD - PAD_T - 0.5, Z_PAD - PAD_T + HEAD_T, HEAD_D / 2))       # head seat under it
+            cuts.append(stadium(p0, p1, Z_BOT - 1.0, Z_PAD - PAD_T + HEAD_T, SWEEP_D / 2))              # driver sweep, whole envelope
         # (no ESC seat: the 4-in-1 ESC sits under the FC, none on the arms; dimensions.md System Overseer: arms, Spark 27 Oct)
         # --- spoke sockets (cage_node_lib rule: bore from NODE_R out, 10 deep, 3.0 floor, wall 2.0), aimed at their node
         for sp in self.spokes:
@@ -320,10 +321,12 @@ def build(arm, h, log=print):
         p.load_multi(name, payload(Fm, Fe) + [(s_["lining"], sp[s_["name"]]) for s_ in arm.spokes], cls=cls, support="plates", accel=a)
         Fs = sum(sp.values()); note(Fm + Fs, Fe, np.cross(arm.node - np.r_[arm.M, Z_MOTOR_CG], Fs))
 
-    # ---- STIFFNESS: the arm alone (no spokes), thrust 21 N + 4 g of motor and ESC, all up
-    a = np.array([0, 0, 4.0])
-    Fm, Fe = thrust + M_MOTOR * G * a, M_ESC * G * a
-    p.load_multi("STIFFNESS arm alone: motor 96 g + ESC 25 g, 4 g and 21 N thrust up", payload(Fm, Fe), cls="flight", support="plates", accel=a)
+    # ---- HANDLING: the arm alone (no spokes glued yet), the motor at 2 g, no thrust: the arm is the jig that holds the motor in place
+    # at the bench; in flight the spokes always carry it (29 Oct, Spark: super light arms that still bolt to the plates; the old case,
+    # 4 g + 21 N thrust with no spokes, sized the root at 87 g for a load the arm never sees alone)
+    a = np.array([0, 0, 2.0])
+    Fm, Fe = M_MOTOR * G * a, M_ESC * G * a
+    p.load_multi("HANDLING arm alone: motor 96 g at 2 g, no spokes", payload(Fm, Fe), cls="flight", support="plates", accel=a)
     F_stiff = float(Fm[2] + Fe[2])
 
     # ---- bolts: pull and shear at each boss from the joint reactions (least norm over the 4 bolts)
