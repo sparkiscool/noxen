@@ -89,7 +89,7 @@ def arm_env(deg):
 
 # ================================================================ nose node (v13): the two front core ties end in the deck
 NOSE_WALL = 4.0                                                            # v14 (29 Oct): 2.5 failed at 411 N pull-out (index 1.3 across layers)
-NOSE_ENV = (78.0, 105.0, -26.0, 26.0, 0.0, 26.0)                           # room for the collars and their bracing to the front feet (96, ±17)
+NOSE_ENV = (78.0, 104.0, -26.0, 26.0, 0.0, 26.0)                           # x 104: the whole envelope must stay under the 180 plate (v14 at 105 + -76 = 182, refused)                           # room for the collars and their bracing to the front feet (96, ±17)
 TIE_CASES = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage_loads.json")))["cases"]
 
 
@@ -151,7 +151,7 @@ def hub_deck_bodies():
     cuts = U(plates + bays + [cyl(x, y, -1, T + 2.5, INS[0] / 2) for x, y in feet] + [cyl(x, y, zp - 4.0, zp + 1, 1.1) for x, y in ph] + slots + wires + nose_cuts
              + [grown(f"arm {i}", 1.0) for i in (1, 2, 3, 4)]
              + [arm_env(a_) for a_ in (45, -45, 135, -135)])                                   # the arm session's root envelopes (u >= 58, |v| <= 21)
-    env = U([box(-76, 100, -42, 42, 0, T), nose_env])
+    env = U([box(-75, 100, -42, 42, 0, T), nose_env])                   # -75 (v14; was -76): 179 long with the nose
     # every nose bore is open and no floor is cut (the wire routes cross the deck): as cage_node_lib.verify_cuts
     for s_ in socks:
         for t in (s_["s0"] + 0.5, s_["s0"] + s_["depth"] - 0.5):

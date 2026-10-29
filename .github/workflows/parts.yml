@@ -52,11 +52,21 @@ jobs:
               [ -z "$pending" ] && break
               echo "another run is still finding its parts, waiting"; sleep 10
             done
-            busy=$(others \
-                   | while read id; do gh run view "$id" --json jobs --jq '.jobs[] | select(.status != "completed") | .name'; done \
-                   | sed -n 's/^run (\(.*\))$/\1/p' | sort -u)
-            for b in $busy; do list=$(echo " $list " | sed "s/ $b / /g"); done
-            [ -n "$busy" ] && echo "already running elsewhere, skipped: $busy"
+            # a part running elsewhere is skipped only when that run works on the same setup files (part.py, the libs, the
+            # systems data); on an older setup it stops itself (the run job's watchdog, below) and the new one runs here
+            # (Spark 29 Oct: an old design never keeps running once a new one supersedes it)
+            DESIGN_FILES="parts/*.py systems/*.json :!systems/runtimes.json"
+            for id in $(others); do
+              sha=$(gh run view "$id" --json headSha --jq .headSha)
+              for b in $(gh run view "$id" --json jobs --jq '.jobs[] | select(.status != "completed") | .name' | sed -n 's/^run (\(.*\))$/\1/p'); do
+                case " $list " in *" $b "*) ;; *) continue;; esac
+                if git cat-file -e "$sha" 2>/dev/null && git diff --quiet "$sha" HEAD -- "parts/$b/part.py" $DESIGN_FILES; then
+                  list=$(echo " $list " | sed "s/ $b / /g"); echo "$b: already running on this same setup (run $id), skipped"
+                else
+                  echo "$b: running on an older setup in run $id; that run stops itself, the new one starts here"
+                fi
+              done
+            done
           else
             # every commit of the push, not only the last one; deleted parts excluded
             list=$(git diff --name-only --diff-filter=AM ${{ github.event.before }} ${{ github.sha }} -- 'parts/*/part.py' 'parts/*/inputs/*' \
@@ -94,13 +104,32 @@ jobs:
           path: parts/${{ matrix.part }}/ck*.npz
           key: ck-${{ matrix.part }}-${{ hashFiles(format('parts/{0}/part.py', matrix.part), 'parts/*.py', 'topo/*.py') }}
 
+      # the design hash (topo/run.py design_hash): the setup's masks, supports, loads and SPEC. A watchdog fetches main every
+      # 3 min while the engine runs; when a design file changed there it builds the setup main has now in a worktree and, if its
+      # hash differs or the part is gone, stops the engine: no result, nothing committed, the run of the new design takes over
+      # (Spark 29 Oct: a superseded part never keeps running; "if something is affected it needs to be redone").
       - name: optimise
         id: opt
         shell: bash
         run: |
           set +e
-          python -m topo.run parts/${{ matrix.part }} --time-limit $ENGINE_LIMIT_S
-          rc=$?; echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          P=parts/${{ matrix.part }}
+          DESIGN=$(python -m topo.run $P --design-hash 2>/dev/null | tail -1); echo "design $DESIGN"
+          ( while sleep 180; do
+              git fetch -q origin main 2>/dev/null || continue
+              if git diff --quiet HEAD origin/main -- "$P/part.py" 'parts/*.py' 'systems/*.json' ':!systems/runtimes.json'; then continue; fi
+              rm -rf /tmp/mainwt; git worktree add -q --detach /tmp/mainwt origin/main 2>/dev/null || continue
+              if [ -f /tmp/mainwt/$P/part.py ]; then new=$(cd /tmp/mainwt && python -m topo.run $P --design-hash 2>/dev/null | tail -1); else new="gone"; fi
+              if [ -n "$new" ] && [ "$new" != "$DESIGN" ]; then
+                echo "::notice::${{ matrix.part }}: superseded on main $(git rev-parse --short origin/main) (design $new, was $DESIGN): stopping, the new design runs instead"
+                touch $P/SUPERSEDED; pkill -f "topo.run $P " ; break
+              fi
+            done ) &
+          WD=$!
+          python -m topo.run $P --time-limit $ENGINE_LIMIT_S
+          rc=$?; kill $WD 2>/dev/null
+          if [ -f $P/SUPERSEDED ]; then rm -f $P/result.json; echo "rc=superseded" >> "$GITHUB_OUTPUT"; echo "superseded: no result"; exit 0; fi
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
           exit $rc                                      # a crash shows red (29 Oct: three arm runs "succeeded" in 2 minutes with no result)
 
       # always save the checkpoint (even on timeout or failure), so the next attempt resumes

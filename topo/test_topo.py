@@ -466,6 +466,43 @@ def t_audit_plate():
     RESULTS.append(("audit_plate", ok)); print(f"audit plate: {'ok' if ok else 'FAIL'} 224x64 {a[3]} 170x170 {b[3]} 200x40 {c[3]}")
 
 
+def t_audit_block_measure():
+    """audit: the block measure (diameter_mm) reads a drawn slab the same at every pitch, to the cell: an 8 mm boss block is
+    not a block (limit 8) at h 1.5, 2.0 or 1.0, a 12 mm one is at all three (29 Oct: the tube arm roots were refused at h 1.5
+    for 8 mm blocks that passed at h 2.0, because the distance transform counted a centre cell twice)."""
+    from topo.audit import diameter_mm
+    import numpy as np
+    def slab(t_mm, h):
+        n = int(round(t_mm / h)); m = np.zeros((n + 4, 30, 30), bool); m[2:2 + n] = True; return m
+    thin = [diameter_mm(slab(8.0, h), h) for h in (1.5, 2.0, 1.0)]
+    thick = [diameter_mm(slab(12.0, h), h) for h in (1.5, 2.0, 1.0)]
+    ok = all(d <= 8.0 for d in thin) and all(d > 8.0 for d in thick) and all(abs(d - 8.0) <= 2.0 for d in thin) and all(abs(d - 12.0) <= 2.0 for d in thick)
+    RESULTS.append(("audit_block_measure", ok)); print(f"audit block measure: {'ok' if ok else 'FAIL'} 8 mm -> {[round(d, 1) for d in thin]}  12 mm -> {[round(d, 1) for d in thick]}")
+
+
+def t_design_hash():
+    """the design hash (topo/run.py) is the same for the same setup built twice and differs when a load, a cut or the budget
+    changes (29 Oct: parts.yml stops a running part whose design main has since changed)."""
+    try:
+        import manifold3d as mf
+        from .part import Part
+        from .run import design_hash
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        def mk(load=-10.0, cut=None):
+            p = Part("dh", 1.0, box(0, 3, 0, 12, 0, 12) + box(20, 24, 3, 9, 3, 9), cut or box(100, 101, 100, 101, 100, 101), box(0, 24, 0, 12, 0, 12), log=lambda s_: None)
+            p.support("default", box(-1, 1.5, -1, 13, -1, 13)); p.load("down", box(20, 24, 3, 9, 3, 9), (0, 0, load))
+            return p
+        spec = dict(max_worst=0.5)
+        a, b = design_hash(mk(), 1.0, 1.0, spec), design_hash(mk(), 1.0, 1.0, spec)
+        c = design_hash(mk(load=-12.0), 1.0, 1.0, spec)
+        d = design_hash(mk(cut=box(10, 12, 4, 8, 4, 8)), 1.0, 1.0, spec)
+        e = design_hash(mk(), 1.0, 1.5, spec)
+        ok = a == b and len({a, c, d, e}) == 4
+        RESULTS.append(("design_hash", ok)); print(f"design hash: {'ok' if ok else 'FAIL'} same {a == b}, load/cut/budget distinct {len({a, c, d, e})}/4")
+    except Exception as ex:
+        RESULTS.append(("design_hash", False)); print(f"design hash: FAIL {ex}")
+
+
 def t_near_symmetry():
     """a part mirrored but for a detail (29 Oct, the head mount's L2 key slot: its camera arms came out different left and right)
     is held symmetric on the design cells whose mirror is design too; the detail's cells stay free; an exact mirror still gives
@@ -539,7 +576,7 @@ def t_skin_core():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_audit_plate):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_audit_plate, t_audit_block_measure, t_design_hash):
         t()
     if not quick:
         t_end_to_end()

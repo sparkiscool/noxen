@@ -63,6 +63,16 @@ def plate_fit(env, h):
 
 
 
+def diameter_mm(mask, h):
+    """inscribed diameter of a voxel body, to the cell: the distance transform counts cell centres, so a slab n cells thick
+    reads n + 1 cells across when n is odd (29 Oct: the tube arm roots' 8 mm boss blocks measured 9 mm at h 1.5 and were
+    refused as blocks, while the same blocks measured 8 at h 2.0). 2 * (EDT - 0.5) * h: n * h for odd n, (n - 1) * h for even,
+    never over, so the limit means the same at every pitch."""
+    if not mask.any():
+        return 0.0
+    return max(0.0, (2.0 * float(ndi.distance_transform_edt(mask).max()) - 1.0) * h)
+
+
 def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
     sh, h = part.shape, part.h
     sol = (part.solid & ~part.insert_cells).reshape(sh)
@@ -109,10 +119,10 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         n = int(cells.sum())
         if n < 8:
             continue
-        inscribed = 2.0 * float(ndi.distance_transform_edt(cells).max()) * h
+        inscribed = diameter_mm(cells, h)
         # core thickness: distance to the nearest non-body cell OR cut, so a bore inside a collar counts as surface.
         # A block has cells far from every cut and every edge; an attachment (collar, pad, seat) does not.
-        core_mm = 2.0 * float(ndi.distance_transform_edt(cells & ~ndi.binary_dilation(cut, S6)).max()) * h
+        core_mm = diameter_mm(cells & ~ndi.binary_dilation(cut, S6), h)
         touch_cut = bool((ndi.binary_dilation(cells, S6) & cut).any())
         touch_sup = bool((cells & sup).any())
         is_loaded = bool((cells & loaded).any())

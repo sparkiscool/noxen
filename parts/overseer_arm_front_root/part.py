@@ -4,7 +4,7 @@ Motor at motors_xy[0] (205.97, 139.5); spokes 1.1 / 1.3 end on the PAD at (178.9
 arm axis from this block (socket floors 12 out from the root centre) to the pad. Arm 4 is the y-mirror."""
 from parts.overseer_tube_arm_lib import TubeArm, build_piece
 ARM = TubeArm("front", 45.0, 0, ["spoke 1.1", "spoke 1.3"], [178.94, 146.7, 8.0], "root")
-SPEC = dict(h=1.5, gen_cm3=6.0, max_worst=0.5)      # a block ~45 x 45 x 45 joining two plate blocks, two pegs and two tube collars (E)
+SPEC = dict(h=1.5, gen_cm3=6.0, max_worst=0.5)      # a block ~45 x 45 x 45 joining two plate blocks, two pegs and two tube collars (E)   # run 55 (29 Oct) refused at the audit: the 8 mm plate boss blocks measured as 9 mm cores at h 1.5 (one cell over); the audit now measures to the cell
 
 
 def setup(h):

@@ -71,6 +71,28 @@ def _setup_hash(out_dir):
     return part_sha(py) + lib_sha(py) + engine_sha()
 
 
+def design_hash(part, h, gen, spec, settings=None):
+    """what the run would compute from: the part's voxel masks, supports, every load case and the SPEC, as a short sha. The
+    same setup on another commit gives the same hash; a changed load, socket, cut or budget gives another. parts.yml compares
+    the hash of a running part with the one main would give now and stops the run when they differ (Spark 29 Oct: an old
+    design never keeps running once a new one supersedes it; a result for a design that no longer exists is worth nothing)."""
+    import hashlib
+    import numpy as np
+    hs = hashlib.sha256()
+    hs.update(np.asarray(part.shape).tobytes()); hs.update(np.asarray(part.origin, float).round(6).tobytes())
+    hs.update(np.packbits(part.solid).tobytes()); hs.update(np.packbits(part.design).tobytes())
+    hs.update(np.packbits(part.insert_cells).tobytes()); hs.update(np.asarray(part.stiff, float).round(6).tobytes())
+    for nm in sorted(part.supports):
+        hs.update(nm.encode()); hs.update(np.packbits(np.asarray(part.supports[nm]).ravel()).tobytes())
+    for c in part.cases:
+        hs.update(f"{c.name}|{c.cls}|{c.support}|".encode())
+        hs.update(b"" if c.accel is None else np.asarray(c.accel, float).round(6).tobytes())
+        hs.update(np.asarray(c.F, float).round(6).tobytes())
+    hs.update(f"h {h:.4f} gen {gen:.4f} max_worst {spec.get('max_worst', 0.5)} build {getattr(part, 'build', '')} material {getattr(part, 'material', '')}".encode())
+    hs.update(repr(sorted((spec.get("settings") or {}).items())).encode())
+    return hs.hexdigest()[:16]
+
+
 def _own_checkpoints(out_dir, log):
     """a checkpoint resumes only the setup it came from: ck_setup.npz beside ck*.npz holds the setup hash; a checkpoint from
     another setup (part.py, a lib or the engine changed) is deleted here, not resumed (29 Oct: nine nodes resumed checkpoints of the
@@ -233,6 +255,7 @@ def main(argv=None):
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
                     help="override any Settings field, e.g. --set pmean=8 --set eta=0.7,0.5,0.3 (repeatable)")
     ap.add_argument("--rebuild-from", metavar="RUN_DIR", help="build and check again from RUN_DIR/density.npz")
+    ap.add_argument("--design-hash", action="store_true", help="print the setup's design hash (see design_hash) and exit; no solve")
     a = ap.parse_args(argv)
     if a.part in PARTS:
         spec = PARTS[a.part]()
@@ -247,6 +270,8 @@ def main(argv=None):
     sets = dict(spec.get("settings", {}))
     sets.update(parse_sets(a.set))
     s = Settings(min_member_mm=a.min_member, backend=a.backend, time_limit_s=a.time_limit, **sets)
+    if a.design_hash:
+        print(design_hash(spec["setup"](h), h, gen, spec)); return 0
     if a.rebuild_from:
         res = rebuild(spec["setup"], h, gen, os.path.abspath(a.rebuild_from), os.path.abspath(out), name,
                       settings=s, extra=dict(baseline=spec.get("baseline")))
