@@ -1,0 +1,687 @@
+{
+ "name": "overseer_arm_rear",
+ "engine": "nox/topo",
+ "solid_ok": false,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   23825.1
+  ],
+  "necks": [],
+  "drawn_not_in_main": [
+   [
+    "0.4",
+    0.982,
+    "erode 2.0"
+   ]
+  ],
+  "thin_walls": [],
+  "acute_edges": 4,
+  "ok": false
+ },
+ "function_check": {
+  "skin_mm3": 2788.4,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.0,
+  "outside_env_mm3": -0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "flight 4 g, thrust 21 N, motor torque +0.5 N m",
+    "cls": "flight",
+    "inlayer": 0.289,
+    "across": 0.249,
+    "at": [
+     -63.7,
+     139.0,
+     40.2
+    ]
+   },
+   {
+    "case": "flight 4 g, thrust 21 N, motor torque -0.5 N m",
+    "cls": "flight",
+    "inlayer": 0.237,
+    "across": 0.32,
+    "at": [
+     -59.7,
+     125.0,
+     30.2
+    ]
+   },
+   {
+    "case": "landing 6 g",
+    "cls": "flight",
+    "inlayer": 0.052,
+    "across": 0.053,
+    "at": [
+     -47.7,
+     119.0,
+     28.2
+    ]
+   },
+   {
+    "case": "crash 0 (35 g) dir (+1.00 +0.00 +0.00) at the motor",
+    "cls": "crash",
+    "inlayer": 0.094,
+    "across": 0.181,
+    "at": [
+     -47.7,
+     119.0,
+     24.2
+    ]
+   },
+   {
+    "case": "crash 1 (35 g) dir (-1.00 +0.00 +0.00) at the motor",
+    "cls": "crash",
+    "inlayer": 0.094,
+    "across": 0.197,
+    "at": [
+     -59.7,
+     119.0,
+     24.2
+    ]
+   },
+   {
+    "case": "crash 2 (35 g) dir (+0.00 +1.00 +0.00) at the motor",
+    "cls": "crash",
+    "inlayer": 0.183,
+    "across": 0.156,
+    "at": [
+     -63.7,
+     139.0,
+     40.2
+    ]
+   },
+   {
+    "case": "crash 3 (35 g) dir (+0.00 -1.00 +0.00) at the motor",
+    "cls": "crash",
+    "inlayer": 0.183,
+    "across": 0.088,
+    "at": [
+     -63.7,
+     139.0,
+     40.2
+    ]
+   },
+   {
+    "case": "crash 4 (35 g) dir (+0.00 +0.00 +1.00) at the motor",
+    "cls": "crash",
+    "inlayer": 0.084,
+    "across": 0.085,
+    "at": [
+     -47.7,
+     119.0,
+     28.2
+    ]
+   },
+   {
+    "case": "crash 5 (35 g) dir (+0.00 +0.00 -1.00) at the motor",
+    "cls": "crash",
+    "inlayer": 0.084,
+    "across": 0.156,
+    "at": [
+     -59.7,
+     125.0,
+     30.2
+    ]
+   },
+   {
+    "case": "crash 6 (35 g) dir (+0.58 +0.58 +0.58) at the motor",
+    "cls": "crash",
+    "inlayer": 0.097,
+    "across": 0.149,
+    "at": [
+     -47.7,
+     119.0,
+     24.2
+    ]
+   },
+   {
+    "case": "crash 7 (35 g) dir (+0.58 +0.58 -0.58) at the motor",
+    "cls": "crash",
+    "inlayer": 0.145,
+    "across": 0.18,
+    "at": [
+     -55.7,
+     125.0,
+     30.2
+    ]
+   },
+   {
+    "case": "crash 8 (35 g) dir (+0.58 -0.58 +0.58) at the motor",
+    "cls": "crash",
+    "inlayer": 0.184,
+    "across": 0.148,
+    "at": [
+     -63.7,
+     139.0,
+     40.2
+    ]
+   },
+   {
+    "case": "crash 9 (35 g) dir (+0.58 -0.58 -0.58) at the motor",
+    "cls": "crash",
+    "inlayer": 0.089,
+    "across": 0.06,
+    "at": [
+     -63.7,
+     139.0,
+     40.2
+    ]
+   },
+   {
+    "case": "crash 10 (35 g) dir (-0.58 +0.58 +0.58) at the motor",
+    "cls": "crash",
+    "inlayer": 0.089,
+    "across": 0.046,
+    "at": [
+     -63.7,
+     139.0,
+     40.2
+    ]
+   },
+   {
+    "case": "crash 11 (35 g) dir (-0.58 +0.58 -0.58) at the motor",
+    "cls": "crash",
+    "inlayer": 0.184,
+    "across": 0.193,
+    "at": [
+     -59.7,
+     125.0,
+     30.2
+    ]
+   },
+   {
+    "case": "crash 12 (35 g) dir (-0.58 -0.58 +0.58) at the motor",
+    "cls": "crash",
+    "inlayer": 0.145,
+    "across": 0.107,
+    "at": [
+     -59.7,
+     135.0,
+     40.2
+    ]
+   },
+   {
+    "case": "crash 13 (35 g) dir (-0.58 -0.58 -0.58) at the motor",
+    "cls": "crash",
+    "inlayer": 0.097,
+    "across": 0.208,
+    "at": [
+     -59.7,
+     119.0,
+     24.2
+    ]
+   },
+   {
+    "case": "STIFFNESS arm alone: motor 96 g + ESC 25 g, 4 g and 21 N thrust up",
+    "cls": "flight",
+    "inlayer": 0.305,
+    "across": 0.459,
+    "at": [
+     -59.7,
+     125.0,
+     30.2
+    ]
+   },
+   {
+    "case": "spoke 2.1 pull 1485 N (node 4) + side 6.7 N",
+    "cls": "crash",
+    "inlayer": 3.986,
+    "across": 3.75,
+    "at": [
+     -39.7,
+     63.0,
+     44.2
+    ]
+   },
+   {
+    "case": "spoke 2.1 push 1485 N (node 4) + side 6.7 N",
+    "cls": "crash",
+    "inlayer": 3.984,
+    "across": 3.501,
+    "at": [
+     -39.7,
+     63.0,
+     44.2
+    ]
+   },
+   {
+    "case": "spoke 2.2 pull 275 N (node 3) + side 1.2 N",
+    "cls": "crash",
+    "inlayer": 0.696,
+    "across": 0.639,
+    "at": [
+     -53.7,
+     97.0,
+     4.2
+    ]
+   },
+   {
+    "case": "spoke 2.2 push 275 N (node 3) + side 1.2 N",
+    "cls": "crash",
+    "inlayer": 0.695,
+    "across": 0.935,
+    "at": [
+     -41.7,
+     103.0,
+     30.2
+    ]
+   },
+   {
+    "case": "spoke 2.3 pull 1156 N (node 11) + side 5.0 N",
+    "cls": "crash",
+    "inlayer": 0.891,
+    "across": 0.953,
+    "at": [
+     -55.7,
+     125.0,
+     18.2
+    ]
+   },
+   {
+    "case": "spoke 2.3 push 1156 N (node 11) + side 5.0 N",
+    "cls": "crash",
+    "inlayer": 0.898,
+    "across": 1.1,
+    "at": [
+     -57.7,
+     117.0,
+     22.2
+    ]
+   },
+   {
+    "case": "top bolt v+1 pull 15 N",
+    "cls": "crash",
+    "inlayer": 0.0,
+    "across": 0.001,
+    "at": [
+     -49.7,
+     33.0,
+     6.2
+    ]
+   },
+   {
+    "case": "top bolt v+1 shear 501 N",
+    "cls": "crash",
+    "inlayer": 0.113,
+    "across": 0.214,
+    "at": [
+     -53.7,
+     29.0,
+     40.2
+    ]
+   },
+   {
+    "case": "bottom bolt v+1 pull 123 N",
+    "cls": "crash",
+    "inlayer": 0.004,
+    "across": 0.011,
+    "at": [
+     -57.7,
+     39.0,
+     40.2
+    ]
+   },
+   {
+    "case": "bottom bolt v+1 shear 1604 N",
+    "cls": "crash",
+    "inlayer": 0.313,
+    "across": 0.543,
+    "at": [
+     -49.7,
+     33.0,
+     6.2
+    ]
+   },
+   {
+    "case": "top bolt v-1 pull 672 N",
+    "cls": "crash",
+    "inlayer": 0.023,
+    "across": 0.056,
+    "at": [
+     -39.7,
+     57.0,
+     6.2
+    ]
+   },
+   {
+    "case": "top bolt v-1 shear 2060 N",
+    "cls": "crash",
+    "inlayer": 0.496,
+    "across": 0.67,
+    "at": [
+     -39.7,
+     57.0,
+     22.2
+    ]
+   },
+   {
+    "case": "bottom bolt v-1 pull 581 N",
+    "cls": "crash",
+    "inlayer": 0.022,
+    "across": 0.041,
+    "at": [
+     -41.7,
+     47.0,
+     40.2
+    ]
+   },
+   {
+    "case": "bottom bolt v-1 shear 652 N",
+    "cls": "crash",
+    "inlayer": 0.149,
+    "across": 0.234,
+    "at": [
+     -41.7,
+     47.0,
+     32.2
+    ]
+   }
+  ],
+  "worst": 3.986,
+  "worst_case": "spoke 2.1 pull 1485 N (node 4) + side 6.7 N",
+  "worst_at": [
+   -39.7,
+   63.0,
+   44.2
+  ]
+ },
+ "mass_g": 48.49,
+ "watertight": false,
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 38179.3,
+ "drawn_g": 8.5,
+ "stl": "overseer_arm_rear.stl",
+ "view_stl": "overseer_arm_rear_view.stl",
+ "view_faces": 120000,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "backend": "auto",
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 3.22128343706268,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.10284138527670389,
+  "nd": 36989,
+  "sym_axes": [],
+  "n_real": 32,
+  "n_ties": 48,
+  "backend": "direct",
+  "iterations": 103,
+  "stopped": "grey"
+ },
+ "grid": {
+  "name": "overseer_arm_rear",
+  "h": 2.0,
+  "shape": [
+   40,
+   80,
+   32
+  ],
+  "origin": [
+   -102.7428,
+   15.9779,
+   -8.75
+  ],
+  "cells": 102400,
+  "design": 36935,
+  "drawn": 907,
+  "cases": [
+   "flight 4 g, thrust 21 N, motor torque +0.5 N m",
+   "flight 4 g, thrust 21 N, motor torque -0.5 N m",
+   "landing 6 g",
+   "crash 0 (35 g) dir (+1.00 +0.00 +0.00) at the motor",
+   "crash 1 (35 g) dir (-1.00 +0.00 +0.00) at the motor",
+   "crash 2 (35 g) dir (+0.00 +1.00 +0.00) at the motor",
+   "crash 3 (35 g) dir (+0.00 -1.00 +0.00) at the motor",
+   "crash 4 (35 g) dir (+0.00 +0.00 +1.00) at the motor",
+   "crash 5 (35 g) dir (+0.00 +0.00 -1.00) at the motor",
+   "crash 6 (35 g) dir (+0.58 +0.58 +0.58) at the motor",
+   "crash 7 (35 g) dir (+0.58 +0.58 -0.58) at the motor",
+   "crash 8 (35 g) dir (+0.58 -0.58 +0.58) at the motor",
+   "crash 9 (35 g) dir (+0.58 -0.58 -0.58) at the motor",
+   "crash 10 (35 g) dir (-0.58 +0.58 +0.58) at the motor",
+   "crash 11 (35 g) dir (-0.58 +0.58 -0.58) at the motor",
+   "crash 12 (35 g) dir (-0.58 -0.58 +0.58) at the motor",
+   "crash 13 (35 g) dir (-0.58 -0.58 -0.58) at the motor",
+   "STIFFNESS arm alone: motor 96 g + ESC 25 g, 4 g and 21 N thrust up",
+   "spoke 2.1 pull 1485 N (node 4) + side 6.7 N",
+   "spoke 2.1 push 1485 N (node 4) + side 6.7 N",
+   "spoke 2.2 pull 275 N (node 3) + side 1.2 N",
+   "spoke 2.2 push 275 N (node 3) + side 1.2 N",
+   "spoke 2.3 pull 1156 N (node 11) + side 5.0 N",
+   "spoke 2.3 push 1156 N (node 11) + side 5.0 N",
+   "top bolt v+1 pull 15 N",
+   "top bolt v+1 shear 501 N",
+   "bottom bolt v+1 pull 123 N",
+   "bottom bolt v+1 shear 1604 N",
+   "top bolt v-1 pull 672 N",
+   "top bolt v-1 shear 2060 N",
+   "bottom bolt v-1 pull 581 N",
+   "bottom bolt v-1 shear 652 N"
+  ],
+  "supports": [
+   "plates",
+   "plates+spokes"
+  ]
+ },
+ "build_s": 140.7,
+ "layout_s": 1570,
+ "peak_gb": 2.80146,
+ "gen_cm3": 30.0,
+ "h": 2.0,
+ "audit": {
+  "drawn_share": 0.024,
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 350,
+    "inscribed_mm": 6.9,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.86,
+    "room_depth_mm": 108.0,
+    "at": [
+     -72.9,
+     139.7,
+     42.4
+    ],
+    "core_mm": 5.7,
+    "share_of_drawn": 0.39
+   },
+   {
+    "id": 2,
+    "cells": 61,
+    "inscribed_mm": 5.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.95,
+    "room_depth_mm": 96.0,
+    "at": [
+     -58.5,
+     119.7,
+     13.1
+    ],
+    "core_mm": 4.0
+   },
+   {
+    "id": 3,
+    "cells": 90,
+    "inscribed_mm": 4.0,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.93,
+    "room_depth_mm": 128.0,
+    "at": [
+     -53.7,
+     36.1,
+     2.4
+    ],
+    "core_mm": 4.0
+   },
+   {
+    "id": 4,
+    "cells": 105,
+    "inscribed_mm": 5.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.94,
+    "room_depth_mm": 130.0,
+    "at": [
+     -53.4,
+     35.7,
+     42.3
+    ],
+    "core_mm": 4.0
+   },
+   {
+    "id": 5,
+    "cells": 57,
+    "inscribed_mm": 4.0,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.93,
+    "room_depth_mm": 112.0,
+    "at": [
+     -54.1,
+     133.1,
+     23.7
+    ],
+    "core_mm": 4.0
+   },
+   {
+    "id": 6,
+    "cells": 64,
+    "inscribed_mm": 5.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.96,
+    "room_depth_mm": 90.0,
+    "at": [
+     -43.8,
+     119.3,
+     16.1
+    ],
+    "core_mm": 4.0
+   },
+   {
+    "id": 7,
+    "cells": 82,
+    "inscribed_mm": 4.0,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.93,
+    "room_depth_mm": 90.0,
+    "at": [
+     -36.1,
+     53.4,
+     2.5
+    ],
+    "core_mm": 4.0
+   },
+   {
+    "id": 8,
+    "cells": 98,
+    "inscribed_mm": 5.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.96,
+    "room_depth_mm": 90.0,
+    "at": [
+     -35.9,
+     53.1,
+     42.3
+    ],
+    "core_mm": 4.0
+   }
+  ],
+  "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 141.9,
+   "W_mm": 60.2,
+   "H_mm": 48.0,
+   "fits": true
+  },
+  "cases": 32,
+  "supports": 2,
+  "fails": []
+ },
+ "baseline": null,
+ "total_s": 1711,
+ "part_sha": "81eea7422297",
+ "lib_sha": "e0330ef67cde",
+ "max_worst": 0.5,
+ "strength_ok": false
+}
