@@ -4,7 +4,7 @@ name: site
 on:
   push:
     branches: [main]
-    paths: ['systems/**', 'site/**', 'parts/*/part.stl', 'parts/*/result.json', 'parts/*/feedback.md', 'tools/build_site.py']
+    paths: ['systems/**', 'site/**', 'parts/*/part.stl', 'parts/*/result.json', 'parts/*/feedback.md', 'tools/build_site.py', 'tools/motion.py', 'tools/motion_template.html', 'tools/snap_site.py']
   workflow_dispatch:
 
 permissions: { pages: write, id-token: write, contents: read }
