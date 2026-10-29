@@ -4,7 +4,7 @@ Motor pad at motors_xy[0] (205.97, 139.5), arm top z 45, thrust plane z 82; spok
 (178.94, 146.7, 8); joint plane 130 mm out along the arm axis: 2 x 6.0 carbon pins + 2 x M3 along the axis, contact pads."""
 from parts.overseer_arm_split_lib import SplitArm, build_piece
 ARM = SplitArm("front", 45.0, 0, ["spoke 1.1", "spoke 1.2", "spoke 1.3"], [178.94, 146.7, 8.0], "root")
-SPEC = dict(h=2.0, gen_cm3=40.0, max_worst=0.5)      # 28 (10 % of the design space, ten attachments at the plates) ended with a plate boss off and a bolt case at 2.5e4 of solid (29 Oct); the tip gave back 18
+SPEC = dict(h=2.0, gen_cm3=50.0, max_worst=0.5)      # 28 (10 % of the design space, ten attachments at the plates) ended with a plate boss off and a bolt case at 2.5e4 of solid (29 Oct); the tip gave back 18; 50 (29 Oct): 40 with the joint block passed the solid gate at 0.72 in the stiffness case at the top plate block edge
 
 
 def setup(h):

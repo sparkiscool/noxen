@@ -55,5 +55,6 @@ def camera(c, ms):
 
 
 setup = make(21, extra=camera)
-SPEC = dict(h=1.0, gen_cm3=1.2, max_worst=0.5)      # as light as it goes (Spark 28 Oct); 2.5 gave 8.7 g at index 0.09 on 100 N rod estimates, the frame
-#   model (29 Oct) puts 13 N on the rods: 1.2 cm3 plus O7.6 bosses and no drawn frame (Spark 29 Oct: "not very optimised")
+SPEC = dict(h=1.0, gen_cm3=2.0, max_worst=0.5)      # as light as it goes (Spark 28 Oct); 2.5 gave 8.7 g at index 0.09 on 100 N rod estimates, the frame
+#   model (29 Oct) puts 13 N on the rods: O7.6 bosses and no drawn frame (Spark 29 Oct: "not very optimised"); 1.2 gave 4.1 g with two bosses
+#   standing proud of the body (their cores off at the gate) and a 3 mm neck: 2.0 so the body envelops the bosses
