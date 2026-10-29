@@ -1,33 +1,22 @@
 {
  "name": "overseer_arm_front_root",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   29805.8
+   38113.5
   ],
   "necks": [],
-  "drawn_not_in_main": [
-   [
-    "0.10",
-    0.28,
-    "erode 1.7"
-   ],
-   [
-    "0.18",
-    0.954,
-    "erode 2.0"
-   ]
-  ],
+  "drawn_not_in_main": [],
   "thin_walls": [],
-  "acute_edges": 5,
-  "ok": false
+  "acute_edges": 2,
+  "ok": true
  },
  "function_check": {
-  "skin_mm3": 2283.5,
+  "skin_mm3": 8230.4,
   "skin_missing_mm3": 0.0,
   "in_cuts_mm3": 0.0,
   "outside_env_mm3": -0.0,
@@ -38,198 +27,198 @@
    {
     "case": "flight 4 g, thrust 21 N, motor torque +0.5 N m (via the joint)",
     "cls": "flight",
-    "inlayer": 0.585,
-    "across": 0.269,
+    "inlayer": 0.444,
+    "across": 0.266,
     "at": [
-     69.5,
-     64.3,
-     42.2
+     117.3,
+     110.1,
+     34.2
     ]
    },
    {
     "case": "flight 4 g, thrust 21 N, motor torque -0.5 N m (via the joint)",
     "cls": "flight",
-    "inlayer": 0.698,
-    "across": 0.331,
+    "inlayer": 0.547,
+    "across": 0.322,
     "at": [
-     113.5,
-     104.3,
-     38.2
+     69.3,
+     52.1,
+     44.2
     ]
    },
    {
     "case": "landing 6 g (via the joint)",
     "cls": "flight",
-    "inlayer": 0.231,
-    "across": 0.115,
+    "inlayer": 0.195,
+    "across": 0.091,
     "at": [
-     113.5,
-     104.3,
-     38.2
+     69.3,
+     52.1,
+     44.2
     ]
    },
    {
     "case": "STIFFNESS arm alone: motor 96 g, 4 g and 21 N thrust up (via the joint)",
     "cls": "flight",
-    "inlayer": 0.934,
-    "across": 0.389,
+    "inlayer": 0.724,
+    "across": 0.405,
     "at": [
-     113.5,
-     104.3,
-     38.2
+     69.3,
+     52.1,
+     44.2
     ]
    },
    {
     "case": "cage crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17 (spokes 1.1 -11, 1.2 +10, 1.3 -57 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.146,
-    "across": 0.103,
+    "inlayer": 0.139,
+    "across": 0.293,
     "at": [
-     137.5,
-     104.3,
-     34.2
+     115.3,
+     110.1,
+     10.2
     ]
    },
    {
     "case": "cage crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5 (spokes 1.1 -54, 1.2 -1, 1.3 +224 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.285,
-    "across": 0.176,
+    "inlayer": 0.299,
+    "across": 0.204,
     "at": [
-     133.5,
-     102.3,
-     6.2
+     101.3,
+     98.1,
+     4.2
     ]
    },
    {
     "case": "cage crash 35 g dir (+0.00 +1.00 +0.00) on face 6-11-18 (spokes 1.1 +71, 1.2 -45, 1.3 -64 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.366,
-    "across": 0.228,
+    "inlayer": 0.225,
+    "across": 0.162,
     "at": [
-     109.5,
-     66.3,
+     75.3,
+     46.1,
      2.2
     ]
    },
    {
     "case": "cage crash 35 g dir (+0.00 -1.00 +0.00) on face 12-8-19 (spokes 1.1 -40, 1.2 +40, 1.3 -5 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.249,
-    "across": 0.151,
+    "inlayer": 0.151,
+    "across": 0.207,
     "at": [
-     111.5,
-     68.3,
-     2.2
+     141.3,
+     78.1,
+     22.2
     ]
    },
    {
     "case": "cage crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10 (spokes 1.1 +55, 1.2 +42, 1.3 -101 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.27,
-    "across": 0.187,
+    "inlayer": 0.32,
+    "across": 0.221,
     "at": [
-     109.5,
-     66.3,
-     2.2
+     103.3,
+     100.1,
+     4.2
     ]
    },
    {
     "case": "cage crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5 (spokes 1.1 -75, 1.2 -42, 1.3 +159 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.354,
-    "across": 0.173,
+    "inlayer": 0.441,
+    "across": 0.223,
     "at": [
-     109.5,
-     66.3,
-     2.2
+     101.3,
+     98.1,
+     4.2
     ]
    },
    {
     "case": "cage crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15 (spokes 1.1 +73, 1.2 +0, 1.3 -175 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.353,
-    "across": 0.233,
+    "inlayer": 0.359,
+    "across": 0.175,
     "at": [
-     109.5,
-     66.3,
-     2.2
+     101.3,
+     98.1,
+     4.2
     ]
    },
    {
     "case": "cage crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3 (spokes 1.1 -80, 1.2 -27, 1.3 +99 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.478,
-    "across": 0.227,
+    "inlayer": 0.288,
+    "across": 0.14,
     "at": [
-     103.5,
-     60.3,
-     4.2
+     75.3,
+     46.1,
+     2.2
     ]
    },
    {
     "case": "cage crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16 (spokes 1.1 -1, 1.2 +53, 1.3 -108 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.208,
-    "across": 0.109,
+    "inlayer": 0.273,
+    "across": 0.299,
     "at": [
-     133.5,
-     102.3,
-     6.2
+     115.3,
+     110.1,
+     10.2
     ]
    },
    {
     "case": "cage crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1 (spokes 1.1 -164, 1.2 +18, 1.3 +155 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.817,
-    "across": 0.387,
+    "inlayer": 0.595,
+    "across": 0.275,
     "at": [
-     105.5,
-     62.3,
+     75.3,
+     46.1,
      2.2
     ]
    },
    {
     "case": "cage crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20 (spokes 1.1 +87, 1.2 -4, 1.3 -27 N) (via the joint)",
     "cls": "crash",
-    "inlayer": 0.458,
-    "across": 0.299,
+    "inlayer": 0.351,
+    "across": 0.25,
     "at": [
-     67.5,
-     34.3,
-     6.2
+     75.3,
+     46.1,
+     2.2
     ]
    },
    {
     "case": "cage landing 6 g on the base (spokes 1.1 -13, 1.2 -7, 1.3 +27 N) (via the joint)",
     "cls": "flight",
-    "inlayer": 0.22,
-    "across": 0.108,
+    "inlayer": 0.276,
+    "across": 0.14,
     "at": [
-     109.5,
-     66.3,
-     2.2
+     101.3,
+     98.1,
+     4.2
     ]
    },
    {
     "case": "top bolt v+1 pull 12 N",
     "cls": "crash",
     "inlayer": 0.0,
-    "across": 0.0,
+    "across": 0.001,
     "at": [
-     37.5,
-     60.3,
+     39.3,
+     58.1,
      6.2
     ]
    },
    {
     "case": "top bolt v+1 shear 196 N",
     "cls": "crash",
-    "inlayer": 0.045,
-    "across": 0.049,
+    "inlayer": 0.019,
+    "across": 0.021,
     "at": [
-     31.5,
-     56.3,
+     31.3,
+     56.1,
      40.2
     ]
    },
@@ -239,20 +228,20 @@
     "inlayer": 0.0,
     "across": 0.001,
     "at": [
-     31.5,
-     52.3,
+     37.3,
+     58.1,
      40.2
     ]
    },
    {
     "case": "bottom bolt v+1 shear 83 N",
     "cls": "crash",
-    "inlayer": 0.016,
-    "across": 0.03,
+    "inlayer": 0.008,
+    "across": 0.014,
     "at": [
-     29.5,
-     54.3,
-     40.2
+     49.3,
+     56.1,
+     14.2
     ]
    },
    {
@@ -261,20 +250,20 @@
     "inlayer": 0.0,
     "across": 0.001,
     "at": [
-     55.5,
-     28.3,
+     55.3,
+     28.1,
      6.2
     ]
    },
    {
     "case": "top bolt v-1 shear 161 N",
     "cls": "crash",
-    "inlayer": 0.033,
+    "inlayer": 0.031,
     "across": 0.049,
     "at": [
-     55.5,
-     28.3,
-     6.2
+     55.3,
+     28.1,
+     8.2
     ]
    },
    {
@@ -283,8 +272,8 @@
     "inlayer": 0.0,
     "across": 0.0,
     "at": [
-     57.5,
-     40.3,
+     53.3,
+     44.1,
      40.2
     ]
    },
@@ -292,67 +281,67 @@
     "case": "bottom bolt v-1 shear 256 N",
     "cls": "crash",
     "inlayer": 0.039,
-    "across": 0.062,
+    "across": 0.058,
     "at": [
-     57.5,
-     40.3,
+     57.3,
+     40.1,
      24.2
     ]
    },
    {
     "case": "joint pin v+13 shear 49 N",
     "cls": "crash",
-    "inlayer": 0.25,
-    "across": 0.191,
+    "inlayer": 0.414,
+    "across": 0.285,
     "at": [
-     39.5,
-     64.3,
-     2.2
+     103.3,
+     96.1,
+     6.2
     ]
    },
    {
     "case": "joint pin v-13 shear 72 N",
     "cls": "crash",
-    "inlayer": 0.493,
-    "across": 0.394,
+    "inlayer": 0.427,
+    "across": 0.502,
     "at": [
-     61.5,
-     58.3,
-     42.2
+     141.3,
+     78.1,
+     22.2
     ]
    },
    {
     "case": "joint bolt v+13 pull 174 N",
     "cls": "crash",
-    "inlayer": 0.311,
-    "across": 0.193,
+    "inlayer": 0.434,
+    "across": 0.245,
     "at": [
-     139.5,
-     108.3,
-     6.2
+     77.3,
+     90.1,
+     12.2
     ]
    },
    {
     "case": "joint bolt v-13 pull 53 N",
     "cls": "crash",
-    "inlayer": 0.102,
-    "across": 0.142,
+    "inlayer": 0.065,
+    "across": 0.048,
     "at": [
-     159.5,
-     102.3,
-     14.2
+     135.3,
+     80.1,
+     4.2
     ]
    }
   ],
-  "worst": 0.934,
+  "worst": 0.724,
   "worst_case": "STIFFNESS arm alone: motor 96 g, 4 g and 21 N thrust up (via the joint)",
   "worst_at": [
-   113.5,
-   104.3,
-   38.2
+   69.3,
+   52.1,
+   44.2
   ]
  },
- "mass_g": 59.12,
+ "mass_g": 73.62,
  "watertight": false,
  "bodies": {
   "bodies_raw": 1,
@@ -360,8 +349,8 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 46549.0,
- "drawn_g": 7.65,
+ "volume_mm3": 57965.9,
+ "drawn_g": 20.93,
  "stl": "overseer_arm_front_root.stl",
  "view_stl": "overseer_arm_front_root_view.stl",
  "view_faces": 120000,
@@ -426,13 +415,13 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.13746571585298958,
-  "nd": 36460,
+  "volfrac": 0.1489956775997966,
+  "nd": 35397,
   "sym_axes": [],
   "n_real": 28,
-  "n_ties": 66,
+  "n_ties": 30,
   "backend": "direct",
-  "iterations": 98,
+  "iterations": 93,
   "stopped": "max_stage"
  },
  "grid": {
@@ -440,17 +429,17 @@
   "h": 2.0,
   "shape": [
    80,
-   56,
+   64,
    32
   ],
   "origin": [
-   18.4567,
-   23.2992,
+   18.2799,
+   15.1224,
    -8.75
   ],
-  "cells": 143360,
-  "design": 36448,
-  "drawn": 761,
+  "cells": 163840,
+  "design": 35123,
+  "drawn": 2157,
   "cases": [
    "flight 4 g, thrust 21 N, motor torque +0.5 N m (via the joint)",
    "flight 4 g, thrust 21 N, motor torque -0.5 N m (via the joint)",
@@ -485,148 +474,100 @@
    "plates"
   ]
  },
- "build_s": 338.6,
- "layout_s": 2646,
- "peak_gb": 3.724924,
+ "build_s": 195.2,
+ "layout_s": 1030,
+ "peak_gb": 2.887796,
  "gen_cm3": 40.0,
  "h": 2.0,
  "audit": {
-  "drawn_share": 0.02,
+  "drawn_share": 0.058,
   "bodies": [
    {
     "id": 1,
-    "cells": 78,
-    "inscribed_mm": 4.0,
+    "cells": 272,
+    "inscribed_mm": 8.0,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
-    "room": 0.85,
-    "room_depth_mm": 86.0,
+    "room": 0.82,
+    "room_depth_mm": 90.0,
     "at": [
-     36.4,
-     53.9,
-     2.5
+     36.9,
+     54.8,
+     3.4
     ],
-    "core_mm": 4.0
+    "core_mm": 6.9
    },
    {
     "id": 2,
-    "cells": 94,
-    "inscribed_mm": 5.7,
+    "cells": 287,
+    "inscribed_mm": 8.0,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
-    "room": 0.95,
-    "room_depth_mm": 86.0,
+    "room": 0.9,
+    "room_depth_mm": 90.0,
     "at": [
-     36.1,
-     53.5,
-     42.4
+     36.7,
+     54.6,
+     41.3
     ],
-    "core_mm": 4.0
+    "core_mm": 8.0
    },
    {
     "id": 3,
-    "cells": 96,
-    "inscribed_mm": 5.7,
+    "cells": 252,
+    "inscribed_mm": 8.0,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
-    "room": 0.96,
-    "room_depth_mm": 54.0,
+    "room": 0.84,
+    "room_depth_mm": 56.0,
     "at": [
-     53.2,
-     36.1,
-     42.2
+     54.4,
+     37.3,
+     3.4
     ],
-    "core_mm": 4.0
+    "core_mm": 5.7
    },
    {
     "id": 4,
-    "cells": 80,
-    "inscribed_mm": 4.0,
+    "cells": 269,
+    "inscribed_mm": 8.0,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
-    "room": 0.87,
-    "room_depth_mm": 54.0,
+    "room": 0.93,
+    "room_depth_mm": 56.0,
     "at": [
-     53.4,
-     36.4,
-     2.5
+     54.2,
+     37.1,
+     41.2
     ],
-    "core_mm": 4.0
+    "core_mm": 8.0
    },
    {
     "id": 5,
-    "cells": 156,
-    "inscribed_mm": 4.0,
+    "cells": 1077,
+    "inscribed_mm": 8.9,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
-    "room": 0.94,
-    "room_depth_mm": 48.0,
+    "room": 0.92,
+    "room_depth_mm": 92.0,
     "at": [
-     142.4,
-     117.5,
-     30.8
+     154.2,
+     109.5,
+     24.1
     ],
-    "core_mm": 4.0,
-    "share_of_drawn": 0.2
-   },
-   {
-    "id": 6,
-    "cells": 155,
-    "inscribed_mm": 4.0,
-    "touches_cut": true,
-    "touches_support": false,
-    "loaded": true,
-    "room": 0.94,
-    "room_depth_mm": 90.0,
-    "at": [
-     155.7,
-     95.2,
-     30.8
-    ],
-    "core_mm": 4.0
-   },
-   {
-    "id": 7,
-    "cells": 50,
-    "inscribed_mm": 4.0,
-    "touches_cut": true,
-    "touches_support": false,
-    "loaded": true,
-    "room": 0.89,
-    "room_depth_mm": 46.0,
-    "at": [
-     150.9,
-     122.4,
-     13.1
-    ],
-    "core_mm": 4.0
-   },
-   {
-    "id": 8,
-    "cells": 52,
-    "inscribed_mm": 4.0,
-    "touches_cut": true,
-    "touches_support": false,
-    "loaded": true,
-    "room": 0.89,
-    "room_depth_mm": 86.0,
-    "at": [
-     163.8,
-     99.7,
-     13.1
-    ],
-    "core_mm": 4.0
+    "core_mm": 8.0,
+    "share_of_drawn": 0.5
    }
   ],
-  "envelope_waste": 0.06,
+  "envelope_waste": 0.032,
   "plate": {
-   "L_mm": 145.8,
-   "W_mm": 52.3,
+   "L_mm": 146.2,
+   "W_mm": 52.5,
    "H_mm": 48.0,
    "fits": true
   },
@@ -635,9 +576,9 @@
   "fails": []
  },
  "baseline": null,
- "total_s": 2984,
+ "total_s": 1225,
  "part_sha": "40710fd2902c",
- "lib_sha": "15b8c701ce80",
+ "lib_sha": "31d30737a711",
  "max_worst": 0.5,
  "strength_ok": false
 }
