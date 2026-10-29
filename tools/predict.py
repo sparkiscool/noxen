@@ -5,17 +5,21 @@
     python tools/predict.py --engine v2              # engine changed: older entries are ignored from now on
 
 systems/runtimes.json: {"engine": "<tag>", "runs": [{part, engine, cells, design, cases, minutes, peak_gb, at}]}
-Fit: minutes ~ a * design_cells * cases ^ b over the current engine's runs (log-log least squares), with a safety
-factor. Fewer than 3 runs: use the per-(design*cases) median. A part that is still running past its prediction gets
-its remaining time re-estimated from the fit, plus 15 min.
+Fit (29 Oct, after the nodes ran 2 h on a 20 min prediction): minutes ~ a_engine * (design_cells * cases) ^ b, log-log
+least squares over EVERY engine's runs of 3 min or more (shorter ones are audit refusals and cut-offs): one shared slope
+b, one intercept per engine. The current engine's intercept comes from its own runs once it has two, until then from the
+latest engine that has any (an engine tag reset used to throw the whole history away and fit a line through 1..3 points).
+Safety: the 80th percentile of actual / fit over the latest engines (back until 10 runs), at least 1.25. A part still running past its
+prediction is given max(0.5 x prediction, MIN_CHECK) more. MIN_CHECK 60: check-ins are never under an hour apart (CLAUDE.md).
 """
 import glob, json, os, sys, time, math
 from datetime import datetime, timedelta, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RT = os.path.join(ROOT, "systems", "runtimes.json")
-SAFETY = 1.25
-MIN_CHECK = 15
+SAFETY_MIN = 1.25
+MIN_MINUTES = 3.0                                     # shorter runs are audit refusals or cut-offs, not timings
+MIN_CHECK = 60
 
 
 def load():
@@ -49,20 +53,41 @@ def update():
     print(f"runtimes: {len(d['runs'])} runs, engine {d['engine']}")
 
 
+def _usable(d):
+    return [x for x in d["runs"] if x["design"] and x["minutes"] and x["minutes"] >= MIN_MINUTES]
+
+
 def fit(d):
-    runs = [x for x in d["runs"] if x["engine"] == d["engine"] and x["design"] and x["minutes"]]
+    """minutes(design, cases) for the current engine, and the safety factor"""
+    runs = _usable(d)
     if not runs:
-        return lambda des, cases: 30.0
-    if len(runs) < 3:
-        k = sorted(x["minutes"] / (x["design"] * x["cases"]) for x in runs)[len(runs) // 2]
-        return lambda des, cases: k * des * cases
-    # log(min) = la + b * log(design * cases)
+        return (lambda des, cases: 60.0), SAFETY_MIN
+    engines = []
+    for x in runs:
+        if x["engine"] not in engines:
+            engines.append(x["engine"])
     xs = [math.log(x["design"] * x["cases"]) for x in runs]
     ys = [math.log(x["minutes"]) for x in runs]
-    n = len(xs); mx, my = sum(xs) / n, sum(ys) / n
-    b = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / max(sum((x - mx) ** 2 for x in xs), 1e-9)
-    la = my - b * mx
-    return lambda des, cases: math.exp(la + b * math.log(max(des * cases, 1)))
+    # shared slope on engine-centred data
+    mx, my = {}, {}
+    for e in engines:
+        idx = [k for k, x in enumerate(runs) if x["engine"] == e]
+        mx[e] = sum(xs[k] for k in idx) / len(idx); my[e] = sum(ys[k] for k in idx) / len(idx)
+    num = sum((xs[k] - mx[x["engine"]]) * (ys[k] - my[x["engine"]]) for k, x in enumerate(runs))
+    den = sum((xs[k] - mx[x["engine"]]) ** 2 for k, x in enumerate(runs))
+    b = num / den if den > 1e-9 else 1.0
+    b = min(max(b, 0.5), 1.5)                                   # a few points can give any slope: keep it near linear
+    la = {e: my[e] - b * mx[e] for e in engines}                # intercept per engine
+    cur = d["engine"]
+    n_cur = sum(1 for x in runs if x["engine"] == cur)
+    use = cur if n_cur >= 2 else [e for e in engines if e in la][-1]
+    f = lambda des, cases: math.exp(la[use] + b * math.log(max(des * cases, 1)))
+    recent, k = [], len(engines)                                 # the latest engines, back until 10 runs are in hand
+    while len(recent) < 10 and k > 0:
+        k -= 1; recent += [x for x in runs if x["engine"] == engines[k]]
+    ratios = sorted(x["minutes"] / math.exp(la[x["engine"]] + b * math.log(x["design"] * x["cases"])) for x in recent)
+    safety = max(SAFETY_MIN, ratios[int(0.8 * (len(ratios) - 1))]) if ratios else SAFETY_MIN
+    return f, safety
 
 
 def part_size(part):
@@ -72,19 +97,19 @@ def part_size(part):
     if os.path.exists(rj):
         return size(json.load(open(rj)))
     d = load()
-    runs = [x for x in d["runs"] if x["engine"] == d["engine"]] or [dict(design=60000, cases=20)]
+    runs = _usable(d) or [dict(design=60000, cases=20)]
     runs.sort(key=lambda x: x["design"] * x["cases"])
     m = runs[len(runs) // 2]
     return m["design"], m["cases"]
 
 
 def predict(parts, started=None):
-    d = load(); f = fit(d)
+    d = load(); f, safety = fit(d)
     started = started or datetime.now(timezone.utc)
     out, latest = [], started
     for p in parts:
         des, cases = size_or_running(p)
-        m = f(des, cases) * SAFETY
+        m = f(des, cases) * safety
         eta = started + timedelta(minutes=m)
         elapsed = (datetime.now(timezone.utc) - started).total_seconds() / 60
         if elapsed > m:                                  # overdue: push out by the shortfall plus a margin
