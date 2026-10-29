@@ -1,5 +1,5 @@
 {
- "note": "Overseer cage v6 geometry (Spark 28 Oct, rod cut: v5 nodes 21, 22, 23 removed, their 12 tubes replaced by 7-9, 7-10, 7-20; 54 tubes, 21 nodes, shell closed, crash probes as v5) and the frame model socket loads, for node, head mount and arm setups. Frame: x fwd, y left, z up, mm, z 0 = bottom plate top. nodes: 24 node centres (index = node id; mirrors: 0<->4, 1<->3, 8<->6, 9<->10, 12<->11, 14<->13, 16<->15, 19<->18, 22<->23 share a design, the design is the lower-numbered of each pair except 0->4, 1->3, 8->6, 9->10, 12->11, 14->13, 16->15, 19->18, 22->23 where the design is the second). rods: cage tubes as node index pairs (6/4 carbon, r 3.0, socket bore 6.2, 15 deep). tubes/links: from runs/overseer_layout/v5/result.json in nox (C). node_loads: per node, per member, axial N (the largest |N| over the cases; N keeps its sign, case names the case) and side N (end shear) from tools/cage_loads.py (29 Oct: the core free with its mass, the arms at their stiffness; systems/overseer.cage_loads.json has every case), F. bay ties 8 -> 4 (29 Oct, Spark: too many rods at the battery bay): only the crossing pair per side stays, node 3 -> (-90, 56, -5.1) and node 4 -> (30, 56, -5.1) and their mirrors from nodes 1 / 0; head rod c dropped 29 Oct (Spark: node 17 is printed into the head mount since 28 Oct, so the rod joined the part to itself). Node 21 (Spark 28 Oct): the rear camera node, sunk 45 mm inside the rear facet 13-14-5 on three 3 mm rods ('camera rod 13/14/5' in links, 1.6 bore) so a tail-first hit lands on the facet tubes, lens 26 mm inside the plane; its rod loads from the same model (13 N; the 100 N / 3 N estimates of 28 Oct are what node 21 was generated with).",
+ "note": "Overseer cage v6 geometry (Spark 28 Oct, rod cut: v5 nodes 21, 22, 23 removed, their 12 tubes replaced by 7-9, 7-10, 7-20; 54 tubes, 21 nodes, shell closed, crash probes as v5) and the frame model socket loads, for node, head mount and arm setups. Frame: x fwd, y left, z up, mm, z 0 = bottom plate top. nodes: 24 node centres (index = node id; mirrors: 0<->4, 1<->3, 8<->6, 9<->10, 12<->11, 14<->13, 16<->15, 19<->18, 22<->23 share a design, the design is the lower-numbered of each pair except 0->4, 1->3, 8->6, 9->10, 12->11, 14->13, 16->15, 19->18, 22->23 where the design is the second). rods: cage tubes as node index pairs (6/4 carbon, r 3.0, socket bore 6.2, 15 deep). tubes/links: from runs/overseer_layout/v5/result.json in nox (C). node_loads: per node, per member, axial N (the largest |N| over the cases; N keeps its sign, case names the case) and side N (end shear) from tools/cage_loads.py (29 Oct: the core free with its mass, the arms at their stiffness; systems/overseer.cage_loads.json has every case), F. spokes 12 -> 8 (29 Oct, frame model what-if: the .2 spokes, all to nodes 3 / 1, carried 76..204 N and their removal leaves every link under 540 N, tubes under 520, buckling 0.78, arm roots 362 / 191 N; Spark: as light as possible); bay ties 8 -> 4 (29 Oct, Spark: too many rods at the battery bay): only the crossing pair per side stays, node 3 -> (-90, 56, -5.1) and node 4 -> (30, 56, -5.1) and their mirrors from nodes 1 / 0; head rod c dropped 29 Oct (Spark: node 17 is printed into the head mount since 28 Oct, so the rod joined the part to itself). Node 21 (Spark 28 Oct): the rear camera node, sunk 45 mm inside the rear facet 13-14-5 on three 3 mm rods ('camera rod 13/14/5' in links, 1.6 bore) so a tail-first hit lands on the facet tubes, lens 26 mm inside the plane; its rod loads from the same model (13 N; the 100 N / 3 N estimates of 28 Oct are what node 21 was generated with).",
  "nodes": [
   [
    -98.857,
@@ -346,18 +346,6 @@
     -79.9
    ]
   ],
-  "spoke 1.2": [
-   [
-    178.94,
-    146.7,
-    8.0
-   ],
-   [
-    55.8,
-    116.06,
-    -79.9
-   ]
-  ],
   "spoke 1.3": [
    [
     178.94,
@@ -379,18 +367,6 @@
    [
     -98.86,
     119.7,
-    -79.9
-   ]
-  ],
-  "spoke 2.2": [
-   [
-    -53.26,
-    119.7,
-    25.0
-   ],
-   [
-    55.8,
-    116.06,
     -79.9
    ]
   ],
@@ -418,18 +394,6 @@
     -79.9
    ]
   ],
-  "spoke 3.2": [
-   [
-    -53.26,
-    -119.7,
-    25.0
-   ],
-   [
-    55.8,
-    -116.06,
-    -79.9
-   ]
-  ],
   "spoke 3.3": [
    [
     -53.26,
@@ -451,18 +415,6 @@
    [
     161.16,
     0.0,
-    -79.9
-   ]
-  ],
-  "spoke 4.2": [
-   [
-    178.94,
-    -146.7,
-    8.0
-   ],
-   [
-    55.8,
-    -116.06,
     -79.9
    ]
   ],
@@ -764,1025 +716,997 @@
  "node_loads": {
   "0": {
    "tube 0-1": {
-    "axial": 135.6,
-    "side": 4.5,
-    "N": 135.6,
-    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
+    "axial": 190.1,
+    "side": 8.6,
+    "N": 190.1,
+    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    },
    "tube 0-12": {
-    "axial": 97.7,
-    "side": 2.8,
-    "N": -97.7,
-    "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
+    "axial": 76.6,
+    "side": 4.0,
+    "N": -76.6,
+    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "tube 0-5": {
-    "axial": 92.7,
-    "side": 7.5,
-    "N": -92.7,
-    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
+    "axial": 68.6,
+    "side": 11.2,
+    "N": -68.6,
+    "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    },
    "bay tie +1-1.2": {
-    "axial": 215.1,
-    "side": 0.5,
-    "N": -215.1,
+    "axial": 201.6,
+    "side": 0.7,
+    "N": -201.6,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "spoke 3.1": {
-    "axial": 136.8,
-    "side": 1.4,
-    "N": 136.8,
+    "axial": 126.1,
+    "side": 1.9,
+    "N": 126.1,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    }
   },
   "1": {
    "tube 0-1": {
-    "axial": 135.6,
-    "side": 4.5,
-    "N": 135.6,
-    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
+    "axial": 190.1,
+    "side": 8.6,
+    "N": 190.1,
+    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    },
    "tube 1-12": {
-    "axial": 237.5,
+    "axial": 244.4,
     "side": 2.6,
-    "N": 237.5,
+    "N": 244.4,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 1-19": {
-    "axial": 241.1,
-    "side": 0.8,
-    "N": -241.1,
+    "axial": 319.0,
+    "side": 1.3,
+    "N": -319.0,
     "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "tube 1-2": {
-    "axial": 337.0,
-    "side": 10.8,
-    "N": -337.0,
+    "axial": 276.1,
+    "side": 9.5,
+    "N": -276.1,
     "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    },
    "bay tie -1-1.2": {
-    "axial": 231.8,
-    "side": 0.5,
-    "N": -231.8,
+    "axial": 458.3,
+    "side": 0.6,
+    "N": -458.3,
     "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
-    "tag": "F"
-   },
-   "spoke 3.2": {
-    "axial": 199.3,
-    "side": 0.6,
-    "N": -199.3,
-    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
-    "tag": "F"
-   },
-   "spoke 4.2": {
-    "axial": 76.5,
-    "side": 0.6,
-    "N": -76.5,
-    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    }
   },
   "5": {
    "tube 0-5": {
-    "axial": 92.7,
-    "side": 7.5,
-    "N": -92.7,
-    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
+    "axial": 68.6,
+    "side": 11.2,
+    "N": -68.6,
+    "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    },
    "tube 4-5": {
-    "axial": 89.4,
-    "side": 7.6,
-    "N": -89.4,
-    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
+    "axial": 66.0,
+    "side": 11.4,
+    "N": -66.0,
+    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "tube 5-11": {
-    "axial": 253.0,
-    "side": 0.5,
-    "N": -253.0,
+    "axial": 325.0,
+    "side": 0.7,
+    "N": -325.0,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 5-12": {
-    "axial": 250.5,
-    "side": 0.5,
-    "N": -250.5,
+    "axial": 319.6,
+    "side": 0.7,
+    "N": -319.6,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 5-13": {
-    "axial": 62.3,
-    "side": 1.8,
-    "N": 62.3,
+    "axial": 51.7,
+    "side": 2.7,
+    "N": 51.7,
     "case": "crash 35 g dir (+0.00 +1.00 +0.00) on face 6-11-18",
     "tag": "F"
    },
    "tube 5-14": {
-    "axial": 62.1,
-    "side": 1.8,
-    "N": 62.1,
+    "axial": 51.5,
+    "side": 2.7,
+    "N": 51.5,
     "case": "crash 35 g dir (+0.00 -1.00 +0.00) on face 12-8-19",
     "tag": "F"
    },
    "camera rod 5": {
-    "axial": 10.5,
-    "side": 0.6,
-    "N": -10.5,
-    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
+    "axial": 10.6,
+    "side": 0.9,
+    "N": 10.6,
+    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    }
   },
   "12": {
    "tube 0-12": {
-    "axial": 97.7,
-    "side": 2.8,
-    "N": -97.7,
-    "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
+    "axial": 76.6,
+    "side": 4.0,
+    "N": -76.6,
+    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "tube 1-12": {
-    "axial": 237.5,
+    "axial": 244.4,
     "side": 2.6,
-    "N": 237.5,
+    "N": 244.4,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 12-14": {
-    "axial": 219.5,
-    "side": 0.4,
-    "N": 219.5,
+    "axial": 219.3,
+    "side": 0.5,
+    "N": 219.3,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "tube 12-19": {
-    "axial": 261.1,
+    "axial": 267.0,
     "side": 0.2,
-    "N": -261.1,
+    "N": -267.0,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 5-12": {
-    "axial": 250.5,
-    "side": 0.5,
-    "N": -250.5,
+    "axial": 319.6,
+    "side": 0.7,
+    "N": -319.6,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 8-12": {
-    "axial": 157.8,
-    "side": 0.5,
-    "N": 157.8,
+    "axial": 158.8,
+    "side": 0.8,
+    "N": 158.8,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "tube 9-12": {
-    "axial": 241.2,
-    "side": 2.9,
-    "N": -241.2,
+    "axial": 241.6,
+    "side": 3.6,
+    "N": -241.6,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "core tie right.1": {
-    "axial": 212.4,
-    "side": 0.1,
-    "N": 212.4,
+    "axial": 272.2,
+    "side": 0.2,
+    "N": 272.2,
     "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    },
    "spoke 3.3": {
-    "axial": 233.9,
-    "side": 0.3,
-    "N": -233.9,
+    "axial": 222.8,
+    "side": 0.4,
+    "N": -222.8,
     "case": "crash 35 g dir (+0.00 -1.00 +0.00) on face 12-8-19",
     "tag": "F"
    }
   },
   "2": {
    "tube 1-2": {
-    "axial": 337.0,
-    "side": 10.8,
-    "N": -337.0,
+    "axial": 276.1,
+    "side": 9.5,
+    "N": -276.1,
     "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    },
    "tube 2-18": {
-    "axial": 288.8,
-    "side": 3.2,
-    "N": 288.8,
+    "axial": 368.3,
+    "side": 2.8,
+    "N": 368.3,
     "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    },
    "tube 2-19": {
-    "axial": 271.7,
-    "side": 3.5,
-    "N": 271.7,
+    "axial": 345.9,
+    "side": 3.2,
+    "N": 345.9,
     "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "tube 2-3": {
-    "axial": 359.4,
-    "side": 12.0,
-    "N": -359.4,
+    "axial": 302.8,
+    "side": 10.7,
+    "N": -302.8,
     "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "spoke 1.1": {
-    "axial": 220.7,
-    "side": 1.6,
-    "N": -220.7,
+    "axial": 236.4,
+    "side": 2.1,
+    "N": -236.4,
     "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "spoke 4.1": {
-    "axial": 207.9,
-    "side": 1.5,
-    "N": -207.9,
+    "axial": 225.0,
+    "side": 2.0,
+    "N": -225.0,
     "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    }
   },
   "19": {
    "tube 1-19": {
-    "axial": 241.1,
-    "side": 0.8,
-    "N": -241.1,
+    "axial": 319.0,
+    "side": 1.3,
+    "N": -319.0,
     "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "tube 12-19": {
-    "axial": 261.1,
+    "axial": 267.0,
     "side": 0.2,
-    "N": -261.1,
+    "N": -267.0,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 16-19": {
-    "axial": 65.7,
-    "side": 1.6,
-    "N": -65.7,
+    "axial": 65.3,
+    "side": 2.7,
+    "N": -65.3,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 17-19": {
-    "axial": 183.3,
+    "axial": 181.2,
     "side": 4.5,
-    "N": 183.3,
+    "N": 181.2,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 18-19": {
-    "axial": 182.4,
+    "axial": 204.4,
     "side": 0.3,
-    "N": -182.4,
+    "N": -204.4,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 2-19": {
-    "axial": 271.7,
-    "side": 3.5,
-    "N": 271.7,
+    "axial": 345.9,
+    "side": 3.2,
+    "N": 345.9,
     "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "tube 8-19": {
-    "axial": 134.5,
-    "side": 0.5,
-    "N": -134.5,
+    "axial": 139.0,
+    "side": 0.8,
+    "N": -139.0,
     "case": "crash 35 g dir (+0.00 -1.00 +0.00) on face 12-8-19",
     "tag": "F"
    },
    "spoke 4.3": {
-    "axial": 202.9,
-    "side": 1.1,
-    "N": 202.9,
-    "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
+    "axial": 231.8,
+    "side": 1.8,
+    "N": 231.8,
+    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    }
   },
   "3": {
    "tube 2-3": {
-    "axial": 359.4,
-    "side": 12.0,
-    "N": -359.4,
+    "axial": 302.8,
+    "side": 10.7,
+    "N": -302.8,
     "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "tube 3-11": {
-    "axial": 251.7,
+    "axial": 241.7,
     "side": 2.9,
-    "N": -251.7,
-    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
+    "N": 241.7,
+    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 3-18": {
-    "axial": 247.8,
-    "side": 0.8,
-    "N": -247.8,
+    "axial": 330.7,
+    "side": 1.3,
+    "N": -330.7,
     "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    },
    "tube 3-4": {
-    "axial": 141.4,
-    "side": 4.7,
-    "N": -141.4,
-    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
+    "axial": 202.1,
+    "side": 8.8,
+    "N": 202.1,
+    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    },
    "bay tie -1+1.2": {
-    "axial": 252.2,
-    "side": 0.5,
-    "N": -252.2,
-    "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
-    "tag": "F"
-   },
-   "spoke 1.2": {
-    "axial": 78.6,
-    "side": 0.7,
-    "N": -78.6,
-    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
-    "tag": "F"
-   },
-   "spoke 2.2": {
-    "axial": 204.4,
+    "axial": 488.9,
     "side": 0.6,
-    "N": -204.4,
-    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
+    "N": -488.9,
+    "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    }
   },
   "18": {
    "tube 11-18": {
-    "axial": 261.8,
+    "axial": 266.6,
     "side": 0.2,
-    "N": -261.8,
+    "N": -266.6,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 15-18": {
-    "axial": 73.2,
-    "side": 1.6,
-    "N": -73.2,
+    "axial": 72.8,
+    "side": 2.7,
+    "N": -72.8,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    },
    "tube 17-18": {
-    "axial": 185.0,
+    "axial": 184.2,
     "side": 4.5,
-    "N": 185.0,
+    "N": 184.2,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    },
    "tube 18-19": {
-    "axial": 182.4,
+    "axial": 204.4,
     "side": 0.3,
-    "N": -182.4,
+    "N": -204.4,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 2-18": {
-    "axial": 288.8,
-    "side": 3.2,
-    "N": 288.8,
+    "axial": 368.3,
+    "side": 2.8,
+    "N": 368.3,
     "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    },
    "tube 3-18": {
-    "axial": 247.8,
-    "side": 0.8,
-    "N": -247.8,
+    "axial": 330.7,
+    "side": 1.3,
+    "N": -330.7,
     "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    },
    "tube 6-18": {
-    "axial": 230.1,
-    "side": 0.5,
-    "N": -230.1,
+    "axial": 245.3,
+    "side": 0.8,
+    "N": -245.3,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "spoke 1.3": {
-    "axial": 216.0,
-    "side": 1.2,
-    "N": 216.0,
-    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
+    "axial": 230.0,
+    "side": 1.8,
+    "N": 230.0,
+    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    }
   },
   "4": {
    "tube 3-4": {
-    "axial": 141.4,
-    "side": 4.7,
-    "N": -141.4,
-    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
+    "axial": 202.1,
+    "side": 8.8,
+    "N": 202.1,
+    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    },
    "tube 4-11": {
-    "axial": 109.0,
-    "side": 2.8,
-    "N": -109.0,
-    "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
+    "axial": 100.3,
+    "side": 4.1,
+    "N": -100.3,
+    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "tube 4-5": {
-    "axial": 89.4,
-    "side": 7.6,
-    "N": -89.4,
-    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
+    "axial": 66.0,
+    "side": 11.4,
+    "N": -66.0,
+    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "bay tie +1+1.2": {
-    "axial": 225.3,
-    "side": 0.5,
-    "N": -225.3,
+    "axial": 216.8,
+    "side": 0.7,
+    "N": -216.8,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "spoke 2.1": {
-    "axial": 148.2,
-    "side": 1.4,
-    "N": 148.2,
+    "axial": 144.1,
+    "side": 2.0,
+    "N": 144.1,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    }
   },
   "11": {
    "tube 10-11": {
-    "axial": 331.6,
-    "side": 4.7,
-    "N": -331.6,
+    "axial": 324.9,
+    "side": 5.4,
+    "N": -324.9,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 11-13": {
-    "axial": 413.2,
-    "side": 0.4,
-    "N": 413.2,
+    "axial": 394.6,
+    "side": 0.5,
+    "N": 394.6,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 11-18": {
-    "axial": 261.8,
+    "axial": 266.6,
     "side": 0.2,
-    "N": -261.8,
+    "N": -266.6,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 3-11": {
-    "axial": 251.7,
+    "axial": 241.7,
     "side": 2.9,
-    "N": -251.7,
-    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
+    "N": 241.7,
+    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 4-11": {
-    "axial": 109.0,
-    "side": 2.8,
-    "N": -109.0,
-    "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
+    "axial": 100.3,
+    "side": 4.1,
+    "N": -100.3,
+    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "tube 5-11": {
-    "axial": 253.0,
-    "side": 0.5,
-    "N": -253.0,
+    "axial": 325.0,
+    "side": 0.7,
+    "N": -325.0,
     "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 6-11": {
-    "axial": 280.5,
-    "side": 0.6,
-    "N": 280.5,
+    "axial": 297.0,
+    "side": 0.8,
+    "N": 297.0,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "core tie left.1": {
-    "axial": 228.9,
-    "side": 0.1,
-    "N": 228.9,
+    "axial": 288.3,
+    "side": 0.2,
+    "N": 288.3,
     "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "spoke 2.3": {
-    "axial": 233.6,
-    "side": 0.3,
-    "N": -233.6,
+    "axial": 222.5,
+    "side": 0.5,
+    "N": -222.5,
     "case": "crash 35 g dir (+0.00 +1.00 +0.00) on face 6-11-18",
     "tag": "F"
    }
   },
   "13": {
    "tube 10-13": {
-    "axial": 295.4,
+    "axial": 325.7,
     "side": 0.4,
-    "N": -295.4,
+    "N": -325.7,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 11-13": {
-    "axial": 413.2,
-    "side": 0.4,
-    "N": 413.2,
+    "axial": 394.6,
+    "side": 0.5,
+    "N": 394.6,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 13-14": {
-    "axial": 100.2,
+    "axial": 141.5,
     "side": 0.1,
-    "N": -100.2,
-    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
+    "N": 141.5,
+    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 13-20": {
-    "axial": 107.8,
+    "axial": 107.4,
     "side": 2.4,
-    "N": -107.8,
+    "N": -107.4,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 5-13": {
-    "axial": 62.3,
-    "side": 1.8,
-    "N": 62.3,
+    "axial": 51.7,
+    "side": 2.7,
+    "N": 51.7,
     "case": "crash 35 g dir (+0.00 +1.00 +0.00) on face 6-11-18",
     "tag": "F"
    },
    "camera rod 13": {
-    "axial": 13.0,
-    "side": 0.1,
-    "N": 13.0,
+    "axial": 13.2,
+    "side": 0.2,
+    "N": 13.2,
     "case": "crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17",
     "tag": "F"
    },
    "core tie left.2": {
-    "axial": 197.0,
+    "axial": 205.0,
     "side": 0.1,
-    "N": -197.0,
-    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
+    "N": 205.0,
+    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "core tie rear.1": {
-    "axial": 252.4,
+    "axial": 173.5,
     "side": 0.2,
-    "N": -252.4,
+    "N": -173.5,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    }
   },
   "14": {
    "tube 12-14": {
-    "axial": 219.5,
-    "side": 0.4,
-    "N": 219.5,
+    "axial": 219.3,
+    "side": 0.5,
+    "N": 219.3,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "tube 13-14": {
-    "axial": 100.2,
+    "axial": 141.5,
     "side": 0.1,
-    "N": -100.2,
-    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
+    "N": 141.5,
+    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 14-20": {
-    "axial": 110.0,
+    "axial": 110.8,
     "side": 2.3,
-    "N": -110.0,
+    "N": -110.8,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    },
    "tube 5-14": {
-    "axial": 62.1,
-    "side": 1.8,
-    "N": 62.1,
+    "axial": 51.5,
+    "side": 2.7,
+    "N": 51.5,
     "case": "crash 35 g dir (+0.00 -1.00 +0.00) on face 12-8-19",
     "tag": "F"
    },
    "tube 9-14": {
-    "axial": 191.0,
+    "axial": 194.3,
     "side": 0.2,
-    "N": -191.0,
+    "N": -194.3,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "camera rod 14": {
-    "axial": 13.0,
-    "side": 0.1,
-    "N": 13.0,
+    "axial": 13.2,
+    "side": 0.2,
+    "N": 13.2,
     "case": "crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17",
     "tag": "F"
    },
    "core tie rear.2": {
-    "axial": 148.1,
+    "axial": 143.8,
     "side": 0.2,
-    "N": -148.1,
-    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
+    "N": 143.8,
+    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "core tie right.2": {
-    "axial": 182.3,
+    "axial": 193.0,
     "side": 0.1,
-    "N": -182.3,
-    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
+    "N": 193.0,
+    "case": "crash 35 g dir (+0.58 +0.58 -0.58) on face 2-18-3",
     "tag": "F"
    }
   },
   "6": {
    "tube 6-10": {
-    "axial": 480.6,
+    "axial": 518.9,
     "side": 0.5,
-    "N": -480.6,
+    "N": -518.9,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 6-11": {
-    "axial": 280.5,
-    "side": 0.6,
-    "N": 280.5,
+    "axial": 297.0,
+    "side": 0.8,
+    "N": 297.0,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 6-15": {
-    "axial": 116.9,
+    "axial": 138.9,
     "side": 0.9,
-    "N": -116.9,
-    "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
+    "N": 138.9,
+    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    },
    "tube 6-18": {
-    "axial": 230.1,
-    "side": 0.5,
-    "N": -230.1,
+    "axial": 245.3,
+    "side": 0.8,
+    "N": -245.3,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 6-7": {
-    "axial": 143.4,
-    "side": 1.2,
-    "N": 143.4,
+    "axial": 157.9,
+    "side": 2.0,
+    "N": 157.9,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    }
   },
   "7": {
    "tube 6-7": {
-    "axial": 143.4,
-    "side": 1.2,
-    "N": 143.4,
+    "axial": 157.9,
+    "side": 2.0,
+    "N": 157.9,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 7-10": {
-    "axial": 157.0,
-    "side": 0.7,
-    "N": -157.0,
-    "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
+    "axial": 154.7,
+    "side": 1.1,
+    "N": -154.7,
+    "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 7-15": {
-    "axial": 174.8,
-    "side": 2.8,
-    "N": 174.8,
+    "axial": 172.7,
+    "side": 4.2,
+    "N": 172.7,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    },
    "tube 7-16": {
-    "axial": 172.0,
-    "side": 2.8,
-    "N": 172.0,
+    "axial": 167.9,
+    "side": 4.2,
+    "N": 167.9,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 7-20": {
-    "axial": 86.9,
-    "side": 1.4,
-    "N": 86.9,
-    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
+    "axial": 85.6,
+    "side": 2.0,
+    "N": -85.6,
+    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "tube 7-8": {
-    "axial": 114.5,
-    "side": 1.2,
-    "N": -114.5,
+    "axial": 112.0,
+    "side": 2.0,
+    "N": -112.0,
     "case": "crash 35 g dir (+0.00 -1.00 +0.00) on face 12-8-19",
     "tag": "F"
    },
    "tube 7-9": {
-    "axial": 152.5,
-    "side": 0.7,
-    "N": -152.5,
+    "axial": 152.6,
+    "side": 1.1,
+    "N": -152.6,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    },
    "core tie front.1": {
-    "axial": 539.1,
+    "axial": 537.1,
     "side": 0.6,
-    "N": -539.1,
+    "N": -537.1,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    }
   },
   "10": {
    "tube 10-11": {
-    "axial": 331.6,
-    "side": 4.7,
-    "N": -331.6,
+    "axial": 324.9,
+    "side": 5.4,
+    "N": -324.9,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 10-13": {
-    "axial": 295.4,
+    "axial": 325.7,
     "side": 0.4,
-    "N": -295.4,
+    "N": -325.7,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 10-20": {
-    "axial": 99.1,
-    "side": 0.9,
-    "N": 99.1,
+    "axial": 97.7,
+    "side": 1.0,
+    "N": 97.7,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 6-10": {
-    "axial": 480.6,
+    "axial": 518.9,
     "side": 0.5,
-    "N": -480.6,
+    "N": -518.9,
     "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
     "tag": "F"
    },
    "tube 7-10": {
-    "axial": 157.0,
-    "side": 0.7,
-    "N": -157.0,
-    "case": "crash 35 g dir (-0.58 +0.58 +0.58) on face 13-14-10-9-20",
+    "axial": 154.7,
+    "side": 1.1,
+    "N": -154.7,
+    "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    }
   },
   "15": {
    "tube 15-16": {
-    "axial": 192.6,
+    "axial": 227.6,
     "side": 0.4,
-    "N": 192.6,
-    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
+    "N": 227.6,
+    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 15-17": {
-    "axial": 163.0,
+    "axial": 161.3,
     "side": 4.2,
-    "N": -163.0,
+    "N": -161.3,
     "case": "crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17",
     "tag": "F"
    },
    "tube 15-18": {
-    "axial": 73.2,
-    "side": 1.6,
-    "N": -73.2,
+    "axial": 72.8,
+    "side": 2.7,
+    "N": -72.8,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    },
    "tube 6-15": {
-    "axial": 116.9,
+    "axial": 138.9,
     "side": 0.9,
-    "N": -116.9,
-    "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
+    "N": 138.9,
+    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    },
    "tube 7-15": {
-    "axial": 174.8,
-    "side": 2.8,
-    "N": 174.8,
+    "axial": 172.7,
+    "side": 4.2,
+    "N": 172.7,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    },
    "head rod +1": {
-    "axial": 95.0,
+    "axial": 95.2,
     "side": 1.9,
-    "N": -95.0,
+    "N": -95.2,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    }
   },
   "8": {
    "tube 7-8": {
-    "axial": 114.5,
-    "side": 1.2,
-    "N": -114.5,
+    "axial": 112.0,
+    "side": 2.0,
+    "N": -112.0,
     "case": "crash 35 g dir (+0.00 -1.00 +0.00) on face 12-8-19",
     "tag": "F"
    },
    "tube 8-12": {
-    "axial": 157.8,
-    "side": 0.5,
-    "N": 157.8,
+    "axial": 158.8,
+    "side": 0.8,
+    "N": 158.8,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "tube 8-16": {
-    "axial": 116.2,
+    "axial": 139.5,
     "side": 0.9,
-    "N": -116.2,
-    "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
+    "N": 139.5,
+    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    },
    "tube 8-19": {
-    "axial": 134.5,
-    "side": 0.5,
-    "N": -134.5,
+    "axial": 139.0,
+    "side": 0.8,
+    "N": -139.0,
     "case": "crash 35 g dir (+0.00 -1.00 +0.00) on face 12-8-19",
     "tag": "F"
    },
    "tube 8-9": {
-    "axial": 205.4,
+    "axial": 206.5,
     "side": 0.3,
-    "N": -205.4,
+    "N": -206.5,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    }
   },
   "9": {
    "tube 7-9": {
-    "axial": 152.5,
-    "side": 0.7,
-    "N": -152.5,
+    "axial": 152.6,
+    "side": 1.1,
+    "N": -152.6,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    },
    "tube 8-9": {
-    "axial": 205.4,
+    "axial": 206.5,
     "side": 0.3,
-    "N": -205.4,
+    "N": -206.5,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "tube 9-12": {
-    "axial": 241.2,
-    "side": 2.9,
-    "N": -241.2,
+    "axial": 241.6,
+    "side": 3.6,
+    "N": -241.6,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    },
    "tube 9-14": {
-    "axial": 191.0,
+    "axial": 194.3,
     "side": 0.2,
-    "N": -191.0,
+    "N": -194.3,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 9-20": {
-    "axial": 101.0,
+    "axial": 100.6,
     "side": 1.0,
-    "N": 101.0,
+    "N": 100.6,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    }
   },
   "16": {
    "tube 15-16": {
-    "axial": 192.6,
+    "axial": 227.6,
     "side": 0.4,
-    "N": 192.6,
-    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
+    "N": 227.6,
+    "case": "crash 35 g dir (-1.00 +0.00 +0.00) on face 13-14-5",
     "tag": "F"
    },
    "tube 16-17": {
-    "axial": 164.2,
+    "axial": 162.2,
     "side": 4.2,
-    "N": -164.2,
+    "N": -162.2,
     "case": "crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17",
     "tag": "F"
    },
    "tube 16-19": {
-    "axial": 65.7,
-    "side": 1.6,
-    "N": -65.7,
+    "axial": 65.3,
+    "side": 2.7,
+    "N": -65.3,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 7-16": {
-    "axial": 172.0,
-    "side": 2.8,
-    "N": 172.0,
+    "axial": 167.9,
+    "side": 4.2,
+    "N": 167.9,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 8-16": {
-    "axial": 116.2,
+    "axial": 139.5,
     "side": 0.9,
-    "N": -116.2,
-    "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
+    "N": 139.5,
+    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
     "tag": "F"
    },
    "head rod -1": {
-    "axial": 95.0,
+    "axial": 95.2,
     "side": 1.9,
-    "N": -95.0,
+    "N": -95.2,
     "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    }
   },
   "20": {
    "tube 10-20": {
-    "axial": 99.1,
-    "side": 0.9,
-    "N": 99.1,
+    "axial": 97.7,
+    "side": 1.0,
+    "N": 97.7,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 13-20": {
-    "axial": 107.8,
+    "axial": 107.4,
     "side": 2.4,
-    "N": -107.8,
+    "N": -107.4,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "tube 14-20": {
-    "axial": 110.0,
+    "axial": 110.8,
     "side": 2.3,
-    "N": -110.0,
+    "N": -110.8,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    },
    "tube 7-20": {
-    "axial": 86.9,
-    "side": 1.4,
-    "N": 86.9,
-    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
+    "axial": 85.6,
+    "side": 2.0,
+    "N": -85.6,
+    "case": "crash 35 g dir (+0.58 -0.58 -0.58) on face 2-19-1",
     "tag": "F"
    },
    "tube 9-20": {
-    "axial": 101.0,
+    "axial": 100.6,
     "side": 1.0,
-    "N": 101.0,
+    "N": 100.6,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    }
   },
   "17": {
    "tube 15-17": {
-    "axial": 163.0,
+    "axial": 161.3,
     "side": 4.2,
-    "N": -163.0,
+    "N": -161.3,
     "case": "crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17",
     "tag": "F"
    },
    "tube 16-17": {
-    "axial": 164.2,
+    "axial": 162.2,
     "side": 4.2,
-    "N": -164.2,
+    "N": -162.2,
     "case": "crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17",
     "tag": "F"
    },
    "tube 17-18": {
-    "axial": 185.0,
+    "axial": 184.2,
     "side": 4.5,
-    "N": 185.0,
+    "N": 184.2,
     "case": "crash 35 g dir (+0.58 +0.58 +0.58) on face 7-10-15",
     "tag": "F"
    },
    "tube 17-19": {
-    "axial": 183.3,
+    "axial": 181.2,
     "side": 4.5,
-    "N": 183.3,
+    "N": 181.2,
     "case": "crash 35 g dir (+0.58 -0.58 +0.58) on face 7-9-16",
     "tag": "F"
    },
    "core tie front.2": {
-    "axial": 408.6,
-    "side": 0.4,
-    "N": -408.6,
+    "axial": 412.5,
+    "side": 0.7,
+    "N": -412.5,
     "case": "crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17",
     "tag": "F"
    }
   },
   "21": {
    "camera rod 13": {
-    "axial": 13.0,
-    "side": 0.1,
-    "N": 13.0,
+    "axial": 13.2,
+    "side": 0.2,
+    "N": 13.2,
     "case": "crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17",
     "tag": "F"
    },
    "camera rod 14": {
-    "axial": 13.0,
-    "side": 0.1,
-    "N": 13.0,
+    "axial": 13.2,
+    "side": 0.2,
+    "N": 13.2,
     "case": "crash 35 g dir (+1.00 +0.00 +0.00) on face 18-19-17",
     "tag": "F"
    },
    "camera rod 5": {
-    "axial": 10.5,
-    "side": 0.6,
-    "N": -10.5,
-    "case": "crash 35 g dir (+0.00 +0.00 -1.00) on face 0-1-2-3-4-5",
+    "axial": 10.6,
+    "side": 0.9,
+    "N": 10.6,
+    "case": "crash 35 g dir (+0.00 +0.00 +1.00) on face 7-9-10",
     "tag": "F"
    }
   }
@@ -1793,13 +1717,13 @@
   "tube 0-12": 188.6,
   "tube 1-2": 136.3,
   "tube 1-12": 227.2,
-  "tube 1-19": 263.4,
+  "tube 1-19": 271.7,
   "tube 2-3": 136.3,
   "tube 2-18": 253.3,
   "tube 2-19": 253.3,
   "tube 3-4": 127.5,
   "tube 3-11": 227.2,
-  "tube 3-18": 263.4,
+  "tube 3-18": 271.7,
   "tube 4-5": 154.4,
   "tube 4-11": 188.6,
   "tube 5-11": 331.5,
@@ -1846,16 +1770,12 @@
   "camera rod 14": 145.4,
   "camera rod 5": 98.3,
   "spoke 1.1": 148.5,
-  "spoke 1.2": 125.7,
   "spoke 1.3": 145.8,
   "spoke 2.1": 94.0,
-  "spoke 2.2": 126.8,
   "spoke 2.3": 167.3,
   "spoke 3.1": 94.0,
-  "spoke 3.2": 126.8,
   "spoke 3.3": 167.3,
   "spoke 4.1": 148.5,
-  "spoke 4.2": 125.7,
   "spoke 4.3": 145.8,
   "core tie front.1": 119.3,
   "core tie front.2": 224.3,
@@ -1867,8 +1787,8 @@
   "core tie right.2": 303.0,
   "bay tie +1+1.2": 138.7,
   "bay tie +1-1.2": 138.7,
-  "bay tie -1+1.2": 150.0,
-  "bay tie -1-1.2": 150.0,
+  "bay tie -1+1.2": 150.4,
+  "bay tie -1-1.2": 150.4,
   "head rod +1": 137.0,
   "head rod -1": 137.0,
   "arm 1 tube lo": 144.9,

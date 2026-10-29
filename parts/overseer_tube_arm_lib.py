@@ -2,10 +2,10 @@
 
 Each arm is two 6/4 carbon tubes, stacked (z 14 and 36, on the arm axis), running from a small printed ROOT block between the
 plates to a printed motor PAD; both ends glued in coupon sockets 15 deep (parts/cage_node_lib.py socket_cuts: resin grooves,
-lead-in, teardrop crown, 2.5 collar). The spokes to the cage end on the PAD as before.
+lead-in, teardrop crown, 2.5 collar). The two spokes per arm (the .1 and .3; the .2 spokes were dropped the same day) end on the PAD.
   ROOT (between the plates, bolted and pegged to them as the one-piece arm was): the two plate boss blocks, the two pegs and two
        tube collars pointing out along the arm; the topology joins them. Nothing else.
-  PAD: the motor pad lugs (slots r 8..9.5, shaft bore), the three 3 mm spoke collars and two tube collars facing the root.
+  PAD: the motor pad lugs (slots r 8..9.5, shaft bore), the two 3 mm spoke collars and two tube collars facing the root.
 Assembly: glue the tubes into the ROOT first (the ROOT bolted to the plates, the tubes pushed home against the socket floors),
 then the PAD onto the tubes with the spokes dry-fitted so the pad sits where the cage puts it, then the spokes.
 Loads (each its own case): PAD: flight 4 g + 21 N thrust with +-0.5 N m torque, landing 6 g, on "tubes+spokes"; HANDLING (the 96 g

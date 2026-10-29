@@ -196,7 +196,7 @@ def build(cage, mg):
     link_pts = {}
     for nm, (p, q) in cage["links"].items():
         if nm == "head rod c":
-            continue                                             # both ends on the head mount (node 17 is part of it)
+            continue                                             # both ends on the head mount (node 17 is part of it; dropped 29 Oct)
         i, j = fr.node(p), fr.node(q); link_pts[nm] = (i, j)
         fr.member(nm, i, j, RODS, "link"); lengths[nm] = float(np.linalg.norm(np.asarray(p) - np.asarray(q)))
     # masses: nodes, tubes and rods half to each end

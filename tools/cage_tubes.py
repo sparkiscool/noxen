@@ -46,8 +46,8 @@ for nm, (p, q) in CAGE["links"].items():
     rods.append(trimesh.creation.cylinder(KIND[kind]["bore_r"] - 0.1, L, sections=16, segment=np.vstack([p + u * s0, q - u * s1])))
 # the arm tubes (29 Oct, tube arms): two 6/4 tubes per arm from the root block's socket floors to the pad's, arms 3 / 4 mirrored in y
 from parts.overseer_tube_arm_lib import TubeArm, TUBE_BORE_R
-for nm, arm in (("arm 1", TubeArm("front", 45.0, 0, ["spoke 1.1", "spoke 1.2", "spoke 1.3"], [178.94, 146.7, 8.0], "root")),
-                ("arm 2", TubeArm("rear", 135.0, 1, ["spoke 2.1", "spoke 2.2", "spoke 2.3"], [-53.26, 119.7, 25.0], "root"))):
+for nm, arm in (("arm 1", TubeArm("front", 45.0, 0, ["spoke 1.1", "spoke 1.3"], [178.94, 146.7, 8.0], "root")),
+                ("arm 2", TubeArm("rear", 135.0, 1, ["spoke 2.1", "spoke 2.3"], [-53.26, 119.7, 25.0], "root"))):
     for (p, q), tag in zip(zip(arm.tube_points("root"), arm.tube_points("pad")), ("lo", "hi")):
         for sgn, k in ((1, nm), (-1, {"arm 1": "arm 4", "arm 2": "arm 3"}[nm])):
             pp, qq = p * np.array([1, sgn, 1]), q * np.array([1, sgn, 1]); L = float(np.linalg.norm(qq - pp))
