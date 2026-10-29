@@ -1,35 +1,19 @@
 {
  "name": "overseer_cage_node_5",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   4048.4
+   3988.5
   ],
   "necks": [],
-  "drawn_not_in_main": [
-   [
-    "0.2",
-    0.0,
-    "erode 2.0"
-   ],
-   [
-    "0.10",
-    0.248,
-    "erode 1.7"
-   ],
-   [
-    "0.14",
-    0.491,
-    "erode 2.0"
-   ]
-  ],
+  "drawn_not_in_main": [],
   "thin_walls": [],
   "acute_edges": 0,
-  "ok": false
+  "ok": true
  },
  "function_check": {
   "skin_mm3": 1959.5,
@@ -43,12 +27,12 @@
    {
     "case": "frame tube 5-11 axial 149 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.045,
-    "across": 0.04,
+    "inlayer": 0.042,
+    "across": 0.033,
     "at": [
-     -239.3,
-     15.0,
-     -72.3
+     -233.3,
+     10.2,
+     -78.3
     ]
    },
    {
@@ -57,20 +41,20 @@
     "inlayer": 0.0,
     "across": 0.0,
     "at": [
-     -235.7,
-     15.0,
-     -81.9
+     -239.3,
+     13.8,
+     -80.7
     ]
    },
    {
     "case": "frame tube 5-12 axial 149 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.045,
-    "across": 0.04,
+    "inlayer": 0.042,
+    "across": 0.033,
     "at": [
-     -239.3,
-     -15.0,
-     -72.3
+     -233.3,
+     -10.2,
+     -78.3
     ]
    },
    {
@@ -79,20 +63,20 @@
     "inlayer": 0.0,
     "across": 0.0,
     "at": [
-     -235.7,
+     -239.3,
      -15.0,
-     -81.9
+     -79.5
     ]
    },
    {
     "case": "frame tube 5-13 axial 75 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.121,
-    "across": 0.158,
+    "inlayer": 0.092,
+    "across": 0.145,
     "at": [
      -240.5,
-     10.2,
-     -78.3
+     7.8,
+     -79.5
     ]
    },
    {
@@ -101,42 +85,42 @@
     "inlayer": 0.003,
     "across": 0.003,
     "at": [
-     -239.3,
-     15.0,
-     -72.3
+     -241.7,
+     12.6,
+     -69.9
     ]
    },
    {
     "case": "frame tube 5-14 axial 75 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.122,
-    "across": 0.159,
+    "inlayer": 0.091,
+    "across": 0.144,
     "at": [
      -240.5,
-     -10.2,
-     -78.3
+     -7.8,
+     -79.5
     ]
    },
    {
     "case": "frame tube 5-14 side 1.5 N",
     "cls": "crash",
     "inlayer": 0.003,
-    "across": 0.003,
+    "across": 0.004,
     "at": [
-     -239.3,
-     -15.0,
-     -72.3
+     -241.7,
+     -12.6,
+     -69.9
     ]
    },
    {
     "case": "frame camera rod 5 axial 11 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.012,
-    "across": 0.019,
+    "inlayer": 0.01,
+    "across": 0.018,
     "at": [
-     -240.5,
-     -10.2,
-     -78.3
+     -239.3,
+     6.6,
+     -74.7
     ]
    },
    {
@@ -145,43 +129,43 @@
     "inlayer": 0.0,
     "across": 0.0,
     "at": [
-     -239.3,
-     -9.0,
-     -72.3
+     -241.7,
+     -7.8,
+     -78.3
     ]
    },
    {
     "case": "crash 35 g through the longest tube tube 5-11 (381 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.045,
-    "across": 0.04,
+    "inlayer": 0.042,
+    "across": 0.033,
     "at": [
-     -239.3,
-     15.0,
-     -72.3
+     -233.3,
+     10.2,
+     -78.3
     ]
    },
    {
     "case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
     "cls": "flight",
-    "inlayer": 0.94,
-    "across": 1.448,
+    "inlayer": 0.651,
+    "across": 0.655,
     "at": [
-     -234.5,
-     -10.2,
-     -86.7
+     -240.5,
+     -4.2,
+     -89.1
     ]
    }
   ],
-  "worst": 1.448,
+  "worst": 0.655,
   "worst_case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
   "worst_at": [
-   -234.5,
-   -10.2,
-   -86.7
+   -240.5,
+   -4.2,
+   -89.1
   ]
  },
- "mass_g": 12.05,
+ "mass_g": 12.11,
  "watertight": true,
  "bodies": {
   "bodies_raw": 1,
@@ -189,7 +173,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 9485.8,
+ "volume_mm3": 9532.9,
  "drawn_g": 8.75,
  "stl": "overseer_cage_node_5.stl",
  "view_stl": "overseer_cage_node_5_view.stl",
@@ -263,7 +247,7 @@
   "n_real": 12,
   "n_ties": 30,
   "backend": "direct",
-  "iterations": 137,
+  "iterations": 66,
   "stopped": "grey"
  },
  "grid": {
@@ -300,9 +284,9 @@
    "default"
   ]
  },
- "build_s": 79.1,
- "layout_s": 15993,
- "peak_gb": 6.306036,
+ "build_s": 74.3,
+ "layout_s": 7894,
+ "peak_gb": 6.331388,
  "gen_cm3": 2.7,
  "h": 1.2,
  "audit": {
@@ -386,9 +370,9 @@
   "fails": []
  },
  "baseline": null,
- "total_s": 16072,
+ "total_s": 7968,
  "part_sha": "17bbecd403fa",
- "lib_sha": "421d0dd2fb1a",
+ "lib_sha": "d376e1fdbfd7",
  "max_worst": 0.5,
  "strength_ok": false
 }
