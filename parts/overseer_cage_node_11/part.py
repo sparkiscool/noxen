@@ -1,4 +1,4 @@
 """Overseer cage node 11 (v6 setup: socket walls and floors drawn, the rest generated; parts/cage_node_lib.py)."""
 from parts.cage_node_lib import make
 setup = make(11)
-SPEC = dict(h=1.0, gen_cm3=9.9, max_worst=0.5)
+SPEC = dict(h=1.2, gen_cm3=9.9, max_worst=0.5)

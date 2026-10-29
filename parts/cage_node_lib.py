@@ -25,7 +25,7 @@ from topo.part import man
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "systems", "overseer.cage.json")))
 NODES = np.array(CAGE["nodes"], float)
-NODE_R = float(CAGE["node_r_mm"])                     # 10.15: where the bores start
+NODE_R = float(CAGE["node_r_mm"])                     # 10.15: where a bore starts unless a neighbour forces it further out (SOCKET_START)
 BASE = {0, 1, 2, 3, 4, 5}                             # the base loop, z -79.9
 WALL, FLOOR, MARGIN = 2.0, 3.0, 8.0
 KIND = {"tube": dict(bore_r=3.1, depth=15.0), "link": dict(bore_r=1.6, depth=10.0)}   # bore 6.2 / 3.2
@@ -35,8 +35,7 @@ FOOT_R, FOOT_T = 8.0, 2.4                             # landing face: Ø16 x 2.4
 GN = 9.81e-3
 
 
-def members(n):
-    """sockets of node n: dicts name, kind, far (far end point), u (unit, node -> far end), bore_r, depth, axial, side."""
+def _raw_members(n):
     c = NODES[n]
     out = []
     for a, b in CAGE["rods"]:
@@ -46,12 +45,46 @@ def members(n):
     for nm, (p, q) in CAGE["links"].items():
         for e, f in ((p, q), (q, p)):
             if np.linalg.norm(np.array(e) - c) < 0.5:
-                out.append(dict(name=nm, kind="link", far=np.array(f, float), other=None))
-    loads = CAGE["node_loads"].get(str(n), {})
+                d = np.linalg.norm(NODES - np.array(f, float), axis=1); o = int(np.argmin(d)) if d.min() < 0.6 else None
+                out.append(dict(name=nm, kind="link", far=np.array(f, float), other=o))
     for m in out:
         d = m["far"] - c
         m["len"] = float(np.linalg.norm(d)); m["u"] = d / m["len"]
         m.update(KIND[m["kind"]])
+    return out
+
+
+def _socket_starts():
+    """where each socket's bore starts, per (node, member): NODE_R, or further out where two members meet at a small angle, so
+    that every bore clears its neighbours by WALL (Spark 29 Oct: no carbon touching carbon inside a node; the v5/v6 nodes had
+    merged bores at every node from 0 to 19, members 20..36 deg apart). The rod is cut shorter by the same amount."""
+    st = {}
+    for n in range(len(NODES)):
+        ms = _raw_members(n)
+        for m in ms:
+            s0 = NODE_R
+            for o in ms:
+                if o is m:
+                    continue
+                t = float(np.arccos(np.clip(m["u"] @ o["u"], -1.0, 1.0)))
+                if t < 1e-6:
+                    continue
+                s0 = max(s0, (m["bore_r"] + o["bore_r"] + WALL) / (2.0 * np.sin(t / 2.0)))
+            st[(n, m["name"])] = float(np.ceil(s0 * 10.0) / 10.0)          # up to the next 0.1 mm: the check below is exact
+    return st
+
+
+SOCKET_START = _socket_starts()
+
+
+def members(n):
+    """sockets of node n: dicts name, kind, far (far end point), u (unit, node -> far end), bore_r, depth, axial, side, s0 (where the
+    bore starts, mm from the centre), s0_far (the same at the far end, a cage node)."""
+    out = _raw_members(n)
+    loads = CAGE["node_loads"].get(str(n), {})
+    for m in out:
+        m["s0"] = SOCKET_START[(n, m["name"])]
+        m["s0_far"] = SOCKET_START.get((m["other"], m["name"]), NODE_R)
         m["axial"] = loads.get(m["name"], {}).get("axial")
         m["side"] = loads.get(m["name"], {}).get("side")
     return out
@@ -84,12 +117,16 @@ def check_members(n, log=print):
                 continue
             if not np.allclose(back[0]["u"], -m["u"], atol=1e-9):
                 bad.append(f"{m['name']}: the two sockets are not on one axis")
-            if m["len"] - 2 * NODE_R < 2 * m["depth"] - 1e-6:
+            if m["len"] - m["s0"] - m["s0_far"] < 2 * m["depth"] - 1e-6:
                 log(f"  note: {m['name']} is {m['len']:.0f} long: its two {m['depth']} mm bores nearly meet")
-    ang = [(np.degrees(np.arccos(np.clip(a["u"] @ b["u"], -1, 1))), a["name"], b["name"]) for i, a in enumerate(ms) for b in ms[i + 1:]]
-    for t, a, b in ang:
-        if 2 * NODE_R * np.sin(np.radians(t) / 2) < 6.2:
-            log(f"  WARNING {a} / {b}: {t:.0f} deg apart, their bores overlap at the node (the members would touch)")
+    for i, a in enumerate(ms):
+        for b in ms[i + 1:]:
+            t = np.arccos(np.clip(a["u"] @ b["u"], -1, 1)); r = max(a["s0"], b["s0"])
+            if 2 * r * np.sin(t / 2) < a["bore_r"] + b["bore_r"] + WALL - 1e-6:
+                bad.append(f"{a['name']} / {b['name']}: {np.degrees(t):.0f} deg apart, bores overlap at {r:.1f} mm (carbon would touch carbon)")
+    far = [f"{m['name']} from {m['s0']:.1f}" for m in ms if m["s0"] > NODE_R + 1e-6]
+    if far:
+        log(f"  sockets moved out so no bores overlap: {', '.join(far)} mm (others from {NODE_R})")
     if bad:
         raise ValueError(f"node {n}: " + "; ".join(bad))
     return ms
@@ -103,12 +140,12 @@ def verify_cuts(n, ms, cuts, log=print):
         t = mf.Manifold.sphere(0.25, 8).translate(p.tolist())
         return (cuts ^ t).volume() > 0.9 * t.volume()
     for m in ms:
-        for s in (NODE_R + 0.5, NODE_R + m["depth"] / 2, NODE_R + m["depth"] - 0.5):
+        for s in (m["s0"] + 0.5, m["s0"] + m["depth"] / 2, m["s0"] + m["depth"] - 0.5):
             if not inside(c + m["u"] * s):
                 raise ValueError(f"node {n}: {m['name']} bore not cut at {s:.1f} mm from the node centre")
-        if inside(c + m["u"] * (NODE_R - FLOOR / 2)):
+        if inside(c + m["u"] * (m["s0"] - FLOOR / 2)):
             raise ValueError(f"node {n}: {m['name']} floor is cut")
-    log(f"  members check: {len(ms)} sockets, every member lands in a bore of node {n} (bore from {NODE_R} mm)")
+    log(f"  members check: {len(ms)} sockets, every member lands in a bore of node {n}")
 
 
 def build(n, h, log=print, extra=None):
@@ -122,12 +159,12 @@ def build(n, h, log=print, extra=None):
     pts = []
     for m in ms:
         ro = m["bore_r"] + WALL
-        s_end = NODE_R + m["depth"]
-        collars.append(along(c, m["u"], NODE_R - FLOOR, s_end, ro))
-        bores.append(along(c, m["u"], NODE_R, s_end + 1.0, m["bore_r"]))
+        s_end = m["s0"] + m["depth"]
+        collars.append(along(c, m["u"], m["s0"] - FLOOR, s_end, ro))
+        bores.append(along(c, m["u"], m["s0"], s_end + 1.0, m["bore_r"]))
         keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))     # the member itself, and room to wrap it: no growth
         m["ro"], m["s_end"] = ro, s_end
-        for s in (NODE_R - FLOOR, s_end):
+        for s in (m["s0"] - FLOOR, s_end):
             for a in np.linspace(0, 2 * np.pi, 8, endpoint=False):
                 e1 = np.cross(m["u"], [0, 0, 1.0] if abs(m["u"][2]) < 0.9 else [1.0, 0, 0]); e1 /= np.linalg.norm(e1)
                 e2 = np.cross(m["u"], e1)
@@ -152,7 +189,7 @@ def build(n, h, log=print, extra=None):
     # ---- supports: the sockets of the two tubes with the largest frame-model axial force
     tubes = sorted([m for m in ms if m["kind"] == "tube"] or ms, key=lambda m: -m["axial"])     # a node on rods only (21): its rods hold it
     sup = tubes[:2]
-    lining = lambda m, grow=1.0: along(c, m["u"], NODE_R - FLOOR - 0.5, m["s_end"], m["bore_r"] + grow)   # bore wall + floor
+    lining = lambda m, grow=1.0: along(c, m["u"], m["s0"] - FLOOR - 0.5, m["s_end"], m["bore_r"] + grow)   # bore wall + floor
     p.support("default", U([lining(m, 1.4) for m in sup]))
     held = {m["name"] for m in sup}
     log(f"  supports: {sorted(held)}")
