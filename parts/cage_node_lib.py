@@ -46,7 +46,9 @@ def _raw_members(n):
         for e, f in ((p, q), (q, p)):
             if np.linalg.norm(np.array(e) - c) < 0.5:
                 d = np.linalg.norm(NODES - np.array(f, float), axis=1); o = int(np.argmin(d)) if d.min() < 0.6 else None
-                out.append(dict(name=nm, kind="link", far=np.array(f, float), other=o))
+                # head rods +1 / -1 are 6/4 tubes (dimensions.md Sensor head supports, Spark 27 Oct; the head mount bores them
+                # 6.2 x 15): nodes 15 / 16 bored them 3.2 as rods until 29 Oct
+                out.append(dict(name=nm, kind="tube" if nm.startswith("head rod") else "link", far=np.array(f, float), other=o))
     for m in out:
         d = m["far"] - c
         m["len"] = float(np.linalg.norm(d)); m["u"] = d / m["len"]

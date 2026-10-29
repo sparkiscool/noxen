@@ -36,9 +36,14 @@ for nm, (p, q) in CAGE["links"].items():
     if db.min() < 0.6:
         p, q, da, db = q, p, db, da                                  # p is the cage-node end (if any)
     s0 = SOCKET_START[(int(np.argmin(da)), nm)] if da.min() < 0.6 else float(CAGE["node_r_mm"])
-    s1 = float(CAGE["node_r_mm"]); u = (q - p) / np.linalg.norm(q - p)
+    s1 = float(CAGE["node_r_mm"]); u = (q - p) / np.linalg.norm(q - p); kind = "link"
+    if nm.startswith("head rod"):
+        # 6/4 tube into the head mount: the mount's socket mouth is at the link point and its bore runs 15 deep into the
+        # mount, away from the cage (parts/overseer_head_mount/part.py Sock, mouth_at_end), so the tube starts 15 inside
+        # (29 Oct, Spark: the rods floated 10 mm short of the mount)
+        kind, s1 = "tube", -KIND["tube"]["depth"]
     L = float(np.linalg.norm(q - p)) - s0 - s1; cuts[nm] = round(L, 1)
-    rods.append(trimesh.creation.cylinder(KIND["link"]["bore_r"] - 0.1, L, sections=16, segment=np.vstack([p + u * s0, q - u * s1])))
+    rods.append(trimesh.creation.cylinder(KIND[kind]["bore_r"] - 0.1, L, sections=16, segment=np.vstack([p + u * s0, q - u * s1])))
 mr = trimesh.util.concatenate(rods); mr.export(os.path.join(ROOT, "parts", "spokes_ties_head_rods", "part.stl"))
 print(f"{len(rods)} rods off the cage -> parts/spokes_ties_head_rods/part.stl ({len(mr.faces)} faces)")
 path = os.path.join(ROOT, "systems", "overseer.cage.json"); s = open(path).read(); c = json.loads(s)
