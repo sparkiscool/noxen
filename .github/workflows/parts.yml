@@ -100,7 +100,8 @@ jobs:
         run: |
           set +e
           python -m topo.run parts/${{ matrix.part }} --time-limit $ENGINE_LIMIT_S
-          echo "rc=$?" >> "$GITHUB_OUTPUT"
+          rc=$?; echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          exit $rc                                      # a crash shows red (29 Oct: three arm runs "succeeded" in 2 minutes with no result)
 
       # always save the checkpoint (even on timeout or failure), so the next attempt resumes
       - name: save checkpoint

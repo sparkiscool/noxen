@@ -67,9 +67,9 @@ class SplitArm(Arm):
             out.append((self.p(sJ + sg * PIN_HALF / 2, v, PIN_Z), self.axial(min(sJ + sg * 0.5, sJ + sg * PIN_HALF), max(sJ + sg * 0.5, sJ + sg * PIN_HALF), v, PIN_Z, PIN_BORE_R + 1.4)))
         for v in (JB_V, -JB_V):
             if self.piece == "tip":
-                seat = self.axial(sJ + NUT_T, sJ + NUT_T + 1.2, v, JB_Z, 3.3)       # nut seat behind the pocket
+                seat = self.axial(sJ + NUT_T, sJ + NUT_T + 2.5, v, JB_Z, 3.3)       # nut seat behind the pocket (2.5 thick for the coarse pitch)
             else:
-                seat = self.axial(sJ - PAD_T + HEAD_T, sJ - PAD_T + HEAD_T + 1.2, v, JB_Z, 3.3)   # head seat at the counterbore floor
+                seat = self.axial(sJ - PAD_T + HEAD_T, sJ - PAD_T + HEAD_T + 2.5, v, JB_Z, 3.3)   # head seat at the counterbore floor
             out.append((self.p(sJ + sg * (NUT_T + 0.6), v, JB_Z), seat))
         return out
 
@@ -161,7 +161,7 @@ def build_piece(arm, h, log=print):
 
     if arm.piece == "tip":
         # ---- supports: the joint (pins + contact face), and + the 3 spoke sockets
-        face = arm.slab(arm.sJ, arm.sJ + 1.0, -PAD_V, PAD_V, PAD_Z0, PAD_Z1)
+        face = arm.slab(arm.sJ, arm.sJ + 2.5, -PAD_V, PAD_V, PAD_Z0, PAD_Z1)
         joint = U([face] + [reg for (_, reg) in jp[:2]])
         p.support("joint", joint)
         p.support("joint+spokes", U([joint] + [sp["lining"] for sp in arm.spokes]))
@@ -185,7 +185,7 @@ def build_piece(arm, h, log=print):
         lips = []
         for s in (1, -1):
             A, B = arm.xy(BOLT_TOP[0], s * BOLT_TOP[1]), arm.xy(BOLT_BOT[0], s * BOLT_BOT[1])
-            lips += [stadium(A, B, Z_PAD - 1.0, Z_PAD, BOSS_R), stadium(A, B, Z_BOT, Z_BOT + 1.0, BOSS_R)]
+            lips += [stadium(A, B, Z_PAD - 2.5, Z_PAD, BOSS_R), stadium(A, B, Z_BOT, Z_BOT + 2.5, BOSS_R)]   # 2.5: a 1.0 lip holds no cell at the coarse pitch 4.0
         p.support("plates", U(lips))
 
         def via_joint(P_, F, Mz=0.0):
@@ -215,9 +215,9 @@ def build_piece(arm, h, log=print):
         for i, b in enumerate(B):
             x, y = b["xy"]
             if b["nut"] == "bot":
-                seat = cyl(x, y, Z_BOT + NUT_T, Z_BOT + NUT_T + 1.2, 3.3); dz = +1.0
+                seat = cyl(x, y, Z_BOT + NUT_T, Z_BOT + NUT_T + 2.5, 3.3); dz = +1.0      # 2.5 thick: a 1.2 seat held no cell at the coarse pitch 4.0
             else:
-                seat = cyl(x, y, Z_PAD - NUT_T - 1.2, Z_PAD - NUT_T, 3.3); dz = -1.0
+                seat = cyl(x, y, Z_PAD - NUT_T - 2.5, Z_PAD - NUT_T, 3.3); dz = -1.0
             wall = cyl(x, y, Z_BOT + NUT_T + FLOOR, Z_PAD - NUT_T - FLOOR, 2.7)
             pl, sh = max(worst[i]["pull"], 1.0), worst[i]["shear"]
             p.load_multi(f"{b['name']} pull {pl:.0f} N", [(seat, np.array([0, 0, dz * pl]))], cls="crash", support="plates")

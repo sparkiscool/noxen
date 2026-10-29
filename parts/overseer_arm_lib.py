@@ -249,7 +249,7 @@ def build(arm, h, log=print):
     lips = []
     for s in (1, -1):
         A, B = arm.xy(BOLT_TOP[0], s * BOLT_TOP[1]), arm.xy(BOLT_BOT[0], s * BOLT_BOT[1])
-        lips += [stadium(A, B, Z_PAD - 1.0, Z_PAD, BOSS_R), stadium(A, B, Z_BOT, Z_BOT + 1.0, BOSS_R)]
+        lips += [stadium(A, B, Z_PAD - 2.5, Z_PAD, BOSS_R), stadium(A, B, Z_BOT, Z_BOT + 2.5, BOSS_R)]     # 2.5 (29 Oct): a 1.0 lip held no cell at the coarse pitch 4.0 and the run crashed
     plates = U(lips)
     p.support("plates", plates)
     p.support("plates+spokes", U([plates] + [sp["lining"] for sp in arm.spokes]))
@@ -318,9 +318,9 @@ def build(arm, h, log=print):
     for i, b in enumerate(B):
         x, y = b["xy"]
         if b["nut"] == "bot":
-            seat = cyl(x, y, Z_BOT + NUT_T, Z_BOT + NUT_T + 1.2, 3.3); dz = +1.0
+            seat = cyl(x, y, Z_BOT + NUT_T, Z_BOT + NUT_T + 2.5, 3.3); dz = +1.0      # 2.5 thick: a 1.2 seat held no cell at the coarse pitch 4.0
         else:
-            seat = cyl(x, y, Z_PAD - NUT_T - 1.2, Z_PAD - NUT_T, 3.3); dz = -1.0
+            seat = cyl(x, y, Z_PAD - NUT_T - 2.5, Z_PAD - NUT_T, 3.3); dz = -1.0
         wall = cyl(x, y, Z_BOT + NUT_T + FLOOR, Z_PAD - NUT_T - FLOOR, 2.7)
         pl, sh = max(worst[i]["pull"], 1.0), worst[i]["shear"]
         p.load_multi(f"{b['name']} pull {pl:.0f} N", [(seat, np.array([0, 0, dz * pl]))], cls="crash", support="plates")
