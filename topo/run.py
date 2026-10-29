@@ -62,18 +62,18 @@ def peak_gb():
 
 
 def _setup_hash(out_dir):
-    """part.py + its libs (tools/part_sha.py), or None for a demo part"""
+    """part.py + its libs + the engine (tools/part_sha.py), or None for a demo part"""
     py = os.path.join(out_dir, "part.py")
     if not os.path.exists(py):
         return None
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
-    from part_sha import part_sha, lib_sha
-    return part_sha(py) + lib_sha(py)
+    from part_sha import part_sha, lib_sha, engine_sha
+    return part_sha(py) + lib_sha(py) + engine_sha()
 
 
 def _own_checkpoints(out_dir, log):
     """a checkpoint resumes only the setup it came from: ck_setup.npz beside ck*.npz holds the setup hash; a checkpoint from
-    another setup (part.py or a lib changed) is deleted here, not resumed (29 Oct: nine nodes resumed checkpoints of the
+    another setup (part.py, a lib or the engine changed) is deleted here, not resumed (29 Oct: nine nodes resumed checkpoints of the
     previous socket layout and reported in two minutes)"""
     import glob, numpy as np
     want = _setup_hash(out_dir)

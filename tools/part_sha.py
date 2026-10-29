@@ -31,6 +31,13 @@ def part_sha(py):
     return _h(py)
 
 
+def engine_sha():
+    """the engine itself (topo/*.py): a checkpoint from another engine is not resumed either"""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    fs = sorted(f for f in os.listdir(os.path.join(root, "topo")) if f.endswith(".py"))
+    return hashlib.sha256("".join(_h(os.path.join(root, "topo", f)) for f in fs).encode()).hexdigest()[:12]
+
+
 def lib_sha(py):
     ls = libs(py)
     return hashlib.sha256("".join(_h(l) for l in ls).encode()).hexdigest()[:12] if ls else ""
