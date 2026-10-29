@@ -1,47 +1,19 @@
 {
  "name": "overseer_cage_node_21",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
   "specks_plain": 1,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   1259.9
+   1960.8
   ],
-  "necks": [
-   {
-    "neck_under_mm": 3.0,
-    "blob_thick_mm": 6.7,
-    "joint_mm2": 147.0,
-    "blob_mm3": 225.9,
-    "at": [
-     -243.8,
-     -8.3,
-     32.9
-    ]
-   }
-  ],
-  "drawn_not_in_main": [
-   [
-    "0.1",
-    0.0,
-    "erode 1.8"
-   ],
-   [
-    "0.2",
-    0.0,
-    "erode 2.0"
-   ],
-   [
-    "0.4",
-    0.497,
-    "erode 1.6"
-   ]
-  ],
+  "necks": [],
+  "drawn_not_in_main": [],
   "thin_walls": [],
   "acute_edges": 3,
-  "ok": false
+  "ok": true
  },
  "function_check": {
   "skin_mm3": 512.2,
@@ -55,21 +27,21 @@
    {
     "case": "frame camera rod 5 axial 11 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.02,
-    "across": 0.039,
+    "inlayer": 0.013,
+    "across": 0.024,
     "at": [
-     -243.4,
-     5.5,
-     34.8
+     -244.4,
+     -5.5,
+     38.8
     ]
    },
    {
     "case": "frame camera rod 5 side 0.5 N",
     "cls": "crash",
-    "inlayer": 0.001,
-    "across": 0.002,
+    "inlayer": 0.0,
+    "across": 0.001,
     "at": [
-     -245.4,
+     -246.4,
      10.5,
      37.8
     ]
@@ -77,101 +49,101 @@
    {
     "case": "camera flight 4 g",
     "cls": "flight",
-    "inlayer": 0.004,
-    "across": 0.008,
+    "inlayer": 0.003,
+    "across": 0.005,
     "at": [
-     -243.4,
-     -8.5,
-     35.8
+     -244.4,
+     8.5,
+     37.8
     ]
    },
    {
     "case": "camera landing 6 g",
     "cls": "flight",
-    "inlayer": 0.006,
-    "across": 0.012,
+    "inlayer": 0.004,
+    "across": 0.008,
     "at": [
-     -243.4,
-     -8.5,
-     35.8
+     -244.4,
+     8.5,
+     37.8
     ]
    },
    {
     "case": "camera crash 35 g +x",
     "cls": "crash",
-    "inlayer": 0.013,
-    "across": 0.025,
+    "inlayer": 0.008,
+    "across": 0.018,
     "at": [
-     -243.4,
-     7.5,
-     35.8
+     -244.4,
+     8.5,
+     37.8
     ]
    },
    {
     "case": "camera crash 35 g -x",
     "cls": "crash",
-    "inlayer": 0.013,
-    "across": 0.022,
+    "inlayer": 0.008,
+    "across": 0.012,
     "at": [
-     -249.4,
-     -6.5,
-     37.8
+     -248.4,
+     9.5,
+     35.8
     ]
    },
    {
     "case": "camera crash 35 g +y",
     "cls": "crash",
-    "inlayer": 0.01,
-    "across": 0.012,
+    "inlayer": 0.004,
+    "across": 0.006,
     "at": [
      -245.4,
      10.5,
-     37.8
+     33.8
     ]
    },
    {
     "case": "camera crash 35 g -y",
     "cls": "crash",
-    "inlayer": 0.01,
-    "across": 0.012,
+    "inlayer": 0.004,
+    "across": 0.006,
     "at": [
      -245.4,
      -10.5,
-     37.8
+     33.8
     ]
    },
    {
     "case": "camera crash 35 g +z",
     "cls": "crash",
-    "inlayer": 0.009,
-    "across": 0.019,
+    "inlayer": 0.006,
+    "across": 0.013,
     "at": [
-     -243.4,
-     -8.5,
-     35.8
+     -244.4,
+     8.5,
+     37.8
     ]
    },
    {
     "case": "camera crash 35 g -z",
     "cls": "crash",
-    "inlayer": 0.009,
-    "across": 0.009,
+    "inlayer": 0.006,
+    "across": 0.006,
     "at": [
-     -249.4,
-     -6.5,
-     37.8
+     -243.4,
+     8.5,
+     36.8
     ]
    }
   ],
-  "worst": 0.039,
+  "worst": 0.024,
   "worst_case": "frame camera rod 5 axial 11 N (pull-out)",
   "worst_at": [
-   -243.4,
-   5.5,
-   34.8
+   -244.4,
+   -5.5,
+   38.8
   ]
  },
- "mass_g": 4.07,
+ "mass_g": 5.12,
  "watertight": true,
  "bodies": {
   "bodies_raw": 1,
@@ -179,11 +151,11 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 3205.5,
+ "volume_mm3": 4035.3,
  "drawn_g": 2.5,
  "stl": "overseer_cage_node_21.stl",
  "view_stl": "overseer_cage_node_21_view.stl",
- "view_faces": 58764,
+ "view_faces": 62106,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -245,7 +217,7 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.030194676201827572,
+  "volfrac": 0.050059594755661505,
   "nd": 40272,
   "sym_axes": [
    1
@@ -253,7 +225,7 @@
   "n_real": 10,
   "n_ties": 42,
   "backend": "direct",
-  "iterations": 94,
+  "iterations": 92,
   "stopped": "grey"
  },
  "grid": {
@@ -288,10 +260,10 @@
    "default"
   ]
  },
- "build_s": 25.1,
- "layout_s": 2869,
- "peak_gb": 3.122192,
- "gen_cm3": 1.2,
+ "build_s": 24.4,
+ "layout_s": 2718,
+ "peak_gb": 3.14874,
+ "gen_cm3": 2.0,
  "h": 1.0,
  "audit": {
   "drawn_share": 0.048,
@@ -390,8 +362,8 @@
   "fails": []
  },
  "baseline": null,
- "total_s": 2894,
- "part_sha": "b03bdf7bd619",
+ "total_s": 2742,
+ "part_sha": "bbe85af8e176",
  "lib_sha": "d376e1fdbfd7",
  "max_worst": 0.5,
  "strength_ok": true
