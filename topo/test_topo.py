@@ -467,7 +467,7 @@ def t_audit_plate():
 
 
 def t_skin_core():
-    """masked erosion with thick drawn skins eroding (29 Oct): a 6 x 6 x 4 drawn pad keeps only the core the solid gate keeps and its
+    """masked erosion with thick drawn skins eroding (29 Oct): an 8 mm drawn pad keeps only the core the solid gate keeps and its
     skin erodes with the design, so a 5 mm member meeting the pad at its rim leaves the pad's core outside the engine's eroded body
     (the gate's verdict on the rear arm's plate bosses, which the engine passed with the pad held whole), while a member on the
     pad's centre joins it; the rim member's tie compliance is far above the centre one's."""
@@ -476,8 +476,8 @@ def t_skin_core():
         from scipy import ndimage as ndi
         from .part import Part
         box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
-        base, pad = box(0, 3, 0, 12, 0, 12), box(20, 24, 2, 8, 2, 8)
-        p = Part("rim", 1.0, base + pad, box(100, 101, 100, 101, 100, 101), box(0, 24, 0, 12, 0, 12), log=lambda s_: None)
+        base, pad = box(0, 3, 0, 12, 0, 12), box(20, 28, 1, 9, 1, 9)             # an 8 mm pad: thick enough to keep a core
+        p = Part("rim", 1.0, base + pad, box(100, 101, 100, 101, 100, 101), box(0, 28, 0, 12, 0, 12), log=lambda s_: None)
         p.support("default", box(-1, 1.5, -1, 13, -1, 13))
         p.load("down", pad, (0, 0, -10.0))
         p.load("side", pad, (0, 5.0, 0))

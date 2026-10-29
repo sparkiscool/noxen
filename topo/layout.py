@@ -21,7 +21,7 @@ Anchored-core erosion (option, erosion = "anchored", round 1 default): only the 
 design; their skins are projected like design material and loads on them move to the nearest core node. It isolated
 thin drawn plates next to cuts (bracket_jA topo-v1: 3 bodies off from beta 8, tie compliance ratio ~1e5).
 erosion = "frozen": drawn cells 1, eroded field = the nominal filter (the classic robust formulation).
-In "masked" (29 Oct) a thick drawn body is held only at the core the solid gate keeps (the part eroded by
+In "masked" (29 Oct) a drawn body at least 6 mm thick is held only at the core the solid gate keeps (the part eroded by
 clip(0.8 x its half thickness, 0.9, 2.0) mm): its skin takes the nominal filter's density and erodes with the design, so a
 member that meets the body at its rim is seen to come off, as the gate sees it; loads on a skin move to the nearest core
 node. A body too thin for a core stays whole, as before (the gate judges it by its own size).
@@ -43,6 +43,11 @@ from .mma import MMA
 
 S26 = np.ones((3, 3, 3), bool)
 S6 = ndi.generate_binary_structure(3, 1)
+
+
+CORE_MIN_HALF_MM = 3.0                   # a drawn body erodes to its gate core only if at least 6 mm thick (core >= 2 mm): thinner
+#   bodies (organic 2.5 mm skins, collar floors, a node's landing foot) keep slivers for cores, and ties on a sliver can never
+#   be met (node 5, 29 Oct: 280 core cells, 3,468 skin cells, "tie b1 mx" 1.7e5, foot off)
 
 
 @dataclass
@@ -359,8 +364,10 @@ class Layout:
             lab, nb = ndi.label(sol3, S26)
             anchor = sol3.copy()
             for b in range(1, nb + 1):
-                m = lab == b
-                ef = float(np.clip(0.8 * din[m].max(), 0.9, s.gate_thin_mm))
+                m = lab == b; dmax = float(din[m].max())
+                if dmax < CORE_MIN_HALF_MM:
+                    continue                                 # a body under 6 mm thick keeps no core worth loading: held whole
+                ef = float(np.clip(0.8 * dmax, 0.9, s.gate_thin_mm))
                 core = m & (din > ef)
                 if core.any():
                     anchor[m] = core[m]
