@@ -4,7 +4,7 @@ Motor pad at motors_xy[0] (205.97, 139.5), arm top z 45, thrust plane z 82; spok
 (178.94, 146.7, 8); joint plane 130 mm out along the arm axis: 2 x 6.0 carbon pins + 2 x M3 along the axis, contact pads."""
 from parts.overseer_arm_split_lib import SplitArm, build_piece
 ARM = SplitArm("front", 45.0, 0, ["spoke 1.1", "spoke 1.2", "spoke 1.3"], [178.94, 146.7, 8.0], "tip")
-SPEC = dict(h=2.0, gen_cm3=30.0, max_worst=0.5)      # 20 gave index 1.38 at the spoke 1.3 socket (1465 N pull) and a collar off the body; the one-piece arm had 48
+SPEC = dict(h=2.0, gen_cm3=12.0, max_worst=0.5)      # 30 gave index 0.10 on the frame-model loads (29 Oct, Spark: cut it); 20 gave 1.38 on the old rigid-core 1465 N spoke pull
 
 
 def setup(h):
