@@ -1,5 +1,7 @@
 """Overseer cage node 21: the rear camera node (Spark 28 Oct). A cage node like the others (parts/cage_node_lib.py: three socket collars,
-drawn arms to the centre, the rest generated) sunk 45 mm inside the rear facet 13-14-5 on three 3 mm rods to nodes 13, 14 and 5, so a
+drawn arms to the centre, the rest generated) sunk 45 mm inside the rear facet 13-14-5 on three 3 mm rods to nodes 13, 14 and 20 (29 Oct, Spark: a rod must not be in the way of
+mounting the camera: the rod to node 5 ran straight down 1 mm behind the board's lower edge, through the plug zone; the rod to node 20
+leaves forward and up, 99 long, clear of the board, its plugs and the view), so a
 tail-first hit lands on the facet tubes and the lens, 26 mm inside the plane, never touches. It carries the DECXIN 2633V2 looking
 back and 40 deg down: 4 standoff cones 10 long behind the board (M2.5 on 28 x 28, insert O3.2 x 5.7, E; O7.6 at the board to O11; 29 Oct: the plugs on the board's back
 need the standoff, the plug zone behind the board is a cut; was O7.6 x 6, before that O10 on a drawn frame),

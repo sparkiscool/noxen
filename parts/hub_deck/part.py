@@ -6,7 +6,11 @@ node 17, printed into the head mount, so that rod keeps its line). Node conventi
 in systems/overseer.cage.json is the virtual node centre, the rod stops NODE_R short of it, the coupon socket (bore 3.2 x 10, resin
 grooves, lead-in, crown) runs from there toward the cage node, a 2.5 wall and 3.0 floor drawn round it. Loads: the frame model's
 member forces per crash case (systems/overseer.cage_loads.json), each added to the deck's own payload case of the same direction,
-plus a pull-out at the largest axial force per tie."""
+plus a pull-out at the largest axial force per tie.
+v14 (29 Oct): v13 FAILED at the nose, index 2.1 across layers at the front.1 collar on the left front foot in the +x crash, 1.3 at the
+front.2 collar under its 411 N pull-out, and a drawn body cut off at the gate: 14 cm3 spread over the whole deck left the nose thin.
+Nose collars 4.0 thick (NOSE_WALL; the 2.5 of the cage nodes sits in 3..7 cm3 of generated material each), the nose room back to
+x 78 (the UBEC bay ends at 82) and out to |y| 26 over both front feet, gen 22 (the v12 deck at 11 ran at index 0.17), h 1.3 for the cells."""
 import json, os
 import numpy as np, trimesh, manifold3d as mf
 
@@ -16,7 +20,7 @@ from topo import Part
 from topo.part import man
 from parts.cage_node_lib import CAGE, socket_cuts, collar_shape, KIND, WALL, FLOOR, NODE_R
 
-SPEC = dict(h=1.25, gen_cm3=14.0, max_worst=0.5)    # v12: h 1.0, 11 cm3; v13: the nose node lifts the grid to z 24 (h 1.0 would be 350k cells, 1.2 307k, limit 300k) and adds its collars + bracing (E)
+SPEC = dict(h=1.3, gen_cm3=22.0, max_worst=0.5)    # v12: h 1.0, 11 cm3; v13: the nose node lifts the grid to z 24 (h 1.0 would be 350k cells, 1.2 307k, limit 300k) and adds its collars + bracing (E)
 LEAN = False
 
 R = json.load(open(os.path.join(INP, "core_result.json")))
@@ -84,7 +88,8 @@ def arm_env(deg):
 
 
 # ================================================================ nose node (v13): the two front core ties end in the deck
-NOSE_ENV = (80.0, 105.0, -24.0, 24.0, 0.0, 24.0)                           # room for the collars and their bracing to the front feet (96, ±17)
+NOSE_WALL = 4.0                                                            # v14 (29 Oct): 2.5 failed at 411 N pull-out (index 1.3 across layers)
+NOSE_ENV = (78.0, 105.0, -26.0, 26.0, 0.0, 26.0)                           # room for the collars and their bracing to the front feet (96, ±17)
 TIE_CASES = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage_loads.json")))["cases"]
 
 
@@ -98,7 +103,7 @@ def nose_sockets():
         c, q = np.array(p, float), np.array(q, float); u = (q - c) / np.linalg.norm(q - c)
         k = KIND["link"]
         out.append(dict(name=nm, c=c, u=u, s0=NODE_R, depth=k["depth"], bore_r=k["bore_r"],
-                        lining=along(c, u, NODE_R - FLOOR - 0.5, NODE_R + k["depth"], k["bore_r"] + 1.0),
+                        lining=along(c, u, NODE_R - FLOOR - 0.5, NODE_R + k["depth"], k["bore_r"] + 1.5),
                         axial=max(abs(cs["members"][nm]["N"]) for cs in TIE_CASES)))
     assert len(out) == 2, [s_["name"] for s_ in out]
     # the two bores clear each other by WALL at their grooves (cage_node_lib's rule), measured between the two bore axes
@@ -106,7 +111,7 @@ def nose_sockets():
     sa = [a["c"] + a["u"] * t for t in np.linspace(a["s0"] - FLOOR, a["s0"] + a["depth"], 30)]
     sb = [b["c"] + b["u"] * t for t in np.linspace(b["s0"] - FLOOR, b["s0"] + b["depth"], 30)]
     dmin = min(np.linalg.norm(x - y) for x in sa for y in sb)
-    need = a["bore_r"] + b["bore_r"] + 2 * 0.5 + WALL
+    need = a["bore_r"] + b["bore_r"] + 2 * 0.5 + NOSE_WALL
     assert dmin >= need, f"nose sockets {dmin:.1f} mm apart, need {need:.1f}"
     return out
 
@@ -116,7 +121,7 @@ def nose_bodies(socks):
     collars, cuts = [], []
     for s_ in socks:
         s_end = s_["s0"] + s_["depth"]
-        collars.append(collar_shape(s_["c"], s_["u"], s_["s0"] - FLOOR, s_end, s_["bore_r"], WALL))
+        collars.append(collar_shape(s_["c"], s_["u"], s_["s0"] - FLOOR, s_end, s_["bore_r"], NOSE_WALL))
         cuts += socket_cuts(s_["c"], s_["u"], s_["s0"], s_["depth"], s_["bore_r"])
         cuts.append(along(s_["c"], s_["u"], s_end, s_end + 60.0, s_["bore_r"] + 0.6))        # the rod: nothing grows on it
     return collars, cuts, box(*NOSE_ENV)
