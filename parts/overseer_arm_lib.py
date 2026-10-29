@@ -2,8 +2,9 @@
 
 ONE printed PETG piece from the plate bolts to the motor pad: the jig that puts the motor in place and square to the FC.
 Drawn (attachments only, nothing between them):
-  * 4 plate bosses a side's worth: per side a top-face stadium (5.6 thick: 2.6 nut pocket or relief + 3.0 floor) and a bottom-face
-    stadium over the two bolts (top bolt u 63.17 v +-15, bottom bolt u 63.74 v +-10, O section M row), 2 locating pegs (u 57.66, v +-11);
+  * 4 plate bosses: per side a top-face block and a bottom-face block (u 57.5..72, |v| 3..22, 8 tall; nut pocket or relief 2.6 in
+    the face) round the two bolts (top bolt u 63.17 v +-15, bottom bolt u 63.74 v +-10, O section M row), 2 locating pegs (u 57.66,
+    v +-11); 29 Oct: was a stadium r 5.5, 5.6 thick, whose core at the gate's 2 mm erosion was slivers between the shank holes;
   * the motor pad (disc 36 x 6, level with the arm top z 45) with 4 bolt slots r 8..9.5 on the 45 deg lines, shaft bore 8.6;
   * 3 socket collars for the 3 mm carbon spokes (bore 3.2, 10 deep, 3.0 floor, wall 2.0) aimed at their cage node;
 Cut through the whole envelope: bolt shanks, nut pockets, motor-bolt tool sweeps, the shaft bore, the own spokes beyond their
@@ -41,6 +42,10 @@ PEG = (57.66, 11.0, 5.8, 1.5)                    # u, |v|, dia, height (M)
 HOLE_D = 3.2                                     # M3 shank (E: close fit like the rod bore; plates Ø3.1 / 3.0, M)
 NUT_AF, NUT_T = 5.7, 2.6                         # M3 nut AF 5.5 x 2.4 + clearance (E: not recorded in dimensions.md)
 BOSS_R, FLOOR = 5.5, 3.0                         # boss radius (2.2 wall round the relief), 3.0 floor behind the pocket
+BOSS_U, BOSS_V, BOSS_T = (57.5, 72.0), (3.0, 22.0), 8.0   # plate boss block per side and face (29 Oct): u 57.5..72 (the lips reach 57.7; the Pi deck keeps u >= 58),
+#   |v| 3..22, 8 tall. Was a stadium r 5.5 round the two bolts, 5.6 tall: its core at the gate's 2 mm erosion was slivers between the
+#   shank holes, so no joint could keep it in the main body (root and rear arm: plate bosses off at the gate, the engine stuck on
+#   their ties). This block keeps a 10 x 15 x 4 core round the holes that a member lands on full-face.
 RELIEF_R = 3.0                                   # round the neighbour's shank in the nut layer, merges with the pocket (no sliver)
 PAD_D, PAD_T = 36.0, 6.0                         # motor pad (arms section, C): Ø36 reach, 6 thick
 LUG_R = 5.5                                      # lug radius round each slot (slot 1.6 + 2.0 wall + 1.9)
@@ -184,11 +189,12 @@ class Arm:
         for s in (1, -1):
             A, B = self.xy(BOLT_TOP[0], s * BOLT_TOP[1]), self.xy(BOLT_BOT[0], s * BOLT_BOT[1])
             dAB = np.degrees(np.arctan2(*(B - A)[::-1])); dBA = dAB + 180.0
-            # top face (z 39.4..45): nut of the BOTTOM bolt B, relief round the top bolt A (its head-side contact is the plate lip)
-            drawn.append(stadium(A, B, Z_PAD - NUT_T - FLOOR, Z_PAD, BOSS_R))
+            blk = [(q[0], q[1], 0.0) for q in (self.xy(u, s * v) for u in BOSS_U for v in BOSS_V)]
+            # top face (z 37..45): nut of the BOTTOM bolt B, relief round the top bolt A (its head-side contact is the plate lip)
+            drawn.append(hull_xy(blk, Z_PAD - BOSS_T, Z_PAD))
             cuts += [hex_nut(B[0], B[1], Z_PAD - NUT_T, Z_PAD + 0.5, dBA), cyl(A[0], A[1], Z_PAD - NUT_T, Z_PAD + 0.5, RELIEF_R)]
-            # bottom face (z 0..5.6): nut of the TOP bolt A, relief round the bottom bolt B
-            drawn.append(stadium(A, B, Z_BOT, Z_BOT + NUT_T + FLOOR, BOSS_R))
+            # bottom face (z 0..8): nut of the TOP bolt A, relief round the bottom bolt B
+            drawn.append(hull_xy(blk, Z_BOT, Z_BOT + BOSS_T))
             cuts += [hex_nut(A[0], A[1], Z_BOT - 0.5, Z_BOT + NUT_T, dAB), cyl(B[0], B[1], Z_BOT - 0.5, Z_BOT + NUT_T, RELIEF_R)]
             for P in (A, B):                                       # shanks through the whole envelope (and out of the plates' way)
                 cuts.append(cyl(P[0], P[1], Z_BOT - 2.0, Z_PAD + 2.0, HOLE_D / 2, 24))
