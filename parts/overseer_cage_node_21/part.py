@@ -1,10 +1,9 @@
 """Overseer cage node 21: the rear camera node (Spark 28 Oct). A cage node like the others (parts/cage_node_lib.py: three socket collars,
 drawn arms to the centre, the rest generated) sunk 45 mm inside the rear facet 13-14-5 on three 3 mm rods to nodes 13, 14 and 5, so a
 tail-first hit lands on the facet tubes and the lens, 26 mm inside the plane, never touches. It carries the DECXIN 2633V2 looking
-back and 40 deg down: 4 insert bosses behind the board (M2.5 on 28 x 28, insert O3.2 x 5.7, E) on a 38 x 38 frame (6 wide, 2 thick) as the seat the
-node body grows on, as light as possible (Spark), the camera body and its view are cuts. Camera load: 15 g (E) at its CG split equally over the 4 bosses, flight 4 g, landing
-6 g, crash 35 g on 6 axes (the moment from the 3 mm CG offset is neglected). The rods' own loads are the cage file's 100 N estimates
-(E, no frame model for them yet)."""
+back and 40 deg down: 4 insert bosses behind the board (M2.5 on 28 x 28, insert O3.2 x 5.7, E; O7.6 x 6, 29 Oct: was O10 on a drawn 38 x 38 frame),
+as light as possible (Spark), the camera body and its view are cuts. Camera load: 15 g (E) at its CG split equally over the 4 bosses, flight 4 g, landing
+6 g, crash 35 g on 6 axes (the moment from the 3 mm CG offset is neglected). The rods' own loads come from the cage file (tools/cage_loads.py, 29 Oct: 13 N; they were 100 N estimates)."""
 import numpy as np
 import trimesh
 from topo.part import man
@@ -16,7 +15,7 @@ UP = np.array([-np.sin(np.radians(PITCH)), 0.0, np.cos(np.radians(PITCH))])
 RT = np.cross(F, UP)
 BASE_AHEAD = 8.0                                                 # board back plane 8 ahead of the node centre (clear of the collars)
 CAM_BOARD_BACK, CAM_SQ = 12.0, 14.0                              # lens 12 ahead of the board back (E); M2.5 on 28 x 28 (P)
-BOSS_L, BOSS_R = 6.0, 5.0                                        # boss O10 x 6 round the O3.2 x 5.7 insert: the lightest that holds it
+BOSS_L, BOSS_R = 6.0, 3.8                                        # boss O7.6 x 6 round the O3.2 x 5.7 insert (2.2 wall; was O10, 29 Oct: Spark, "not very optimised")
 HA, HV = 44.5, 36.5                                              # view half angles (dimensions.md Camera)
 CAM_MASS = 15.0                                                  # g (E)
 
@@ -38,8 +37,7 @@ def camera(c, ms):
         drawn.append(along(q, -F, 0.0, BOSS_L, BOSS_R))                          # boss O12 x 8 behind the board
         cuts.append(along(q, F, -5.7, 1.0, 1.6))                                 # insert hole O3.2 x 5.7 from the board face
     cuts.append(fbox(base, F, RT, UP, (0.0, 25.0), (-22.0, 22.0), (-22.0, 22.0)))  # board + body (38 x 38 + clearance), nothing grows there
-    ring = fbox(base, F, RT, UP, (-BOSS_L - 2.0, -BOSS_L + 0.5), (-19.0, 19.0), (-19.0, 19.0)) - fbox(base, F, RT, UP, (-BOSS_L - 3.0, -BOSS_L + 1.5), (-13.0, 13.0), (-13.0, 13.0))
-    drawn.append(ring)                                                            # 38 x 38 frame, 6 wide x 2 thick, joining the 4 bosses: the seat the node body grows on (2 g)
+    # (29 Oct: the drawn 38 x 38 frame joining the bosses is gone, 2 g; the topology joins them, as everywhere else)
     far = lens + F * 400.0
     w, hh = 400.0 * np.tan(np.radians(HA + 2.0)), 400.0 * np.tan(np.radians(HV + 2.0))
     cuts.append(hull([lens - F * 0.5] + [far + sr * w * RT + su * hh * UP for sr in (1, -1) for su in (1, -1)]))   # the view
@@ -57,4 +55,5 @@ def camera(c, ms):
 
 
 setup = make(21, extra=camera)
-SPEC = dict(h=1.0, gen_cm3=2.5, max_worst=0.5)      # as light as it goes (Spark 28 Oct): three 100 N rods and a 15 g camera
+SPEC = dict(h=1.0, gen_cm3=1.2, max_worst=0.5)      # as light as it goes (Spark 28 Oct); 2.5 gave 8.7 g at index 0.09 on 100 N rod estimates, the frame
+#   model (29 Oct) puts 13 N on the rods: 1.2 cm3 plus O7.6 bosses and no drawn frame (Spark 29 Oct: "not very optimised")
