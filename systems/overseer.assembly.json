@@ -2615,21 +2615,40 @@
    "color": "#cfcfcf"
   },
   {
-   "name": "arm 1",
+   "name": "arm 1 root",
    "role": "structure",
-   "mesh": "parts/overseer_arm_front/part.stl",
+   "mesh": "parts/overseer_arm_front_root/part.stl",
    "material": "PETG",
-   "mass_g": 61.0,
+   "mass_g": 36.0,
    "cg": [
-    122.12,
-    90.96,
-    24.35
+    103.2,
+    79.7,
+    22.0
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v6 setup (one piece, spokes end on the arm, every bolt a case)",
-   "source": "parts/overseer_arm_lib.py",
-   "id": "overseer_arm_front",
+   "version": "v7 setup: the front arm in two bolted prints, joint 130 out along the arm axis (2 x 6.0 carbon pins + 2 x M3), each fits the 180 plate",
+   "source": "parts/overseer_arm_split_lib.py",
+   "id": "overseer_arm_front_root",
+   "group": "printed",
+   "color": "#8899aa"
+  },
+  {
+   "name": "arm 1 tip",
+   "role": "structure",
+   "mesh": "parts/overseer_arm_front_tip/part.stl",
+   "material": "PETG",
+   "mass_g": 25.0,
+   "cg": [
+    189.6,
+    130.0,
+    25.0
+   ],
+   "tag": "E",
+   "owner": "overseer",
+   "version": "v7 setup: the front arm in two bolted prints, joint 130 out along the arm axis (2 x 6.0 carbon pins + 2 x M3), each fits the 180 plate",
+   "source": "parts/overseer_arm_split_lib.py",
+   "id": "overseer_arm_front_tip",
    "group": "printed",
    "color": "#8899aa"
   },
@@ -2783,24 +2802,70 @@
    "color": "#d9a400"
   },
   {
-   "name": "arm 4",
+   "name": "arm 4 root",
    "role": "structure",
-   "mesh": "parts/overseer_arm_front/part.stl",
+   "mesh": "parts/overseer_arm_front_root/part.stl",
    "material": "PETG",
-   "mass_g": 61.0,
+   "mass_g": 36.0,
    "cg": [
-    122.12,
-    -90.96,
-    24.35
+    103.2,
+    -79.7,
+    22.0
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v6 setup (one piece, spokes end on the arm, every bolt a case)",
-   "source": "parts/overseer_arm_lib.py",
-   "id": "arm_4",
+   "version": "v7 setup: the front arm in two bolted prints, joint 130 out along the arm axis (2 x 6.0 carbon pins + 2 x M3), each fits the 180 plate",
+   "source": "parts/overseer_arm_split_lib.py",
+   "id": "arm_4_root",
    "group": "printed",
    "color": "#8899aa",
-   "part": "overseer_arm_front",
+   "part": "overseer_arm_front_root",
+   "pose": [
+    [
+     1,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     -1,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     1,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "arm 4 tip",
+   "role": "structure",
+   "mesh": "parts/overseer_arm_front_tip/part.stl",
+   "material": "PETG",
+   "mass_g": 25.0,
+   "cg": [
+    189.6,
+    -130.0,
+    25.0
+   ],
+   "tag": "E",
+   "owner": "overseer",
+   "version": "v7 setup: the front arm in two bolted prints, joint 130 out along the arm axis (2 x 6.0 carbon pins + 2 x M3), each fits the 180 plate",
+   "source": "parts/overseer_arm_split_lib.py",
+   "id": "arm_4_tip",
+   "group": "printed",
+   "color": "#8899aa",
+   "part": "overseer_arm_front_tip",
    "pose": [
     [
      1,
