@@ -8,7 +8,8 @@ Neck test: also eroded at 1.2 / 1.5 (necks under 3 mm); a blob that splits off, 
 kept connected (a body is never split from itself by its own grooves or bores) and its core must stay in the main body.
 python3 solid_check.py part.stl [--erode 1.0] [--pitch 0.25]   -> exit 1 on fail
 from solid_check import solid_check; ok, info = solid_check(trimesh_part, drawn=[trimesh, ...], thin_ok=[trimesh, ...])
-thin_ok: drawn bodies the setup declares deliberately thin (Part(..., thin_ok=[...])): their thin walls are reported as thin_allowed, not failed."""
+thin_ok: drawn bodies the setup declares deliberately thin (Part(..., thin_ok=[...])): their thin walls, and a neck under a blob holding one
+when the neck is at least as thick as the body's wall, are reported as thin_allowed, not failed."""
 import sys, numpy as np, trimesh
 from scipy import ndimage as ndi
 
@@ -127,7 +128,22 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0, thin_o
     # neck test (Spark 20 Oct 14:19, bracket_e v8 pads on ~2 mm necks passed the 0.9 test): erode deeper; a blob that splits
     # off and is clearly thicker than the neck it hung on (max inscribed radius >= e + NECK_MARGIN) is a sliver attachment.
     # A wall that is simply thin vanishes at that depth instead of splitting, so legal 2.0 walls are not flagged.
-    necks = []
+    # thin walls (the opening's residue, thin_walls) and the declared-thin bodies (thin_ok: the camera M2 insert posts, 1.2 wall, Spark
+    # 29 Oct by coupon): a thin wall whose core lies in one of them is reported under thin_allowed and does not fail the part; each
+    # such body's wall is the thickness of its own thin finding (a post is solid below its bore: its thickest part is not its wall)
+    R, labr, thin, labc = thin_walls(V, pitch, erode_mm, lo)
+    T = np.zeros(shape, bool); bodies_T = []
+    for t in thin_ok:
+        Tb = voxels(t, pitch, lo, shape)
+        if Tb.any():
+            T |= Tb; bodies_T.append(Tb)
+    allowed = [t for t in thin if t["kind"] == "wall" and T.any() and T[labc == t["core_label"]].mean() >= 0.9]
+    walls = []
+    for Tb in bodies_T:
+        own = [t["thick_mm"] for t in allowed if Tb[labc == t["core_label"]].mean() >= 0.5]
+        walls.append((Tb, max(own) if own else round(2 * float(ndi.distance_transform_edt(Tb).max()) * pitch, 2)))
+    necks, allowed_necks = [], []
+    prev = {e: (NECK_LEVELS[i - 1] if i else 0.0) for i, e in enumerate(NECK_LEVELS)}
     for e in NECK_LEVELS:
         Le, ne = ndi.label(d > e, st)
         if ne < 2: continue
@@ -138,8 +154,16 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0, thin_o
             A = _interface_mm2(V, Le, k, pitch, pad=int(np.ceil((e + 8.0) / pitch)))
             tb = 2 * float(mx[k - 1])
             if A >= NECK_AREA_K * tb ** 2: continue               # joined over a wide band (a thin-walled box on a channel): not a neck
-            c = lo + (np.array(ndi.center_of_mass(Le == k)) + 0.5) * pitch
-            necks.append(dict(neck_under_mm=round(2 * e, 1), blob_thick_mm=round(tb, 1), joint_mm2=round(A, 1), blob_mm3=round(float(ve[k - 1]), 1), at=np.round(c, 1).tolist()))
+            blob = Le == k
+            c = lo + (np.array(ndi.center_of_mass(blob)) + 0.5) * pitch
+            row = dict(neck_under_mm=round(2 * e, 1), blob_thick_mm=round(tb, 1), joint_mm2=round(A, 1), blob_mm3=round(float(ve[k - 1]), 1), at=np.round(c, 1).tolist())
+            # a blob that is, or holds, a declared-thin body (the root of a 1.2 mm post) on a neck at least as thick as that body's
+            # wall: the neck is not the weak point (30 Oct, node 21: 4.5 mm post roots on 2.4 mm necks under 1.2 mm posts carrying 2 N)
+            own = [w for Tb, w in walls if (Tb & blob).any()]
+            if own and 2 * prev[e] >= max(own):
+                row.update(kind="neck", thin_wall_mm=max(own), neck_over_mm=round(2 * prev[e], 1)); allowed_necks.append(row)
+            else:
+                necks.append(row)
     info["necks"] = necks
     # every drawn body on its own, eroded to 0.4 x its own thickness (0.9..2.0): its core must stay in the main body. Its
     # thickness is its own (the body alone, 90th percentile of its wall: a 2.5 collar reads 2.5 where a boss overlaps it or a
@@ -163,16 +187,9 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0, thin_o
             share = 1.0 - float(off.mean())
             if share < 0.999: bad.append(dict(body=f"{i}.{j}", share=round(share, 3), erode_mm=round(ef, 2), **_where(core, off, lo, pitch)))
     info["drawn_not_in_main"] = bad
-    R, labr, thin, labc = thin_walls(V, pitch, erode_mm, lo)
-    # walls the setup declares deliberately thin (thin_ok meshes: the camera M2 insert posts, 1.2 wall, Spark 29 Oct by coupon): a thin
-    # wall whose core lies in one of them is reported under thin_allowed and does not fail the part
-    T = np.zeros(shape, bool)
-    for t in thin_ok:
-        T |= voxels(t, pitch, lo, shape)
-    allowed = [t for t in thin if t["kind"] == "wall" and T.any() and T[labc == t["core_label"]].mean() >= 0.9]
     strip = lambda t: {k: v for k, v in t.items() if k not in ("label", "core_label")}
     info["thin_walls"] = sorted([strip(t) for t in thin if t["kind"] == "wall" and t not in allowed], key=lambda t: -t["core_mm3"])[:12]
-    info["thin_allowed"] = sorted([strip(t) for t in allowed], key=lambda t: -t["core_mm3"])[:12]
+    info["thin_allowed"] = sorted([strip(t) for t in allowed], key=lambda t: -t["core_mm3"])[:12] + allowed_necks
     info["acute_edges"] = len([t for t in thin if t["kind"] == "edge"])
     ok = n_plain == 1 and len(keep) == 1 and not bad and not info["thin_walls"] and not necks
     info["ok"] = bool(ok)
