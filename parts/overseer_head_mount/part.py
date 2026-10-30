@@ -34,10 +34,11 @@ L2_PAD_R, L2_PAD_T = 8.0, 8.0       # O16 pads (v5 row), 8 deep behind the base 
 KEY_R, KEY_W, KEY_L, KEY_H, KEY_BACK = 30.0, 3.3, 3.3, 2.0, 6.0   # L2 manual drawing p8 (28 Oct): 4 positioning slots 3.5 wide on a O60 circle at the
                                     # body axes (0/90/180/270 deg from the cable axis): keys 3.5 - 0.2 fit = 3.3 wide, 3.3 long (radial, E), 2.0 tall
                                     # ahead of the base plane. SLOT DEPTH IS NOT IN THE MANUAL: the 2.0 key height is E (check on the unit).
-CAM_SQ = 14.0                       # DECXIN 2633V2: M2.5 on 28 x 28 (P); heat-set insert hole O3.2 x 5.7 (E, dimensions.md); boss O12 (v5 row)
+CAM_SQ = 14.0                       # DECXIN 2633V2: M2 on 28 x 28 (Spark 29 Oct, coupon; read as M2.5 before); heat-set insert hole O3.2 x 5.7 (E, dimensions.md); boss O12 (v5 row)
 CAM_BOARD_BACK = 12.0               # board back face 12 behind the lens plane (E placeholder: lens and thickness open, Q3); body 38 x 38 (P)
 CAM_BOSS_L = 10.0                   # standoff length (29 Oct, Spark: the board's plugs sit on its back near the holes, so the board stands
-CAM_TIP_R, CAM_BASE_R = 3.8, 5.5     #   10 off the body on 4 cones: O7.6 at the board (2.2 wall round the O3.2 x 5.7 insert) flaring to O11)
+CAM_TIP_R, CAM_BASE_R = 2.8, 2.8     #   10 off the body on 4 posts O5.6 straight (1.2 wall round the O3.2 x 5.7 M2 insert; Spark 29 Oct, coupon A fits the
+                                    #   board and the insert, the O7.6 -> O11 cones did not clear it; 10 long so the plug and its wire fit behind the board)
 CAM_PLUG_BACK = 8.0                 # keep-out behind the whole board between the standoffs: the plugs (nothing grows there)
 TUBE_BORE_R, TUBE_DEPTH = 3.1, 15.0 # 6/4 carbon: bore 6.2, 15 deep (Spark 27 Oct, coupons v2)
 ROD_BORE_R, ROD_DEPTH = 1.6, 10.0   # 3.0 rod: bore 3.2, 10 deep

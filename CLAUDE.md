@@ -34,7 +34,7 @@ audit report; `python -m topo.run parts/<name> --h 2.5 --maxit 2 --no-coarse` ru
 - Draw only attachments: pads, bosses, socket walls, seats, contact faces, and the gusset into the body. Everything between them is generated.
 - Cut bolts, nuts, rods and tool sweeps through the whole envelope, not just to the pad.
 - Supports are the faces it really bolts to. Loads are the masses it carries at their CG plus the joint reactions from the system, each as its own case (flight, crash, handling). No guessed loads: if a case is missing, say so.
-- PETG, nothing under 2 mm, 3 mm and 6 mm carbon only (socket bores 3.2 / 6.2), Bambu A1 mini 180 cube, largest flat face down.
+- PETG, nothing under 2 mm (one exception: the camera M2 insert posts, Ø5.6 round Ø3.2, 1.2 wall, Spark 29 Oct by coupon), 3 mm and 6 mm carbon only (socket bores 3.2 / 6.2), Bambu A1 mini 180 cube, largest flat face down.
 - Numbers come from `systems/dimensions.md`, tagged M measured, C CAD, E estimate.
 
 ## Runs and check-ins (how Spark hears about results)

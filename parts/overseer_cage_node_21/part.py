@@ -18,8 +18,9 @@ UP = np.array([-np.sin(np.radians(PITCH)), 0.0, np.cos(np.radians(PITCH))])
 RT = np.cross(F, UP)
 BASE_AHEAD = 14.0                                                # board back plane 14 ahead of the node centre (29 Oct, was 8: the 10 mm standoffs
 #   and the plug zone behind the board must clear the node's core and its socket floors; the lens moves 6 further out, 20 inside the facet)
-CAM_BOARD_BACK, CAM_SQ = 12.0, 14.0                              # lens 12 ahead of the board back (E); M2.5 on 28 x 28 (P)
-BOSS_L, BOSS_R, BOSS_BASE_R = 10.0, 3.8, 5.5                     # standoff cone 10 long: O7.6 at the board (2.2 wall round the O3.2 x 5.7 insert) to O11
+CAM_BOARD_BACK, CAM_SQ = 12.0, 14.0                              # lens 12 ahead of the board back (E); M2 on 28 x 28 (Spark 29 Oct, coupon)
+BOSS_L, BOSS_R, BOSS_BASE_R = 10.0, 2.8, 2.8                     # standoff post 10 long, O5.6 straight: 1.2 wall round the O3.2 x 5.7 M2 insert (Spark 29 Oct: coupon A fits,
+                                                                 # the O7.6 -> O11 cones did not clear the board; 10 long for the plug and its wire behind the board)
 PLUG_BACK = 8.0                                                  #   (29 Oct, Spark: plugs on the board's back near the holes); keep-out behind the board
 HA, HV = 44.5, 36.5                                              # view half angles (dimensions.md Camera)
 CAM_MASS = 25.0                                                  # g (E): board 15 + a heatsink on its back 10 (Spark 29 Oct)
