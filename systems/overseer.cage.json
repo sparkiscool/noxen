@@ -1,5 +1,5 @@
 {
- "note": "Overseer cage v6 geometry (Spark 28 Oct, rod cut: v5 nodes 21, 22, 23 removed, their 12 tubes replaced by 7-9, 7-10, 7-20; 54 tubes, 21 nodes, shell closed, crash probes as v5) and the frame model socket loads, for node, head mount and arm setups. Frame: x fwd, y left, z up, mm, z 0 = bottom plate top. nodes: 24 node centres (index = node id; mirrors: 0<->4, 1<->3, 8<->6, 9<->10, 12<->11, 14<->13, 16<->15, 19<->18, 22<->23 share a design, the design is the lower-numbered of each pair except 0->4, 1->3, 8->6, 9->10, 12->11, 14->13, 16->15, 19->18, 22->23 where the design is the second). rods: cage tubes as node index pairs (6/4 carbon, r 3.0, socket bore 6.2, 15 deep). tubes/links: from runs/overseer_layout/v5/result.json in nox (C). node_loads: per node, per member, axial N (the largest |N| over the cases; N keeps its sign, case names the case) and side N (end shear) from tools/cage_loads.py (29 Oct: the core free with its mass, the arms at their stiffness; systems/overseer.cage_loads.json has every case), F. spokes 12 -> 8 (29 Oct, frame model what-if: the .2 spokes, all to nodes 3 / 1, carried 76..204 N and their removal leaves every link under 540 N, tubes under 520, buckling 0.78, arm roots 362 / 191 N; Spark: as light as possible); bay ties 8 -> 4 (29 Oct, Spark: too many rods at the battery bay): only the crossing pair per side stays, node 3 -> (-90, 56, -5.1) and node 4 -> (30, 56, -5.1) and their mirrors from nodes 1 / 0; head rod c dropped 29 Oct (Spark: node 17 is printed into the head mount since 28 Oct, so the rod joined the part to itself). Node 21 (Spark 28 Oct): the rear camera node, sunk 45 mm inside the rear facet 13-14-5 on three 3 mm rods ('camera rod 13/14/5' in links, 1.6 bore) so a tail-first hit lands on the facet tubes, lens 26 mm inside the plane; its rod loads from the same model (13 N; the 100 N / 3 N estimates of 28 Oct are what node 21 was generated with).",
+ "note": "Overseer cage v6 geometry (Spark 28 Oct, rod cut: v5 nodes 21, 22, 23 removed, their 12 tubes replaced by 7-9, 7-10, 7-20; 54 tubes, 21 nodes, shell closed, crash probes as v5) and the frame model socket loads, for node, head mount and arm setups. Frame: x fwd, y left, z up, mm, z 0 = bottom plate top. nodes: 24 node centres (index = node id; mirrors: 0<->4, 1<->3, 8<->6, 9<->10, 12<->11, 14<->13, 16<->15, 19<->18, 22<->23 share a design, the design is the lower-numbered of each pair except 0->4, 1->3, 8->6, 9->10, 12->11, 14->13, 16->15, 19->18, 22->23 where the design is the second). rods: cage tubes as node index pairs (6/4 carbon, r 3.0, socket bore 6.2, 15 deep). tubes/links: from runs/overseer_layout/v5/result.json in nox (C). node_loads: per node, per member, axial N (the largest |N| over the cases; N keeps its sign, case names the case) and side N (end shear) from tools/cage_loads.py (29 Oct: the core free with its mass, the arms at their stiffness; systems/overseer.cage_loads.json has every case), F. spokes 12 -> 8 (29 Oct, frame model what-if: the .2 spokes, all to nodes 3 / 1, carried 76..204 N and their removal leaves every link under 540 N, tubes under 520, buckling 0.78, arm roots 362 / 191 N; Spark: as light as possible); bay ties 8 -> 4 (29 Oct, Spark: too many rods at the battery bay): only the crossing pair per side stays, node 3 -> (-90, 56, -5.1) and node 4 -> (30, 56, -5.1) and their mirrors from nodes 1 / 0; head rod c dropped 29 Oct (Spark: node 17 is printed into the head mount since 28 Oct, so the rod joined the part to itself). Node 21 (Spark 28 Oct): the rear camera node, sunk 45 mm inside the rear facet 13-14-5 on three 3 mm rods ('camera rod 13/14/5' in links, 1.6 bore) so a tail-first hit lands on the facet tubes, lens 26 mm inside the plane; its rod loads from the same model (13 N; the 100 N / 3 N estimates of 28 Oct are what node 21 was generated with). 30 Oct (Spark, after base v4): the four bay tie hub ends dropped from z -5.1 to -9.0 so the base's socket collar (bore r 3.1 + 2.5 wall) sits under the plate (underside -2.1) with 1.3 mm to spare instead of being cut off by it; nodes 3 and 4 (mirrors 1, 0) rerun for the new rod directions; the rods' lengths and angles change by under 4 mm / 1.2 deg, the frame model is not rerun.",
  "nodes": [
   [
    -98.857,
@@ -482,7 +482,7 @@
    [
     30.0,
     56.0,
-    -5.1
+    -9.0
    ],
    [
     -98.86,
@@ -494,7 +494,7 @@
    [
     30.0,
     -56.0,
-    -5.1
+    -9.0
    ],
    [
     -98.86,
@@ -506,7 +506,7 @@
    [
     -90.0,
     56.0,
-    -5.1
+    -9.0
    ],
    [
     55.8,
@@ -518,7 +518,7 @@
    [
     -90.0,
     -56.0,
-    -5.1
+    -9.0
    ],
    [
     55.8,
@@ -575,7 +575,11 @@
    ]
   ],
   "camera rod 20": [
-   [-171.791, 0.0, 107.927],
+   [
+    -171.791,
+    0.0,
+    107.927
+   ],
    [
     -243.8,
     0.0,
@@ -1632,7 +1636,7 @@
   }
  },
  "rod_cuts_mm": {
-  "tube 0-1": 127.5,
+  "tube 0-1": 126.9,
   "tube 0-5": 154.4,
   "tube 0-12": 188.6,
   "tube 1-2": 136.3,
@@ -1641,7 +1645,7 @@
   "tube 2-3": 136.3,
   "tube 2-18": 253.3,
   "tube 2-19": 253.3,
-  "tube 3-4": 127.5,
+  "tube 3-4": 126.9,
   "tube 3-11": 227.2,
   "tube 3-18": 271.7,
   "tube 4-5": 154.4,
@@ -1701,10 +1705,10 @@
   "core tie left.2": 303.0,
   "core tie right.1": 245.8,
   "core tie right.2": 303.0,
-  "bay tie +1+1.2": 138.7,
-  "bay tie +1-1.2": 138.7,
-  "bay tie -1+1.2": 150.4,
-  "bay tie -1-1.2": 150.4,
+  "bay tie +1+1.2": 136.6,
+  "bay tie +1-1.2": 136.6,
+  "bay tie -1+1.2": 148.4,
+  "bay tie -1-1.2": 148.4,
   "head rod +1": 137.0,
   "head rod -1": 137.0,
   "arm 1 tube lo": 144.9,

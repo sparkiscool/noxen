@@ -4,7 +4,7 @@ compact as possible, enough room to attach the design after").
 
 One generated PETG piece under the bottom plate (plate z -2.1..0, x -95.5..100.5, y +-59) that ends the ten cage links whose hub
 ends had no part: core ties rear.1 / rear.2 (hub ends (-95.5, +-12, -1), behind the plate), left.1 / left.2 and right.1 / right.2
-(hub ends (0, +-59, -1), at the plate's side edges) and the four bay ties (hub ends (30 / -90, +-56, -5.1)). Each is a coupon
+(hub ends (0, +-59, -1), at the plate's side edges) and the four bay ties (hub ends (30 / -90, +-56, -9.0); -5.1 until 30 Oct). Each is a coupon
 socket as the cage nodes' (parts/cage_node_lib: bore 3.2 x 10 from 10.15 past the virtual centre, resin grooves, lead-in, crown,
 wall 2.5, floor 3.0), so the rod ends and cut list of systems/overseer.cage.json do not move: nothing else reruns.
 Drawn = attachments only: the 10 socket collars; 8 pads O9 x 6 under the plate's arm bottom screws (S500 STEP (+-52.14, +-38),
@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(HERE)))
 from topo.part import Part
 from parts.cage_node_lib import CAGE, KIND, NODE_R, WALL, FLOOR, socket_cuts, collar_shape, along, U
 
-SPEC = dict(h=1.7, gen_cm3=45.0, max_worst=0.5)   # v4 (30 Oct 1:30 am, auto mode): v3 with the rails to x -95 gave 1.55 at the same spot as v2 (1.54), now in the bay tie -1+1.2 pull-out (488 N) at (-60, 54, -7), the end of that socket where it meets the body under the plate; room did nothing between v2 and v3 (8 % of a 380 cm3 room is filled), so the lever is volume: 30 -> 45 (the node 5 history, 3.5 -> 4.5 cm3 halved its index, scales as volume^-3; 1.55 -> ~0.45 E), ~70 g      # v2: h 1.7 (the wider side room at 1.6 is 301k cells), 30 cm3 (v1 came in at 44 g with 26)   # v3 (30 Oct, auto mode): run 69 gave 1.54 at (-55, 55, -8.5), the left edge between the left.1/.2 sockets (x 0) and the bay tie -1+1.2 socket (x -90): the side rails only ran x -45..45, so the rail ended 45 mm short of that socket and the path pinched in the 16 mm under the plate edge; rails now x -95..45 (room, not volume)
+SPEC = dict(h=1.7, gen_cm3=45.0, max_worst=0.5)   # v5 (30 Oct 8:15 am, Spark): the bay tie hub ends sit at z -9.0 in the cage file (were -5.1: the 6.2 bore had no wall under the plate at -2.1 and v4 gave 3.65 at those sockets); nothing else changed, 45 kept for a pass first   # v4 (30 Oct 1:30 am, auto mode): v3 with the rails to x -95 gave 1.55 at the same spot as v2 (1.54), now in the bay tie -1+1.2 pull-out (488 N) at (-60, 54, -7), the end of that socket where it meets the body under the plate; room did nothing between v2 and v3 (8 % of a 380 cm3 room is filled), so the lever is volume: 30 -> 45 (the node 5 history, 3.5 -> 4.5 cm3 halved its index, scales as volume^-3; 1.55 -> ~0.45 E), ~70 g      # v2: h 1.7 (the wider side room at 1.6 is 301k cells), 30 cm3 (v1 came in at 44 g with 26)   # v3 (30 Oct, auto mode): run 69 gave 1.54 at (-55, 55, -8.5), the left edge between the left.1/.2 sockets (x 0) and the bay tie -1+1.2 socket (x -90): the side rails only ran x -45..45, so the rail ended 45 mm short of that socket and the path pinched in the 16 mm under the plate edge; rails now x -95..45 (room, not volume)
 G = 9.81e-3
 BUILD = (0.0, 0.0, -1.0)                                          # printed upside down: the flat z -8.1 faces on the plate
 Z_PLATE, Z_MOUNT = -2.1, -8.1                                     # plate underside; the future mechanism's mount plane
