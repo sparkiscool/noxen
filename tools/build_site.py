@@ -72,34 +72,38 @@ def head(offline=False):
 
 
 def overlays(o):
-    """Thin-line context for the artifact page (systems/<drone>.assembly.json `overlays`): swept props, the L2 field, the camera views."""
-    import math
-    line = lambda a, b, rr=0.7: trimesh.creation.cylinder(rr, np.linalg.norm(np.subtract(b, a)), sections=6, segment=np.vstack([a, b]))
+    """Context for the artifact page (systems/<drone>.assembly.json `overlays`): the sensor fields as translucent solids (Spark 30 Oct:
+    "get rid of the yellow rings and show the views of the camera and lidar better"): the L2 half-sphere (90 deg mode, r 220 ahead of
+    its base plane), the two head camera frustums and the rear camera's on node 21 (220 long). The swept-prop rings are gone; the disc
+    the cage must clear is still systems/<drone>.cage.json's keep-out, not a picture."""
+    import math, json as _json
     out = []
-    if "motors_xy" in o:
-        r0, r1 = o.get("prop_r", [124.5, 127.0]); rings = []
-        for mx, my in o["motors_xy"]:
-            a = trimesh.creation.annulus(r0, r1, 1.0, sections=96); a.apply_translation([mx, my, o.get("prop_z", 82.0)]); rings.append(a)
-        out.append(("props (swept)", trimesh.util.concatenate(rings), "#d9a400"))
     if "l2_axis" in o:
-        Ax, B = np.array(o["l2_axis"]), np.array(o["l2_base"]); up = np.array([-Ax[2], 0, Ax[0]]); ey = np.array([0, 1.0, 0]); Rf = 220.0
-        lines = []
-        for t in np.linspace(0, math.pi, 7):
-            d = math.cos(t) * up + math.sin(t) * ey
-            pts = [B + Rf * (math.cos(f) * d + math.sin(f) * Ax) for f in np.linspace(0, math.pi, 25)]
-            lines += [line(pts[i], pts[i + 1]) for i in range(24)]
-        rim = [B + Rf * (math.cos(f) * up + math.sin(f) * ey) for f in np.linspace(0, 2 * math.pi, 49)]
-        lines += [line(rim[i], rim[i + 1]) for i in range(48)]
-        out.append(("L2 field (90 deg mode)", trimesh.util.concatenate(lines), "#4a90d9"))
-    if o.get("cams"):
+        Ax, B = np.array(o["l2_axis"], float), np.array(o["l2_base"], float); Rf = 220.0
+        sph = trimesh.creation.icosphere(subdivisions=3, radius=Rf); sph.apply_translation(B)
+        keep = ((sph.triangles_center - B) @ Ax) > 0.0                               # the half ahead of the base plane, by hand (no shapely)
+        half = trimesh.Trimesh(sph.vertices, sph.faces[keep], process=False)
+        e1 = np.cross(Ax, [0, 1.0, 0]); e1 /= np.linalg.norm(e1); e2 = np.cross(Ax, e1)
+        rim = np.array([B + Rf * (math.cos(t) * e1 + math.sin(t) * e2) for t in np.linspace(0, 2 * math.pi, 96, endpoint=False)])
+        V = np.vstack([B[None, :], rim]); Fc = np.array([[0, 1 + i, 1 + (i + 1) % 96] for i in range(96)])
+        disc = trimesh.Trimesh(V, Fc, process=False)
+        out.append(("L2 field (90 deg mode)", trimesh.util.concatenate([half, disc]), "#4a90d9", 0.14))
+    cams = list(o.get("cams") or [])
+    try:                                                                            # the rear camera on node 21 (parts/overseer_cage_node_21/part.py)
+        cage = _json.load(open(os.path.join(ROOT, "systems", "overseer.cage.json")))
+        pitch = math.radians(40.0); F = np.array([-math.cos(pitch), 0.0, -math.sin(pitch)]); U = np.array([-math.sin(pitch), 0.0, math.cos(pitch)])
+        c21 = np.array(cage["nodes"][21]); cams.append(dict(lens=(c21 + F * 26.0).tolist(), f=F.tolist(), u=U.tolist(), r=np.cross(F, U).tolist(), ha=44.5, hv=36.5))
+    except Exception:
+        pass
+    if cams:
         fr = []; Rf = 220.0
-        for c in o["cams"]:
-            L, f, u, r = (np.array(c[k]) for k in ("lens", "f", "u", "r")); ha, va = math.radians(c["ha"]), math.radians(c["hv"])
+        for c in cams:
+            L, f, u, r = (np.array(c[k], float) for k in ("lens", "f", "u", "r")); ha, va = math.radians(c["ha"]), math.radians(c["hv"])
             cor = []
             for sy, sz in ((1, 1), (-1, 1), (-1, -1), (1, -1)):
                 d = f + math.tan(ha) * sy * r + math.tan(va) * sz * u; cor.append(L + Rf * d / np.linalg.norm(d))
-            fr += [line(L, c_) for c_ in cor] + [line(cor[i], cor[(i + 1) % 4]) for i in range(4)]
-        out.append(("camera views", trimesh.util.concatenate(fr), "#3fa34d"))
+            fr.append(trimesh.convex.convex_hull(np.vstack([L] + cor)))
+        out.append(("camera views (3 x 89 x 73 deg)", trimesh.util.concatenate(fr), "#3fa34d", 0.18))
     return out
 
 
@@ -130,8 +134,8 @@ def artifact_page(a, S, meshes, commit, path):
         pid = p.get("id") or p["name"]; q = by_id[pid]
         s.part(p["name"], meshes[pid], group=p.get("group", "part"), color=p.get("color"), opacity=p.get("opacity"),
                printed=p.get("material") in ("PETG", "TPU") and p.get("role") != "bought", note=note(p, q.get("_result")))
-    for nm, m, col in overlays(a.get("overlays", {})):
-        s.part(nm, m, group="views" if "view" in nm or "field" in nm else "bought", color=col, printed=False)
+    for nm, m, col, op in overlays(a.get("overlays", {})):
+        s.part(nm, m, group="views", color=col, printed=False, opacity=op)
     names = [p["name"] for p in s.parts]
     spin = lambda t: trimesh.transformations.rotation_matrix(math.radians(360 * t / 24), [0, 0, 1])
     s.timeline(lambda t: {n: spin(t) for n in names}, duration_s=24, fps=24)
