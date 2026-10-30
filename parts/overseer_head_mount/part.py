@@ -1,4 +1,4 @@
-"""Overseer head mount (v6 setup, 28 Oct; v7 29 Oct evening: O5.6 x 10 M2 standoff posts and one light pad per camera, see LIGHT_*): ONE printed PETG piece that carries the Unitree L2 and both cameras and absorbs cage
+"""Overseer head mount (v6 setup, 28 Oct; v7 29 Oct evening: O5.6 x 10 M2 standoff posts; camera lights were added and dropped the same evening, Spark: no lights): ONE printed PETG piece that carries the Unitree L2 and both cameras and absorbs cage
 node 17 (the cage node nearest the L2), so node 17 is no longer a separate part.
 
 Drawn = attachments only: 4 L2 bolt pads, 2 x 4 camera insert bosses, the socket collars of node 17 (4 tubes 6/4 + the front core
@@ -40,16 +40,6 @@ CAM_BOSS_L = 10.0                   # standoff length (29 Oct, Spark: the board'
 CAM_TIP_R, CAM_BASE_R = 2.8, 2.8     #   10 off the body on 4 posts O5.6 straight (1.2 wall round the O3.2 x 5.7 M2 insert; Spark 29 Oct, coupon A fits the
                                     #   board and the insert, the O7.6 -> O11 cones did not clear it; 10 long so the plug and its wire fit behind the board)
 CAM_PLUG_BACK = 8.0                 # keep-out behind the whole board between the standoffs: the plugs (nothing grows there)
-# camera lights (29 Oct evening, Spark approved; systems/lights.md): one light per camera, 45 mm BELOW the lens along the camera's
-# up axis (the research put it 45 outboard, at |y| 117: outside the 180 plate the head prints on; above the lens it sits 4 mm from the
-# head rod seat and lifts the part to 162 tall; below, |y| 81, 36 mm from the L2 body, 72 from the seats). The emitting face is
-# flush with the lens front: pad face 14 behind it, the sink (25 x 25 x 10) + star + 3 mm standoffs fill the 14. Pad 27 x 27 x 3,
-# two M3 insert bosses O7 x 6 behind it at 20 mm centres (insert O4.0 x 5.7 from the pad face), keep-out 28 x 28 x 14.5 ahead of
-# the pad face, 12 g (E: XP-L star 1 + sink 6 + tape, screws, wire) at the sink's centre.
-LIGHT_OFF, LIGHT_BACK = -45.0, 14.0
-LIGHT_PAD, LIGHT_PAD_T, LIGHT_BOSS_R, LIGHT_BOSS_L, LIGHT_BOSS_SEP = 27.0, 3.0, 3.5, 6.0, 20.0
-LIGHT_INSERT_R, LIGHT_INSERT_D, LIGHT_KEEP = 2.0, 5.7, 14.5
-LIGHT_MASS = 12.0
 TUBE_BORE_R, TUBE_DEPTH = 3.1, 15.0 # 6/4 carbon: bore 6.2, 15 deep (Spark 27 Oct, coupons v2)
 ROD_BORE_R, ROD_DEPTH = 1.6, 10.0   # 3.0 rod: bore 3.2, 10 deep
 WALL, FLOOR = 2.5, 3.0              # wall 2.5 (29 Oct, was 2.0: 2.0 is left at the resin grooves), floor 3.0
@@ -207,16 +197,6 @@ def bodies():
         # (29 Oct: the drawn 38 x 38 frame joining the 4 camera bosses is gone, as on node 21; the topology joins them)
         cuts.append(frustum(c))
         envs_cam.append(fbox(base, c["f"], c["r"], c["u"], (-34.0, 0.0), (-22.0, 22.0), (-22.0, 22.0)))
-        # --- the camera light: pad, two insert bosses, the sink's keep-out ahead of the pad, design room round the pad
-        face = c["lens"] + c["u"] * LIGHT_OFF - c["f"] * LIGHT_BACK
-        hp = LIGHT_PAD / 2
-        drawn.append(fbox(face, c["f"], c["r"], c["u"], (-LIGHT_PAD_T, 0.0), (-hp, hp), (-hp, hp)))
-        for sr in (1, -1):
-            q = face + c["r"] * (sr * LIGHT_BOSS_SEP / 2)
-            drawn.append(along(q - c["f"] * (LIGHT_PAD_T + LIGHT_BOSS_L), q - c["f"] * LIGHT_PAD_T, LIGHT_BOSS_R))
-            cuts.append(along(q + c["f"] * 1.0, q - c["f"] * LIGHT_INSERT_D, LIGHT_INSERT_R))
-        cuts.append(fbox(face, c["f"], c["r"], c["u"], (0.0, LIGHT_KEEP), (-hp - 0.5, hp + 0.5), (-hp - 0.5, hp + 0.5)))
-        envs_cam.append(fbox(face, c["f"], c["r"], c["u"], (-22.0, 0.0), (-hp - 6.0, hp + 6.0), (-hp - 6.0, hp + 6.0)))
     # --- sockets
     for s in S.values():
         drawn.append(s.collar())
@@ -267,12 +247,6 @@ def setup(h):
         return (np.linalg.pinv(Am) @ np.r_[F, Mc]).reshape(n, 3)
 
     cam_cg = [c["lens"] - c["f"] * 8.9 for c in cs]               # assembly CG: 8.9 behind the lens (E)
-    light_reg, light_cg = [], []
-    for c in cs:
-        face = c["lens"] + c["u"] * LIGHT_OFF - c["f"] * LIGHT_BACK
-        qs = [face + c["r"] * (sr * LIGHT_BOSS_SEP / 2) for sr in (1, -1)]
-        light_reg.append((qs, [along(q - c["f"] * 3.0, q + c["f"] * 0.3, LIGHT_BOSS_R + 0.5) for q in qs]))
-        light_cg.append(face + c["f"] * 7.0)                                                           # the sink's centre
 
     def payload(name, a, cls):
         f = rigid_split(bolts, -L2_MASS * G * a, L2_CG)
@@ -280,9 +254,6 @@ def setup(h):
         for (pts, regs), cg in zip(cam_reg, cam_cg):
             fc = rigid_split(pts, -CAM_MASS * G * a, cg)
             reg += [(regs[i], fc[i]) for i in range(4)]
-        for (pts, regs), cg in zip(light_reg, light_cg):
-            fl = rigid_split(pts, -LIGHT_MASS * G * a, cg)
-            reg += [(regs[i], fl[i]) for i in range(2)]
         p.load_multi(name, reg, cls=cls, accel=-a, support="all sockets")
 
     # cases: crash 35 g in the 14 directions (the nose hit is +x deceleration through the L2 base: a = -35 x), flight, landing

@@ -166,7 +166,7 @@ def masses(asm_rows, cage):
             tubes += g
         elif pid == "spokes_ties_head_rods":
             rods += g
-        elif pid in ("overseer_head_mount", "unitree_l2", "camera_left", "camera_right", "camera_light_left", "camera_light_right"):   # the head (lights 29 Oct)
+        elif pid in ("overseer_head_mount", "unitree_l2", "camera_left", "camera_right"):
             head_m += g; head_s += g * c
         elif pid == "camera_rear":
             cam21 += g
