@@ -543,6 +543,50 @@ def t_gate_thin_ok():
         check("gate thin_ok", False, str(e))
 
 
+def t_export_mesh():
+    """export (topo/build.py weld_mesh / export_mesh): the exact part of a boolean with coincident surfaces (a mesh cut again with
+    the holes it already has, as tools/recut.py does) holds sliver triangles thinner than float32; welded at STL precision, the
+    collapsed faces go and the mesh is watertight, one body, same volume, and still watertight after a reload (29 Oct: node 5's
+    recut had 467 open edges, the page's decimation tore it open). weld_mesh alone: a folded sliver (two coincident triangle
+    fans), a 2-face open shell and a 0.1 mm3 speck beside a box all go; the box stays closed."""
+    try:
+        import trimesh, tempfile, os
+        from .part import man, tm
+        from .build import weld_mesh, export_mesh
+        box = _mbox(20, 20, 20, (-240, 0, -80))                              # where node 5 sits: float32 resolves 1.5e-5 there
+        c = trimesh.creation.cylinder(3.1, 30.0, sections=40)
+        c.apply_transform(trimesh.transformations.rotation_matrix(np.radians(30), [1, 0.3, 0])); cyl = man(c.apply_translation((-240, 0, -80)))
+        once = tm(box - cyl)                                                  # float32 round trip, as an STL
+        again = man(once) - cyl                                              # the same hole cut again: coincident surfaces
+        raw = again.to_mesh64(); v = np.asarray(raw.vert_properties)[:, :3]; f = np.asarray(raw.tri_verts)
+        from scipy.spatial import cKDTree
+        uv = np.unique(v, axis=0); dnn = cKDTree(uv).query(uv, k=2)[0][:, 1]
+        slivers = int((dnn < 1e-5).sum())
+        m, rep = export_mesh(again, log=lambda s_: None)
+        with tempfile.TemporaryDirectory() as d:
+            fn = os.path.join(d, "x.stl"); m.export(fn); r = trimesh.load(fn, force="mesh")
+            r.update_faces(r.nondegenerate_faces(height=1e-6))
+            reload_ok = r.is_watertight and len(r.split(only_watertight=False)) == 1
+        vol_ok = abs(m.volume - again.volume()) < 1.0
+        # weld_mesh alone on a synthetic mesh
+        b = trimesh.creation.box((10, 10, 10))
+        fin = np.array([[5, -2, -2], [9, -2, -2], [9, 2, 2]], float); fin2 = fin + np.array([0, 0, 1e-9])
+        n0 = len(b.vertices)
+        V = np.vstack([b.vertices, fin, fin2, [[20, 0, 0], [21, 0, 0], [20, 1, 0], [21, 1, 0]], [[30, 0, 0], [30.4, 0, 0], [30, 0.4, 0], [30, 0, 0.4]]])
+        F = np.vstack([b.faces, [[n0, n0 + 1, n0 + 2], [n0 + 3, n0 + 5, n0 + 4]],                     # the folded fin (two sides, 1e-9 apart)
+                       [[n0 + 6, n0 + 7, n0 + 8], [n0 + 7, n0 + 9, n0 + 8]],                            # an open 2-face shell
+                       [[n0 + 10, n0 + 11, n0 + 12], [n0 + 10, n0 + 13, n0 + 11], [n0 + 10, n0 + 12, n0 + 13], [n0 + 11, n0 + 13, n0 + 12]]])   # a 0.01 mm3 speck
+        w, wr = weld_mesh(V, F)
+        weld_ok = (wr["folded"] == 2 and wr["watertight"] and wr["bodies"] == 1 and abs(w.volume - 1000.0) < 1e-6
+                   and wr["n_dropped_shells"] == 2 and any(not d_["closed"] for d_ in wr["dropped_shells"]) and any(d_["closed"] and d_["mm3"] < 1.0 for d_ in wr["dropped_shells"]))
+        good = slivers > 0 and rep["watertight"] and rep["bodies"] == 1 and rep["boundary_edges"] == 0 and rep["nonmanifold_edges"] == 0 and vol_ok and reload_ok and weld_ok
+        check("export: a coincident-cut part welds watertight at STL precision and survives a reload; folded slivers, open shells and specks go", good,
+              f"raw sliver vertices {slivers}, export {rep}, volume {m.volume:.1f} vs {again.volume():.1f}, reload {reload_ok}; weld {wr}")
+    except Exception as e:
+        traceback.print_exc()
+        check("export mesh", False, str(e))
+
+
 def t_audit_plate():
     """audit: an envelope longer than the 180 mm plate at every rotation is refused (the front arm, 225 x 63: 29 Oct); a 170 x 170 one passes."""
     from topo.audit import plate_fit
@@ -664,7 +708,7 @@ def t_skin_core():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_audit_plate, t_audit_block_measure, t_design_hash):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_audit_plate, t_audit_block_measure, t_design_hash):
         t()
     if not quick:
         t_end_to_end()

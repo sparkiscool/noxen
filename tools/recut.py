@@ -29,13 +29,16 @@ def recut(name, log=print):
     M0 = man(m0)
     if M0.volume() < 1.0:
         raise RuntimeError(f"{name}: part.stl does not read as a solid (manifold status {M0.status()}); nothing recut")
+    v0 = m0.volume
     P = M0 - part.cuts_m
+    del m0, M0                                                                    # the gate at 0.25 mm is the memory peak: nothing else held
     P, cleanup = B.export_cleanup(P, part, log=log)                              # the export cleanup, as a fresh run would do it
-    PT = B.clean_mesh(tm(P), log=log)
+    PT, export = B.export_mesh(P, log=log)                                        # welded at STL precision, checked watertight
+    del P
     drawn_fin = tm(part.drawn_m - part.cuts_m)
     ok, solid = B.solid_check(PT, [drawn_fin], thin_ok=[tm(m - part.cuts_m) for m in getattr(part, "thin_ok", [])])
     mass = PT.volume / 1000.0 * MATERIALS[part.material].density
-    removed = (m0.volume - PT.volume) / 1000.0
+    removed = (v0 - PT.volume) / 1000.0
     PT.export(stl)
     try:
         B.render(PT, os.path.join(d, "preview.png"), title=f"{name} (nox/topo, recut)",
@@ -43,7 +46,7 @@ def recut(name, log=print):
     except Exception as e:
         log(f"  render failed: {e}")
     py = os.path.join(d, "part.py")
-    res.update(solid_ok=bool(ok), solid=solid, export_cleanup=cleanup, mass_g=round(mass, 2), volume_mm3=round(PT.volume, 1), watertight=bool(PT.is_watertight),
+    res.update(solid_ok=bool(ok and export["watertight"]), solid=solid, export_cleanup=cleanup, export=export, mass_g=round(mass, 2), volume_mm3=round(PT.volume, 1), watertight=bool(export["watertight"]),
                part_sha=part_sha(py), lib_sha=lib_sha(py),
                recut=dict(at=time.strftime("%Y-%m-%d %H:%M"), removed_cm3=round(removed, 3), note="holes recut from the current setup; strength not re-solved"))
     json.dump(res, open(rj, "w"), indent=1)
