@@ -1,20 +1,30 @@
 {
  "name": "overseer_cage_node_21",
  "engine": "nox/topo",
- "solid_ok": true,
+ "solid_ok": false,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 13,
+  "specks_plain": 14,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   3210.5
+   3145.1
   ],
   "necks": [],
-  "drawn_not_in_main": [],
+  "drawn_not_in_main": [
+   [
+    "0.0",
+    0.014,
+    "erode 2.0"
+   ],
+   [
+    "0.3",
+    0.011,
+    "erode 2.0"
+   ]
+  ],
   "thin_walls": [],
-  "thin_allowed": [],
-  "acute_edges": 7,
-  "ok": true
+  "acute_edges": 5,
+  "ok": false
  },
  "function_check": {
   "skin_mm3": 1834.8,
@@ -409,10 +419,5 @@
    "mm3": 6618.2
   },
   "welded_at": "2026-10-30 04:43"
- },
- "regate": {
-  "at": "2026-10-30 05:05",
-  "engine": "export",
-  "note": "re-gated with the fixed gate (tools/solid_check.py, 5989a12: a drawn body eroded by its own wall); mesh and strength unchanged"
  }
 }
