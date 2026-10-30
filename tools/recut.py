@@ -22,7 +22,14 @@ def recut(name, log=print):
     mod = importlib.import_module(f"parts.{name}.part")
     part = mod.setup(float(res["h"]))
     m0 = trimesh.load(stl, force="mesh")
-    P = man(m0) - part.cuts_m
+    # a big exported STL (the head mount, 500k faces) carries a few duplicate vertices and degenerate faces that make manifold3d
+    # read it as NotManifold (empty, volume 0: 29 Oct, the recut then crashed in export_cleanup); merge and drop them first
+    m0.merge_vertices(); m0.update_faces(m0.nondegenerate_faces()); m0.update_faces(m0.unique_faces()); m0.remove_unreferenced_vertices()
+    trimesh.repair.fix_normals(m0)
+    M0 = man(m0)
+    if M0.volume() < 1.0:
+        raise RuntimeError(f"{name}: part.stl does not read as a solid (manifold status {M0.status()}); nothing recut")
+    P = M0 - part.cuts_m
     P, cleanup = B.export_cleanup(P, part, log=log)                              # the export cleanup, as a fresh run would do it
     PT = B.clean_mesh(tm(P), log=log)
     drawn_fin = tm(part.drawn_m - part.cuts_m)
