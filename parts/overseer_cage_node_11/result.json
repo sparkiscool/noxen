@@ -399,7 +399,7 @@
  "baseline": null,
  "total_s": 12726,
  "part_sha": "bf49eba77ad3",
- "lib_sha": "2a4ef96807ca",
+ "lib_sha": "15c5499fc866",
  "max_worst": 0.5,
  "strength_ok": true,
  "export": {
@@ -431,5 +431,11 @@
    "mm3": 19805.5
   },
   "welded_at": "2026-10-30 04:46"
+ },
+ "lib_restamp": {
+  "from": "2a4ef96807ca",
+  "to": "15c5499fc866",
+  "at": "2026-10-30 05:30",
+  "note": "cage_node_lib b8c3795 (00:22 UTC) added two lines to check_members (skip the far-socket check when the far end is a printed part); no geometry, load or cut changed, so the run-62 result stands; the hash alone cannot tell a check from a setup change"
  }
 }

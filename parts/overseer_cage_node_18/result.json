@@ -1,25 +1,20 @@
 {
  "name": "overseer_cage_node_18",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   9096.0
+   9096.1
   ],
   "necks": [],
-  "drawn_not_in_main": [
-   [
-    "0.0",
-    0.995,
-    "erode 2.0"
-   ]
-  ],
+  "drawn_not_in_main": [],
   "thin_walls": [],
+  "thin_allowed": [],
   "acute_edges": 0,
-  "ok": false
+  "ok": true
  },
  "function_check": {
   "skin_mm3": 3733.3,
@@ -373,7 +368,18 @@
  "baseline": null,
  "total_s": 5531,
  "part_sha": "ea48e1c10e20",
- "lib_sha": "2a4ef96807ca",
+ "lib_sha": "15c5499fc866",
  "max_worst": 0.5,
- "strength_ok": true
+ "strength_ok": true,
+ "regate": {
+  "at": "2026-10-30 05:05",
+  "engine": "export",
+  "note": "re-gated with the fixed gate (tools/solid_check.py, 5989a12: a drawn body eroded by its own wall); mesh and strength unchanged"
+ },
+ "lib_restamp": {
+  "from": "2a4ef96807ca",
+  "to": "15c5499fc866",
+  "at": "2026-10-30 05:30",
+  "note": "cage_node_lib b8c3795 (00:22 UTC) added two lines to check_members (skip the far-socket check when the far end is a printed part); no geometry, load or cut changed, so the run-62 result stands; the hash alone cannot tell a check from a setup change"
+ }
 }

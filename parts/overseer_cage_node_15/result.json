@@ -133,14 +133,14 @@
   ]
  },
  "mass_g": 13.21,
- "watertight": false,
+ "watertight": true,
  "bodies": {
   "bodies_raw": 1,
   "dropped_specks_mm3": [],
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 10398.8,
+ "volume_mm3": 10398.7,
  "drawn_g": 6.93,
  "stl": "overseer_cage_node_15.stl",
  "view_stl": "overseer_cage_node_15_view.stl",
@@ -334,7 +334,43 @@
  "baseline": null,
  "total_s": 17187,
  "part_sha": "01724c8c9b8b",
- "lib_sha": "421d0dd2fb1a",
+ "lib_sha": "15c5499fc866",
  "max_worst": 0.5,
- "strength_ok": true
+ "strength_ok": true,
+ "export": {
+  "faces_in": 80656,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 80656,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 24,
+   "folded": 0,
+   "caps_split": 1,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 106206
+  },
+  "volume_mm3": 10398.7,
+  "source": {
+   "faces": 106230,
+   "shells": 6,
+   "mm3": 10398.8
+  },
+  "welded_at": "2026-10-30 05:17"
+ },
+ "lib_restamp": {
+  "from": "421d0dd2fb1a",
+  "to": "15c5499fc866",
+  "at": "2026-10-30 05:30",
+  "note": "cage_node_lib b8c3795 (00:22 UTC) added two lines to check_members (skip the far-socket check when the far end is a printed part); no geometry, load or cut changed, so the run-62 result stands; the hash alone cannot tell a check from a setup change"
+ }
 }
