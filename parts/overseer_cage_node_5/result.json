@@ -134,7 +134,7 @@
   ]
  },
  "mass_g": 16.57,
- "watertight": false,
+ "watertight": true,
  "bodies": {
   "bodies_raw": 1,
   "dropped_specks_mm3": [],
@@ -353,6 +353,6 @@
  "recut": {
   "at": "2026-10-30 03:01",
   "removed_cm3": -0.004,
-  "note": "holes recut from the current setup; strength not re-solved"
+  "note": "holes recut from the current setup; strength not re-solved. The recut export (30 Oct 03:01 UTC) left open seams and stray faces (not watertight, torn on the page); the mesh is the run's own export of the same geometry (13046 mm3 both), the gate result is from the recut"
  }
 }

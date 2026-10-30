@@ -24,7 +24,29 @@ import numpy as np, trimesh
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = os.path.join(ROOT, "site")
-MAX_FACES = 24000                        # the inline page must stay under the 16 MB artifact limit (29 Oct: 16.8 MB at 40k)
+def view_mesh(m, pid=""):
+    """the page's copy of a part: stray faces and shells dropped, then decimated. An exported STL carries a few loose
+    triangles and 1-3 face shells beside the part (the manifold -> STL export, 29 Oct: node 21 had 126 of them); the
+    quadric decimation of a mesh holding them tears the part open (node 5 on the page lost a quarter of its volume and
+    its faces, Spark 29 Oct: "looks weird and unrendered"), so only the closed shells of at least 1 mm3 are kept. A
+    part whose main shell itself is open (a recut export) still decimates, and the volume lost is printed."""
+    if len(m.faces) <= 200:
+        return m
+    m.merge_vertices(); m.update_faces(m.nondegenerate_faces()); m.update_faces(m.unique_faces()); m.remove_unreferenced_vertices()
+    bodies = m.split(only_watertight=False)
+    keep = [b for b in bodies if b.is_watertight and abs(b.volume) >= 1.0]
+    if not keep or len(keep) < len(bodies) // 2:                 # a drawn multi-body mesh whose shells are not closed: drop only the loose triangles
+        keep = [b for b in bodies if len(b.faces) > 3] or bodies
+    m = trimesh.util.concatenate(keep) if len(keep) > 1 else keep[0]
+    if len(m.faces) > MAX_FACES:
+        v0 = abs(m.volume)
+        m = m.simplify_quadric_decimation(face_count=MAX_FACES)
+        if v0 > 0 and abs(abs(m.volume) - v0) > 0.02 * v0:
+            print(f"site: {pid}: the decimated mesh lost {100 * (v0 - abs(m.volume)) / v0:.0f} % of its volume (the STL is not watertight)")
+    return m
+
+
+MAX_FACES = 20000                        # the inline page must stay under the 16 MB artifact limit (29 Oct: 16.8 MB at 40k, 15.2 MB at 24k with 58 parts)
 
 
 def sha(path):
@@ -180,9 +202,7 @@ def build(inline=False, offline=False):
             elif st == "placed" and "mesh" in p and os.path.exists(os.path.join(ROOT, p["mesh"])):
                 mesh = os.path.join(ROOT, p["mesh"])
             if mesh:
-                m = trimesh.load(mesh, force="mesh")
-                if len(m.faces) > MAX_FACES:
-                    m = m.simplify_quadric_decimation(face_count=MAX_FACES)
+                m = view_mesh(trimesh.load(mesh, force="mesh"), pid)
                 kind = "mesh"
             else:
                 m = placeholder(p)
