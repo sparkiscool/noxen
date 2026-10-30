@@ -183,6 +183,8 @@ def check_members(n, log=print):
         bad.append(f"frame model members differ: no load for {sorted(names - loads)}, no member for {sorted(loads - names)}")
     for m in ms:
         if m["kind"] == "tube":
+            if m["other"] is None:                    # the far end is a printed part, not a node (head rods +1 / -1 end in the
+                continue                              # head mount, which bores them itself); 29 Oct: node 15 crashed here
             back = [k for k in members(m["other"]) if k["name"] == m["name"]]
             if len(back) != 1:
                 bad.append(f"{m['name']}: no socket at node {m['other']}")
