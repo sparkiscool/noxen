@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   4757.3
+   4757.1
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -25,10 +25,10 @@
  "strength": {
   "rows": [
    {
-    "case": "frame tube 6-7 axial 145 N (pull-out)",
+    "case": "frame tube 6-7 axial 160 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.336,
-    "across": 0.273,
+    "inlayer": 0.37,
+    "across": 0.301,
     "at": [
      158.0,
      324.4,
@@ -36,10 +36,10 @@
     ]
    },
    {
-    "case": "frame tube 6-7 side 0.9 N",
+    "case": "frame tube 6-7 side 2.0 N",
     "cls": "crash",
-    "inlayer": 0.002,
-    "across": 0.001,
+    "inlayer": 0.004,
+    "across": 0.003,
     "at": [
      154.0,
      317.4,
@@ -47,10 +47,10 @@
     ]
    },
    {
-    "case": "frame tube 6-15 axial 121 N (pull-out)",
+    "case": "frame tube 6-15 axial 148 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.229,
-    "across": 0.145,
+    "inlayer": 0.28,
+    "across": 0.177,
     "at": [
      165.0,
      321.4,
@@ -58,7 +58,7 @@
     ]
    },
    {
-    "case": "frame tube 6-15 side 0.9 N",
+    "case": "frame tube 6-15 side 0.8 N",
     "cls": "crash",
     "inlayer": 0.004,
     "across": 0.003,
@@ -69,10 +69,10 @@
     ]
    },
    {
-    "case": "frame tube 6-18 axial 231 N (pull-out)",
+    "case": "frame tube 6-18 axial 248 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.504,
-    "across": 0.365,
+    "inlayer": 0.54,
+    "across": 0.391,
     "at": [
      162.0,
      322.4,
@@ -80,10 +80,10 @@
     ]
    },
    {
-    "case": "frame tube 6-18 side 0.5 N",
+    "case": "frame tube 6-18 side 0.8 N",
     "cls": "crash",
-    "inlayer": 0.002,
-    "across": 0.001,
+    "inlayer": 0.003,
+    "across": 0.002,
     "at": [
      158.0,
      324.4,
@@ -93,8 +93,8 @@
    {
     "case": "crash 35 g through the longest tube tube 6-7 (325 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.334,
-    "across": 0.196,
+    "inlayer": 0.366,
+    "across": 0.215,
     "at": [
      158.0,
      324.4,
@@ -102,8 +102,8 @@
     ]
    }
   ],
-  "worst": 0.504,
-  "worst_case": "frame tube 6-18 axial 231 N (pull-out)",
+  "worst": 0.54,
+  "worst_case": "frame tube 6-18 axial 248 N (pull-out)",
   "worst_at": [
    162.0,
    322.4,
@@ -118,7 +118,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 9384.0,
+ "volume_mm3": 9383.9,
  "drawn_g": 8.55,
  "stl": "overseer_cage_node_6.stl",
  "view_stl": "overseer_cage_node_6_view.stl",
@@ -211,21 +211,21 @@
   "design": 135440,
   "drawn": 6691,
   "cases": [
-   "frame tube 6-7 axial 145 N (pull-out)",
-   "frame tube 6-7 side 0.9 N",
-   "frame tube 6-15 axial 121 N (pull-out)",
-   "frame tube 6-15 side 0.9 N",
-   "frame tube 6-18 axial 231 N (pull-out)",
-   "frame tube 6-18 side 0.5 N",
+   "frame tube 6-7 axial 160 N (pull-out)",
+   "frame tube 6-7 side 2.0 N",
+   "frame tube 6-15 axial 148 N (pull-out)",
+   "frame tube 6-15 side 0.8 N",
+   "frame tube 6-18 axial 248 N (pull-out)",
+   "frame tube 6-18 side 0.8 N",
    "crash 35 g through the longest tube tube 6-7 (325 mm), axial + side"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 36.6,
- "layout_s": 6690,
- "peak_gb": 9.883308,
+ "build_s": 53.7,
+ "layout_s": 13932,
+ "peak_gb": 9.850748,
  "gen_cm3": 2.7,
  "h": 1.0,
  "audit": {
@@ -234,7 +234,7 @@
    {
     "id": 1,
     "cells": 2667,
-    "inscribed_mm": 4.5,
+    "inscribed_mm": 3.5,
     "touches_cut": true,
     "touches_support": true,
     "loaded": false,
@@ -245,12 +245,12 @@
      324.1,
      110.7
     ],
-    "core_mm": 3.5
+    "core_mm": 2.5
    },
    {
     "id": 2,
     "cells": 1344,
-    "inscribed_mm": 4.0,
+    "inscribed_mm": 3.0,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
@@ -261,12 +261,12 @@
      308.2,
      116.2
     ],
-    "core_mm": 4.0
+    "core_mm": 3.0
    },
    {
     "id": 3,
     "cells": 2680,
-    "inscribed_mm": 4.5,
+    "inscribed_mm": 3.5,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
@@ -277,7 +277,7 @@
      314.6,
      110.3
     ],
-    "core_mm": 4.0,
+    "core_mm": 3.0,
     "share_of_drawn": 0.4
    }
   ],
@@ -293,7 +293,7 @@
   "fails": []
  },
  "baseline": null,
- "total_s": 6727,
+ "total_s": 13986,
  "part_sha": "45b50b2c3d3b",
  "lib_sha": "2a4ef96807ca",
  "max_worst": 0.5,
