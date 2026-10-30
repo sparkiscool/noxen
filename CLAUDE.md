@@ -27,7 +27,7 @@ audit report; `python -m topo.run parts/<name> --h 2.5 --maxit 2 --no-coarse` ru
 
 ## Never
 - Run a full optimisation in a session. Never read meshes, logs, images or `inputs/`.
-- Edit `topo/` in a part session, except the audit check a failure calls for (other engine changes are their own session, with `python -m topo.test_topo`).
+- Edit `topo/` in a part session, except the audit check a failure calls for. Other engine changes are their own session, which THIS session starts itself (`create_session` on the repo, the whole brief in the prompt, `python -m topo.test_topo` in it); Spark never pastes a prompt (Spark 29 Oct).
 - Patch a failed run by drawing more solid. Fix the setup: room, cuts, loads, volume.
 
 ## Design rules
