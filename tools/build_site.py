@@ -10,9 +10,9 @@
 Outside CI the build refuses a checkout behind origin/main: a page built from an old checkout shows old parts.
 
 Status is computed, never stored:
-  done     parts/<id>/result.json exists, solid_ok true, and its part_sha / lib_sha match the current part.py and libs
+  done     parts/<id>/result.json exists, solid_ok true, and its setup_sha is the setup part.py builds now (tools/part_sha.py)
   failed   result.json exists, solid_ok false, sha matches
-  stale    result.json exists but part.py changed since (a run is due)
+  stale    result.json exists but the setup changed since (a run is due)
   pending  part.py exists, no result.json yet
   placed   no part.py: a bought part or a hand-drawn mesh, shown as is
 Nothing here is ever read by Claude; CI runs it.
@@ -148,7 +148,7 @@ def status(pid):
     if not os.path.exists(rj):
         return "pending", None
     r = json.load(open(rj))
-    if _stale(py, r):                                 # tools/part_sha.py: part.py or an imported lib changed
+    if _stale(py, r):                                 # tools/part_sha.py: the setup changed since this result
         return "stale", r
     ok = r.get("solid_ok") and r.get("strength_ok", True)
     return ("done" if ok else "failed"), r

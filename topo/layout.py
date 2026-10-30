@@ -98,6 +98,8 @@ class Settings:
     auto_sym: bool = True
     near_sym: bool = False              # a part's own choice (SPEC settings): hold a nearly mirrored part symmetric away from its odd detail
     backend: str = "auto"               # "auto" | "direct" | "mg"
+    early_beta: int = 4                 # early strength check once this beta stage is done (later if the field is not one body yet; 0 = off): topo/run.py early_check
+    early_k: float = 3.0                # ... stop the run when the index there is over early_k x SPEC max_worst (SPEC settings override)
     mg_tol: float = 1e-5
     time_limit_s: float = 5.5 * 3600
     checkpoint_every: int = 10
@@ -851,7 +853,9 @@ class Layout:
         return xh
 
     def run(self, maxit=400, checkpoint=None, resume=None, beta_start=0, beta_stop=None, log_every=1,
-            on_checkpoint=None):
+            on_checkpoint=None, on_stage=None):
+        """on_stage(bi, f): called when the beta stage bi is done, with its fields (topo/run.py's early strength check raises
+        there to stop a hopeless run)"""
         s, log = self.s, self.log
         t0 = time.time()
         it, bi, since = 0, int(beta_start), 0
@@ -921,6 +925,10 @@ class Layout:
             hurry = s.time_limit_s and elapsed > 0.75 * s.time_limit_s
             if bi < last_bi and (settled or since >= s.max_stage or (hurry and since >= 3)):
                 self._connect_report(f, beta)
+                if on_stage:
+                    if checkpoint:
+                        self._save(checkpoint, it, bi, since)
+                    on_stage(bi, f)
                 bi += 1
                 since = 0
                 self.mma.reset()

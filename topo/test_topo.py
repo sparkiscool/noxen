@@ -429,9 +429,12 @@ def t_end_to_end():
         s = Settings(min_member_mm=4.0, max_stage=12, min_stage=4, backend="auto", time_limit_s=900)
         res = optimise(setup, 2.0, 6.0, out, "holder_smoke", settings=s, coarse=False, maxit=60,
                        log=lambda s_: print(s_[:300], flush=True))
+        e = res.get("early") or {}
         check("end to end: holder at h 2.0 builds one watertight body", res["bodies"]["bodies"] == 1 and
               res["watertight"], f"{res['mass_g']} g, solid check {'PASS' if res['solid_ok'] else 'FAIL'}, "
-                                 f"worst {res['strength']['worst']}, {res['total_s']} s, files in {out}")
+                                 f"worst {res['strength']['worst']}, early check {e.get('worst')} after beta {e.get('beta')} "
+                                 f"(ratio {e['worst'] / res['strength']['worst'] if e.get('worst') and res['strength']['worst'] else None}), "
+                                 f"{res['total_s']} s, files in {out}")
     except Exception as e:
         traceback.print_exc()
         check("end to end", False, str(e))
@@ -587,6 +590,73 @@ def t_export_mesh():
         check("export mesh", False, str(e))
 
 
+def t_setup_sha():
+    """staleness by setup (tools/part_sha.py): a result carrying the setup_sha of the setup part.py builds now is current even when
+    part.py's or a lib's file hash changed (30 Oct: a two-line validation in cage_node_lib flagged eight node results stale and they
+    were restamped by hand); a result from another setup is stale; a result without setup_sha falls back to the file rule."""
+    try:
+        import os, sys, json, tempfile, shutil
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools"))
+        import importlib, part_sha as PS
+        importlib.reload(PS)
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        d = tempfile.mkdtemp(prefix="setup_sha_", dir=os.path.join(root, "parts"))      # under parts/, as the cache expects
+        try:
+            py = os.path.join(d, "part.py")
+            src = ("import manifold3d as mf\nfrom topo.part import Part\n"
+                   "box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])\n"
+                   "LOAD = %s\n"
+                   "def setup(h):\n    p = Part('t', h, box(0, 3, 0, 12, 0, 12) + box(20, 24, 3, 9, 3, 9), box(100, 101, 100, 101, 100, 101), box(0, 24, 0, 12, 0, 12), log=lambda s_: None)\n"
+                   "    p.support('default', box(-1, 1.5, -1, 13, -1, 13)); p.load('down', box(20, 24, 3, 9, 3, 9), (0, 0, LOAD)); return p\n"
+                   "SPEC = dict(h=1.0, gen_cm3=1.0, max_worst=0.5)\n")
+            open(py, "w").write(src % "-10.0")
+            a = PS.setup_sha(py); cached = json.load(open(os.path.join(d, "setup.json")))
+            open(py, "w").write(src % "-10.0" + "# a comment: the file changed, the setup did not\n")
+            b = PS.setup_sha(py)
+            res_same = dict(part_sha="old", lib_sha="", setup_sha=a)
+            res_other = dict(part_sha=PS.part_sha(py), lib_sha="", setup_sha="0000000000000000")
+            res_old = dict(part_sha="old", lib_sha="")
+            not_stale = not PS.stale(py, res_same); other_stale = PS.stale(py, res_other); old_rule = PS.stale(py, res_old)
+            open(py, "w").write(src % "-12.0")
+            c = PS.setup_sha(py)
+            ok = a == b and cached["setup_sha"] == a and not_stale and other_stale and old_rule and c != a
+            check("setup sha: a comment in part.py keeps a result current, a changed load makes it stale, old results use the file rule", ok,
+                  f"comment {a == b}, cache {cached['setup_sha'] == a}, current {not_stale}, other setup stale {other_stale}, old rule {old_rule}, load changed {c != a}")
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+    except Exception as e:
+        traceback.print_exc()
+        check("setup sha", False, str(e))
+
+
+def t_early_check():
+    """the early strength stop (topo/run.py early_check): on a field that joins the loads to the supports it returns the index of the
+    same solver build_and_check uses and raises EarlyFail over early_k x max_worst; on a field that does not join them it is skipped
+    (an index on a broken field means nothing). The holder's full run (t_end_to_end) prints early vs final so the threshold stays honest."""
+    try:
+        from .run import early_check, EarlyFail
+        p = _mini_part()
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn")
+        L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+        cen = p.cell_centres()[L.design]
+        bar = (np.abs(cen[:, 1] - 5) < 3) & (np.abs(cen[:, 2] - 5) < 3)                     # a 6 x 6 bar from the base to the pad
+        f_bar = L.fields(np.where(bar, 1.0, 0.0), 32.0)
+        f_none = L.fields(np.zeros(L.nd), 32.0)                                            # nothing between base and pad
+        msgs = []
+        st = early_check(L, f_bar, 1, 0.5, 1e6, log=msgs.append)                             # a huge k: never raises
+        skipped = early_check(L, f_none, 1, 0.5, 3.0, log=msgs.append)
+        try:
+            early_check(L, f_bar, 1, 0.5, 1e-6, log=msgs.append); raised = False
+        except EarlyFail as e:
+            raised = e.info["worst"] == st["worst"] and e.info["beta"] == 2.0
+        ok = st is not None and st["worst"] is not None and st["worst"] > 0 and skipped is None and raised and any("skipped" in m for m in msgs)
+        check("early check: index on a joined field, skipped on a broken one, EarlyFail over k x max_worst", ok,
+              f"index {None if st is None else st['worst']}, skipped {skipped is None}, raised {raised}")
+    except Exception as e:
+        traceback.print_exc()
+        check("early check", False, str(e))
+
+
 def t_audit_plate():
     """audit: an envelope longer than the 180 mm plate at every rotation is refused (the front arm, 225 x 63: 29 Oct); a 170 x 170 one passes."""
     from topo.audit import plate_fit
@@ -708,7 +778,7 @@ def t_skin_core():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_audit_plate, t_audit_block_measure, t_design_hash):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_audit_plate, t_audit_block_measure, t_design_hash):
         t()
     if not quick:
         t_end_to_end()

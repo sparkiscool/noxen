@@ -465,13 +465,14 @@ def function_check(P, part, layout=None):
                 ok=bool(max(missing, in_cuts, in_keep) < 0.5))
 
 
-def strength(layout, part_mesh, log=print):
+def strength(layout, part_mesh=None, log=print, mask=None):
     """as-built voxel FE on the layout grid: every real load case at nominal loads, transversely isotropic material,
     failure indices in-layer (von Mises / A_xy) and across layers (sqrt((sigma_n+ / A_z)^2 + (tau_n / A_s)^2)) at
-    element centres; elements touching a loaded or fixed node are left out (point-load singularities)."""
+    element centres; elements touching a loaded or fixed node are left out (point-load singularities). The material is
+    the built mesh voxelised, or a cell mask (the early check on the layout's own field, topo/run.py early_check)."""
     part = layout.part
     ins = getattr(part, "insert_cells", np.zeros(part.nel, bool))
-    A = voxelise(part_mesh, *part.axes).ravel() | ins                     # inserts (rods) sit in their bores
+    A = (np.asarray(mask, bool).ravel() if mask is not None else voxelise(part_mesh, *part.axes).ravel()) | ins   # inserts (rods) sit in their bores
     E = np.where(ins, getattr(part, "stiff", np.ones(part.nel)), np.where(A, 1.0, 1e-9))
     real = [c for c in layout.cases if not c.tie]
     sol = Solver(part.shape, part.h, layout.C, part.supports, active=A | layout.solid, backend="auto",

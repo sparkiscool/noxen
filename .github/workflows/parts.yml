@@ -238,6 +238,7 @@ jobs:
           PY
           rm -rf _results
           python3 tools/predict.py --update
+          python3 tools/part_sha.py --refresh          # the setup.json caches (staleness by setup, tools/part_sha.py), committed with the results
       - name: commit and push (retry on race)
         shell: bash
         run: |

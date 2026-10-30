@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.12', cache: pip }
-      - run: pip install numpy scipy networkx trimesh fast_simplification   # networkx: trimesh smooth shading needs a graph engine (site builds failed all day without it)
+      - run: pip install -r requirements.txt       # the whole engine: the page's staleness is by setup (tools/part_sha.py setup_sha builds a part when its cache is behind)
       - run: python tools/build_site.py --inline    # also site/<drone>.html, the drone's artifact file, every current part embedded
       - run: pip install playwright && playwright install --with-deps chromium
       - run: python tools/snap_site.py                 # site/<drone>.png: the picture the README shows (served from Pages, never committed)

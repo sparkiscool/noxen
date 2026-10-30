@@ -16,10 +16,11 @@ import json
 import time
 import argparse
 import subprocess
+import numpy as np
 from dataclasses import replace
 
 from .layout import Layout, Settings, gate_member_mm
-from .build import build_and_check
+from .build import build_and_check, strength
 from .audit import SetupError
 
 MAX_CELLS = 300_000      # the grid the GitHub runner solves direct (16 GB, direct estimate 6 (n/4.5e5)^(4/3) GB): over it the multigrid
@@ -72,10 +73,14 @@ def _setup_hash(out_dir):
 
 
 def design_hash(part, h, gen, spec, settings=None):
-    """what the run would compute from: the part's voxel masks, supports, every load case and the SPEC, as a short sha. The
-    same setup on another commit gives the same hash; a changed load, socket, cut or budget gives another. parts.yml compares
-    the hash of a running part with the one main would give now and stops the run when they differ (Spark 29 Oct: an old
-    design never keeps running once a new one supersedes it; a result for a design that no longer exists is worth nothing)."""
+    """what the run would compute from: the part's voxel masks, supports, every load case, the SPEC and the thin_ok bodies, as a
+    short sha. The same setup on another commit gives the same hash; a changed load, socket, cut or budget gives another; a lib
+    edit that moves no geometry gives the same. parts.yml compares the hash of a running part with the one main would give now
+    and stops the run when they differ (Spark 29 Oct: an old design never keeps running once a new one supersedes it). It is
+    also the result's setup_sha (result.json), the staleness key of tools/part_sha.py: a result is stale when the setup it was
+    solved from differs from the one part.py builds now, not when a file hash changed (30 Oct: a two-line validation in
+    cage_node_lib flagged eight node results stale and they were restamped by hand). Deterministic across machines (checked
+    30 Oct: node 21 gave 84667bc3415f9a31 here and on the runner)."""
     import hashlib
     import numpy as np
     hs = hashlib.sha256()
@@ -90,6 +95,8 @@ def design_hash(part, h, gen, spec, settings=None):
         hs.update(np.asarray(c.F, float).round(6).tobytes())
     hs.update(f"h {h:.4f} gen {gen:.4f} max_worst {spec.get('max_worst', 0.5)} build {getattr(part, 'build', '')} material {getattr(part, 'material', '')}".encode())
     hs.update(repr(sorted((spec.get("settings") or {}).items())).encode())
+    for m in getattr(part, "thin_ok", []):                                 # declared-thin bodies change the gate's verdict
+        hs.update(f"thin_ok {m.volume():.3f} {np.round(np.asarray(m.bounding_box(), float), 3).tolist()}".encode())
     return hs.hexdigest()[:16]
 
 
@@ -110,8 +117,56 @@ def _own_checkpoints(out_dir, log):
         np.savez(tag, setup=np.array(want))
 
 
+class EarlyFail(Exception):
+    """the run is a lost cause: the early strength check (early_check) found an index far over SPEC max_worst"""
+    def __init__(self, info):
+        super().__init__(f"early fail: index {info['worst']} in '{info['worst_case']}' at {info['worst_at']} after beta {info['beta']} "
+                         f"(it {info['iteration']}), over {info['k']} x max_worst {info['max_worst']}")
+        self.info = info
+
+
+def early_check(L, f, bi, max_worst, k, log=print):
+    """the as-built strength on the layout's own field at a beta step (nominal density > 0.5 plus the drawn cells, the solver
+    build_and_check uses on the built mesh): a design whose index is over k x max_worst here never recovers in the stages that
+    follow (30 Oct: the base ran 97 / 97 / 141 min to 2.09 / 1.54 / 1.55; its first stages already said so). Returns the
+    strength dict with beta / iteration added, or None when the field is not yet one body from the loads to the supports
+    (an index on a broken field means nothing). Raises EarlyFail over the limit."""
+    from scipy import ndimage as ndi
+    part = L.part
+    A = ((f["rho_n"] > 0.5) | L.solid).reshape(part.shape)
+    lab, n = ndi.label(A, ndi.generate_binary_structure(3, 1))
+    sup = np.zeros(part.nel, bool)
+    for el in part.support_cells.values():
+        sup[el] = True
+    held = set(np.unique(lab[sup.reshape(part.shape)])) - {0}
+    loaded = np.zeros(part.nel, bool)
+    nx, ny, nz = part.shape
+    for c in L.cases:
+        if c.tie or c.nodes is None or not len(c.nodes):
+            continue
+        nid = np.asarray(c.nodes)
+        kk = nid % (nz + 1); j = (nid // (nz + 1)) % (ny + 1); i = nid // ((nz + 1) * (ny + 1))
+        for a in (0, -1):
+            for b in (0, -1):
+                for cc in (0, -1):
+                    ii, jj, k2 = i + a, j + b, kk + cc
+                    ok = (ii >= 0) & (ii < nx) & (jj >= 0) & (jj < ny) & (k2 >= 0) & (k2 < nz)
+                    loaded[np.ravel_multi_index((ii[ok], jj[ok], k2[ok]), part.shape)] = True
+    lab_loaded = set(np.unique(lab[(loaded & A.ravel()).reshape(part.shape)])) - {0}
+    if not held or not lab_loaded or not lab_loaded <= held:
+        log(f"early check: skipped after beta {L.s.betas[bi]:.0f}: the field is not one body from the loads to the supports yet "
+            f"({n} bodies)")
+        return None
+    st = strength(L, mask=A, log=log)
+    st.update(beta=float(L.s.betas[bi]), iteration=len(L.hist), max_worst=max_worst, k=k)
+    if st["worst"] is not None and st["worst"] > k * max_worst:
+        raise EarlyFail(st)
+    log(f"early check: index {st['worst']:.2f} after beta {L.s.betas[bi]:.0f} (limit {k * max_worst:.2f}): the run goes on")
+    return st
+
+
 def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=False, log=None, maxit=400,
-             extra=None):
+             extra=None, max_worst=0.5):
     os.makedirs(out_dir, exist_ok=True)
     log = log or Tee(os.path.join(out_dir, "log.txt"))
     s = settings or Settings()
@@ -151,14 +206,33 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
     L = Layout(part, gen_cm3=gen_cm3, settings=s, log=log)
     if xh_c is not None:
         L.init_from(xh_c, part_c)
-    L.run(maxit=maxit, checkpoint=ck, resume=ck, beta_start=2 if coarse else 0, on_checkpoint=hook)
+    early = {}
+
+    def on_stage(bi, f):
+        if s.early_beta and float(s.betas[bi]) >= float(s.early_beta) and "worst" not in early:   # from early_beta on, until the field is one body
+            st = early_check(L, f, bi, max_worst, s.early_k, log=log)
+            if st is not None:
+                early.update(st)
+    try:
+        L.run(maxit=maxit, checkpoint=ck, resume=ck, beta_start=2 if coarse else 0, on_checkpoint=hook, on_stage=on_stage)
+    except EarlyFail as e:
+        res = dict(name=name, engine="nox/topo", status="early_fail", solid_ok=False, strength=e.info, early=e.info,
+                   mass_g=None, layout=L.meta(), grid=part.summary(), gen_cm3=gen_cm3, h=h, audit=rep_audit,
+                   total_s=round(time.time() - t0), **(extra or {}))
+        log(f"EARLY FAIL: {e}; the run stops here ({res['total_s']} s): change the setup (room, volume, loads), do not wait for the rest")
+        with open(os.path.join(out_dir, "result.json"), "w") as fh:
+            json.dump(res, fh, indent=1, default=str)
+        return res
     L.save(os.path.join(out_dir, "density.npz"))
     t_layout = time.time() - t0
     log(f"layout done: {t_layout:.0f} s, peak {peak_gb()} GB")
-    ex = dict(layout_s=round(t_layout), peak_gb=peak_gb(), gen_cm3=gen_cm3, h=h, audit=rep_audit)
+    ex = dict(layout_s=round(t_layout), peak_gb=peak_gb(), gen_cm3=gen_cm3, h=h, audit=rep_audit, early=early or None)
     if extra:
         ex.update(extra)
     res, P = build_and_check(L, out_dir, name, log=log, extra=ex)
+    if early.get("worst") is not None and res["strength"]["worst"]:
+        log(f"early check vs final: {early['worst']:.2f} after beta {early['beta']:.0f} -> {res['strength']['worst']:.2f} built "
+            f"(ratio {early['worst'] / max(res['strength']['worst'], 1e-9):.2f})")
     res["total_s"] = round(time.time() - t0)
     with open(os.path.join(out_dir, "result.json"), "w") as fh:
         json.dump(res, fh, indent=1, default=str)
@@ -285,7 +359,7 @@ def main(argv=None):
                       settings=s, extra=dict(baseline=spec.get("baseline")))
     else:
         res = optimise(spec["setup"], h, gen, os.path.abspath(out), name, settings=s, coarse=not a.no_coarse,
-                       git=a.git, maxit=a.maxit, extra=dict(baseline=spec.get("baseline")))
+                       git=a.git, maxit=a.maxit, extra=dict(baseline=spec.get("baseline")), max_worst=float(spec.get("max_worst", 0.5)))
     if a.part not in PARTS:                             # parts/<name>/: the result is always part.stl beside part.py
         import shutil
         src = os.path.join(out, f"{name}.stl")
@@ -298,12 +372,17 @@ def main(argv=None):
             r = json.load(fh)
         r["part_sha"] = part_sha(os.path.join(out, "part.py"))
         r["lib_sha"] = lib_sha(os.path.join(out, "part.py"))
+        r["setup_sha"] = design_hash(spec["setup"](h), h, gen, spec)   # the staleness key (tools/part_sha.py stale): the setup, not the files
         # strength gate: SPEC["max_worst"] (default 0.5). Above it the part is failed like a solid-check fail.
         mw = float(spec.get("max_worst", 0.5))
         r["max_worst"] = mw
         r["strength_ok"] = bool(res["strength"]["worst"] is not None and res["strength"]["worst"] <= mw)
         with open(rj, "w") as fh:
             json.dump(r, fh, indent=1, default=str)
+        if res.get("status") == "early_fail":
+            print(f"EARLY FAIL: index {res['strength']['worst']} in '{res['strength']['worst_case']}' after beta {res['strength']['beta']:.0f}, "
+                  f"over {res['strength']['k']} x max_worst {mw}: stopped at {res['total_s']} s")
+            return 1
         if not r["strength_ok"]:
             print(f"STRENGTH FAIL: worst index {res['strength']['worst']} > max_worst {mw}")
             return 1

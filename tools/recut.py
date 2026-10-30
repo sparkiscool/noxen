@@ -13,6 +13,7 @@ sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "tools"))
 from topo.part import man, tm                                                   # noqa: E402
 from topo import build as B                                                     # noqa: E402
 from part_sha import part_sha, lib_sha                                          # noqa: E402
+from topo.run import design_hash                                                # noqa: E402
 from topo.material import MATERIALS                                             # noqa: E402
 
 
@@ -47,7 +48,7 @@ def recut(name, log=print):
         log(f"  render failed: {e}")
     py = os.path.join(d, "part.py")
     res.update(solid_ok=bool(ok and export["watertight"]), solid=solid, export_cleanup=cleanup, export=export, mass_g=round(mass, 2), volume_mm3=round(PT.volume, 1), watertight=bool(export["watertight"]),
-               part_sha=part_sha(py), lib_sha=lib_sha(py),
+               part_sha=part_sha(py), lib_sha=lib_sha(py), setup_sha=design_hash(part, float(res["h"]), float(res.get("gen_cm3") or mod.SPEC["gen_cm3"]), mod.SPEC),
                recut=dict(at=time.strftime("%Y-%m-%d %H:%M"), removed_cm3=round(removed, 3), note="holes recut from the current setup; strength not re-solved"))
     json.dump(res, open(rj, "w"), indent=1)
     log(f"{name}: recut, {removed:.2f} cm3 removed, {mass:.1f} g, solid check {'PASS' if ok else 'FAIL'}"
