@@ -19,7 +19,7 @@ Loads (frame model systems/overseer.cage_loads.json, as the hub deck's nose): ev
 mechanism 750 g (E: pack ~600 + latch 150) at the pack's CG through the 4 bosses at 35 g in 14 directions, flight 4 g, landing 6 g.
 Supports: the 8 pad faces against the plate. Prints upside down: the z -8.1 faces on the build plate, crowns toward -z.
 Numbers: systems/dimensions.md (Overseer core: bottom plate holes, latch set pose; cage rows). v1 h 1.6 (h 1.5 = 323k cells, over
-the 300k limit), gen 26 cm3 (E)."""
+the 300k limit), gen 26 cm3 (E). v2 (29 Oct, auto mode): side room y +-84 / z 8, h 1.7, 30 cm3 (v1: index 2.09 at the side sockets, 44.4 g, run 64)."""
 import json, os, sys
 import numpy as np
 
@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(HERE)))
 from topo.part import Part
 from parts.cage_node_lib import CAGE, KIND, NODE_R, WALL, FLOOR, socket_cuts, collar_shape, along, U
 
-SPEC = dict(h=1.6, gen_cm3=26.0, max_worst=0.5)
+SPEC = dict(h=1.7, gen_cm3=30.0, max_worst=0.5)      # v2: h 1.7 (the wider side room at 1.6 is 301k cells), 30 cm3 (v1 came in at 44 g with 26)
 G = 9.81e-3
 BUILD = (0.0, 0.0, -1.0)                                          # printed upside down: the flat z -8.1 faces on the plate
 Z_PLATE, Z_MOUNT = -2.1, -8.1                                     # plate underside; the future mechanism's mount plane
@@ -104,8 +104,11 @@ def bodies():
     cuts.append(box(SLOT[0], SLOT[1], SLOT[2], SLOT[3], -80.0, Z_MOUNT))
     # envelope: the 6 mm under the plate over the part's footprint; beside the plate's sides and behind its tail the room rises past
     # the plate plane for the core tie collars (nothing else is there) and drops to z -18 for the bay tie bosses
+    # v2 (29 Oct, run 64: index 2.09 at the left side socket in the sideways crash, collars hanging off the main body): v1 gave the
+    # sockets beside the plate an 11 mm strip (y 59..70) while their bores reach y 79 and the collars 83: the collars hung off a
+    # ledge. The side room now runs to y +-84 and up to z 8 (168 wide: under the 180 plate), so the collars sit inside material.
     env = U([box(-118.0, 57.0, -70.0, 70.0, -18.0, Z_PLATE),
-             box(-45.0, 45.0, 59.0, 70.0, -18.0, 5.0), box(-45.0, 45.0, -70.0, -59.0, -18.0, 5.0),
+             box(-45.0, 45.0, 59.0, 84.0, -18.0, 8.0), box(-45.0, 45.0, -84.0, -59.0, -18.0, 8.0),
              box(-118.0, -95.5, -34.0, 34.0, -18.0, 11.0)])
     return U(collars + pads + bosses), U(cuts), env, socks, pads
 

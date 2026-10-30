@@ -14,6 +14,7 @@ crash, and the merged nose collars (audit body at (95.6, 8.5, 12.4)) hang 99.7 %
 nose is a 17 mm tower on a 6.5 mm deck with design room only x 78..104, y +-26, so its root is a neck. The rod lines stay (node 7 and
 the rods do not move): the nose room grows to x 70..104, y +-30, z 0..28 and the volume 22 -> 28 cm3, so the engine can build a
 wide root from the deck into both collars.
+v16 (29 Oct, auto mode): v15 passed the gate, index 0.67 across layers at the same mouth (56.1 g): nose wall 4 -> 5, 28 -> 32 cm3.
 Nose collars 4.0 thick (NOSE_WALL; the 2.5 of the cage nodes sits in 3..7 cm3 of generated material each), the nose room back to
 x 78 (the UBEC bay ends at 82) and out to |y| 26 over both front feet, gen 22 (the v12 deck at 11 ran at index 0.17), h 1.3 for the cells."""
 import json, os
@@ -25,7 +26,7 @@ from topo import Part
 from topo.part import man
 from parts.cage_node_lib import CAGE, socket_cuts, collar_shape, KIND, WALL, FLOOR, NODE_R
 
-SPEC = dict(h=1.3, gen_cm3=28.0, max_worst=0.5)    # v12: h 1.0, 11 cm3; v13: the nose node lifts the grid to z 24 (h 1.0 would be 350k cells, 1.2 307k, limit 300k) and adds its collars + bracing (E)
+SPEC = dict(h=1.3, gen_cm3=32.0, max_worst=0.5)    # v12: h 1.0, 11 cm3; v13: the nose node lifts the grid to z 24 (h 1.0 would be 350k cells, 1.2 307k, limit 300k) and adds its collars + bracing (E)
 LEAN = False
 
 R = json.load(open(os.path.join(INP, "core_result.json")))
@@ -93,7 +94,7 @@ def arm_env(deg):
 
 
 # ================================================================ nose node (v13): the two front core ties end in the deck
-NOSE_WALL = 4.0                                                            # v14 (29 Oct): 2.5 failed at 411 N pull-out (index 1.3 across layers)
+NOSE_WALL = 5.0                                                            # v16 (29 Oct): 4.0 left 0.67 across layers at the front.1 mouth (v15); v14: 2.5 failed at 411 N pull-out (1.3)
 NOSE_ENV = (70.0, 104.0, -30.0, 30.0, 0.0, 28.0)                           # x 104: the whole envelope must stay under the 180 plate (v14 at 105 + -76 = 182, refused)                           # room for the collars and their bracing to the front feet (96, ±17)
 TIE_CASES = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage_loads.json")))["cases"]
 
