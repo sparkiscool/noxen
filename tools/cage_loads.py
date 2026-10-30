@@ -152,6 +152,10 @@ class Frame:
         return u.reshape(n, 6), out, -lam                        # -lam: the surface's force on the node along d
 
 
+PACK_G, PACK_CG = 750.0, (-20.0, 0.0, -42.0)     # pack + swap mechanism (E), as parts/overseer_base/part.py loads it; the
+                                                  # placeholder mesh left the assembly 29 Oct (Spark), the mass stays in the frame model
+
+
 def masses(asm_rows, cage):
     """group the assembly's placed masses: returns dict core=(g, cg), head=(g, cg), arms[k]=(arm g, motor g), cam21 g,
     node[g by id], tubes g, rods g"""
@@ -182,6 +186,7 @@ def masses(asm_rows, cage):
             arms[3]["arm"] += g
         else:
             core_m += g; core_s += g * c
+    core_m += PACK_G; core_s += PACK_G * np.asarray(PACK_CG, float)      # the future pack has no mesh on the page (Spark 29 Oct)
     return dict(core=(core_m, core_s / core_m), head=(head_m, head_s / head_m), arms=arms, cam21=cam21, nodes=nodes,
                 tubes=tubes, rods=rods)
 

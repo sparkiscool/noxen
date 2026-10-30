@@ -158,6 +158,37 @@ jobs:
             parts/${{ matrix.part }}/log.txt
           if-no-files-found: ignore
 
+      # a finished part lands on main now: the commit job below waits for the run's slowest part (29 Oct: the base's 8 h held
+      # the hub deck's and the front root's results for the whole night). Same stale rule as the commit job; it never fails the job.
+      - name: commit this part's result now
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          p=${{ matrix.part }}
+          [ -f parts/$p/result.json ] || exit 0
+          mkdir -p _mine && cp parts/$p/result.json parts/$p/part.stl parts/$p/preview.png _mine/
+          git config user.name nox-ci
+          git config user.email ci@users.noreply.github.com
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main && git checkout -q -f -B main origin/main
+            [ -f parts/$p/part.py ] || { echo "$p: no part.py on main any more, result not placed"; break; }
+            python3 - "$p" <<'PY' || break
+          import json, os, sys; sys.path.insert(0, "tools"); from part_sha import stale
+          p = sys.argv[1]; py = f"parts/{p}/part.py"; old = f"parts/{p}/result.json"
+          if os.path.exists(old) and stale(py, json.load(open("_mine/result.json"))) and not stale(py, json.load(open(old))):
+              print(f"{p}: the run's result is older than the one on main, kept main's"); sys.exit(1)
+          PY
+            cp _mine/result.json _mine/part.stl _mine/preview.png parts/$p/
+            git add parts/$p
+            git diff --cached --quiet && { echo "$p: already on main"; break; }
+            git commit -q -m "results: [$p]" && git push -q origin main && { gh workflow run site.yml; break; }
+            echo "push raced ($i), retrying"; sleep 5
+          done
+          cp _mine/result.json _mine/part.stl _mine/preview.png parts/$p/ 2>/dev/null; rm -rf _mine
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       # the job hit its time cap (step cancelled) and left no result: launch this workflow again for this part only.
       # It resumes from the checkpoint. A crash (non-zero exit, step not cancelled) is NOT relaunched: it needs a fix.
       - name: relaunch if cut off
