@@ -7,11 +7,12 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   4757.1
+   5491.1
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
+  "thin_allowed": [],
   "acute_edges": 0,
   "ok": true
  },
@@ -27,102 +28,136 @@
    {
     "case": "frame tube 6-7 axial 160 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.37,
-    "across": 0.301,
+    "inlayer": 0.28,
+    "across": 0.246,
     "at": [
-     158.0,
-     324.4,
-     114.3
+     156.0,
+     326.4,
+     110.3
     ]
    },
    {
     "case": "frame tube 6-7 side 2.0 N",
     "cls": "crash",
-    "inlayer": 0.004,
-    "across": 0.003,
+    "inlayer": 0.003,
+    "across": 0.002,
     "at": [
      154.0,
      317.4,
-     117.3
+     116.3
     ]
    },
    {
     "case": "frame tube 6-15 axial 148 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.28,
-    "across": 0.177,
+    "inlayer": 0.175,
+    "across": 0.137,
     "at": [
-     165.0,
-     321.4,
-     113.3
+     159.0,
+     324.4,
+     116.3
     ]
    },
    {
     "case": "frame tube 6-15 side 0.8 N",
     "cls": "crash",
-    "inlayer": 0.004,
-    "across": 0.003,
+    "inlayer": 0.003,
+    "across": 0.002,
     "at": [
-     158.0,
-     324.4,
-     114.3
+     156.0,
+     326.4,
+     110.3
     ]
    },
    {
     "case": "frame tube 6-18 axial 248 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.54,
-    "across": 0.391,
+    "inlayer": 0.383,
+    "across": 0.235,
     "at": [
-     162.0,
-     322.4,
-     116.3
+     159.0,
+     323.4,
+     117.3
     ]
    },
    {
     "case": "frame tube 6-18 side 0.8 N",
     "cls": "crash",
-    "inlayer": 0.003,
-    "across": 0.002,
+    "inlayer": 0.002,
+    "across": 0.001,
     "at": [
-     158.0,
-     324.4,
-     114.3
+     156.0,
+     326.4,
+     110.3
     ]
    },
    {
     "case": "crash 35 g through the longest tube tube 6-7 (325 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.366,
-    "across": 0.215,
+    "inlayer": 0.277,
+    "across": 0.157,
     "at": [
-     158.0,
-     324.4,
-     114.3
+     156.0,
+     326.4,
+     110.3
     ]
    }
   ],
-  "worst": 0.54,
+  "worst": 0.383,
   "worst_case": "frame tube 6-18 axial 248 N (pull-out)",
   "worst_at": [
-   162.0,
-   322.4,
-   116.3
+   159.0,
+   323.4,
+   117.3
   ]
  },
- "mass_g": 11.92,
+ "mass_g": 12.93,
  "watertight": true,
+ "export": {
+  "faces_in": 89452,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 89452,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 122,
+   "folded": 2,
+   "caps_split": 1,
+   "caps_left": 2,
+   "watertight": true,
+   "faces": 122064
+  },
+  "volume_mm3": 10182.1,
+  "exact_mm3": 10182.2
+ },
  "bodies": {
   "bodies_raw": 1,
   "dropped_specks_mm3": [],
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 9383.8,
+ "volume_mm3": 10182.2,
  "drawn_g": 8.55,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
  "stl": "overseer_cage_node_6.stl",
  "view_stl": "overseer_cage_node_6_view.stl",
- "view_faces": 119999,
+ "view_faces": 89452,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -185,13 +220,13 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.02189210896684867,
+  "volfrac": 0.027786988527090654,
   "nd": 135711,
   "sym_axes": [],
   "n_real": 7,
   "n_ties": 18,
   "backend": "direct",
-  "iterations": 76,
+  "iterations": 70,
   "stopped": "grey"
  },
  "grid": {
@@ -223,10 +258,10 @@
    "default"
   ]
  },
- "build_s": 53.7,
- "layout_s": 13932,
- "peak_gb": 9.850748,
- "gen_cm3": 2.7,
+ "build_s": 47.7,
+ "layout_s": 5551,
+ "peak_gb": 9.87996,
+ "gen_cm3": 3.5,
  "h": 1.0,
  "audit": {
   "drawn_share": 0.047,
@@ -293,39 +328,9 @@
   "fails": []
  },
  "baseline": null,
- "total_s": 13986,
- "part_sha": "45b50b2c3d3b",
- "lib_sha": "2a4ef96807ca",
+ "total_s": 5598,
+ "part_sha": "16a14d1c56c5",
+ "lib_sha": "15c5499fc866",
  "max_worst": 0.5,
- "strength_ok": false,
- "export": {
-  "faces_in": 89118,
-  "degenerate": 0,
-  "folded": 0,
-  "caps_split": 0,
-  "caps_left": 0,
-  "dropped_shells": [],
-  "n_dropped_shells": 0,
-  "bodies": 1,
-  "faces": 89118,
-  "boundary_edges": 0,
-  "nonmanifold_edges": 0,
-  "watertight": true,
-  "simplified": true,
-  "first_pass": {
-   "degenerate": 54,
-   "folded": 4,
-   "caps_split": 1,
-   "caps_left": 2,
-   "watertight": true,
-   "faces": 120338
-  },
-  "volume_mm3": 9383.8,
-  "source": {
-   "faces": 120395,
-   "shells": 3,
-   "mm3": 9388.4
-  },
-  "welded_at": "2026-10-30 04:46"
- }
+ "strength_ok": true
 }
