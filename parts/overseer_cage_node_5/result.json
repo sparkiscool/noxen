@@ -1,35 +1,20 @@
 {
  "name": "overseer_cage_node_5",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   6500.3
+   6500.2
   ],
   "necks": [],
-  "drawn_not_in_main": [
-   [
-    "0.0",
-    0.004,
-    "erode 2.0"
-   ],
-   [
-    "0.5",
-    0.004,
-    "erode 2.0"
-   ],
-   [
-    "0.24",
-    0.808,
-    "erode 2.0"
-   ]
-  ],
+  "drawn_not_in_main": [],
   "thin_walls": [],
+  "thin_allowed": [],
   "acute_edges": 0,
-  "ok": false
+  "ok": true
  },
  "function_check": {
   "skin_mm3": 3093.1,
@@ -149,14 +134,14 @@
   ]
  },
  "mass_g": 16.57,
- "watertight": true,
+ "watertight": false,
  "bodies": {
   "bodies_raw": 1,
   "dropped_specks_mm3": [],
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 13045.5,
+ "volume_mm3": 13049.7,
  "drawn_g": 10.99,
  "stl": "overseer_cage_node_5.stl",
  "view_stl": "overseer_cage_node_5_view.stl",
@@ -353,7 +338,21 @@
  "baseline": null,
  "total_s": 7033,
  "part_sha": "3a0f8e224975",
- "lib_sha": "2a4ef96807ca",
+ "lib_sha": "15c5499fc866",
  "max_worst": 0.5,
- "strength_ok": true
+ "strength_ok": true,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
+ "recut": {
+  "at": "2026-10-30 03:01",
+  "removed_cm3": -0.004,
+  "note": "holes recut from the current setup; strength not re-solved"
+ }
 }
