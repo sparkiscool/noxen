@@ -133,12 +133,20 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
     if coarse and not os.path.exists(ck):
         part_c = setup(2.0 * h)
         sc = replace(s, reach_check="off", geometric=False, max_stage=25)
-        Lc = Layout(part_c, gen_cm3=gen_cm3, settings=sc, log=log)
-        ckc = os.path.join(out_dir, "coarse_ck.npz")
-        Lc.run(maxit=maxit, checkpoint=ckc, resume=ckc, beta_stop=2, on_checkpoint=hook)
-        xh_c = Lc.x_hat()
-        log(f"coarse stage done: {len(Lc.hist)} iterations, {time.time() - t0:.0f} s, peak {peak_gb()} GB")
-        del Lc
+        try:
+            Lc = Layout(part_c, gen_cm3=gen_cm3, settings=sc, log=log)
+        except ValueError as e:
+            # the 2h grid cannot resolve a small feature the fine grid can (29 Oct, node 21: the O5.6 camera posts' load faces fell
+            # on the rod collars' support cells at h 2.0, "the load sits on fixed nodes", and the run died in 12 s): the warm start
+            # is a speed-up, not the result; the fine layout starts cold instead
+            log(f"coarse stage skipped (the 2h grid cannot carry this setup: {str(e)[:300]}); the fine layout starts cold")
+            Lc = part_c = None
+        if Lc is not None:
+            ckc = os.path.join(out_dir, "coarse_ck.npz")
+            Lc.run(maxit=maxit, checkpoint=ckc, resume=ckc, beta_stop=2, on_checkpoint=hook)
+            xh_c = Lc.x_hat()
+            log(f"coarse stage done: {len(Lc.hist)} iterations, {time.time() - t0:.0f} s, peak {peak_gb()} GB")
+            del Lc
     part = setup(h)
     L = Layout(part, gen_cm3=gen_cm3, settings=s, log=log)
     if xh_c is not None:

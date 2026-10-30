@@ -114,6 +114,7 @@ jobs:
         run: |
           set +e
           P=parts/${{ matrix.part }}
+          rm -f $P/result.json $P/part.stl $P/preview.png      # the checked-out result is not this run's: a crashed run must upload nothing (run 67, 30 Oct: node 21 died at setup and its job uploaded the tree's old result.json, which the commit job then put over a newer re-gated one)
           DESIGN=$(python -m topo.run $P --design-hash 2>/dev/null | tail -1); echo "design $DESIGN"
           ( while sleep 180; do
               git fetch -q origin main 2>/dev/null || continue
