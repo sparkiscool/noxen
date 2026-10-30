@@ -127,7 +127,9 @@ const fill = new THREE.DirectionalLight(0xffffff, 0.35); fill.position.set(-1.5,
 
 const objs = {}, mats = [], groups = {};
 for (const p of D.parts) {
-  const mat = new THREE.MeshStandardMaterial({ color: p.color, metalness: 0.05, roughness: 0.6 });
+  const clear = p.opacity != null && p.opacity < 1;   // clear PETG: translucent, glossier (Spark 30 Oct: real colours)
+  const mat = new THREE.MeshStandardMaterial({ color: p.color, metalness: 0.05, roughness: clear ? 0.3 : 0.6,
+    transparent: clear, opacity: clear ? p.opacity : 1, depthWrite: !clear, side: clear ? THREE.DoubleSide : THREE.FrontSide });
   const mesh = new THREE.Mesh(G[p.mesh], mat); mesh.matrixAutoUpdate = false;
   scene.add(mesh); objs[p.name] = { mesh, part: p, on: true }; mats.push(mat);
   (groups[p.group] = groups[p.group] || []).push(p.name);

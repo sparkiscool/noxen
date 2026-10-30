@@ -128,7 +128,7 @@ def artifact_page(a, S, meshes, commit, path):
     by_id = {p["id"]: p for p in S["parts"]}
     for p in a["parts"]:
         pid = p.get("id") or p["name"]; q = by_id[pid]
-        s.part(p["name"], meshes[pid], group=p.get("group", "part"), color=p.get("color"),
+        s.part(p["name"], meshes[pid], group=p.get("group", "part"), color=p.get("color"), opacity=p.get("opacity"),
                printed=p.get("material") in ("PETG", "TPU") and p.get("role") != "bought", note=note(p, q.get("_result")))
     for nm, m, col in overlays(a.get("overlays", {})):
         s.part(nm, m, group="views" if "view" in nm or "field" in nm else "bought", color=col, printed=False)
