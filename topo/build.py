@@ -473,9 +473,17 @@ def strength(layout, part_mesh=None, log=print, mask=None):
     part = layout.part
     ins = getattr(part, "insert_cells", np.zeros(part.nel, bool))
     A = (np.asarray(mask, bool).ravel() if mask is not None else voxelise(part_mesh, *part.axes).ravel()) | ins   # inserts (rods) sit in their bores
+    from .layout import floating_cells
+    fixed_n = np.zeros(part.nshape, bool)
+    for fx in part.supports.values():
+        fixed_n |= fx.any(1).reshape(part.nshape)
+    fl = floating_cells((A | layout.solid).reshape(part.shape), fixed_n).ravel()
+    if fl.any():
+        log(f"strength: {int(fl.sum())} cells of the built part are joined to no support at h {part.h} (a feature under the cell size): left out")
+        A &= ~fl
     E = np.where(ins, getattr(part, "stiff", np.ones(part.nel)), np.where(A, 1.0, 1e-9))
     real = [c for c in layout.cases if not c.tie]
-    sol = Solver(part.shape, part.h, layout.C, part.supports, active=A | layout.solid, backend="auto",
+    sol = Solver(part.shape, part.h, layout.C, part.supports, active=(A | layout.solid) & ~fl, backend="auto",
                  log=lambda s_: None)
     g = sol.grid
     wg = layout.mat.density * 1e-6 * part.h ** 3 * 9.81

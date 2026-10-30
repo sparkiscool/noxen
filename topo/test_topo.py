@@ -537,10 +537,21 @@ def t_gate_thin_ok():
         ok1, i1 = solid_check(tm(P), [tm(post - bore)], thin_ok=[tm(post - bore)])
         fin = _mbox(1.0, 4, 4, (0, 12, 0))
         ok2, i2 = solid_check(tm(P + fin), [tm(post - bore)], thin_ok=[tm(post - bore)])
+        # the post's root as a 4.5 mm blob on a 2.4 mm neck (node 21 run 74: a neck finding at every declared post): allowed when
+        # the neck is at least as thick as the post's wall; the same blob without the declaration is still a neck
+        neck = man(trimesh.creation.cylinder(1.2, 2.2, sections=32).apply_translation((0, 0, 11.0)))
+        blob = man(trimesh.creation.icosphere(3, 2.25).apply_translation((0, 0, 13.5)))
+        post2 = man(trimesh.creation.cylinder(2.8, 10.0, sections=48).apply_translation((0, 0, 18.5)))
+        bore2 = man(trimesh.creation.cylinder(1.6, 5.7, sections=32).apply_translation((0, 0, 20.65)))
+        Q = cube + neck + blob + post2 - bore2
+        ok3, i3 = solid_check(tm(Q), [tm(post2 - bore2)], thin_ok=[tm(post2 - bore2)])
+        ok4, i4 = solid_check(tm(Q), [tm(post2 - bore2)])
+        neck_ok = (ok3 and not i3["necks"] and any(t.get("kind") == "neck" for t in i3["thin_allowed"]) and not ok4 and len(i4["necks"]) >= 1)   # the same blob at two erosion levels
         good = (not ok0 and len(i0["thin_walls"]) == 1 and ok1 and not i1["thin_walls"] and len(i1["thin_allowed"]) == 1
-                and i1["thin_allowed"][0]["thick_mm"] < 2.0 and not ok2 and len(i2["thin_walls"]) == 1 and len(i2["thin_allowed"]) == 1)
-        check("gate thin_ok: a declared 1.2 mm post passes as thin_allowed, an undeclared fin still fails", good,
-              f"undeclared {ok0} {i0['thin_walls']}; declared {ok1} allowed {i1['thin_allowed']} walls {i1['thin_walls']}; + fin {ok2} {i2['thin_walls']}")
+                and i1["thin_allowed"][0]["thick_mm"] < 2.0 and not ok2 and len(i2["thin_walls"]) == 1 and len(i2["thin_allowed"]) == 1 and neck_ok)
+        check("gate thin_ok: a declared 1.2 mm post passes as thin_allowed, an undeclared fin still fails, its root on a 2.4 mm neck is allowed", good,
+              f"undeclared {ok0} {i0['thin_walls']}; declared {ok1} allowed {i1['thin_allowed']} walls {i1['thin_walls']}; + fin {ok2} {i2['thin_walls']}; "
+              f"neck: declared {ok3} {i3['necks']} allowed {[t for t in i3['thin_allowed'] if t.get('kind') == 'neck']}, undeclared {ok4} {i4['necks']}")
     except Exception as e:
         traceback.print_exc()
         check("gate thin_ok", False, str(e))
@@ -655,6 +666,34 @@ def t_early_check():
     except Exception as e:
         traceback.print_exc()
         check("early check", False, str(e))
+
+
+def t_floating_load():
+    """a drawn pad no support reaches (a void slab between it and the design: the h 2.5 head mount's 1.2 mm camera posts, whose
+    cell chains break) is left out of the model and its load moves to the nearest material the supports reach, with a log line,
+    instead of 'zero compliance of the full solid' (head mount run 74, 30 Oct); the ordinary part is untouched."""
+    try:
+        import manifold3d as mf
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        pad = box(20, 24, 2, 8, 2, 8)
+        p = Part("float", 1.0, box(0, 3, 0, 10, 0, 10) + pad, box(17, 20, -1, 11, -1, 11), box(0, 24, 0, 10, 0, 10), log=lambda s_: None)
+        p.support("default", box(-1, 1.5, -1, 11, -1, 11))
+        p.load("down", pad, (0, 0, -10.0))
+        msgs = []
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn")
+        L = Layout(p, volfrac=0.3, settings=s, log=msgs.append)
+        moved = any("moved up to" in m for m in msgs); left = any("joined to no support" in m for m in msgs)
+        c = L.cases[0]
+        on_act = bool(L._node_mask(~L.void).ravel()[c.nodes].all())
+        p0 = _mini_part(); m0 = []
+        L0 = Layout(p0, volfrac=0.3, settings=s, log=m0.append)
+        ok = moved and left and on_act and L.c_ref[0] > 0 and not L.floating.sum() == 0 and L0.floating.sum() == 0 and not any("moved" in m for m in m0)
+        check("floating load: a pad no support reaches is left out and its load moves to the nearest carried material", ok,
+              f"floating {int(L.floating.sum())} cells, moved {moved}, c_ref {L.c_ref[0]:.3g}, nodes on material {on_act}; plain part floating {int(L0.floating.sum())}")
+    except Exception as e:
+        traceback.print_exc()
+        check("floating load", False, str(e))
 
 
 def t_audit_plate():
@@ -778,7 +817,7 @@ def t_skin_core():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_audit_plate, t_audit_block_measure, t_design_hash):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_design_hash):
         t()
     if not quick:
         t_end_to_end()

@@ -249,6 +249,25 @@ def gate_member_mm(part, floor_mm, gate_erode_cap=2.0, gate_erode_min=0.9, margi
     return lo
 
 
+def floating_cells(active3, fixed_n3):
+    """cells of active3 that no support reaches: not face-connected to any cell touching a fixed node. Material there carries
+    nothing and leaves the stiffness matrix singular (30 Oct, head mount run 74 at h 2.5: the O5.6 / 1.2-wall camera posts
+    voxelise into cell chains that break, Pardiso -4 on the full solid, the camera cases read as zero compliance; the load on the
+    post tips sat on a floating piece). Returns the bool mask of those cells."""
+    lab, n = ndi.label(active3, S6)
+    if n <= 1:
+        return np.zeros(active3.shape, bool)
+    nx, ny, nz = active3.shape
+    touch = np.zeros(active3.shape, bool)
+    for di in (0, 1):
+        for dj in (0, 1):
+            for dk in (0, 1):
+                touch |= fixed_n3[di:di + nx, dj:dj + ny, dk:dk + nz]
+    held = np.unique(lab[touch & active3])
+    held = held[held > 0]
+    return active3 & ~np.isin(lab, held)
+
+
 # ------------------------------------------------------------------------------------------------------ layout
 class Layout:
     def __init__(self, part, gen_cm3=None, volfrac=None, settings=None, log=print):
@@ -278,6 +297,18 @@ class Layout:
             solid |= add
             design &= ~add
             log(f"layout: collar {s.collar_mm} mm round the drawn bodies: +{add.sum() * h ** 3 / 1000:.2f} cm3 passive")
+        # material no support reaches (floating_cells) is taken out of the model: it would make the stiffness matrix singular
+        fixed_n = np.zeros(part.nshape, bool)
+        for fx in part.supports.values():
+            fixed_n |= fx.any(1).reshape(part.nshape)
+        fl = floating_cells((~void).reshape(shape), fixed_n)
+        self.floating = fl.ravel()
+        if fl.any():
+            c = (np.argwhere(fl).mean(0) + 0.5) * h + np.asarray(part.origin)
+            log(f"layout: {int(fl.sum())} cells ({int((fl.ravel() & solid).sum())} drawn, {int((fl.ravel() & design).sum())} design) round "
+                f"{np.round(c, 1).tolist()} are joined to no support at h {h}: left out of the model; a load on them moves to the nearest "
+                f"cells the supports reach (_cases)")
+            void |= fl.ravel(); solid &= ~fl.ravel(); design &= ~fl.ravel()
         self.solid, self.void, self.design = solid, void, design
         self.stiff = getattr(part, "stiff", np.ones(self.nel))   # inserts (Part.insert): solid at their own modulus
         ins = getattr(part, "insert_cells", np.zeros(self.nel, bool))
@@ -457,10 +488,28 @@ class Layout:
             return out.ravel()
 
         wg = self.mat.density * 1e-6 * h ** 3 * 9.81                         # N per g of a full element
+        # a load on nodes no active cell touches (a drawn feature smaller than the cell, cells no support reaches) moves to the
+        # nearest nodes that are: the feature's root, where it meets material the model carries (30 Oct, head mount run 74)
+        act_n = self._node_mask(~self.void)
+        _, ind = ndi.distance_transform_edt(~act_n, return_indices=True) if (~act_n).any() else (None, None)
+        near = np.ravel_multi_index(tuple(ind), nshape).ravel() if ind is not None else np.arange(part.nn)
         self.cases = []
         for lc in part.cases:
+            F, nodes = lc.F, lc.nodes
+            Fn = F.reshape(-1, 3)
+            off = (np.abs(Fn).sum(1) > 0) & ~act_n.ravel()
+            if off.any():
+                tgt = near[np.where(off)[0]]
+                P0 = np.stack(np.unravel_index(np.where(off)[0], nshape), 1); P1 = np.stack(np.unravel_index(tgt, nshape), 1)
+                dist = float(np.linalg.norm((P1 - P0) * h, axis=1).max())
+                out = Fn.copy(); out[off] = 0.0
+                np.add.at(out, tgt, Fn[off])
+                F = out.ravel()
+                nodes = np.unique(np.r_[np.asarray(nodes)[~off[np.asarray(nodes)]] if nodes is not None and len(nodes) else [], tgt]).astype(int)
+                self.log(f"layout: load '{lc.name}': {int(off.sum())} of {int((np.abs(Fn).sum(1) > 0).sum())} loaded nodes sit on no material the model carries; "
+                         f"moved up to {dist:.1f} mm to the nearest that do")
             fe = None if lc.accel is None else np.tile(np.asarray(lc.accel, float) * wg / 8.0, 8)
-            self.cases.append(_Case(lc.name, lc.F, eroded(lc.F), lc.support, fe, 1.0, False, lc.cls, lc.nodes))
+            self.cases.append(_Case(lc.name, F, eroded(F), lc.support, fe, 1.0, False, lc.cls, nodes))
         n_real = len(self.cases)
         # tie cases: every drawn body the main support does not hold
         count = {}

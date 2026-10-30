@@ -4,6 +4,7 @@ parts/<part>/part.stl, the export cleanup and the solid gate (with the setup's t
 Strength is not re-solved: a cut only removes material round a hole, so the recorded index is a lower bound; the gate's
 thin-wall check is what guards the walls round the new grooves and crowns.
 Run: python tools/recut.py <part> [<part> ...]      (from the repo root; writes part.stl, preview.png, result.json)
+     python tools/recut.py --regate <part> ...      the gate alone on the existing mesh, result.json updated (a gate rule changed)
 """
 import importlib, json, os, sys, time
 import numpy as np, trimesh
@@ -56,6 +57,26 @@ def recut(name, log=print):
     return ok
 
 
+def regate(name, log=print):
+    """the solid gate again on the existing part.stl with the current setup's drawn and thin_ok bodies, nothing cut, nothing re-solved
+    (a gate rule changed: 30 Oct, necks under declared-thin posts); result.json's solid / solid_ok updated with a regate note"""
+    d = os.path.join(ROOT, "parts", name); stl = os.path.join(d, "part.stl"); rj = os.path.join(d, "result.json")
+    res = json.load(open(rj))
+    mod = importlib.import_module(f"parts.{name}.part")
+    part = mod.setup(float(res["h"]))
+    PT = trimesh.load(stl, force="mesh")
+    ok, solid = B.solid_check(PT, [tm(part.drawn_m - part.cuts_m)], thin_ok=[tm(m - part.cuts_m) for m in getattr(part, "thin_ok", [])])
+    res.update(solid_ok=bool(ok and res.get("watertight", True)), solid=solid,
+               regate=dict(at=time.strftime("%Y-%m-%d %H:%M"), note="gate rerun on the existing mesh with the current gate; nothing cut or re-solved"))
+    json.dump(res, open(rj, "w"), indent=1)
+    log(f"{name}: regate, solid check {'PASS' if ok else 'FAIL'}"
+        + ("" if ok else f" {json.dumps({k: v for k, v in solid.items() if k in ('necks', 'drawn_not_in_main', 'thin_walls', 'bodies_plain')})[:400]}"))
+    return ok
+
+
 if __name__ == "__main__":
-    bad = [p for p in sys.argv[1:] if not recut(p)]
+    if sys.argv[1:2] == ["--regate"]:
+        bad = [p for p in sys.argv[2:] if not regate(p)]
+    else:
+        bad = [p for p in sys.argv[1:] if not recut(p)]
     sys.exit(1 if bad else 0)
