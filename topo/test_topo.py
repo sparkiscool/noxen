@@ -630,9 +630,21 @@ def t_setup_sha():
             not_stale = not PS.stale(py, res_same); other_stale = PS.stale(py, res_other); old_rule = PS.stale(py, res_old)
             open(py, "w").write(src % "-12.0")
             c = PS.setup_sha(py)
-            ok = a == b and cached["setup_sha"] == a and not_stale and other_stale and old_rule and c != a
-            check("setup sha: a comment in part.py keeps a result current, a changed load makes it stale, old results use the file rule", ok,
-                  f"comment {a == b}, cache {cached['setup_sha'] == a}, current {not_stale}, other setup stale {other_stale}, old rule {old_rule}, load changed {c != a}")
+            # a data file the setup reads (parts/<p>/inputs/, as systems/*.json for the cage nodes) is in the cache key: a changed value
+            # recomputes the sha and the result reads stale (30 Oct: hub ends moved in overseer.cage.json, nodes 3 and 4 read as current)
+            os.makedirs(os.path.join(d, "inputs"))
+            open(os.path.join(d, "inputs", "load.json"), "w").write('{"load": -12.0}')
+            src_d = src.replace("LOAD = %s", "import json, os\nLOAD = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'inputs', 'load.json')))['load']")
+            open(py, "w").write(src_d % ())
+            d1 = PS.setup_sha(py)
+            open(os.path.join(d, "inputs", "load.json"), "w").write('{"load": -14.0}')
+            d2 = PS.setup_sha(py)
+            data_stale = PS.stale(py, dict(part_sha=PS.part_sha(py), lib_sha="", setup_sha=d1))
+            sysjson = any(f.endswith("overseer.cage.json") for f in PS.data_files(py))
+            ok = a == b and cached["setup_sha"] == a and not_stale and other_stale and old_rule and c != a and d1 == c and d2 != d1 and data_stale and sysjson
+            check("setup sha: a comment keeps a result current, a changed load or data file makes it stale, old results use the file rule", ok,
+                  f"comment {a == b}, cache {cached['setup_sha'] == a}, current {not_stale}, other setup stale {other_stale}, old rule {old_rule}, load changed {c != a}, "
+                  f"data file: same {d1 == c}, changed {d2 != d1}, stale {data_stale}; systems/*.json in the key {sysjson}")
         finally:
             shutil.rmtree(d, ignore_errors=True)
     except Exception as e:
