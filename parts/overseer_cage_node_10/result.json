@@ -111,7 +111,7 @@
   ]
  },
  "mass_g": 14.01,
- "watertight": false,
+ "watertight": true,
  "bodies": {
   "bodies_raw": 1,
   "dropped_specks_mm3": [],
@@ -297,5 +297,35 @@
  "part_sha": "459f28af4455",
  "lib_sha": "2a4ef96807ca",
  "max_worst": 0.5,
- "strength_ok": true
+ "strength_ok": true,
+ "export": {
+  "faces_in": 87586,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 87586,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 92,
+   "folded": 4,
+   "caps_split": 3,
+   "caps_left": 2,
+   "watertight": true,
+   "faces": 120460
+  },
+  "volume_mm3": 11028.5,
+  "source": {
+   "faces": 120555,
+   "shells": 3,
+   "mm3": 11018.5
+  },
+  "welded_at": "2026-10-30 04:45"
+ }
 }

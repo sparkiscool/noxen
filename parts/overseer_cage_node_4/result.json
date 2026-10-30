@@ -100,14 +100,14 @@
   ]
  },
  "mass_g": 12.19,
- "watertight": false,
+ "watertight": true,
  "bodies": {
   "bodies_raw": 1,
   "dropped_specks_mm3": [],
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 9597.0,
+ "volume_mm3": 9596.8,
  "drawn_g": 6.59,
  "stl": "overseer_cage_node_4.stl",
  "view_stl": "overseer_cage_node_4_view.stl",
@@ -301,5 +301,35 @@
  "part_sha": "449df97009cd",
  "lib_sha": "2a4ef96807ca",
  "max_worst": 0.5,
- "strength_ok": true
+ "strength_ok": true,
+ "export": {
+  "faces_in": 84238,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 84238,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 56,
+   "folded": 14,
+   "caps_split": 9,
+   "caps_left": 2,
+   "watertight": true,
+   "faces": 118150
+  },
+  "volume_mm3": 9596.8,
+  "source": {
+   "faces": 118218,
+   "shells": 5,
+   "mm3": 9593.0
+  },
+  "welded_at": "2026-10-30 04:46"
+ }
 }
