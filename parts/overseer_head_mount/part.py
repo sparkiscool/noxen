@@ -194,14 +194,14 @@ def bodies():
     drawn += keys
     # --- camera standoffs: 4 cones 10 long behind the board back plane, insert hole O3.2 x 5.7 from the front; the board, its body and
     # the plugs behind it are cuts (29 Oct)
-    envs_cam = []
+    envs_cam, posts = [], []                                  # posts: the O5.6 / 1.2 wall standoffs, declared thin_ok to the gate
     for c in cs:
         pts, base = cam_boss_pts(c)
         cones = []
         for q in pts:
             cones.append(cone(q, -c["f"], 0.0, CAM_BOSS_L, CAM_TIP_R, CAM_BASE_R))                              # standoff cone
             cuts.append(along(q + c["f"] * 1.0, q - c["f"] * 5.7, 1.6))
-        drawn += cones
+        drawn += cones; posts += cones
         cuts.append(fbox(base, c["f"], c["r"], c["u"], (0.0, 25.0), (-22.0, 22.0), (-22.0, 22.0)))          # board + body (38 x 38 + clearance)
         cuts.append(fbox(base, c["f"], c["r"], c["u"], (-CAM_PLUG_BACK, 0.0), (-19.0, 19.0), (-19.0, 19.0)) - UNION(cones))   # plugs behind the board
         # (29 Oct: the drawn 38 x 38 frame joining the 4 camera bosses is gone, as on node 21; the topology joins them)
@@ -239,13 +239,13 @@ def bodies():
     # the 180 mm plate (29 Oct): the head rod seats at y +-80 with their 2.5 collars and crowns span 177 drawn; the envelope is
     # clipped to |y| <= 89.9 so the generated part cannot outgrow the plate (the audit refuses an envelope over 180)
     env = env ^ mf.Manifold.cube([600.0, 2 * 89.9, 400.0]).translate([100.0, -89.9, -100.0])
-    return U(drawn), U(cuts), env, dict(S=S, cs=cs, bolts=bolts)
+    return U(drawn), U(cuts), env, dict(S=S, cs=cs, bolts=bolts, posts=posts)
 
 
 def setup(h):
     drawn, cuts, env, X = bodies()
     S, cs, bolts = X["S"], X["cs"], X["bolts"]
-    p = Part("overseer_head_mount", h, drawn, cuts, env, build="+z", material="PETG")
+    p = Part("overseer_head_mount", h, drawn, cuts, env, build="+z", material="PETG", thin_ok=X["posts"])   # the 1.2 mm post walls pass the gate
     # supports: every socket (the cage holds the head there); the 3 rods of node 17's neighbours are the cage, node 17 itself is this part
     for nm, s in S.items():
         p.support(nm, s.region())

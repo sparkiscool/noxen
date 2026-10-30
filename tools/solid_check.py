@@ -1,12 +1,14 @@
 """Strict connectivity check (Spark 20 Oct 01:08: no disconnected structures, ever). A part passes only if it is ONE body
 after a 0.9 mm erosion (just under half the 2.0 wall floor, so a legal 2.0 wall survives): a feature that touches the rest along an edge, a corner, a sliver or a
 neck thinner than 2.0 splits off when eroded and fails here, even when a plain body count says 1. Every drawn feature
-(pads, cheeks, plates, slot walls) must also sit in the main eroded body.
+(pads, cheeks, plates, slot walls) must also sit in the main eroded body (drawn_not_in_main: body, share, erode_mm, and at / mm3 of the detached core).
 Neck test: also eroded at 1.2 / 1.5 (necks under 3 mm); a blob that splits off, is >= 1.6 mm thicker than its neck and joins the rest over less than
 4 x its thickness squared fails (pads on
-~2 mm necks). Each drawn body is also eroded to 0.4 x its own thickness and must stay joined.
+~2 mm necks). Each drawn body is also eroded to 0.4 x its own thickness (its own wall, 90th percentile, not what wraps it) with its voxels
+kept connected (a body is never split from itself by its own grooves or bores) and its core must stay in the main body.
 python3 solid_check.py part.stl [--erode 1.0] [--pitch 0.25]   -> exit 1 on fail
-from solid_check import solid_check; ok, info = solid_check(trimesh_part, drawn=[trimesh, ...])"""
+from solid_check import solid_check; ok, info = solid_check(trimesh_part, drawn=[trimesh, ...], thin_ok=[trimesh, ...])
+thin_ok: drawn bodies the setup declares deliberately thin (Part(..., thin_ok=[...])): their thin walls are reported as thin_allowed, not failed."""
 import sys, numpy as np, trimesh
 from scipy import ndimage as ndi
 
@@ -58,7 +60,45 @@ def _interface_mm2(V, Le, k, pitch, pad):
     return A * pitch ** 2
 
 
-def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0):
+def thin_walls(V, pitch, erode_mm=0.9, lo=(0.0, 0.0, 0.0), core_r_mm=0.35, min_core_mm3=0.3):
+    """the material an opening with a ball of radius erode_mm removes (R), its components (labr) and, for every residue
+    component whose core (inscribed radius >= core_r_mm, a real sliver / wall under 2 x erode_mm) is at least min_core_mm3,
+    a dict: label (component of labr), core_label (component of labc, the cores), kind ("wall": the core spreads in 2 directions; "edge": the residue a convex edge
+    loses to the opening spreads in 1), thick_mm, core_mm3, at, span, mm3 (the whole residue component). Shared by the gate
+    (the thin_walls report) and the engine's export cleanup (topo/build.py drops the wall-kind ones under its core limit)."""
+    lo = np.asarray(lo, float)
+    E = ndi.distance_transform_edt(V) * pitch > erode_mm
+    O = ndi.distance_transform_edt(~E) * pitch <= erode_mm
+    R = V & ~O
+    dr = ndi.distance_transform_edt(R) * pitch
+    st = ndi.generate_binary_structure(3, 1)
+    labr, nr = ndi.label(R, st)
+    thin = []
+    if nr:
+        vol = np.bincount(labr.ravel()) * pitch ** 3
+        core = (dr >= core_r_mm) & R
+        labc, nc = ndi.label(core, ndi.generate_binary_structure(3, 3))
+        for k in range(1, nc + 1):
+            idx = np.argwhere(labc == k)
+            if len(idx) * pitch ** 3 < min_core_mm3: continue
+            P = lo + (idx + 0.5) * pitch
+            ev = np.sqrt(np.maximum(np.linalg.eigvalsh(np.cov(P.T)) if len(P) > 3 else np.zeros(3), 0))[::-1]
+            kind = "wall" if ev[1] > 0.8 else "edge"                  # a wall's core spreads in 2 directions, an edge residue in 1
+            th = float(2 * dr[tuple(idx.T)].max())
+            lab = int(labr[tuple(idx[0])])
+            thin.append(dict(kind=kind, thick_mm=round(th, 2), core_mm3=round(len(idx) * pitch ** 3, 2), at=np.round(P.mean(0), 1).tolist(),
+                             span=np.round(ev, 1).tolist(), label=lab, core_label=k, mm3=round(float(vol[lab]), 1)))
+    return R, labr, thin, labc
+
+
+def _where(core, off, lo, pitch):
+    """'at' and 'mm3' of a detached drawn core: core the body's core voxels (bool grid), off which of them (in core's order) sit
+    off the main body"""
+    idx = np.argwhere(core)[off]
+    return dict(at=np.round(lo + (idx.mean(0) + 0.5) * pitch, 1).tolist(), mm3=round(float(len(idx)) * pitch ** 3, 2))
+
+
+def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0, thin_ok=()):
     lo = mesh.bounds[0] - 2 * pitch; hi = mesh.bounds[1] + 2 * pitch
     shape = tuple(int(np.ceil((hi[k] - lo[k]) / pitch)) for k in range(3))
     V = voxels(mesh, pitch, lo, shape)
@@ -81,8 +121,9 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0):
     for i, t in enumerate(drawn):
         Dv = voxels(t, pitch, lo, shape) & E
         if Dv.sum() == 0: continue                                   # a drawn feature thinner than 2 x erode: judged by its own size check
-        share = 1.0 - float(((lab[Dv] != main) & big[lab[Dv]]).mean())
-        if share < 0.999: bad.append((i, round(share, 3)))
+        off = (lab[Dv] != main) & big[lab[Dv]]
+        share = 1.0 - float(off.mean())
+        if share < 0.999: bad.append(dict(body=str(i), share=round(share, 3), erode_mm=erode_mm, **_where(Dv, off, lo, pitch)))
     # neck test (Spark 20 Oct 14:19, bracket_e v8 pads on ~2 mm necks passed the 0.9 test): erode deeper; a blob that splits
     # off and is clearly thicker than the neck it hung on (max inscribed radius >= e + NECK_MARGIN) is a sliver attachment.
     # A wall that is simply thin vanishes at that depth instead of splitting, so legal 2.0 walls are not flagged.
@@ -100,41 +141,38 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0):
             c = lo + (np.array(ndi.center_of_mass(Le == k)) + 0.5) * pitch
             necks.append(dict(neck_under_mm=round(2 * e, 1), blob_thick_mm=round(tb, 1), joint_mm2=round(A, 1), blob_mm3=round(float(ve[k - 1]), 1), at=np.round(c, 1).tolist()))
     info["necks"] = necks
-    # every drawn body on its own, eroded to 0.4 x its own thickness (0.9..2.0): its core must stay in the main body
+    # every drawn body on its own, eroded to 0.4 x its own thickness (0.9..2.0): its core must stay in the main body. Its
+    # thickness is its own (the body alone, 90th percentile of its wall: a 2.5 collar reads 2.5 where a boss overlaps it or a
+    # fillet wraps it, 29 Oct: node 5's collar clusters and node 21's camera cones were eroded 2.0 for the material round them
+    # and had to hang on 4 mm) and its voxels are kept connected (a collar's grooves or a cone's bore never split a body from
+    # itself): the body is joined when any of it meets the main eroded body.
     for i, t in enumerate(drawn):
         for j, b in enumerate(t.split(only_watertight=False) if len(t.faces) else []):
             Dv = voxels(b, pitch, lo, shape) & V
             if Dv.sum() == 0: continue
-            ef = float(np.clip(0.8 * d[Dv].max(), erode_mm, 2.0))
-            Le, ne = ndi.label(d > ef, st)
-            core = Dv & (d > ef)
+            own = ndi.distance_transform_edt(Dv) * pitch
+            ef = float(np.clip(0.8 * np.percentile(own[Dv], 90), erode_mm, 2.0))
+            Ee = d > ef
+            core = Dv & Ee
             if core.sum() == 0: continue
+            Le, ne = ndi.label(Ee, st)
             ve = np.bincount(Le.ravel())[1:]; mn = int(np.argmax(ve)) + 1
-            bige = np.r_[False, ve * pitch ** 3 >= min_cc_mm3]
-            share = 1.0 - float(((Le[core] != mn) & bige[Le[core]]).mean())
-            if share < 0.999: bad.append((f"{i}.{j}", round(share, 3), f"erode {ef:.1f}"))
+            Lc, _ = ndi.label(Ee | Dv, st)
+            mc = int(Lc[Le == mn][0])
+            off = Lc[core] != mc
+            share = 1.0 - float(off.mean())
+            if share < 0.999: bad.append(dict(body=f"{i}.{j}", share=round(share, 3), erode_mm=round(ef, 2), **_where(core, off, lo, pitch)))
     info["drawn_not_in_main"] = bad
-    # thin walls: material an opening with a ball of r erode_mm removes, keeping only blobs with an inscribed radius
-    # >= 0.4 mm (a real sliver / wall under 1.8); the bits a convex edge loses to the opening are thinner and drop out
-    O = ndi.distance_transform_edt(~ndi.binary_dilation(E, iterations=0) if False else ~E) * pitch <= erode_mm
-    R = V & ~O
-    dr = ndi.distance_transform_edt(R) * pitch
-    labr, nr = ndi.label(R, st)
-    thin = []
-    if nr:
-        mx = ndi.maximum(dr, labr, index=np.arange(1, nr + 1)); vol = np.bincount(labr.ravel())[1:] * pitch ** 3
-        core = (dr >= 0.35) & R
-        labc, nc = ndi.label(core, ndi.generate_binary_structure(3, 3))
-        for k in range(1, nc + 1):
-            idx = np.argwhere(labc == k)
-            if len(idx) * pitch ** 3 < 0.3: continue
-            P = lo + (idx + 0.5) * pitch
-            ev = np.sqrt(np.maximum(np.linalg.eigvalsh(np.cov(P.T)) if len(P) > 3 else np.zeros(3), 0))[::-1]
-            kind = "wall" if ev[1] > 0.8 else "edge"                  # a wall's core spreads in 2 directions, an edge residue in 1
-            th = float(2 * dr[tuple(idx.T)].max())
-            thin.append(dict(kind=kind, thick_mm=round(th, 2), core_mm3=round(len(idx) * pitch ** 3, 2), at=np.round(P.mean(0), 1).tolist(),
-                             span=np.round(ev, 1).tolist()))
-    info["thin_walls"] = sorted([t for t in thin if t["kind"] == "wall"], key=lambda t: -t["core_mm3"])[:12]
+    R, labr, thin, labc = thin_walls(V, pitch, erode_mm, lo)
+    # walls the setup declares deliberately thin (thin_ok meshes: the camera M2 insert posts, 1.2 wall, Spark 29 Oct by coupon): a thin
+    # wall whose core lies in one of them is reported under thin_allowed and does not fail the part
+    T = np.zeros(shape, bool)
+    for t in thin_ok:
+        T |= voxels(t, pitch, lo, shape)
+    allowed = [t for t in thin if t["kind"] == "wall" and T.any() and T[labc == t["core_label"]].mean() >= 0.9]
+    strip = lambda t: {k: v for k, v in t.items() if k not in ("label", "core_label")}
+    info["thin_walls"] = sorted([strip(t) for t in thin if t["kind"] == "wall" and t not in allowed], key=lambda t: -t["core_mm3"])[:12]
+    info["thin_allowed"] = sorted([strip(t) for t in allowed], key=lambda t: -t["core_mm3"])[:12]
     info["acute_edges"] = len([t for t in thin if t["kind"] == "edge"])
     ok = n_plain == 1 and len(keep) == 1 and not bad and not info["thin_walls"] and not necks
     info["ok"] = bool(ok)

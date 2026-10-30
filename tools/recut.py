@@ -1,6 +1,6 @@
 """Recut a finished part's holes without rerunning it (Spark 29 Oct: "just changing the hole sizes"): the part's CURRENT setup
 is built, its cuts (bores, resin grooves, lead-ins, teardrop crowns, bolt holes, keep-outs) are subtracted from the existing
-parts/<part>/part.stl, the solid gate runs on the result, and result.json is updated (solid, mass, hashes, a recut note).
+parts/<part>/part.stl, the export cleanup and the solid gate (with the setup's thin_ok bodies) run on the result, and result.json is updated (solid, mass, hashes, a recut note).
 Strength is not re-solved: a cut only removes material round a hole, so the recorded index is a lower bound; the gate's
 thin-wall check is what guards the walls round the new grooves and crowns.
 Run: python tools/recut.py <part> [<part> ...]      (from the repo root; writes part.stl, preview.png, result.json)
@@ -23,9 +23,10 @@ def recut(name, log=print):
     part = mod.setup(float(res["h"]))
     m0 = trimesh.load(stl, force="mesh")
     P = man(m0) - part.cuts_m
+    P, cleanup = B.export_cleanup(P, part, log=log)                              # the export cleanup, as a fresh run would do it
     PT = B.clean_mesh(tm(P), log=log)
     drawn_fin = tm(part.drawn_m - part.cuts_m)
-    ok, solid = B.solid_check(PT, [drawn_fin])
+    ok, solid = B.solid_check(PT, [drawn_fin], thin_ok=[tm(m - part.cuts_m) for m in getattr(part, "thin_ok", [])])
     mass = PT.volume / 1000.0 * MATERIALS[part.material].density
     removed = (m0.volume - PT.volume) / 1000.0
     PT.export(stl)
@@ -35,7 +36,7 @@ def recut(name, log=print):
     except Exception as e:
         log(f"  render failed: {e}")
     py = os.path.join(d, "part.py")
-    res.update(solid_ok=bool(ok), solid=solid, mass_g=round(mass, 2), volume_mm3=round(PT.volume, 1), watertight=bool(PT.is_watertight),
+    res.update(solid_ok=bool(ok), solid=solid, export_cleanup=cleanup, mass_g=round(mass, 2), volume_mm3=round(PT.volume, 1), watertight=bool(PT.is_watertight),
                part_sha=part_sha(py), lib_sha=lib_sha(py),
                recut=dict(at=time.strftime("%Y-%m-%d %H:%M"), removed_cm3=round(removed, 3), note="holes recut from the current setup; strength not re-solved"))
     json.dump(res, open(rj, "w"), indent=1)

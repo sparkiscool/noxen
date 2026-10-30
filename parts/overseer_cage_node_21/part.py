@@ -34,6 +34,9 @@ def fbox(o, e1, e2, e3, r1, r2, r3):
     return hull([o + a * e1 + b * e2 + c * e3 for a in r1 for b in r2 for c in r3])
 
 
+POSTS = []                                                       # the 4 standoff posts: the gate allows their 1.2 mm walls (thin_ok)
+
+
 def camera(c, ms):
     base = c + F * BASE_AHEAD
     lens = base + F * CAM_BOARD_BACK
@@ -43,7 +46,7 @@ def camera(c, ms):
     for q in pts:
         cones.append(cone(q, -F, 0.0, BOSS_L, BOSS_R, BOSS_BASE_R))                # standoff cone behind the board
         cuts.append(along(q, F, -5.7, 1.0, 1.6))                                 # insert hole O3.2 x 5.7 from the board face
-    drawn += cones
+    drawn += cones; POSTS[:] = cones                                                 # declared thin_ok to the gate (1.2 wall)
     cuts.append(fbox(base, F, RT, UP, (0.0, 25.0), (-22.0, 22.0), (-22.0, 22.0)))  # board + body (38 x 38 + clearance), nothing grows there
     cuts.append(fbox(base, F, RT, UP, (-PLUG_BACK, 0.0), (-19.0, 19.0), (-19.0, 19.0)) - U(cones))   # the plugs behind the board
     # (29 Oct: the drawn 38 x 38 frame joining the bosses is gone, 2 g; the topology joins them, as everywhere else)
@@ -63,7 +66,15 @@ def camera(c, ms):
     return dict(drawn=drawn, cuts=cuts, env=env, loads=loads)
 
 
-setup = make(21, extra=camera)
+_setup = make(21, extra=camera)
+
+
+def setup(h):
+    p = _setup(h)
+    p.thin_ok = list(POSTS)                                      # the O5.6 / 1.2 wall posts pass the gate as thin_allowed (Spark 29 Oct by coupon)
+    return p
+
+
 SPEC = dict(h=1.0, gen_cm3=2.0, max_worst=0.5, settings=dict(near_sym=True))   # near_sym: mirrored but for 0.4 % (29 Oct)      # as light as it goes (Spark 28 Oct); 2.5 gave 8.7 g at index 0.09 on 100 N rod estimates, the frame
 #   model (29 Oct) puts 13 N on the rods: O7.6 bosses and no drawn frame (Spark 29 Oct: "not very optimised"); 1.2 gave 4.1 g with two bosses
 #   standing proud of the body (their cores off at the gate) and a 3 mm neck: 2.0 so the body envelops the bosses

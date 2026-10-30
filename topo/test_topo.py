@@ -455,6 +455,94 @@ def t_gate_specks():
     RESULTS.append(("gate_specks", ok)); print(f"gate specks: {'ok' if ok else 'FAIL'} speck {ok1}/{i1['specks_plain']} blob {ok2}/{i2['bodies_plain']} pad {ok3}/{i3['drawn_not_in_main']}")
 
 
+def _mbox(sx, sy, sz, at):
+    import trimesh
+    from .part import man
+    return man(trimesh.creation.box((sx, sy, sz)).apply_translation(at))
+
+
+def t_export_cleanup():
+    """export cleanup (topo/build.py export_cleanup): a 1.0 mm fin with ~6 mm3 of core and a floating 0.5 mm speck come off a 20 mm cube,
+    the cube and a drawn 4 mm pad on it stay as they are and the gate then passes (29 Oct: the rear arm and the front arm root, both
+    strong, failed the gate on one 1.1 / 1.4 mm sliver each); a 1.4 mm wall with ~100 mm3 of core is structure, not detail: it stays
+    for the gate to judge."""
+    try:
+        import types
+        from .part import tm
+        from .build import export_cleanup, solid_check
+        cube = _mbox(20, 20, 20, (0, 0, 0))
+        pad = _mbox(4, 8, 8, (12, 0, 0))                                         # drawn pad on the +x face
+        fin = _mbox(1.0, 4, 4, (0, 12, 0))                                       # 1.0 mm fin standing 4 mm off the +y face
+        speck = _mbox(0.5, 0.5, 0.5, (0, 0, 13))                                 # floating voxel dust, 0.125 mm3
+        part = types.SimpleNamespace(drawn_m=pad)
+        P, rep = export_cleanup(cube + pad + fin + speck, part, log=lambda s_: None)
+        fin_left = (P ^ fin).volume(); pad_lost = pad.volume() - (P ^ pad).volume(); cube_lost = (cube - P).volume()
+        ok, info = solid_check(tm(P), [tm(pad)])
+        wall = _mbox(1.4, 12, 12, (0, -12.7, 0))
+        P3, rep3 = export_cleanup(cube + pad + wall, part, log=lambda s_: None)
+        good = (len(rep["slivers"]) == 1 and rep["slivers"][0]["core_mm3"] < 10 and len(rep["specks_mm3"]) == 1 and fin_left < 1.5                 # a stub of one voxel (0.25 mm) may stay: the removal never reaches into the opened body
+                and pad_lost < 0.01 and cube_lost < 1.0 and ok and not rep3["slivers"] and len(rep3["kept_walls"]) == 1
+                and rep3["removed_mm3"] == 0.0)
+        check("export cleanup: fin and speck removed, cube, pad and a 100 mm3 wall untouched, gate passes after", good,
+              f"slivers {rep['slivers']}, specks {rep['specks_mm3']}, fin left {fin_left:.2f}, pad lost {pad_lost:.3f}, cube lost "
+              f"{cube_lost:.2f} mm3, gate {'PASS' if ok else 'FAIL'} {info.get('thin_walls')}; wall kept {rep3['kept_walls']}")
+    except Exception as e:
+        traceback.print_exc()
+        check("export cleanup", False, str(e))
+
+
+def t_gate_drawn_body():
+    """gate, drawn bodies (tools/solid_check.py): (a) a 2.5 mm drawn plate on a 3.6 mm wall passes though a 4 mm generated block
+    wraps its far end (the old measure took the body's thickness from the part round it, eroded 2.0 and asked for a 4 mm joint:
+    node 5's collar clusters, node 21's camera cones, 29 Oct); (b) a 3.6 mm drawn tab notched to 2.2 mm stays one body (a feature is
+    never split from itself: a collar's resin grooves); (c) a 4 mm pad on a 1.2 mm sliver still fails, the entry naming where and
+    how much of its core is off."""
+    try:
+        from .part import tm
+        from .build import solid_check
+        cube = _mbox(20, 20, 20, (0, 0, 0))
+        wall = _mbox(6, 3.6, 12, (13, 0, 0)); plate = _mbox(2.5, 12, 12, (17.25, 0, 0)); sleeve = _mbox(4, 14, 14, (19, 0, 0))
+        ok_a, ia = solid_check(tm(cube + wall + plate + sleeve), [tm(plate)])
+        tab = _mbox(14, 3.6, 10, (17, 0, 0)); notch = _mbox(1.5, 0.7, 10.2, (15.75, 1.45, 0)) + _mbox(1.5, 0.7, 10.2, (15.75, -1.45, 0))
+        ok_b, ib = solid_check(tm(cube + (tab - notch)), [tm(tab - notch)])
+        pad = _mbox(4, 8, 8, (14.6, 0, 0)); sliver = _mbox(2.6, 1.2, 8, (11.3, 0, 0))
+        ok_c, ic = solid_check(tm(cube + sliver + pad), [tm(pad)])
+        bad = ic["drawn_not_in_main"]
+        good = (ok_a and not ia["drawn_not_in_main"] and ok_b and not ib["drawn_not_in_main"] and not ok_c and len(bad) >= 1
+                and bad[-1]["at"][0] > 12.0 and bad[-1]["mm3"] > 1.0 and bad[-1]["share"] < 0.5)
+        check("gate drawn bodies: own thickness, never split from itself, a pad on a sliver still fails with at / mm3", good,
+              f"(a) {ok_a} {ia['drawn_not_in_main']} necks {ia['necks']} thin {ia['thin_walls']}; (b) {ok_b} {ib['drawn_not_in_main']} necks {ib['necks']} "
+              f"thin {ib['thin_walls']}; (c) {ok_c} {bad}")
+    except Exception as e:
+        traceback.print_exc()
+        check("gate drawn bodies", False, str(e))
+
+
+def t_gate_thin_ok():
+    """gate, declared-thin bodies (Part(..., thin_ok=[...]) -> solid_check thin_ok): a drawn O5.6 post round a O3.2 bore (1.2 wall, the
+    camera M2 insert posts, Spark 29 Oct by coupon) fails the gate as a thin wall unless the setup declares it; declared, it is reported
+    under thin_allowed and the part passes; an undeclared 1.0 mm fin beside it still fails."""
+    try:
+        import trimesh
+        from .part import tm, man
+        from .build import solid_check
+        cube = _mbox(20, 20, 20, (0, 0, 0))
+        post = man(trimesh.creation.cylinder(2.8, 10.0, sections=48).apply_translation((0, 0, 15)))
+        bore = man(trimesh.creation.cylinder(1.6, 5.7, sections=32).apply_translation((0, 0, 17.15)))
+        P = cube + post - bore
+        ok0, i0 = solid_check(tm(P), [tm(post - bore)])
+        ok1, i1 = solid_check(tm(P), [tm(post - bore)], thin_ok=[tm(post - bore)])
+        fin = _mbox(1.0, 4, 4, (0, 12, 0))
+        ok2, i2 = solid_check(tm(P + fin), [tm(post - bore)], thin_ok=[tm(post - bore)])
+        good = (not ok0 and len(i0["thin_walls"]) == 1 and ok1 and not i1["thin_walls"] and len(i1["thin_allowed"]) == 1
+                and i1["thin_allowed"][0]["thick_mm"] < 2.0 and not ok2 and len(i2["thin_walls"]) == 1 and len(i2["thin_allowed"]) == 1)
+        check("gate thin_ok: a declared 1.2 mm post passes as thin_allowed, an undeclared fin still fails", good,
+              f"undeclared {ok0} {i0['thin_walls']}; declared {ok1} allowed {i1['thin_allowed']} walls {i1['thin_walls']}; + fin {ok2} {i2['thin_walls']}")
+    except Exception as e:
+        traceback.print_exc()
+        check("gate thin_ok", False, str(e))
+
+
 def t_audit_plate():
     """audit: an envelope longer than the 180 mm plate at every rotation is refused (the front arm, 225 x 63: 29 Oct); a 170 x 170 one passes."""
     from topo.audit import plate_fit
@@ -576,7 +664,7 @@ def t_skin_core():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_audit_plate, t_audit_block_measure, t_design_hash):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_audit_plate, t_audit_block_measure, t_design_hash):
         t()
     if not quick:
         t_end_to_end()

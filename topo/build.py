@@ -4,7 +4,9 @@ Surface: the filtered field x_tilde is smooth by construction (it is a cone-filt
 iso-surface IS the blueprint boundary, and near a drawn body the filter has already blended the member into the body
 (a fillet whose radius is the filter radius). It is sampled with cubic interpolation at a fine pitch, held
 `clip_margin` inside every keep-out (except where it meets a drawn body), meshed by marching cubes and lightly Taubin
-smoothed. Then, exactly: (generated + drawn) intersect envelope minus cuts. Mounting features stay exact.
+smoothed. Then, exactly: (generated + drawn) intersect envelope minus cuts. Mounting features stay exact. Then the export cleanup
+(export_cleanup): voxel specks under 1 mm3 and surface slivers under the 2.0 wall floor with under 10 mm3 of core are
+taken off the exact part, drawn bodies and every member over 2.0 untouched; result.json lists what went (export_cleanup).
 
 Checks: nox/solid_check.py (the hard gate, unchanged), function check (drawn complete, nothing in cuts or keep-outs),
 as-built strength (voxel FE of the built part, every real load case, layer-aware failure indices), mass.
@@ -227,6 +229,72 @@ def assemble(layout, gen_mesh, speck_mm3=20.0, log=print):
                    bodies=len([b for b in P.decompose() if b.volume() > 0]))
 
 
+def _mask_mesh(M, lo, pitch):
+    """a closed mesh round a voxel mask (marching cubes at the half level, so the surface runs half a voxel outside the cells)"""
+    import trimesh
+    from skimage import measure
+    F = np.pad(M.astype(np.float32), 1)
+    v, f, _, _ = measure.marching_cubes(F, 0.5, spacing=(pitch, pitch, pitch))
+    v += np.asarray(lo, float) - 0.5 * pitch
+    m = trimesh.Trimesh(v, f, process=True)
+    if m.volume < 0:
+        m.invert()
+    return m
+
+
+def export_cleanup(P, part, log=print, pitch=0.25, erode_mm=0.9, core_mm3=10.0, min_mm3=1.0, max_mm3=100.0):
+    """the part as printed, without the surface detail the solid gate would fail it for (29 Oct: the rear arm and the front arm
+    root, both strong, failed on one sliver each of 1.1 / 1.4 mm and 4 / 7 mm3 of core; node 21 carried 14 voxel specks):
+      * pieces under min_mm3 at the gate's pitch (voxel dust: a shell, a flap on an edge) are dropped;
+      * surface slivers thinner than 2 x erode_mm (the 2.0 wall floor: the gate's opening) whose core is under core_mm3 are
+        removed by that opening, i.e. the sliver's residue component is subtracted, so the body under it is left as the
+        opening leaves it. A wall with core_mm3 or more of core is structure, not detail: it stays for the gate to judge.
+    Every drawn body is left untouched (the subtraction excludes it) and so is every member over 2 x erode_mm: the opening
+    does not reach into it (where a sliver stands on a member's edge, the edge loses the under-0.4 mm residue the opening
+    takes there). The thin-wall measure is the gate's own (tools/solid_check.py thin_walls). Returns (P, report)."""
+    import trimesh
+    SC = _solid_check_module()
+    t0 = time.time()
+    PT = tm(P)
+    lo = PT.bounds[0] - 2 * pitch; hi = PT.bounds[1] + 2 * pitch
+    shape = tuple(int(np.ceil((hi[k] - lo[k]) / pitch)) for k in range(3))
+    V = SC.voxels(PT, pitch, lo, shape)
+    st = ndi.generate_binary_structure(3, 1)
+    rep = dict(pitch=pitch, erode_mm=erode_mm, core_limit_mm3=core_mm3, specks_mm3=[], slivers=[], kept_walls=[], removed_mm3=0.0)
+    rm = np.zeros(shape, bool)
+    lab0, n0 = ndi.label(V, st)
+    if n0 > 1:
+        vol0 = np.bincount(lab0.ravel()) * pitch ** 3
+        small = np.where(vol0 < min_mm3)[0]; small = small[small > 0]
+        if len(small):
+            rm |= np.isin(lab0, small)
+            rep["specks_mm3"] = sorted([round(float(vol0[k]), 3) for k in small], reverse=True)[:20]
+            rep["specks"] = int(len(small))
+    R, labr, thin, _ = SC.thin_walls(V, pitch, erode_mm, lo)
+    for t in thin:
+        if t["kind"] != "wall":
+            continue
+        if t["core_mm3"] < core_mm3 and t["mm3"] <= max_mm3:
+            rm |= labr == t["label"]
+            rep["slivers"].append(dict(at=t["at"], thick_mm=t["thick_mm"], core_mm3=t["core_mm3"], mm3=t["mm3"]))
+        else:
+            rep["kept_walls"].append(dict(at=t["at"], thick_mm=t["thick_mm"], core_mm3=t["core_mm3"], mm3=t["mm3"]))
+    if not rm.any():
+        log(f"build: export cleanup: nothing to remove ({time.time() - t0:.0f} s)")
+        return P, rep
+    # grow the removal by one voxel into air and other residue only, never into the opened body, so no flap thinner than a
+    # voxel is left standing
+    rm = ndi.binary_dilation(rm, st) & (~V | R)
+    blob = man(_mask_mesh(rm, lo, pitch)) - part.drawn_m
+    v0 = P.volume()
+    P2 = P - blob
+    rep["removed_mm3"] = round(v0 - P2.volume(), 2)
+    log(f"build: export cleanup: {len(rep['specks_mm3'])} speck(s) {rep['specks_mm3'][:6]} mm3, {len(rep['slivers'])} sliver(s) "
+        f"{[(w['thick_mm'], w['core_mm3']) for w in rep['slivers']]} (thick, core mm3) removed, {rep['removed_mm3']} mm3 in all; "
+        f"{len(rep['kept_walls'])} thin wall(s) over {core_mm3} mm3 of core kept for the gate; {time.time() - t0:.0f} s")
+    return P2, rep
+
+
 def clean_mesh(m, log=print, min_mm3=1.0):
     """the exported STL: only shells with volume (the head mount's STL, 29 Oct, carried 8 zero-volume shells beside the part,
     which a slicer prints as loose scraps), merged vertices, outward normals."""
@@ -256,8 +324,8 @@ def _solid_check_module():
     return SC
 
 
-def solid_check(mesh, drawn_meshes):
-    return _solid_check_module().solid_check(mesh, drawn=drawn_meshes)
+def solid_check(mesh, drawn_meshes, thin_ok=()):
+    return _solid_check_module().solid_check(mesh, drawn=drawn_meshes, thin_ok=thin_ok)
 
 
 def function_check(P, part, layout=None):
@@ -400,9 +468,10 @@ def build_and_check(layout, out_dir, name, clip_margin=0.5, pitch=None, log=prin
     t0 = time.time()
     gm = surface(layout, pitch=pitch, clip_margin=clip_margin, log=log)
     P, bod = assemble(layout, gm, log=log)
+    P, cleanup = export_cleanup(P, part, log=log)
     PT = clean_mesh(tm(P), log=log)
     drawn_fin = tm(part.drawn_m - part.cuts_m)
-    ok_solid, solid = solid_check(PT, [drawn_fin])
+    ok_solid, solid = solid_check(PT, [drawn_fin], thin_ok=[tm(m - part.cuts_m) for m in getattr(part, "thin_ok", [])])
     log(f"solid check: {'PASS' if ok_solid else 'FAIL'} {json.dumps(solid)[:600]}")
     fc = function_check(P, part, layout)
     log(f"function check: {fc}")
@@ -424,6 +493,7 @@ def build_and_check(layout, out_dir, name, clip_margin=0.5, pitch=None, log=prin
                strength=st, mass_g=round(mass, 2), watertight=bool(PT.is_watertight), bodies=bod,
                volume_mm3=round(P.volume(), 1), drawn_g=round((part.drawn_m - part.cuts_m).volume() / 1000.0 *
                                                                layout.mat.density, 2),
+               export_cleanup=cleanup,
                stl=os.path.basename(stl), view_stl=os.path.basename(view), view_faces=nview,
                preview=None if png is None else os.path.basename(png), layout=layout.meta(),
                grid=part.summary(), build_s=round(time.time() - t0, 1))

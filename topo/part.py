@@ -72,9 +72,13 @@ def voxelise(mesh, xs, ys, zs):
 
 class Part:
     def __init__(self, name, h, drawn, cuts, env, build="+z", overhang=False, material="PETG", pad=1, mult=8,
-                 log=print):
+                 log=print, thin_ok=()):
         self.name, self.h, self.build, self.material, self.log = name, float(h), build, material, log
         self.overhang = overhang
+        # drawn bodies the setup declares deliberately thinner than the 2 mm floor (the camera M2 insert posts, O5.6 round O3.2, 1.2
+        # wall: Spark 29 Oct by coupon, the one exception in CLAUDE.md). The gate reports their thin walls under thin_allowed and
+        # does not fail the part for them; everything else thin still fails.
+        self.thin_ok = list(thin_ok)
         self.env0_m = env                                       # the envelope as given (functional-skin rule)
         env = env + drawn
         self.drawn_m, self.cuts_m, self.env_m = drawn, cuts, env
