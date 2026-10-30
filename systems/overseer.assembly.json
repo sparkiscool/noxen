@@ -3038,6 +3038,40 @@
    "color": "#aab4c0"
   },
   {
+   "name": "base",
+   "role": "structure",
+   "mesh": "parts/overseer_base/part.stl",
+   "material": "PETG",
+   "mass_g": 48.0,
+   "cg": [
+    -30.0,
+    0.0,
+    -6.0
+   ],
+   "tag": "E",
+   "owner": "overseer",
+   "version": "v1 setup (29 Oct, Spark): one PETG piece under the bottom plate ending the 6 rear / left / right core ties and the 4 bay ties, clamped by the 8 arm bottom screws, 4 M3 inserts on z -8.1 for the future battery mechanism; run pending",
+   "source": "parts/overseer_base/part.py",
+   "id": "overseer_base",
+   "group": "printed",
+   "color": "#b0a890",
+   "box": [
+    -118,
+    57,
+    -70,
+    70,
+    -18,
+    11
+   ],
+   "pose": {
+    "t": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
    "name": "flow clip",
    "role": "structure",
    "mesh": "parts/flow_clip/part.stl",
