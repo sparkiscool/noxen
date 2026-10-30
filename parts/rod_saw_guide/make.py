@@ -1,4 +1,4 @@
-"""Rod saw guide v4, one piece (Spark 30 Oct 1 am: the best tool, researched; no clamp; "it needs to be one piece").
+"""Rod saw guide v4.1, one piece, flat bottom (Spark 30 Oct 1 am: the best tool, researched; no clamp; "it needs to be one piece").
 Drawn only: python parts/rod_saw_guide/make.py writes part.stl.
 
 Research (30 Oct; clearwatercomposites.com, carbonfibertubes.net, ridegearlab.com, GTA forum): carbon splinters when one
@@ -16,7 +16,7 @@ One PETG block, 100 x 34 x 30 on a 60 x 8 base, nothing to clamp, nothing to ass
     wears with use, reprint the block when the cut starts to wander
   - a tick every 10 mm along both top edges, measured from the blade (deep tick every 50): short pieces are set against the
     ticks, long ones from a tape mark laid in the slot
-  - four O10.5 x 1 recesses under the base for stick-on rubber feet (any 10 mm self-adhesive bumper)
+  - a flat bottom: Spark tapes it to the bench with double-sided tape (30 Oct, instead of rubber feet)
 Prints base down, no supports, 100 % infill. Use: tape the rod at the mark, press it into the clips with the mark in the
 slot, saw with light strokes turning the rod a quarter at a time, file the end at 45 deg. Dust: cut wet or masked."""
 import os, numpy as np, trimesh, manifold3d as mf
@@ -27,7 +27,6 @@ CH = [(-8.0, 6.4, 8.4), (8.0, 3.4, 5.4)]                   # (y, width, depth): 
 KERF = 1.0
 SLOT_BOTTOM = H - 8.4 - 3.0
 CLIP_X, GRIP, FINGER, RELIEF, RELIEF_D = ((8.0, 22.0), (L - 22.0, L - 8.0)), 0.5, 2.0, 1.0, 10.0
-FEET = [(12.0, 22.0), (L - 12.0, 22.0), (12.0, -22.0), (L - 12.0, -22.0)]; FOOT_R, FOOT_D = 5.25, 1.0
 
 def box(x0, x1, y0, y1, z0, z1):
     return mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
@@ -56,11 +55,10 @@ for k in range(1, int(L / 2 / 10) + 1):                                         
     for x in (L / 2 - 10 * k, L / 2 + 10 * k):
         for sg in (-1, 1):
             cuts.append(box(x - 0.4, x + 0.4, min(sg * W / 2, sg * (W / 2 - (6.0 if deep else 3.0))), max(sg * W / 2, sg * (W / 2 - (6.0 if deep else 3.0))), H - 0.6, H + 1))
-cuts += [mf.Manifold.cylinder(FOOT_D + 0.01, FOOT_R, FOOT_R, 48).translate([fx, fy, -0.01]) for fx, fy in FEET]
 part = body - mf.Manifold.batch_boolean(cuts, mf.OpType.Add)
 m = part.to_mesh()
 tm = trimesh.Trimesh(np.asarray(m.vert_properties)[:, :3], np.asarray(m.tri_verts), process=True)
 assert tm.is_watertight and tm.is_volume
 tm.export(os.path.join(os.path.dirname(os.path.abspath(__file__)), "part.stl"))
-print(f"rod_saw_guide v4: {tm.volume / 1000:.1f} cm3, {tm.volume / 1000 * 1.27:.0f} g PETG, {np.round(tm.extents, 1).tolist()} mm, {len(tm.faces)} faces, "
+print(f"rod_saw_guide v4.1: {tm.volume / 1000:.1f} cm3, {tm.volume / 1000 * 1.27:.0f} g PETG, {np.round(tm.extents, 1).tolist()} mm, {len(tm.faces)} faces, "
       f"slot {KERF} wide at x {L / 2}, clips at {CLIP_X}")
