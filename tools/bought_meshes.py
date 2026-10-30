@@ -145,5 +145,20 @@ def motors():
         m = union([base, stator, bell, shaft, adapter]) - union([slots, windows, holes, cyl(mx, my, z0 - 1, z0 + 26.5, 0.0001)])
         write(f"motor_{k}", m)
 
+# ---- Unitree L2: a round puck (Spark 30 Oct: "the lidar is circular"), O75 flange, O72 body, domed window to 65 tall, 4 x M3 on O51,
+#      cable notch at the base toward the drone; axis = overlays.l2_axis (forward, 15 deg down) from overlays.l2_base
+def l2():
+    asm = json.load(open(os.path.join(ROOT, "systems", "overseer.assembly.json")))["overlays"]
+    Ax = np.array(asm["l2_axis"], float); B = np.array(asm["l2_base"], float)
+    ey = np.array([0, 1.0, 0]); ex = np.cross(ey, Ax); ex /= np.linalg.norm(ex)        # local x: in the drone's x-z plane, toward the nose side
+    flange = cyl(0, 0, 0, 6.0, 37.5, 96)
+    body = cyl(0, 0, 6.0, 30.0, 36.0, 96)
+    band = cyl(0, 0, 18.0, 30.0, 37.0, 96)                                               # the window band, slightly proud
+    dome = mf.Manifold.sphere(35.0, 96).translate([0, 0, 30.0]) ^ box(-40, 40, -40, 40, 30.0, 66.0)   # the domed head, top at 65
+    holes = [cyl(25.5 * np.cos(a), 25.5 * np.sin(a), -1, 6.5, 1.6, 24) for a in np.radians((22.5, 112.5, 202.5, 292.5))]
+    notch = box(-40, -30, -5, 5, -1, 8)                                                   # cable notch at the base on local -x (toward the body)
+    m = union([flange, body, band, dome]) - union(holes + [notch])
+    write("unitree_l2", frame(m, B, ex, ey, Ax))
+
 if __name__ == "__main__":
-    place_cams(); fc_stack(); pi5(); small(); flow(); motors()
+    place_cams(); fc_stack(); pi5(); small(); flow(); motors(); l2()
