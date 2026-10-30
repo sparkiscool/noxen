@@ -3018,10 +3018,10 @@
    "role": "structure",
    "mesh": "parts/overseer_flow_clip/part.stl",
    "material": "PETG",
-   "mass_g": 5.0,
-   "tag": "M",
+   "mass_g": 3.8,
+   "tag": "C",
    "owner": "overseer core session",
-   "version": "FINAL, printed 29 Oct (Spark). v1 (printed, 5.0 g M; print/overseer_flow_clip_v1.stl): pocket 21.6 x 16 for the MTF-02P, lens window in the 3.0 floor, flange holes at (96, +-17) under the deck's front feet; until 29 Oct the page showed core v2's concept block",
+   "version": "v2 (30 Oct, Spark 1 am: v1's plug gap too small, its lens window misses the sensors): drawn from MicoAir's MTF-02P dimension drawing (parts/overseer_flow_clip/make.py): pocket 22.2 x 16.6 at (94, 0), board back on the plate underside, component face down, socket edge to the tail; tail wall notched 9 wide full height for the plug and wires; one floor window x 92.6..102.6 over the full pocket width under the lens (98, -2.5) and both ToF windows (96.3 / 99.7, +4.3); flanges 3.0 at (96, +-17) under the deck's front M3 x 10 as v1. 3.8 g (C). v1 (printed 29 Oct, 5.0 g M) superseded",
    "source": "nox/overseer/core_v1.py",
    "budget_g": 5,
    "id": "flow_clip",
@@ -3029,12 +3029,11 @@
    "color": "#aab4c0",
    "pose": {
     "t": [
-     80.2,
-     -23.0,
-     -11.9
+     0,
+     0,
+     0
     ]
-   },
-   "final": "printed 29 Oct (Spark: final unless brought up again for a rerun)"
+   }
   },
   {
    "id": "camera_rear",
