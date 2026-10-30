@@ -118,3 +118,18 @@ PWM-to-switch board. The Pi colours the scan and knows when the light is needed,
 17. Exposure formula E = C N² / (t S), C ≈ 250 — https://colour-hdri.readthedocs.io/en/v0.1.5/_modules/colour_hdri/utilities/exposure.html ; PWM shorter than the exposure = frame-to-frame brightness change — https://www.accessnewswire.com/newsroom/en/electronics-and-engineering/vadzo-imaging-explains-led-flicker-mitigation-techniques-for-industrial-1172807
 18. Flyability Elios 3: 16,000 lm lighting — https://mfe-is.com/wp-content/uploads/2024/12/Elios-3_tech-specs.pdf
 19. Unitree L2: 360° x 90° hemisphere, infrared pulsed laser (manual); > 100 klux anti-glare (reseller) — https://oss-global-cdn.unitree.com/static/Unitree%204D%20LiDAR%20L2%20User%20Manual.pdf , https://www.robotshop.com/products/unitree-4d-lidar-l2
+
+## 5. Amazon sourcing (design session, 29 Oct evening; Spark: "everything needs to be on Amazon")
+
+The Cree CXB1304 COB is a distributor part (DigiKey / Mouser only). The Amazon-available build of the same light:
+
+| Part | Amazon | Numbers | Tag |
+|---|---|---|---|
+| Emitter | Cree XLamp XP-L High Density 3-up on a 20 mm star, 4000 K, https://www.amazon.com/Cree-Xlamp-XP-L-High-Density/dp/B08BB2H77Z | three dies in series: ~8.4 V at 350 mA (2.8 V each, E from the 2.95 V at 1.05 A), ~450 lm at 350 mA (E: single XP-L HD ~170 lm at 350 mA, 4000 K bin ~10 % under cool white), 120° Lambertian per die; CRI 70..75 (standard XP-L 4000 K bins; the 90 CRI of the CXB1304 is not available on Amazon in this size). 20 mm star fits the 25 x 25 sink. | E / listing |
+| Driver | Mean Well LDD-350LW (wired version of the LDD-350L), https://www.amazon.com/Original-LDD-350LW-Constant-Current-Step-Down/dp/B07KPJWR59 | 9..36 V in, 2..32 V out at 350 mA, Vout <= Vin - 3 V: 8.4 V from the 14.8 V pack rail works, from the 12 V buck it works too (12 - 3 = 9 > 8.4) if the buck has the 0.35 A. DIM: open = on, < 0.8 V = off (Pi GPIO). | S [13][14] |
+| Heatsink | Easycargo 25 x 25 x 10 black, 10-pack with 3M 8810 thermal tape, https://www.amazon.com/Easycargo-Heatsink-25x25x10mm-conductive-25mmx25mmx10mm/dp/B07D4F1F8R | 6 g each (listing); the star is taped to it, the sink screwed to the pad through 3 mm standoffs (1 mm air to the PETG). | listing |
+| Rear camera, cheap | OV2710 2 MP 1080p rolling shutter, 100° distortionless lens, https://www.amazon.com/OV2710-Camera-Module-Degree-distortionless/dp/B0DWKRLF55 ; branded ELP 120 fps 100°: https://www.amazon.com/ELP-Computer-Lightburn-Security-Distortion/dp/B0D9N7KBND | 38 x 38 board; confirm 28 mm M2 holes in the photos | listing |
+| Camera, same as the front | ELP AR0234 global shutter 1080p 90 fps, 100° no-distortion, https://www.amazon.com/ELP-Global-Shutter-Computer-Distortion/dp/B0D41BSBTS | 38 x 38, AR0234 colour; DECXIN 2633V2 itself is not on Amazon (Alibaba / AliExpress only) | listing |
+
+What changes against section 4: colour rendering 70..75 instead of 90 (colours a little flatter in the scan), flux the same class (~450 vs 400 lm), voltage 8.4 instead of 9 V, mass the same (star 1 g + sink 6 g + tape, screws, wire ~ 12 g). Placement (section 3) and the head mount's pads, bosses and keep-outs (section 4) are unchanged.
+
