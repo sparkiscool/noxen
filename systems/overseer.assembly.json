@@ -2497,7 +2497,7 @@
    "tag": "E",
    "owner": "overseer",
    "version": "yawed 20 out (29 Oct: one solid window ahead)",
-   "source": "nox/overseer/layout_v5.py",
+   "source": "tools/bought_meshes.py",
    "id": "camera_left",
    "group": "bought",
    "color": "#1c1c1c"
@@ -2516,7 +2516,7 @@
    "tag": "E",
    "owner": "overseer",
    "version": "yawed 20 out (29 Oct: one solid window ahead)",
-   "source": "nox/overseer/layout_v5.py",
+   "source": "tools/bought_meshes.py",
    "id": "camera_right",
    "group": "bought",
    "color": "#1c1c1c"
@@ -2607,7 +2607,7 @@
    "tag": "E",
    "owner": "overseer",
    "version": "layout v5 / cage v5",
-   "source": "nox/overseer/layout_v5.py",
+   "source": "tools/bought_meshes.py",
    "id": "motor_1",
    "group": "bought",
    "color": "#1c1c1c"
@@ -2656,7 +2656,7 @@
    "tag": "E",
    "owner": "overseer",
    "version": "layout v5 / cage v5",
-   "source": "nox/overseer/layout_v5.py",
+   "source": "tools/bought_meshes.py",
    "id": "motor_2",
    "group": "bought",
    "color": "#1c1c1c"
@@ -2732,7 +2732,7 @@
    "tag": "E",
    "owner": "overseer",
    "version": "layout v5 / cage v5",
-   "source": "nox/overseer/layout_v5.py",
+   "source": "tools/bought_meshes.py",
    "id": "motor_3",
    "group": "bought",
    "color": "#1c1c1c"
@@ -2854,7 +2854,7 @@
    "tag": "E",
    "owner": "overseer",
    "version": "layout v5 / cage v5",
-   "source": "nox/overseer/layout_v5.py",
+   "source": "tools/bought_meshes.py",
    "id": "motor_4",
    "group": "bought",
    "color": "#1c1c1c"
@@ -2883,7 +2883,7 @@
    "tag": "E",
    "owner": "overseer core session",
    "version": "core v2",
-   "source": "nox/overseer/core_v1.py",
+   "source": "tools/bought_meshes.py",
    "id": "fc_stack_micoair743_lite_on_55a_4_in_1",
    "group": "bought",
    "color": "#2e7d32"
@@ -2898,10 +2898,10 @@
    "tag": "E",
    "owner": "overseer core session",
    "version": "core v2",
-   "source": "nox/overseer/core_v1.py",
+   "source": "tools/bought_meshes.py",
    "id": "esc_cap",
    "group": "bought",
-   "color": "#2e7d32"
+   "color": "#1c1c1c"
   },
   {
    "name": "Pi 5 + Active Cooler",
@@ -2913,10 +2913,22 @@
    "tag": "E",
    "owner": "overseer core session",
    "version": "core v2",
-   "source": "nox/overseer/core_v1.py",
+   "source": "tools/bought_meshes.py",
    "id": "pi_5_active_cooler",
    "group": "bought",
    "color": "#2e7d32"
+  },
+  {
+   "name": "Pi 5 Active Cooler (fins and fan)",
+   "role": "bought",
+   "mesh": "parts/pi_5_cooler/part.stl",
+   "mass_g": 0.0,
+   "tag": "C",
+   "source": "tools/bought_meshes.py",
+   "version": "30 Oct: the cooler drawn as its own part so it renders aluminium over the green board; its mass is in pi_5_active_cooler (55 g)",
+   "id": "pi_5_cooler",
+   "group": "bought",
+   "color": "#b8bcc0"
   },
   {
    "name": "UBEC 5 V",
@@ -2928,10 +2940,10 @@
    "tag": "E",
    "owner": "overseer core session",
    "version": "core v2",
-   "source": "nox/overseer/core_v1.py",
+   "source": "tools/bought_meshes.py",
    "id": "ubec_5_v",
    "group": "bought",
-   "color": "#2e7d32"
+   "color": "#1c1c1c"
   },
   {
    "name": "buck 12 V",
@@ -2943,7 +2955,7 @@
    "tag": "E",
    "owner": "overseer core session",
    "version": "core v2",
-   "source": "nox/overseer/core_v1.py",
+   "source": "tools/bought_meshes.py",
    "id": "buck_12_v",
    "group": "bought",
    "color": "#2e7d32"
@@ -2958,7 +2970,7 @@
    "tag": "E",
    "owner": "overseer core session",
    "version": "core v2",
-   "source": "nox/overseer/core_v1.py",
+   "source": "tools/bought_meshes.py",
    "id": "rx_xr2",
    "group": "bought",
    "color": "#2e7d32"
@@ -2973,10 +2985,10 @@
    "tag": "E",
    "owner": "overseer core session",
    "version": "core v2",
-   "source": "nox/overseer/core_v1.py",
+   "source": "tools/bought_meshes.py",
    "id": "flow_mtf_02p",
    "group": "bought",
-   "color": "#2d5a2d"
+   "color": "#1c1c1c"
   },
   {
    "name": "wires",
@@ -3082,8 +3094,17 @@
     12.55,
     40.55
    ],
-   "pose": null,
-   "note": "DECXIN 2633V2 on cage node 21, facing -x, 40 deg down, lens 26 mm inside the rear facet (C)"
+   "pose": {
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   "note": "DECXIN 2633V2 on cage node 21, facing -x, 40 deg down, lens 26 mm inside the rear facet (C)",
+   "source": "tools/bought_meshes.py",
+   "mesh": "parts/camera_rear/part.stl",
+   "version": "mesh 30 Oct: the DECXIN body on node 21, looking back and 40 deg down (tools/bought_meshes.py); was an axis-aligned box"
   }
  ],
  "mass_budget_g": 2200,
