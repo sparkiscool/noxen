@@ -3074,17 +3074,24 @@
   {
    "name": "flow clip",
    "role": "structure",
-   "mesh": "parts/flow_clip/part.stl",
+   "mesh": "parts/overseer_flow_clip/part.stl",
    "material": "PETG",
    "mass_g": 5.0,
-   "tag": "E",
+   "tag": "M",
    "owner": "overseer core session",
-   "version": "core v2",
+   "version": "v1 (printed, 5.0 g M; print/overseer_flow_clip_v1.stl): pocket 21.6 x 16 for the MTF-02P, lens window in the 3.0 floor, flange holes at (96, +-17) under the deck's front feet; until 29 Oct the page showed core v2's concept block",
    "source": "nox/overseer/core_v1.py",
    "budget_g": 5,
    "id": "flow_clip",
    "group": "printed",
-   "color": "#aab4c0"
+   "color": "#aab4c0",
+   "pose": {
+    "t": [
+     80.2,
+     -23.0,
+     -11.9
+    ]
+   }
   },
   {
    "id": "camera_rear",
