@@ -2991,7 +2991,7 @@
    "color": "#1c1c1c"
   },
   {
-   "name": "wires",
+   "name": "wires (black leads)",
    "role": "bought",
    "mesh": "parts/wires/part.stl",
    "material": "PETG",
@@ -3002,7 +3002,21 @@
    "source": "nox/overseer/core_v1.py",
    "id": "wires",
    "group": "bought",
-   "color": "#1b5e20"
+   "color": "#1c1c1c"
+  },
+  {
+   "name": "wires (red leads)",
+   "role": "bought",
+   "mesh": "parts/wires_red/part.stl",
+   "material": "PETG",
+   "mass_g": 0.0,
+   "tag": "E",
+   "owner": "overseer core session",
+   "version": "30 Oct: every other lead of the wire runs drawn red (the + of each pair), the rest black; the 80 g stays on wires",
+   "source": "nox/overseer/core_v1.py",
+   "id": "wires_red",
+   "group": "bought",
+   "color": "#c0282d"
   },
   {
    "name": "hub deck",
