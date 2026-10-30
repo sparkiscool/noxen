@@ -1,150 +1,19 @@
 {
  "name": "overseer_head_mount",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
-  "bodies_plain": 10,
-  "specks_plain": 6,
-  "bodies_eroded": 2,
+  "bodies_plain": 1,
+  "specks_plain": 14,
+  "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   52390.5,
-   1.4
+   54731.3
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
-  "thin_allowed": [
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 55.33,
-    "at": [
-     378.7,
-     -56.0,
-     110.7
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 95.6
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 55.09,
-    "at": [
-     369.1,
-     82.3,
-     110.7
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 95.2
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 54.98,
-    "at": [
-     369.1,
-     -82.3,
-     110.7
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 95.1
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 54.66,
-    "at": [
-     373.6,
-     -84.0,
-     138.2
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 106.6
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 53.83,
-    "at": [
-     383.3,
-     57.7,
-     138.3
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 198.8
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 53.81,
-    "at": [
-     378.7,
-     56.0,
-     110.7
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 198.8
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 53.02,
-    "at": [
-     373.7,
-     83.9,
-     138.2
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 100.4
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 51.34,
-    "at": [
-     383.2,
-     -57.8,
-     138.3
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 106.5
-   }
-  ],
-  "acute_edges": 11,
-  "ok": false
+  "acute_edges": 3,
+  "ok": true
  },
  "function_check": {
   "skin_mm3": 6907.1,
@@ -472,7 +341,7 @@
    29.3
   ]
  },
- "mass_g": 99.53,
+ "mass_g": 102.56,
  "watertight": false,
  "bodies": {
   "bodies_raw": 5,
@@ -485,7 +354,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 78372.1,
+ "volume_mm3": 80756.0,
  "drawn_g": 24.49,
  "stl": "overseer_head_mount.stl",
  "view_stl": "overseer_head_mount_view.stl",
@@ -888,251 +757,9 @@
  },
  "baseline": null,
  "total_s": 14532,
- "part_sha": "5fc49aec8c43",
- "lib_sha": "15c5499fc866",
+ "part_sha": "bbeab956c64d",
+ "lib_sha": "2a4ef96807ca",
  "max_worst": 0.5,
  "strength_ok": true,
- "export_cleanup": {
-  "pitch": 0.25,
-  "erode_mm": 0.9,
-  "core_limit_mm3": 10.0,
-  "specks_mm3": [
-   0.875,
-   0.688,
-   0.688,
-   0.578,
-   0.516,
-   0.375,
-   0.344,
-   0.281,
-   0.234,
-   0.234,
-   0.234,
-   0.188,
-   0.172,
-   0.172,
-   0.141,
-   0.141,
-   0.141,
-   0.141,
-   0.141,
-   0.141
-  ],
-  "slivers": [],
-  "kept_walls": [
-   {
-    "at": [
-     369.1,
-     -82.3,
-     110.7
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 53.84,
-    "mm3": 96.5
-   },
-   {
-    "at": [
-     369.1,
-     82.3,
-     110.7
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 55.09,
-    "mm3": 95.2
-   },
-   {
-    "at": [
-     373.6,
-     -84.0,
-     138.3
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 54.22,
-    "mm3": 118.1
-   },
-   {
-    "at": [
-     373.7,
-     84.0,
-     138.2
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 55.03,
-    "mm3": 95.9
-   },
-   {
-    "at": [
-     378.7,
-     -56.0,
-     110.7
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 54.45,
-    "mm3": 95.8
-   },
-   {
-    "at": [
-     378.6,
-     56.0,
-     110.7
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 52.5,
-    "mm3": 96.2
-   },
-   {
-    "at": [
-     383.3,
-     -57.7,
-     138.3
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 52.11,
-    "mm3": 101.5
-   },
-   {
-    "at": [
-     383.3,
-     57.7,
-     138.3
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 54.77,
-    "mm3": 101.9
-   }
-  ],
-  "removed_mm3": 4.57,
-  "specks": 34
- },
- "export": {
-  "faces_in": 563540,
-  "degenerate": 5172,
-  "folded": 1008,
-  "caps_split": 1345,
-  "caps_left": 180,
-  "dropped_shells": [
-   {
-    "faces": 555016,
-    "mm3": 78347.698,
-    "closed": false
-   },
-   {
-    "faces": 472,
-    "mm3": 0.162,
-    "closed": true
-   },
-   {
-    "faces": 234,
-    "mm3": 0.035,
-    "closed": true
-   },
-   {
-    "faces": 210,
-    "mm3": 0.012,
-    "closed": true
-   },
-   {
-    "faces": 206,
-    "mm3": 0.012,
-    "closed": true
-   },
-   {
-    "faces": 172,
-    "mm3": 0.009,
-    "closed": true
-   },
-   {
-    "faces": 116,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 106,
-    "mm3": 0.005,
-    "closed": true
-   },
-   {
-    "faces": 58,
-    "mm3": 0.005,
-    "closed": true
-   },
-   {
-    "faces": 58,
-    "mm3": 0.003,
-    "closed": true
-   },
-   {
-    "faces": 54,
-    "mm3": 0.003,
-    "closed": true
-   },
-   {
-    "faces": 32,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 28,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 28,
-    "mm3": 0.001,
-    "closed": true
-   },
-   {
-    "faces": 26,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 22,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 20,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 20,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 20,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 20,
-    "mm3": 0.0,
-    "closed": false
-   }
-  ],
-  "n_dropped_shells": 87,
-  "bodies": 0,
-  "faces": 557360,
-  "boundary_edges": 4,
-  "nonmanifold_edges": 75,
-  "watertight": false,
-  "simplified": false,
-  "first_pass": {
-   "degenerate": 5172,
-   "folded": 1008,
-   "caps_split": 1345,
-   "caps_left": 180,
-   "watertight": false,
-   "faces": 557360
-  },
-  "volume_mm3": 78372.1,
-  "exact_mm3": 78272.9
- },
- "recut": {
-  "at": "2026-10-30 04:58",
-  "removed_cm3": 2.384,
-  "note": "holes recut from the current setup; strength not re-solved"
- }
+ "display_note": "30 Oct 2:40 am: the v6 mesh (old camera cones, PASS 102.6 g) is shown while run 77 reruns the mount with the O5.6 M2 posts on the fixed engine; the 8f32279 recut export of this mesh was not watertight and tore on the page"
 }
