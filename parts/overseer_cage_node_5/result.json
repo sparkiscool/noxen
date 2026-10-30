@@ -1,22 +1,38 @@
 {
  "name": "overseer_cage_node_5",
  "engine": "nox/topo",
- "solid_ok": true,
+ "solid_ok": false,
  "solid": {
   "bodies_plain": 1,
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   6019.0
+   6500.3
   ],
   "necks": [],
-  "drawn_not_in_main": [],
+  "drawn_not_in_main": [
+   [
+    "0.0",
+    0.004,
+    "erode 2.0"
+   ],
+   [
+    "0.5",
+    0.004,
+    "erode 2.0"
+   ],
+   [
+    "0.24",
+    0.808,
+    "erode 2.0"
+   ]
+  ],
   "thin_walls": [],
   "acute_edges": 0,
-  "ok": true
+  "ok": false
  },
  "function_check": {
-  "skin_mm3": 3272.9,
+  "skin_mm3": 3093.1,
   "skin_missing_mm3": 0.0,
   "in_cuts_mm3": -0.0,
   "outside_env_mm3": 0.0,
@@ -25,147 +41,114 @@
  "strength": {
   "rows": [
    {
-    "case": "frame tube 5-11 axial 149 N (pull-out)",
+    "case": "frame tube 0-5 axial 89 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.062,
-    "across": 0.054,
+    "inlayer": 0.076,
+    "across": 0.072,
     "at": [
-     -227.4,
-     21.0,
-     -79.4
-    ]
-   },
-   {
-    "case": "frame tube 5-11 side 0.4 N",
-    "cls": "crash",
-    "inlayer": 0.0,
-    "across": 0.0,
-    "at": [
-     -225.0,
-     19.8,
-     -73.4
-    ]
-   },
-   {
-    "case": "frame tube 5-12 axial 149 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.062,
-    "across": 0.054,
-    "at": [
-     -227.4,
-     -21.0,
-     -79.4
-    ]
-   },
-   {
-    "case": "frame tube 5-12 side 0.4 N",
-    "cls": "crash",
-    "inlayer": 0.0,
-    "across": 0.0,
-    "at": [
-     -225.0,
+     -223.7,
      -19.8,
-     -73.4
+     -74.7
     ]
    },
    {
-    "case": "frame tube 5-13 axial 75 N (pull-out)",
+    "case": "frame tube 0-5 side 11.0 N",
     "cls": "crash",
-    "inlayer": 0.107,
-    "across": 0.159,
+    "inlayer": 0.016,
+    "across": 0.011,
     "at": [
-     -240.6,
-     9.0,
-     -79.4
+     -224.9,
+     -22.2,
+     -78.3
     ]
    },
    {
-    "case": "frame tube 5-13 side 1.5 N",
+    "case": "frame tube 4-5 axial 136 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.106,
+    "across": 0.104,
+    "at": [
+     -224.9,
+     22.2,
+     -78.3
+    ]
+   },
+   {
+    "case": "frame tube 4-5 side 11.0 N",
+    "cls": "crash",
+    "inlayer": 0.015,
+    "across": 0.018,
+    "at": [
+     -227.3,
+     21.0,
+     -79.5
+    ]
+   },
+   {
+    "case": "frame tube 5-13 axial 91 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.117,
+    "across": 0.119,
+    "at": [
+     -241.7,
+     16.2,
+     -73.5
+    ]
+   },
+   {
+    "case": "frame tube 5-13 side 2.9 N",
+    "cls": "crash",
+    "inlayer": 0.003,
+    "across": 0.002,
+    "at": [
+     -239.3,
+     15.0,
+     -68.7
+    ]
+   },
+   {
+    "case": "frame tube 5-14 axial 90 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.116,
+    "across": 0.118,
+    "at": [
+     -241.7,
+     -16.2,
+     -73.5
+    ]
+   },
+   {
+    "case": "frame tube 5-14 side 2.9 N",
     "cls": "crash",
     "inlayer": 0.003,
     "across": 0.003,
     "at": [
-     -241.8,
-     13.8,
-     -71.0
-    ]
-   },
-   {
-    "case": "frame tube 5-14 axial 75 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.107,
-    "across": 0.158,
-    "at": [
-     -240.6,
-     -9.0,
-     -79.4
-    ]
-   },
-   {
-    "case": "frame tube 5-14 side 1.5 N",
-    "cls": "crash",
-    "inlayer": 0.003,
-    "across": 0.003,
-    "at": [
-     -241.8,
-     -12.6,
-     -69.8
-    ]
-   },
-   {
-    "case": "frame camera rod 5 axial 11 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.013,
-    "across": 0.022,
-    "at": [
-     -241.8,
-     4.2,
-     -67.4
-    ]
-   },
-   {
-    "case": "frame camera rod 5 side 0.5 N",
-    "cls": "crash",
-    "inlayer": 0.0,
-    "across": 0.001,
-    "at": [
-     -241.8,
-     -4.2,
-     -67.4
-    ]
-   },
-   {
-    "case": "crash 35 g through the longest tube tube 5-11 (381 mm), axial + side",
-    "cls": "crash",
-    "inlayer": 0.062,
-    "across": 0.068,
-    "at": [
-     -225.0,
-     19.8,
-     -73.4
+     -239.3,
+     -15.0,
+     -68.7
     ]
    },
    {
     "case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
     "cls": "flight",
-    "inlayer": 0.564,
-    "across": 0.56,
+    "inlayer": 0.258,
+    "across": 0.232,
     "at": [
-     -243.0,
-     5.4,
-     -90.2
+     -239.3,
+     15.0,
+     -75.9
     ]
    }
   ],
-  "worst": 0.564,
+  "worst": 0.258,
   "worst_case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
   "worst_at": [
-   -243.0,
-   5.4,
-   -90.2
+   -239.3,
+   15.0,
+   -75.9
   ]
  },
- "mass_g": 16.02,
+ "mass_g": 16.57,
  "watertight": true,
  "bodies": {
   "bodies_raw": 1,
@@ -173,8 +156,8 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 12614.0,
- "drawn_g": 11.59,
+ "volume_mm3": 13045.5,
+ "drawn_g": 10.99,
  "stl": "overseer_cage_node_5.stl",
  "view_stl": "overseer_cage_node_5_view.stl",
  "view_faces": 120000,
@@ -240,15 +223,15 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.023796990451509407,
-  "nd": 96040,
+  "volfrac": 0.02964333340242799,
+  "nd": 96486,
   "sym_axes": [
    1
   ],
-  "n_real": 12,
-  "n_ties": 24,
+  "n_real": 9,
+  "n_ties": 30,
   "backend": "direct",
-  "iterations": 78,
+  "iterations": 69,
   "stopped": "grey"
  },
  "grid": {
@@ -260,55 +243,52 @@
    40
   ],
   "origin": [
-   -266.3763,
+   -266.3317,
    -48.0,
-   -95.5883
+   -95.6945
   ],
   "cells": 179200,
-  "design": 95780,
-  "drawn": 5272,
+  "design": 96230,
+  "drawn": 4968,
   "cases": [
-   "frame tube 5-11 axial 149 N (pull-out)",
-   "frame tube 5-11 side 0.4 N",
-   "frame tube 5-12 axial 149 N (pull-out)",
-   "frame tube 5-12 side 0.4 N",
-   "frame tube 5-13 axial 75 N (pull-out)",
-   "frame tube 5-13 side 1.5 N",
-   "frame tube 5-14 axial 75 N (pull-out)",
-   "frame tube 5-14 side 1.5 N",
-   "frame camera rod 5 axial 11 N (pull-out)",
-   "frame camera rod 5 side 0.5 N",
-   "crash 35 g through the longest tube tube 5-11 (381 mm), axial + side",
+   "frame tube 0-5 axial 89 N (pull-out)",
+   "frame tube 0-5 side 11.0 N",
+   "frame tube 4-5 axial 136 N (pull-out)",
+   "frame tube 4-5 side 11.0 N",
+   "frame tube 5-13 axial 91 N (pull-out)",
+   "frame tube 5-13 side 2.9 N",
+   "frame tube 5-14 axial 90 N (pull-out)",
+   "frame tube 5-14 side 2.9 N",
    "landing 6 g on the foot (67 N up, 3 of 6 feet)"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 101.5,
- "layout_s": 8200,
- "peak_gb": 6.925672,
- "gen_cm3": 3.5,
+ "build_s": 92.6,
+ "layout_s": 6940,
+ "peak_gb": 6.786556,
+ "gen_cm3": 4.5,
  "h": 1.2,
  "audit": {
-  "drawn_share": 0.052,
+  "drawn_share": 0.049,
   "bodies": [
    {
     "id": 1,
-    "cells": 1830,
-    "inscribed_mm": 5.4,
+    "cells": 1572,
+    "inscribed_mm": 4.2,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
     "room": 0.94,
     "room_depth_mm": 56.4,
     "at": [
-     -246.6,
+     -247.2,
      0.0,
-     -67.7
+     -68.3
     ],
     "core_mm": 3.4,
-    "share_of_drawn": 0.35
+    "share_of_drawn": 0.32
    },
    {
     "id": 2,
@@ -322,13 +302,13 @@
     "at": [
      -242.7,
      0.0,
-     -90.8
+     -90.9
     ],
     "core_mm": 2.4
    },
    {
     "id": 3,
-    "cells": 1581,
+    "cells": 1558,
     "inscribed_mm": 5.4,
     "touches_cut": true,
     "touches_support": true,
@@ -337,14 +317,14 @@
     "room_depth_mm": 67.2,
     "at": [
      -225.4,
-     -20.8,
-     -76.4
+     -20.9,
+     -76.3
     ],
-    "core_mm": 4.2
+    "core_mm": 3.4
    },
    {
     "id": 4,
-    "cells": 1581,
+    "cells": 1558,
     "inscribed_mm": 5.4,
     "touches_cut": true,
     "touches_support": true,
@@ -353,10 +333,10 @@
     "room_depth_mm": 67.2,
     "at": [
      -225.4,
-     20.8,
-     -76.4
+     20.9,
+     -76.3
     ],
-    "core_mm": 4.2
+    "core_mm": 3.4
    }
   ],
   "envelope_waste": 0.0,
@@ -366,14 +346,14 @@
    "H_mm": 43.2,
    "fits": true
   },
-  "cases": 12,
+  "cases": 9,
   "supports": 1,
   "fails": []
  },
  "baseline": null,
- "total_s": 8301,
- "part_sha": "f268fc64e862",
+ "total_s": 7033,
+ "part_sha": "3a0f8e224975",
  "lib_sha": "2a4ef96807ca",
  "max_worst": 0.5,
- "strength_ok": false
+ "strength_ok": true
 }
