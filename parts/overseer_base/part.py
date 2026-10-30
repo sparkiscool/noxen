@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(HERE)))
 from topo.part import Part
 from parts.cage_node_lib import CAGE, KIND, NODE_R, WALL, FLOOR, socket_cuts, collar_shape, along, U
 
-SPEC = dict(h=1.7, gen_cm3=30.0, max_worst=0.5)      # v2: h 1.7 (the wider side room at 1.6 is 301k cells), 30 cm3 (v1 came in at 44 g with 26)
+SPEC = dict(h=1.7, gen_cm3=30.0, max_worst=0.5)      # v2: h 1.7 (the wider side room at 1.6 is 301k cells), 30 cm3 (v1 came in at 44 g with 26)   # v3 (30 Oct, auto mode): run 69 gave 1.54 at (-55, 55, -8.5), the left edge between the left.1/.2 sockets (x 0) and the bay tie -1+1.2 socket (x -90): the side rails only ran x -45..45, so the rail ended 45 mm short of that socket and the path pinched in the 16 mm under the plate edge; rails now x -95..45 (room, not volume)
 G = 9.81e-3
 BUILD = (0.0, 0.0, -1.0)                                          # printed upside down: the flat z -8.1 faces on the plate
 Z_PLATE, Z_MOUNT = -2.1, -8.1                                     # plate underside; the future mechanism's mount plane
@@ -108,7 +108,7 @@ def bodies():
     # sockets beside the plate an 11 mm strip (y 59..70) while their bores reach y 79 and the collars 83: the collars hung off a
     # ledge. The side room now runs to y +-84 and up to z 8 (168 wide: under the 180 plate), so the collars sit inside material.
     env = U([box(-118.0, 57.0, -70.0, 70.0, -18.0, Z_PLATE),
-             box(-45.0, 45.0, 59.0, 84.0, -18.0, 8.0), box(-45.0, 45.0, -84.0, -59.0, -18.0, 8.0),
+             box(-95.0, 45.0, 59.0, 84.0, -18.0, 8.0), box(-95.0, 45.0, -84.0, -59.0, -18.0, 8.0),
              box(-118.0, -95.5, -34.0, 34.0, -18.0, 11.0)])
     return U(collars + pads + bosses), U(cuts), env, socks, pads
 
