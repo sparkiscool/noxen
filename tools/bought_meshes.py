@@ -122,7 +122,7 @@ def small():
 
 # ---- flow sensor, component face down under the plate at (94, 0): nose end at x 104.8, socket edge at the tail
 def flow():
-    zt = -2.1
+    zt = -4.6                       # board back on the flow clip v3 roof (31 Oct; v2 taped it to the plate at -2.1)
     board = cbox(94, 0, zt - 0.5, 21.6, 16, 1.0)
     tof = cbox(98.0, 4.3, zt - 1.0 - 2.75, 6.8, 6.0, 5.5)
     tofw = [cyl(x, 4.3, zt - 1.0 - 5.5 - 0.3, zt - 1.0 - 5.5 + 1.5, 1.3, 24) for x in (96.3, 99.7)]
