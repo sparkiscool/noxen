@@ -2876,6 +2876,29 @@
    "color": "#1c1c1c"
   },
   {
+   "name": "FC mount",
+   "role": "structure",
+   "mesh": "parts/overseer_fc_mount/part.stl",
+   "material": "PETG",
+   "mass_g": 12.9,
+   "tag": "C",
+   "owner": "overseer core session",
+   "version": "v1 (30 Oct, Spark 9 pm: one stack bolt does not go into the top plate): drawn (parts/overseer_fc_mount/make.py); the +X stack hole at r 21.57 falls on the web between the plate's centre cutout and the +X slot. Ring r 17..26 x 6 on the plate top, 4 bosses to z 55 on the 30.5 stack holes with M3 x 5.7 heat-set inserts, 4 tabs bolted through the plate slots at r 32 (M3 x 8 flush, nut under the plate); stack on M3 x 20. 12.9 g (C)",
+   "source": "parts/overseer_fc_mount/make.py",
+   "budget_g": 15,
+   "id": "overseer_fc_mount",
+   "group": "printed",
+   "color": "#eef2f5",
+   "pose": {
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   "opacity": 0.8
+  },
+  {
    "name": "FC stack (MicoAir743-Lite on 55A 4-in-1)",
    "role": "bought",
    "protect": true,
@@ -2884,11 +2907,18 @@
    "mass_g": 24.0,
    "tag": "E",
    "owner": "overseer core session",
-   "version": "core v2",
+   "version": "core v2 30 Oct 9 pm: on the FC mount (overseer_fc_mount), 5 mm higher",
    "source": "tools/bought_meshes.py",
    "id": "fc_stack_micoair743_lite_on_55a_4_in_1",
    "group": "bought",
-   "color": "#1c1c1c"
+   "color": "#1c1c1c",
+   "pose": {
+    "t": [
+     0,
+     0,
+     5.0
+    ]
+   }
   },
   {
    "name": "ESC cap",
