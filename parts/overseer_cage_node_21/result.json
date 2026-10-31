@@ -7,7 +7,7 @@
   "specks_plain": 1,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   2128.7
+   2993.5
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -76,41 +76,13 @@
      1.5
     ],
     "mm3": 95.7
-   },
-   {
-    "neck_under_mm": 2.4,
-    "blob_thick_mm": 4.5,
-    "joint_mm2": 33.8,
-    "blob_mm3": 19.3,
-    "at": [
-     -257.3,
-     -14.1,
-     46.1
-    ],
-    "kind": "neck",
-    "thin_wall_mm": 1.5,
-    "neck_over_mm": 1.8
-   },
-   {
-    "neck_under_mm": 2.4,
-    "blob_thick_mm": 4.5,
-    "joint_mm2": 32.9,
-    "blob_mm3": 19.5,
-    "at": [
-     -257.3,
-     14.1,
-     46.1
-    ],
-    "kind": "neck",
-    "thin_wall_mm": 1.5,
-    "neck_over_mm": 1.8
    }
   ],
   "acute_edges": 4,
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 912.8,
+  "skin_mm3": 1310.2,
   "skin_missing_mm3": 23.78,
   "in_cuts_mm3": -0.0,
   "outside_env_mm3": 0.0,
@@ -121,151 +93,157 @@
    {
     "case": "frame camera rod 20 axial 9 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.01,
-    "across": 0.011,
+    "inlayer": 0.006,
+    "across": 0.007,
     "at": [
-     -241.0,
-     4.5,
-     44.3
+     -239.0,
+     -3.5,
+     47.3
     ]
    },
    {
     "case": "frame camera rod 20 side 0.6 N",
     "cls": "crash",
     "inlayer": 0.001,
-    "across": 0.002,
+    "across": 0.001,
     "at": [
-     -238.0,
+     -239.0,
      4.5,
-     44.3
+     45.3
     ]
    },
    {
     "case": "camera flight 4 g",
     "cls": "flight",
-    "inlayer": 0.028,
-    "across": 0.021,
+    "inlayer": 0.006,
+    "across": 0.016,
     "at": [
-     -256.0,
-     -14.5,
-     44.3
+     -241.0,
+     12.5,
+     26.3
     ]
    },
    {
     "case": "camera landing 6 g",
     "cls": "flight",
-    "inlayer": 0.042,
-    "across": 0.031,
+    "inlayer": 0.009,
+    "across": 0.023,
     "at": [
-     -256.0,
-     -14.5,
-     44.3
+     -241.0,
+     12.5,
+     26.3
     ]
    },
    {
     "case": "camera crash 35 g +x",
     "cls": "crash",
-    "inlayer": 0.039,
-    "across": 0.063,
+    "inlayer": 0.032,
+    "across": 0.049,
     "at": [
      -238.0,
-     8.5,
-     34.3
+     7.5,
+     36.3
     ]
    },
    {
     "case": "camera crash 35 g -x",
     "cls": "crash",
-    "inlayer": 0.039,
-    "across": 0.055,
+    "inlayer": 0.032,
+    "across": 0.045,
     "at": [
-     -244.0,
-     7.5,
-     33.3
+     -245.0,
+     6.5,
+     37.3
     ]
    },
    {
     "case": "camera crash 35 g +y",
     "cls": "crash",
-    "inlayer": 0.081,
-    "across": 0.044,
+    "inlayer": 0.019,
+    "across": 0.037,
     "at": [
-     -255.0,
-     13.5,
-     45.3
+     -240.0,
+     -11.5,
+     25.3
     ]
    },
    {
     "case": "camera crash 35 g -y",
     "cls": "crash",
-    "inlayer": 0.081,
-    "across": 0.044,
+    "inlayer": 0.019,
+    "across": 0.039,
     "at": [
-     -255.0,
-     13.5,
-     45.3
+     -240.0,
+     11.5,
+     25.3
     ]
    },
    {
     "case": "camera crash 35 g +z",
     "cls": "crash",
-    "inlayer": 0.068,
-    "across": 0.05,
+    "inlayer": 0.015,
+    "across": 0.038,
     "at": [
-     -256.0,
-     -14.5,
-     44.3
+     -241.0,
+     12.5,
+     26.3
     ]
    },
    {
     "case": "camera crash 35 g -z",
     "cls": "crash",
-    "inlayer": 0.068,
-    "across": 0.064,
+    "inlayer": 0.015,
+    "across": 0.016,
     "at": [
-     -256.0,
-     -14.5,
-     44.3
+     -239.0,
+     6.5,
+     34.3
     ]
    }
   ],
-  "worst": 0.081,
-  "worst_case": "camera crash 35 g +y",
+  "worst": 0.049,
+  "worst_case": "camera crash 35 g +x",
   "worst_at": [
-   -255.0,
-   13.5,
-   45.3
+   -238.0,
+   7.5,
+   36.3
   ]
  },
- "mass_g": 6.14,
+ "mass_g": 7.84,
  "watertight": true,
  "export": {
-  "faces_in": 62736,
+  "faces_in": 68186,
   "degenerate": 0,
   "folded": 6,
-  "caps_split": 6,
+  "caps_split": 5,
   "caps_left": 6,
-  "dropped_shells": [],
-  "n_dropped_shells": 0,
+  "dropped_shells": [
+   {
+    "faces": 14,
+    "mm3": 0.0,
+    "closed": true
+   }
+  ],
+  "n_dropped_shells": 1,
   "bodies": 1,
-  "faces": 62730,
+  "faces": 68166,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 720,
+   "degenerate": 740,
    "folded": 387,
-   "caps_split": 226,
-   "caps_left": 44,
+   "caps_split": 225,
+   "caps_left": 42,
    "watertight": true,
-   "faces": 77584
+   "faces": 89748
   },
-  "volume_mm3": 4838.6,
-  "exact_mm3": 4838.0
+  "volume_mm3": 6177.1,
+  "exact_mm3": 6176.5
  },
  "bodies": {
-  "bodies_raw": 23,
+  "bodies_raw": 25,
   "dropped_specks_mm3": [
    0.0,
    0.0,
@@ -288,20 +266,27 @@
    0.0,
    0.0,
    0.0,
+   0.0,
+   2.13,
    0.0
   ],
   "cavities_mm3": [],
   "bodies": 31
  },
- "volume_mm3": 4838.0,
- "drawn_g": 3.38,
+ "volume_mm3": 6176.5,
+ "drawn_g": 4.42,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
   "specks_mm3": [
+   0.156,
    0.078,
    0.062,
+   0.062,
+   0.031,
+   0.016,
+   0.016,
    0.016
   ],
   "slivers": [],
@@ -328,13 +313,23 @@
    },
    {
     "at": [
+     -245.8,
+     -9.8,
+     35.5
+    ],
+    "thick_mm": 1.5,
+    "core_mm3": 4.38,
+    "mm3": 120.4
+   },
+   {
+    "at": [
      -243.3,
      -14.0,
      21.5
     ],
     "thick_mm": 1.5,
     "core_mm3": 56.61,
-    "mm3": 119.1
+    "mm3": 120.4
    },
    {
     "at": [
@@ -344,15 +339,15 @@
     ],
     "thick_mm": 1.5,
     "core_mm3": 56.55,
-    "mm3": 133.2
+    "mm3": 142.3
    }
   ],
-  "removed_mm3": 0.0,
-  "specks": 3
+  "removed_mm3": 0.24,
+  "specks": 8
  },
  "stl": "overseer_cage_node_21.stl",
  "view_stl": "overseer_cage_node_21_view.stl",
- "view_faces": 62730,
+ "view_faces": 68166,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -401,6 +396,8 @@
    "auto_sym": true,
    "near_sym": true,
    "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
    "checkpoint_every": 10
@@ -415,15 +412,15 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.03559625447535114,
-  "nd": 58096,
+  "volfrac": 0.0448339676664688,
+  "nd": 57278,
   "sym_axes": [
    1
   ],
   "n_real": 10,
-  "n_ties": 42,
+  "n_ties": 18,
   "backend": "direct",
-  "iterations": 137,
+  "iterations": 57,
   "stopped": "grey"
  },
  "grid": {
@@ -440,8 +437,8 @@
    9.8439
   ],
   "cells": 175616,
-  "design": 58028,
-  "drawn": 2653,
+  "design": 57210,
+  "drawn": 3471,
   "cases": [
    "frame camera rod 20 axial 9 N (pull-out)",
    "frame camera rod 20 side 0.6 N",
@@ -458,49 +455,33 @@
    "default"
   ]
  },
- "build_s": 51.5,
- "layout_s": 8963,
- "peak_gb": 4.691624,
- "gen_cm3": 2.0,
+ "build_s": 36.7,
+ "layout_s": 1068,
+ "peak_gb": 4.182716,
+ "gen_cm3": 2.5,
  "h": 1.0,
  "audit": {
-  "drawn_share": 0.044,
+  "drawn_share": 0.057,
   "bodies": [
    {
     "id": 1,
-    "cells": 818,
-    "inscribed_mm": 3.5,
+    "cells": 2451,
+    "inscribed_mm": 5.0,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
-    "room": 0.7,
+    "room": 0.71,
     "room_depth_mm": 42.0,
     "at": [
-     -251.6,
-     -12.2,
-     43.7
+     -252.9,
+     -0.0,
+     45.2
     ],
-    "core_mm": 2.5,
-    "share_of_drawn": 0.31
+    "core_mm": 3.9,
+    "share_of_drawn": 0.71
    },
    {
     "id": 2,
-    "cells": 815,
-    "inscribed_mm": 3.5,
-    "touches_cut": true,
-    "touches_support": true,
-    "loaded": true,
-    "room": 0.7,
-    "room_depth_mm": 42.0,
-    "at": [
-     -251.6,
-     12.2,
-     43.8
-    ],
-    "core_mm": 2.5
-   },
-   {
-    "id": 3,
     "cells": 201,
     "inscribed_mm": 3.5,
     "touches_cut": true,
@@ -516,7 +497,7 @@
     "core_mm": 1.8
    },
    {
-    "id": 4,
+    "id": 3,
     "cells": 193,
     "inscribed_mm": 3.5,
     "touches_cut": true,
@@ -532,14 +513,14 @@
     "core_mm": 1.8
    },
    {
-    "id": 5,
+    "id": 4,
     "cells": 626,
     "inscribed_mm": 3.0,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
-    "room": 0.98,
-    "room_depth_mm": 38.0,
+    "room": 0.97,
+    "room_depth_mm": 37.0,
     "at": [
      -234.3,
      0.0,
@@ -559,14 +540,12 @@
   "supports": 1,
   "fails": []
  },
+ "early": null,
  "baseline": null,
- "total_s": 9015,
- "part_sha": "e2d3db871013",
+ "total_s": 1104,
+ "part_sha": "7f3dbcc45073",
  "lib_sha": "15c5499fc866",
+ "setup_sha": "515aab9740d26d17",
  "max_worst": 0.5,
- "strength_ok": true,
- "regate": {
-  "at": "2026-10-30 08:41",
-  "note": "gate rerun on the existing mesh with the current gate; nothing cut or re-solved"
- }
+ "strength_ok": true
 }
