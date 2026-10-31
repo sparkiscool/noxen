@@ -47,6 +47,9 @@ def camera(c, ms):
         cones.append(cone(q, -F, 0.0, BOSS_L, BOSS_R, BOSS_BASE_R))                # standoff cone behind the board
         cuts.append(along(q, F, -5.7, 1.0, 1.6))                                 # insert hole O3.2 x 5.7 from the board face
     drawn += cones; POSTS[:] = cones                                                 # declared thin_ok to the gate (1.2 wall)
+    # 30 Oct 10 pm (Spark: the top two standoffs hang on a tiny amount of material): a drawn bar 5 deep joins the roots of the
+    # two top posts behind the plug zone (s -13..-8, the plugs are 0..-8), 5.6 tall, across both posts, so the body grows into a bar
+    drawn.append(fbox(base, F, RT, UP, (-BOSS_L - 3.0, -PLUG_BACK), (-CAM_SQ - BOSS_R, CAM_SQ + BOSS_R), (CAM_SQ - BOSS_R, CAM_SQ + BOSS_R)))
     cuts.append(fbox(base, F, RT, UP, (0.0, 25.0), (-22.0, 22.0), (-22.0, 22.0)))  # board + body (38 x 38 + clearance), nothing grows there
     cuts.append(fbox(base, F, RT, UP, (-PLUG_BACK, 0.0), (-19.0, 19.0), (-19.0, 19.0)) - U(cones))   # the plugs behind the board
     # (29 Oct: the drawn 38 x 38 frame joining the bosses is gone, 2 g; the topology joins them, as everywhere else)
@@ -75,6 +78,6 @@ def setup(h):
     return p
 
 
-SPEC = dict(h=1.0, gen_cm3=2.0, max_worst=0.5, settings=dict(near_sym=True))   # near_sym: mirrored but for 0.4 % (29 Oct)      # as light as it goes (Spark 28 Oct); 2.5 gave 8.7 g at index 0.09 on 100 N rod estimates, the frame
+SPEC = dict(h=1.0, gen_cm3=2.5, max_worst=0.5, settings=dict(near_sym=True))   # 2.0 -> 2.5 with the top post bar (30 Oct 10 pm)   # near_sym: mirrored but for 0.4 % (29 Oct)      # as light as it goes (Spark 28 Oct); 2.5 gave 8.7 g at index 0.09 on 100 N rod estimates, the frame
 #   model (29 Oct) puts 13 N on the rods: O7.6 bosses and no drawn frame (Spark 29 Oct: "not very optimised"); 1.2 gave 4.1 g with two bosses
 #   standing proud of the body (their cores off at the gate) and a 3 mm neck: 2.0 so the body envelops the bosses
