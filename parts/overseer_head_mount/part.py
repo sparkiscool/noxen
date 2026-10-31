@@ -14,7 +14,7 @@ from parts.cage_node_lib import socket_cuts, collar_shape, cone, U as UNION
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage.json")))
-SPEC = dict(h=2.5, gen_cm3=60.0, max_worst=0.5, settings=dict(near_sym=True))      # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB
+SPEC = dict(h=2.5, gen_cm3=60.0, max_worst=0.5, settings=dict(near_sym=True))      # v8 (30 Oct 11 pm): L2 keys removed (Spark)   # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB
 #   runner); refine once the shape is accepted. near_sym (29 Oct, Spark: the camera arms came out different left and right): the part
 #   mirrors about y but for the L2's key slot, so the design is held symmetric away from it
 
@@ -171,17 +171,8 @@ def bodies():
         drawn.append(along(q - A * L2_PAD_T, q, L2_PAD_R))
         cuts.append(along(q - A * 80.0, q + A * 1.0, 1.7))
         cuts.append(along(q - A * 80.0, q - A * 5.0, 3.25))
-    # --- L2 positioning keys: small drawn bodies in the slots (they stand 2.0 ahead of the base plane, so the field cut leaves them out)
-    keys = []
-    for k in range(4):
-        phi = np.radians(90.0 * k)
-        rad, tan = np.cos(phi) * CABLE + np.sin(phi) * Y, -np.sin(phi) * CABLE + np.cos(phi) * Y
-        keys.append(fbox(B + KEY_R * rad, A, rad, tan, (-KEY_BACK, KEY_H), (-KEY_L / 2, KEY_L / 2), (-KEY_W / 2, KEY_W / 2)))
-        # gusset (28 Oct, the v6 run split the keys off): a 7 x 7 stem behind the key and a 6 x 6 bar to the nearest bolt pad, one body
-        keys.append(fbox(B + KEY_R * rad, A, rad, tan, (-KEY_BACK - 2.0, -2.0), (-3.5, 3.5), (-3.5, 3.5)))
-        q = min(bolts, key=lambda q: np.linalg.norm(q - (B + KEY_R * rad)))
-        keys.append(along(B + KEY_R * rad - A * (KEY_BACK - 1.0), q - A * (L2_PAD_T - 1.0), 3.0))
-    drawn += keys
+    # (30 Oct 11 pm, Spark: the L2 notches were in the wrong place, right outside the screw holes on the unit; the 4 M3 locate the L2:
+    #  the positioning keys, their stems and bars are gone)
     # --- camera standoffs: 4 cones 10 long behind the board back plane, insert hole O3.2 x 5.7 from the front; the board, its body and
     # the plugs behind it are cuts (29 Oct)
     envs_cam, posts = [], []                                  # posts: the O5.6 / 1.2 wall standoffs, declared thin_ok to the gate
@@ -205,7 +196,7 @@ def bodies():
     # --- L2 field: half ball R 220 ahead of the base plane; cable slot below the L2 flange (the cable leaves the base downward)
     half = fbox(B, A, Y, P, (0.0, FIELD_R + 5), (-FIELD_R - 5, FIELD_R + 5), (-FIELD_R - 5, FIELD_R + 5))
     ball = mf.Manifold.sphere(FIELD_R, 96).translate(list(B))
-    cuts.append((ball ^ half) - U(keys))
+    cuts.append(ball ^ half)
     cuts.append(fbox(B, A, Y, P, (-60.0, 1.0), (-7.0, 7.0), (-120.0, -32.5)))
     # --- envelope: slab behind the base (O80 x 46), camera blocks behind the boards, the head rod seat cylinders, one hull over all
     slab = along(B - A * 46.0, B, 40.0, 48)
