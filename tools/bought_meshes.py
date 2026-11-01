@@ -155,8 +155,8 @@ def l2():
     body = cyl(0, 0, 6.0, 30.0, 36.0, 96)
     band = cyl(0, 0, 18.0, 30.0, 37.0, 96)                                               # the window band, slightly proud
     dome = mf.Manifold.sphere(35.0, 96).translate([0, 0, 30.0]) ^ box(-40, 40, -40, 40, 30.0, 66.0)   # the domed head, top at 65
-    holes = [cyl(25.5 * np.cos(a), 25.5 * np.sin(a), -1, 6.5, 1.6, 24) for a in np.radians((22.5, 112.5, 202.5, 292.5))]
-    notch = box(-40, -30, -5, 5, -1, 8)                                                   # cable notch at the base on local -x (toward the body)
+    holes = [cyl(25.5 * np.cos(a), 25.5 * np.sin(a), -1, 6.5, 1.6, 24) for a in np.radians((0.0, 90.0, 180.0, 270.0))]   # v9 head mount: rolled 22.5, the M3 sit as a diamond
+    notch = rotz(box(30, 40, -5, 5, -1, 8), -22.5)                                       # cable notch on the mount's cable side (down), 22.5 off after the roll
     m = union([flange, body, band, dome]) - union(holes + [notch])
     write("unitree_l2", frame(m, B, ex, ey, Ax))
 

@@ -14,7 +14,7 @@ from parts.cage_node_lib import socket_cuts, collar_shape, cone, U as UNION
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage.json")))
-SPEC = dict(h=2.5, gen_cm3=60.0, max_worst=0.5, settings=dict(near_sym=True))      # v8 (30 Oct 11 pm): L2 keys removed (Spark)   # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB
+SPEC = dict(h=2.5, gen_cm3=60.0, max_worst=0.5, settings=dict(near_sym=True))      # v8 (30 Oct 11 pm): L2 keys removed (Spark); v9 (1 Nov): L2 bolts a diamond, fully mirrored   # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB
 #   runner); refine once the shape is accepted. near_sym (29 Oct, Spark: the camera arms came out different left and right): the part
 #   mirrors about y but for the L2's key slot, so the design is held symmetric away from it
 
@@ -28,8 +28,10 @@ P = np.cross(A, Y); P /= np.linalg.norm(P)                     # up in the base 
 CABLE = -P                                                      # cable notch down (L2 rolled 180, dimensions.md "Sensor head")
 
 # ---- numbers and tags -------------------------------------------------------------------------------------------------
-L2_R_BOLT, L2_ROT = 25.5, 22.5      # Unitree L2: 4 x M3, 6 deep, on a O51 circle, 22.5 deg off the cable axis (dimensions.md, spec P);
-                                    # which side of the cable axis the 22.5 deg goes is E (positive about +y here)
+L2_R_BOLT, L2_ROT = 25.5, 0.0       # Unitree L2: 4 x M3, 6 deep, on a O51 circle, 22.5 deg off its cable axis (dimensions.md, spec P).
+                                    # v9 (1 Nov, Spark: the mount must be fully symmetric): the L2 is rolled 22.5 deg so the 4 M3 sit as a
+                                    # diamond (down, +y, up, -y) and the mount mirrors about y; its cable then leaves 22.5 deg off down
+CABLE_ROLL = 22.5                   # cable slot on one side only (Spark 1 Nov); near_sym holds the rest of the design mirrored
 L2_PAD_R, L2_PAD_T = 8.0, 8.0       # O16 pads (v5 row), 8 deep behind the base plane; M3 hole O3.4, head/driver tunnel O6.5 from 5 behind
 KEY_R, KEY_W, KEY_L, KEY_H, KEY_BACK = 30.0, 3.3, 3.3, 2.0, 6.0   # L2 manual drawing p8 (28 Oct): 4 positioning slots 3.5 wide on a O60 circle at the
                                     # body axes (0/90/180/270 deg from the cable axis): keys 3.5 - 0.2 fit = 3.3 wide, 3.3 long (radial, E), 2.0 tall
@@ -197,7 +199,8 @@ def bodies():
     half = fbox(B, A, Y, P, (0.0, FIELD_R + 5), (-FIELD_R - 5, FIELD_R + 5), (-FIELD_R - 5, FIELD_R + 5))
     ball = mf.Manifold.sphere(FIELD_R, 96).translate(list(B))
     cuts.append(ball ^ half)
-    cuts.append(fbox(B, A, Y, P, (-60.0, 1.0), (-7.0, 7.0), (-120.0, -32.5)))
+    dn = np.cos(np.radians(-CABLE_ROLL)) * CABLE + np.sin(np.radians(-CABLE_ROLL)) * Y   # v9: the cable leaves 22.5 deg off down (-y side)
+    cuts.append(fbox(B, A, np.cross(A, dn), -dn, (-60.0, 1.0), (-7.0, 7.0), (-120.0, -32.5)))
     # --- envelope: slab behind the base (O80 x 46), camera blocks behind the boards, the head rod seat cylinders, one hull over all
     slab = along(B - A * 46.0, B, 40.0, 48)
     heads = [S[n].pt(S[n].t_floor - 6.0) for n in ("head rod +1", "head rod -1")]
