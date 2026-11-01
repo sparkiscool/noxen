@@ -118,6 +118,35 @@ def note(p, r):
     return f"{p.get('mass_g') or 0:.0f} g ({p.get('tag', 'E')}, layout model)"
 
 
+def rod_segments():
+    """{part id: [(member, p0, p1, cut mm)]} for the rod meshes tools/cage_tubes.py writes (the cage tubes and rods between nodes;
+    the spokes, ties, head rods and arm tubes), node to node with the cut list's length, so a click on the page names the rod."""
+    try:
+        sys.path.insert(0, ROOT)
+        from parts.cage_node_lib import NODES, CAGE
+        cuts = CAGE.get("rod_cuts_mm", {})
+    except Exception as e:
+        print(f"site: no rod picking ({e})"); return {}
+    shell, off = [], []
+    for a, b in CAGE["rods"]:
+        nm = f"tube {a}-{b}"; shell.append((nm, NODES[a], NODES[b], cuts.get(nm, float(np.linalg.norm(NODES[b] - NODES[a])))))
+    for nm, (p, q) in CAGE["links"].items():
+        p, q = np.array(p, float), np.array(q, float)
+        on = np.linalg.norm(NODES - p, axis=1).min() < 0.6 and np.linalg.norm(NODES - q, axis=1).min() < 0.6
+        (shell if on else off).append((nm, p, q, cuts.get(nm, float(np.linalg.norm(q - p)))))
+    for k, L in cuts.items():                                           # the arm tubes (cage_tubes.py: arm 1 and its mirror arm 4)
+        if " tube " in k and k.startswith("arm "):
+            try:
+                from parts.overseer_tube_arm_lib import TubeArm
+                arm = TubeArm("front", 45.0, 0, ["spoke 1.1", "spoke 1.3"], [178.94, 146.7, 8.0], "root")
+                i = ("lo", "hi").index(k.split()[-1]); sg = 1 if k.startswith("arm 1") else -1
+                p, q = arm.tube_points("root")[i] * np.array([1, sg, 1]), arm.tube_points("pad")[i] * np.array([1, sg, 1])
+                off.append((k, p, q, L))
+            except Exception:
+                pass
+    return {"cage_shell_tubes": shell, "spokes_ties_head_rods": off}
+
+
 def artifact_page(a, S, meshes, commit, path):
     """One self-contained page per drone, the look of the system artifact: parts by group and colour, the overlays, a turntable."""
     import math
@@ -129,11 +158,11 @@ def artifact_page(a, S, meshes, commit, path):
         sub += f" of {a['mass_budget_g']} g budget"
     sub += f"; built from {os.environ.get('GITHUB_REPOSITORY', 'sparkiscool/noxen')} @ {commit}"
     s = Scene(S["title"], sub)
-    by_id = {p["id"]: p for p in S["parts"]}
+    by_id = {p["id"]: p for p in S["parts"]}; segs = rod_segments()
     for p in a["parts"]:
         pid = p.get("id") or p["name"]; q = by_id[pid]
         s.part(p["name"], meshes[pid], group=p.get("group", "part"), color=p.get("color"), opacity=p.get("opacity"),
-               printed=p.get("material") in ("PETG", "TPU") and p.get("role") != "bought", note=note(p, q.get("_result")))
+               printed=p.get("material") in ("PETG", "TPU") and p.get("role") != "bought", note=note(p, q.get("_result")), segs=segs.get(pid))
     for nm, m, col, op in overlays(a.get("overlays", {})):
         s.part(nm, m, group="views", color=col, printed=False, opacity=op)
     names = [p["name"] for p in s.parts]

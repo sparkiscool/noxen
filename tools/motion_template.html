@@ -17,6 +17,8 @@ header { grid-area: head; display: flex; justify-content: space-between; align-i
 h1 { margin: 0; font-size: 17px; font-weight: 600; } h1 small { font-weight: 400; color: var(--muted); margin-left: 8px; font-size: 13px; }
 .chip { font: 500 12px/1 var(--mono); padding: 5px 8px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); }
 .stage { grid-area: stage; position: relative; min-height: 320px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.pick { position: absolute; left: 8px; bottom: 8px; max-width: min(360px, calc(100% - 16px)); padding: 8px 10px; font-size: 12px; line-height: 1.4; background: var(--panel); color: var(--fg); border: 1px solid var(--accent); border-radius: 6px; }
+.pick b { font-size: 14px; } .pick .len { font: 600 15px var(--mono); }
 .stage canvas { display: block; width: 100%; height: 100%; }
 .views { position: absolute; top: 10px; left: 10px; display: flex; gap: 4px; flex-wrap: wrap; }
 .views button, .bar button { font: 12px var(--mono); padding: 5px 9px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
@@ -66,6 +68,7 @@ body.rec .stage { border: 0; border-radius: 0; }
   <div class="stage" id="stage">
     <div class="views" id="views"></div>
     <div class="hud" id="hud"></div>
+    <div class="pick" id="pick" hidden></div>
   </div>
   <div class="bar">
     <button type="button" id="play">pause</button>
@@ -95,7 +98,7 @@ const D = JSON.parse(document.getElementById('data').textContent);
 const $ = id => document.getElementById(id);
 $('title').innerHTML = D.title + (D.subtitle ? '<small>' + D.subtitle.replace(/</g, '&lt;') + '</small>' : '');
 $('mass').textContent = D.mass_total ? D.mass_total.toFixed(1) + ' g printed (M; ' + D.material + ' density E)' : 'no printed mass';
-$('note').textContent = 'Masses: mesh volume (M) x ' + (D.material === 'TPU' ? '1.21' : '1.27') + ' g/cm3 solid (E). Bought parts are context. Drag to orbit, wheel to zoom, right-drag to pan.';
+$('note').textContent = 'Masses: mesh volume (M) x ' + (D.material === 'TPU' ? '1.21' : '1.27') + ' g/cm3 solid (E). Bought parts are context. Drag to orbit, wheel to zoom, right-drag to pan. Click a part to name it; a rod shows its cut length.';
 
 // ---------- meshes
 function b64(s) { const b = atob(s); const u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
@@ -236,6 +239,40 @@ function loop(now) {
   last = now; controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
+
+// ---------- click a part: its name and note; on a rod mesh, the rod under the click and its cut length
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), inv = new THREE.Matrix4(); let down = null, hl = null;
+const hlMat = new THREE.MeshBasicMaterial({ color: 0xff7a00, depthTest: false, transparent: true, opacity: 0.9 });
+function nearestSeg(segs, v) {
+  let best = null, bd = 1e9;
+  for (const s of segs) {
+    const a = new THREE.Vector3(s[1], s[2], s[3]), b = new THREE.Vector3(s[4], s[5], s[6]), ab = b.clone().sub(a);
+    const t = Math.max(0, Math.min(1, v.clone().sub(a).dot(ab) / ab.lengthSq())); const d = a.add(ab.multiplyScalar(t)).distanceTo(v);
+    if (d < bd) { bd = d; best = s; }
+  }
+  return best;
+}
+function pick(ev) {
+  const r = renderer.domElement.getBoundingClientRect();
+  ndc.set((ev.clientX - r.left) / r.width * 2 - 1, -(ev.clientY - r.top) / r.height * 2 + 1); ray.setFromCamera(ndc, camera);
+  const vis = Object.values(objs).filter(o => o.mesh.visible && !(o.part.group === 'views')).map(o => o.mesh);
+  const hit = ray.intersectObjects(vis, false)[0]; const box = $('pick');
+  if (hl) { hl.parent.remove(hl); hl = null; }
+  if (!hit) { box.hidden = true; return; }
+  const o = Object.values(objs).find(o => o.mesh === hit.object), p = o.part; let html;
+  if (p.segs && p.segs.length) {
+    const s = nearestSeg(p.segs, hit.point.clone().applyMatrix4(inv.copy(o.mesh.matrixWorld).invert()));
+    const a = new THREE.Vector3(s[1], s[2], s[3]), b = new THREE.Vector3(s[4], s[5], s[6]);
+    hl = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, a.distanceTo(b), 12), hlMat); hl.renderOrder = 9;
+    hl.position.copy(a.clone().add(b).multiplyScalar(0.5)); hl.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+    o.mesh.add(hl);
+    html = '<b>' + s[0] + '</b> <span class="note">(' + p.name + ')</span><br><span class="len">cut ' + s[7].toFixed(1) + ' mm = ' + (s[7] / 25.4).toFixed(2) + ' in</span>';
+  } else html = '<b>' + p.name + '</b> <span class="note">(' + p.group + ')</span>' + (p.note ? '<br>' + p.note.replace(/</g, '&lt;') : '');
+  box.innerHTML = html; box.hidden = false; playing = false; $('play').textContent = 'play';
+}
+renderer.domElement.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
+renderer.domElement.addEventListener('pointerup', e => { if (down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) < 5) pick(e); down = null; });
+$('pick').onclick = () => { $('pick').hidden = true; if (hl) { hl.parent.remove(hl); hl = null; } };
 
 // ---------- headless hooks
 window.__motion = { ready: true, n: N,
