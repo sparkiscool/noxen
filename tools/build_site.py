@@ -124,7 +124,7 @@ def rod_segments():
     try:
         sys.path.insert(0, ROOT)
         from parts.cage_node_lib import NODES, CAGE
-        cuts = CAGE.get("rod_cuts_mm", {})
+        cuts = CAGE.get("rod_cuts_mm", {}); was = CAGE.get("rod_cuts_was_mm", {})   # recut members: drawn red with the old length
     except Exception as e:
         print(f"site: no rod picking ({e})"); return {}
     shell, off = [], []
@@ -144,7 +144,7 @@ def rod_segments():
                 off.append((k, p, q, L))
             except Exception:
                 pass
-    return {"cage_shell_tubes": shell, "spokes_ties_head_rods": off}
+    return {k: [(*m, was.get(m[0])) for m in v] for k, v in {"cage_shell_tubes": shell, "spokes_ties_head_rods": off}.items()}
 
 
 def artifact_page(a, S, meshes, commit, path):

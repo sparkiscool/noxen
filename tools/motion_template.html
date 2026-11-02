@@ -18,6 +18,7 @@ h1 { margin: 0; font-size: 17px; font-weight: 600; } h1 small { font-weight: 400
 .chip { font: 500 12px/1 var(--mono); padding: 5px 8px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); }
 .stage { grid-area: stage; position: relative; min-height: 320px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
 .pick { position: absolute; left: 8px; bottom: 8px; max-width: min(360px, calc(100% - 16px)); padding: 8px 10px; font-size: 12px; line-height: 1.4; background: var(--panel); color: var(--fg); border: 1px solid var(--accent); border-radius: 6px; }
+.pick.recut { left: auto; right: 8px; top: 44px; bottom: auto; border-color: #d62828; } .pick .red { color: #d62828; }
 .pick b { font-size: 14px; } .pick .len { font: 600 15px var(--mono); }
 .stage canvas { display: block; width: 100%; height: 100%; }
 .views { position: absolute; top: 10px; left: 10px; display: flex; gap: 4px; flex-wrap: wrap; }
@@ -69,6 +70,7 @@ body.rec .stage { border: 0; border-radius: 0; }
     <div class="views" id="views"></div>
     <div class="hud" id="hud"></div>
     <div class="pick" id="pick" hidden></div>
+    <div class="pick recut" id="recut" hidden></div>
   </div>
   <div class="bar">
     <button type="button" id="play">pause</button>
@@ -266,10 +268,19 @@ function pick(ev) {
     hl = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, a.distanceTo(b), 12), hlMat); hl.renderOrder = 9;
     hl.position.copy(a.clone().add(b).multiplyScalar(0.5)); hl.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
     o.mesh.add(hl);
-    html = '<b>' + s[0] + '</b> <span class="note">(' + p.name + ')</span><br><span class="len">cut ' + s[7].toFixed(1) + ' mm = ' + (s[7] / 25.4).toFixed(2) + ' in</span>';
+    html = '<b>' + s[0] + '</b> <span class="note">(' + p.name + ')</span><br><span class="len">cut ' + s[7].toFixed(1) + ' mm = ' + (s[7] / 25.4).toFixed(2) + ' in</span>' + (s[8] != null ? '<br><span class="red">recut, was ' + s[8].toFixed(1) + ' mm = ' + (s[8] / 25.4).toFixed(2) + ' in</span>' : '');
   } else html = '<b>' + p.name + '</b> <span class="note">(' + p.group + ')</span>' + (p.note ? '<br>' + p.note.replace(/</g, '&lt;') : '');
   box.innerHTML = html; box.hidden = false; playing = false; $('play').textContent = 'play';
 }
+// recut members (a 9th seg field, the old length): always drawn red, listed with old and new length
+const redMat = new THREE.MeshBasicMaterial({ color: 0xd62828 }); const recut = [];
+for (const o of Object.values(objs)) for (const s of (o.part.segs || [])) if (s[8] != null) {
+  const a = new THREE.Vector3(s[1], s[2], s[3]), b = new THREE.Vector3(s[4], s[5], s[6]);
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, a.distanceTo(b), 12), redMat);
+  m.position.copy(a.clone().add(b).multiplyScalar(0.5)); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+  o.mesh.add(m); recut.push(s);
+}
+if (recut.length) { $('recut').innerHTML = '<b class="red">recut (' + recut.length + ')</b>' + recut.map(s => '<br>' + s[0] + ': <b>' + s[7].toFixed(1) + ' mm = ' + (s[7] / 25.4).toFixed(2) + ' in</b> <span class="note">(was ' + s[8].toFixed(1) + ' = ' + (s[8] / 25.4).toFixed(2) + ' in)</span>').join(''); $('recut').hidden = false; }
 renderer.domElement.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
 renderer.domElement.addEventListener('pointerup', e => { if (down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) < 5) pick(e); down = null; });
 $('pick').onclick = () => { $('pick').hidden = true; if (hl) { hl.parent.remove(hl); hl = null; } };

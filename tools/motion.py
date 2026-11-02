@@ -84,9 +84,9 @@ class Scene:
 
     def part(self, name, mesh, group="part", color=None, printed=True, faces=30000, note="", opacity=None, segs=None):
         """mesh: trimesh in world coords at the identity pose. Same mesh object under several names is embedded once.
-        segs: [(member, p0, p1, cut_mm)] for a mesh of many rods, so a click on the page names the rod and its cut length."""
+        segs: [(member, p0, p1, cut_mm[, old_mm])] for a mesh of many rods, so a click on the page names the rod and its cut length."""
         self.parts.append(dict(name=name, mesh=mesh, group=group, color=color, printed=printed, faces=faces, note=note, opacity=opacity,
-                               segs=[[n, *map(lambda v: round(float(v), 2), (*a, *b)), round(float(L), 1)] for n, a, b, L in (segs or [])]))
+                               segs=[[n, *map(lambda v: round(float(v), 2), (*a, *b)), round(float(L), 1), *w] for n, a, b, L, *w in (segs or [])]))
         return self
 
     def timeline(self, poses, duration_s, fps=30):
