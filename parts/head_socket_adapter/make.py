@@ -1,4 +1,5 @@
-"""Head socket adapter (Spark 2 Nov): a 3 mm carbon rod into one of the head mount's 6.2 x 15 tube sockets (tubes 15/16/18/19-17,
+"""Head socket adapter (Spark 2 Nov: for tube 16-17 and its mirror 15-17, built as 3 mm rods; 4 needed, one in each end, the head
+mount and nodes 15 / 16 both have 6.2 x 15 tube sockets): a 3 mm carbon rod into a 6.2 x 15 tube socket (tubes 15/16/18/19-17,
 head rods +1 / -1; parts/overseer_head_mount/part.py Sock). Drawn only, no topology run: python parts/head_socket_adapter/make.py
 writes part.stl (one adapter; set the copies in the slicer). Each: a sleeve O6.0 x 15 (the socket's depth; 0.1 glue gap a side in the 6.2
 bore) and a collar O10 x 4 that sits on the socket mouth, bore O3.2 right through (the 3 mm rod socket bore, cage_node_lib link),
