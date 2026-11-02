@@ -7,6 +7,13 @@ import json, os, sys
 import numpy as np, trimesh
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); sys.path.insert(0, ROOT)
 from parts.cage_node_lib import SOCKET_START, NODES, CAGE, KIND
+# node 17 is the head mount (parts/overseer_head_mount), not a cage node print: its bores bottom at its own floor, so the members
+# into it start there (2 Nov, Spark: the front rods looked short; the 4 tubes were cut 11.4 short and core tie front.2 7.2)
+import importlib.util as _il
+_sp = _il.spec_from_file_location("_head_mount", os.path.join(ROOT, "parts", "overseer_head_mount", "part.py")); _hm = _il.module_from_spec(_sp); _sp.loader.exec_module(_hm)
+for _nm, _s in _hm.sockets().items():
+    if _s.t_mouth:                                                  # the node-17 sockets (the head rods' mouths are at their link ends)
+        SOCKET_START[(17, _nm)] = _s.t_mouth - _s.depth
 
 out, cuts = [], {}
 for a, b in CAGE["rods"]:
