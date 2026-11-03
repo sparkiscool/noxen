@@ -29,8 +29,8 @@ BEAM_Y = 209.0                                    # the beams reach the side she
 NOSE_BEAM = (112.0, 124.0, 150.0 - ZW, 162.0 - ZW)   # seat x, W Z 150..162: 8 under the Overseer's nose diagonals (bottom 170), outside the pack sweep (Y 279..291)
 TAIL_BEAM = (-121.0, -109.0, 155.0 - ZW, 163.0 - ZW)  # seat x, W Z 155..163 in the rails' band (tips 151): 4 over them, 7 under the Overseer's tail diagonals
 END_PAD_Y = 200.0                                 # the beam ends drop to the sheet tops (W Z 145) over |y| 200..209
-BUTTRESS_TOP = -14.0                              # the slab from the tail beam up behind the tail wall (its outer face at seat x -115 is at h 30)
-CORNER_Y = 44.0                                   # the x walls' top corners (h 28..40) stop at |y| 44 (48 was grazed 23 mm3 by an Overseer tube at its +x+y capture limit at h 30): the Overseer's loop diagonals pass clear of them at its capture limits; the receiver still bears on them over |y| <= 48
+BUTTRESS_TOP, BUTTRESS_Y = -14.0, 40.0            # the slab from the tail beam up behind the tail wall (its outer face at seat x -115 is at h 30), |y| 40: at 48 an Overseer tube grazed its top corner (23 mm3) at the +x+y capture limit, h 30
+CORNER_Y = 48.0                                   # the x walls' top corners (h 28..40) stop at |y| 48: the Overseer's loop diagonals pass 15 outside them at its capture limits at its capture limits; the receiver still bears on them over |y| <= 48
 LEG_Y = 40.0                                       # the nose legs stand on the nose beam under the nose wall's end (|y| 40)      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
 
@@ -63,7 +63,7 @@ def funnel():
     for b in (NOSE_BEAM, TAIL_BEAM):                                                                                           # the beam ends sit on the sheet tops
         for sy in (-1, 1):
             legs.append(box(b[0], b[1], min(sy * END_PAD_Y, sy * BEAM_Y), max(sy * END_PAD_Y, sy * BEAM_Y), 145.0 - ZW, b[2]))
-    legs.append(box(TAIL_BEAM[0], TAIL_BEAM[1], -48.0, 48.0, TAIL_BEAM[3], BUTTRESS_TOP))                                     # the buttress from the tail beam up behind the tail wall
+    legs.append(box(TAIL_BEAM[0], TAIL_BEAM[1], -BUTTRESS_Y, BUTTRESS_Y, TAIL_BEAM[3], BUTTRESS_TOP))                                     # the buttress from the tail beam up behind the tail wall
     hole = box(*HOLE, z0 - SKIRT - 8.0, z0 + H_X + 2.0)
     corner_cut = [box(x0 - 200, x1 + 200, s_ * CORNER_Y, s_ * 300, z0 + H_Y, z0 + H_X + 2) if s_ > 0 else box(x0 - 200, x1 + 200, -300, -CORNER_Y, z0 + H_Y, z0 + H_X + 2) for s_ in (-1, 1)]
     body = (outer - top_cut - mf.Manifold.batch_boolean(corner_cut, mf.OpType.Add)) + mf.Manifold.batch_boolean(rim + [skirt] + legs, mf.OpType.Add)
