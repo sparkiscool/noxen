@@ -86,7 +86,9 @@ def main(src):
         parts.append(dict(id=pid, name=name, role="bought", group="Overseer", color="#aab4be", mesh=mesh, pose=None, material=None,
                           opacity=0.3, tag="C", owner="overseer", version="systems/overseer.assembly.json, current parts merged",
                           source="tools/import_xswap.py", note=f"{len(ms)} parts of the Overseer page, as context"))
-    a = dict(name="xswap short lock", title="xswap Short Lock in the Overseer", readme_view="iso", artifact=None, machine="overseer",
+    a = dict(name="xswap short lock", title="xswap Short Lock in the Overseer", readme_view="lock", artifact=None, machine="overseer",
+             views={"lock": dict(eye=[270, -330, 110], target=[-20, 0, -70]), "lock side": dict(eye=[-20, -420, -60], target=[-20, 0, -70]),
+                    "lock under": dict(eye=[200, -260, -330], target=[-20, 0, -80])},
              note=("The xswap short lock v5 on the Overseer's 4 base inserts, one swap cycle from the lock's CAD: the pincer rises, "
                    "the fingers close and swing both gate bars open, the tabs drop into their seats, the rail pulls the shell off the "
                    "XT60 and the guide poles, the carriage flips, then the reverse puts a pack back. Drone frame (x nose, y left, z up, z 0 "

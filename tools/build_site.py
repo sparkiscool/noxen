@@ -186,6 +186,8 @@ def artifact_page(a, S, meshes, commit, path):
                         ("top", (60, 0, 1300), (60, 0, 0)), ("under", (300, -300, -900), (0, 0, -50))):
         at_k = c + k * (np.array(at, float) - np.array([60, 0, 20]))
         s.view(nm, tuple(np.round(at_k + k * (np.array(eye, float) - np.array(at, float)), 1)), tuple(np.round(at_k, 1)))
+    for nm, v in (a.get("views") or {}).items():                                    # the assembly's own close-ups: {"name": {"eye": [..], "target": [..]}}
+        s.view(nm, tuple(v["eye"]), tuple(v.get("target", (0, 0, 0))))
     s.write(path)
 
 
