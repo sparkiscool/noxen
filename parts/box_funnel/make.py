@@ -24,7 +24,7 @@ CX = 1.5                                          # the receiver centre x (the c
 SEAT = (CX - 92.0, CX + 92.0, -33.4, 33.4)        # the Overseer receiver v2 outline (E) = the Scout's belly skirt
 HOLE = (CX - 85.0, CX + 85.0, -25.0, 25.0)        # both cartridges and the swap head pass (Overseer cartridge width CHECK)
 RIM, LEG, LEG_BOTTOM = 0.0, 12.0, -70.3           # legs to the enclosure's top edge, W Z 145 (under the rail tips, r 151, and the Overseer's feet at 155)
-SIDE_LEG_X, SIDE_LEG_Y, SKIRT = 70.0, 80.0, 8.0    # side legs at seat (+-70, +-80) = W Y 97 / 237, X +-80: outside the rails' band (Y 38..73) and the pack sweep over the grip lane (Y 114..210); skirt 8: its underside 12 over the rail tips
+SIDE_LEG_X, SIDE_LEG_Y, SKIRT = 40.0, 80.0, 8.0    # side legs at seat (+-40, +-80) = W Y 127 / 207, X +-80: 16 clear of the Overseer's loop side tubes at its +-20 y capture (at x 70 its loop nodes grazed them), r 165.6 at the enclosure top vs the parked pack's sweep 164 (the head turns retracted, so more in use); skirt 8: its underside 12 over the rail tips
 CORNER_Y = 48.0                                   # the x walls' top corners (h 28..40) stop at |y| 48: the Overseer's loop diagonals pass 15 outside them at its capture limits; the receiver still bears on them over |y| <= 48
 LEG_Y = 40.0                                       # the nose legs under the nose wall's end (seat x +118 = W Y 285, |y| 40); no tail legs: the tail end stands over the rails' band      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
