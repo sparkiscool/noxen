@@ -76,9 +76,9 @@ def setup(h):
     drawn, cuts, env, R = bodies()
     p = Part("overseer_battery_holder", h, drawn, cuts, env, build="+z", material="PETG")
     p.support("default", U([cyl(x, y, Z_MOUNT - 0.6, Z_MOUNT + 0.5, PAD_R + 0.5) for x, y in BOLTS]))
-    e = 0.6                                                             # contact layers: the face of each drawn pad on the pack
+    e = PAD + 1.5                                                       # contact regions: each drawn pad and 1.5 behind it (a 0.6 layer is empty at a coarse h)
     reg = {"-z": U([box(x - 8, x + 8, s0, s1, ZB - e, ZB) for x in (-75.0, 35.0) for s0, s1 in ((7.0, 23.0), (-23.0, -7.0))]),
-           "+z": U([cyl(x, y, Z_MOUNT - PAD_T - 0.01, Z_MOUNT - PAD_T + e, PAD_R) for x, y in BOLTS]),
+           "+z": U([cyl(x, y, Z_MOUNT - PAD_T - 0.01, Z_MOUNT - PAD_T + 2.0, PAD_R) for x, y in BOLTS]),
            "+y": U([box(x - 8, x + 8, YW, YW + e, PACK_CG[2] - 8, PACK_CG[2] + 8) for x in (-75.0, 35.0)]),
            "-y": U([box(x - 8, x + 8, -YW - e, -YW, PACK_CG[2] - 8, PACK_CG[2] + 8) for x in (-75.0, 35.0)]),
            "+x": box(X1, X1 + e, -10.0, 10.0, PACK_CG[2] - 10, PACK_CG[2] + 10),
