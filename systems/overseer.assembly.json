@@ -3151,6 +3151,40 @@
    "source": "tools/bought_meshes.py",
    "mesh": "parts/camera_rear/part.stl",
    "version": "mesh 30 Oct: the DECXIN body on node 21, looking back and 40 deg down (tools/bought_meshes.py); was an axis-aligned box"
+  },
+  {
+   "name": "battery holder (Zeee 4S 5200)",
+   "role": "structure",
+   "material": "PETG",
+   "mass_g": 28.0,
+   "cg": [
+    -20.0,
+    0.0,
+    -39.0
+   ],
+   "tag": "E",
+   "owner": "overseer",
+   "version": "v1 setup (3 Nov, Spark): on the base's 4 M3 inserts, pack slides in from the tail, snap tab, no strap; run pending",
+   "source": "parts/overseer_battery_holder/part.py",
+   "id": "overseer_battery_holder",
+   "group": "printed",
+   "color": "#eef2f5",
+   "box": [
+    -93.5,
+    56.5,
+    -32,
+    32,
+    -71.6,
+    -8.1
+   ],
+   "pose": {
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   "opacity": 0.8
   }
  ],
  "mass_budget_g": 2200,
