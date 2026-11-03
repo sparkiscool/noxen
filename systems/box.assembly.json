@@ -1,0 +1,2742 @@
+{
+"name": "Nox Ground Unit",
+"title": "Nox Ground Unit",
+"readme_view": "iso",
+"artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
+"machine": "box",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 155.3), nox/box/catch_system.py SEAT_TO_W). In: the swap arm v7 at park with its 9 bay receivers and two packs, the stand of the built demo, the v2 enclosure sheets and PSU as boxes, the funnel drawn 3 Nov on the latch footprint, the Scout's receiver and cartridge seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
+"cg_ref": null,
+"parts": [
+{
+"id": "box_arm_hub",
+"name": "arm: hub",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_hub/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "hub v7 (topo)"
+},
+{
+"id": "box_arm_stub",
+"name": "arm: stub",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_stub/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "stub axle v3"
+},
+{
+"id": "box_arm_stub_bolts",
+"name": "arm: stub_bolts",
+"role": "bought",
+"group": "arm drives",
+"color": "#9a9a9a",
+"mesh": "parts/box_arm_stub_bolts/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 8.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "stub M5 button heads x4"
+},
+{
+"id": "box_arm_post",
+"name": "arm: post",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_post/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "sun post (fixed)"
+},
+{
+"id": "box_arm_motor_a",
+"name": "arm: motor_A",
+"role": "bought",
+"group": "arm drives",
+"color": "#555555",
+"mesh": "parts/box_arm_motor_a/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 400.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "NEMA17 A"
+},
+{
+"id": "box_arm_shaft_a",
+"name": "arm: shaft_A",
+"role": "bought",
+"group": "arm drives",
+"color": "#9a9a9a",
+"mesh": "parts/box_arm_shaft_a/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 0.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "shaft A"
+},
+{
+"id": "box_arm_motor_b",
+"name": "arm: motor_B",
+"role": "bought",
+"group": "arm drives",
+"color": "#555555",
+"mesh": "parts/box_arm_motor_b/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 400.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "NEMA17 B"
+},
+{
+"id": "box_arm_shaft_b",
+"name": "arm: shaft_B",
+"role": "bought",
+"group": "arm drives",
+"color": "#9a9a9a",
+"mesh": "parts/box_arm_shaft_b/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 0.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "shaft B"
+},
+{
+"id": "box_arm_motor_axle",
+"name": "arm: motor_axle",
+"role": "bought",
+"group": "arm drives",
+"color": "#555555",
+"mesh": "parts/box_arm_motor_axle/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 400.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "NEMA17 axle"
+},
+{
+"id": "box_arm_shaft_axle",
+"name": "arm: shaft_axle",
+"role": "bought",
+"group": "arm drives",
+"color": "#9a9a9a",
+"mesh": "parts/box_arm_shaft_axle/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 0.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "shaft axle"
+},
+{
+"id": "box_arm_p20_axle",
+"name": "arm: p20_axle",
+"role": "bought",
+"group": "arm drives",
+"color": "#777777",
+"mesh": "parts/box_arm_p20_axle/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 8.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "20T axle"
+},
+{
+"id": "box_arm_p80",
+"name": "arm: p80",
+"role": "bought",
+"group": "arm drives",
+"color": "#777777",
+"mesh": "parts/box_arm_p80/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 30.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "80T sun (fixed)"
+},
+{
+"id": "box_arm_belt_axle",
+"name": "arm: belt_axle",
+"role": "bought",
+"group": "arm drives",
+"color": "#333333",
+"mesh": "parts/box_arm_belt_axle/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 8.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "axle loop 122T (spliced 6 mm)"
+},
+{
+"id": "box_arm_brg0",
+"name": "arm: brg0",
+"role": "bought",
+"group": "arm drives",
+"color": "#9a9a9a",
+"mesh": "parts/box_arm_brg0/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 110.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "6010 bearing 1"
+},
+{
+"id": "box_arm_brg1",
+"name": "arm: brg1",
+"role": "bought",
+"group": "arm drives",
+"color": "#9a9a9a",
+"mesh": "parts/box_arm_brg1/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 110.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "6010 bearing 2"
+},
+{
+"id": "box_arm_raila",
+"name": "arm: railA",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_raila/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "rail A v3"
+},
+{
+"id": "box_arm_railb",
+"name": "arm: railB",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_railb/part.stl",
+"pose": [
+[
+-0.8660254037844386,
+0.0,
+-0.5000000000000001,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "rail B v3"
+},
+{
+"id": "box_arm_pin16_a",
+"name": "arm: pin16_A",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_pin16_a/part.stl",
+"pose": [
+[
+0.5689871925122321,
+0.0,
+0.8223463836833285,
+-20.881397208144115
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+-0.8223463836833285,
+0.0,
+0.5689871925122321,
+73.83235910246746
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "16T pinion A v2"
+},
+{
+"id": "box_arm_pin16_b",
+"name": "arm: pin16_B",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_pin16_b/part.stl",
+"pose": [
+[
+-0.08158417130191596,
+0.0,
+0.9966664552361435,
+18.832359102467457
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+-0.9966664552361435,
+0.0,
+-0.08158417130191596,
+-74.38139720814414
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "16T pinion B v2"
+},
+{
+"id": "box_arm_heada",
+"name": "arm: headA",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_heada/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+16.000000000000004
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "carriage A (drawn proxy: plate, wing, rack web)"
+},
+{
+"id": "box_arm_wheelsa",
+"name": "arm: wheelsA",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_wheelsa/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+16.000000000000004
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "V-wheels A v1 x3"
+},
+{
+"id": "box_arm_axlesa",
+"name": "arm: axlesA",
+"role": "bought",
+"group": "arm drives",
+"color": "#9a9a9a",
+"mesh": "parts/box_arm_axlesa/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+16.000000000000004
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 20.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "axle stacks A (M5, shims, nylocs)"
+},
+{
+"id": "box_arm_busha",
+"name": "arm: bushA",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_busha/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+16.000000000000004
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "eccentric bush A v1"
+},
+{
+"id": "box_arm_gripa",
+"name": "arm: gripA",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_gripa/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+16.000000000000004
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "gripper guide + servo plate A (v4)"
+},
+{
+"id": "box_arm_finga_a",
+"name": "arm: fingA_A",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_finga_a/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-25.712812921102035
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+19.464101615137757
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "finger A (A)"
+},
+{
+"id": "box_arm_fingb_a",
+"name": "arm: fingB_A",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_fingb_a/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-29.712812921102035
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+12.53589838486225
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "finger B (A)"
+},
+{
+"id": "box_arm_pinion_a",
+"name": "arm: pinion_A",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_pinion_a/part.stl",
+"pose": [
+[
+0.39294363038847413,
+0.30918490153486855,
+-0.8660254037844386,
+-10.962812921102032
+],
+[
+-0.618369803069737,
+0.785887260776948,
+0.0,
+167.1
+],
+[
+0.6805983323434028,
+0.5355239583915727,
+0.5000000000000001,
+45.0118510267787
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "gripper pinion (A)"
+},
+{
+"id": "box_arm_servo_a",
+"name": "arm: servo_A",
+"role": "bought",
+"group": "arm drives",
+"color": "#555555",
+"mesh": "parts/box_arm_servo_a/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+16.000000000000004
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 60.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "servo (A)"
+},
+{
+"id": "box_arm_headb",
+"name": "arm: headB",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_headb/part.stl",
+"pose": [
+[
+-0.8660254037844386,
+0.0,
+-0.5000000000000001,
+-16.000000000000004
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "carriage B (drawn proxy: plate, wing, rack web)"
+},
+{
+"id": "box_arm_wheelsb",
+"name": "arm: wheelsB",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_wheelsb/part.stl",
+"pose": [
+[
+-0.8660254037844386,
+0.0,
+-0.5000000000000001,
+-16.000000000000004
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "V-wheels B v1 x3"
+},
+{
+"id": "box_arm_axlesb",
+"name": "arm: axlesB",
+"role": "bought",
+"group": "arm drives",
+"color": "#9a9a9a",
+"mesh": "parts/box_arm_axlesb/part.stl",
+"pose": [
+[
+-0.8660254037844386,
+0.0,
+-0.5000000000000001,
+-16.000000000000004
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 20.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "axle stacks B (M5, shims, nylocs)"
+},
+{
+"id": "box_arm_bushb",
+"name": "arm: bushB",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_bushb/part.stl",
+"pose": [
+[
+-0.8660254037844386,
+0.0,
+-0.5000000000000001,
+-16.000000000000004
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "eccentric bush B v1"
+},
+{
+"id": "box_arm_gripb",
+"name": "arm: gripB",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_gripb/part.stl",
+"pose": [
+[
+-0.8660254037844386,
+0.0,
+-0.5000000000000001,
+-16.000000000000004
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "gripper guide + servo plate B (v4)"
+},
+{
+"id": "box_arm_finga_b",
+"name": "arm: fingA_B",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_finga_b/part.stl",
+"pose": [
+[
+-0.8660254037844386,
+0.0,
+-0.5000000000000001,
+-12.53589838486225
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-29.712812921102035
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "finger A (B)"
+},
+{
+"id": "box_arm_fingb_b",
+"name": "arm: fingB_B",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_fingb_b/part.stl",
+"pose": [
+[
+-0.8660254037844386,
+0.0,
+-0.5000000000000001,
+-19.464101615137757
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-25.712812921102035
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "finger B (B)"
+},
+{
+"id": "box_arm_pinion_b",
+"name": "arm: pinion_B",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_pinion_b/part.stl",
+"pose": [
+[
+-0.6805983323434028,
+0.5355239583915727,
+-0.5000000000000001,
+13.01185102677869
+],
+[
+0.618369803069737,
+0.785887260776948,
+0.0,
+167.1
+],
+[
+0.39294363038847413,
+-0.30918490153486855,
+-0.8660254037844386,
+-44.46281292110204
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "gripper pinion (B)"
+},
+{
+"id": "box_arm_servo_b",
+"name": "arm: servo_B",
+"role": "bought",
+"group": "arm drives",
+"color": "#555555",
+"mesh": "parts/box_arm_servo_b/part.stl",
+"pose": [
+[
+-0.8660254037844386,
+0.0,
+-0.5000000000000001,
+-16.000000000000004
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-27.712812921102035
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 60.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "servo (B)"
+},
+{
+"id": "box_arm_detent_ring",
+"name": "arm: detent_ring",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_detent_ring/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "detent ring v3"
+},
+{
+"id": "box_arm_detent_arm",
+"name": "arm: detent_arm",
+"role": "structure",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_detent_arm/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "detent arm v2 + carbon roller axle + hook pin"
+},
+{
+"id": "box_arm_detent_roller",
+"name": "arm: detent_roller",
+"role": "bought",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_detent_roller/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 1.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "683ZZ roller"
+},
+{
+"id": "box_arm_detent_springs",
+"name": "arm: detent_springs",
+"role": "bought",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_detent_springs/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 1.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "extension springs x2"
+},
+{
+"id": "box_arm_detent_tower",
+"name": "arm: detent_tower",
+"role": "bought",
+"group": "swap arm",
+"color": "#99a6b3",
+"mesh": "parts/box_arm_detent_tower/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 0.5,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "detent anchor pin (the tower is hub v6's)"
+},
+{
+"id": "box_arm_tiesa",
+"name": "arm: tiesA",
+"role": "bought",
+"group": "arm drives",
+"color": "#333333",
+"mesh": "parts/box_arm_tiesa/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 5.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "carbon tie rods A (2 x 3.0)"
+},
+{
+"id": "box_arm_tiesb",
+"name": "arm: tiesB",
+"role": "bought",
+"group": "arm drives",
+"color": "#333333",
+"mesh": "parts/box_arm_tiesb/part.stl",
+"pose": [
+[
+-0.8660254037844386,
+0.0,
+-0.5000000000000001,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 5.0,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "carbon tie rods B (2 x 3.0)"
+},
+{
+"id": "box_arm_rec30",
+"name": "arm: rec30",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec30/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "scout bay at 30 deg: latch receiver"
+},
+{
+"id": "box_arm_rec_30",
+"name": "arm: rec-30",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec_30/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "scout bay at -30 deg: latch receiver + a seated cartridge"
+},
+{
+"id": "box_arm_rec_90",
+"name": "arm: rec-90",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec_90/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "scout bay at -90 deg: latch receiver + a seated cartridge"
+},
+{
+"id": "box_arm_rec_150",
+"name": "arm: rec-150",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec_150/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "scout bay at -150 deg: latch receiver + a seated cartridge"
+},
+{
+"id": "box_arm_rec_210",
+"name": "arm: rec-210",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec_210/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "scout bay at -210 deg: latch receiver"
+},
+{
+"id": "box_arm_rec0",
+"name": "arm: rec0",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec0/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "overseer bay at 0 deg: latch receiver + a seated cartridge"
+},
+{
+"id": "box_arm_rec_60",
+"name": "arm: rec-60",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec_60/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "overseer bay at -60 deg: latch receiver + a seated cartridge"
+},
+{
+"id": "box_arm_rec_120",
+"name": "arm: rec-120",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec_120/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "overseer bay at -120 deg: latch receiver + a seated cartridge"
+},
+{
+"id": "box_arm_rec_180",
+"name": "arm: rec-180",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec_180/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "overseer bay at -180 deg: latch receiver + a seated cartridge"
+},
+{
+"id": "box_arm_pack_charged",
+"name": "arm: pack charged",
+"role": "bought",
+"group": "packs",
+"color": "#2f4fbf",
+"mesh": "parts/box_arm_pack_charged/part.stl",
+"pose": [
+[
+0.5000000000000001,
+0.0,
+-0.8660254037844386,
+-97.86087062764156
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.8660254037844386,
+0.0,
+0.5000000000000001,
+56.500000000000014
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 216.5,
+"tag": "E",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "bay0@bay0"
+},
+{
+"id": "box_arm_pack_dead",
+"name": "arm: pack dead",
+"role": "bought",
+"group": "packs",
+"color": "#2f4fbf",
+"mesh": "parts/box_arm_pack_dead/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+118.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"mass_g": 216.5,
+"tag": "E",
+"owner": "box swap arm v7",
+"version": "v7",
+"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
+"note": "drone (before landing)"
+},
+{
+"id": "box_stand_mast",
+"name": "stand: mast",
+"role": "structure",
+"group": "stand",
+"color": "#b7bfc9",
+"mesh": "parts/box_stand_mast/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+-0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+1e-06
+],
+[
+-0.0,
+0.0,
+1.0,
+2e-06
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box structure",
+"version": "v6",
+"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
+"note": "print/box_mast_v6.stl"
+},
+{
+"id": "box_stand_cradle_keel",
+"name": "stand: cradle_keel",
+"role": "structure",
+"group": "stand",
+"color": "#b7bfc9",
+"mesh": "parts/box_stand_cradle_keel/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+-0.0,
+-0.0
+],
+[
+0.0,
+1.0,
+0.0,
+7e-06
+],
+[
+-0.0,
+0.0,
+1.0,
+-9e-06
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box structure",
+"version": "v6",
+"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
+"note": "print/box_cradle_keel_v6.stl"
+},
+{
+"id": "box_stand_kb",
+"name": "stand: kb",
+"role": "structure",
+"group": "stand",
+"color": "#b7bfc9",
+"mesh": "parts/box_stand_kb/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+-0.0,
+-0.0
+],
+[
+0.0,
+1.0,
+-0.0,
+-2e-06
+],
+[
+-0.0,
+-0.0,
+1.0,
+7e-06
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box structure",
+"version": "v7b",
+"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
+"note": "print/box_kb_v7b.stl"
+},
+{
+"id": "box_stand_toe",
+"name": "stand: toe",
+"role": "structure",
+"group": "stand",
+"color": "#b7bfc9",
+"mesh": "parts/box_stand_toe/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+-0.0,
+-0.0
+],
+[
+0.0,
+1.0,
+-0.0,
+-1.5e-05
+],
+[
+-0.0,
+-0.0,
+1.0,
+1.1e-05
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box structure",
+"version": "v7b",
+"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
+"note": "print/box_toe_v7b.stl"
+},
+{
+"id": "box_stand_bara",
+"name": "stand: barA",
+"role": "structure",
+"group": "stand",
+"color": "#b7bfc9",
+"mesh": "parts/box_stand_bara/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+-0.0
+],
+[
+0.0,
+1.0,
+-0.0,
+-3e-06
+],
+[
+0.0,
+-0.0,
+1.0,
+8e-06
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box structure",
+"version": "v8",
+"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
+"note": "print/box_bar_half_v8.stl"
+},
+{
+"id": "box_stand_barb",
+"name": "stand: barB",
+"role": "structure",
+"group": "stand",
+"color": "#b7bfc9",
+"mesh": "parts/box_stand_barb/part.stl",
+"pose": [
+[
+-1.0,
+0.0,
+-0.0,
+-0.0
+],
+[
+-0.0,
+-1.0,
+-0.0,
+108.000363
+],
+[
+-0.0,
+-0.0,
+1.0,
+1.3e-05
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "M",
+"owner": "box structure",
+"version": "v8",
+"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
+"note": "print/box_bar_half_v8.stl"
+},
+{
+"id": "box_enclosure_psu_lrs_350_24",
+"name": "enclosure: PSU LRS-350-24",
+"role": "bought",
+"group": "enclosure",
+"color": "#777777",
+"box": [
+42,
+157,
+-66,
+-36,
+-170,
+45
+],
+"opacity": null,
+"mass_g": 750.0,
+"tag": "C",
+"owner": "box structure v2",
+"version": "v2 layout",
+"source": "nox/box/box_structure_v2.assembly.json",
+"note": ""
+},
+{
+"id": "box_enclosure_sheet_x",
+"name": "enclosure: sheet+X",
+"role": "bought",
+"group": "enclosure",
+"color": "#c9d6e2",
+"box": [
+206,
+209,
+-63.0,
+334,
+-236,
+234
+],
+"opacity": 0.25,
+"mass_g": 666.1,
+"tag": "C",
+"owner": "box structure v2",
+"version": "v2 layout",
+"source": "nox/box/box_structure_v2.assembly.json",
+"note": ""
+},
+{
+"id": "box_enclosure_sheet_x",
+"name": "enclosure: sheet-X",
+"role": "bought",
+"group": "enclosure",
+"color": "#c9d6e2",
+"box": [
+-209,
+-206,
+-63.0,
+334,
+-236,
+234
+],
+"opacity": 0.25,
+"mass_g": 666.1,
+"tag": "C",
+"owner": "box structure v2",
+"version": "v2 layout",
+"source": "nox/box/box_structure_v2.assembly.json",
+"note": ""
+},
+{
+"id": "box_enclosure_sheetf",
+"name": "enclosure: sheetF",
+"role": "bought",
+"group": "enclosure",
+"color": "#c9d6e2",
+"box": [
+-203,
+203,
+337,
+340,
+-236,
+234
+],
+"opacity": 0.25,
+"mass_g": 681.2,
+"tag": "C",
+"owner": "box structure v2",
+"version": "v2 layout",
+"source": "nox/box/box_structure_v2.assembly.json",
+"note": ""
+},
+{
+"id": "box_enclosure_sheetr",
+"name": "enclosure: sheetR",
+"role": "bought",
+"group": "enclosure",
+"color": "#c9d6e2",
+"box": [
+-203,
+203,
+-69.0,
+-66.0,
+-236,
+234
+],
+"opacity": 0.25,
+"mass_g": 681.2,
+"tag": "C",
+"owner": "box structure v2",
+"version": "v2 layout",
+"source": "nox/box/box_structure_v2.assembly.json",
+"note": ""
+},
+{
+"id": "box_funnel",
+"name": "funnel (latch-footprint seat, 55 deg)",
+"role": "structure",
+"group": "funnel",
+"color": "#e07020",
+"mesh": "parts/box_funnel/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "E",
+"owner": "box catch",
+"version": "v1 drawn 3 Nov",
+"source": "parts/box_funnel/make.py",
+"note": "centres on the receiver v3 footprint 106 x 66 so both drones seat at one height; mouth 204 x 164, faces 55 deg, 70 tall; hold-down not drawn"
+},
+{
+"id": "box_ctx_receiver_v3",
+"name": "receiver v3 (seated Scout)",
+"role": "protected",
+"group": "seated drone (context)",
+"color": "#8899aa",
+"mesh": "parts/box_ctx_receiver_v3/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "M",
+"owner": "battery latch",
+"version": "v3 / v6",
+"source": "parts/receiver_v3_latch (this repo), at the seat",
+"note": "the latch set every drone carries: what the funnel seats"
+},
+{
+"id": "box_ctx_cartridge_v6",
+"name": "cartridge v6 (seated Scout)",
+"role": "protected",
+"group": "seated drone (context)",
+"color": "#8899aa",
+"mesh": "parts/box_ctx_cartridge_v6/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "M",
+"owner": "battery latch",
+"version": "v3 / v6",
+"source": "parts/cartridge_v6_latch (this repo), at the seat",
+"note": "the latch set every drone carries: what the funnel seats"
+}
+]
+}
