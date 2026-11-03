@@ -19,8 +19,9 @@ dimensions; the cage and the battery mechanism are off the page while the shared
 ## Nox Ground Unit (the box)
 [![Nox Ground Unit, current assembly](https://sparkiscool.github.io/noxen/box.png)](https://sparkiscool.github.io/noxen/box.html?view=iso&still)
 
-[Open the box viewer](https://sparkiscool.github.io/noxen/box.html?view=iso&still): the swap arm v7 with its nine bays, the stand, the
-enclosure, and the landing funnel drawn on the latch footprint so both drones seat at one height (`tools/import_box.py` brings the
+[Open the box viewer](https://sparkiscool.github.io/noxen/box.html?view=iso&still): the swap arm v7 with seven bays, the stand, the
+enclosure, and the landing funnel drawn on the latch footprint so both drones seat at one height, 60 above the arm's grip height
+so the wheel turns clear under them (`tools/import_box.py` brings the
 mechanism's meshes over from the nox repo; `parts/box_funnel/make.py` draws the funnel).
 
 ## Live artifacts (the pages above as claude.ai artifacts, republished by the sessions)

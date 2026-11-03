@@ -4,7 +4,7 @@
 "readme_view": "iso",
 "artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
 "machine": "box",
-"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 155.3), nox/box/catch_system.py SEAT_TO_W). In: the swap arm v7 at park with 7 bay receivers (the two nearest the top dropped, Spark 3 Nov) and two packs, the stand of the built demo, the v2 enclosure sheets and PSU as boxes, the funnel drawn 3 Nov on the latch footprint, the Scout's receiver and cartridge seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 215.3): the catch's SEAT_TO_W raised 60, the arm's head extending 60 more at the drone slot, Spark 3 Nov). In: the swap arm v7 at park with 7 bay receivers (the two nearest the top dropped) and two packs, a placeholder extended head at the drone, the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the funnel on its legs over the wheel, both drones seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
 "cg_ref": null,
 "timeline": "tools/landing_box.py:timeline",
 "parts": [
@@ -2461,7 +2461,7 @@
 -63.0,
 334,
 -236,
-63.0
+145.0
 ],
 "opacity": 0.25,
 "mass_g": 666.1,
@@ -2483,7 +2483,7 @@
 -63.0,
 334,
 -236,
-63.0
+145.0
 ],
 "opacity": 0.25,
 "mass_g": 666.1,
@@ -2505,7 +2505,7 @@
 337,
 340,
 -236,
-63.0
+145.0
 ],
 "opacity": 0.25,
 "mass_g": 681.2,
@@ -2527,7 +2527,7 @@
 -69.0,
 -66.0,
 -236,
-63.0
+145.0
 ],
 "opacity": 0.25,
 "mass_g": 681.2,
@@ -2538,19 +2538,46 @@
 "note": ""
 },
 {
-"id": "box_deck",
-"name": "top deck (the enclosure ends here)",
+"id": "box_arm_head_at_drone",
+"name": "arm: head A at the drone, extended +60 (placeholder)",
 "role": "structure",
-"group": "funnel",
-"color": "#c9b48a",
-"mesh": "parts/box_deck/part.stl",
-"pose": null,
+"group": "swap arm",
+"color": "#d08a3a",
+"box": [
+-20.0,
+20.0,
+59.0,
+74.0,
+100.0,
+172.0
+],
 "material": "PETG",
-"tag": "C",
-"owner": "box catch",
-"version": "v1 drawn 3 Nov",
-"source": "parts/box_deck/make.py",
-"note": "W Z 63..66, the v2 footprint, swap opening 210 x 106 on the catch centre; under the Overseer's loop feet (W Z 71.6)"
+"tag": "E",
+"owner": "box swap arm",
+"version": "concept 3 Nov",
+"source": "tools/import_box.py",
+"note": "a second stage on the head: 60 more radial reach at the drone slot only, so the cartridge seats at W Z 171 (the grip is the box below)"
+},
+{
+"id": "box_arm_grip_at_drone",
+"name": "arm: grip at the drone cartridge (placeholder)",
+"role": "structure",
+"group": "swap arm",
+"color": "#d08a3a",
+"box": [
+-15.5,
+15.5,
+149.0,
+214.0,
+162.0,
+181.0
+],
+"material": "PETG",
+"tag": "E",
+"owner": "box swap arm",
+"version": "concept 3 Nov",
+"source": "tools/import_box.py",
+"note": "the grabber at the cartridge tabs, W Z 171..178, inside the funnel's hole"
 },
 {
 "id": "box_funnel",
@@ -2576,7 +2603,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -2616,7 +2643,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -2655,7 +2682,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -2694,7 +2721,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -2733,7 +2760,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -2772,7 +2799,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -2811,7 +2838,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -2850,7 +2877,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -2889,7 +2916,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -2928,7 +2955,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -2967,7 +2994,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -3006,7 +3033,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -3045,7 +3072,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -3084,7 +3111,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -3123,7 +3150,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -3162,7 +3189,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -3202,7 +3229,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -3241,7 +3268,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3280,7 +3307,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3319,7 +3346,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3358,7 +3385,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3397,7 +3424,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3436,7 +3463,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3475,7 +3502,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3514,7 +3541,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3553,7 +3580,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3592,7 +3619,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3631,7 +3658,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3670,7 +3697,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3709,7 +3736,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3748,7 +3775,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3787,7 +3814,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3826,7 +3853,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3865,7 +3892,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3904,7 +3931,7 @@
 0.0,
 0.0,
 1.0,
-187.70000000000002
+247.70000000000002
 ],
 [
 0.0,
@@ -3958,7 +3985,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,
@@ -4005,7 +4032,7 @@
 0,
 0,
 1.0,
-155.3
+215.3
 ],
 [
 0,

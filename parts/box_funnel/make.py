@@ -18,14 +18,15 @@ Run: python parts/box_funnel/make.py
 import os, numpy as np, trimesh, manifold3d as mf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SEAT_Z, FACE_DEG, WALL = -44.3, 55.0, 3.0
+SEAT_Z, FACE_DEG, WALL = -44.3, 55.0, 3.0            # seat frame; the seat's z 0 is W Z 215.3 (3 Nov: +60, the head extends 60 more at the drone slot)
 H_X, H_Y = 40.0, 28.0                             # the x (nose / tail) faces and the y faces end here, above the seat
 CX = 1.5                                          # the receiver centre x (the catch centre) in the seat frame
 SEAT = (CX - 92.0, CX + 92.0, -33.4, 33.4)        # the Overseer receiver v2 outline (E) = the Scout's belly skirt
 HOLE = (CX - 85.0, CX + 85.0, -25.0, 25.0)        # both cartridges and the swap head pass (Overseer cartridge width CHECK)
-RIM, LEG, LEG_BOTTOM = 0.0, 12.0, -89.3
+RIM, LEG, LEG_BOTTOM = 0.0, 12.0, -70.3           # legs to the enclosure's top edge, W Z 145 (under the rail tips, r 151, and the Overseer's feet at 155)
+SIDE_LEG_X, SIDE_LEG_Y, SKIRT = 70.0, 80.0, 8.0    # side legs at seat (+-70, +-80) = W Y 97 / 237, X +-80: outside the rails' band (Y 38..73) and the pack sweep over the grip lane (Y 114..210); skirt 8: its underside 12 over the rail tips
 CORNER_Y = 48.0                                   # the x walls' top corners (h 28..40) stop at |y| 48: the Overseer's loop diagonals pass 15 outside them at its capture limits; the receiver still bears on them over |y| <= 48
-LEG_Y = 40.0                                       # legs under the x walls' ends, |y| 40: the Overseer's loop diagonals and bay ties never come within 15 of them, and the Scout cage keeps everything above the wall tops (3 Nov, tools/seat_check.py --descent)      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
+LEG_Y = 40.0                                       # the nose legs under the nose wall's end (seat x +118 = W Y 285, |y| 40); no tail legs: the tail end stands over the rails' band      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
 
 
@@ -50,10 +51,13 @@ def funnel():
     top_cut = box(x0 - gy + 0.5, x1 + gy - 0.5, -200, 200, z0 + H_Y, z0 + H_X + 2)        # the y walls above h 28 go; the x walls (beyond the inner x at h 28) stay
     ox0, ox1 = x0 - gx - w, x1 + gx + w                                                 # the x walls' outer faces at h 40
     rim = [box(ox0 - RIM, ox0 + 2.0, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X), box(ox1 - 2.0, ox1 + RIM, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X)] if RIM else []
-    skirt = box(HOLE[0] - WALL, HOLE[1] + WALL, HOLE[2] - WALL, HOLE[3] + WALL, z0 - 12.0, z0)
-    legs = [box(cx - LEG / 2, cx + LEG / 2, cy - LEG / 2, cy + LEG / 2, LEG_BOTTOM, z0 + H_X)
-            for cx in (ox0 + LEG / 2 + 1.0, ox1 - LEG / 2 - 1.0) for cy in (-LEG_Y, LEG_Y)]                   # inside the x walls' footprint at the top, merging into them
-    hole = box(*HOLE, z0 - 20.0, z0 + H_X + 2.0)
+    skirt = box(HOLE[0] - WALL, HOLE[1] + WALL, HOLE[2] - WALL, HOLE[3] + WALL, z0 - SKIRT, z0)
+    legs = [box(ox1 - LEG - 1.0, ox1 - 1.0, cy - LEG / 2, cy + LEG / 2, LEG_BOTTOM, z0 + H_X) for cy in (-LEG_Y, LEG_Y)]   # nose legs, inside the nose wall's footprint at the top
+    for sx in (-1, 1):                                                                                            # side legs with a bar into each y wall at h 24..28
+        for sy in (-1, 1):
+            legs.append(box(sx * SIDE_LEG_X - LEG / 2, sx * SIDE_LEG_X + LEG / 2, sy * SIDE_LEG_Y - LEG / 2, sy * SIDE_LEG_Y + LEG / 2, LEG_BOTTOM, z0 + H_Y))
+            legs.append(box(sx * SIDE_LEG_X - LEG / 2, sx * SIDE_LEG_X + LEG / 2, min(sy * 50.0, sy * (SIDE_LEG_Y + LEG / 2)), max(sy * 50.0, sy * (SIDE_LEG_Y + LEG / 2)), z0 + H_Y - 4.0, z0 + H_Y))
+    hole = box(*HOLE, z0 - SKIRT - 8.0, z0 + H_X + 2.0)
     corner_cut = [box(x0 - 200, x1 + 200, s_ * CORNER_Y, s_ * 300, z0 + H_Y, z0 + H_X + 2) if s_ > 0 else box(x0 - 200, x1 + 200, -300, -CORNER_Y, z0 + H_Y, z0 + H_X + 2) for s_ in (-1, 1)]
     body = (outer - top_cut - mf.Manifold.batch_boolean(corner_cut, mf.OpType.Add)) + mf.Manifold.batch_boolean(rim + [skirt] + legs, mf.OpType.Add)
     return body - inner - hole

@@ -11,7 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import seat_envelope as se
 
-SEAT_TO_W = np.array([[0, -1.0, 0, 0], [1.0, 0, 0, 167.1], [0, 0, 1.0, 155.3], [0, 0, 0, 1.0]])
+SEAT_TO_W = np.array([[0, -1.0, 0, 0], [1.0, 0, 0, 167.1], [0, 0, 1.0, 215.3], [0, 0, 0, 1.0]])   # seat z 0 at W Z 215.3 (3 Nov: +60)
 
 
 def load_make(rel):
@@ -38,11 +38,11 @@ def to_tri(mm):
 
 
 def solids():
+    """the funnel (seat frame) and the enclosure top (W Z 145, the sheets' top edge as a 3 mm band, seat frame): there is no deck (3 Nov)"""
     fun = load_make("parts/box_funnel/make.py").funnel()
-    dk = load_make("parts/box_deck/make.py")
-    deck = dk.box(dk.X0, dk.X1, dk.Y0, dk.Y1, dk.Z_TOP - dk.T, dk.Z_TOP) - dk.box(-dk.HOLE_X / 2, dk.HOLE_X / 2, dk.YC - dk.HOLE_Y / 2, dk.YC + dk.HOLE_Y / 2, dk.Z_TOP - dk.T - 1, dk.Z_TOP + 1)
-    deck = deck.transform(np.linalg.inv(SEAT_TO_W)[:3, :])
-    return [("funnel", fun, to_tri(fun)), ("deck", deck, to_tri(deck))]
+    top = mf.Manifold.cube([418.0, 409.0, 3.0]).translate([-209.0, -69.0, 142.0]) - mf.Manifold.cube([412.0, 403.0, 5.0]).translate([-206.0, -66.0, 141.0])
+    top = top.transform(np.linalg.inv(SEAT_TO_W)[:3, :])
+    return [("funnel", fun, to_tri(fun)), ("enclosure top", top, to_tri(top))]
 
 
 def descent_states(drone):
