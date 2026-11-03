@@ -11,7 +11,7 @@ What sets the size, and only this:
            no posts; the roof is a spine of two nodes fanned to the ring
   bottom   the whole shell stays above z 0, over the funnel's wall tops (z -4.3) in every state of the descent (the end walls
            sweep |x| <= 153, |y| <= 85 at the capture limits): base rails at |y| 115, z 0, nose and tail bottom nodes at z 8, the
-           window sill at z 17; four legs from the rail ends to feet at z -50 (TPU caps, contact -53; the belly skirt at -44.3)
+           window sill at z 17; four legs from the rail ends to feet at z -45 (TPU caps, contact -48; the belly skirt at -44.3; the feet 9 over the funnel's nose beam)
   funnel   nothing of the cage inside the funnel's walls when seated or during the +-28 / +-20 descent (tools/seat_check.py)
   shell    closed, mirror-exact, two declared openings: the bottom inside the base ring and the nose window
 Writes parts/scout_cage_v15/part.stl (tubes + node spheres, the look), the shell into systems/scout.assembly.json (cage_shell, the
@@ -23,7 +23,7 @@ import numpy as np, trimesh
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 
-ZR, ZB, ZF, ZL = 62.0, 0.0, 17.0, -50.0               # the ring (prop keep-out and roof edge), the base rails, the dipped front nodes, the feet
+ZR, ZB, ZF, ZL = 62.0, 0.0, 17.0, -45.0               # the ring (prop keep-out and roof edge), the base rails, the dipped front nodes, the feet
 XN, XT, YS, C = 136.0, -130.0, 115.0, 193.7          # nose flat, tail flat, side flats, the corner chamfer line |x| + |y| = C
 NODES = {
     "P0": (XN, C - XN, ZF), "P7": (XN, -(C - XN), ZF),                                                         # front nodes, dipped: the window's bottom corners
