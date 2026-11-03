@@ -23,7 +23,8 @@ A run refuses to start when: drawn solid is over 30 % of the part; one drawn bod
 material with a thick core (a drawn structure); any drawn body has a core over 8 mm away from every hole and face (a
 block); a loaded drawn body has less than one member of design room behind it. The fix is always the setup, never a
 `--set audit=warn`: delete the block, open the envelope behind the feature, move the cut. `result.json` carries the
-audit report; `python -m topo.run parts/<name> --h 2.5 --maxit 2 --no-coarse` runs it in a minute.
+audit report; `python -m topo.run parts/<name> --h <SPEC h> --maxit 1 --no-coarse` runs it in a minute (at the SPEC h: room is measured
+in cells, a coarser h can pass a setup the run refuses).
 
 ## Never
 - Run a full optimisation in a session. Never read meshes, logs, images or `inputs/`.
