@@ -174,8 +174,8 @@ def artifact_page(a, S, meshes, commit, path):
         sp = importlib.util.spec_from_file_location("tl_" + os.path.basename(mod)[:-3], os.path.join(ROOT, mod)); tm = importlib.util.module_from_spec(sp); sp.loader.exec_module(tm)
         poses, dur, series = getattr(tm, fn)(a)
         s.timeline(poses, duration_s=dur, fps=24)
-        for nm, vals, unit in series:
-            s.series(nm, vals, unit)
+        for nm, vals, unit, *kw in series:                                          # an optional dict: bad_below / bad_above
+            s.series(nm, vals, unit, **(kw[0] if kw else {}))
     else:
         spin = lambda t: trimesh.transformations.rotation_matrix(math.radians(360 * t / 24), [0, 0, 1])
         s.timeline(lambda t: {n: spin(t) for n in names}, duration_s=24, fps=24)

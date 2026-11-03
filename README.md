@@ -23,6 +23,13 @@ dimensions; the cage and the battery mechanism are off the page while the shared
 enclosure, and the landing funnel drawn on the latch footprint so both drones seat at one height (`tools/import_box.py` brings the
 mechanism's meshes over from the nox repo; `parts/box_funnel/make.py` draws the funnel).
 
+## xswap short lock (the Overseer's battery mechanism)
+[![xswap short lock in the Overseer](https://sparkiscool.github.io/noxen/xswap.png)](https://sparkiscool.github.io/noxen/xswap.html?view=iso&still)
+
+[Open the lock viewer](https://sparkiscool.github.io/noxen/xswap.html?view=iso&still): the short lock v5 on the Overseer's base inserts through one
+swap cycle (pincer, fingers, gate bars, rail, flip), the drone see-through round it, with the shell's height over the cage feet read out
+(`tools/import_xswap.py` copies the lock's meshes from its own page; `tools/xswap_motion.py` is the cycle).
+
 ## Live artifacts (the pages above as claude.ai artifacts, republished by the sessions)
 Each system's `artifact` URL is in its `systems/<name>.assembly.json`; a session publishes `site/<name>.html` there after `python tools/build_site.py --inline`.
 - Overseer: https://claude.ai/artifact/VhDfnp75uoVsj8SnyrW2Qg
