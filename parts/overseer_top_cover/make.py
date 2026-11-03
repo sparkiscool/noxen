@@ -5,15 +5,16 @@
 * thin, for translucent PETG;
 * held by the 8 top plate bolts;
 * clamps seamlessly to the top plate, the plate sandwiched;
-* fully overlaps the rectangular arm roots.
+* meets the rectangular arm roots flush at the plate edge, nothing on top of them.
 Drawn only, no topology run (a cosmetic shell, no load path): python parts/overseer_top_cover/make.py writes part.stl.
 
 Shape: one continuous height field H(x, y), soft-blended, the 3D field blurred 0.27 mm and meshed by marching cubes (no facets).
 * Footprint = the top plate's own outline (sectioned from parts/top_plate/part.stl) + 1.35, plus each arm root's rectangular
   block where it leaves the plate: hull of the plate boss block (u 57.5..72, |v| <= 22) and the tube mouths (29 out along
   the arm axis, |v| 8.6), parts/overseer_tube_arm_lib.py. The rear arms are one-piece and generated; their root is taken as
-  the same block on their own axis (CHECK on the printed arm). The lip runs down past the plate edge to z 45 and sits on
-  the root tops beyond it, flush with their sides: the plate is sandwiched, no seam.
+  the same block on their own axis (CHECK on the printed arm). The lip runs down past the plate edge to z 45, the plate
+  sandwiched, no seam; where a root leaves the plate the cover stops at the plate edge and the lip butts flush on the root's
+  sides: nothing on top of the root material (Spark 3 Nov).
 * From the edge a steep skirt (3:1) blends into a teardrop dome. Its peak is z 86.6 (40 over the plate top) at x +5. It runs
   longer to the rear (95) than the front (75), y 65.
 * The dome softens down under the rear prop disks (10 in, r 127). There it stays 6 under the blade band (z 82) at the disk
@@ -97,8 +98,9 @@ def bolts():
 
 # ---------------- 2D fields on the grid
 O = plate_outline(); RT = roots()
-Fo = O.offset(GAP + LIP, J) + RT                            # outer footprint (lip outside the plate, flush with the roots)
-Fi = O.offset(GAP, J) + RT.offset(-LIP, J)                  # below the plate top: open inside the plate and over the roots
+RT_OUT = RT - O                                             # the root blocks beyond the plate edge: left bare (Spark 3 Nov)
+Fo = O.offset(GAP + LIP, J) - RT_OUT.offset(GAP, J)         # outer footprint: lip round the plate edge, butting flush on the root sides
+Fi = O.offset(GAP, J)                                       # below the plate top: open inside the plate
 xs = np.arange(-XY, XY + RES / 2, RES); X, Y = np.meshgrid(xs, xs, indexing="ij"); P2 = np.c_[X.ravel(), Y.ravel()]
 
 
