@@ -20,7 +20,7 @@ h1 { margin: 0; font-size: 17px; font-weight: 600; } h1 small { font-weight: 400
 .pick { position: absolute; left: 8px; bottom: 8px; max-width: min(360px, calc(100% - 16px)); padding: 8px 10px; font-size: 12px; line-height: 1.4; background: var(--panel); color: var(--fg); border: 1px solid var(--accent); border-radius: 6px; }
 .pick.recut { left: auto; right: 8px; top: 44px; bottom: auto; border-color: #d62828; } .pick .red { color: #d62828; }
 .pick b { font-size: 14px; } .pick .len { font: 600 15px var(--mono); }
-.pick .look { margin-top: 6px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; } .pick .look input[type=range] { width: 110px; } .pick .look input[type=color] { width: 32px; height: 22px; padding: 0; border: 0; background: none; }
+.pick.lookall { left: auto; right: 8px; bottom: 8px; } .pick .look { margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; } .pick .look input[type=range] { width: 110px; } .pick .look input[type=color] { width: 32px; height: 22px; padding: 0; border: 0; background: none; }
 .stage canvas { display: block; width: 100%; height: 100%; }
 .views { position: absolute; top: 10px; left: 10px; display: flex; gap: 4px; flex-wrap: wrap; }
 .views button, .bar button { font: 12px var(--mono); padding: 5px 9px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
@@ -72,6 +72,7 @@ body.rec .stage { border: 0; border-radius: 0; }
     <div class="hud" id="hud"></div>
     <div class="pick" id="pick" hidden></div>
     <div class="pick recut" id="recut" hidden></div>
+    <div class="pick lookall" id="lookall" hidden><b>printed parts</b> <span class="look">colour <input type="color" id="lookc" value="#eef2f5"> clear <input type="range" id="looko" min="0.05" max="1" step="0.05" value="1"> <span id="lookv">as designed</span> <button id="lookr">reset</button></span></div>
   </div>
   <div class="bar">
     <button type="button" id="play">pause</button>
@@ -101,7 +102,7 @@ const D = JSON.parse(document.getElementById('data').textContent);
 const $ = id => document.getElementById(id);
 $('title').innerHTML = D.title + (D.subtitle ? '<small>' + D.subtitle.replace(/</g, '&lt;') + '</small>' : '');
 $('mass').textContent = D.mass_total ? D.mass_total.toFixed(1) + ' g printed (M; ' + D.material + ' density E)' : 'no printed mass';
-$('note').textContent = 'Masses: mesh volume (M) x ' + (D.material === 'TPU' ? '1.21' : '1.27') + ' g/cm3 solid (E). Bought parts are context. Drag to orbit, wheel to zoom, right-drag to pan. Click a part to name it (a rod shows its cut length) and to change its colour and transparency.';
+$('note').textContent = 'Masses: mesh volume (M) x ' + (D.material === 'TPU' ? '1.21' : '1.27') + ' g/cm3 solid (E). Bought parts are context. Drag to orbit, wheel to zoom, right-drag to pan. Click a part to name it; a rod shows its cut length. Bottom right: one colour and transparency for every printed part.';
 
 // ---------- meshes
 function b64(s) { const b = atob(s); const u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
@@ -271,21 +272,32 @@ function pick(ev) {
     o.mesh.add(hl);
     html = '<b>' + s[0] + '</b> <span class="note">(' + p.name + ')</span><br><span class="len">cut ' + s[7].toFixed(1) + ' mm = ' + (s[7] / 25.4).toFixed(2) + ' in</span>' + (s[8] != null ? '<br><span class="red">recut, was ' + s[8].toFixed(1) + ' mm = ' + (s[8] / 25.4).toFixed(2) + ' in</span>' : '');
   } else html = '<b>' + p.name + '</b> <span class="note">(' + p.group + ')</span>' + (p.note ? '<br>' + p.note.replace(/</g, '&lt;') : '');
-  const m = o.mesh.material;
-  html += '<div class="look">colour <input type="color" id="lookc" value="#' + m.color.getHexString() + '"> clear <input type="range" id="looko" min="0.05" max="1" step="0.05" value="' + m.opacity + '"> <span id="lookv">' + Math.round(m.opacity * 100) + '%</span> <button id="lookr">reset</button></div>';
   box.innerHTML = html; box.hidden = false; playing = false; $('play').textContent = 'play';
-  const set = () => { setLook(p.name, $('lookc').value, +$('looko').value); $('lookv').textContent = Math.round(+$('looko').value * 100) + '%'; };
-  $('lookc').oninput = set; $('looko').oninput = set;
-  $('lookr').onclick = () => { setLook(p.name, p.color, p.opacity != null ? p.opacity : 1, true); $('lookc').value = '#' + m.color.getHexString(); $('looko').value = m.opacity; $('lookv').textContent = Math.round(m.opacity * 100) + '%'; };
 }
-// colour and transparency per part, from the pick box; remembered in this browser only
-function setLook(name, color, op, reset) {
-  const m = objs[name].mesh.material, clear = op < 1;
+// one colour and transparency for every printed part at once (Spark 3 Nov); remembered in this browser only
+const printed = Object.values(objs).filter(o => o.part.printed && o.part.group !== 'views');
+function lookOne(o, color, op) {
+  const m = o.mesh.material, clear = op < 1;
   m.color.set(color); m.opacity = op; m.transparent = clear; m.depthWrite = !clear; m.roughness = clear ? 0.3 : 0.6;
   m.side = clear ? THREE.DoubleSide : THREE.FrontSide; m.needsUpdate = true;
-  try { const k = 'look:' + name; if (reset) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify([color, op])); } catch (e) {}
+  if (o.li) { const sw = o.li.querySelector('i'); if (sw) sw.style.background = color; }
 }
-for (const n of Object.keys(objs)) { try { const v = JSON.parse(localStorage.getItem('look:' + n)); if (v) setLook(n, v[0], v[1]); } catch (e) {} }
+function lookAll(color, op) {
+  for (const o of printed) lookOne(o, color, op);
+  $('lookv').textContent = Math.round(op * 100) + '%';
+  try { localStorage.setItem('look:printed', JSON.stringify([color, op])); } catch (e) {}
+}
+function lookReset() {
+  for (const o of printed) lookOne(o, o.part.color, o.part.opacity != null ? o.part.opacity : 1);
+  try { localStorage.removeItem('look:printed'); } catch (e) {}
+  $('lookc').value = '#' + new THREE.Color(printed.length ? printed[0].part.color : '#ffffff').getHexString(); $('looko').value = 1; $('lookv').textContent = 'as designed';
+}
+if (printed.length) {
+  $('lookall').hidden = false;
+  const go = () => lookAll($('lookc').value, +$('looko').value);
+  $('lookc').oninput = go; $('looko').oninput = go; $('lookr').onclick = lookReset;
+  try { const v = JSON.parse(localStorage.getItem('look:printed')); if (v) { $('lookc').value = v[0]; $('looko').value = v[1]; lookAll(v[0], v[1]); } } catch (e) {}
+}
 // recut members (a 9th seg field, the old length): always drawn red, listed with old and new length
 const redMat = new THREE.MeshBasicMaterial({ color: 0xd62828 }); const recut = [];
 for (const o of Object.values(objs)) for (const s of (o.part.segs || [])) if (s[8] != null) {
@@ -297,7 +309,7 @@ for (const o of Object.values(objs)) for (const s of (o.part.segs || [])) if (s[
 if (recut.length) { $('recut').innerHTML = '<b class="red">recut (' + recut.length + ')</b>' + recut.map(s => '<br>' + s[0] + ': <b>' + s[7].toFixed(1) + ' mm = ' + (s[7] / 25.4).toFixed(2) + ' in</b> <span class="note">(was ' + s[8].toFixed(1) + ' = ' + (s[8] / 25.4).toFixed(2) + ' in)</span>').join(''); $('recut').hidden = false; }
 renderer.domElement.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
 renderer.domElement.addEventListener('pointerup', e => { if (down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) < 5) pick(e); down = null; });
-$('pick').onclick = e => { if (e.target.closest('.look')) return; $('pick').hidden = true; if (hl) { hl.parent.remove(hl); hl = null; } };
+$('pick').onclick = e => { $('pick').hidden = true; if (hl) { hl.parent.remove(hl); hl = null; } };
 
 // ---------- headless hooks
 window.__motion = { ready: true, n: N,
