@@ -90,6 +90,8 @@ def overlays(o):
         out.append(("L2 field (90 deg mode)", trimesh.util.concatenate([half, disc]), "#4a90d9", 0.14))
     cams = list(o.get("cams") or [])
     try:                                                                            # the rear camera on node 21 (parts/overseer_cage_node_21/part.py)
+        if "cams" not in o:                                                         # only with the Overseer's cams (3 Nov: it was drawn on the Scout page too)
+            raise KeyError("cams")
         cage = _json.load(open(os.path.join(ROOT, "systems", "overseer.cage.json")))
         pitch = math.radians(40.0); F = np.array([-math.cos(pitch), 0.0, -math.sin(pitch)]); U = np.array([-math.sin(pitch), 0.0, math.cos(pitch)])
         c21 = np.array(cage["nodes"][21]); cams.append(dict(lens=(c21 + F * 26.0).tolist(), f=F.tolist(), u=U.tolist(), r=np.cross(F, U).tolist(), ha=44.5, hv=36.5))
@@ -219,6 +221,7 @@ def build(inline=False, offline=False):
     os.makedirs(os.path.join(SITE, "meshes"), exist_ok=True)
     out = {"systems": [], "repo": os.environ.get("GITHUB_REPOSITORY", "sparkiscool/noxen"), "commit": head(offline)}
     meshes = {}
+    owners = {}                                   # parts/<folder> -> the one system that places it
     for f in sorted(glob.glob(os.path.join(ROOT, "systems", "*.assembly.json"))):
         a = json.load(open(f))
         sysname = os.path.basename(f).split(".")[0]
@@ -234,6 +237,9 @@ def build(inline=False, offline=False):
                 mesh = cand
             elif st == "placed" and "mesh" in p and os.path.exists(os.path.join(ROOT, p["mesh"])):
                 mesh = os.path.join(ROOT, p["mesh"])
+            if mesh and mesh.startswith(os.path.join(ROOT, "parts", src) + os.sep) and owners.setdefault(src, sysname) != sysname:
+                sys.exit(f"build_site: parts/{src} is placed by both {owners[src]} and {sysname}: a folder belongs to one drone "
+                         f"(3 Nov: the Scout page drew the Overseer's cage, motors and props from shared folders). Give each its own folder.")
             if mesh:
                 m = view_mesh(trimesh.load(mesh, force="mesh"), pid)
                 kind = "mesh"
