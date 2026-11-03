@@ -45,7 +45,7 @@ def write(name, t):
 def motor(mx, my):
     z0 = PLATE_TOP
     base = cyl(mx, my, z0, z0 + 2.0, 8.0) + union([rotz(cbox(0, 0, 0, 19.0, 5.0, 2.0), a) for a in (45, 135)]).translate([mx, my, z0 + 1.0])
-    holes = union([cyl(mx + sx * 6.0, my + sy * 6.0, z0 - 1, z0 + 3, 1.0, 16) for sx in (-1, 1) for sy in (-1, 1)])   # 4 x M2 on 12 x 12
+    holes = union([cyl(mx + 8.49 * c, my + 8.49 * s, z0 - 1, z0 + 3, 1.0, 16) for c, s in ((1, 0), (-1, 0), (0, 1), (0, -1))])   # 4 x M2 on 12 x 12, along the arm
     stator = cyl(mx, my, z0 + 2.0, z0 + 5.0, 6.0)
     bell = cyl(mx, my, z0 + 4.0, z0 + MOTOR_H - 1.5, MOTOR_D / 2, 72)
     windows = union([rotz(box(8.0, 14.0, -1.6, 1.6, 0, 6.0), a) for a in range(0, 360, 40)]).translate([mx, my, z0 + 6.0])   # side windows
@@ -117,27 +117,8 @@ def cylx(x0, x1, y, z, r, n=24):
 PCB = 1.6
 
 
-# ---- the bought parts of the layout (dimensions.md A, H, M), each at the centre of the box that stood on the page (layout v3 / v12)
-def plate():
-    """Bee35 arm plate, 3.5 carbon, z 18.5..22 (dimensions.md C): 153 wheelbase, body 94 across at the side bolts (y +-47), tail end x -50
-    with the XT60 cut-out, every mount cut off but the arms and the FC area. The outline between those numbers is E (not measured)."""
-    z0, z1 = PLATE_TOP - 3.5, PLATE_TOP
-    body = box(-50, 50, -47, 47, z0, z1)
-    corners = union([box(-20, 20, -20, 20, z0 - 1, z1 + 1).rotate([0, 0, 45]).translate([sx * 60, sy * 57, 0]) for sx in (-1, 1) for sy in (-1, 1)])
-    body = body - corners                                                                          # 45 deg chamfers on the body corners
-    arms = []
-    for mx, my in MOTORS_XY:
-        L = float(np.hypot(mx, my)) + 10.0; ang = float(np.degrees(np.arctan2(my, mx)))
-        arms.append(rotz(box(0, L, -8.0, 8.0, z0, z1), ang))
-        arms.append(cyl(mx, my, z0, z1, 12.0))
-    holes = [cyl(mx + sx * 6.0, my + sy * 6.0, z0 - 1, z1 + 1, 1.1, 16) for mx, my in MOTORS_XY for sx in (-1, 1) for sy in (-1, 1)]   # 12 x 12 M2
-    holes += [cyl(mx, my, z0 - 1, z1 + 1, 4.0) for mx, my in MOTORS_XY]                                                                 # bell clearance
-    holes += [cyl(1.9 + 18.03 * c, 18.03 * s, z0 - 1, z1 + 1, 1.5) for c, s in ((1, 0), (-1, 0), (0, 1), (0, -1))]                   # AIO 25.5 diamond, O3
-    holes += [cyl(3.9, sy * 31.0, z0 - 1, z1 + 1, 1.6) for sy in (-1, 1)] + [cyl(36.0, 0, z0 - 1, z1 + 1, 1.6)]                         # 3 plate bolts M3
-    holes += [box(-51, -40, -8.0, 8.0, z0 - 1, z1 + 1)]                                                                                  # XT60 cut-out at the tail
-    return union([body] + arms) - union(holes)
-
-
+# ---- the bought parts of the layout (dimensions.md A, H, M), each at the centre of the box that stood on the page (layout v3 / v12);
+#      the Bee35 plate itself is traced from SpeedyBee's render by tools/bee35_plate.py
 def fc_aio():
     """MicoAir743 AIO, 36 x 36 x 1.6 as a diamond at (1.9, 0), hanging under the plate on 4 grommet standoffs (25.5 holes), component side
     down, lowest point z 9.5 (dimensions.md A, H); USB-C at the tail corner, slightly right; the 4-in-1 FETs and caps on the same board."""
@@ -220,8 +201,7 @@ if __name__ == "__main__":
         write(f"scout_motor_{k}", to_trimesh(motor(mx, my)))
         write(f"scout_prop_{k}", prop(mx, my, k))
     write("scout_flow_mtf_02p", to_trimesh(flow(*FLOW_AT)))
-    write("frame_plate_bee35_carbon", to_trimesh(plate()))
-    write("fc", to_trimesh(fc_aio()))
+    write("fc", to_trimesh(fc_aio()))                   # the plate is traced from SpeedyBee's render: tools/bee35_plate.py
     write("radxa_zero_3w", to_trimesh(radxa()))
     write("ubec", to_trimesh(ubec()))
     write("xr2", to_trimesh(xr2()))
