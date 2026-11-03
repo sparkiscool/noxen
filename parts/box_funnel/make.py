@@ -22,7 +22,7 @@ H_X, H_Y = 40.0, 28.0                             # the x (nose / tail) faces an
 CX = 1.5                                          # the receiver centre x (the catch centre) in the seat frame
 SEAT = (CX - 92.0, CX + 92.0, -33.4, 33.4)        # the Overseer receiver v2 outline (E) = the Scout's belly skirt
 HOLE = (CX - 85.0, CX + 85.0, -25.0, 25.0)        # both cartridges and the swap head pass (Overseer cartridge width CHECK)
-RIM, LEG, LEG_BOTTOM, LEG_Y = 6.0, 12.0, -89.3, 40.0
+RIM, LEG, LEG_BOTTOM, LEG_Y = 0.0, 12.0, -89.3, 40.0      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
 
 
@@ -46,10 +46,10 @@ def funnel():
     yw = 33.4 + gy + w                                                                  # the y walls' outer face at h 28
     top_cut = box(x0 - gy + 0.5, x1 + gy - 0.5, -200, 200, z0 + H_Y, z0 + H_X + 2)        # the y walls above h 28 go; the x walls (beyond the inner x at h 28) stay
     ox0, ox1 = x0 - gx - w, x1 + gx + w                                                 # the x walls' outer faces at h 40
-    rim = [box(ox0 - RIM, ox0 + 2.0, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X), box(ox1 - 2.0, ox1 + RIM, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X)]
+    rim = [box(ox0 - RIM, ox0 + 2.0, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X), box(ox1 - 2.0, ox1 + RIM, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X)] if RIM else []
     skirt = box(HOLE[0] - WALL, HOLE[1] + WALL, HOLE[2] - WALL, HOLE[3] + WALL, z0 - 12.0, z0)
     legs = [box(cx - LEG / 2, cx + LEG / 2, cy - LEG / 2, cy + LEG / 2, LEG_BOTTOM, z0 + H_X)
-            for cx in (ox0 - RIM / 2, ox1 + RIM / 2) for cy in (-LEG_Y, LEG_Y)]
+            for cx in (ox0 - LEG / 2, ox1 + LEG / 2) for cy in (-LEG_Y, LEG_Y)]
     hole = box(*HOLE, z0 - 20.0, z0 + H_X + 2.0)
     body = (outer - top_cut) + mf.Manifold.batch_boolean(rim + [skirt] + legs, mf.OpType.Add)
     return body - inner - hole

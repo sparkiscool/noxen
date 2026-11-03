@@ -146,13 +146,13 @@ def radxa():
     soc = cbox(30, 14, 0.6, 12, 12, 1.2); ram = cbox(44, 20, 0.5, 8, 8, 1.0); wifi = cbox(62, 15, 0.6, 3, 10, 1.2)
     sd = box(0, 4.9, 7.8, 22.3, -PCB - 2.86, -PCB)
     m = union([b, hdmi, soc, ram, wifi, sd] + usb) - union(holes)
-    return frame(m, (-144.4, 0.0, 19.5), (1, 0, 0), (0, 0, 1), (0, -1, 0))   # +10 (3 Nov): clear of the funnel rim
+    return frame(m, (-118.0, -15.0, 7.5), (1, 0, 0), (0, 1, 0), (0, 0, 1))   # 3 Nov compact layout: flat under the plate's tail, x -118..-53, z 7.5..15, over the funnel mouth
 
 
 def ubec():
     """5 V UBEC, a heatshrunk brick (makers 43..50 x 17..25 x 7..10, Q4: 48 x 17 x 8 E) with leads out both short ends, in the layout's
     box x -178.6..-117.6, y 18.2..33.6, z 16..24 (tail bay, behind the rear disks)."""
-    cx, cy, cz = -148.1, 25.9, 30.0                                                  # +10 (3 Nov): clear of the funnel rim
+    cx, cy, cz = -84.0, 26.0, 11.5                                                   # 3 Nov compact layout: beside the Radxa under the plate's tail
     brick = union([cbox(cx, cy, cz, 48, 15, 8), cbox(cx, cy, cz, 50, 17, 6)])
     leads = [cylx(cx - 30.5, cx - 24, cy + dy, cz, 0.9) for dy in (-3, 3)] + [cylx(cx + 24, cx + 30.5, cy + dy, cz, 0.9) for dy in (-3, 3)]
     return union([brick] + leads)
@@ -160,10 +160,10 @@ def ubec():
 
 def xr2():
     """RadioMaster XR2 nano: 16 x 12 x 6 board with the antenna up (dimensions.md M), in the layout's box x -110..-94, y -27..-15, z 23..45."""
-    cx, cy, z0 = -102.0, -21.0, 33.0                                                  # +10 (3 Nov): clear of the funnel rim
+    cx, cy, z0 = -70.0, -24.0, 8.0                                                    # 3 Nov compact layout: under the plate's tail; antenna laid flat along -x
     board = cbox(cx, cy, z0 + 0.5, 16, 12, 1.0)
     chip = cbox(cx, cy, z0 + 1.0 + 1.0, 5, 5, 2.0); rf = cbox(cx + 5, cy - 3, z0 + 1.0 + 0.8, 3, 3, 1.6); conn = cbox(cx - 6, cy, z0 + 1.0 + 1.5, 3, 8, 3.0)
-    ant = union([cyl(cx + 6, cy + 4, z0 + 1.0, z0 + 20.0, 0.5, 12), cbox(cx + 6, cy + 4, z0 + 20.5, 1.0, 6.0, 1.0)])     # T antenna, up
+    ant = union([cylx(cx - 26, cx - 6, cy + 4, z0 + 2.0, 0.5, 12), cbox(cx - 26, cy + 4, z0 + 2.0, 1.0, 6.0, 1.0)])      # T antenna, flat along -x (3 Nov)
     return union([board, chip, rf, conn, ant])
 
 
@@ -193,7 +193,7 @@ def camera():
     return union([board, holder, barrel, ring, front, plug] + chips) - union(holes + [glass_cut])
 
 
-CAMERA_LENS = (149.0, 0.0, 47.0)                                                # +5 (3 Nov): the board bottom over the funnel mouth                                     # one camera at the nose, horizon, looking +x (dimensions.md System Scout v3)
+CAMERA_LENS = (122.0, 0.0, 40.0)                                                # 3 Nov compact layout: just ahead of the front discs (board x 105..120), lens low                                     # one camera at the nose, horizon, looking +x (dimensions.md System Scout v3)
 
 
 if __name__ == "__main__":
