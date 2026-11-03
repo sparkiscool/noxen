@@ -4,7 +4,7 @@ no strap, light, clears the bottom"). One PETG piece under the base, on its 4 M3
 in from the tail, leads aft, against a front stop, and a snap tab in the floor drops behind its rear face: no strap. Out: press the
 tab end down, slide aft. Pack centre x -20 (the base's pack design point), top under the 4 pads.
 Drawn: the 4 bolt pads (O11 x 6, M3 through, head recessed from below), small contact pads on the pack's bottom, sides and front
-(2.0), the snap tab (2.4 x 12, 30 long, 2.5 hook, ramp aft). Cut: the pack (0.5 a side) and its slide-out path aft through the
+(2.0), the snap tab (2.4 x 12, 38 long: 30 free + 8 root in the floor, 2.5 hook, ramp aft). Cut: the pack (0.5 a side) and its slide-out path aft through the
 envelope (less the hook), the tab's free slots and its 3.5 deflection room, the M3 shanks and a O7 screwdriver path below each pad.
 Generated: everything between. Supports: the pad tops on the base. Loads: the pack 480 g (E) at its centre, each case's pack force
 split by direction onto the faces that hold it (floor, pads, sides, front stop, tab): crash 35 g in 14 directions, flight, landing."""
@@ -24,7 +24,7 @@ X0, X1 = -20.0 - PACK[0] / 2 - CLR, -20.0 + PACK[0] / 2 + CLR      # cavity x -8
 YW = PACK[1] / 2 + CLR                                              # cavity y +-24
 ZT = Z_MOUNT - PAD_T - CLR; ZB = ZT - PACK[2] - 2 * CLR             # cavity z -63.6..-14.6
 PACK_CG = np.array([-20.0, 0.0, (ZT + ZB) / 2])
-TAB_W, TAB_T, TAB_L, HOOK = 12.0, 2.4, 30.0, 2.5
+TAB_W, TAB_T, TAB_L, TAB_FREE, HOOK = 12.0, 2.4, 38.0, 30.0, 2.5   # free 30 (1.0 % strain at the 2.5 hook), root 8 in the generated floor
 PAD = 2.0
 DIRS14 = [np.array(v, float) / np.linalg.norm(v) for v in
           [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)] + [(a, b, c) for a in (1, -1) for b in (1, -1) for c in (1, -1)]]
@@ -61,9 +61,9 @@ def bodies():
     tab = [box(tab_x0, tab_x0 + TAB_L, -TAB_W / 2, TAB_W / 2, ZB - TAB_T, ZB), hook()]
     cuts = [box(X0, X1, -YW, YW, ZB, ZT),                              # the pack
             box(X0 - 60.0, X0, -YW, YW, ZB, ZT + 0.01) - box(X0 - 0.5 - HOOK - 0.01, X0 - 0.49, -TAB_W / 2 - 0.01, TAB_W / 2 + 0.01, ZB - 0.01, ZB + HOOK + 0.01),
-            box(tab_x0 - 1.0, tab_x0 + TAB_L, TAB_W / 2, TAB_W / 2 + 1.0, ZB - 20.0, ZB),      # the tab's free slots
-            box(tab_x0 - 1.0, tab_x0 + TAB_L, -TAB_W / 2 - 1.0, -TAB_W / 2, ZB - 20.0, ZB),
-            box(tab_x0 - 1.0, tab_x0 + TAB_L, -TAB_W / 2 - 1.0, TAB_W / 2 + 1.0, ZB - 20.0, ZB - TAB_T),   # its deflection room
+            box(tab_x0 - 1.0, tab_x0 + TAB_FREE, TAB_W / 2, TAB_W / 2 + 1.0, ZB - 20.0, ZB),      # the tab's free slots
+            box(tab_x0 - 1.0, tab_x0 + TAB_FREE, -TAB_W / 2 - 1.0, -TAB_W / 2, ZB - 20.0, ZB),
+            box(tab_x0 - 1.0, tab_x0 + TAB_FREE, -TAB_W / 2 - 1.0, TAB_W / 2 + 1.0, ZB - 20.0, ZB - TAB_T),   # its deflection room
             box(tab_x0 - 20.0, tab_x0, -TAB_W / 2 - 1.0, TAB_W / 2 + 1.0, ZB - 20.0, ZB)]      # nothing aft of the tab end (thumb)
     cuts += [cyl(x, y, Z_MOUNT - 80, Z_MOUNT + 1, SHANK_R) for x, y in BOLTS]
     cuts += [cyl(x, y, Z_MOUNT - 80, Z_MOUNT - PAD_T + HEAD_D, HEAD_R + 0.1) for x, y in BOLTS]   # head recess + driver path
@@ -82,7 +82,7 @@ def setup(h):
            "+y": U([box(x - 8, x + 8, YW, YW + e, PACK_CG[2] - 8, PACK_CG[2] + 8) for x in (-75.0, 35.0)]),
            "-y": U([box(x - 8, x + 8, -YW - e, -YW, PACK_CG[2] - 8, PACK_CG[2] + 8) for x in (-75.0, 35.0)]),
            "+x": box(X1, X1 + e, -10.0, 10.0, PACK_CG[2] - 10, PACK_CG[2] + 10),
-           "-x": box(X0 - 0.5 - e, X0 - 0.5 + 0.01, -TAB_W / 2, TAB_W / 2, ZB, ZB + HOOK)}
+           "-x": box(X0 - 0.5 - HOOK - 0.5, X0 - 0.49, -TAB_W / 2, TAB_W / 2, ZB - TAB_T, ZB + HOOK)}   # the hook and the tab end under it
 
     def pack(name, a, cls):
         F = -PACK_G * G * np.asarray(a, float)                          # the pack's push on the holder
