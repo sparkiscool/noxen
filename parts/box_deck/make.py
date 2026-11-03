@@ -1,7 +1,7 @@
 """The box's top deck (3 Nov): the enclosure ends here and the funnel stands on it. Box W frame. The Overseer's cage hangs round the
 funnel when it is seated, its loop feet at W Z 71.6 (seat z -83.7), so nothing of the box may stand above the deck but the funnel:
 deck top W Z 66, 3 thick, the enclosure footprint (X +-209, Y -69..340, the v2 layout), with the swap opening for the heads
-and both cartridges centred on the catch centre (0, 167.1): 210 along Y (the axle) x 106 across (concept F's swap hole, C).
+and both cartridges centred on the catch centre (0, 167.1): 220 along Y (the axle) x 140 across (the head body 126 x 15 plus clearance; concept F had 210 x 106).
 Run: python parts/box_deck/make.py
 """
 import os, numpy as np, trimesh, manifold3d as mf
@@ -9,7 +9,7 @@ import os, numpy as np, trimesh, manifold3d as mf
 HERE = os.path.dirname(os.path.abspath(__file__))
 Z_TOP, T = 66.0, 3.0
 X0, X1, Y0, Y1 = -209.0, 209.0, -69.0, 340.0
-YC, HOLE_Y, HOLE_X = 167.1, 210.0, 106.0
+YC, HOLE_Y, HOLE_X = 167.1, 220.0, 140.0           # 3 Nov: the swap head's body (126 along X) passes up to the funnel's under-seat skirt
 
 
 def box(x0, x1, y0, y1, z0, z1):
