@@ -23,7 +23,6 @@ Shape: one continuous height field H(x, y), soft-blended, the 3D field blurred 0
 * The 8 top plate bolts A (arm lib BOLT_TOP): a 1.6 seat ring on the plate top and a tube up to the shell round a O7.2
   driver well. M3 x 50 as now (drilled bottom plate).
 * Cable exits:
-  - one 15 x 11 at the end of each arm root, along the tubes (the motor leads ride the root tops under the cover);
   - one 48 x 18 on each side face.
 * Print (Bambu A1 mini, translucent PETG, dried 65 C 8 h):
   - upright: the lip on the smooth PEI plate with glue stick;
@@ -47,7 +46,7 @@ HD, FLOOR, XC, AXF, AXR, AY = 40.0, 12.0, 5.0, 75.0, 95.0, 65.0
 PROP_Z, PROP_R, PROP_CLR = 82.0, 127.0, 6.0
 LOGO_W, LOGO_C, LOGO_T = 50.0, (12.0, 0.0), 2.0
 BOLT_U, BOLT_V, HOLE_R, SEAT_R, DRIVE_R = 63.17, 15.0, 1.7, 5.0, 3.6
-ARM_EXIT, SIDE_EXIT = (15.0, 11.0, 8.0), (48.0, 18.0, 38.0)  # width, height over the plate, start (s along the arm / r)
+SIDE_EXIT = (48.0, 18.0, 38.0)                              # width, height over the plate, start r (no exits at the root ends: Spark 3 Nov)
 RES, XY = 0.45, 92.0
 SKIRT = 3.0                                                 # skirt rise per mm in from the edge (72 deg; prints upright)
 LOGO = [[(0, 0), (78, 0), (286, 257), (210, 257), (56, 66.7), (56, 257), (0, 257)],
@@ -149,11 +148,6 @@ rb = np.min([np.hypot(X - bx, Y - by) for bx, by in bolts()], axis=0)
 def exit_field(Z):
     """> 0 inside a cable exit"""
     E = np.full(X.shape + (Z.shape[-1],), -1e3, np.float32)
-    w, h, s0 = ARM_EXIT
-    for R, ud, vd, a in arms():
-        n = np.array([-a[1], a[0]]); dx, dy = X - R[0], Y - R[1]
-        sa, ta = dx * a[0] + dy * a[1], dx * n[0] + dy * n[1]
-        E = np.maximum(E, np.minimum(np.minimum(w / 2 - np.abs(ta), sa - s0)[..., None], PT + h - Z))
     w, h, s0 = SIDE_EXIT
     for th in (0.0, 90.0, 180.0, 270.0):
         c, sn = np.cos(np.radians(th)), np.sin(np.radians(th))
