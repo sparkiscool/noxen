@@ -3,7 +3,7 @@ the seated Scout: x nose, y left, z up; the receiver bottom at z -44.3) with the
 part but the latch set is sliced in 2 mm bands of height above the seat. Per band: the half-widths in x (nose / tail, about the
 receiver centre x 1.5) and y, and the part that sets each. Writes runs/seat_envelope/<drone>.json and prints the table.
     python tools/seat_envelope.py scout|overseer|both
-Overseer -> seat: T_OV (tools/import_box.py): its catch centre x -30 and cartridge bottom z -54 onto the Scout's (1.5, -44.5).
+Overseer -> seat: T_OV (tools/import_box.py): its catch centre x -30 and cartridge bottom z -76.9 (cage v5: the loop at -79.9 is 3 under it) onto the Scout's (1.5, -44.5).
 """
 import json, os, sys
 import numpy as np, trimesh
@@ -12,7 +12,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 from build_site import pose_matrix, placeholder
 SEAT_Z, RX = -44.3, 1.5
-T_OV = np.array([[1, 0, 0, 31.5], [0, 1, 0, 0], [0, 0, 1, 9.5], [0, 0, 0, 1.0]])
+T_OV = np.array([[1, 0, 0, 31.5], [0, 1, 0, 0], [0, 0, 1, 32.4], [0, 0, 0, 1.0]])   # its cartridge bottom z -76.9 (cage v5) onto the Scout's -44.5
 SKIP = ("receiver", "cartridge", "slider", "latch", "pack", "battery holder", "wires", "cables", "props (swept)", "ghost", "view")
 
 

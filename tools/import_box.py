@@ -116,8 +116,8 @@ def main(nox):
         parts.append(dict(id=pid, name=nm, role="protected", group="landing: Scout", color="#8899aa", mesh=mesh, pose=SEAT_TO_W,
                           material="PETG", tag="M", owner="battery latch", version="v3 / v6", source=f"parts/{src} (this repo), at the seat",
                           note="the latch set every drone carries: what the funnel seats"))
-    T_OV = np.array([[1, 0, 0, 31.5], [0, 1, 0, 0], [0, 0, 1, 9.5], [0, 0, 0, 1.0]])      # Overseer drone frame -> seat frame: its catch centre (x -30)
-    ov = json.load(open(os.path.join(ROOT, "systems", "overseer.assembly.json")))         # and cartridge bottom (z -54) onto the Scout's (1.5, -44.5)
+    T_OV = np.array([[1, 0, 0, 31.5], [0, 1, 0, 0], [0, 0, 1, 32.4], [0, 0, 0, 1.0]])     # Overseer drone frame -> seat frame: its catch centre (x -30)
+    ov = json.load(open(os.path.join(ROOT, "systems", "overseer.assembly.json")))         # and cartridge bottom (z -76.9: cage v5, the loop 3 under it; an earlier -54 was v3's) onto the Scout's (1.5, -44.5)
     keep = {"cage_shell_tubes", "cage_shell_nodes", "spokes_ties_head_rods", "overseer_base", "top_plate", "bottom_plate", "overseer_head_mount",
             "unitree_l2", "camera_left", "camera_right", "motor_1", "motor_2", "motor_3", "motor_4", "prop_1", "prop_2", "prop_3", "prop_4", "overseer_battery_holder"}
     for p in ov["parts"]:
