@@ -1045,10 +1045,12 @@
 "tag": "E",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "frame_plate_bee35_carbon",
 "group": "frame",
-"color": "#3a3a3a"
+"color": "#3a3a3a",
+"note": "Bee35 arm plate 3.5 carbon, 153 wheelbase, body 94 across, tail x -50 with the XT60 cut-out (dimensions.md C); the outline between those numbers is E",
+"pose": null
 },
 {
 "name": "motor 1",
@@ -1187,10 +1189,12 @@
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "fc",
 "group": "bought",
-"color": "#2e7d32"
+"color": "#2e7d32",
+"note": "MicoAir743 AIO 36 x 36 diamond at (1.9, 0) under the plate on grommet standoffs, lowest point z 9.5 (dimensions.md A, H)",
+"pose": null
 },
 {
 "name": "UBEC",
@@ -1201,10 +1205,12 @@
 "tag": "E",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "ubec",
 "group": "bought",
-"color": "#2e7d32"
+"color": "#2e7d32",
+"note": "5 V UBEC brick 48 x 17 x 8 with leads (Q4, E) at the layout's place in the tail bay",
+"pose": null
 },
 {
 "name": "XR2",
@@ -1215,10 +1221,12 @@
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "xr2",
 "group": "bought",
-"color": "#2e7d32"
+"color": "#2e7d32",
+"note": "RadioMaster XR2 nano 16 x 12 x 6 with the antenna up (dimensions.md M) at the layout's place",
+"pose": null
 },
 {
 "name": "Radxa Zero 3W",
@@ -1226,13 +1234,15 @@
 "protect": true,
 "mesh": "parts/radxa_zero_3w/part.stl",
 "mass_g": 10.0,
-"tag": "E",
+"tag": "C",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "radxa_zero_3w",
 "group": "bought",
-"color": "#2e7d32"
+"color": "#2e7d32",
+"note": "Radxa Zero 3W 65 x 30 from the STEP (dimensions.md H), on edge in the tail bay at the layout's place; ports edge down, components to -y (E)",
+"pose": null
 },
 {
 "name": "flow MTF-02P",
@@ -1440,10 +1450,12 @@
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "pack_4s_1500",
 "group": "bought",
-"color": "#2f4fbf"
+"color": "#2f4fbf",
+"note": "4S 1500, 70 x 33 x 32, 165 g (dimensions.md A), leads out the nose end to the XT60 plug",
+"pose": null
 },
 {
 "name": "pack XT60 plug",
@@ -1507,13 +1519,15 @@
 "protect": true,
 "mesh": "parts/camera/part.stl",
 "mass_g": 10.0,
-"tag": "E",
+"tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "camera",
 "group": "bought",
-"color": "#2d5a2d"
+"color": "#2d5a2d",
+"note": "DECXIN 2633V2 board 38 x 38, M2 holes on 28 x 28, lens (149, 0, 42) looking +x (dimensions.md A, System Scout v3)",
+"pose": null
 },
 {
 "name": "wires",
