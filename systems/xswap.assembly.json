@@ -1,9 +1,47 @@
 {
 "name": "xswap short lock",
 "title": "xswap Short Lock in the Overseer",
-"readme_view": "iso",
-"artifact": null,
+"readme_view": "lock",
+"artifact": "https://claude.ai/artifact/Tiij4hVRdJWVdtLy9JdeQv",
 "machine": "overseer",
+"views": {
+"lock": {
+"eye": [
+270,
+-330,
+110
+],
+"target": [
+-20,
+0,
+-70
+]
+},
+"lock side": {
+"eye": [
+-20,
+-420,
+-60
+],
+"target": [
+-20,
+0,
+-70
+]
+},
+"lock under": {
+"eye": [
+200,
+-260,
+-330
+],
+"target": [
+-20,
+0,
+-80
+]
+}
+},
 "note": "The xswap short lock v5 on the Overseer's 4 base inserts, one swap cycle from the lock's CAD: the pincer rises, the fingers close and swing both gate bars open, the tabs drop into their seats, the rail pulls the shell off the XT60 and the guide poles, the carriage flips, then the reverse puts a pack back. Drone frame (x nose, y left, z up, z 0 bottom plate top); the Overseer drawn see-through round it. Readouts: finger stroke, bar swing, rail, flip, and the shell's lowest point over the cage feet (z -93.2): -9.5 at rest, the skirt under the shell's bottom plate. Copied from the lock's own page by tools/import_xswap.py; the lock's CAD stays in the xswap session.",
 "cg_ref": null,
 "timeline": "tools/xswap_motion.py:timeline",

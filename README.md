@@ -35,6 +35,7 @@ Each system's `artifact` URL is in its `systems/<name>.assembly.json`; a session
 - Overseer: https://claude.ai/artifact/VhDfnp75uoVsj8SnyrW2Qg
 - Scout: https://claude.ai/artifact/WHdjYkzKPifXuHT1dWeqoR
 - Nox Ground Unit: https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z
+- xswap short lock in the Overseer: https://claude.ai/artifact/Tiij4hVRdJWVdtLy9JdeQv
 
 ## How it works
 One script per part, GitHub runs the topology engine, one page shows the assembly. Claude writes scripts, nothing else.
