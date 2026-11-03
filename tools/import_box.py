@@ -63,16 +63,22 @@ def main(nox):
         if "box" not in p or not (p["name"].startswith("sheet") or p["name"].startswith("PSU")):
             continue
         pid = slug("enclosure " + p["name"])
+        bx = list(p["box"])
+        if p["name"].startswith("sheet"):
+            bx[5] = 63.0                                                   # the sheets end under the deck (3 Nov): the Overseer's cage hangs round the funnel above it
         parts.append(dict(id=pid, name=f"enclosure: {p['name']}", role="bought", group="enclosure", color="#c9d6e2" if p["name"].startswith("sheet") else "#777777",
-                          box=p["box"], opacity=0.25 if p["name"].startswith("sheet") else None, mass_g=p.get("mass_g"), tag="C",
+                          box=bx, opacity=0.25 if p["name"].startswith("sheet") else None, mass_g=p.get("mass_g"), tag="C",
                           owner="box structure v2", version="v2 layout", source="nox/box/box_structure_v2.assembly.json", note=p.get("note", "")))
-    parts.append(dict(id="box_funnel", name="funnel (latch-footprint seat, 55 deg)", role="structure", group="funnel", color="#e07020", mesh="parts/box_funnel/part.stl",
+    parts.append(dict(id="box_deck", name="top deck (the enclosure ends here)", role="structure", group="funnel", color="#c9b48a", mesh="parts/box_deck/part.stl",
+                      pose=None, material="PETG", tag="C", owner="box catch", version="v1 drawn 3 Nov", source="parts/box_deck/make.py",
+                      note="W Z 63..66, the v2 footprint, swap opening 210 x 106 on the catch centre; under the Overseer's loop feet (W Z 71.6)"))
+    parts.append(dict(id="box_funnel", name="funnel v3 (seats the 184 x 67 receiver outline, 55 deg; x faces to h 40, y faces to h 28)", role="structure", group="funnel", color="#e07020", mesh="parts/box_funnel/part.stl",
                       pose=SEAT_TO_W, material="PETG", tag="E", owner="box catch", version="v1 drawn 3 Nov", source="parts/box_funnel/make.py",
-                      note="centres on the receiver v3 footprint 106 x 66 so both drones seat at one height; mouth 204 x 164, faces 55 deg, 70 tall; hold-down not drawn"))
+                      note="seats the Overseer receiver outline, which the Scout matches with its belly skirt, so both land at one height; the y faces stop at h 28 under the Overseer base's side rails and the x faces at h 40 under its flow clip (capture +-20 / +-28); legs to the deck; hold-down not drawn"))
     # the two drones for the landing timeline (tools/landing_box.py): rigid copies of their current pages, posed seated
     scout = json.load(open(os.path.join(ROOT, "systems", "scout.assembly.json")))
     for p in scout["parts"]:
-        if p["id"] not in ("frame_plate_bee35_carbon", "fc", "pack_4s_1500", "camera") and not p["id"].startswith(("scout_motor", "scout_prop")):
+        if p["id"] not in ("frame_plate_bee35_carbon", "fc", "pack_4s_1500", "camera", "scout_belly_skirt", "scout_cage_pattern") and not p["id"].startswith(("scout_motor", "scout_prop")):
             continue
         pid = slug("scout " + p["id"]); mesh, nf = copy_mesh(os.path.join(ROOT, p["mesh"]), pid)
         parts.append(dict(id=pid, name=f"Scout: {p['name']}", role=p.get("role", "bought"), group="landing: Scout", color=p.get("color"), mesh=mesh,
@@ -101,11 +107,11 @@ def main(nox):
         else:
             continue
         parts.append(e)
-    for src, nm in (("receiver_v3_latch", "Overseer: receiver (the same latch footprint)"), ("cartridge_v6_latch", "Overseer: cartridge")):
-        pid = slug("ctx overseer " + src.split("_")[0]); mesh, nf = copy_mesh(os.path.join(ROOT, "parts", src, "part.stl"), pid)
-        parts.append(dict(id=pid, name=nm, role="protected", group="landing: Overseer", color="#8899aa", mesh=mesh, pose=SEAT_TO_W,
-                          material="PETG", tag="E", owner="battery latch", version="v3 / v6", source=f"parts/{src}, at the Overseer's catch centre",
-                          note="the Overseer carries the same 106 x 66 footprint under its base (proposal 3 Nov); its battery holder of today sits above it"))
+    for pid, nm, bx in (("box_ctx_overseer_receiver", "Overseer: receiver v2 (E box)", [1.5 - 92, 1.5 + 92, -33.4, 33.4, -44.3, 27.7]),
+                        ("box_ctx_overseer_cartridge", "Overseer: cartridge (E box)", [1.5 - 80, 1.5 + 80, -25, 25, -44.5, 0.5])):
+        parts.append(dict(id=pid, name=nm, role="protected", group="landing: Overseer", color="#8899aa", box=bx, pose=SEAT_TO_W,
+                          material="PETG", tag="E", owner="battery latch", version="v2 (bay envelope)", source="the swap arm's bay receiver envelope, at the seat",
+                          note="the Overseer latch set back in its base slot (out since 29 Oct): 184 x 67 x 72 from the arm's bay envelope; the cartridge width is a CHECK"))
     a = dict(name="Nox Ground Unit", title="Nox Ground Unit", readme_view="iso", artifact=None, machine="box",
              note=("Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 155.3), "
                    "nox/box/catch_system.py SEAT_TO_W). In: the swap arm v7 at park with its 9 bay receivers and two packs, the stand of the built demo, "

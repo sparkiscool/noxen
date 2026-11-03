@@ -3,7 +3,7 @@
 "title": "Scout v3",
 "artifact": "https://claude.ai/artifact/WHdjYkzKPifXuHT1dWeqoR",
 "machine": "scout",
-"note": "Scout internals only, no battery mechanism (Spark 3 Nov): the Bee35 plate, the EMAX ECO II 2004 motors and Gemfan 3520 props, the electronics and the 4S 1500 pack from layout v3 / v12; the latch set (receiver v3, cartridge v6, sliders, TPU pieces, the panel XT60) is off the page with the cage until the shared funnel and the Scout belly ring are decided. Until 3 Nov the assembly placed the Overseer's folders for the cage, motors, props and flow sensor, so the page showed the Overseer's cage on the Scout (the migration of 28 Oct shared the folder names). v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
+"note": "Scout built against the shared funnel (3 Nov): the Bee35 plate, the EMAX ECO II 2004 motors and Gemfan 3520 props, the electronics and the 4S 1500 pack from layout v3 / v12, the belly skirt that seats in the funnel, and the cage as a 3 mm rod clearance pattern round the funnel's rim and legs; the tail bay electronics sit 10 higher and the camera 5 higher than layout v12 so nothing but the belly is below the funnel mouth (z 7.7); the latch set stays off the page until the hold-down is designed. Until 3 Nov the assembly placed the Overseer's folders for the cage, motors, props and flow sensor, so the page showed the Overseer's cage on the Scout (the migration of 28 Oct shared the folder names). v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
 "cg_ref": [
 0.0,
 0.0,
@@ -905,105 +905,107 @@
 "id": "wires",
 "group": "wires",
 "color": "#99a6b3"
+},
+{
+"id": "scout_belly_skirt",
+"name": "belly skirt (the Scout's seat, 184 x 67)",
+"role": "structure",
+"group": "printed",
+"color": "#e07020",
+"mesh": "parts/scout_belly_skirt/part.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "scout v3",
+"version": "v1 drawn 3 Nov",
+"source": "parts/scout_belly_skirt/make.py",
+"note": "runners fore and aft of the receiver v3 to the Overseer receiver's 184 x 67 outline at z -44.3: what the shared funnel seats; built into the belly mount later"
+},
+{
+"id": "scout_cage_pattern",
+"name": "cage (clearance pattern, 3 mm rods)",
+"role": "cage",
+"group": "cage",
+"color": "#2b2b2b",
+"mesh": "parts/scout_cage_pattern/part.stl",
+"tag": "E",
+"owner": "scout v3",
+"version": "pattern 3 Nov",
+"source": "tools/scout_cage_pattern.py",
+"note": "14 nodes, 25 rods: bottom ring at z 12 outside the funnel rim, top ring over the props at z 60, nose round the camera, 4 legs to z -36; not a design, the clearance envelope the design must keep"
 }
 ],
 "mass_budget_g": 500,
 "cage_shell": {
 "nodes": [
 [
-83.3,
-116.1,
--49.621
+150.0,
+92.0,
+12.0
 ],
 [
--71.4,
-119.7,
--49.621
+150.0,
+-92.0,
+12.0
 ],
 [
--71.4,
--119.7,
--49.621
+-150.0,
+-92.0,
+12.0
 ],
 [
-83.3,
--116.1,
--49.621
+-150.0,
+92.0,
+12.0
 ],
 [
--166.338,
-0.0,
-61.473
+150.0,
+92.0,
+60.0
 ],
 [
--1.018,
-125.052,
--11.894
+150.0,
+-92.0,
+60.0
 ],
 [
--1.018,
--125.052,
--11.894
+-150.0,
+-92.0,
+60.0
 ],
 [
-110.506,
--96.335,
-61.119
+-150.0,
+92.0,
+60.0
 ],
 [
-110.506,
-96.335,
-61.119
+178.0,
+42.0,
+36.0
 ],
 [
--239.044,
-0.0,
-41.473
+178.0,
+-42.0,
+36.0
 ],
 [
--93.12,
--116.91,
-61.473
+150.0,
+92.0,
+-36.0
 ],
 [
--93.12,
-116.91,
-61.473
+150.0,
+-92.0,
+-36.0
 ],
 [
-44.808,
-132.776,
-44.145
+-150.0,
+-92.0,
+-36.0
 ],
 [
-44.808,
--132.776,
-44.145
-],
-[
-122.589,
-62.163,
-11.536
-],
-[
-122.589,
--62.163,
-11.536
-],
-[
--26.313,
-0.0,
-61.332
-],
-[
-116.548,
-0.0,
-36.328
-],
-[
-102.945,
-0.0,
--19.043
+-150.0,
+92.0,
+-36.0
 ]
 ],
 "rods": [
@@ -1012,71 +1014,43 @@
 1
 ],
 [
-0,
-3
-],
-[
-0,
-5
-],
-[
-0,
-8
-],
-[
-0,
-12
-],
-[
-0,
-14
-],
-[
-0,
-18
-],
-[
 1,
 2
 ],
 [
-1,
-5
-],
-[
-1,
-9
-],
-[
-1,
-11
-],
-[
-1,
-12
-],
-[
 2,
 3
 ],
 [
-2,
+3,
+0
+],
+[
+4,
+5
+],
+[
+5,
 6
 ],
 [
-2,
-9
+6,
+7
+],
+[
+7,
+4
+],
+[
+0,
+4
+],
+[
+1,
+5
 ],
 [
 2,
-10
-],
-[
-2,
-13
-],
-[
-3,
 6
 ],
 [
@@ -1084,145 +1058,62 @@
 7
 ],
 [
-3,
-13
+0,
+5
+],
+[
+1,
+6
+],
+[
+2,
+7
 ],
 [
 3,
-15
+4
 ],
 [
-3,
-18
-],
-[
-4,
+8,
 9
 ],
 [
-4,
-10
-],
-[
-4,
-11
-],
-[
-4,
-16
-],
-[
-5,
-12
-],
-[
-6,
-13
-],
-[
-7,
+0,
 8
 ],
 [
-7,
-10
+4,
+8
 ],
 [
-7,
-13
-],
-[
-7,
-15
-],
-[
-7,
-16
-],
-[
-7,
-17
-],
-[
-8,
-11
-],
-[
-8,
-12
-],
-[
-8,
-14
-],
-[
-8,
-16
-],
-[
-8,
-17
-],
-[
-9,
-10
-],
-[
-9,
-11
-],
-[
-10,
-13
-],
-[
-10,
-16
-],
-[
-11,
-12
-],
-[
-11,
-16
-],
-[
-14,
-15
-],
-[
-14,
-17
-],
-[
-14,
-18
-],
-[
-15,
-17
-],
-[
-15,
-18
-]
-],
-"links": 8,
-"link_r_mm": 1.5,
-"total_rods": 58,
-"open": [
-{
-"name": "bottom opening (pack + swap): the Overseer cage v5 base loop's 4 side nodes",
-"ring": [
-0,
 1,
+9
+],
+[
+5,
+9
+],
+[
+0,
+10
+],
+[
+1,
+11
+],
+[
 2,
-3
+12
+],
+[
+3,
+13
 ]
-}
 ],
 "node_r_mm": 6.0,
-"rod_r_mm": 1.5
+"rod_r_mm": 1.5,
+"total_rods": 25,
+"open": [],
+"note": "clearance pattern of 3 Nov round the shared funnel (tools/scout_cage_pattern.py), not a design"
 }
 }

@@ -2543,7 +2543,7 @@
 -63.0,
 334,
 -236,
-234
+63.0
 ],
 "opacity": 0.25,
 "mass_g": 666.1,
@@ -2565,7 +2565,7 @@
 -63.0,
 334,
 -236,
-234
+63.0
 ],
 "opacity": 0.25,
 "mass_g": 666.1,
@@ -2587,7 +2587,7 @@
 337,
 340,
 -236,
-234
+63.0
 ],
 "opacity": 0.25,
 "mass_g": 681.2,
@@ -2609,7 +2609,7 @@
 -69.0,
 -66.0,
 -236,
-234
+63.0
 ],
 "opacity": 0.25,
 "mass_g": 681.2,
@@ -2620,8 +2620,23 @@
 "note": ""
 },
 {
+"id": "box_deck",
+"name": "top deck (the enclosure ends here)",
+"role": "structure",
+"group": "funnel",
+"color": "#c9b48a",
+"mesh": "parts/box_deck/part.stl",
+"pose": null,
+"material": "PETG",
+"tag": "C",
+"owner": "box catch",
+"version": "v1 drawn 3 Nov",
+"source": "parts/box_deck/make.py",
+"note": "W Z 63..66, the v2 footprint, swap opening 210 x 106 on the catch centre; under the Overseer's loop feet (W Z 71.6)"
+},
+{
 "id": "box_funnel",
-"name": "funnel (latch-footprint seat, 55 deg)",
+"name": "funnel v3 (seats the 184 x 67 receiver outline, 55 deg; x faces to h 40, y faces to h 28)",
 "role": "structure",
 "group": "funnel",
 "color": "#e07020",
@@ -2657,7 +2672,7 @@
 "owner": "box catch",
 "version": "v1 drawn 3 Nov",
 "source": "parts/box_funnel/make.py",
-"note": "centres on the receiver v3 footprint 106 x 66 so both drones seat at one height; mouth 204 x 164, faces 55 deg, 70 tall; hold-down not drawn"
+"note": "seats the Overseer receiver outline, which the Scout matches with its belly skirt, so both land at one height; the y faces stop at h 28 under the Overseer base's side rails and the x faces at h 40 under its flow clip (capture +-20 / +-28); legs to the deck; hold-down not drawn"
 },
 {
 "id": "box_scout_frame_plate_bee35_carbon",
@@ -3125,6 +3140,84 @@
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_scout_belly_skirt",
+"name": "Scout: belly skirt (the Scout's seat, 184 x 67)",
+"role": "structure",
+"group": "landing: Scout",
+"color": "#e07020",
+"mesh": "parts/box_scout_scout_belly_skirt/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "E",
+"owner": "scout v3",
+"version": "v1 drawn 3 Nov",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_scout_cage_pattern",
+"name": "Scout: cage (clearance pattern, 3 mm rods)",
+"role": "cage",
+"group": "landing: Scout",
+"color": "#2b2b2b",
+"mesh": "parts/box_scout_scout_cage_pattern/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "scout v3",
+"version": "pattern 3 Nov",
 "source": "systems/scout.assembly.json, seated"
 },
 {
@@ -3918,11 +4011,18 @@
 },
 {
 "id": "box_ctx_overseer_receiver",
-"name": "Overseer: receiver (the same latch footprint)",
+"name": "Overseer: receiver v2 (E box)",
 "role": "protected",
 "group": "landing: Overseer",
 "color": "#8899aa",
-"mesh": "parts/box_ctx_overseer_receiver/part.stl",
+"box": [
+-90.5,
+93.5,
+-33.4,
+33.4,
+-44.3,
+27.7
+],
 "pose": [
 [
 0,
@@ -3952,17 +4052,24 @@
 "material": "PETG",
 "tag": "E",
 "owner": "battery latch",
-"version": "v3 / v6",
-"source": "parts/receiver_v3_latch, at the Overseer's catch centre",
-"note": "the Overseer carries the same 106 x 66 footprint under its base (proposal 3 Nov); its battery holder of today sits above it"
+"version": "v2 (bay envelope)",
+"source": "the swap arm's bay receiver envelope, at the seat",
+"note": "the Overseer latch set back in its base slot (out since 29 Oct): 184 x 67 x 72 from the arm's bay envelope; the cartridge width is a CHECK"
 },
 {
 "id": "box_ctx_overseer_cartridge",
-"name": "Overseer: cartridge",
+"name": "Overseer: cartridge (E box)",
 "role": "protected",
 "group": "landing: Overseer",
 "color": "#8899aa",
-"mesh": "parts/box_ctx_overseer_cartridge/part.stl",
+"box": [
+-78.5,
+81.5,
+-25,
+25,
+-44.5,
+0.5
+],
 "pose": [
 [
 0,
@@ -3992,9 +4099,9 @@
 "material": "PETG",
 "tag": "E",
 "owner": "battery latch",
-"version": "v3 / v6",
-"source": "parts/cartridge_v6_latch, at the Overseer's catch centre",
-"note": "the Overseer carries the same 106 x 66 footprint under its base (proposal 3 Nov); its battery holder of today sits above it"
+"version": "v2 (bay envelope)",
+"source": "the swap arm's bay receiver envelope, at the seat",
+"note": "the Overseer latch set back in its base slot (out since 29 Oct): 184 x 67 x 72 from the arm's bay envelope; the cartridge width is a CHECK"
 }
 ]
 }
