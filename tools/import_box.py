@@ -1,8 +1,9 @@
 """The box (Nox Ground Unit) as a system of this repo, from the nox repo's assembly files (3 Nov, Spark: the funnel with the most
 up-to-date box mechanism CAD, as real as it gets, one artifact other sessions can reach). Copies the real meshes into
 parts/box_<slug>/part.stl (a folder belongs to one system) and writes systems/box.assembly.json in the box W frame:
-  swap arm v7      nox/box/box_swap_arm.assembly.json (55 parts: hub, stub, rails, heads, grabbers, detent, drives, the 9 bay
-                   receivers and two packs; meshes runs/arm/v7/asm), poses as in the file (cycle t 0, park)
+  swap arm v7      nox/box/box_swap_arm.assembly.json (hub, stub, rails, heads, grabbers, detent, drives, the bay receivers and two
+                   packs; meshes runs/arm/v7/asm), poses as in the file (cycle t 0, park); the two bays nearest the top (30 and -210 deg)
+                   are dropped (Spark 3 Nov): their receivers rose through the deck, so 7 bays stay (4 Overseer, 3 Scout)
   stand            nox/box/box_structure.assembly.json: mast, cradle keel, kb, toe, the two cross bars (the built demo v1); the v1
                    ring frames, posts, brackets and v4i bay modules are left out: the v2 layout superseded them with the 9 bays
                    the arm file carries, and nothing of v2's bodies is drawn yet
@@ -16,6 +17,7 @@ import numpy as np, trimesh
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SEAT_TO_W = [[0, -1.0, 0, 0], [1.0, 0, 0, 167.1], [0, 0, 1.0, 155.3], [0, 0, 0, 1.0]]   # catch_system.py: Y_FUN 167.1, Z_SEAT 155.3 (C)
+DROPPED_BAYS = {"rec30", "rec-210"}                 # the two bays nearest the top (Spark 3 Nov): their receivers reached W Z 85, through the deck (66) and into the Overseer's loop; 7 bays stay
 BOUGHT = {"motor", "shaft", "p20", "p80", "belt", "brg", "axles", "servo", "detent_roller", "detent_springs", "detent_tower", "ties", "stub_bolts", "pack"}
 GROUP = {"rec": ("bays", "#8a94a6"), "pack": ("packs", "#2f4fbf"), "motor": ("arm drives", "#555555"), "servo": ("arm drives", "#555555"),
          "brg": ("arm drives", "#9a9a9a"), "shaft": ("arm drives", "#9a9a9a"), "p20": ("arm drives", "#777777"), "p80": ("arm drives", "#777777"),
@@ -36,11 +38,36 @@ def copy_mesh(src, pid):
     return f"parts/{pid}/part.stl", len(m.faces)
 
 
+def box_check(parts):
+    """every box part with a mesh against the deck and the funnel (W frame): the Overseer's descent check covers the drones, this covers the box"""
+    sys.path.insert(0, os.path.join(ROOT, "tools")); import seat_check as sc
+    S = sc.solids(); T = np.array(SEAT_TO_W)
+    sol = [(nm, m.transform(T[:3, :])) for nm, m, _ in S]                                   # seat frame -> W
+    sol_t = [(nm, sc.to_tri(mm)) for nm, mm in sol]
+    hits = []
+    for p in parts:
+        if not p.get("mesh") or p.get("group", "").startswith("landing") or p["id"] in ("box_funnel", "box_deck"):
+            continue
+        m = trimesh.load(os.path.join(ROOT, p["mesh"]), force="mesh"); m.apply_transform(np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4))
+        for (nm, mm), (_, st) in zip(sol, sol_t):
+            if not ((m.bounds[0] <= st.bounds[1]).all() and (m.bounds[1] >= st.bounds[0]).all()):
+                continue
+            mp = sc.man(m)
+            if mp is None:
+                continue
+            v = sc.volume(mp ^ mm)
+            if v > 0.5:
+                hits.append((p["name"], nm, v, sc.to_tri(mp ^ mm).bounds.round(0).tolist()))
+    print(f"box parts vs deck / funnel: {len(hits)} crossings" + "".join(f"\n  {a} x {b}: {v:.0f} mm3 at W {bb}" for a, b, v, bb in hits))
+
+
 def main(nox):
     parts = []
     arm = json.load(open(os.path.join(nox, "nox", "box", "box_swap_arm.assembly.json")))
     for p in arm["parts"]:
         nm = p["name"]; key = next((k for k in GROUP if nm.startswith(k)), None)
+        if nm in DROPPED_BAYS:
+            continue
         grp, col = GROUP.get(key, ("swap arm", "#99a6b3"))
         bought = any(nm.startswith(b) for b in BOUGHT)
         pid = slug("arm " + nm)
@@ -114,12 +141,13 @@ def main(nox):
                           note="the Overseer latch set back in its base slot (out since 29 Oct): 184 x 67 x 72 from the arm's bay envelope; the cartridge width is a CHECK"))
     a = dict(name="Nox Ground Unit", title="Nox Ground Unit", readme_view="iso", artifact=None, machine="box",
              note=("Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 155.3), "
-                   "nox/box/catch_system.py SEAT_TO_W). In: the swap arm v7 at park with its 9 bay receivers and two packs, the stand of the built demo, "
+                   "nox/box/catch_system.py SEAT_TO_W). In: the swap arm v7 at park with 7 bay receivers (the two nearest the top dropped, Spark 3 Nov) and two packs, the stand of the built demo, "
                    "the v2 enclosure sheets and PSU as boxes, the funnel drawn 3 Nov on the latch footprint, the Scout's receiver and cartridge seated in it. "
                    "Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, "
                    "the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). "
                    "Imported by tools/import_box.py from sparkiscool/nox."),
              cg_ref=None, timeline="tools/landing_box.py:timeline", parts=parts)
+    box_check(parts)
     out = os.path.join(ROOT, "systems", "box.assembly.json")
     if os.path.exists(out):
         old = json.load(open(out)); a["artifact"] = old.get("artifact")

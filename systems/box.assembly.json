@@ -4,7 +4,7 @@
 "readme_view": "iso",
 "artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
 "machine": "box",
-"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 155.3), nox/box/catch_system.py SEAT_TO_W). In: the swap arm v7 at park with its 9 bay receivers and two packs, the stand of the built demo, the v2 enclosure sheets and PSU as boxes, the funnel drawn 3 Nov on the latch footprint, the Scout's receiver and cartridge seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 155.3), nox/box/catch_system.py SEAT_TO_W). In: the swap arm v7 at park with 7 bay receivers (the two nearest the top dropped, Spark 3 Nov) and two packs, the stand of the built demo, the v2 enclosure sheets and PSU as boxes, the funnel drawn 3 Nov on the latch footprint, the Scout's receiver and cartridge seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
 "cg_ref": null,
 "timeline": "tools/landing_box.py:timeline",
 "parts": [
@@ -1813,47 +1813,6 @@
 "note": "carbon tie rods B (2 x 3.0)"
 },
 {
-"id": "box_arm_rec30",
-"name": "arm: rec30",
-"role": "structure",
-"group": "bays",
-"color": "#8a94a6",
-"mesh": "parts/box_arm_rec30/part.stl",
-"pose": [
-[
-1.0,
-0.0,
-0.0,
-0.0
-],
-[
-0.0,
-1.0,
-0.0,
-0.0
-],
-[
-0.0,
-0.0,
-1.0,
-0.0
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"material": "PETG",
-"mass_g": null,
-"tag": "M",
-"owner": "box swap arm v7",
-"version": "v7",
-"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
-"note": "scout bay at 30 deg: latch receiver"
-},
-{
 "id": "box_arm_rec_30",
 "name": "arm: rec-30",
 "role": "structure",
@@ -1975,47 +1934,6 @@
 "version": "v7",
 "source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
 "note": "scout bay at -150 deg: latch receiver + a seated cartridge"
-},
-{
-"id": "box_arm_rec_210",
-"name": "arm: rec-210",
-"role": "structure",
-"group": "bays",
-"color": "#8a94a6",
-"mesh": "parts/box_arm_rec_210/part.stl",
-"pose": [
-[
-1.0,
-0.0,
-0.0,
-0.0
-],
-[
-0.0,
-1.0,
-0.0,
-0.0
-],
-[
-0.0,
-0.0,
-1.0,
-0.0
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"material": "PETG",
-"mass_g": null,
-"tag": "M",
-"owner": "box swap arm v7",
-"version": "v7",
-"source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
-"note": "scout bay at -210 deg: latch receiver"
 },
 {
 "id": "box_arm_rec0",
