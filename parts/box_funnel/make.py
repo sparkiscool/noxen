@@ -30,6 +30,7 @@ NOSE_BEAM = (112.0, 124.0, 150.0 - ZW, 162.0 - ZW)   # seat x, W Z 150..162: 8 u
 TAIL_BEAM = (-121.0, -109.0, 155.0 - ZW, 163.0 - ZW)  # seat x, W Z 155..163 in the rails' band (tips 151): 4 over them, 7 under the Overseer's tail diagonals
 END_PAD_Y = 200.0                                 # the beam ends drop to the sheet tops (W Z 145) over |y| 200..209
 BUTTRESS_TOP, BUTTRESS_Y = -14.0, 40.0            # the slab from the tail beam up behind the tail wall (its outer face at seat x -115 is at h 30), |y| 40: at 48 an Overseer tube grazed its top corner (23 mm3) at the +x+y capture limit, h 30
+END_CUT_X, END_CUT_Y, END_CUT_H = 100.0, 50.0, 24.0   # the y walls' ends (|x| > 100) stop at h 24 outside |y| 50: the Overseer's loop corner grazed the tail end's top (h 25..28, 20 mm3) at the diagonal capture limit at h 30
 CORNER_Y = 48.0                                   # the x walls' top corners (h 28..40) stop at |y| 48: the Overseer's loop diagonals pass 15 outside them at its capture limits at its capture limits; the receiver still bears on them over |y| <= 48
 LEG_Y = 40.0                                       # the nose legs stand on the nose beam under the nose wall's end (|y| 40)      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
@@ -65,8 +66,9 @@ def funnel():
             legs.append(box(b[0], b[1], min(sy * END_PAD_Y, sy * BEAM_Y), max(sy * END_PAD_Y, sy * BEAM_Y), 145.0 - ZW, b[2]))
     legs.append(box(TAIL_BEAM[0], TAIL_BEAM[1], -BUTTRESS_Y, BUTTRESS_Y, TAIL_BEAM[3], BUTTRESS_TOP))                                     # the buttress from the tail beam up behind the tail wall
     hole = box(*HOLE, z0 - SKIRT - 8.0, z0 + H_X + 2.0)
+    end_cut = [box(min(sx * END_CUT_X, sx * 300), max(sx * END_CUT_X, sx * 300), min(sy * END_CUT_Y, sy * 300), max(sy * END_CUT_Y, sy * 300), z0 + END_CUT_H, z0 + H_X + 2) for sx in (-1, 1) for sy in (-1, 1)]   # the y walls' top ends
     corner_cut = [box(x0 - 200, x1 + 200, s_ * CORNER_Y, s_ * 300, z0 + H_Y, z0 + H_X + 2) if s_ > 0 else box(x0 - 200, x1 + 200, -300, -CORNER_Y, z0 + H_Y, z0 + H_X + 2) for s_ in (-1, 1)]
-    body = (outer - top_cut - mf.Manifold.batch_boolean(corner_cut, mf.OpType.Add)) + mf.Manifold.batch_boolean(rim + [skirt] + legs, mf.OpType.Add)
+    body = (outer - top_cut - mf.Manifold.batch_boolean(corner_cut + end_cut, mf.OpType.Add)) + mf.Manifold.batch_boolean(rim + [skirt] + legs, mf.OpType.Add)
     return body - inner - hole
 
 
