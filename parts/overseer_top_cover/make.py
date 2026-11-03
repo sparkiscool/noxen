@@ -18,8 +18,8 @@ Shape: one continuous height field H(x, y), soft-blended, the 3D field blurred 0
 * The dome softens down under the rear prop disks (10 in, r 127). There it stays 6 under the blade band (z 82) at the disk
   edge and slopes 1:2 lower inside it, so the wash runs off it. The floor is 12 over the plate everywhere: the cable shelf
   over the lobes and roots.
-* Shell 1.26 normal (3 lines at 0.42). The N mark is raised 2.0 on the dome top, 50 wide, upright seen from above with the
-  nose forward.
+* Shell 1.26 normal (3 lines at 0.42). The N mark is raised 2.0 on the dome top, 50 wide, on the front shoulder (centre x 24),
+  reading upright to someone standing in front of the drone.
 * The 8 top plate bolts A (arm lib BOLT_TOP): a 1.6 seat ring on the plate top and a tube up to the shell round a O7.2
   driver well. M3 x 50 as now (drilled bottom plate).
 * Cable exits:
@@ -44,7 +44,7 @@ PB, PT, STACK = 45.0, 46.6, 26.0                            # plate underside / 
 T, LIP, GAP = 1.26, 1.2, 0.15
 HD, FLOOR, XC, AXF, AXR, AY = 40.0, 12.0, 5.0, 75.0, 95.0, 65.0
 PROP_Z, PROP_R, PROP_CLR = 82.0, 127.0, 6.0
-LOGO_W, LOGO_C, LOGO_T = 50.0, (12.0, 0.0), 2.0
+LOGO_W, LOGO_C, LOGO_T = 50.0, (24.0, 0.0), 2.0             # forward onto the front shoulder (Spark 3 Nov)
 BOLT_U, BOLT_V, HOLE_R, SEAT_R, DRIVE_R = 63.17, 15.0, 1.7, 5.0, 3.6
 SIDE_EXIT = (48.0, 18.0, 38.0)                              # width, height over the plate, start r (no exits at the root ends: Spark 3 Nov)
 RES, XY = 0.45, 92.0
@@ -140,7 +140,7 @@ H = np.minimum(H, PT + SKIRT * np.maximum(sd_o, 0.0))               # keep the e
 gx, gy = np.gradient(H, RES)
 Tn = T * np.minimum(np.sqrt(1.0 + gx ** 2 + gy ** 2), 2.5)
 s = LOGO_W / 472.0
-logo_cs = mf.CrossSection([ccw([(LOGO_C[0] - (v - 128.5) * s, LOGO_C[1] - (u - 236.0) * s) for u, v in p]) for p in LOGO])
+logo_cs = mf.CrossSection([ccw([(LOGO_C[0] + (v - 128.5) * s, LOGO_C[1] + (u - 236.0) * s) for u, v in p]) for p in LOGO])   # reads upright from the front
 sd_logo = sdf(logo_cs)
 rb = np.min([np.hypot(X - bx, Y - by) for bx, by in bolts()], axis=0)
 
