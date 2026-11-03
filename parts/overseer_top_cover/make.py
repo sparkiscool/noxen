@@ -13,8 +13,8 @@ python parts/overseer_top_cover/make.py writes part.stl.
   top), 6.7 under the prop blade band (z 82; the rear 10 in disks reach r 30). Its lobes draw in along a parabola (offset
   13 t^2, never steeper than 45 deg, so it prints top down without supports) while the side faces stay out at the stack.
   Walls 1.2 normal (3 lines at 0.4: solid, no infill, the clearest translucent print).
-* 8 cable notches, 12 wide x 7 tall, through flange and dome foot: one at each arm (the motor leads over the arm tops) and one on
-  each side face (RX antenna, USB, telemetry).
+* 8 cable exits through skirt and dome foot (Spark's photo 3 Nov: bundles cross every edge): 16 wide x 12 tall at each arm
+  between its bolt pair (the motor leads over the arm tops), 32 x 14 on each side face (USB, RX antenna, signal wires).
 * Logo: the N mark cut through the top, 60 wide, upright seen from above with the nose forward.
 * 27.2 g (C). Gate: one body; FAILs only on thin walls (1.2 everywhere, Spark asked thin for the translucent print; no load).
 * Print (Bambu A1 mini, translucent PETG, dried 65 C 8 h): top face down on the smooth PEI plate with glue stick; 0.2 layers;
@@ -29,7 +29,7 @@ T, FL, LIP, GAP = 1.2, 1.6, 1.2, 0.15                       # wall, flange, lip,
 ZT = PT + STACK + CLR + T                                   # top 76.1
 Z0 = PT + FL                                                # dome foot 48.2
 INSET, DMAX, R_SIDE, DZ = 9.0, 13.0, 40.0, 0.2              # dome foot from the plate edge, lobe draw-in, side faces, slice = layer
-NOTCH_W, NOTCH_H = 12.0, 7.0
+ARM_EXIT, SIDE_EXIT = (16.0, 12.0), (32.0, 14.0)            # w, h above the plate (Spark's photo 3 Nov: bundles over every edge)
 BOLT_U, BOLT_V, HOLE_R = 63.17, 15.0, 1.7                   # parts/overseer_arm_lib.py BOLT_TOP (M); M3 clearance
 SEAT_R, DRIVE_R = 5.0, 3.6                                  # seat under the M3 head (O5.5); driver well O7.2
 PROP_Z = 82.0                                               # prop blade band bottom (arm lib Z_THRUST)
@@ -112,9 +112,10 @@ body += mf.Manifold.batch_boolean(seats, mf.OpType.Add) ^ solid
 
 cuts = [mf.Manifold.cylinder(FL + 2.0, HOLE_R, HOLE_R, 24).translate([x, y, PT - 1.0]) for x, y in bolts()]
 cuts += [mf.Manifold.cylinder(ZT - PT, DRIVE_R, DRIVE_R, 48).translate([x, y, PT + FL]) for x, y in bolts()]
-nt = [(-NOTCH_W / 2, PB - 1.0), (NOTCH_W / 2, PB - 1.0), (NOTCH_W / 2, PT + NOTCH_H - NOTCH_W / 2), (0.0, PT + NOTCH_H),
-      (-NOTCH_W / 2, PT + NOTCH_H - NOTCH_W / 2)]            # pointed top: prints top down without a bridge
-cuts += [radial(nt, th, 30.0, 95.0) for th in range(0, 360, 45)]
+def notch(w, h, c=2.0):                                     # its top edge is the floor when printed top down: no bridge
+    return [(-w / 2, PB - 1.0), (w / 2, PB - 1.0), (w / 2, PT + h - c), (w / 2 - c, PT + h), (-w / 2 + c, PT + h), (-w / 2, PT + h - c)]
+cuts += [radial(notch(*ARM_EXIT), th, 30.0, 95.0) for th in (45, 135, 225, 315)]
+cuts += [radial(notch(*SIDE_EXIT), th, 30.0, 95.0) for th in (0, 90, 180, 270)]
 s = LOGO_W / 472.0; uc, vc = 236.0, 128.5
 cuts += [prism(mf.CrossSection([ccw([(-(v - vc) * s, -(u - uc) * s) for u, v in p])]), ZT - T - 1.0, ZT + 1.0) for p in LOGO]
 body -= mf.Manifold.batch_boolean(cuts, mf.OpType.Add)
