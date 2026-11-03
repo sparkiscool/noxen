@@ -62,6 +62,58 @@ HOLES = ([(mx, my, 2.5) for mx, my in PADS_MM.values()]                         
          + [(3.9, 31.0, 1.6), (3.9, -31.0, 1.6), (36.0, 0.0, 1.6)])                                             # the 3 plate bolts the underside uses (C / E nose)
 
 
+PADS_IMG10 = {"FL": (474.1, 319.8), "FR": (844.6, 575.6), "RR": (445.9, 773.5), "RL": (62.0, 522.0)}   # sb_bee35-10.jpg pad centres (the RL pad read by eye: its arm is in shadow)
+
+
+def rectify_product(jpg, pads=None):
+    """SpeedyBee's product image sb_bee35-10.jpg: the bare main plate, nothing on it, dark carbon on a black gradient (3 Nov). The
+    plate is the textured grey region in the upper part of the image; its four pad centre holes are the holes farthest from the
+    centroid; the homography from them to the motor positions rectifies it. Nose = the wide end with the diagonal slots (upper right
+    in the image): pads top = FL, right = FR, left = RL, bottom = RR. Both halves are traced; the one with the smaller area is the far
+    side (no visible thickness) and is mirrored."""
+    from skimage.filters import rank
+    from skimage.morphology import disk as _disk
+    a = np.array(Image.open(jpg).convert("L")).astype(float)
+    a = a[:880]                                                                              # the insets below are not the plate
+    tex = ndi.generic_filter(a, np.std, size=5)                                            # the weave has texture, the background none
+    m = (a > 38) & (tex > 2.5)
+    m = ndi.binary_closing(m, structure=_disk(2)); m = ndi.binary_fill_holes(m) & ~ndi.binary_opening(~m, structure=_disk(1))
+    m = ndi.binary_opening(m, structure=_disk(2))
+    lab, n = ndi.label(m); sizes = ndi.sum(m, lab, range(1, n + 1)); m = lab == (np.argmax(sizes) + 1)
+    m = ndi.binary_fill_holes(m) & ~(ndi.binary_fill_holes(m) & ~m & (a < 38))             # holes: dark background seen through
+    hl, hn = ndi.label(~m); cy, cx = ndi.center_of_mass(m)
+    holes = []
+    for i in range(1, hn + 1):
+        yy, xx = np.nonzero(hl == i)
+        if xx.min() == 0 or yy.min() == 0 or xx.max() == m.shape[1] - 1 or yy.max() == m.shape[0] - 1 or len(xx) < 30:
+            continue
+        holes.append((np.hypot(xx.mean() - cx, yy.mean() - cy), xx.mean(), yy.mean(), len(xx)))
+    Image.fromarray((m * 255).astype(np.uint8)).save(os.path.splitext(jpg)[0] + "_mask.png")
+    if pads is None:
+        nose, left = np.array([1.0, -1.0]) / 2 ** 0.5, np.array([-1.0, -1.0]) / 2 ** 0.5     # image axes x right, y down: nose up-right
+        quad = lambda h: ("F" if (np.array([h[1] - cx, h[2] - cy]) @ nose) > 0 else "R") + ("L" if (np.array([h[1] - cx, h[2] - cy]) @ left) > 0 else "R")
+        pads = {}
+        for q in ("FL", "FR", "RR", "RL"):               # per pad: the holes at the arm's end, the biggest of them is the centre hole
+            sel = [h for h in holes if quad(h) == q]; rmax = max(h[0] for h in sel)
+            best = max([h for h in sel if h[0] > 0.85 * rmax], key=lambda h: h[3]); pads[q] = (best[1], best[2])
+    print("pads:", {k: tuple(np.round(v, 1)) for k, v in pads.items()})
+    keys = ["FL", "FR", "RR", "RL"]
+    H = homography([pads[k] for k in keys], [PADS_MM[k] for k in keys]); Hi = np.linalg.inv(H)
+    xs = np.arange(-110, 110, PX); ys = np.arange(-90, 90, PX)
+    X, Y = np.meshgrid(xs, ys)
+    P = np.stack([X.ravel(), Y.ravel(), np.ones(X.size)]); Q = Hi @ P; u, v = Q[0] / Q[2], Q[1] / Q[2]
+    inside = (u >= 0) & (u < m.shape[1] - 1) & (v >= 0) & (v < m.shape[0] - 1)
+    M = np.zeros(X.size, bool); M[inside] = ndi.map_coordinates(m.astype(float), [v[inside], u[inside]], order=1) > 0.5
+    M = M.reshape(X.shape)
+    top, bot = np.where(Y > 0, M, False), np.where(Y < 0, M, False)
+    print(f"half areas: y>0 {top.sum() * PX * PX:.0f} mm2, y<0 {bot.sum() * PX * PX:.0f} mm2 (the smaller is the far side)")
+    half = top if top.sum() <= bot.sum() else bot
+    Mm = half | half[::-1, :]
+    Mm = ndi.binary_opening(Mm, structure=disk(2)); Mm = ndi.binary_closing(Mm, iterations=1)
+    lab, n = ndi.label(Mm); sizes = ndi.sum(Mm, lab, range(1, n + 1)); Mm = lab == (np.argmax(sizes) + 1)
+    return Mm, xs, ys, H
+
+
 def polygon(Mm, xs, ys):
     pad = np.pad(Mm, 2)
     cs = measure.find_contours(pad.astype(float), 0.5)
@@ -82,8 +134,15 @@ def polygon(Mm, xs, ys):
 
 
 if __name__ == "__main__":
-    png = sys.argv[1]
+    png = sys.argv[1]                                                                   # the manual render (RGBA): the outline
     Mm, xs, ys, H = rectify(png)
+    if len(sys.argv) > 2:                                                               # the product image: the nose region only
+        Mp, _, _, _ = rectify_product(sys.argv[2], pads=PADS_IMG10)
+        Image.fromarray((~Mp[::-1, :] * 255).astype(np.uint8)).save(os.path.splitext(sys.argv[2])[0] + "_rect.png")
+        X, Y = np.meshgrid(xs, ys)
+        body = (np.abs(Y) < 42.0) & (X > -58.0) & (X < 66.0)                              # the body and nose from the product image (clean there,
+        Mm = np.where(body, ndi.binary_opening(Mp, structure=disk(3)), Mm)                 # its arms are in shadow); the arms from the manual render
+        lab, n = ndi.label(Mm); sizes = ndi.sum(Mm, lab, range(1, n + 1)); Mm = lab == (np.argmax(sizes) + 1)
     out = os.path.splitext(png)[0] + "_rect.png"
     Image.fromarray((~Mm[::-1, :] * 255).astype(np.uint8)).save(out)                  # y up, x right, black = plate
     poly, nh = polygon(Mm, xs, ys)
