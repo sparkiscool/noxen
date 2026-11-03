@@ -1,0 +1,1038 @@
+{
+ "name": "overseer_battery_holder",
+ "engine": "nox/topo",
+ "solid_ok": false,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   16923.9
+  ],
+  "necks": [
+   {
+    "neck_under_mm": 2.4,
+    "blob_thick_mm": 7.2,
+    "joint_mm2": 70.9,
+    "blob_mm3": 1544.8,
+    "at": [
+     -71.6,
+     26.9,
+     -40.5
+    ]
+   },
+   {
+    "neck_under_mm": 2.4,
+    "blob_thick_mm": 7.1,
+    "joint_mm2": 86.3,
+    "blob_mm3": 804.7,
+    "at": [
+     -74.9,
+     -26.4,
+     -56.7
+    ]
+   },
+   {
+    "neck_under_mm": 2.4,
+    "blob_thick_mm": 7.2,
+    "joint_mm2": 55.6,
+    "blob_mm3": 698.5,
+    "at": [
+     -67.5,
+     -27.5,
+     -21.8
+    ]
+   },
+   {
+    "neck_under_mm": 2.4,
+    "blob_thick_mm": 7.1,
+    "joint_mm2": 45.4,
+    "blob_mm3": 697.9,
+    "at": [
+     27.6,
+     -27.5,
+     -22.1
+    ]
+   },
+   {
+    "neck_under_mm": 2.4,
+    "blob_thick_mm": 7.0,
+    "joint_mm2": 90.2,
+    "blob_mm3": 656.6,
+    "at": [
+     49.0,
+     -20.2,
+     -36.1
+    ]
+   },
+   {
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 7.2,
+    "joint_mm2": 92.5,
+    "blob_mm3": 572.8,
+    "at": [
+     -75.0,
+     26.6,
+     -56.7
+    ]
+   },
+   {
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 7.1,
+    "joint_mm2": 88.2,
+    "blob_mm3": 568.5,
+    "at": [
+     -75.0,
+     -26.7,
+     -56.8
+    ]
+   },
+   {
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 7.2,
+    "joint_mm2": 111.0,
+    "blob_mm3": 481.7,
+    "at": [
+     -67.9,
+     27.7,
+     -22.4
+    ]
+   },
+   {
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 7.2,
+    "joint_mm2": 112.9,
+    "blob_mm3": 479.4,
+    "at": [
+     -67.8,
+     -27.7,
+     -22.4
+    ]
+   },
+   {
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 7.1,
+    "joint_mm2": 126.4,
+    "blob_mm3": 476.5,
+    "at": [
+     27.9,
+     -27.7,
+     -22.7
+    ]
+   },
+   {
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 7.1,
+    "joint_mm2": 96.8,
+    "blob_mm3": 479.0,
+    "at": [
+     27.9,
+     27.7,
+     -22.8
+    ]
+   },
+   {
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 6.8,
+    "joint_mm2": 82.2,
+    "blob_mm3": 270.4,
+    "at": [
+     28.1,
+     -0.0,
+     -67.1
+    ]
+   },
+   {
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 7.2,
+    "joint_mm2": 55.0,
+    "blob_mm3": 438.0,
+    "at": [
+     48.9,
+     20.8,
+     -36.1
+    ]
+   },
+   {
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 7.0,
+    "joint_mm2": 49.1,
+    "blob_mm3": 428.0,
+    "at": [
+     49.1,
+     -20.7,
+     -36.1
+    ]
+   }
+  ],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 0,
+  "ok": false
+ },
+ "function_check": {
+  "skin_mm3": 2655.0,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.0,
+  "outside_env_mm3": -0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "crash 0 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.696,
+    "across": 1.175,
+    "at": [
+     -64.2,
+     -26.2,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 1 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.511,
+    "across": 0.83,
+    "at": [
+     24.2,
+     -29.2,
+     -18.1
+    ]
+   },
+   {
+    "case": "crash 2 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.597,
+    "across": 1.215,
+    "at": [
+     -65.8,
+     -24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 3 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.597,
+    "across": 1.215,
+    "at": [
+     -65.8,
+     24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 4 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.177,
+    "across": 0.394,
+    "at": [
+     30.2,
+     -24.8,
+     -63.1
+    ]
+   },
+   {
+    "case": "crash 5 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.011,
+    "across": 0.012,
+    "at": [
+     30.2,
+     29.2,
+     -54.1
+    ]
+   },
+   {
+    "case": "crash 6 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.514,
+    "across": 1.021,
+    "at": [
+     -65.8,
+     -24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 7 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.514,
+    "across": 1.064,
+    "at": [
+     -65.8,
+     -24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 8 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.514,
+    "across": 1.021,
+    "at": [
+     -65.8,
+     24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 9 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.514,
+    "across": 1.064,
+    "at": [
+     -65.8,
+     24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 10 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.358,
+    "across": 0.645,
+    "at": [
+     -67.2,
+     -24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "crash 11 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.35,
+    "across": 0.665,
+    "at": [
+     -67.2,
+     -24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "crash 12 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.358,
+    "across": 0.645,
+    "at": [
+     -67.2,
+     24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "crash 13 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.35,
+    "across": 0.665,
+    "at": [
+     -67.2,
+     24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "flight 4 g",
+    "cls": "flight",
+    "inlayer": 0.073,
+    "across": 0.164,
+    "at": [
+     30.2,
+     -24.8,
+     -63.1
+    ]
+   },
+   {
+    "case": "flight 2 g x",
+    "cls": "flight",
+    "inlayer": 0.142,
+    "across": 0.245,
+    "at": [
+     28.8,
+     27.8,
+     -12.1
+    ]
+   },
+   {
+    "case": "flight 2 g y",
+    "cls": "flight",
+    "inlayer": 0.12,
+    "across": 0.245,
+    "at": [
+     -65.8,
+     -24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "landing 6 g",
+    "cls": "flight",
+    "inlayer": 0.11,
+    "across": 0.245,
+    "at": [
+     30.2,
+     -24.8,
+     -63.1
+    ]
+   }
+  ],
+  "worst": 1.215,
+  "worst_case": "crash 2 (35 g, pack 480 g)",
+  "worst_at": [
+   -65.8,
+   -24.8,
+   -16.6
+  ]
+ },
+ "mass_g": 38.54,
+ "watertight": true,
+ "export": {
+  "faces_in": 313594,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 313594,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 30,
+   "folded": 2,
+   "caps_split": 2,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 462566
+  },
+  "volume_mm3": 30343.2,
+  "exact_mm3": 30345.2
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 30345.2,
+ "drawn_g": 11.15,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [
+   {
+    "at": [
+     -49.6,
+     0.0,
+     -64.1
+    ],
+    "thick_mm": 1.0,
+    "core_mm3": 3.69,
+    "mm3": 12.7
+   },
+   {
+    "at": [
+     -39.7,
+     0.0,
+     -64.1
+    ],
+    "thick_mm": 1.0,
+    "core_mm3": 3.47,
+    "mm3": 12.6
+   }
+  ],
+  "kept_walls": [],
+  "removed_mm3": 11.51
+ },
+ "stl": "overseer_battery_holder.stl",
+ "view_stl": "overseer_battery_holder_view.stl",
+ "view_faces": 120000,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": false,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 4.29504458275024,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.09296914169688421,
+  "nd": 71212,
+  "sym_axes": [
+   1
+  ],
+  "n_real": 18,
+  "n_ties": 138,
+  "backend": "direct",
+  "iterations": 95,
+  "stopped": "max_stage"
+ },
+ "grid": {
+  "name": "overseer_battery_holder",
+  "h": 1.5,
+  "shape": [
+   104,
+   48,
+   48
+  ],
+  "origin": [
+   -96.5,
+   -36.0,
+   -75.85
+  ],
+  "cells": 239616,
+  "design": 71110,
+  "drawn": 2508,
+  "cases": [
+   "crash 0 (35 g, pack 480 g)",
+   "crash 1 (35 g, pack 480 g)",
+   "crash 2 (35 g, pack 480 g)",
+   "crash 3 (35 g, pack 480 g)",
+   "crash 4 (35 g, pack 480 g)",
+   "crash 5 (35 g, pack 480 g)",
+   "crash 6 (35 g, pack 480 g)",
+   "crash 7 (35 g, pack 480 g)",
+   "crash 8 (35 g, pack 480 g)",
+   "crash 9 (35 g, pack 480 g)",
+   "crash 10 (35 g, pack 480 g)",
+   "crash 11 (35 g, pack 480 g)",
+   "crash 12 (35 g, pack 480 g)",
+   "crash 13 (35 g, pack 480 g)",
+   "flight 4 g",
+   "flight 2 g x",
+   "flight 2 g y",
+   "landing 6 g"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 181.7,
+ "layout_s": 2925,
+ "peak_gb": 7.984684,
+ "gen_cm3": 22.0,
+ "h": 1.5,
+ "audit": {
+  "drawn_share": 0.034,
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 121,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.42,
+    "room_depth_mm": 39.0,
+    "at": [
+     -74.8,
+     -24.8,
+     -39.1
+    ],
+    "core_mm": 0.0
+   },
+   {
+    "id": 2,
+    "cells": 110,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.52,
+    "room_depth_mm": 138.0,
+    "at": [
+     -74.8,
+     -15.0,
+     -64.6
+    ],
+    "core_mm": 0.0
+   },
+   {
+    "id": 3,
+    "cells": 110,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.52,
+    "room_depth_mm": 138.0,
+    "at": [
+     -74.8,
+     15.0,
+     -64.6
+    ],
+    "core_mm": 0.0
+   },
+   {
+    "id": 4,
+    "cells": 121,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.42,
+    "room_depth_mm": 39.0,
+    "at": [
+     -74.8,
+     24.8,
+     -39.1
+    ],
+    "core_mm": 0.0
+   },
+   {
+    "id": 5,
+    "cells": 120,
+    "inscribed_mm": 2.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.67,
+    "room_depth_mm": 118.5,
+    "at": [
+     -60.0,
+     -25.0,
+     -10.9
+    ],
+    "core_mm": 1.5
+   },
+   {
+    "id": 6,
+    "cells": 120,
+    "inscribed_mm": 2.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.67,
+    "room_depth_mm": 118.5,
+    "at": [
+     -60.0,
+     25.0,
+     -10.9
+    ],
+    "core_mm": 1.5
+   },
+   {
+    "id": 7,
+    "cells": 740,
+    "inscribed_mm": 7.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.47,
+    "room_depth_mm": 109.5,
+    "at": [
+     -44.7,
+     0.0,
+     -67.6
+    ],
+    "core_mm": 4.5,
+    "share_of_drawn": 0.3
+   },
+   {
+    "id": 8,
+    "cells": 120,
+    "inscribed_mm": 2.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.67,
+    "room_depth_mm": 115.5,
+    "at": [
+     20.0,
+     -25.0,
+     -10.9
+    ],
+    "core_mm": 1.5
+   },
+   {
+    "id": 9,
+    "cells": 120,
+    "inscribed_mm": 2.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.67,
+    "room_depth_mm": 115.5,
+    "at": [
+     20.0,
+     25.0,
+     -10.9
+    ],
+    "core_mm": 1.5
+   },
+   {
+    "id": 10,
+    "cells": 121,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.44,
+    "room_depth_mm": 39.0,
+    "at": [
+     34.8,
+     -24.8,
+     -39.1
+    ],
+    "core_mm": 0.0
+   },
+   {
+    "id": 11,
+    "cells": 110,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.54,
+    "room_depth_mm": 135.0,
+    "at": [
+     34.8,
+     -15.0,
+     -64.6
+    ],
+    "core_mm": 0.0
+   },
+   {
+    "id": 12,
+    "cells": 110,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.54,
+    "room_depth_mm": 135.0,
+    "at": [
+     34.8,
+     15.0,
+     -64.6
+    ],
+    "core_mm": 0.0
+   },
+   {
+    "id": 13,
+    "cells": 121,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.44,
+    "room_depth_mm": 39.0,
+    "at": [
+     34.8,
+     24.8,
+     -39.1
+    ],
+    "core_mm": 0.0
+   },
+   {
+    "id": 14,
+    "cells": 364,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.47,
+    "room_depth_mm": 40.5,
+    "at": [
+     50.5,
+     0.0,
+     -39.1
+    ],
+    "core_mm": 1.5
+   }
+  ],
+  "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 150.0,
+   "W_mm": 63.0,
+   "H_mm": 63.0,
+   "fits": true
+  },
+  "cases": 18,
+  "supports": 1,
+  "fails": []
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "crash 0 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.822,
+    "across": 1.08,
+    "at": [
+     30.2,
+     -27.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 1 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.548,
+    "across": 0.951,
+    "at": [
+     21.2,
+     -29.2,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 2 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.591,
+    "across": 1.228,
+    "at": [
+     -67.2,
+     -24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "crash 3 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.591,
+    "across": 1.228,
+    "at": [
+     -67.2,
+     24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "crash 4 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.229,
+    "across": 0.493,
+    "at": [
+     28.8,
+     24.8,
+     -63.1
+    ]
+   },
+   {
+    "case": "crash 5 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.014,
+    "across": 0.011,
+    "at": [
+     19.8,
+     -29.2,
+     -52.6
+    ]
+   },
+   {
+    "case": "crash 6 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.534,
+    "across": 0.949,
+    "at": [
+     -65.8,
+     -24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 7 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.542,
+    "across": 0.994,
+    "at": [
+     -65.8,
+     -24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 8 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.534,
+    "across": 0.949,
+    "at": [
+     -65.8,
+     24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 9 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.542,
+    "across": 0.994,
+    "at": [
+     -65.8,
+     24.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "crash 10 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.346,
+    "across": 0.716,
+    "at": [
+     -67.2,
+     -24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "crash 11 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.345,
+    "across": 0.736,
+    "at": [
+     -67.2,
+     -24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "crash 12 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.346,
+    "across": 0.716,
+    "at": [
+     -67.2,
+     24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "crash 13 (35 g, pack 480 g)",
+    "cls": "crash",
+    "inlayer": 0.345,
+    "across": 0.736,
+    "at": [
+     -67.2,
+     24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "flight 4 g",
+    "cls": "flight",
+    "inlayer": 0.095,
+    "across": 0.205,
+    "at": [
+     28.8,
+     24.8,
+     -63.1
+    ]
+   },
+   {
+    "case": "flight 2 g x",
+    "cls": "flight",
+    "inlayer": 0.169,
+    "across": 0.228,
+    "at": [
+     30.2,
+     -27.8,
+     -16.6
+    ]
+   },
+   {
+    "case": "flight 2 g y",
+    "cls": "flight",
+    "inlayer": 0.119,
+    "across": 0.251,
+    "at": [
+     -67.2,
+     -24.8,
+     -15.1
+    ]
+   },
+   {
+    "case": "landing 6 g",
+    "cls": "flight",
+    "inlayer": 0.143,
+    "across": 0.307,
+    "at": [
+     28.8,
+     24.8,
+     -63.1
+    ]
+   }
+  ],
+  "worst": 1.228,
+  "worst_case": "crash 2 (35 g, pack 480 g)",
+  "worst_at": [
+   -67.2,
+   -24.8,
+   -15.1
+  ],
+  "beta": 4.0,
+  "iteration": 14,
+  "max_worst": 0.5,
+  "k": 3.0
+ },
+ "baseline": null,
+ "total_s": 3107,
+ "part_sha": "8c19d73d1a2f",
+ "lib_sha": "15c5499fc866",
+ "setup_sha": "78fb615392829263",
+ "max_worst": 0.5,
+ "strength_ok": false
+}
