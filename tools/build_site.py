@@ -170,8 +170,13 @@ def artifact_page(a, S, meshes, commit, path):
     names = [p["name"] for p in s.parts]
     spin = lambda t: trimesh.transformations.rotation_matrix(math.radians(360 * t / 24), [0, 0, 1])
     s.timeline(lambda t: {n: spin(t) for n in names}, duration_s=24, fps=24)
-    s.view("iso", (700, -800, 500), (60, 0, 20)); s.view("side", (60, -1300, 40), (60, 0, 40)); s.view("front", (1400, 0, 60), (0, 0, 40))
-    s.view("top", (60, 0, 1300), (60, 0, 0)); s.view("under", (300, -300, -900), (0, 0, -50))
+    B = [meshes[p.get("id") or p["name"]].bounds for p in a["parts"]]                 # the views were framed on the Overseer (690 across);
+    lo, hi = np.min([b[0] for b in B], 0), np.max([b[1] for b in B], 0)              # a smaller drone (the Scout, 260) fills the frame too
+    c = (lo + hi) / 2; k = max(float((hi - lo).max()) / 690.0, 0.15)
+    for nm, eye, at in (("iso", (700, -800, 500), (60, 0, 20)), ("side", (60, -1300, 40), (60, 0, 40)), ("front", (1400, 0, 60), (0, 0, 40)),
+                        ("top", (60, 0, 1300), (60, 0, 0)), ("under", (300, -300, -900), (0, 0, -50))):
+        at_k = c + k * (np.array(at, float) - np.array([60, 0, 20]))
+        s.view(nm, tuple(np.round(at_k + k * (np.array(eye, float) - np.array(at, float)), 1)), tuple(np.round(at_k, 1)))
     s.write(path)
 
 
