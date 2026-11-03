@@ -6,6 +6,7 @@
 "machine": "box",
 "note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 155.3), nox/box/catch_system.py SEAT_TO_W). In: the swap arm v7 at park with its 9 bay receivers and two packs, the stand of the built demo, the v2 enclosure sheets and PSU as boxes, the funnel drawn 3 Nov on the latch footprint, the Scout's receiver and cartridge seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
 "cg_ref": null,
+"timeline": "tools/landing_box.py:timeline",
 "parts": [
 {
 "id": "box_arm_hub",
@@ -2659,12 +2660,480 @@
 "note": "centres on the receiver v3 footprint 106 x 66 so both drones seat at one height; mouth 204 x 164, faces 55 deg, 70 tall; hold-down not drawn"
 },
 {
-"id": "box_ctx_receiver_v3",
-"name": "receiver v3 (seated Scout)",
+"id": "box_scout_frame_plate_bee35_carbon",
+"name": "Scout: frame plate (Bee35 carbon)",
+"role": "structure",
+"group": "landing: Scout",
+"color": "#3a3a3a",
+"mesh": "parts/box_scout_frame_plate_bee35_carbon/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": "carbon",
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_scout_motor_1",
+"name": "Scout: motor 1",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#b0b0b0",
+"mesh": "parts/box_scout_scout_motor_1/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_scout_prop_1",
+"name": "Scout: prop 1",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#d9a400",
+"mesh": "parts/box_scout_scout_prop_1/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_scout_motor_2",
+"name": "Scout: motor 2",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#b0b0b0",
+"mesh": "parts/box_scout_scout_motor_2/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_scout_prop_2",
+"name": "Scout: prop 2",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#d9a400",
+"mesh": "parts/box_scout_scout_prop_2/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_scout_motor_3",
+"name": "Scout: motor 3",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#b0b0b0",
+"mesh": "parts/box_scout_scout_motor_3/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_scout_prop_3",
+"name": "Scout: prop 3",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#d9a400",
+"mesh": "parts/box_scout_scout_prop_3/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_scout_motor_4",
+"name": "Scout: motor 4",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#b0b0b0",
+"mesh": "parts/box_scout_scout_motor_4/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_scout_prop_4",
+"name": "Scout: prop 4",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#d9a400",
+"mesh": "parts/box_scout_scout_prop_4/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_fc",
+"name": "Scout: FC",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#2e7d32",
+"mesh": "parts/box_scout_fc/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_pack_4s_1500",
+"name": "Scout: pack 4S 1500",
 "role": "protected",
-"group": "seated drone (context)",
+"group": "landing: Scout",
+"color": "#2f4fbf",
+"mesh": "parts/box_scout_pack_4s_1500/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_scout_camera",
+"name": "Scout: camera",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#2d5a2d",
+"mesh": "parts/box_scout_camera/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": null,
+"tag": "P",
+"owner": "scout v3",
+"version": "layout v3 / cage v2",
+"source": "systems/scout.assembly.json, seated"
+},
+{
+"id": "box_ctx_scout_receiver_v3",
+"name": "Scout: receiver v3",
+"role": "protected",
+"group": "landing: Scout",
 "color": "#8899aa",
-"mesh": "parts/box_ctx_receiver_v3/part.stl",
+"mesh": "parts/box_ctx_scout_receiver_v3/part.stl",
 "pose": [
 [
 0,
@@ -2699,12 +3168,12 @@
 "note": "the latch set every drone carries: what the funnel seats"
 },
 {
-"id": "box_ctx_cartridge_v6",
-"name": "cartridge v6 (seated Scout)",
+"id": "box_ctx_scout_cartridge_v6",
+"name": "Scout: cartridge v6",
 "role": "protected",
-"group": "seated drone (context)",
+"group": "landing: Scout",
 "color": "#8899aa",
-"mesh": "parts/box_ctx_cartridge_v6/part.stl",
+"mesh": "parts/box_ctx_scout_cartridge_v6/part.stl",
 "pose": [
 [
 0,
@@ -2737,6 +3206,795 @@
 "version": "v3 / v6",
 "source": "parts/cartridge_v6_latch (this repo), at the seat",
 "note": "the latch set every drone carries: what the funnel seats"
+},
+{
+"id": "box_overseer_cage_shell_tubes",
+"name": "Overseer: cage shell tubes",
+"role": "cage",
+"group": "landing: Overseer",
+"color": "#2b2b2b",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "carbon",
+"tag": "E",
+"owner": "overseer",
+"version": "cage v6 (rod cut: 54 tubes, 21 nodes) + 3 camera rods 3 mm to node 21",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_cage_shell_tubes/part.stl"
+},
+{
+"id": "box_overseer_spokes_ties_head_rods",
+"name": "Overseer: spokes, ties, head rods",
+"role": "cage",
+"group": "landing: Overseer",
+"color": "#444444",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "carbon",
+"tag": "C",
+"owner": "overseer",
+"version": "cage v6 links from systems/overseer.cage.json, cut to the socket starts (tools/cage_tubes.py, 29 Oct); the front core ties run on into the hub deck nose (29 Oct); rear spokes and rear arm tubes gone (29 Oct: the rear arms are one printed piece)",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_spokes_ties_head_rods/part.stl"
+},
+{
+"id": "box_overseer_overseer_head_mount",
+"name": "Overseer: head mount (L2 + both cameras + node 17)",
+"role": "structure",
+"group": "landing: Overseer",
+"color": "#eef2f5",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "E",
+"owner": "overseer",
+"version": "v6 setup (one piece, node 17 merged)",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_overseer_head_mount/part.stl"
+},
+{
+"id": "box_overseer_unitree_l2",
+"name": "Overseer: Unitree L2",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "P",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_unitree_l2/part.stl"
+},
+{
+"id": "box_overseer_camera_left",
+"name": "Overseer: camera left",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "yawed 20 out (29 Oct: one solid window ahead)",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_camera_left/part.stl"
+},
+{
+"id": "box_overseer_camera_right",
+"name": "Overseer: camera right",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "yawed 20 out (29 Oct: one solid window ahead)",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_camera_right/part.stl"
+},
+{
+"id": "box_overseer_top_plate",
+"name": "Overseer: top plate",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_top_plate/part.stl"
+},
+{
+"id": "box_overseer_bottom_plate",
+"name": "Overseer: bottom plate",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_bottom_plate/part.stl"
+},
+{
+"id": "box_overseer_motor_1",
+"name": "Overseer: motor 1",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_motor_1/part.stl"
+},
+{
+"id": "box_overseer_prop_1",
+"name": "Overseer: prop 1",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "two-blade 10 x 4.5 model (29 Oct, tools/props.py; the swept disc is the overlay, which the cage must clear)",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_prop_1/part.stl"
+},
+{
+"id": "box_overseer_motor_2",
+"name": "Overseer: motor 2",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_motor_2/part.stl"
+},
+{
+"id": "box_overseer_prop_2",
+"name": "Overseer: prop 2",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "two-blade 10 x 4.5 model (29 Oct, tools/props.py; the swept disc is the overlay, which the cage must clear)",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_prop_2/part.stl"
+},
+{
+"id": "box_overseer_motor_3",
+"name": "Overseer: motor 3",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_motor_3/part.stl"
+},
+{
+"id": "box_overseer_prop_3",
+"name": "Overseer: prop 3",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "two-blade 10 x 4.5 model (29 Oct, tools/props.py; the swept disc is the overlay, which the cage must clear)",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_prop_3/part.stl"
+},
+{
+"id": "box_overseer_motor_4",
+"name": "Overseer: motor 4",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "layout v5 / cage v5",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_motor_4/part.stl"
+},
+{
+"id": "box_overseer_prop_4",
+"name": "Overseer: prop 4",
+"role": "bought",
+"group": "landing: Overseer",
+"color": "#1c1c1c",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "overseer",
+"version": "two-blade 10 x 4.5 model (29 Oct, tools/props.py; the swept disc is the overlay, which the cage must clear)",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_prop_4/part.stl"
+},
+{
+"id": "box_overseer_overseer_base",
+"name": "Overseer: base",
+"role": "structure",
+"group": "landing: Overseer",
+"color": "#eef2f5",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "E",
+"owner": "overseer",
+"version": "v1 setup (29 Oct, Spark): one PETG piece under the bottom plate ending the 6 rear / left / right core ties and the 4 bay ties, clamped by the 8 arm bottom screws, 4 M3 inserts on z -8.1 for the future battery mechanism; run pending",
+"source": "systems/overseer.assembly.json, seated",
+"mesh": "parts/box_overseer_overseer_base/part.stl"
+},
+{
+"id": "box_overseer_overseer_battery_holder",
+"name": "Overseer: battery holder (Zeee 4S 5200)",
+"role": "structure",
+"group": "landing: Overseer",
+"color": "#eef2f5",
+"pose": [
+[
+0.0,
+-1.0,
+0.0,
+0.0
+],
+[
+1.0,
+0.0,
+0.0,
+198.6
+],
+[
+0.0,
+0.0,
+1.0,
+164.8
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "E",
+"owner": "overseer",
+"version": "v1 setup (3 Nov, Spark): on the base's 4 M3 inserts, pack slides in from the tail, snap tab, no strap; run pending",
+"source": "systems/overseer.assembly.json, seated",
+"box": [
+-93.5,
+56.5,
+-32,
+32,
+-71.6,
+-8.1
+]
+},
+{
+"id": "box_ctx_overseer_receiver",
+"name": "Overseer: receiver (the same latch footprint)",
+"role": "protected",
+"group": "landing: Overseer",
+"color": "#8899aa",
+"mesh": "parts/box_ctx_overseer_receiver/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "E",
+"owner": "battery latch",
+"version": "v3 / v6",
+"source": "parts/receiver_v3_latch, at the Overseer's catch centre",
+"note": "the Overseer carries the same 106 x 66 footprint under its base (proposal 3 Nov); its battery holder of today sits above it"
+},
+{
+"id": "box_ctx_overseer_cartridge",
+"name": "Overseer: cartridge",
+"role": "protected",
+"group": "landing: Overseer",
+"color": "#8899aa",
+"mesh": "parts/box_ctx_overseer_cartridge/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+155.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "E",
+"owner": "battery latch",
+"version": "v3 / v6",
+"source": "parts/cartridge_v6_latch, at the Overseer's catch centre",
+"note": "the Overseer carries the same 106 x 66 footprint under its base (proposal 3 Nov); its battery holder of today sits above it"
 }
 ]
 }

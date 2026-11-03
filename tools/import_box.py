@@ -69,12 +69,43 @@ def main(nox):
     parts.append(dict(id="box_funnel", name="funnel (latch-footprint seat, 55 deg)", role="structure", group="funnel", color="#e07020", mesh="parts/box_funnel/part.stl",
                       pose=SEAT_TO_W, material="PETG", tag="E", owner="box catch", version="v1 drawn 3 Nov", source="parts/box_funnel/make.py",
                       note="centres on the receiver v3 footprint 106 x 66 so both drones seat at one height; mouth 204 x 164, faces 55 deg, 70 tall; hold-down not drawn"))
-    for src, nm in (("receiver_v3_latch", "receiver v3 (seated Scout)"), ("cartridge_v6_latch", "cartridge v6 (seated Scout)")):
-        pid = slug("ctx " + nm.split(" (")[0])
-        mesh, nf = copy_mesh(os.path.join(ROOT, "parts", src, "part.stl"), pid)
-        parts.append(dict(id=pid, name=nm, role="protected", group="seated drone (context)", color="#8899aa", mesh=mesh, pose=SEAT_TO_W,
+    # the two drones for the landing timeline (tools/landing_box.py): rigid copies of their current pages, posed seated
+    scout = json.load(open(os.path.join(ROOT, "systems", "scout.assembly.json")))
+    for p in scout["parts"]:
+        if p["id"] not in ("frame_plate_bee35_carbon", "fc", "pack_4s_1500", "camera") and not p["id"].startswith(("scout_motor", "scout_prop")):
+            continue
+        pid = slug("scout " + p["id"]); mesh, nf = copy_mesh(os.path.join(ROOT, p["mesh"]), pid)
+        parts.append(dict(id=pid, name=f"Scout: {p['name']}", role=p.get("role", "bought"), group="landing: Scout", color=p.get("color"), mesh=mesh,
+                          pose=(np.array(SEAT_TO_W) @ np.array(p["pose"], float)).tolist() if p.get("pose") else SEAT_TO_W,
+                          material=p.get("material"), tag=p.get("tag", "E"), owner="scout v3", version=p.get("version"), source="systems/scout.assembly.json, seated"))
+    for src, nm in (("receiver_v3_latch", "Scout: receiver v3"), ("cartridge_v6_latch", "Scout: cartridge v6")):
+        pid = slug("ctx " + nm.replace(":", "")); mesh, nf = copy_mesh(os.path.join(ROOT, "parts", src, "part.stl"), pid)
+        parts.append(dict(id=pid, name=nm, role="protected", group="landing: Scout", color="#8899aa", mesh=mesh, pose=SEAT_TO_W,
                           material="PETG", tag="M", owner="battery latch", version="v3 / v6", source=f"parts/{src} (this repo), at the seat",
                           note="the latch set every drone carries: what the funnel seats"))
+    T_OV = np.array([[1, 0, 0, 31.5], [0, 1, 0, 0], [0, 0, 1, 9.5], [0, 0, 0, 1.0]])      # Overseer drone frame -> seat frame: its catch centre (x -30)
+    ov = json.load(open(os.path.join(ROOT, "systems", "overseer.assembly.json")))         # and cartridge bottom (z -54) onto the Scout's (1.5, -44.5)
+    keep = {"cage_shell_tubes", "cage_shell_nodes", "spokes_ties_head_rods", "overseer_base", "top_plate", "bottom_plate", "overseer_head_mount",
+            "unitree_l2", "camera_left", "camera_right", "motor_1", "motor_2", "motor_3", "motor_4", "prop_1", "prop_2", "prop_3", "prop_4", "overseer_battery_holder"}
+    for p in ov["parts"]:
+        if p["id"] not in keep:
+            continue
+        pid = slug("overseer " + p["id"]); P = np.array(SEAT_TO_W) @ T_OV @ (np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4))
+        e = dict(id=pid, name=f"Overseer: {p['name']}", role=p.get("role", "bought"), group="landing: Overseer", color=p.get("color"), pose=P.tolist(),
+                 material=p.get("material"), tag=p.get("tag", "E"), owner="overseer", version=p.get("version"), source="systems/overseer.assembly.json, seated")
+        srcd = p.get("part", p["id"]); cand = os.path.join(ROOT, "parts", srcd, "part.stl")
+        if os.path.exists(cand):
+            e["mesh"], nf = copy_mesh(cand, pid)
+        elif "box" in p:
+            e["box"] = p["box"]
+        else:
+            continue
+        parts.append(e)
+    for src, nm in (("receiver_v3_latch", "Overseer: receiver (the same latch footprint)"), ("cartridge_v6_latch", "Overseer: cartridge")):
+        pid = slug("ctx overseer " + src.split("_")[0]); mesh, nf = copy_mesh(os.path.join(ROOT, "parts", src, "part.stl"), pid)
+        parts.append(dict(id=pid, name=nm, role="protected", group="landing: Overseer", color="#8899aa", mesh=mesh, pose=SEAT_TO_W,
+                          material="PETG", tag="E", owner="battery latch", version="v3 / v6", source=f"parts/{src}, at the Overseer's catch centre",
+                          note="the Overseer carries the same 106 x 66 footprint under its base (proposal 3 Nov); its battery holder of today sits above it"))
     a = dict(name="Nox Ground Unit", title="Nox Ground Unit", readme_view="iso", artifact=None, machine="box",
              note=("Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 155.3), "
                    "nox/box/catch_system.py SEAT_TO_W). In: the swap arm v7 at park with its 9 bay receivers and two packs, the stand of the built demo, "
@@ -82,7 +113,7 @@ def main(nox):
                    "Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, "
                    "the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). "
                    "Imported by tools/import_box.py from sparkiscool/nox."),
-             cg_ref=None, parts=parts)
+             cg_ref=None, timeline="tools/landing_box.py:timeline", parts=parts)
     out = os.path.join(ROOT, "systems", "box.assembly.json")
     if os.path.exists(out):
         old = json.load(open(out)); a["artifact"] = old.get("artifact")
