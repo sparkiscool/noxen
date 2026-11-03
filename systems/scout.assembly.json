@@ -3,7 +3,7 @@
 "title": "Scout v3",
 "artifact": "https://claude.ai/artifact/WHdjYkzKPifXuHT1dWeqoR",
 "machine": "scout",
-"note": "Scout internals only (Spark 3 Nov): the Bee35 plate, the EMAX ECO II 2004 motors and Gemfan 3520 props, the electronics, the latch set and the tail bay from layout v3 / v12; the cage (shell tubes and nodes, rods and ties, tie saddle) and the camera mount v1 are off the page until the internals are settled; cage_shell keeps the v13 shell geometry for then. Until 3 Nov the assembly placed the Overseer's folders for the cage, motors, props and flow sensor, so the page showed the Overseer's cage on the Scout (the migration of 28 Oct shared the folder names). v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
+"note": "Scout built against the shared funnel (3 Nov): the Bee35 plate, the EMAX ECO II 2004 motors and Gemfan 3520 props, the electronics and the 4S 1500 pack from layout v3 / v12, the belly skirt that seats in the funnel, and the cage as a 3 mm rod clearance pattern round the funnel's rim and legs; the tail bay electronics sit 10 higher and the camera 5 higher than layout v12 so nothing but the belly is below the funnel mouth (z 7.7); the latch set stays off the page until the hold-down is designed. Until 3 Nov the assembly placed the Overseer's folders for the cage, motors, props and flow sensor, so the page showed the Overseer's cage on the Scout (the migration of 28 Oct shared the folder names). v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
 "cg_ref": [
 0.0,
 0.0,
@@ -18,17 +18,6 @@
 "cage_margin_mm": 3.0,
 "openings": [
 {
-"part": "cartridge v6 (latch)",
-"axis": [
-0,
-0,
--1
-],
-"half_angle_deg": 40.0,
-"min_mm": 0.0,
-"skip_probes": true
-},
-{
 "part": "pack 4S 1500",
 "axis": [
 0,
@@ -40,51 +29,7 @@
 "skip_probes": true
 },
 {
-"part": "slider +y (latch)",
-"axis": [
-0,
-0,
--1
-],
-"half_angle_deg": 40.0,
-"min_mm": 0.0,
-"skip_probes": true
-},
-{
-"part": "slider -y (latch)",
-"axis": [
-0,
-0,
--1
-],
-"half_angle_deg": 40.0,
-"min_mm": 0.0,
-"skip_probes": true
-},
-{
 "part": "pack XT60 plug",
-"axis": [
-0,
-0,
--1
-],
-"half_angle_deg": 40.0,
-"min_mm": 0.0,
-"skip_probes": true
-},
-{
-"part": "receiver v3 (latch)",
-"axis": [
-0,
-0,
--1
-],
-"half_angle_deg": 40.0,
-"min_mm": 0.0,
-"skip_probes": true
-},
-{
-"part": "receiver lid (latch)",
 "axis": [
 0,
 0,
@@ -159,103 +104,8 @@
 1000000000.0
 ],
 [
-"receiver TPU end pieces (latch, E)",
-"receiver v3 (latch)",
-1000000000.0
-],
-[
-"receiver TPU end pieces (latch, E)",
-"receiver lid (latch)",
-1000000000.0
-],
-[
-"receiver TPU end pieces (latch, E)",
-"receiver TPU strips (latch)",
-1000000000.0
-],
-[
-"receiver TPU end pieces (latch, E)",
-"mount + nose legs (Scout)",
-1000000000.0
-],
-[
-"receiver TPU end pieces (latch, E)",
-"cartridge v6 strips (latch, TPU)",
-1000000000.0
-],
-[
-"cartridge v6 strips (latch, TPU)",
-"cartridge v6 (latch)",
-1000000000.0
-],
-[
-"cartridge v6 strips (latch, TPU)",
-"slider +y (latch)",
-1000000000.0
-],
-[
-"cartridge v6 strips (latch, TPU)",
-"slider -y (latch)",
-1000000000.0
-],
-[
-"cartridge v6 strips (latch, TPU)",
-"pack 4S 1500",
-1000000000.0
-],
-[
-"cartridge v6 (latch)",
-"receiver TPU strips (latch)",
-5.0
-],
-[
-"pack 4S 1500",
-"cartridge v6 (latch)",
-1.0
-],
-[
-"pack XT60 plug",
-"cartridge v6 (latch)",
-5.0
-],
-[
-"XT60E1-M",
-"receiver v3 (latch)",
-5.0
-],
-[
-"XT60E1-M",
-"receiver lid (latch)",
-5.0
-],
-[
-"receiver TPU strips (latch)",
-"receiver v3 (latch)",
-5.0
-],
-[
-"pack XT60 plug",
-"XT60E1-M",
-1.0
-],
-[
-"mount + nose legs (Scout)",
-"receiver v3 (latch)",
-1000000000.0
-],
-[
-"mount + nose legs (Scout)",
-"receiver lid (latch)",
-1000000000.0
-],
-[
 "mount + nose legs (Scout)",
 "frame plate (Bee35 carbon)",
-1000000000.0
-],
-[
-"mount + nose legs (Scout)",
-"XT60E1-M",
 1000000000.0
 ],
 [
@@ -311,11 +161,6 @@
 [
 "wires",
 "UBEC",
-1000000000.0
-],
-[
-"wires",
-"receiver v3 (latch)",
 1000000000.0
 ],
 [
@@ -350,16 +195,6 @@
 ],
 [
 "tail bay cables (Scout electronics, E)",
-"slider -y (latch)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"cartridge skid closed end (latch, TPU)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
 "mount + nose legs (Scout)",
 1000000000.0
 ],
@@ -375,22 +210,7 @@
 ],
 [
 "tail bay cables (Scout electronics, E)",
-"receiver v3 (latch)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"receiver TPU strips (latch)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
 "prop 4",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"cartridge skid lead end (latch, TPU)",
 1000000000.0
 ],
 [
@@ -405,27 +225,7 @@
 ],
 [
 "tail bay cables (Scout electronics, E)",
-"cartridge v6 strips (latch, TPU)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
 "tail bay mount block (Scout electronics, E)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"XT60E1-M",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"slider +y (latch)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"receiver lid (latch)",
 1000000000.0
 ],
 [
@@ -455,22 +255,12 @@
 ],
 [
 "tail bay cables (Scout electronics, E)",
-"receiver TPU end pieces (latch, E)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
 "FC",
 1000000000.0
 ],
 [
 "tail bay cables (Scout electronics, E)",
 "motor 2",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"cartridge v6 (latch)",
 1000000000.0
 ],
 [
@@ -510,16 +300,6 @@
 ],
 [
 "tail bay mount block (Scout electronics, E)",
-"slider -y (latch)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"cartridge skid closed end (latch, TPU)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
 "mount + nose legs (Scout)",
 1000000000.0
 ],
@@ -540,22 +320,7 @@
 ],
 [
 "tail bay mount block (Scout electronics, E)",
-"receiver v3 (latch)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"receiver TPU strips (latch)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
 "prop 4",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"cartridge skid lead end (latch, TPU)",
 1000000000.0
 ],
 [
@@ -566,26 +331,6 @@
 [
 "tail bay mount block (Scout electronics, E)",
 "XR2",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"cartridge v6 strips (latch, TPU)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"XT60E1-M",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"slider +y (latch)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"receiver lid (latch)",
 1000000000.0
 ],
 [
@@ -615,22 +360,12 @@
 ],
 [
 "tail bay mount block (Scout electronics, E)",
-"receiver TPU end pieces (latch, E)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
 "FC",
 1000000000.0
 ],
 [
 "tail bay mount block (Scout electronics, E)",
 "motor 2",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"cartridge v6 (latch)",
 1000000000.0
 ],
 [
@@ -670,16 +405,6 @@
 ],
 [
 "tail bay carrier (Scout electronics, E)",
-"slider -y (latch)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"cartridge skid closed end (latch, TPU)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
 "mount + nose legs (Scout)",
 1000000000.0
 ],
@@ -700,22 +425,7 @@
 ],
 [
 "tail bay carrier (Scout electronics, E)",
-"receiver v3 (latch)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"receiver TPU strips (latch)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
 "prop 4",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"cartridge skid lead end (latch, TPU)",
 1000000000.0
 ],
 [
@@ -730,27 +440,7 @@
 ],
 [
 "tail bay carrier (Scout electronics, E)",
-"cartridge v6 strips (latch, TPU)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
 "tail bay mount block (Scout electronics, E)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"XT60E1-M",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"slider +y (latch)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"receiver lid (latch)",
 1000000000.0
 ],
 [
@@ -775,22 +465,12 @@
 ],
 [
 "tail bay carrier (Scout electronics, E)",
-"receiver TPU end pieces (latch, E)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
 "FC",
 1000000000.0
 ],
 [
 "tail bay carrier (Scout electronics, E)",
 "motor 2",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"cartridge v6 (latch)",
 1000000000.0
 ],
 [
@@ -803,28 +483,6 @@
 "shell tubes to prop disks, 3D (G)": 13.9
 },
 "access": [
-{
-"name": "swap: cartridge v6 (latch) down",
-"part": "cartridge v6 (latch)",
-"dir": [
-0,
-0,
--1
-],
-"length_mm": 150.0,
-"tool": "part",
-"ignore": [
-"cartridge v6 (latch)",
-"cartridge v6 strips (latch, TPU)",
-"pack 4S 1500",
-"slider +y (latch)",
-"slider -y (latch)",
-"pack XT60 plug",
-"cartridge skid closed end (latch, TPU)",
-"cartridge skid lead end (latch, TPU)",
-"receiver TPU strips (latch)"
-]
-},
 {
 "name": "swap: pack 4S 1500 down",
 "part": "pack 4S 1500",
@@ -870,142 +528,6 @@
 ]
 },
 {
-"name": "M3 key, receiver bolt (-45.1, -26.6)",
-"part": "receiver v3 (latch)",
-"from": [
--45.15,
--26.55,
-9.6
-],
-"dir": [
-0,
-0,
--1
-],
-"length_mm": 150.0,
-"tool": {
-"type": "cylinder",
-"d": 4
-},
-"ignore": [
-"cartridge v6 (latch)",
-"cartridge v6 strips (latch, TPU)",
-"pack 4S 1500",
-"slider +y (latch)",
-"slider -y (latch)",
-"pack XT60 plug",
-"cartridge skid closed end (latch, TPU)",
-"cartridge skid lead end (latch, TPU)",
-"receiver TPU strips (latch)",
-"receiver lid (latch)",
-"mount + nose legs (Scout)",
-"XT60E1-M",
-"receiver TPU end pieces (latch, E)"
-]
-},
-{
-"name": "M3 key, receiver bolt (-45.1, +26.6)",
-"part": "receiver v3 (latch)",
-"from": [
--45.15,
-26.55,
-9.6
-],
-"dir": [
-0,
-0,
--1
-],
-"length_mm": 150.0,
-"tool": {
-"type": "cylinder",
-"d": 4
-},
-"ignore": [
-"cartridge v6 (latch)",
-"cartridge v6 strips (latch, TPU)",
-"pack 4S 1500",
-"slider +y (latch)",
-"slider -y (latch)",
-"pack XT60 plug",
-"cartridge skid closed end (latch, TPU)",
-"cartridge skid lead end (latch, TPU)",
-"receiver TPU strips (latch)",
-"receiver lid (latch)",
-"mount + nose legs (Scout)",
-"XT60E1-M",
-"receiver TPU end pieces (latch, E)"
-]
-},
-{
-"name": "M3 key, receiver bolt (+40.8, -26.6)",
-"part": "receiver v3 (latch)",
-"from": [
-40.75,
--26.55,
-9.6
-],
-"dir": [
-0,
-0,
--1
-],
-"length_mm": 150.0,
-"tool": {
-"type": "cylinder",
-"d": 4
-},
-"ignore": [
-"cartridge v6 (latch)",
-"cartridge v6 strips (latch, TPU)",
-"pack 4S 1500",
-"slider +y (latch)",
-"slider -y (latch)",
-"pack XT60 plug",
-"cartridge skid closed end (latch, TPU)",
-"cartridge skid lead end (latch, TPU)",
-"receiver TPU strips (latch)",
-"receiver lid (latch)",
-"mount + nose legs (Scout)",
-"XT60E1-M",
-"receiver TPU end pieces (latch, E)"
-]
-},
-{
-"name": "M3 key, receiver bolt (+40.8, +26.6)",
-"part": "receiver v3 (latch)",
-"from": [
-40.75,
-26.55,
-9.6
-],
-"dir": [
-0,
-0,
--1
-],
-"length_mm": 150.0,
-"tool": {
-"type": "cylinder",
-"d": 4
-},
-"ignore": [
-"cartridge v6 (latch)",
-"cartridge v6 strips (latch, TPU)",
-"pack 4S 1500",
-"slider +y (latch)",
-"slider -y (latch)",
-"pack XT60 plug",
-"cartridge skid closed end (latch, TPU)",
-"cartridge skid lead end (latch, TPU)",
-"receiver TPU strips (latch)",
-"receiver lid (latch)",
-"mount + nose legs (Scout)",
-"XT60E1-M",
-"receiver TPU end pieces (latch, E)"
-]
-},
-{
 "name": "FC USB-C cable (12 x 7, searched path, E)",
 "part": "FC",
 "from": [
@@ -1045,10 +567,12 @@
 "tag": "E",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/bee35_plate.py",
 "id": "frame_plate_bee35_carbon",
 "group": "frame",
-"color": "#3a3a3a"
+"color": "#3a3a3a",
+"note": "SpeedyBee Bee35 main (middle) plate, 3.5 carbon (official spec: 153 wheelbase, 3.5 top plate, motor 12 x 12, FC 20 / 25.5 / 30.5), traced from SpeedyBee's own images rectified on the 4 motor pads (tools/bee35_plate.py): body and nose from the product image of the bare plate, arms from the manual render; outline E (about 1 mm), holes C; 35 cut-outs and holes",
+"pose": null
 },
 {
 "name": "motor 1",
@@ -1187,10 +711,12 @@
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "fc",
 "group": "bought",
-"color": "#2e7d32"
+"color": "#2e7d32",
+"note": "MicoAir743 AIO 36 x 36 diamond at (1.9, 0) under the plate on grommet standoffs, lowest point z 9.5 (dimensions.md A, H)",
+"pose": null
 },
 {
 "name": "UBEC",
@@ -1201,10 +727,12 @@
 "tag": "E",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "ubec",
 "group": "bought",
-"color": "#2e7d32"
+"color": "#2e7d32",
+"note": "5 V UBEC brick 48 x 17 x 8 with leads (Q4, E) at the layout's place in the tail bay",
+"pose": null
 },
 {
 "name": "XR2",
@@ -1215,10 +743,12 @@
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "xr2",
 "group": "bought",
-"color": "#2e7d32"
+"color": "#2e7d32",
+"note": "RadioMaster XR2 nano 16 x 12 x 6 with the antenna up (dimensions.md M) at the layout's place",
+"pose": null
 },
 {
 "name": "Radxa Zero 3W",
@@ -1226,13 +756,15 @@
 "protect": true,
 "mesh": "parts/radxa_zero_3w/part.stl",
 "mass_g": 10.0,
-"tag": "E",
+"tag": "C",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "radxa_zero_3w",
 "group": "bought",
-"color": "#2e7d32"
+"color": "#2e7d32",
+"note": "Radxa Zero 3W 65 x 30 from the STEP (dimensions.md H), on edge in the tail bay at the layout's place; ports edge down, components to -y (E)",
+"pose": null
 },
 {
 "name": "flow MTF-02P",
@@ -1265,172 +797,6 @@
 "color": "#99a6b3"
 },
 {
-"name": "receiver v3 (latch)",
-"role": "protected",
-"protect": true,
-"mesh": "parts/receiver_v3_latch/part.stl",
-"material": "PETG",
-"mass_g": 94.4,
-"tag": "M",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "receiver_v3_latch",
-"group": "printed",
-"color": "#8899aa"
-},
-{
-"name": "receiver lid (latch)",
-"role": "protected",
-"protect": true,
-"mesh": "parts/receiver_lid_latch/part.stl",
-"material": "PETG",
-"mass_g": 10.3,
-"tag": "M",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "receiver_lid_latch",
-"group": "printed",
-"color": "#8899aa"
-},
-{
-"name": "receiver TPU strips (latch)",
-"role": "structure",
-"protect": true,
-"mesh": "parts/receiver_tpu_strips_latch/part.stl",
-"material": "TPU",
-"mass_g": 2.0,
-"tag": "M",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "receiver_tpu_strips_latch",
-"group": "printed",
-"color": "#555555"
-},
-{
-"name": "receiver TPU end pieces (latch, E)",
-"role": "cage",
-"mesh": "parts/receiver_tpu_end_pieces_latch_e/part.stl",
-"material": "TPU",
-"mass_g": 8.2,
-"tag": "M",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "receiver_tpu_end_pieces_latch_e",
-"group": "printed",
-"color": "#555555"
-},
-{
-"name": "XT60E1-M",
-"role": "bought",
-"protect": true,
-"mesh": "parts/xt60e1_m/part.stl",
-"mass_g": 6.0,
-"tag": "E",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "xt60e1_m",
-"group": "bought",
-"color": "#c9a400"
-},
-{
-"name": "cartridge v6 (latch)",
-"role": "protected",
-"protect": true,
-"swap": true,
-"mesh": "parts/cartridge_v6_latch/part.stl",
-"material": "PETG",
-"mass_g": 37.9,
-"tag": "M",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "cartridge_v6_latch",
-"group": "printed",
-"color": "#99a6b3"
-},
-{
-"name": "slider +y (latch)",
-"role": "protected",
-"protect": true,
-"swap": true,
-"mesh": "parts/slider_y_latch/part.stl",
-"material": "PETG",
-"mass_g": 2.9,
-"tag": "M",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "slider_y_latch",
-"group": "printed",
-"color": "#7d8a99"
-},
-{
-"name": "slider -y (latch)",
-"role": "protected",
-"protect": true,
-"swap": true,
-"mesh": "parts/slider_y_latch/part.stl",
-"material": "PETG",
-"mass_g": 2.9,
-"tag": "M",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "slider_y_latch",
-"group": "printed",
-"color": "#7d8a99"
-},
-{
-"name": "cartridge v6 strips (latch, TPU)",
-"role": "cage",
-"swap": true,
-"mesh": "parts/cartridge_v6_strips_latch_tpu/part.stl",
-"material": "TPU",
-"mass_g": 2.2,
-"tag": "M",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "cartridge_v6_strips_latch_tpu",
-"group": "printed",
-"color": "#555555"
-},
-{
-"name": "cartridge skid closed end (latch, TPU)",
-"role": "cage",
-"swap": true,
-"mesh": "parts/cartridge_skid_closed_end_latch_tpu/part.stl",
-"material": "TPU",
-"mass_g": 1.4,
-"tag": "M",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "cartridge_skid_closed_end_latch_tpu",
-"group": "printed",
-"color": "#555555"
-},
-{
-"name": "cartridge skid lead end (latch, TPU)",
-"role": "cage",
-"swap": true,
-"mesh": "parts/cartridge_skid_lead_end_latch_tpu/part.stl",
-"material": "TPU",
-"mass_g": 3.2,
-"tag": "M",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "cartridge_skid_lead_end_latch_tpu",
-"group": "printed",
-"color": "#555555"
-},
-{
 "name": "pack 4S 1500",
 "role": "protected",
 "protect": true,
@@ -1440,10 +806,12 @@
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "pack_4s_1500",
 "group": "bought",
-"color": "#2f4fbf"
+"color": "#2f4fbf",
+"note": "4S 1500, 70 x 33 x 32, 165 g (dimensions.md A), leads out the nose end to the XT60 plug",
+"pose": null
 },
 {
 "name": "pack XT60 plug",
@@ -1507,13 +875,15 @@
 "protect": true,
 "mesh": "parts/camera/part.stl",
 "mass_g": 10.0,
-"tag": "E",
+"tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
+"source": "tools/scout_meshes.py",
 "id": "camera",
 "group": "bought",
-"color": "#2d5a2d"
+"color": "#2d5a2d",
+"note": "DECXIN 2633V2 board 38 x 38, M2 holes on 28 x 28, lens (149, 0, 42) looking +x (dimensions.md A, System Scout v3)",
+"pose": null
 },
 {
 "name": "wires",
@@ -1535,105 +905,107 @@
 "id": "wires",
 "group": "wires",
 "color": "#99a6b3"
+},
+{
+"id": "scout_belly_skirt",
+"name": "belly skirt (the Scout's seat, 184 x 67)",
+"role": "structure",
+"group": "printed",
+"color": "#e07020",
+"mesh": "parts/scout_belly_skirt/part.stl",
+"material": "PETG",
+"tag": "E",
+"owner": "scout v3",
+"version": "v1 drawn 3 Nov",
+"source": "parts/scout_belly_skirt/make.py",
+"note": "runners fore and aft of the receiver v3 to the Overseer receiver's 184 x 67 outline at z -44.3: what the shared funnel seats; built into the belly mount later"
+},
+{
+"id": "scout_cage_pattern",
+"name": "cage (clearance pattern, 3 mm rods)",
+"role": "cage",
+"group": "cage",
+"color": "#2b2b2b",
+"mesh": "parts/scout_cage_pattern/part.stl",
+"tag": "E",
+"owner": "scout v3",
+"version": "pattern 3 Nov",
+"source": "tools/scout_cage_pattern.py",
+"note": "14 nodes, 25 rods: bottom ring at z 12 outside the funnel rim, top ring over the props at z 60, nose round the camera, 4 legs to z -36; not a design, the clearance envelope the design must keep"
 }
 ],
 "mass_budget_g": 500,
 "cage_shell": {
 "nodes": [
 [
-83.3,
-116.1,
--49.621
+150.0,
+92.0,
+12.0
 ],
 [
--71.4,
-119.7,
--49.621
+150.0,
+-92.0,
+12.0
 ],
 [
--71.4,
--119.7,
--49.621
+-150.0,
+-92.0,
+12.0
 ],
 [
-83.3,
--116.1,
--49.621
+-150.0,
+92.0,
+12.0
 ],
 [
--166.338,
-0.0,
-61.473
+150.0,
+92.0,
+60.0
 ],
 [
--1.018,
-125.052,
--11.894
+150.0,
+-92.0,
+60.0
 ],
 [
--1.018,
--125.052,
--11.894
+-150.0,
+-92.0,
+60.0
 ],
 [
-110.506,
--96.335,
-61.119
+-150.0,
+92.0,
+60.0
 ],
 [
-110.506,
-96.335,
-61.119
+178.0,
+42.0,
+36.0
 ],
 [
--239.044,
-0.0,
-41.473
+178.0,
+-42.0,
+36.0
 ],
 [
--93.12,
--116.91,
-61.473
+150.0,
+92.0,
+-36.0
 ],
 [
--93.12,
-116.91,
-61.473
+150.0,
+-92.0,
+-36.0
 ],
 [
-44.808,
-132.776,
-44.145
+-150.0,
+-92.0,
+-36.0
 ],
 [
-44.808,
--132.776,
-44.145
-],
-[
-122.589,
-62.163,
-11.536
-],
-[
-122.589,
--62.163,
-11.536
-],
-[
--26.313,
-0.0,
-61.332
-],
-[
-116.548,
-0.0,
-36.328
-],
-[
-102.945,
-0.0,
--19.043
+-150.0,
+92.0,
+-36.0
 ]
 ],
 "rods": [
@@ -1642,71 +1014,43 @@
 1
 ],
 [
-0,
-3
-],
-[
-0,
-5
-],
-[
-0,
-8
-],
-[
-0,
-12
-],
-[
-0,
-14
-],
-[
-0,
-18
-],
-[
 1,
 2
 ],
 [
-1,
-5
-],
-[
-1,
-9
-],
-[
-1,
-11
-],
-[
-1,
-12
-],
-[
 2,
 3
 ],
 [
-2,
+3,
+0
+],
+[
+4,
+5
+],
+[
+5,
 6
 ],
 [
-2,
-9
+6,
+7
+],
+[
+7,
+4
+],
+[
+0,
+4
+],
+[
+1,
+5
 ],
 [
 2,
-10
-],
-[
-2,
-13
-],
-[
-3,
 6
 ],
 [
@@ -1714,145 +1058,62 @@
 7
 ],
 [
-3,
-13
+0,
+5
+],
+[
+1,
+6
+],
+[
+2,
+7
 ],
 [
 3,
-15
+4
 ],
 [
-3,
-18
-],
-[
-4,
+8,
 9
 ],
 [
-4,
-10
-],
-[
-4,
-11
-],
-[
-4,
-16
-],
-[
-5,
-12
-],
-[
-6,
-13
-],
-[
-7,
+0,
 8
 ],
 [
-7,
-10
+4,
+8
 ],
 [
-7,
-13
-],
-[
-7,
-15
-],
-[
-7,
-16
-],
-[
-7,
-17
-],
-[
-8,
-11
-],
-[
-8,
-12
-],
-[
-8,
-14
-],
-[
-8,
-16
-],
-[
-8,
-17
-],
-[
-9,
-10
-],
-[
-9,
-11
-],
-[
-10,
-13
-],
-[
-10,
-16
-],
-[
-11,
-12
-],
-[
-11,
-16
-],
-[
-14,
-15
-],
-[
-14,
-17
-],
-[
-14,
-18
-],
-[
-15,
-17
-],
-[
-15,
-18
-]
-],
-"links": 8,
-"link_r_mm": 1.5,
-"total_rods": 58,
-"open": [
-{
-"name": "bottom opening (pack + swap): the Overseer cage v5 base loop's 4 side nodes",
-"ring": [
-0,
 1,
+9
+],
+[
+5,
+9
+],
+[
+0,
+10
+],
+[
+1,
+11
+],
+[
 2,
-3
+12
+],
+[
+3,
+13
 ]
-}
 ],
 "node_r_mm": 6.0,
-"rod_r_mm": 1.5
+"rod_r_mm": 1.5,
+"total_rods": 25,
+"open": [],
+"note": "clearance pattern of 3 Nov round the shared funnel (tools/scout_cage_pattern.py), not a design"
 }
 }

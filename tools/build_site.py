@@ -168,8 +168,17 @@ def artifact_page(a, S, meshes, commit, path):
     for nm, m, col, op in overlays(a.get("overlays", {})):
         s.part(nm, m, group="views", color=col, printed=False, opacity=op)
     names = [p["name"] for p in s.parts]
-    spin = lambda t: trimesh.transformations.rotation_matrix(math.radians(360 * t / 24), [0, 0, 1])
-    s.timeline(lambda t: {n: spin(t) for n in names}, duration_s=24, fps=24)
+    if a.get("timeline"):                                                           # "tools/<file>.py:<function>": function(assembly) -> (poses(t), duration_s, series)
+        import importlib.util
+        mod, fn = a["timeline"].rsplit(":", 1)
+        sp = importlib.util.spec_from_file_location("tl_" + os.path.basename(mod)[:-3], os.path.join(ROOT, mod)); tm = importlib.util.module_from_spec(sp); sp.loader.exec_module(tm)
+        poses, dur, series = getattr(tm, fn)(a)
+        s.timeline(poses, duration_s=dur, fps=24)
+        for nm, vals, unit in series:
+            s.series(nm, vals, unit)
+    else:
+        spin = lambda t: trimesh.transformations.rotation_matrix(math.radians(360 * t / 24), [0, 0, 1])
+        s.timeline(lambda t: {n: spin(t) for n in names}, duration_s=24, fps=24)
     B = [meshes[p.get("id") or p["name"]].bounds for p in a["parts"]]                 # the views were framed on the Overseer (690 across);
     lo, hi = np.min([b[0] for b in B], 0), np.max([b[1] for b in B], 0)              # a smaller drone (the Scout, 260) fills the frame too
     c = (lo + hi) / 2; k = max(float((hi - lo).max()) / 690.0, 0.15)

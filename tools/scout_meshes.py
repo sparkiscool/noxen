@@ -20,7 +20,7 @@ PLATE_TOP = 22.0
 MOTORS_XY = [(54.1, -54.1), (-54.1, 54.1), (54.1, 54.1), (-54.1, -54.1)]      # PX4 quad X: 1 FR, 2 RL, 3 FL, 4 RR (y left)
 MOTOR_D, MOTOR_H = 24.7, 19.2                                                 # bell, arm top to prop hub face (listing, E)
 PROP_R, PROP_HUB_D, PROP_HUB_H, PITCH_MM = 44.45, 11.0, 5.5, 50.8
-FLOW_AT = (0.0, -40.0, -30.0)                                                 # lens, belly mount concept v1 (C on E)
+FLOW_AT = (0.0, -30.0, -30.0)                                                 # lens; belly mount concept v1 had y -40, moved in 10 (3 Nov) to clear the funnel's y face
 
 
 def box(x0, x1, y0, y1, z0, z1):
@@ -45,7 +45,7 @@ def write(name, t):
 def motor(mx, my):
     z0 = PLATE_TOP
     base = cyl(mx, my, z0, z0 + 2.0, 8.0) + union([rotz(cbox(0, 0, 0, 19.0, 5.0, 2.0), a) for a in (45, 135)]).translate([mx, my, z0 + 1.0])
-    holes = union([cyl(mx + sx * 6.0, my + sy * 6.0, z0 - 1, z0 + 3, 1.0, 16) for sx in (-1, 1) for sy in (-1, 1)])   # 4 x M2 on 12 x 12
+    holes = union([cyl(mx + 8.49 * c, my + 8.49 * s, z0 - 1, z0 + 3, 1.0, 16) for c, s in ((1, 0), (-1, 0), (0, 1), (0, -1))])   # 4 x M2 on 12 x 12, along the arm
     stator = cyl(mx, my, z0 + 2.0, z0 + 5.0, 6.0)
     bell = cyl(mx, my, z0 + 4.0, z0 + MOTOR_H - 1.5, MOTOR_D / 2, 72)
     windows = union([rotz(box(8.0, 14.0, -1.6, 1.6, 0, 6.0), a) for a in range(0, 360, 40)]).translate([mx, my, z0 + 6.0])   # side windows
@@ -108,8 +108,102 @@ def flow(cx, cy, lens_z):
     return union([board, tof, lensm, barrel, sock] + chips) - union(tofw + [cyl(cx + 4.0, cy - 2.5, zt - 1.0 - 4.6, zt - 1.0 - 4.0, 1.5, 24)])
 
 
+def frame(m, o, ex, ey, ez):
+    """m drawn in a local right-handed frame (x, y, z) -> placed with axes ex, ey, ez at origin o"""
+    T = np.array([[ex[0], ey[0], ez[0], o[0]], [ex[1], ey[1], ez[1], o[1]], [ex[2], ey[2], ez[2], o[2]]], float)
+    return m.transform(T)
+def cylx(x0, x1, y, z, r, n=24):
+    return mf.Manifold.cylinder(x1 - x0, r, r, n).rotate([0, 90, 0]).translate([x0, y, z])
+PCB = 1.6
+
+
+# ---- the bought parts of the layout (dimensions.md A, H, M), each at the centre of the box that stood on the page (layout v3 / v12);
+#      the Bee35 plate itself is traced from SpeedyBee's render by tools/bee35_plate.py
+def fc_aio():
+    """MicoAir743 AIO, 36 x 36 x 1.6 as a diamond at (1.9, 0), hanging under the plate on 4 grommet standoffs (25.5 holes), component side
+    down, lowest point z 9.5 (dimensions.md A, H); USB-C at the tail corner, slightly right; the 4-in-1 FETs and caps on the same board."""
+    cx, zb = 1.9, 14.4                                                  # board bottom (components below it reach z 9.5)
+    board = cbox(0, 0, zb + PCB / 2, 36, 36, PCB)
+    posts = [cyl(sx * 12.75, sy * 12.75, zb + PCB, PLATE_TOP - 3.5, 2.5, 6) for sx in (-1, 1) for sy in (-1, 1)]
+    holes = [cyl(sx * 12.75, sy * 12.75, zb - 1, PLATE_TOP - 3.5 + 1, 1.5) for sx in (-1, 1) for sy in (-1, 1)]
+    fets = [cbox(sx * 11, sy * 11, zb - 0.9, 6.0, 5.0, 1.8) for sx in (-1, 1) for sy in (-1, 1)]
+    caps = [cyl(0, sy * 13, zb - 4.9, zb, 3.2) for sy in (-1, 1)]
+    mcu = cbox(0, 0, zb - 0.6, 8, 8, 1.2); gyro = cbox(-8, 0, zb - 0.5, 3, 3, 1.0); baro = cbox(8, 4, zb - 0.6, 3, 3, 1.2)
+    usb = cbox(-14, -5, zb - 1.6, 7.5, 9.0, 3.2)                        # tail corner (-x), slightly right (-y)
+    pads = [cbox(sx * 15, 0, zb - 0.3, 4, 10, 0.6) for sx in (-1, 1)]
+    m = union([board, mcu, gyro, baro, usb] + posts + fets + caps + pads) - union(holes)
+    return rotz(m, 45.0).translate([cx, 0, 0])
+
+
+def radxa():
+    """Radxa Zero 3W from the STEP numbers (dimensions.md H): 65 x 30 x 1.6, holes O2.8 at 57.85 x 22.85, two USB-C and a micro HDMI on the
+    Y 0 long edge, SD slot under the X 0 end. On edge in the tail bay (layout v12 box x -144.4..-79.3, y +-3.2, z 8..38): long side along x,
+    SD end to the tail, ports edge down, components to the right (-y, E)."""
+    b = cbox(32.5, 15.0, -PCB / 2, 65, 30, PCB)
+    holes = [cyl(x, y, -PCB - 1, 1, 1.4, 16) for x, y in ((3.55, 3.60), (3.60, 26.45), (61.40, 3.60), (61.40, 26.50))]
+    usb = [box(37.1, 46.0, -1.25, 6.0, 0, 3.16), box(49.6, 58.5, -1.25, 6.0, 0, 3.16)]
+    hdmi = box(9.2, 15.7, -1.5, 5.0, 0, 3.03)
+    soc = cbox(30, 14, 0.6, 12, 12, 1.2); ram = cbox(44, 20, 0.5, 8, 8, 1.0); wifi = cbox(62, 15, 0.6, 3, 10, 1.2)
+    sd = box(0, 4.9, 7.8, 22.3, -PCB - 2.86, -PCB)
+    m = union([b, hdmi, soc, ram, wifi, sd] + usb) - union(holes)
+    return frame(m, (-144.4, 0.0, 19.5), (1, 0, 0), (0, 0, 1), (0, -1, 0))   # +10 (3 Nov): clear of the funnel rim
+
+
+def ubec():
+    """5 V UBEC, a heatshrunk brick (makers 43..50 x 17..25 x 7..10, Q4: 48 x 17 x 8 E) with leads out both short ends, in the layout's
+    box x -178.6..-117.6, y 18.2..33.6, z 16..24 (tail bay, behind the rear disks)."""
+    cx, cy, cz = -148.1, 25.9, 30.0                                                  # +10 (3 Nov): clear of the funnel rim
+    brick = union([cbox(cx, cy, cz, 48, 15, 8), cbox(cx, cy, cz, 50, 17, 6)])
+    leads = [cylx(cx - 30.5, cx - 24, cy + dy, cz, 0.9) for dy in (-3, 3)] + [cylx(cx + 24, cx + 30.5, cy + dy, cz, 0.9) for dy in (-3, 3)]
+    return union([brick] + leads)
+
+
+def xr2():
+    """RadioMaster XR2 nano: 16 x 12 x 6 board with the antenna up (dimensions.md M), in the layout's box x -110..-94, y -27..-15, z 23..45."""
+    cx, cy, z0 = -102.0, -21.0, 33.0                                                  # +10 (3 Nov): clear of the funnel rim
+    board = cbox(cx, cy, z0 + 0.5, 16, 12, 1.0)
+    chip = cbox(cx, cy, z0 + 1.0 + 1.0, 5, 5, 2.0); rf = cbox(cx + 5, cy - 3, z0 + 1.0 + 0.8, 3, 3, 1.6); conn = cbox(cx - 6, cy, z0 + 1.0 + 1.5, 3, 8, 3.0)
+    ant = union([cyl(cx + 6, cy + 4, z0 + 1.0, z0 + 20.0, 0.5, 12), cbox(cx + 6, cy + 4, z0 + 20.5, 1.0, 6.0, 1.0)])     # T antenna, up
+    return union([board, chip, rf, conn, ant])
+
+
+def pack():
+    """4S 1500 pack 70 x 33 x 32 (dimensions.md A: 70 x 32 x 33, 165 g), heatshrunk edges, in the layout's box x -42.5..27.5, z -32.5..-0.5;
+    leads and the balance lead out the nose end toward the XT60 plug at x 36.7 (parts/pack_xt60_plug)."""
+    cx, cy, cz = -7.5, 0.0, -16.5
+    body = union([cbox(cx, cy, cz, 70, 30, 32), cbox(cx, cy, cz, 70, 33, 29), cbox(cx, cy, cz, 68, 33, 32)])
+    leads = [cylx(27.5, 36.7, sy * 3.6, -13.0, 1.75) for sy in (-1, 1)]
+    bal = cbox(31.0, -10.0, -8.0, 7.0, 6.0, 1.2)
+    return union([body, bal] + leads)
+
+
+def camera():
+    """DECXIN 2633V2 (as tools/bought_meshes.camera): board 38 x 38 x 1.6, holes on 28 x 28, lens holder 16 x 16 x 7, M12 barrel with the
+    focus ring, glass O8; plug block and chips on the back. Local: x right, y up, z forward, glass front at z 0, board back at z -12."""
+    bb = -12.0
+    board = cbox(0, 0, bb + PCB / 2, 38, 38, PCB)
+    holes = [cyl(sx * 14, sy * 14, bb - 1, bb + PCB + 1, 1.1) for sx in (-1, 1) for sy in (-1, 1)]        # M2 (coupon A, Spark 29 Oct)
+    holder = cbox(0, 0, bb + PCB + 3.5, 16, 16, 7.0)
+    barrel = cyl(0, 0, bb + PCB + 7.0, -1.2, 6.0)
+    ring = cyl(0, 0, -4.0, -1.2, 7.0, 24)
+    glass_cut = cyl(0, 0, -0.5, 0.5, 4.0)
+    front = cyl(0, 0, -1.2, 0.0, 6.0)
+    plug = cbox(-12, 12, bb - 1.6, 9, 4, 3.2)
+    chips = [cbox(0, -11, bb - 0.8, 7, 7, 1.6), cbox(9, 5, bb - 0.6, 5, 4, 1.2), cbox(-9, 6, bb - 0.6, 4, 4, 1.2)]
+    return union([board, holder, barrel, ring, front, plug] + chips) - union(holes + [glass_cut])
+
+
+CAMERA_LENS = (149.0, 0.0, 47.0)                                                # +5 (3 Nov): the board bottom over the funnel mouth                                     # one camera at the nose, horizon, looking +x (dimensions.md System Scout v3)
+
+
 if __name__ == "__main__":
     for k, (mx, my) in enumerate(MOTORS_XY, 1):
         write(f"scout_motor_{k}", to_trimesh(motor(mx, my)))
         write(f"scout_prop_{k}", prop(mx, my, k))
     write("scout_flow_mtf_02p", to_trimesh(flow(*FLOW_AT)))
+    write("fc", to_trimesh(fc_aio()))                   # the plate is traced from SpeedyBee's render: tools/bee35_plate.py
+    write("radxa_zero_3w", to_trimesh(radxa()))
+    write("ubec", to_trimesh(ubec()))
+    write("xr2", to_trimesh(xr2()))
+    write("pack_4s_1500", to_trimesh(pack()))
+    write("camera", to_trimesh(frame(camera(), CAMERA_LENS, (0, 1, 0), (0, 0, 1), (1, 0, 0))))

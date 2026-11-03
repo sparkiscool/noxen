@@ -8,8 +8,26 @@ The picture below is the current assembly, redrawn by CI after every result; not
 
 [Open the Overseer viewer](https://sparkiscool.github.io/noxen/overseer.html?view=front&still): every part, its mass and whether it passed; press play for the turntable.
 
-Grey parts are placeholders still to be generated, red ones failed their last run. The Scout joins this page when its cage is
-rebuilt on the same workflow. Every drone is at https://sparkiscool.github.io/noxen/.
+Grey parts are placeholders still to be generated, red ones failed their last run. Every system is at https://sparkiscool.github.io/noxen/.
+
+## Scout
+[![Scout, current assembly](https://sparkiscool.github.io/noxen/scout.png)](https://sparkiscool.github.io/noxen/scout.html?view=iso&still)
+
+[Open the Scout viewer](https://sparkiscool.github.io/noxen/scout.html?view=iso&still): the Bee35 plate and the bought parts drawn to their
+dimensions; the cage and the battery mechanism are off the page while the shared landing funnel is decided.
+
+## Nox Ground Unit (the box)
+[![Nox Ground Unit, current assembly](https://sparkiscool.github.io/noxen/box.png)](https://sparkiscool.github.io/noxen/box.html?view=iso&still)
+
+[Open the box viewer](https://sparkiscool.github.io/noxen/box.html?view=iso&still): the swap arm v7 with its nine bays, the stand, the
+enclosure, and the landing funnel drawn on the latch footprint so both drones seat at one height (`tools/import_box.py` brings the
+mechanism's meshes over from the nox repo; `parts/box_funnel/make.py` draws the funnel).
+
+## Live artifacts (the pages above as claude.ai artifacts, republished by the sessions)
+Each system's `artifact` URL is in its `systems/<name>.assembly.json`; a session publishes `site/<name>.html` there after `python tools/build_site.py --inline`.
+- Overseer: https://claude.ai/artifact/VhDfnp75uoVsj8SnyrW2Qg
+- Scout: https://claude.ai/artifact/WHdjYkzKPifXuHT1dWeqoR
+- Nox Ground Unit: https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z
 
 ## How it works
 One script per part, GitHub runs the topology engine, one page shows the assembly. Claude writes scripts, nothing else.
