@@ -90,6 +90,8 @@ def overlays(o):
         out.append(("L2 field (90 deg mode)", trimesh.util.concatenate([half, disc]), "#4a90d9", 0.14))
     cams = list(o.get("cams") or [])
     try:                                                                            # the rear camera on node 21 (parts/overseer_cage_node_21/part.py)
+        if "cams" not in o:                                                         # only with the Overseer's cams (3 Nov: it was drawn on the Scout page too)
+            raise KeyError("cams")
         cage = _json.load(open(os.path.join(ROOT, "systems", "overseer.cage.json")))
         pitch = math.radians(40.0); F = np.array([-math.cos(pitch), 0.0, -math.sin(pitch)]); U = np.array([-math.sin(pitch), 0.0, math.cos(pitch)])
         c21 = np.array(cage["nodes"][21]); cams.append(dict(lens=(c21 + F * 26.0).tolist(), f=F.tolist(), u=U.tolist(), r=np.cross(F, U).tolist(), ha=44.5, hv=36.5))
@@ -168,8 +170,13 @@ def artifact_page(a, S, meshes, commit, path):
     names = [p["name"] for p in s.parts]
     spin = lambda t: trimesh.transformations.rotation_matrix(math.radians(360 * t / 24), [0, 0, 1])
     s.timeline(lambda t: {n: spin(t) for n in names}, duration_s=24, fps=24)
-    s.view("iso", (700, -800, 500), (60, 0, 20)); s.view("side", (60, -1300, 40), (60, 0, 40)); s.view("front", (1400, 0, 60), (0, 0, 40))
-    s.view("top", (60, 0, 1300), (60, 0, 0)); s.view("under", (300, -300, -900), (0, 0, -50))
+    B = [meshes[p.get("id") or p["name"]].bounds for p in a["parts"]]                 # the views were framed on the Overseer (690 across);
+    lo, hi = np.min([b[0] for b in B], 0), np.max([b[1] for b in B], 0)              # a smaller drone (the Scout, 260) fills the frame too
+    c = (lo + hi) / 2; k = max(float((hi - lo).max()) / 690.0, 0.15)
+    for nm, eye, at in (("iso", (700, -800, 500), (60, 0, 20)), ("side", (60, -1300, 40), (60, 0, 40)), ("front", (1400, 0, 60), (0, 0, 40)),
+                        ("top", (60, 0, 1300), (60, 0, 0)), ("under", (300, -300, -900), (0, 0, -50))):
+        at_k = c + k * (np.array(at, float) - np.array([60, 0, 20]))
+        s.view(nm, tuple(np.round(at_k + k * (np.array(eye, float) - np.array(at, float)), 1)), tuple(np.round(at_k, 1)))
     s.write(path)
 
 
@@ -219,6 +226,7 @@ def build(inline=False, offline=False):
     os.makedirs(os.path.join(SITE, "meshes"), exist_ok=True)
     out = {"systems": [], "repo": os.environ.get("GITHUB_REPOSITORY", "sparkiscool/noxen"), "commit": head(offline)}
     meshes = {}
+    owners = {}                                   # parts/<folder> -> the one system that places it
     for f in sorted(glob.glob(os.path.join(ROOT, "systems", "*.assembly.json"))):
         a = json.load(open(f))
         sysname = os.path.basename(f).split(".")[0]
@@ -234,6 +242,9 @@ def build(inline=False, offline=False):
                 mesh = cand
             elif st == "placed" and "mesh" in p and os.path.exists(os.path.join(ROOT, p["mesh"])):
                 mesh = os.path.join(ROOT, p["mesh"])
+            if mesh and mesh.startswith(os.path.join(ROOT, "parts", src) + os.sep) and owners.setdefault(src, sysname) != sysname:
+                sys.exit(f"build_site: parts/{src} is placed by both {owners[src]} and {sysname}: a folder belongs to one drone "
+                         f"(3 Nov: the Scout page drew the Overseer's cage, motors and props from shared folders). Give each its own folder.")
             if mesh:
                 m = view_mesh(trimesh.load(mesh, force="mesh"), pid)
                 kind = "mesh"

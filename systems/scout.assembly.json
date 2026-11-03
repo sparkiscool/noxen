@@ -1,9 +1,9 @@
 {
 "name": "Scout v3",
-"title": "Scout v3 Cage",
+"title": "Scout v3",
 "artifact": "https://claude.ai/artifact/WHdjYkzKPifXuHT1dWeqoR",
 "machine": "scout",
-"note": "v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
+"note": "Scout internals only (Spark 3 Nov): the Bee35 plate, the EMAX ECO II 2004 motors and Gemfan 3520 props, the electronics, the latch set and the tail bay from layout v3 / v12; the cage (shell tubes and nodes, rods and ties, tie saddle) and the camera mount v1 are off the page until the internals are settled; cage_shell keeps the v13 shell geometry for then. Until 3 Nov the assembly placed the Overseer's folders for the cage, motors, props and flow sensor, so the page showed the Overseer's cage on the Scout (the migration of 28 Oct shared the folder names). v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
 "cg_ref": [
 0.0,
 0.0,
@@ -159,61 +159,6 @@
 1000000000.0
 ],
 [
-"cage shell tubes",
-"cage shell nodes",
-1000000000.0
-],
-[
-"spokes, bay ties, core ties, camera guard",
-"cage shell nodes",
-1000000000.0
-],
-[
-"spokes, bay ties, core ties, camera guard",
-"cage shell tubes",
-1000000000.0
-],
-[
-"spokes, bay ties, core ties, camera guard",
-"frame plate (Bee35 carbon)",
-1000000000.0
-],
-[
-"spokes, bay ties, core ties, camera guard",
-"receiver v3 (latch)",
-1000000000.0
-],
-[
-"spokes, bay ties, core ties, camera guard",
-"mount + nose legs (Scout)",
-1000000000.0
-],
-[
-"spokes, bay ties, core ties, camera guard",
-"receiver TPU end pieces (latch, E)",
-1000000000.0
-],
-[
-"spokes, bay ties, core ties, camera guard",
-"camera mount (printed)",
-1000000000.0
-],
-[
-"camera mount (printed)",
-"camera",
-1000000000.0
-],
-[
-"camera mount (printed)",
-"frame plate (Bee35 carbon)",
-1000000000.0
-],
-[
-"camera mount (printed)",
-"mount + nose legs (Scout)",
-1000000000.0
-],
-[
 "receiver TPU end pieces (latch, E)",
 "receiver v3 (latch)",
 1000000000.0
@@ -374,16 +319,6 @@
 1000000000.0
 ],
 [
-"spokes, bay ties, core ties, camera guard",
-"tie saddle (printed)",
-1000000000.0
-],
-[
-"tie saddle (printed)",
-"frame plate (Bee35 carbon)",
-1000000000.0
-],
-[
 "tail bay cables (Scout electronics, E)",
 "Radxa Zero 3W",
 1000000000.0
@@ -400,22 +335,12 @@
 ],
 [
 "tail bay cables (Scout electronics, E)",
-"cage shell nodes",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
 "camera",
 1000000000.0
 ],
 [
 "tail bay cables (Scout electronics, E)",
 "wires",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"tie saddle (printed)",
 1000000000.0
 ],
 [
@@ -466,11 +391,6 @@
 [
 "tail bay cables (Scout electronics, E)",
 "cartridge skid lead end (latch, TPU)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"spokes, bay ties, core ties, camera guard",
 1000000000.0
 ],
 [
@@ -530,22 +450,12 @@
 ],
 [
 "tail bay cables (Scout electronics, E)",
-"cage shell tubes",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
 "motor 3",
 1000000000.0
 ],
 [
 "tail bay cables (Scout electronics, E)",
 "receiver TPU end pieces (latch, E)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"camera mount (printed)",
 1000000000.0
 ],
 [
@@ -585,22 +495,12 @@
 ],
 [
 "tail bay mount block (Scout electronics, E)",
-"cage shell nodes",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
 "camera",
 1000000000.0
 ],
 [
 "tail bay mount block (Scout electronics, E)",
 "wires",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"tie saddle (printed)",
 1000000000.0
 ],
 [
@@ -660,11 +560,6 @@
 ],
 [
 "tail bay mount block (Scout electronics, E)",
-"spokes, bay ties, core ties, camera guard",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
 "UBEC",
 1000000000.0
 ],
@@ -715,22 +610,12 @@
 ],
 [
 "tail bay mount block (Scout electronics, E)",
-"cage shell tubes",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
 "motor 3",
 1000000000.0
 ],
 [
 "tail bay mount block (Scout electronics, E)",
 "receiver TPU end pieces (latch, E)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"camera mount (printed)",
 1000000000.0
 ],
 [
@@ -770,22 +655,12 @@
 ],
 [
 "tail bay carrier (Scout electronics, E)",
-"cage shell nodes",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
 "camera",
 1000000000.0
 ],
 [
 "tail bay carrier (Scout electronics, E)",
 "wires",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"tie saddle (printed)",
 1000000000.0
 ],
 [
@@ -845,11 +720,6 @@
 ],
 [
 "tail bay carrier (Scout electronics, E)",
-"spokes, bay ties, core ties, camera guard",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
 "UBEC",
 1000000000.0
 ],
@@ -900,22 +770,12 @@
 ],
 [
 "tail bay carrier (Scout electronics, E)",
-"cage shell tubes",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
 "motor 3",
 1000000000.0
 ],
 [
 "tail bay carrier (Scout electronics, E)",
 "receiver TPU end pieces (latch, E)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"camera mount (printed)",
 1000000000.0
 ],
 [
@@ -1177,63 +1037,6 @@
 ],
 "parts": [
 {
-"name": "cage shell tubes",
-"role": "cage",
-"mesh": "parts/cage_shell_tubes/part.stl",
-"material": "carbon",
-"mass_g": 69.77,
-"cg": [
--3.31,
-0.0,
-16.47
-],
-"tag": "E",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "cage_shell_tubes",
-"group": "cage",
-"color": "#2b2b2b"
-},
-{
-"name": "cage shell nodes",
-"role": "cage",
-"mesh": "parts/cage_shell_nodes/part.stl",
-"material": "PETG",
-"mass_g": 203.42,
-"cg": [
-17.81,
-0.0,
-14.55
-],
-"tag": "E",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "cage_shell_nodes",
-"group": "cage",
-"color": "#7d8a99"
-},
-{
-"name": "spokes, bay ties, core ties, camera guard",
-"role": "cage",
-"mesh": "parts/spokes_bay_ties_core_ties_camera_guard/part.stl",
-"material": "carbon",
-"mass_g": 8.39,
-"cg": [
-19.2,
--0.0,
-1.97
-],
-"tag": "C",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "spokes_bay_ties_core_ties_camera_guard",
-"group": "cage",
-"color": "#444444"
-},
-{
 "name": "frame plate (Bee35 carbon)",
 "role": "structure",
 "mesh": "parts/frame_plate_bee35_carbon/part.stl",
@@ -1251,113 +1054,129 @@
 "name": "motor 1",
 "role": "bought",
 "protect": true,
-"mesh": "parts/motor_1/part.stl",
+"mesh": "parts/scout_motor_1/part.stl",
 "mass_g": 18.0,
 "tag": "E",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "motor_1",
+"source": "tools/scout_meshes.py",
+"id": "scout_motor_1",
 "group": "bought",
-"color": "#b0b0b0"
+"color": "#b0b0b0",
+"pose": null,
+"note": "EMAX ECO II 2004 (dimensions.md A, C), 19.2 to the prop hub face (listing, E)"
 },
 {
 "name": "prop 1",
 "role": "bought",
 "protect": true,
-"mesh": "parts/prop_1/part.stl",
+"mesh": "parts/scout_prop_1/part.stl",
 "mass_g": 1.8,
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "prop_1",
+"source": "tools/scout_meshes.py",
+"id": "scout_prop_1",
 "group": "bought",
-"color": "#d9a400"
+"color": "#d9a400",
+"pose": null,
+"note": "Gemfan Hurricane 3520, 3 blades r 44.45 (dimensions.md A)"
 },
 {
 "name": "motor 2",
 "role": "bought",
 "protect": true,
-"mesh": "parts/motor_2/part.stl",
+"mesh": "parts/scout_motor_2/part.stl",
 "mass_g": 18.0,
 "tag": "E",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "motor_2",
+"source": "tools/scout_meshes.py",
+"id": "scout_motor_2",
 "group": "bought",
-"color": "#b0b0b0"
+"color": "#b0b0b0",
+"pose": null,
+"note": "EMAX ECO II 2004 (dimensions.md A, C), 19.2 to the prop hub face (listing, E)"
 },
 {
 "name": "prop 2",
 "role": "bought",
 "protect": true,
-"mesh": "parts/prop_2/part.stl",
+"mesh": "parts/scout_prop_2/part.stl",
 "mass_g": 1.8,
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "prop_2",
+"source": "tools/scout_meshes.py",
+"id": "scout_prop_2",
 "group": "bought",
-"color": "#d9a400"
+"color": "#d9a400",
+"pose": null,
+"note": "Gemfan Hurricane 3520, 3 blades r 44.45 (dimensions.md A)"
 },
 {
 "name": "motor 3",
 "role": "bought",
 "protect": true,
-"mesh": "parts/motor_3/part.stl",
+"mesh": "parts/scout_motor_3/part.stl",
 "mass_g": 18.0,
 "tag": "E",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "motor_3",
+"source": "tools/scout_meshes.py",
+"id": "scout_motor_3",
 "group": "bought",
-"color": "#b0b0b0"
+"color": "#b0b0b0",
+"pose": null,
+"note": "EMAX ECO II 2004 (dimensions.md A, C), 19.2 to the prop hub face (listing, E)"
 },
 {
 "name": "prop 3",
 "role": "bought",
 "protect": true,
-"mesh": "parts/prop_3/part.stl",
+"mesh": "parts/scout_prop_3/part.stl",
 "mass_g": 1.8,
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "prop_3",
+"source": "tools/scout_meshes.py",
+"id": "scout_prop_3",
 "group": "bought",
-"color": "#d9a400"
+"color": "#d9a400",
+"pose": null,
+"note": "Gemfan Hurricane 3520, 3 blades r 44.45 (dimensions.md A)"
 },
 {
 "name": "motor 4",
 "role": "bought",
 "protect": true,
-"mesh": "parts/motor_4/part.stl",
+"mesh": "parts/scout_motor_4/part.stl",
 "mass_g": 18.0,
 "tag": "E",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "motor_4",
+"source": "tools/scout_meshes.py",
+"id": "scout_motor_4",
 "group": "bought",
-"color": "#b0b0b0"
+"color": "#b0b0b0",
+"pose": null,
+"note": "EMAX ECO II 2004 (dimensions.md A, C), 19.2 to the prop hub face (listing, E)"
 },
 {
 "name": "prop 4",
 "role": "bought",
 "protect": true,
-"mesh": "parts/prop_4/part.stl",
+"mesh": "parts/scout_prop_4/part.stl",
 "mass_g": 1.8,
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "prop_4",
+"source": "tools/scout_meshes.py",
+"id": "scout_prop_4",
 "group": "bought",
-"color": "#d9a400"
+"color": "#d9a400",
+"pose": null,
+"note": "Gemfan Hurricane 3520, 3 blades r 44.45 (dimensions.md A)"
 },
 {
 "name": "FC",
@@ -1419,15 +1238,17 @@
 "name": "flow MTF-02P",
 "role": "bought",
 "protect": true,
-"mesh": "parts/flow_mtf_02p/part.stl",
+"mesh": "parts/scout_flow_mtf_02p/part.stl",
 "mass_g": 1.5,
 "tag": "P",
 "owner": "scout v3",
 "version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "flow_mtf_02p",
+"source": "tools/scout_meshes.py",
+"id": "scout_flow_mtf_02p",
 "group": "bought",
-"color": "#2d5a2d"
+"color": "#2d5a2d",
+"pose": null,
+"note": "at the belly mount concept's (0, -40, -30), face down (dimensions.md System Scout v3; E until the mount is designed)"
 },
 {
 "name": "mount + nose legs (Scout)",
@@ -1695,20 +1516,6 @@
 "color": "#2d5a2d"
 },
 {
-"name": "tie saddle (printed)",
-"role": "cage",
-"mesh": "parts/tie_saddle_printed/part.stl",
-"material": "PETG",
-"mass_g": 17.01,
-"tag": "E",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "tie_saddle_printed",
-"group": "printed",
-"color": "#7d8a99"
-},
-{
 "name": "wires",
 "role": "structure",
 "box": [
@@ -1728,48 +1535,6 @@
 "id": "wires",
 "group": "wires",
 "color": "#99a6b3"
-},
-{
-"name": "camera mount (printed)",
-"role": "cage",
-"mesh": "parts/camera_mount_printed/part.stl",
-"material": "PETG",
-"mass_g": 21.75,
-"tag": "M",
-"owner": "scout camera mount",
-"version": "v1",
-"source": "nox/scout/v3/camera_mount.py",
-"id": "camera_mount_printed",
-"group": "cage",
-"color": "#7d8a99"
-},
-{
-"name": "camera mount stop collar +y",
-"role": "cage",
-"mesh": "parts/camera_mount_stop_collar_y/part.stl",
-"material": "PETG",
-"mass_g": 0.25,
-"tag": "M",
-"owner": "scout camera mount",
-"version": "v1",
-"source": "nox/scout/v3/camera_mount.py",
-"id": "camera_mount_stop_collar_y",
-"group": "cage",
-"color": "#7d8a99"
-},
-{
-"name": "camera mount stop collar -y",
-"role": "cage",
-"mesh": "parts/camera_mount_stop_collar_y/part.stl",
-"material": "PETG",
-"mass_g": 0.25,
-"tag": "M",
-"owner": "scout camera mount",
-"version": "v1",
-"source": "nox/scout/v3/camera_mount.py",
-"id": "camera_mount_stop_collar_y",
-"group": "cage",
-"color": "#7d8a99"
 }
 ],
 "mass_budget_g": 500,
