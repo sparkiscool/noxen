@@ -45,10 +45,27 @@ def solids():
     return [("funnel", fun, to_tri(fun)), ("deck", deck, to_tri(deck))]
 
 
-def check(drone, verbose=True):
+def descent_states(drone):
+    """the landing path of tools/landing_box.py at its capture limits: (label, offset x, offset y, height) with the offset following the
+    55 deg faces down (offset = height / tan 55 once in contact); the states where a part can meet a wall or a leg"""
+    import math
+    tan = math.tan(math.radians(55.0)); out = [("seated", 0.0, 0.0, 0.0)]
+    X = 28.0 if drone == "scout" else 18.0                 # the Overseer's x capture is +-18: its loop diagonals meet the end walls' top corners beyond that
+    for lab, ox, oy in ((f"+x {X:.0f}", X, 0.0), (f"-x {X:.0f}", -X, 0.0), ("+y 20", 0.0, 20.0), ("-y 20", 0.0, -20.0), ("+x+y", X * 0.7, 14.0)):
+        o0 = math.hypot(ox, oy)
+        for h in (60.0, 45.0, 30.0, 20.0, 12.0, 6.0):
+            k = min(1.0, (h / tan) / o0)
+            out.append((f"{lab} at h {h:.0f}", ox * k, oy * k, h))
+    return out
+
+
+def check(drone, verbose=True, offset=(0.0, 0.0, 0.0)):
     S = solids()
     hits = []
+    T = np.eye(4); T[:3, 3] = offset
     for nm, m in se.parts_of(drone):
+        if any(offset):
+            m = m.copy(); m.apply_transform(T)
         for sname, sm, st in S:
             if not ((m.bounds[0] <= st.bounds[1]).all() and (m.bounds[1] >= st.bounds[0]).all()):
                 continue
@@ -75,3 +92,10 @@ if __name__ == "__main__":
     which = sys.argv[1] if len(sys.argv) > 1 else "both"
     for d in (["scout", "overseer"] if which == "both" else [which]):
         check(d)
+        if "--descent" in sys.argv:
+            bad = 0
+            for lab, ox, oy, h in descent_states(d)[1:]:
+                hs = check(d, verbose=False, offset=(ox, oy, h))
+                if hs:
+                    bad += 1; print(f"  descent {lab:14}: " + "; ".join(f"{nm[:28]} x {s} {v:.0f} mm3 at {bb}" for nm, s, v, dd, bb in hs))
+            print(f"  descent: {bad} of {len(descent_states(d)) - 1} states with a crossing")

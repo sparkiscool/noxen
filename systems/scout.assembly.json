@@ -927,12 +927,12 @@
 "group": "cage",
 "color": "#2b2b2b",
 "mesh": "parts/scout_cage_v15/part.stl",
-"mass_g": 150.3,
+"mass_g": 163.9,
 "tag": "E",
 "owner": "scout v3",
 "version": "v15 (3 Nov)",
 "source": "tools/scout_cage.py",
-"note": "18 nodes, 45 rods 3.0 (5.48 m), an octagonal prism tangent to the prop keep-out, base ring z -48 with TPU feet, roof z 63, nose window for the camera; nodes E 5 g each until designed"
+"note": "22 nodes, 48 rods 3.0 (4.90 m), an octagonal prism tangent to the prop keep-out, base ring z -48 with TPU feet, roof z 63, nose window for the camera; nodes E 5 g each until designed"
 }
 ],
 "mass_budget_g": 500,
@@ -1001,32 +1001,52 @@
 [
 100.0,
 115.0,
--48.0
+0.0
 ],
 [
 -100.0,
 115.0,
--48.0
+0.0
 ],
 [
 -100.0,
 -115.0,
--48.0
+0.0
 ],
 [
 100.0,
 -115.0,
--48.0
+0.0
 ],
 [
-128.0,
-0.0,
--30.0
+100.0,
+115.0,
+-50.0
 ],
 [
--126.0,
+-100.0,
+115.0,
+-50.0
+],
+[
+-100.0,
+-115.0,
+-50.0
+],
+[
+100.0,
+-115.0,
+-50.0
+],
+[
+118.0,
 0.0,
--30.0
+8.0
+],
+[
+-130.0,
+0.0,
+8.0
 ]
 ],
 "rods": [
@@ -1079,6 +1099,10 @@
 9
 ],
 [
+0,
+1
+],
+[
 10,
 2
 ],
@@ -1127,16 +1151,24 @@
 13
 ],
 [
-13,
+15,
 14
 ],
 [
+12,
+16
+],
+[
+13,
+17
+],
+[
 14,
-15
+18
 ],
 [
 15,
-12
+19
 ],
 [
 12,
@@ -1179,41 +1211,41 @@
 8
 ],
 [
-16,
+20,
 12
 ],
 [
-16,
+20,
 15
 ],
 [
-16,
+20,
 0
 ],
 [
-16,
+20,
 1
 ],
 [
-17,
+21,
 13
 ],
 [
-17,
+21,
 14
 ],
 [
-17,
+21,
 6
 ],
 [
-17,
+21,
 7
 ]
 ],
 "node_r_mm": 7.0,
 "rod_r_mm": 1.5,
-"total_rods": 45,
+"total_rods": 48,
 "open": [
 {
 "ring": [
@@ -1226,7 +1258,22 @@
 },
 {
 "ring": [
-16,
+12,
+15,
+20
+],
+"what": "bottom, nose V"
+},
+{
+"ring": [
+13,
+21,
+14
+],
+"what": "bottom, tail V"
+},
+{
+"ring": [
 0,
 2,
 3,

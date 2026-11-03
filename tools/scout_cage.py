@@ -9,8 +9,9 @@ What sets the size, and only this:
   tail     the tail electronics now sit under the plate's tail (x -118..-53, z 7.5..20, over the funnel mouth): the tail flat at x -130
   roof     one ring at z 62 is both the prop keep-out ring and the roof's edge (17 over the sweep, 3 over the camera board):
            no posts; the roof is a spine of two nodes fanned to the ring
-  bottom   the base ring at z -48 (feet, TPU caps, contact z -51; the belly skirt and cartridge at -44.5), its short sides at x +-100
-           outside the funnel's under-seat skirt (|x| <= 88), long sides at |y| 115 outside the funnel's rim (|y| <= 65) and legs (|y| 40)
+  bottom   the whole shell stays above z 0, over the funnel's wall tops (z -4.3) in every state of the descent (the end walls
+           sweep |x| <= 153, |y| <= 85 at the capture limits): base rails at |y| 115, z 0, nose and tail bottom nodes at z 8, the
+           window sill at z 17; four legs from the rail ends to feet at z -50 (TPU caps, contact -53; the belly skirt at -44.3)
   funnel   nothing of the cage inside the funnel's walls when seated or during the +-28 / +-20 descent (tools/seat_check.py)
   shell    closed, mirror-exact, two declared openings: the bottom inside the base ring and the nose window
 Writes parts/scout_cage_v15/part.stl (tubes + node spheres, the look), the shell into systems/scout.assembly.json (cage_shell, the
@@ -22,7 +23,7 @@ import numpy as np, trimesh
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 
-ZR, ZB, ZF = 62.0, -48.0, 17.0                       # the one ring (prop keep-out and roof), the base ring, the dipped front nodes
+ZR, ZB, ZF, ZL = 62.0, 0.0, 17.0, -50.0               # the ring (prop keep-out and roof edge), the base rails, the dipped front nodes, the feet
 XN, XT, YS, C = 136.0, -130.0, 115.0, 193.7          # nose flat, tail flat, side flats, the corner chamfer line |x| + |y| = C
 NODES = {
     "P0": (XN, C - XN, ZF), "P7": (XN, -(C - XN), ZF),                                                         # front nodes, dipped: the window's bottom corners
@@ -30,19 +31,21 @@ NODES = {
     "P1": (C - YS, YS, ZR), "P2": (-(C - YS), YS, ZR), "P3": (XT, C + XT, ZR),                                  # the ring, left half (nose -> tail)
     "P4": (XT, -(C + XT), ZR), "P5": (-(C - YS), -YS, ZR), "P6": (C - YS, -YS, ZR),                             # right half
     "RF": (70, 0, ZR), "RB": (-70, 0, ZR),                                                                     # roof spine
-    "B0": (100, YS, ZB), "B1": (-100, YS, ZB), "B2": (-100, -YS, ZB), "B3": (100, -YS, ZB),                     # base ring, the feet
-    "NB": (128, 0, -30), "TB": (-126, 0, -30),                                                                 # nose and tail bottom nodes
+    "B0": (100, YS, ZB), "B1": (-100, YS, ZB), "B2": (-100, -YS, ZB), "B3": (100, -YS, ZB),                     # base rails at z 0: above the funnel's walls in every state
+    "L0": (100, YS, ZL), "L1": (-100, YS, ZL), "L2": (-100, -YS, ZL), "L3": (100, -YS, ZL),                     # legs, the feet (TPU caps, contact -53)
+    "NB": (118, 0, 8), "TB": (-130, 0, 8),                                                                     # nose and tail bottom nodes, 12 over the wall tops
 }
 RODS = [("R0", "P1"), ("P1", "P2"), ("P2", "P3"), ("P3", "P4"), ("P4", "P5"), ("P5", "P6"), ("P6", "R7"), ("R7", "R0"),   # the ring at z 62 (the roof's edge)
-        ("P0", "R0"), ("P7", "R7"), ("P0", "P1"), ("P7", "P6"),                                                # the window's posts and the front side slants
+        ("P0", "R0"), ("P7", "R7"), ("P0", "P1"), ("P7", "P6"), ("P0", "P7"),                                  # the window's posts, the front slants, the window sill (z 17, under the view)
         ("RF", "R0"), ("RF", "R7"), ("RF", "P1"), ("RF", "P6"), ("RF", "RB"),                                  # roof, front
         ("RB", "P1"), ("RB", "P6"), ("RB", "P2"), ("RB", "P5"), ("RB", "P3"), ("RB", "P4"),                    # roof, rear
-        ("B0", "B1"), ("B1", "B2"), ("B2", "B3"), ("B3", "B0"),                                                # base ring
+        ("B0", "B1"), ("B3", "B2"),                                                                            # base rails
+        ("B0", "L0"), ("B1", "L1"), ("B2", "L2"), ("B3", "L3"),                                                # legs
         ("B0", "P0"), ("B0", "P1"), ("B1", "P2"), ("B1", "P3"), ("B2", "P4"), ("B2", "P5"), ("B3", "P6"), ("B3", "P7"),   # lower band
         ("B0", "P2"), ("B3", "P5"),                                                                            # side diagonals, mirrored
         ("NB", "B0"), ("NB", "B3"), ("NB", "P0"), ("NB", "P7"), ("TB", "B1"), ("TB", "B2"), ("TB", "P3"), ("TB", "P4")]   # nose and tail, lower band
-OPEN = [dict(ring=["B0", "B1", "B2", "B3"], what="bottom: the belly skirt into the funnel"),
-        dict(ring=["NB", "P0", "R0", "R7", "P7"], what="nose window: the camera's view")]
+OPEN = [dict(ring=["B0", "B1", "B2", "B3"], what="bottom: the belly skirt into the funnel"), dict(ring=["B0", "B3", "NB"], what="bottom, nose V"), dict(ring=["B1", "TB", "B2"], what="bottom, tail V"),
+        dict(ring=["P0", "R0", "R7", "P7"], what="nose window: the camera's view")]
 MOTORS = [(54.1, 54.1), (-54.1, 54.1), (-54.1, -54.1), (54.1, -54.1)]
 R_DISC, Z_DISC = 44.45 + 4.0, (37.2, 45.2)
 LENS, HFOV, VFOV = np.array([122.0, 0.0, 40.0]), math.radians(44.5), math.radians(36.5)

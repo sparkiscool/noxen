@@ -10,8 +10,9 @@ hangs under the nose at x 110..138 from h 42 up. So the two y faces stop at h 28
 (x capture +-28), all at 55 deg from the seat ledge; the mouth is 240 x 106 at the top of the y faces. The base passes 2.7 over the
 y walls, the flow clip 2 over the x walls' rim. With base v8 chamfered to |y| <= 33.4 + h / 1.428 - 2 for h 31..50 and the flow
 clip 17 aft, the faces could all rise to h 50 and capture +-35 (the alternative, not drawn).
-Legs: four 12 square from the x walls' rim down to the deck (W Z 66 = seat z -89.3), at x -128 / +131, y +-40, where the
-Overseer's loop tubes pass 15 clear. Wall 3.0, PETG. Not drawn: the hold-down against the 60 N insert, UHMW tape on the faces.
+Legs: four 12 square under the x walls' ends (x -115 / +118, y +-40) down to the deck (W Z 66 = seat z -89.3), merging into the
+walls' tops; the Overseer's loop diagonals and bay ties pass 15 clear of them at its capture limits and the Scout cage keeps
+every member above the wall tops (tools/seat_check.py --descent: 0 crossings in every state for both drones). Wall 3.0, PETG. Not drawn: the hold-down against the 60 N insert, UHMW tape on the faces.
 Run: python parts/box_funnel/make.py
 """
 import os, numpy as np, trimesh, manifold3d as mf
@@ -22,7 +23,9 @@ H_X, H_Y = 40.0, 28.0                             # the x (nose / tail) faces an
 CX = 1.5                                          # the receiver centre x (the catch centre) in the seat frame
 SEAT = (CX - 92.0, CX + 92.0, -33.4, 33.4)        # the Overseer receiver v2 outline (E) = the Scout's belly skirt
 HOLE = (CX - 85.0, CX + 85.0, -25.0, 25.0)        # both cartridges and the swap head pass (Overseer cartridge width CHECK)
-RIM, LEG, LEG_BOTTOM, LEG_Y = 0.0, 12.0, -89.3, 40.0      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
+RIM, LEG, LEG_BOTTOM = 0.0, 12.0, -89.3
+CORNER_Y = 48.0                                   # the x walls' top corners (h 28..40) stop at |y| 48: the Overseer's loop diagonals pass 15 outside them at its capture limits; the receiver still bears on them over |y| <= 48
+LEG_Y = 40.0                                       # legs under the x walls' ends, |y| 40: the Overseer's loop diagonals and bay ties never come within 15 of them, and the Scout cage keeps everything above the wall tops (3 Nov, tools/seat_check.py --descent)      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
 
 
@@ -49,9 +52,10 @@ def funnel():
     rim = [box(ox0 - RIM, ox0 + 2.0, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X), box(ox1 - 2.0, ox1 + RIM, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X)] if RIM else []
     skirt = box(HOLE[0] - WALL, HOLE[1] + WALL, HOLE[2] - WALL, HOLE[3] + WALL, z0 - 12.0, z0)
     legs = [box(cx - LEG / 2, cx + LEG / 2, cy - LEG / 2, cy + LEG / 2, LEG_BOTTOM, z0 + H_X)
-            for cx in (ox0 - LEG / 2, ox1 + LEG / 2) for cy in (-LEG_Y, LEG_Y)]
+            for cx in (ox0 + LEG / 2 + 1.0, ox1 - LEG / 2 - 1.0) for cy in (-LEG_Y, LEG_Y)]                   # inside the x walls' footprint at the top, merging into them
     hole = box(*HOLE, z0 - 20.0, z0 + H_X + 2.0)
-    body = (outer - top_cut) + mf.Manifold.batch_boolean(rim + [skirt] + legs, mf.OpType.Add)
+    corner_cut = [box(x0 - 200, x1 + 200, s_ * CORNER_Y, s_ * 300, z0 + H_Y, z0 + H_X + 2) if s_ > 0 else box(x0 - 200, x1 + 200, -300, -CORNER_Y, z0 + H_Y, z0 + H_X + 2) for s_ in (-1, 1)]
+    body = (outer - top_cut - mf.Manifold.batch_boolean(corner_cut, mf.OpType.Add)) + mf.Manifold.batch_boolean(rim + [skirt] + legs, mf.OpType.Add)
     return body - inner - hole
 
 
