@@ -14,9 +14,11 @@ Grey parts are placeholders still to be generated, red ones failed their last ru
 [![Scout, current assembly](https://sparkiscool.github.io/noxen/scout.png)](https://sparkiscool.github.io/noxen/scout.html?view=iso&still)
 
 [Open the Scout viewer](https://sparkiscool.github.io/noxen/scout.html?view=iso&still): the Bee35 plate and the bought parts drawn to their
-dimensions, the belly skirt that seats in the shared funnel, and cage v17 (`tools/scout_cage.py`: 3 mm rods in PETG nodes on two skid
-trusses, checked against the funnel on the whole descent and as a frame under crash and landing loads, `tools/scout_cage_loads.py`);
-the battery mechanism is off the page until its hold-down is designed.
+dimensions, the nose and tail units that hold the receiver, seat the Scout in the shared funnel and carry the camera, flow sensor
+and tail electronics (`parts/scout_units_lib.py`, engine setups: their drawn attachments and design rooms show until the runs land), and
+cage v18 (`tools/scout_cage.py`: 3 mm rods in PETG nodes, low and domed, on two skid trusses, checked against the funnel on the whole
+descent and as a frame under crash and landing loads, `tools/scout_cage_loads.py`); the battery mechanism is off the page until its
+hold-down is designed.
 
 ## Nox Ground Unit (the box)
 [![Nox Ground Unit, current assembly](https://sparkiscool.github.io/noxen/box.png)](https://sparkiscool.github.io/noxen/box.html?view=iso&still)

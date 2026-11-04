@@ -3,7 +3,8 @@ as a 3D beam frame on the Overseer's engine (tools/cage_loads.py: Euler beams, r
 CG ray leaves through, a pulled contact node lifts off).
 
 Model: every cage rod and tie a 3.0 solid carbon beam (E 120 GPa); the plate with everything on and under it (motors, pack,
-skirt, electronics) one rigid body at its CG, hung on the eight tie roots by stiff links; masses from systems/scout.assembly.json
+units, electronics) one rigid body at its CG, hung on the tie roots and the printed nodes NB / TB (in the nose and tail units,
+scout_cage.PRINTED) by stiff links; masses from systems/scout.assembly.json
 (cage nodes 5 g each, rods and ties 0.011 g/mm, half to each end).
 Joints: a 3.0 rod in a 10 deep PETG socket turns against the socket wall: k_theta ~ E_petg L^3 / 12 ~ 230 N m/rad (Winkler, E),
 5..12x the rod's own 4EI/L (19 N m/rad at 100 mm, 42 at 45), so rigid joints read the frame right to the rods' compliance; what
@@ -65,7 +66,7 @@ def build(nodes, rods, ties, core):
         L = float(np.linalg.norm(np.array(P[i]) - np.array(P[j])))
         fr.member(f"{i}-{j}", pid[i], pid[j], cl.RODS, "tie"); load[pid[i]] += ROD_G_MM * L / 2; load[pid[j]] += ROD_G_MM * L / 2
     cg_m, cg_c = core; ic = fr.node(cg_c, tol=1e-6); load[ic] = load.get(ic, 0.0) + cg_m
-    for k in sc.TIE_ROOTS:
+    for k in list(sc.TIE_ROOTS) + [k for k in sc.PRINTED if k in nodes]:      # the tie roots and the printed nodes ride on the plate's units
         fr.member(f"core {k}", ic, pid[k], cl.STIFF, "stiff")
     return fr, load, pid, keys
 
@@ -176,13 +177,25 @@ def run(nodes=None, rods=None, ties=None, dry=False, log=print):
     log(f"socket pull-out (cap {CAP['pull_out']:.0f} N E): worst " + ", ".join(f"{k} {t:.0f}" for t, k in pull[:4]))
     log(f"socket side (cap {CAP['side']:.0f} N E): worst " + ", ".join(f"{k} {t:.0f}" for t, k in sides[:4]))
     log(f"end moment (socket cap {CAP['moment_socket']:.0f}, rod {CAP['moment_rod']:.0f} N mm E): worst " + ", ".join(f"{k} {t:.0f}" for t, k in moms[:4]))
+    # node_loads: per node (cage nodes and tie roots), per member ending there: largest |N| (sign kept in N) and side force, as the Overseer's
+    node_loads = {}
+    for m in fr.members:
+        if m["kind"] not in ("rod", "tie"):
+            continue
+        a_, b_ = m["name"].split("-")
+        for end, k in (("i", a_), ("j", b_)):
+            best = max(results, key=lambda r: abs(r["members"][m["name"]]["N"]))
+            side = max(r["members"][m["name"]][f"shear_{end}"] for r in results)
+            Nmax = best["members"][m["name"]]["N"]
+            node_loads.setdefault(k, {})[m["name"]] = dict(axial=round(abs(Nmax), 1), side=round(side, 1), N=round(Nmax, 1), case=best["name"], tag="F")
     worst_case = max(results, key=lambda r: r["deflection_mm"])
     log(f"softest case: {worst_case['name']}: {worst_case['deflection_mm']} mm at {worst_case['worst_node']}")
     record = dict(note=__doc__.strip().split("\n")[0], engine="tools/scout_cage_loads.py",
                   model=dict(points=n, rods=len(rods), ties=len(ties), section=cl.RODS, core_g=round(core[0], 1), core_cg=np.round(core[1], 1).tolist(),
                              total_g=round(total, 1), cg=np.round(cg, 1).tolist(), crash_g=cl.CRASH_G, landing_g=cl.LAND_G, rough_g=ROUGH_G, rough_deg=ROUGH_DEG,
                              capacities=CAP),
-                  pin_jointed=dict(rods=have, needed=need, hinges=mech), modes_hz=fq, cases=results, rods=rodrep)
+                  pin_jointed=dict(rods=have, needed=need, hinges=mech), modes_hz=fq, cases=results, rods=rodrep, node_loads=node_loads,
+                  printed_nodes=sc.PRINTED, tie_roots={k: list(map(float, v)) for k, v in sc.TIE_ROOTS.items()})
     summary = dict(hinges=mech, modes=fq, euler_over_1=sum(e > 1 for e, _ in over), euler_max=over[0], deflection_max=(worst_case["deflection_mm"], worst_case["name"]),
                    pull_max=pull[0], side_max=sides[0], moment_max=moms[0])
     if not dry:

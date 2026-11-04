@@ -20,7 +20,7 @@ PLATE_TOP = 22.0
 MOTORS_XY = [(54.1, -54.1), (-54.1, 54.1), (54.1, 54.1), (-54.1, -54.1)]      # PX4 quad X: 1 FR, 2 RL, 3 FL, 4 RR (y left)
 MOTOR_D, MOTOR_H = 24.7, 19.2                                                 # bell, arm top to prop hub face (listing, E)
 PROP_R, PROP_HUB_D, PROP_HUB_H, PITCH_MM = 44.45, 11.0, 5.5, 50.8
-FLOW_AT = (0.0, -30.0, -30.0)                                                 # lens; belly mount concept v1 had y -40, moved in 10 (3 Nov) to clear the funnel's y face
+FLOW_AT = (70.0, 0.0, -24.5)                                                  # lens: in the nose unit's runner, looking down through a window in it (4 Nov; beside the receiver there is no room between it and the funnel's y face, and under the plate the receiver clips its view)
 
 
 def box(x0, x1, y0, y1, z0, z1):
@@ -193,7 +193,8 @@ def camera():
     return union([board, holder, barrel, ring, front, plug] + chips) - union(holes + [glass_cut])
 
 
-CAMERA_LENS = (122.0, 0.0, 40.0)                                                # 3 Nov compact layout: just ahead of the front discs (board x 105..120), lens low                                     # one camera at the nose, horizon, looking +x (dimensions.md System Scout v3)
+CAMERA_LENS = (126.0, 0.0, 40.0)                                                # 4 Nov: 4 forward so the nose unit's M2 posts (10 behind the board back, |y| 14) clear the front discs' 12 mm keep-out
+# was (122.0, 0.0, 40.0)                                                # 3 Nov compact layout: just ahead of the front discs (board x 105..120), lens low                                     # one camera at the nose, horizon, looking +x (dimensions.md System Scout v3)
 
 
 if __name__ == "__main__":
