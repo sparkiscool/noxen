@@ -3,7 +3,7 @@
 "title": "Scout v3",
 "artifact": "https://claude.ai/artifact/WHdjYkzKPifXuHT1dWeqoR",
 "machine": "scout",
-"note": "Scout built against the shared funnel (3 Nov): the Bee35 plate, the EMAX ECO II 2004 motors and Gemfan 3520 props, the electronics and the 4S 1500 pack from layout v3 / v12, the belly skirt that seats in the funnel, and cage v15, a closed 3 mm rod octagonal prism of 22 nodes and 48 rods tangent to the prop keep-out (tools/scout_cage.py: every member above the funnel's wall tops on the whole descent, base rails at z 0 with four legs to the feet, one ring at z 62 as prop keep-out and roof edge, nose window for the camera), 266 x 230 x 112; the tail electronics sit flat under the plate's tail and the camera just ahead of the front discs (3 Nov compact layout) so nothing but the belly is below the funnel mouth; the latch set stays off the page until the hold-down is designed. Until 3 Nov the assembly placed the Overseer's folders for the cage, motors, props and flow sensor, so the page showed the Overseer's cage on the Scout (the migration of 28 Oct shared the folder names). v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
+"note": "Scout built against the shared funnel (3 Nov): the Bee35 plate, the EMAX ECO II 2004 motors and Gemfan 3520 props, the electronics and the 4S 1500 pack from layout v3 / v12, the belly skirt that seats in the funnel, and cage v16, a closed 3 mm rod octagonal prism of 22 nodes and 52 rods tangent to the prop keep-out (tools/scout_cage.py: every member outboard of the funnel's walls on the whole descent, base rails at z 0, the cage lands on two skids at |y| 84 hung from the rails as triangulated panels (4 Nov, Spark: no standalone legs), one ring at z 62 as prop keep-out and roof edge, nose window for the camera), 266 x 230 x 110; the tail electronics sit flat under the plate's tail and the camera just ahead of the front discs (3 Nov compact layout) so nothing but the belly is below the funnel mouth; the latch set stays off the page until the hold-down is designed. Until 3 Nov the assembly placed the Overseer's folders for the cage, motors, props and flow sensor, so the page showed the Overseer's cage on the Scout (the migration of 28 Oct shared the folder names). v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
 "cg_ref": [
 0.0,
 0.0,
@@ -921,18 +921,18 @@
 "note": "runners fore and aft of the receiver v3 to the Overseer receiver's 184 x 67 outline at z -44.3: what the shared funnel seats; built into the belly mount later"
 },
 {
-"id": "scout_cage_v15",
-"name": "cage v15 (compact funnel cage, 3 mm rods, layout model)",
+"id": "scout_cage_v16",
+"name": "cage v16 (compact funnel cage on skids, 3 mm rods, layout model)",
 "role": "cage",
 "group": "cage",
 "color": "#2b2b2b",
-"mesh": "parts/scout_cage_v15/part.stl",
-"mass_g": 163.6,
+"mesh": "parts/scout_cage_v16/part.stl",
+"mass_g": 173.1,
 "tag": "E",
 "owner": "scout v3",
-"version": "v15 (3 Nov)",
+"version": "v16 (4 Nov)",
 "source": "tools/scout_cage.py",
-"note": "22 nodes, 48 rods 3.0 (4.88 m), an octagonal prism tangent to the prop keep-out, base ring z -48 with TPU feet, roof z 63, nose window for the camera; nodes E 5 g each until designed"
+"note": "22 nodes, 52 rods 3.0 (5.74 m), an octagonal prism tangent to the prop keep-out, base rails z 0, two skids at |y| 84, z -48 (TPU strips), roof z 62, nose window for the camera; nodes E 5 g each until designed"
 }
 ],
 "mass_budget_g": 500,
@@ -1020,23 +1020,23 @@
 ],
 [
 100.0,
-115.0,
--45.0
+84.0,
+-48.0
 ],
 [
 -100.0,
-115.0,
--45.0
+84.0,
+-48.0
 ],
 [
 -100.0,
--115.0,
--45.0
+-84.0,
+-48.0
 ],
 [
 100.0,
--115.0,
--45.0
+-84.0,
+-48.0
 ],
 [
 118.0,
@@ -1155,6 +1155,14 @@
 14
 ],
 [
+16,
+17
+],
+[
+19,
+18
+],
+[
 12,
 16
 ],
@@ -1163,12 +1171,20 @@
 17
 ],
 [
+15,
+19
+],
+[
 14,
 18
 ],
 [
+12,
+17
+],
+[
 15,
-19
+18
 ],
 [
 12,
@@ -1245,14 +1261,14 @@
 ],
 "node_r_mm": 7.0,
 "rod_r_mm": 1.5,
-"total_rods": 48,
+"total_rods": 52,
 "open": [
 {
 "ring": [
-12,
-13,
-14,
-15
+16,
+17,
+18,
+19
 ],
 "what": "bottom: the belly skirt into the funnel"
 },
@@ -1274,6 +1290,24 @@
 },
 {
 "ring": [
+16,
+12,
+15,
+19
+],
+"what": "bottom, nose end between the skids"
+},
+{
+"ring": [
+17,
+13,
+14,
+18
+],
+"what": "bottom, tail end between the skids"
+},
+{
+"ring": [
 0,
 2,
 3,
@@ -1282,6 +1316,6 @@
 "what": "nose window: the camera's view"
 }
 ],
-"note": "cage v15, the compact funnel cage (tools/scout_cage.py, 3 Nov): a closed 3 mm rod octagonal prism formed to the Scout in the shared funnel"
+"note": "cage v16, the compact funnel cage on skids (tools/scout_cage.py, 4 Nov): a closed 3 mm rod octagonal prism formed to the Scout in the shared funnel, landing on two skids hung from its base rails"
 }
 }

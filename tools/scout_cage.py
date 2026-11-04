@@ -1,5 +1,5 @@
-"""Scout cage v15, the compact funnel cage (3 Nov, Spark: v14 was far too large; meet every requirement and make the Scout as
-compact as possible). A closed triangulated shell of 3.0 carbon rods in printed PETG nodes, formed to the Scout as it sits in the
+"""Scout cage v16, the compact funnel cage on skids (3 Nov, Spark: v14 was far too large; meet every requirement and make the Scout as
+compact as possible; 4 Nov: no standalone legs, the cage itself lands, like the Overseer's loop). A closed triangulated shell of 3.0 carbon rods in printed PETG nodes, formed to the Scout as it sits in the
 shared funnel (parts/box_funnel/make.py). Drone frame = seat frame (x nose, y left, z up).
 What sets the size, and only this:
   prop     every rod >= 12 from the four swept discs (r 44.45 + 4, z 41.2 +- 4): a rounded square of half-width 114.6 with corner
@@ -11,10 +11,16 @@ What sets the size, and only this:
            no posts; the roof is a spine of two nodes fanned to the ring
   bottom   the whole shell stays above z 0, over the funnel's wall tops (z -4.3) in every state of the descent (the end walls
            sweep |x| <= 153, |y| <= 85 at the capture limits): base rails at |y| 115, z 0, nose and tail bottom nodes at z 8, the
-           window sill at z 17; four legs from the rail ends to feet at z -45 (TPU caps, contact -48; the belly skirt at -44.3; the feet 9 over the funnel's nose beam)
+           window sill at z 17
+  skids    the cage lands on two skids at |y| 84, z -48 (3.5 under the belly skirt and the cartridge; a TPU strip under each), each
+           hung from its base rail as a triangulated panel (rail ends to skid ends, one diagonal). Outboard of the funnel in every
+           state of the descent: a point at seated height h over the seat clears the y walls (to h 28, 55 deg) through the +-20
+           descent only beyond |y| 77 - 0.7 h, so the skids need |y| >= 80 and the panels lean outward and up to the rails at 115;
+           nothing can cross under the belly (the funnel's seat ring and skirt, the arm's head) or at the ends below the wall tops
+           (the end walls to h 40, the tail beam's buttress), so the belly, nose V and tail V are one declared opening
   funnel   nothing of the cage inside the funnel's walls when seated or during the +-28 / +-20 descent (tools/seat_check.py)
-  shell    closed, mirror-exact, two declared openings: the bottom inside the base ring and the nose window
-Writes parts/scout_cage_v15/part.stl (tubes + node spheres, the look), the shell into systems/scout.assembly.json (cage_shell, the
+  shell    closed, mirror-exact, declared openings: the belly between the skids, its nose and tail ends, the nose and tail Vs, the nose window
+Writes parts/scout_cage_v16/part.stl (tubes + node spheres, the look), the shell into systems/scout.assembly.json (cage_shell, the
 part entry) and prints the checks. Run: python tools/scout_cage.py
 """
 import json, math, os, sys
@@ -23,7 +29,7 @@ import numpy as np, trimesh
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 
-ZR, ZB, ZF, ZL = 62.0, 0.0, 17.0, -45.0               # the ring (prop keep-out and roof edge), the base rails, the dipped front nodes, the feet
+ZR, ZB, ZF, ZK, YK = 62.0, 0.0, 17.0, -48.0, 84.0     # the ring (prop keep-out and roof edge), the base rails, the dipped front nodes, the skids (z, |y|)
 XN, XT, YS, C = 136.0, -130.0, 115.0, 193.7          # nose flat, tail flat, side flats, the corner chamfer line |x| + |y| = C
 NODES = {
     "P0": (XN, C - XN, ZF), "P7": (XN, -(C - XN), ZF),                                                         # front nodes, dipped: the window's bottom corners
@@ -32,7 +38,7 @@ NODES = {
     "P4": (XT, -(C + XT), ZR), "P5": (-(C - YS), -YS, ZR), "P6": (C - YS, -YS, ZR),                             # right half
     "RF": (70, 0, ZR), "RB": (-70, 0, ZR),                                                                     # roof spine
     "B0": (100, YS, ZB), "B1": (-100, YS, ZB), "B2": (-100, -YS, ZB), "B3": (100, -YS, ZB),                     # base rails at z 0: above the funnel's walls in every state
-    "L0": (100, YS, ZL), "L1": (-100, YS, ZL), "L2": (-100, -YS, ZL), "L3": (100, -YS, ZL),                     # legs, the feet (TPU caps, contact -53)
+    "K0": (100, YK, ZK), "K1": (-100, YK, ZK), "K2": (-100, -YK, ZK), "K3": (100, -YK, ZK),                     # the skids' ends, under the rail ends
     "NB": (118, 0, 8), "TB": (-130, 0, 8),                                                                     # nose and tail bottom nodes, 12 over the wall tops
 }
 RODS = [("R0", "P1"), ("P1", "P2"), ("P2", "P3"), ("P3", "P4"), ("P4", "P5"), ("P5", "P6"), ("P6", "R7"), ("R7", "R0"),   # the ring at z 62 (the roof's edge)
@@ -40,11 +46,12 @@ RODS = [("R0", "P1"), ("P1", "P2"), ("P2", "P3"), ("P3", "P4"), ("P4", "P5"), ("
         ("RF", "R0"), ("RF", "R7"), ("RF", "P1"), ("RF", "P6"), ("RF", "RB"),                                  # roof, front
         ("RB", "P1"), ("RB", "P6"), ("RB", "P2"), ("RB", "P5"), ("RB", "P3"), ("RB", "P4"),                    # roof, rear
         ("B0", "B1"), ("B3", "B2"),                                                                            # base rails
-        ("B0", "L0"), ("B1", "L1"), ("B2", "L2"), ("B3", "L3"),                                                # legs
+        ("K0", "K1"), ("K3", "K2"), ("B0", "K0"), ("B1", "K1"), ("B3", "K3"), ("B2", "K2"), ("B0", "K1"), ("B3", "K2"),   # the skids and their panels (one diagonal each, mirrored)
         ("B0", "P0"), ("B0", "P1"), ("B1", "P2"), ("B1", "P3"), ("B2", "P4"), ("B2", "P5"), ("B3", "P6"), ("B3", "P7"),   # lower band
         ("B0", "P2"), ("B3", "P5"),                                                                            # side diagonals, mirrored
         ("NB", "B0"), ("NB", "B3"), ("NB", "P0"), ("NB", "P7"), ("TB", "B1"), ("TB", "B2"), ("TB", "P3"), ("TB", "P4")]   # nose and tail, lower band
-OPEN = [dict(ring=["B0", "B1", "B2", "B3"], what="bottom: the belly skirt into the funnel"), dict(ring=["B0", "B3", "NB"], what="bottom, nose V"), dict(ring=["B1", "TB", "B2"], what="bottom, tail V"),
+OPEN = [dict(ring=["K0", "K1", "K2", "K3"], what="bottom: the belly skirt into the funnel"), dict(ring=["B0", "B3", "NB"], what="bottom, nose V"), dict(ring=["B1", "TB", "B2"], what="bottom, tail V"),
+        dict(ring=["K0", "B0", "B3", "K3"], what="bottom, nose end between the skids"), dict(ring=["K1", "B1", "B2", "K2"], what="bottom, tail end between the skids"),
         dict(ring=["P0", "R0", "R7", "P7"], what="nose window: the camera's view")]
 MOTORS = [(54.1, 54.1), (-54.1, 54.1), (-54.1, -54.1), (54.1, -54.1)]
 R_DISC, Z_DISC = 44.45 + 4.0, (37.2, 45.2)
@@ -106,7 +113,7 @@ if __name__ == "__main__":
     keys = list(NODES); idx = {k: n for n, k in enumerate(keys)}
     L = [float(np.linalg.norm(np.array(NODES[i]) - np.array(NODES[j]))) for i, j in RODS]
     xs = [n[0] for n in NODES.values()]; ys = [n[1] for n in NODES.values()]; zs = [n[2] for n in NODES.values()]
-    print(f"cage v15: {len(NODES)} nodes, {len(RODS)} rods, {sum(L) / 1000:.2f} m of 3.0 rod ({sum(L) * 0.011:.0f} g), shortest {min(L):.0f}, longest {max(L):.0f}; "
+    print(f"cage v16: {len(NODES)} nodes, {len(RODS)} rods, {sum(L) / 1000:.2f} m of 3.0 rod ({sum(L) * 0.011:.0f} g), shortest {min(L):.0f}, longest {max(L):.0f}; "
           f"node extents {max(xs) - min(xs):.0f} x {max(ys) - min(ys):.0f} x {max(zs) - min(zs):.0f}")
     w = checks()
     print("  shortest rods: " + ", ".join(f"{i}-{j} {l:.0f}" for l, (i, j) in sorted(zip(L, RODS))[:4]))
@@ -115,19 +122,19 @@ if __name__ == "__main__":
     print(f"  camera view:   {'clear' if not w['camera'] else 'BLOCKED by ' + ', '.join(w['camera'])}")
     spec = dict(nodes=[list(map(float, NODES[k])) for k in keys], rods=[[idx[i], idx[j]] for i, j in RODS], node_r_mm=7.0, rod_r_mm=1.5,
                 total_rods=len(RODS), open=[dict(ring=[idx[k] for k in o["ring"]], what=o["what"]) for o in OPEN],
-                note="cage v15, the compact funnel cage (tools/scout_cage.py, 3 Nov): a closed 3 mm rod octagonal prism formed to the Scout in the shared funnel")
+                note="cage v16, the compact funnel cage on skids (tools/scout_cage.py, 4 Nov): a closed 3 mm rod octagonal prism formed to the Scout in the shared funnel, landing on two skids hung from its base rails")
     try:
         r = shell_report(spec)
         print("  shell:         " + ", ".join(f"{k} {v}" for k, v in r.items() if k not in ("tris",)))
     except Exception as e:
         print("  shell:         (system_check unavailable:", e, ")")
-    m = mesh(); d = os.path.join(ROOT, "parts", "scout_cage_v15"); os.makedirs(d, exist_ok=True); m.export(os.path.join(d, "part.stl"))
+    m = mesh(); d = os.path.join(ROOT, "parts", "scout_cage_v16"); os.makedirs(d, exist_ok=True); m.export(os.path.join(d, "part.stl"))
     F = os.path.join(ROOT, "systems", "scout.assembly.json"); raw = open(F).read(); a = json.loads(raw)
     a["cage_shell"] = spec
-    a["parts"] = [p for p in a["parts"] if p["id"] not in ("scout_cage_pattern", "scout_cage_v14", "scout_cage_v15")]
-    a["parts"].append(dict(id="scout_cage_v15", name="cage v15 (compact funnel cage, 3 mm rods, layout model)", role="cage", group="cage", color="#2b2b2b",
-                           mesh="parts/scout_cage_v15/part.stl", mass_g=round(sum(L) * 0.011 + len(NODES) * 5.0, 1), tag="E", owner="scout v3",
-                           version="v15 (3 Nov)", source="tools/scout_cage.py",
-                           note=f"{len(NODES)} nodes, {len(RODS)} rods 3.0 ({sum(L) / 1000:.2f} m), an octagonal prism tangent to the prop keep-out, base ring z -48 with TPU feet, roof z 63, nose window for the camera; nodes E 5 g each until designed"))
+    a["parts"] = [p for p in a["parts"] if p["id"] not in ("scout_cage_pattern", "scout_cage_v14", "scout_cage_v15", "scout_cage_v16")]
+    a["parts"].append(dict(id="scout_cage_v16", name="cage v16 (compact funnel cage on skids, 3 mm rods, layout model)", role="cage", group="cage", color="#2b2b2b",
+                           mesh="parts/scout_cage_v16/part.stl", mass_g=round(sum(L) * 0.011 + len(NODES) * 5.0, 1), tag="E", owner="scout v3",
+                           version="v16 (4 Nov)", source="tools/scout_cage.py",
+                           note=f"{len(NODES)} nodes, {len(RODS)} rods 3.0 ({sum(L) / 1000:.2f} m), an octagonal prism tangent to the prop keep-out, base rails z 0, two skids at |y| 84, z -48 (TPU strips), roof z 62, nose window for the camera; nodes E 5 g each until designed"))
     open(F, "w").write(json.dumps(a, indent=0, ensure_ascii=False) + ("\n" if raw.endswith("\n") else ""))
-    print("  written: parts/scout_cage_v15/part.stl and systems/scout.assembly.json cage_shell")
+    print("  written: parts/scout_cage_v16/part.stl and systems/scout.assembly.json cage_shell")

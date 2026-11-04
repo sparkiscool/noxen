@@ -53,7 +53,7 @@ def descent_states(drone):
     X = 28.0 if drone == "scout" else 18.0                 # the Overseer's x capture is +-18: its loop diagonals meet the end walls' top corners beyond that
     for lab, ox, oy in ((f"+x {X:.0f}", X, 0.0), (f"-x {X:.0f}", -X, 0.0), ("+y 20", 0.0, 20.0), ("-y 20", 0.0, -20.0), ("+x+y", X * 0.7, 14.0)):
         o0 = math.hypot(ox, oy)
-        for h in (60.0, 45.0, 30.0, 20.0, 12.0, 6.0):
+        for h in (60.0, 45.0, 40.0, 35.0, 30.0, 27.0, 24.0, 20.0, 16.0, 12.0, 9.0, 6.0, 3.0):   # 4 Nov: every 3..5 (at 6 steps the skirt's graze on the buttress between 26 and 30 was missed)
             k = min(1.0, (h / tan) / o0)
             out.append((f"{lab} at h {h:.0f}", ox * k, oy * k, h))
     return out

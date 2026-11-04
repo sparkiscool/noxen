@@ -3127,12 +3127,12 @@
 "source": "systems/scout.assembly.json, seated"
 },
 {
-"id": "box_scout_scout_cage_v15",
-"name": "Scout: cage v15 (compact funnel cage, 3 mm rods, layout model)",
+"id": "box_scout_scout_cage_v16",
+"name": "Scout: cage v16 (compact funnel cage on skids, 3 mm rods, layout model)",
 "role": "cage",
 "group": "landing: Scout",
 "color": "#2b2b2b",
-"mesh": "parts/box_scout_scout_cage_v15/part.stl",
+"mesh": "parts/box_scout_scout_cage_v16/part.stl",
 "pose": [
 [
 0,
@@ -3162,7 +3162,7 @@
 "material": null,
 "tag": "E",
 "owner": "scout v3",
-"version": "v15 (3 Nov)",
+"version": "v16 (4 Nov)",
 "source": "systems/scout.assembly.json, seated"
 },
 {
@@ -3945,14 +3945,7 @@
 "owner": "overseer",
 "version": "v1 setup (3 Nov, Spark): on the base's 4 M3 inserts, pack slides in from the tail, snap tab, no strap; run pending",
 "source": "systems/overseer.assembly.json, seated",
-"box": [
--93.5,
-56.5,
--32,
-32,
--71.6,
--8.1
-]
+"mesh": "parts/box_overseer_overseer_battery_holder/part.stl"
 },
 {
 "id": "box_ctx_overseer_receiver",
