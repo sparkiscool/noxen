@@ -32,7 +32,7 @@ CLIP_W, CLIP_T, CLIP_GAP, CLIP_FREE = 12.0, 2.5, 7.0, 35.0       # parts/oversee
 CLIP_Z1 = ZB - CLIP_GAP                                            # clip top = the clip pad's underside
 RX0, RX1 = X0 + CLIP_FREE, X0 + CLIP_FREE + 20.0                   # clip pad (the clip's root) x -54.5..-34.5
 CLIP_SCREWS = (RX0 + 5.0, RX1 - 5.0)                               # 2 M3 x 5.7 inserts (O4.0, 6 deep) from below, y 0
-PAD = 2.0
+PAD = 3.0                                                          # contact pads (v6, 4 Nov: 2.0 fails the drawn_thin audit at 2.5, and sat on 2.4 necks at the gate)
 DIRS14 = [np.array(v, float) / np.linalg.norm(v) for v in
           [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)] + [(a, b, c) for a in (1, -1) for b in (1, -1) for c in (1, -1)]]
 FLIGHT = {"flight 4 g": np.array([0, 0, 4.0]), "flight 2 g x": np.array([2.0, 0, 1]), "flight 2 g y": np.array([0, 2.0, 1]), "landing 6 g": np.array([0, 0, 6.0])}
