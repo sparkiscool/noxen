@@ -53,15 +53,22 @@ HFOV, VFOV = 44.5, 36.5
 FLOW_C, FLOW_LENS_Z = (70.0, 0.0), -24.5
 FLOW_BOARD = (21.6, 16.0); FLOW_TOP = FLOW_LENS_Z + 6.1       # board top face: taped to the land above it
 WINDOW = (57.0, 83.0, 10.0)                                  # x0, x1, |y|: the runner's window under the sensor
-# ---- tail electronics (tools/scout_meshes: Radxa frame origin (-118, -15, 7.5) = PCB top; UBEC and XR2 boxes)
-RADXA_HOLES = [(-118.0 + 3.55, -15.0 + 3.60), (-118.0 + 3.60, -15.0 + 26.45), (-118.0 + 61.40, -15.0 + 3.60), (-118.0 + 61.40, -15.0 + 26.50)]
-RADXA_PCB_BOT, RADXA_TOP = 5.9, 10.7
-RPOST_R, RPOST_Z0, RINS_R, RINS_D = 4.0, 0.5, 1.75, 4.0        # M2.5 x 4 insert (E) in a O8 post, z 0.5..5.9
-UBEC = (-116.0, -55.0, 17.5, 34.5, 7.5, 15.5)                 # 1.5 aft since run 2 (4 Nov): its nose-end lead clearance cut a 17 x 9 slot through the yoke's side (one neck); now the leads get an 8 x 5 channel each end, and the cage rod TB-B1 passes its tail-outer corner by 3.5 (6.5 aft it ran into the rod)
-LEAD_CH = (8.0, 5.0, 6.0)                                    # lead channel: width (y), height (z), length (x) out of each UBEC end, centred on the brick
-LAND_T = 4.0                                                 # tape lands 4 thick (4 Nov run 1: 2 mm lands left blobs on necks; the gate erodes 2)
-XR2 = (-96.5, -62.0, -30.0, -17.0, 8.0, 12.0)
-BOARDS_G, BOARDS_CG = 32.0, np.array([-88.0, 2.0, 9.0])      # Radxa 10 + UBEC 15 + XR2 1 + cables 6 (E)
+# ---- tail electronics, on edge in the tail unit's bay over the tail runner (4 Nov, Spark: the electronics into the printed base; tools/scout_meshes)
+#   Radxa Zero 3W: PCB x -80..-78.4, components to -x (to -83.2, toward the UBEC), 65 along y, 30 along z (-23..7), ports edge up, SD end at -y;
+#   its STEP holes (3.55, 3.60), (3.60, 26.45), (61.40, 3.60), (61.40, 26.50) -> drone (y -32.5 + X, z 7 - Y), on O8 posts along +x
+#   (toward the XR2 side) with M2.5 x 4 inserts. (The first bay layout had the posts toward the UBEC: its clearance boxed them in, audit.)
+RADXA_X = -78.4                                              # the PCB's back face (the posts' seat), posts to +x
+RADXA_HOLES = [(-32.5 + X, 7.0 - Y) for X, Y in ((3.55, 3.60), (3.60, 26.45), (61.40, 3.60), (61.40, 26.50))]   # (y, z)
+RPOST_R, RPOST_L, RINS_R, RINS_D = 4.0, 5.0, 1.75, 4.0       # O8 post 5 long behind the PCB, M2.5 x 4 insert (E)
+RADXA_CUT = (-83.2 - 0.5, RADXA_X + 0.5, -33.0, 33.0, -23.5, 7.5)
+RADXA_PLUGS = (-85.0, -76.0, -24.0, 27.0, 7.0, 20.0)         # USB-C x2 and micro HDMI plugs up from the ports edge, between the arms
+RADXA_SD = (-79.0, -74.5, -46.0, -32.0, -16.5, -1.0)         # the microSD card out the -y end
+UBEC = (-95.0, -87.0, -33.0, 28.0, -23.0, -6.0)              # on edge behind the Radxa's components (3.3 clear), 61 along y, 8 along x, 17 tall; leads out the +-y ends
+XR2 = (-72.0, -68.0, -8.0, 8.0, -22.5, -10.5)                # board x -72..-71 + components to -68, on edge ahead of the Radxa (6 ahead of its posts' tips); antenna along -y
+XR2_ANT = (-72.0, -69.0, -27.0, -6.0, -15.5, -13.5)
+LAND_T = 4.0                                                 # the UBEC's and XR2's tape lands: 4 thick plates behind them (2 mm lands left blobs on necks, run 1)
+LEAD_CH = (8.0, 5.0, 6.0)                                    # lead channel: width (z here), height (x), length out of each UBEC end
+BOARDS_G, BOARDS_CG = 32.0, np.array([-83.0, 0.0, -10.0])   # Radxa 10 + UBEC 15 + XR2 1 + cables 6 (E)
 # ---- sockets (cage_node_lib: 3.0 rod, bore 3.2 x 10, floor 3, wall 2.5; the bore bottom 3.0 from the node centre, as the Overseer's node 17)
 BORE_R, DEPTH, FLOOR, WALL = 1.6, 10.0, 3.0, 2.5
 # ---- prop keep-out: the cage rule for anything printed too (12 beyond the swept discs)

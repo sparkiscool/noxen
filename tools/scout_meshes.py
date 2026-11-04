@@ -149,25 +149,24 @@ def radxa():
     soc = cbox(30, 14, 0.6, 12, 12, 1.2); ram = cbox(44, 20, 0.5, 8, 8, 1.0); wifi = cbox(62, 15, 0.6, 3, 10, 1.2)
     sd = box(0, 4.9, 7.8, 22.3, -PCB - 2.86, -PCB)
     m = union([b, hdmi, soc, ram, wifi, sd] + usb) - union(holes)
-    return frame(m, (-118.0, -15.0, 7.5), (1, 0, 0), (0, 1, 0), (0, 0, 1))   # 3 Nov compact layout: flat under the plate's tail, x -118..-53, z 7.5..15, over the funnel mouth
+    return frame(m, (-80.0, -32.5, 7.0), (0, 1, 0), (0, 0, -1), (-1, 0, 0))   # 4 Nov (Spark: the electronics into the printed base): on edge in the tail unit's bay over the tail runner, long side along y, PCB x -80..-78.4, components to -x (toward the UBEC), its posts to +x, ports edge up (plugs up between the arms), SD end at -y
 
 
 def ubec():
-    """5 V UBEC, a heatshrunk brick (makers 43..50 x 17..25 x 7..10, Q4: 48 x 17 x 8 E) with leads out both short ends, in the layout's
-    box x -178.6..-117.6, y 18.2..33.6, z 16..24 (tail bay, behind the rear disks)."""
-    cx, cy, cz = -85.5, 26.0, 11.5                                                   # 3 Nov compact layout: beside the Radxa under the plate's tail; 1.5 aft 4 Nov (parts/scout_units_lib.UBEC)
-    brick = union([cbox(cx, cy, cz, 48, 15, 8), cbox(cx, cy, cz, 50, 17, 6)])
-    leads = [cylx(cx - 30.5, cx - 24, cy + dy, cz, 0.9) for dy in (-3, 3)] + [cylx(cx + 24, cx + 30.5, cy + dy, cz, 0.9) for dy in (-3, 3)]
-    return union([brick] + leads)
+    """5 V UBEC, a heatshrunk brick (makers 43..50 x 17..25 x 7..10, Q4: 48 x 17 x 8 E) with leads out both short ends. 4 Nov: on edge in the
+    tail unit's bay behind the Radxa, length along y (y -33..28), 8 thick along x (x -95..-87), 17 tall (z -23..-6), leads out the +-y ends."""
+    brick = union([cbox(0, 0, 0, 48, 15, 8), cbox(0, 0, 0, 50, 17, 6)])
+    leads = [cylx(-30.5, -24, dy, 0, 0.9) for dy in (-3, 3)] + [cylx(24, 30.5, dy, 0, 0.9) for dy in (-3, 3)]
+    return frame(union([brick] + leads), (-91.0, -2.5, -14.5), (0, 1, 0), (0, 0, 1), (1, 0, 0))
 
 
 def xr2():
-    """RadioMaster XR2 nano: 16 x 12 x 6 board with the antenna up (dimensions.md M), in the layout's box x -110..-94, y -27..-15, z 23..45."""
-    cx, cy, z0 = -70.0, -24.0, 8.0                                                    # 3 Nov compact layout: under the plate's tail; antenna laid flat along -x
-    board = cbox(cx, cy, z0 + 0.5, 16, 12, 1.0)
-    chip = cbox(cx, cy, z0 + 1.0 + 1.0, 5, 5, 2.0); rf = cbox(cx + 5, cy - 3, z0 + 1.0 + 0.8, 3, 3, 1.6); conn = cbox(cx - 6, cy, z0 + 1.0 + 1.5, 3, 8, 3.0)
-    ant = union([cylx(cx - 26, cx - 6, cy + 4, z0 + 2.0, 0.5, 12), cbox(cx - 26, cy + 4, z0 + 2.0, 1.0, 6.0, 1.0)])      # T antenna, flat along -x (3 Nov)
-    return union([board, chip, rf, conn, ant])
+    """RadioMaster XR2 nano: 16 x 12 x 6 board with a T antenna (dimensions.md M). 4 Nov: on edge in the tail unit's bay ahead of the Radxa,
+    board x -72..-71 (components to +x), 16 along y, 12 along z (-22.5..-10.5), the antenna flat along -y."""
+    board = cbox(0, 0, 0.5, 16, 12, 1.0)
+    chip = cbox(0, 0, 1.0 + 1.0, 5, 5, 2.0); rf = cbox(5, -3, 1.0 + 0.8, 3, 3, 1.6); conn = cbox(-6, 0, 1.0 + 1.5, 3, 8, 3.0)
+    ant = union([cylx(-26, -6, 4, 2.0, 0.5, 12), cbox(-26, 4, 2.0, 1.0, 6.0, 1.0)])      # T antenna, flat along local -x = drone -y
+    return frame(union([board, chip, rf, conn, ant]), (-72.0, 0.0, -16.5), (0, 1, 0), (0, 0, 1), (1, 0, 0))
 
 
 def pack():

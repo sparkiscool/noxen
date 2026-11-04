@@ -1,9 +1,10 @@
 """Scout tail unit (v1 setup, 4 Nov): ONE printed PETG piece under the plate's tail that holds the receiver's tail end, seats the
-Scout in the shared funnel, carries the tail electronics (Radxa Zero 3W, UBEC, XR2), and is cage node TB with the two tail tie
+Scout in the shared funnel, carries the tail electronics on edge in a bay over the runner (Radxa Zero 3W, UBEC, XR2; 4 Nov, Spark: into the printed base),
+and is cage node TB with the two tail tie
 sockets (the frame model: without a stiff tail link a 35 g tail-first wall hit racked the cage 17 mm).
 Drawn (attachments only): 3 plate bolt pads (M3 x 5.7 inserts: the FC diamond's tail hole, a drilled pair at (-55, +-13)), 2 receiver bosses,
-the tail runner's seat rim and 55 deg lead-ins, 4 Radxa posts (O8, M2.5 x 4 inserts, z 0.5..5.9 under the PCB), the UBEC and XR2
-tape lands, the socket collars of TB (rods to B1, B2, P3, P4) and of ties C1 / C2. Cuts: the receiver and its clearance, the plate,
+the tail runner's seat rim and 55 deg lead-ins, 4 Radxa posts (O8 along +x behind the PCB, M2.5 x 4 inserts), the UBEC's and XR2's
+4 mm tape lands, the socket collars of TB (rods to B1, B2, P3, P4) and of ties C1 / C2. Cuts: the receiver and its clearance, the plate,
 the boards with their plugs (USB-C / HDMI out the right edge, the SD card out the tail, the UBEC's leads, the XR2's antenna), the
 rods beyond their mouths, the insert holes. Loads: the receiver set's tail share (155 g E) and the boards (32 g E) in 35 g crashes
 (14 directions) and flight; a 35 g landing into the funnel on the seat and the lead-ins; every socket's frame-model force (F).
@@ -13,7 +14,7 @@ from topo import Part
 from parts import scout_units_lib as L
 from parts.scout_units_lib import box, cyl, along, U
 
-SPEC = dict(h=2.0, gen_cm3=50.0, max_worst=0.5)      # E: tail bay mount v2 49 g + a runner. Run 2 (4 Nov): gate FAIL, one neck over the UBEC lead slot in the yoke; index 1.16 at the tray's step past the wall room in the funnel catch; 80.9 g. Run 3: the FC on top of the plate, the yoke to x -8, the UBEC 1.5 aft with 8 x 5 lead channels instead of a full-section clearance, the tray stepped only behind the wall. h 2.0: 123k cells (287k at 1.5: the direct solver took 8.8 GB and was killed; the CI runner has 7 GB). Run 1 (4 Nov, 40 cm3): gate FAIL, two necks at the 2 mm tape lands' ends; index 2.34 in TB-B1 tension under the tail pad (-55, -20): the tray hung on a 10 wide wall slot. Run 2: lands 4, the wall room to x -66, 50 cm3
+SPEC = dict(h=2.0, gen_cm3=50.0, max_worst=0.5)      # E: tail bay mount v2 49 g + a runner. Run 2 (4 Nov): gate FAIL, one neck over the UBEC lead slot in the yoke; index 1.16 at the tray's step past the wall room in the funnel catch; 80.9 g. Run 3: the FC on top of the plate, the yoke to x -8, the electronics on edge in the bay over the runner (no tray), the tail node in to (-112, 0, 10). h 2.0: 123k cells (287k at 1.5: the direct solver took 8.8 GB and was killed; the CI runner has 7 GB). Run 1 (4 Nov, 40 cm3): gate FAIL, two necks at the 2 mm tape lands' ends; index 2.34 in TB-B1 tension under the tail pad (-55, -20): the tray hung on a 10 wide wall slot. Run 2: lands 4, the wall room to x -66, 50 cm3
 
 
 def bodies():
@@ -26,27 +27,27 @@ def bodies():
     rim, block, seat_regs, wedge = L.runner(L.CX - L.SEAT_L / 2, L.RX0 - 1.0, nose=False)
     drawn.append(rim); env.append(block)
     # the body: yoke, the wall down the receiver's tail face, a deck over the runner up to the tray, the tray, the TB block
-    env += [box(-60.0, L.YOKE_SPLIT_X, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(-62.0, -40.0, -41.0, 41.0, 7.0, L.PLATE_Z), box(-66.0, L.RX0 - 0.5, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the yoke to the split at x -8 (the FC is on top of the plate: Spark 4 Nov), its tail corners out to |y| 41 for the tie sockets, the wall room to x -66
-            box(L.CX - L.SEAT_L / 2, L.RX0 - 1.0, -33.4, 33.4, L.SEAT_Z + L.RUN_H, 0.5), box(-122.0, -62.0, -36.0, 36.0, 0.0, 7.5), box(-62.0, -52.0, -33.4, 33.4, 0.0, 7.5),   # the tray 36 wide behind the wall only (run 2: index 1.16 at its step past the wall room)
-            box(-140.0, -118.0, -14.0, 14.0, 0.0, 24.0)]
-    # Radxa on 4 posts (M2.5 inserts), the board and its plugs cut; SD card out the tail end; USB-C / HDMI out the -y edge
+    env += [box(-60.0, L.YOKE_SPLIT_X, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(-62.0, -40.0, -41.0, 41.0, 7.0, L.PLATE_Z), box(-66.0, L.RX0 - 0.5, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the yoke to the split at x -8, its tail corners out to |y| 41 for the tie sockets, the wall room to x -66
+            box(-100.0, L.RX0 - 1.0, -33.4, 33.4, L.SEAT_Z + L.RUN_H, 0.5), box(-100.0, -66.0, -33.4, 33.4, 0.5, 12.0),   # the bay over the runner, to x -100 (the funnel's tail face is 4.5 further at h 20) and up to z 12 behind the wall
+            box(-120.0, -96.0, -14.0, 14.0, -2.0, 20.0)]                                                                  # the arm to the tail node TB (-112, 0, 10)
+    # the bay over the tail runner: Radxa on edge on 4 posts along -x (M2.5 inserts), the board, its plugs (up) and the SD card (out +y) cut;
+    # the UBEC on edge behind it and the XR2 ahead of it on 4 mm lands, their bodies, the leads and the antenna cut
     posts, post_pts, post_regs = [], [], []
-    for x, y in L.RADXA_HOLES:
-        posts.append(cyl(x, y, L.RPOST_Z0, L.RADXA_PCB_BOT, L.RPOST_R)); post_pts.append((x, y, L.RADXA_PCB_BOT))
-        cuts.append(cyl(x, y, L.RADXA_PCB_BOT - L.RINS_D, L.RADXA_PCB_BOT + 1.0, L.RINS_R))
-        post_regs.append(cyl(x, y, L.RADXA_PCB_BOT - 2.0, L.RADXA_PCB_BOT + 0.3, L.RPOST_R))
+    for y, z in L.RADXA_HOLES:
+        q = np.array([L.RADXA_X, y, z]); q0 = q + [L.RPOST_L, 0, 0]                 # posts to +x behind the PCB's back face
+        posts.append(along(q, q0, L.RPOST_R)); post_pts.append(tuple(q))
+        cuts.append(along(q - [1.0, 0, 0], q + [L.RINS_D, 0, 0], L.RINS_R))
+        post_regs.append(along(q - [0.3, 0, 0], q + [2.0, 0, 0], L.RPOST_R))
     drawn += posts
-    cuts.append(box(-118.5, -52.5, -17.0, 15.5, 2.9, L.RADXA_TOP + 0.5) - U(posts))
-    cuts.append(box(-140.0, -118.0, -8.0, 8.0, 2.0, 7.0))                                 # the microSD card
-    cuts.append(box(-111.0, -58.0, -40.0, -14.5, 7.0, 12.0))                               # USB-C x2 and micro HDMI plugs
-    # UBEC and XR2 on tape lands, their bodies and leads cut
+    cuts.append(box(*L.RADXA_CUT) - U(posts))
+    cuts.append(box(*L.RADXA_PLUGS)); cuts.append(box(*L.RADXA_SD))
     x0, x1, y0, y1, z0, z1 = L.UBEC
-    drawn.append(box(x0, x1, y0, y1, z0 - L.LAND_T, z0)); cuts.append(box(x0 - 0.5, x1 + 0.5, y0 - 0.5, y1 + 0.5, z0, z1 + 1.0))
-    cw, ch, cl = L.LEAD_CH; cy, cz = (y0 + y1) / 2, (z0 + z1) / 2
-    cuts += [box(x0 - cl, x0, cy - cw / 2, cy + cw / 2, cz - ch / 2, cz + ch / 2), box(x1, x1 + cl, cy - cw / 2, cy + cw / 2, cz - ch / 2, cz + ch / 2)]   # the leads out both ends
+    drawn.append(box(x0 - L.LAND_T, x0, y0, y1, z0, z1)); cuts.append(box(x0 - 0.5, x1 + 0.5, y0 - 0.5, y1 + 0.5, z0 - 0.5, z1 + 0.5))
+    cw, ch, cl = L.LEAD_CH; cx_, cz_ = (x0 + x1) / 2, (z0 + z1) / 2
+    cuts += [box(cx_ - ch / 2, cx_ + ch / 2, y0 - cl, y0, cz_ - cw / 2, cz_ + cw / 2), box(cx_ - ch / 2, cx_ + ch / 2, y1, y1 + cl, cz_ - cw / 2, cz_ + cw / 2)]   # the leads out both ends
     x0, x1, y0, y1, z0, z1 = L.XR2
-    drawn.append(box(x0, x1, y0, y1, z0 - L.LAND_T, z0)); cuts.append(box(x0 - 0.5, x1 + 0.5, y0 - 0.5, y1 + 0.5, z0, z1 + 0.5))
-    cuts.append(box(-135.0, x0, (y0 + y1) / 2 - 2.5, (y0 + y1) / 2 + 2.5, z0, z1))        # the antenna, flat along -x
+    drawn.append(box(x0 - L.LAND_T, x0, y0, y1, z0, z1)); cuts.append(box(x0 - 0.5, x1 + 0.5, y0 - 0.5, y1 + 0.5, z0 - 0.5, z1 + 0.5))
+    cuts.append(box(*L.XR2_ANT))                                                       # the antenna, flat along -y
     cuts += L.disc_cuts()
     socks = L.node_socks("TB", ["B1", "B2", "P3", "P4"], nodes) + [L.Sock("C1 C1-B1", nodes["C1"], nodes["B1"]), L.Sock("C2 C2-B2", nodes["C2"], nodes["B2"])]
     for s in socks:
