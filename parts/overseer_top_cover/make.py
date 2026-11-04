@@ -3,7 +3,7 @@
 * a super smooth, aerodynamic dome, kept low under the rear props; it need not be symmetric;
 * the Noxen N mark raised on top (thicker, not holes; noxensys.com/assets/icon.svg);
 * thin, for translucent PETG;
-* held by the 8 top plate bolts;
+* held by 4 top plate bolts, one per arm root;
 * clamps seamlessly to the top plate, the plate sandwiched;
 * passes the plate and sits fully on the rectangular arm roots, its end edges square like theirs.
 Drawn only, no topology run (a cosmetic shell, no load path): python parts/overseer_top_cover/make.py writes part.stl.
@@ -20,8 +20,8 @@ Shape: one continuous height field H(x, y), soft-blended, the 3D field blurred 0
   over the lobes and roots.
 * Shell 1.26 normal (3 lines at 0.42). The N mark is raised 2.0 on the dome top, 56 wide (the largest on slopes under 31 deg), centre x 20,
   reading upright to someone standing in front of the drone.
-* The 8 top plate bolts A (arm lib BOLT_TOP): a 1.6 seat ring on the plate top and a tube up to the shell round a O7.2
-  driver well. M3 x 50 as now (drilled bottom plate).
+* 4 of the 8 top plate bolts A (arm lib BOLT_TOP), the outer one on each arm root (|y| 55): a 1.6 seat ring on the plate top and
+  a tube up to the shell round a O7.2 driver well; the other 4 heads sit free under the cover. M3 x 50 as now (drilled bottom plate).
 * Cable exits:
   - one 48 x 18 on each side face.
 * Print (Bambu A1 mini, translucent PETG, dried 65 C 8 h):
@@ -142,7 +142,8 @@ Tn = T * np.minimum(np.sqrt(1.0 + gx ** 2 + gy ** 2), 2.5)
 s = LOGO_W / 472.0
 logo_cs = mf.CrossSection([ccw([(LOGO_C[0] + (v - 128.5) * s, LOGO_C[1] + (u - 236.0) * s) for u, v in p]) for p in LOGO])   # reads upright from the front
 sd_logo = sdf(logo_cs)
-rb = np.min([np.hypot(X - bx, Y - by) for bx, by in bolts()], axis=0)
+USED = [b for b in bolts() if abs(b[1]) > abs(b[0])]       # one bolt per arm root, the outer one (|y| 55; Spark 3 Nov); the other 4 heads sit free under the cover
+rb = np.min([np.hypot(X - bx, Y - by) for bx, by in USED], axis=0)
 
 
 def exit_field(Z):
@@ -174,6 +175,8 @@ v += np.array([xs[0], xs[0], zs[0]]) - RES
 t = trimesh.Trimesh(v, f, process=True)
 if t.volume < 0:
     t.invert()
+if not t.is_watertight:                                     # marching cubes can leave a few open edges at an ambiguous cell
+    t.merge_vertices(); t.update_faces(t.nondegenerate_faces()); t.remove_unreferenced_vertices(); trimesh.repair.fill_holes(t); trimesh.repair.fix_normals(t)
 for n_f in (150000, 250000):                                         # decimate (0.1 mm off the smooth surface) if it stays closed
     d = t.simplify_quadric_decimation(face_count=n_f); d.merge_vertices(); trimesh.repair.fill_holes(d)
     if d.is_watertight and abs(d.volume - t.volume) < 0.01 * abs(t.volume):
