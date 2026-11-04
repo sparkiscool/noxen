@@ -1,7 +1,7 @@
 """Scout tail unit (v1 setup, 4 Nov): ONE printed PETG piece under the plate's tail that holds the receiver's tail end, seats the
 Scout in the shared funnel, carries the tail electronics (Radxa Zero 3W, UBEC, XR2), and is cage node TB with the two tail tie
 sockets (the frame model: without a stiff tail link a 35 g tail-first wall hit racked the cage 17 mm).
-Drawn (attachments only): 4 plate bolt pads (M3 x 5.7 inserts, drilled holes at (-30, +-14) and (-55, +-20)), 2 receiver bosses,
+Drawn (attachments only): 3 plate bolt pads (M3 x 5.7 inserts: the FC diamond's tail hole, a drilled pair at (-55, +-13)), 2 receiver bosses,
 the tail runner's seat rim and 55 deg lead-ins, 4 Radxa posts (O8, M2.5 x 4 inserts, z 0.5..5.9 under the PCB), the UBEC and XR2
 tape lands, the socket collars of TB (rods to B1, B2, P3, P4) and of ties C1 / C2. Cuts: the receiver and its clearance, the plate,
 the boards with their plugs (USB-C / HDMI out the right edge, the SD card out the tail, the UBEC's leads, the XR2's antenna), the
@@ -13,7 +13,7 @@ from topo import Part
 from parts import scout_units_lib as L
 from parts.scout_units_lib import box, cyl, along, U
 
-SPEC = dict(h=2.0, gen_cm3=50.0, max_worst=0.5)      # E: tail bay mount v2 49 g + a runner. h 2.0: 123k cells (287k at 1.5: the direct solver took 8.8 GB and was killed; the CI runner has 7 GB). Run 1 (4 Nov, 40 cm3): gate FAIL, two necks at the 2 mm tape lands' ends; index 2.34 in TB-B1 tension under the tail pad (-55, -20): the tray hung on a 10 wide wall slot. Run 2: lands 4, the wall room to x -66, 50 cm3
+SPEC = dict(h=2.0, gen_cm3=50.0, max_worst=0.5)      # E: tail bay mount v2 49 g + a runner. Run 2 (4 Nov): gate FAIL, one neck over the UBEC lead slot in the yoke; index 1.16 at the tray's step past the wall room in the funnel catch; 80.9 g. Run 3: the FC on top of the plate, the yoke to x -8, the UBEC 6.5 aft, the tray stepped only behind the wall. h 2.0: 123k cells (287k at 1.5: the direct solver took 8.8 GB and was killed; the CI runner has 7 GB). Run 1 (4 Nov, 40 cm3): gate FAIL, two necks at the 2 mm tape lands' ends; index 2.34 in TB-B1 tension under the tail pad (-55, -20): the tray hung on a 10 wide wall slot. Run 2: lands 4, the wall room to x -66, 50 cm3
 
 
 def bodies():
@@ -26,8 +26,8 @@ def bodies():
     rim, block, seat_regs, wedge = L.runner(L.CX - L.SEAT_L / 2, L.RX0 - 1.0, nose=False)
     drawn.append(rim); env.append(block)
     # the body: yoke, the wall down the receiver's tail face, a deck over the runner up to the tray, the tray, the TB block
-    env += [box(-60.0, -28.5, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(-62.0, -40.0, -41.0, 41.0, 7.0, L.PLATE_Z), box(-66.0, L.RX0 - 0.5, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the yoke's tail corners out to |y| 41 under the plate body for the tie sockets at (-50, +-40, 12)   # the wall room to x -66 (run 1: a 10 wide slot carried the tray, index 2.34 under the tail pads)
-            box(L.CX - L.SEAT_L / 2, L.RX0 - 1.0, -33.4, 33.4, L.SEAT_Z + L.RUN_H, 0.5), box(-120.0, -52.0, -36.0, 36.0, 0.0, 7.5),
+    env += [box(-60.0, L.YOKE_SPLIT_X, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(-62.0, -40.0, -41.0, 41.0, 7.0, L.PLATE_Z), box(-66.0, L.RX0 - 0.5, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the yoke to the split at x -8 (the FC is on top of the plate: Spark 4 Nov), its tail corners out to |y| 41 for the tie sockets, the wall room to x -66
+            box(L.CX - L.SEAT_L / 2, L.RX0 - 1.0, -33.4, 33.4, L.SEAT_Z + L.RUN_H, 0.5), box(-127.0, -62.0, -36.0, 36.0, 0.0, 7.5), box(-62.0, -52.0, -33.4, 33.4, 0.0, 7.5),   # the tray 36 wide behind the wall only (run 2: index 1.16 at its step past the wall room), to x -127 for the UBEC 6.5 aft
             box(-140.0, -118.0, -14.0, 14.0, 0.0, 24.0)]
     # Radxa on 4 posts (M2.5 inserts), the board and its plugs cut; SD card out the tail end; USB-C / HDMI out the -y edge
     posts, post_pts, post_regs = [], [], []

@@ -1,6 +1,6 @@
 """Scout nose unit (v1 setup, 4 Nov): ONE printed PETG piece under the plate's nose that holds the receiver's nose end, seats the
 Scout in the shared funnel, carries the camera and the flow sensor, and is cage node NB with the two nose tie sockets.
-Drawn (attachments only): 3 plate bolt pads (M3 x 5.7 inserts; (36, 0) is a Bee35 hole, (34, +-14) are drilled), 2 receiver bosses
+Drawn (attachments only): 6 plate bolt pads (M3 x 5.7 inserts, all Bee35 holes: the nose bolt, the FC diamond's front three, the (3.9, +-31) pair; the FC sits on top of the plate since 4 Nov and its standoff bolts go on through the plate into the yoke), 2 receiver bosses
 (inserts, the receiver's bolts come up through its keys), the nose runner's seat rim and 55 deg lead-ins (what the funnel meets),
 the flow sensor's tape land over its window, 4 camera M2 posts (O5.6 x 10, 1.2 wall: the one thin exception), the socket collars
 of NB (rods to B0, B3, P0, P7) and of ties C0 / C3. Cuts: the receiver and its clearance, the plate, the camera body, plugs and view,
@@ -36,7 +36,7 @@ def bodies():
     cuts.append(box(L.FLOW_C[0] - bx / 2 - 12.0, L.FLOW_C[0] - bx / 2 + 2.0, -4.0, 4.0, L.FLOW_TOP - 7.0, L.FLOW_TOP + 3.0))   # the lead: out the tail end of the board, up the nose wall
     cuts.append(box(54.0, 62.0, -4.0, 4.0, L.FLOW_TOP - 7.0, 2.0))                                                # ... to the FC
     # the body: yoke under the plate, the wall down the receiver's nose face, a deck over the runner, the spine out to the camera
-    env += [box(28.5, 60.0, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(L.RX1 + 0.5, 66.0, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the wall room to x 66, the plate's nose end (run 1: index 0.60 at the wall's top in the funnel catch)
+    env += [box(L.YOKE_SPLIT_X, 60.0, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(L.RX1 + 0.5, 66.0, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the yoke from the split at x -8 (the FC is on top of the plate: Spark 4 Nov) to the nose wall   # the wall room to x 66, the plate's nose end (run 1: index 0.60 at the wall's top in the funnel catch)
             box(L.RX1 + 1.0, L.CX + L.SEAT_L / 2, -33.4, 33.4, L.SEAT_Z + L.RUN_H, -8.0), box(60.0, 104.0, -20.0, 20.0, -8.0, 25.0),
             box(100.0, L.BOARD_BACK_X, -11.0, 11.0, 20.0, 60.0), box(99.0, L.BOARD_BACK_X, -18.0, 18.0, 20.0, 60.0),   # the neck and the block behind the posts (the disc cut trims it to what clears the props)
             box(100.0, 130.0, -12.0, 12.0, -2.0, 22.0)]

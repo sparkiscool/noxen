@@ -120,19 +120,22 @@ PCB = 1.6
 # ---- the bought parts of the layout (dimensions.md A, H, M), each at the centre of the box that stood on the page (layout v3 / v12);
 #      the Bee35 plate itself is traced from SpeedyBee's render by tools/bee35_plate.py
 def fc_aio():
-    """MicoAir743 AIO, 36 x 36 x 1.6 as a diamond at (1.9, 0), hanging under the plate on 4 grommet standoffs (25.5 holes), component side
-    down, lowest point z 9.5 (dimensions.md A, H); USB-C at the tail corner, slightly right; the 4-in-1 FETs and caps on the same board."""
-    cx, zb = 1.9, 14.4                                                  # board bottom (components below it reach z 9.5)
+    """MicoAir743 AIO, 36 x 36 x 1.6 as a diamond at (1.9, 0), ON TOP of the plate (Spark 4 Nov: "we can keep the fc on top of the base plate";
+    was under it, lowest point z 9.5) on 4 standoffs through the 25.5 holes, component side up, board bottom z 26 (4 over the plate top 22),
+    tallest parts (the caps) to z 32.5; USB-C at the tail corner, slightly right; the 4-in-1 FETs and caps on the same board.
+    The same M3 bolts go on through the plate into the nose unit's inserts (parts/scout_units_lib.BOLT_NOSE)."""
+    cx, zb = 1.9, 26.0                                                  # board bottom
+    zt = zb + PCB                                                       # board top: components above it
     board = cbox(0, 0, zb + PCB / 2, 36, 36, PCB)
-    posts = [cyl(sx * 12.75, sy * 12.75, zb + PCB, PLATE_TOP - 3.5, 2.5, 6) for sx in (-1, 1) for sy in (-1, 1)]
-    holes = [cyl(sx * 12.75, sy * 12.75, zb - 1, PLATE_TOP - 3.5 + 1, 1.5) for sx in (-1, 1) for sy in (-1, 1)]
-    fets = [cbox(sx * 11, sy * 11, zb - 0.9, 6.0, 5.0, 1.8) for sx in (-1, 1) for sy in (-1, 1)]
-    caps = [cyl(0, sy * 13, zb - 4.9, zb, 3.2) for sy in (-1, 1)]
-    mcu = cbox(0, 0, zb - 0.6, 8, 8, 1.2); gyro = cbox(-8, 0, zb - 0.5, 3, 3, 1.0); baro = cbox(8, 4, zb - 0.6, 3, 3, 1.2)
-    usb = cbox(-14, -5, zb - 1.6, 7.5, 9.0, 3.2)                        # tail corner (-x), slightly right (-y)
-    pads = [cbox(sx * 15, 0, zb - 0.3, 4, 10, 0.6) for sx in (-1, 1)]
+    posts = [cyl(sx * 12.75, sy * 12.75, PLATE_TOP, zb, 2.5, 6) for sx in (-1, 1) for sy in (-1, 1)]
+    holes = [cyl(sx * 12.75, sy * 12.75, PLATE_TOP - 1, zb + PCB + 1, 1.5) for sx in (-1, 1) for sy in (-1, 1)]
+    fets = [cbox(sx * 11, sy * 11, zt + 0.9, 6.0, 5.0, 1.8) for sx in (-1, 1) for sy in (-1, 1)]
+    caps = [cyl(0, sy * 13, zt, zt + 4.9, 3.2) for sy in (-1, 1)]
+    mcu = cbox(0, 0, zt + 0.6, 8, 8, 1.2); gyro = cbox(-8, 0, zt + 0.5, 3, 3, 1.0); baro = cbox(8, 4, zt + 0.6, 3, 3, 1.2)
+    usb = cbox(-14, -5, zt + 1.6, 7.5, 9.0, 3.2)                        # tail corner (-x), slightly right (-y)
+    pads = [cbox(sx * 15, 0, zt + 0.3, 4, 10, 0.6) for sx in (-1, 1)]
     m = union([board, mcu, gyro, baro, usb] + posts + fets + caps + pads) - union(holes)
-    return rotz(m, 45.0).translate([cx, 0, 0])
+    return m
 
 
 def radxa():
@@ -152,7 +155,7 @@ def radxa():
 def ubec():
     """5 V UBEC, a heatshrunk brick (makers 43..50 x 17..25 x 7..10, Q4: 48 x 17 x 8 E) with leads out both short ends, in the layout's
     box x -178.6..-117.6, y 18.2..33.6, z 16..24 (tail bay, behind the rear disks)."""
-    cx, cy, cz = -84.0, 26.0, 11.5                                                   # 3 Nov compact layout: beside the Radxa under the plate's tail
+    cx, cy, cz = -90.5, 26.0, 11.5                                                   # 3 Nov compact layout: beside the Radxa under the plate's tail; 6.5 aft 4 Nov (its lead clearance cut the tail unit's yoke)
     brick = union([cbox(cx, cy, cz, 48, 15, 8), cbox(cx, cy, cz, 50, 17, 6)])
     leads = [cylx(cx - 30.5, cx - 24, cy + dy, cz, 0.9) for dy in (-3, 3)] + [cylx(cx + 24, cx + 30.5, cy + dy, cz, 0.9) for dy in (-3, 3)]
     return union([brick] + leads)

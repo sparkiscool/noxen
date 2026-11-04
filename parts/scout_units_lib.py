@@ -34,10 +34,12 @@ RX0, RX1, RY, RZ0, RZ1 = -51.3, 54.3, 32.8, -44.3, 9.6       # receiver v3 (C)
 INS_NOSE = [(48.28, 26.55), (48.28, -26.55)]                 # receiver inserts the nose yoke bolts to (C)
 INS_TAIL = [(-37.65, 26.55), (-37.65, -26.55)]
 REC_SET_G, REC_SET_CG = 155.0, np.array([1.5, 0.0, -20.0])  # the half each yoke carries (E), the set's CG (E)
-BOLT_NOSE = [(34.0, 14.0), (34.0, -14.0), (36.0, 0.0)]       # M3 down through the plate into inserts: (36, 0) is a Bee35 hole, the pair new (drill)
-BOLT_TAIL = [(-30.0, 14.0), (-30.0, -14.0), (-55.0, 13.0), (-55.0, -13.0)]   # all new (the belly mount v1 pair moved 5 aft: the FC ends at x -23.6; the tail pair at |y| 13: at 20 their pads were sheared by the UBEC lead clearance, run 1)
+BOLT_NOSE = [(36.0, 0.0), (19.93, 0.0), (1.9, 18.03), (1.9, -18.03), (3.9, 31.0), (3.9, -31.0)]   # M3 down through the plate into inserts, all Bee35 holes (tools/bee35_plate.HOLES): the
+#   nose bolt, the FC's 25.5 diamond (the FC sits on top of the plate since 4 Nov, its standoff bolts go on through the plate), the (3.9, +-31) pair
+BOLT_TAIL = [(-16.13, 0.0), (-55.0, 13.0), (-55.0, -13.0)]   # the FC diamond's tail hole (Bee35) and one drilled pair at the plate's tail end (at (-55, +-20) the pads were sheared by the UBEC lead clearance, run 1)
 PAD_R, PAD_T, INS_R, INS_D = 5.0, 6.0, 2.0, 6.0               # pad O10 x 6 under the plate, M3 x 5.7 insert hole O4 x 6
 BOSS_R = 5.0                                                 # receiver boss O10, z 9.6..18.5, insert hole from below
+YOKE_SPLIT_X = -8.0                                          # the nose unit's yoke runs x -8..54.3 over the receiver, the tail unit's -51.3..-8 (the FC is on top of the plate since 4 Nov)
 # ---- the funnel seat: runners to the Overseer receiver's 184 x 66.8 outline at z -44.3 (parts/box_funnel/make.py, parts/scout_belly_skirt)
 CX, SEAT_L, SEAT_W, SEAT_Z, RUN_H = 1.5, 184.0, 66.8, -44.3, 20.0
 HOLE_X, HOLE_Y = 85.0, 25.0                                  # the funnel's hole 170 x 50: the seat ring is what bears
@@ -55,10 +57,10 @@ WINDOW = (57.0, 83.0, 10.0)                                  # x0, x1, |y|: the 
 RADXA_HOLES = [(-118.0 + 3.55, -15.0 + 3.60), (-118.0 + 3.60, -15.0 + 26.45), (-118.0 + 61.40, -15.0 + 3.60), (-118.0 + 61.40, -15.0 + 26.50)]
 RADXA_PCB_BOT, RADXA_TOP = 5.9, 10.7
 RPOST_R, RPOST_Z0, RINS_R, RINS_D = 4.0, 0.5, 1.75, 4.0        # M2.5 x 4 insert (E) in a O8 post, z 0.5..5.9
-UBEC = (-114.5, -53.5, 17.5, 34.5, 7.5, 15.5)
+UBEC = (-121.0, -60.0, 17.5, 34.5, 7.5, 15.5)                 # 6.5 aft since run 2 (4 Nov): its lead clearance cut a slot through the yoke's side where the pads and tie socket load it (one neck)
 LAND_T = 4.0                                                 # tape lands 4 thick (4 Nov run 1: 2 mm lands left blobs on necks; the gate erodes 2)
 XR2 = (-96.5, -62.0, -30.0, -17.0, 8.0, 12.0)
-BOARDS_G, BOARDS_CG = 32.0, np.array([-85.0, 2.0, 9.0])      # Radxa 10 + UBEC 15 + XR2 1 + cables 6 (E)
+BOARDS_G, BOARDS_CG = 32.0, np.array([-88.0, 2.0, 9.0])      # Radxa 10 + UBEC 15 + XR2 1 + cables 6 (E)
 # ---- sockets (cage_node_lib: 3.0 rod, bore 3.2 x 10, floor 3, wall 2.5; the bore bottom 3.0 from the node centre, as the Overseer's node 17)
 BORE_R, DEPTH, FLOOR, WALL = 1.6, 10.0, 3.0, 2.5
 # ---- prop keep-out: the cage rule for anything printed too (12 beyond the swept discs)
