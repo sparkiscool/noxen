@@ -2,7 +2,7 @@
 no strap, light, clears the bottom"). One PETG piece under the base, on its 4 M3 x 5.7 inserts (dimensions.md Base: 80 x 50 at
 (-60, +-25), (20, +-25), faces on z -8.1). The pack (Zeee 4S 5200, 138 x 47 x 48, ~475 g, Amazon listing, E until measured) slides
 in from the tail, leads aft, against a front stop, and a snap tab in the floor drops behind its rear face: no strap. Out: press the
-clip's thumb end down, slide aft. Pack centre x -20 (the base's pack design point), top under the 4 pads.
+clip's thumb end down, slide aft. Pack centre x -20 (the base's pack design point), top 4 under the 4 pads.
 v2 (3 Nov): the snap tab is its own drawn part, parts/overseer_battery_clip (a drawn flexure is free on every side, so the audit's
 room rule refused it at h 1.5 however it was cut: 28-32 %). It bolts up under this holder's clip pad with 2 M3 x 8 into M3 x 5.7
 inserts; its hook rises behind the pack's rear face. Drawn: the 4 bolt pads (O11 x 6, M3 through, head recessed from below), small
@@ -25,7 +25,8 @@ PAD_R, PAD_T, SHANK_R, HEAD_R, HEAD_D = 5.5, 6.0, 1.6, 3.4, 3.2
 PACK = (138.0, 47.0, 48.0); CLR = 0.5; PACK_G = 480.0
 X0, X1 = -20.0 - PACK[0] / 2 - CLR, -20.0 + PACK[0] / 2 + CLR      # cavity x -89.5..49.5
 YW = PACK[1] / 2 + CLR                                              # cavity y +-24
-ZT = Z_MOUNT - PAD_T - CLR; ZB = ZT - PACK[2] - 2 * CLR             # cavity z -63.6..-14.6
+TOP_GAP = 4.0                                                      # v4 (3 Nov): room under the whole of each bolt pad (v3: the pads half over the pack, joined by their outer half beside the O7 driver path: 0.94 there)
+ZT = Z_MOUNT - PAD_T - TOP_GAP - CLR; ZB = ZT - PACK[2] - 2 * CLR   # cavity z -67.6..-18.6
 PACK_CG = np.array([-20.0, 0.0, (ZT + ZB) / 2])
 CLIP_W, CLIP_T, CLIP_GAP, CLIP_FREE = 12.0, 2.5, 7.0, 35.0       # parts/overseer_battery_clip: strip 12 x 2.5, its top 7 under the pack, 35 free
 CLIP_Z1 = ZB - CLIP_GAP                                            # clip top = the clip pad's underside
