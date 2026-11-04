@@ -17,7 +17,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.di
 from topo import Part
 from parts.cage_node_lib import U
 
-SPEC = dict(h=1.5, gen_cm3=22.0, max_worst=0.5)
+SPEC = dict(h=1.5, gen_cm3=34.0, max_worst=0.5)     # v3 (3 Nov): v2 22 cm3 gave 1.22 across the layers under the rear bolt pads (crash 2/3, +-y 35 g) and pads on 2.4 necks, 38.5 g
 G = 9.81e-3
 Z_MOUNT = -8.1
 BOLTS = [(-60.0, 25.0), (-60.0, -25.0), (20.0, 25.0), (20.0, -25.0)]
