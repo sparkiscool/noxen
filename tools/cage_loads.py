@@ -122,16 +122,21 @@ class Frame:
     def member(self, name, i, j, sec, kind):
         self.members.append(dict(name=name, i=i, j=j, sec=sec, kind=kind))
 
-    def solve(self, loads, constraints):
-        """loads: (n, 3) force per point; constraints: [(point, unit direction)] translations held along that direction
-        (Lagrange multipliers). Returns u (n, 6), per member (N at j, shear at i / j, moment at i / j), reactions per constraint."""
-        n = len(self.pts); K = np.zeros((6 * n, 6 * n)); F = np.zeros(6 * n)
-        cache = []
+    def assemble(self):
+        """the global stiffness (6 dofs a point) and, per member, (local k, rotation, global dof index)"""
+        n = len(self.pts); K = np.zeros((6 * n, 6 * n)); cache = []
         for m in self.members:
             p, q = self.pts[m["i"]], self.pts[m["j"]]
             L, T = rotation(p, q); kl = beam_k(m["sec"], L); kg = T.T @ kl @ T
             idx = np.r_[6 * m["i"]:6 * m["i"] + 6, 6 * m["j"]:6 * m["j"] + 6]
             K[np.ix_(idx, idx)] += kg; cache.append((kl, T, idx))
+        return K, cache
+
+    def solve(self, loads, constraints):
+        """loads: (n, 3) force per point; constraints: [(point, unit direction)] translations held along that direction
+        (Lagrange multipliers). Returns u (n, 6), per member (N at j, shear at i / j, moment at i / j), reactions per constraint."""
+        n = len(self.pts); F = np.zeros(6 * n)
+        K, cache = self.assemble()
         for i in range(n):
             F[6 * i:6 * i + 3] = loads[i]
         C = np.zeros((len(constraints), 6 * n))
