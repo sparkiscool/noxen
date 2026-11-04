@@ -17,7 +17,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.di
 from topo import Part
 from parts.cage_node_lib import U
 
-SPEC = dict(h=1.5, gen_cm3=34.0, max_worst=0.5)     # v3 (3 Nov): v2 22 cm3 gave 1.22 across the layers under the rear bolt pads (crash 2/3, +-y 35 g) and pads on 2.4 necks, 38.5 g
+SPEC = dict(h=1.5, gen_cm3=34.0, max_worst=0.5)     # v5 (4 Nov): build +y; v2..v4 printed flat (+z) all failed ACROSS the layers near the rear bolt pads (1.22 / 0.94 / 1.22): a hanging bucket puts its side walls in vertical tension, across flat layers     # v3 (3 Nov): v2 22 cm3 gave 1.22 across the layers under the rear bolt pads (crash 2/3, +-y 35 g) and pads on 2.4 necks, 38.5 g
 G = 9.81e-3
 Z_MOUNT = -8.1
 BOLTS = [(-60.0, 25.0), (-60.0, -25.0), (20.0, 25.0), (20.0, -25.0)]
@@ -32,7 +32,7 @@ CLIP_W, CLIP_T, CLIP_GAP, CLIP_FREE = 12.0, 2.5, 7.0, 35.0       # parts/oversee
 CLIP_Z1 = ZB - CLIP_GAP                                            # clip top = the clip pad's underside
 RX0, RX1 = X0 + CLIP_FREE, X0 + CLIP_FREE + 20.0                   # clip pad (the clip's root) x -54.5..-34.5
 CLIP_SCREWS = (RX0 + 5.0, RX1 - 5.0)                               # 2 M3 x 5.7 inserts (O4.0, 6 deep) from below, y 0
-PAD = 2.0
+PAD = 3.0                                                          # contact pads (v6, 4 Nov: 2.0 fails the drawn_thin audit at 2.5, and sat on 2.4 necks at the gate)
 DIRS14 = [np.array(v, float) / np.linalg.norm(v) for v in
           [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)] + [(a, b, c) for a in (1, -1) for b in (1, -1) for c in (1, -1)]]
 FLIGHT = {"flight 4 g": np.array([0, 0, 4.0]), "flight 2 g x": np.array([2.0, 0, 1]), "flight 2 g y": np.array([0, 2.0, 1]), "landing 6 g": np.array([0, 0, 6.0])}
@@ -70,7 +70,7 @@ def bodies():
 
 def setup(h):
     drawn, cuts, env, R = bodies()
-    p = Part("overseer_battery_holder", h, drawn, cuts, env, build="+z", material="PETG")
+    p = Part("overseer_battery_holder", h, drawn, cuts, env, build="+y", material="PETG")   # v5 (4 Nov): printed on its side, layers in xz
     p.support("default", U([cyl(x, y, Z_MOUNT - 0.6, Z_MOUNT + 0.5, PAD_R + 0.5) for x, y in BOLTS]))
     e = PAD + 1.5                                                       # contact regions: each drawn pad and 1.5 behind it (a 0.6 layer is empty at a coarse h)
     reg = {"-z": U([box(x - 8, x + 8, s0, s1, ZB - e, ZB) for x in (-75.0, 35.0) for s0, s1 in ((7.0, 23.0), (-23.0, -7.0))]),
