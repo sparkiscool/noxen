@@ -16,7 +16,7 @@ from topo import Part
 from parts import scout_units_lib as L
 from parts.scout_units_lib import box, cyl, along, U
 
-SPEC = dict(h=2.0, gen_cm3=50.0, max_worst=0.5)      # E: belly mount v1 25 g + camera mount v1 22 g + a runner. Run 1 (4 Nov, 40 cm3): gate PASS 60.4 g, index 0.60 in the funnel catch (seat up) at the nose wall's top (56.5, 19, 9): the wall room was 7 wide. Run 2: the wall room to x 66, 50 cm3. h 2.0: the grid (102 x 91 x 104, padded to 8s) is 332k cells at 1.5 (refused), 229k at 1.7, 150k at 2.0: the direct solver took 8.8 GB on the tail unit's 287k cells and was killed (the CI runner has 7 GB; the hub deck runs at 184k)
+SPEC = dict(h=2.3, gen_cm3=50.0, max_worst=0.5)      # E: belly mount v1 25 g + camera mount v1 22 g + a runner. h 2.3 since the yoke reaches x -8 (FC on top): at 2.0 the grid is 194k cells and the direct solve peaked at 6.2 GB here (the CI runner has 7 GB); at 2.3 it is 147k. Run 1 (4 Nov, 40 cm3): gate PASS 60.4 g, index 0.60 in the funnel catch (seat up) at the nose wall's top (56.5, 19, 9): the wall room was 7 wide. Run 2: the wall room to x 66, 50 cm3. h 2.0: the grid (102 x 91 x 104, padded to 8s) is 332k cells at 1.5 (refused), 229k at 1.7, 150k at 2.0: the direct solver took 8.8 GB on the tail unit's 287k cells and was killed (the CI runner has 7 GB; the hub deck runs at 184k)
 
 
 def bodies():
