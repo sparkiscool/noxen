@@ -21,7 +21,8 @@ python tools/dim.py <section>                                     # one section 
 ## Setup audit (runs before every solve, `topo/audit.py`)
 A run refuses to start when: drawn solid is over 30 % of the part; one drawn body holds over 60 % of the drawn
 material with a thick core (a drawn structure); any drawn body has a core over 8 mm away from every hole and face (a
-block); a loaded drawn body has less than one member of design room behind it. The fix is always the setup, never a
+block); a loaded drawn body has less than one member of design room behind it; a drawn body is under 2.5 mm across its
+smallest extent after its cuts (the gate erodes it; thin_ok for the camera posts). The fix is always the setup, never a
 `--set audit=warn`: delete the block, open the envelope behind the feature, move the cut. `result.json` carries the
 audit report; `python -m topo.run parts/<name> --h <SPEC h> --maxit 1 --no-coarse` runs it in a minute (at the SPEC h: room is measured
 in cells, a coarser h can pass a setup the run refuses).

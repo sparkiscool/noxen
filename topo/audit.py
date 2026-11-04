@@ -21,12 +21,18 @@ Checks (hard = raises, soft = logged + in the report):
                        by any sensible load path, they only cost solve time. Reported as a share.
   plate          hard  the envelope (plan hull's smallest rectangle x height) does not fit the printer's 180 mm cube at any
                        rotation (Spark 29 Oct): the part must be split into bolted pieces that each fit.
+  drawn_thin     hard  a drawn body (exact geometry after its cuts, thin_ok bodies left out) under 2.5 mm across its smallest
+                       extent: a plate the gate's 2.0 mm erosion leaves no core, so the engine's material round it ends as blobs on necks.
+                       4 Nov: the Scout tail unit's 2 mm tape lands under the UBEC and XR2 (two necks), the arm clips' tie collar
+                       sheared by the plate keep-out to a 1.1 mm sliver. Thicken it (lands >= 4 mm and 2 cells), move it out of
+                       the cut, or declare it thin_ok (the camera posts).
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
 """
 import numpy as np
 from scipy import ndimage as ndi
+
 
 S6 = ndi.generate_binary_structure(3, 1)
 S26 = np.ones((3, 3, 3), bool)
@@ -71,6 +77,26 @@ def diameter_mm(mask, h):
     if not mask.any():
         return 0.0
     return max(0.0, (2.0 * float(ndi.distance_transform_edt(mask).max()) - 1.0) * h)
+
+
+THIN_MM = 2.5             # a drawn body thinner than this across its smallest extent: the gate's 2.0 mm erosion leaves it no core (PETG: nothing under 2)
+
+
+def thin_drawn(drawn_m, cuts_m, thin_ok=(), thin_mm=THIN_MM, min_mm3=5.0):
+    """exact geometry, independent of the pitch: the drawn bodies less the cuts and the declared-thin bodies, split into pieces; a
+    piece whose smallest bounding-box extent is under thin_mm is a plate or a sliver. Returns [(extent_mm, volume_mm3, centre)]"""
+    body = drawn_m - cuts_m
+    for t in thin_ok:
+        body = body - t
+    out = []
+    for piece in body.decompose():
+        v = float(piece.volume())
+        if v < min_mm3:
+            continue
+        bb = piece.bounding_box(); ext = [bb[k + 3] - bb[k] for k in range(3)]
+        if min(ext) < thin_mm:
+            out.append((round(min(ext), 2), round(v, 1), [round((bb[k] + bb[k + 3]) / 2, 1) for k in range(3)]))
+    return out
 
 
 def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
@@ -196,6 +222,13 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         fails.append(f"plate: the envelope is {L:.0f} x {W:.0f} x {H:.0f} mm and does not fit the {PLATE_MM:.0f} mm plate at any "
                      f"rotation: split the part into bolted pieces that each fit, joined so the positions it sets are kept "
                      f"(Spark 29 Oct).")
+
+    thin = thin_drawn(part.drawn_m, part.cuts_m, getattr(part, "thin_ok", ()) or ())
+    rep["drawn_thin"] = [dict(extent_mm=t[0], mm3=t[1], at=t[2]) for t in thin]
+    for t in thin:
+        fails.append(f"drawn_thin: a drawn body at {t[2]} ({t[1]:.0f} mm3) is {t[0]:.1f} mm across its smallest extent (limit {THIN_MM}): a plate or "
+                     f"sliver the gate's 2 mm erosion leaves no core (a 2 mm tape land, a collar sheared by a keep-out). Thicken it, move it "
+                     f"out of the cut, or declare it thin_ok.")
 
     rep["cases"] = len(part.cases)
     rep["supports"] = len(part.supports)

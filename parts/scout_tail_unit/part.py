@@ -13,7 +13,7 @@ from topo import Part
 from parts import scout_units_lib as L
 from parts.scout_units_lib import box, cyl, along, U
 
-SPEC = dict(h=2.0, gen_cm3=40.0, max_worst=0.5)      # E: tail bay mount v2 49 g + a runner; refine after the first run. h 2.0: 123k cells (287k at 1.5: the direct solver took 8.8 GB and was killed; the CI runner has 7 GB)
+SPEC = dict(h=2.0, gen_cm3=50.0, max_worst=0.5)      # E: tail bay mount v2 49 g + a runner. h 2.0: 123k cells (287k at 1.5: the direct solver took 8.8 GB and was killed; the CI runner has 7 GB). Run 1 (4 Nov, 40 cm3): gate FAIL, two necks at the 2 mm tape lands' ends; index 2.34 in TB-B1 tension under the tail pad (-55, -20): the tray hung on a 10 wide wall slot. Run 2: lands 4, the wall room to x -66, 50 cm3
 
 
 def bodies():
@@ -26,7 +26,7 @@ def bodies():
     rim, block, seat_regs, wedge = L.runner(L.CX - L.SEAT_L / 2, L.RX0 - 1.0, nose=False)
     drawn.append(rim); env.append(block)
     # the body: yoke, the wall down the receiver's tail face, a deck over the runner up to the tray, the tray, the TB block
-    env += [box(-60.0, -28.5, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(-62.0, L.RX0 - 0.5, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),
+    env += [box(-60.0, -28.5, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(-62.0, -40.0, -41.0, 41.0, 7.0, L.PLATE_Z), box(-66.0, L.RX0 - 0.5, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the yoke's tail corners out to |y| 41 under the plate body for the tie sockets at (-50, +-40, 12)   # the wall room to x -66 (run 1: a 10 wide slot carried the tray, index 2.34 under the tail pads)
             box(L.CX - L.SEAT_L / 2, L.RX0 - 1.0, -33.4, 33.4, L.SEAT_Z + L.RUN_H, 0.5), box(-120.0, -52.0, -36.0, 36.0, 0.0, 7.5),
             box(-140.0, -118.0, -14.0, 14.0, 0.0, 24.0)]
     # Radxa on 4 posts (M2.5 inserts), the board and its plugs cut; SD card out the tail end; USB-C / HDMI out the -y edge
@@ -41,15 +41,16 @@ def bodies():
     cuts.append(box(-111.0, -58.0, -40.0, -14.5, 7.0, 12.0))                               # USB-C x2 and micro HDMI plugs
     # UBEC and XR2 on tape lands, their bodies and leads cut
     x0, x1, y0, y1, z0, z1 = L.UBEC
-    drawn.append(box(x0, x1, y0, y1, z0 - 2.0, z0)); cuts.append(box(x0 - 6.0, x1 + 6.0, y0 - 0.5, y1 + 0.5, z0, z1 + 1.0))
+    drawn.append(box(x0, x1, y0, y1, z0 - L.LAND_T, z0)); cuts.append(box(x0 - 6.0, x1 + 6.0, y0 - 0.5, y1 + 0.5, z0, z1 + 1.0))
     x0, x1, y0, y1, z0, z1 = L.XR2
-    drawn.append(box(x0, x1, y0, y1, z0 - 2.0, z0)); cuts.append(box(x0 - 0.5, x1 + 0.5, y0 - 0.5, y1 + 0.5, z0, z1 + 0.5))
+    drawn.append(box(x0, x1, y0, y1, z0 - L.LAND_T, z0)); cuts.append(box(x0 - 0.5, x1 + 0.5, y0 - 0.5, y1 + 0.5, z0, z1 + 0.5))
     cuts.append(box(-135.0, x0, (y0 + y1) / 2 - 2.5, (y0 + y1) / 2 + 2.5, z0, z1))        # the antenna, flat along -x
     cuts += L.disc_cuts()
     socks = L.node_socks("TB", ["B1", "B2", "P3", "P4"], nodes) + [L.Sock("C1 C1-B1", nodes["C1"], nodes["B1"]), L.Sock("C2 C2-B2", nodes["C2"], nodes["B2"])]
     for s in socks:
         drawn.append(s.collar()); cuts += s.bores(); cuts.append(s.clear())
         env.append(along(s.pt(-6.0), s.pt(s.t_mouth), L.BORE_R + L.WALL + 5.0))
+    L.check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
     return dict(drawn=U(drawn), cuts=U(cuts), env=U(env), pad_regs=pad_regs, boss_regs=boss_regs, seat_regs=seat_regs,
                 post_pts=post_pts, post_regs=post_regs, socks=socks)
 

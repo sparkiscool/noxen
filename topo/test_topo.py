@@ -733,6 +733,30 @@ def t_audit_block_measure():
     RESULTS.append(("audit_block_measure", ok)); print(f"audit block measure: {'ok' if ok else 'FAIL'} 8 mm -> {[round(d, 1) for d in thin]}  12 mm -> {[round(d, 1) for d in thick]}")
 
 
+def t_audit_drawn_thin():
+    """audit: drawn_thin (4 Nov: the Scout tail unit's 2 mm tape lands left blobs on necks, the arm clips' tie collar was sheared to a
+    1.1 mm sliver by the plate keep-out). Exact geometry: a 2 mm land is refused, a 4 mm one passes, a collar (O8.2, 3.2 bore, 2.5 wall)
+    passes, a O5.6 post round a O3.2 bore passes too (a ring's wall is the gate's thin_walls check and thin_ok), a 6 mm pad sheared
+    to 1.2 mm by a cut fails, a 3 mm hook (the holder demo) passes."""
+    try:
+        import manifold3d as mf, trimesh
+        from topo.audit import thin_drawn
+        from .part import man
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        none = box(100, 101, 100, 101, 100, 101)
+        collar = man(trimesh.creation.cylinder(4.1, 13.0, sections=48)) - man(trimesh.creation.cylinder(1.6, 14.0, sections=48))
+        post = man(trimesh.creation.cylinder(2.8, 10.0, sections=48)) - man(trimesh.creation.cylinder(1.6, 11.0, sections=48))
+        pad = box(0, 10, 0, 10, 0, 6); shear = box(-1, 11, -1, 11, 1.2, 7)
+        r = [thin_drawn(box(0, 61, 0, 17, 0, 2), none), thin_drawn(box(0, 61, 0, 17, 0, 4), none), thin_drawn(collar, none), thin_drawn(post, none),
+             thin_drawn(post, none, [post]), thin_drawn(pad, shear), thin_drawn(box(26, 34, 0, 3, 14, 24), none)]
+        ok = len(r[0]) == 1 and not r[1] and not r[2] and not r[3] and not r[4] and len(r[5]) == 1 and not r[6]   # a ring's thin wall is the gate's thin_walls check (and thin_ok), not this one
+        check("audit drawn_thin: a 2 mm land fails, 4 mm passes, a 2.5-wall collar and a O5.6 post pass (ring walls are the gate's), a pad sheared to 1.2 fails, a 3 mm hook passes", ok,
+              f"land 2 {r[0]} land 4 {r[1]} collar {r[2]} post {r[3]} post thin_ok {r[4]} sheared pad {r[5]} hook {r[6]}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit drawn_thin", False, str(e))
+
+
 def t_design_hash():
     """the design hash (topo/run.py) is the same for the same setup built twice and differs when a load, a cut or the budget
     changes (29 Oct: parts.yml stops a running part whose design main has since changed)."""
@@ -829,7 +853,7 @@ def t_skin_core():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_design_hash):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_design_hash):
         t()
     if not quick:
         t_end_to_end()

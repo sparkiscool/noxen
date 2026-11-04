@@ -63,8 +63,8 @@ RODS = [("R0", "P1"), ("P1", "P2"), ("P2", "P3"), ("P3", "P4"), ("P4", "P5"), ("
         ("B0", "P0"), ("B0", "P1"), ("B1", "P2"), ("B1", "P3"), ("B2", "P4"), ("B2", "P5"), ("B3", "P6"), ("B3", "P7"),   # lower band
         ("BM0", "P1"), ("BM0", "P2"), ("BM1", "P6"), ("BM1", "P5"),                                            # the side faces fanned from the rails' mid nodes
         ("NB", "B0"), ("NB", "B3"), ("NB", "P0"), ("NB", "P7"), ("TB", "B1"), ("TB", "B2"), ("TB", "P3"), ("TB", "P4")]   # nose and tail, lower band
-TIE_ROOTS = {"A0": (62, 62, 17), "A1": (-62, 62, 17), "A2": (-62, -62, 17), "A3": (62, -62, 17),              # clips under the four arm tips (the motor's M2 screws), z 17 under the plate
-             "C0": (58, 30, 14), "C1": (-58, 30, 14), "C2": (-58, -30, 14), "C3": (58, -30, 14)}               # sockets on the nose and tail units' yoke corners, under the plate (v18; v17 had saddles on the plate top at z 22)
+TIE_ROOTS = {"A0": (62, 62, 13.5), "A1": (-62, 62, 13.5), "A2": (-62, -62, 13.5), "A3": (62, -62, 13.5),      # clips under the four arm tips (the motor's M2 screws), z 13.5 under the plate (4 Nov run 1: at 17 the collar's top was sheared by the plate)
+             "C0": (58, 30, 14), "C1": (-50, 40, 12), "C2": (-50, -40, 12), "C3": (58, -30, 14)}               # sockets on the nose and tail units' yoke corners, under the plate (v18; v17 had saddles on the plate top at z 22); the tail pair out at |y| 40 (4 Nov run 1: at (-58, +-30, 14) their collars were sheared by the UBEC lead and XR2 clearances)
 PRINTED = {"NB": "scout_nose_unit", "TB": "scout_tail_unit"}   # cage nodes printed into a unit bolted to the plate (v18; v17's tail ties T0/T1 to TB are the tail unit itself:
 TIES = [("A0", "B0"), ("A1", "B1"), ("A2", "B2"), ("A3", "B3"), ("C0", "B0"), ("C1", "B1"), ("C2", "B2"), ("C3", "B3")]   # 3.0 rods: the cage hangs on the plate by its four rail corners
 #   without a stiff tail link a 35 g tail-first wall hit racked the cage 17 mm with 1157 N in a corner tie, frame model 4 Nov; with one 0.2 mm, 144 N)

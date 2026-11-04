@@ -16,7 +16,7 @@ from topo import Part
 from parts import scout_units_lib as L
 from parts.scout_units_lib import box, cyl, along, U
 
-SPEC = dict(h=2.0, gen_cm3=40.0, max_worst=0.5)      # E: belly mount v1 25 g + camera mount v1 22 g + a runner; refine after the first run. h 2.0: the grid (102 x 91 x 104, padded to 8s) is 332k cells at 1.5 (refused), 229k at 1.7, 150k at 2.0: the direct solver took 8.8 GB on the tail unit's 287k cells and was killed (the CI runner has 7 GB; the hub deck runs at 184k)
+SPEC = dict(h=2.0, gen_cm3=50.0, max_worst=0.5)      # E: belly mount v1 25 g + camera mount v1 22 g + a runner. Run 1 (4 Nov, 40 cm3): gate PASS 60.4 g, index 0.60 in the funnel catch (seat up) at the nose wall's top (56.5, 19, 9): the wall room was 7 wide. Run 2: the wall room to x 66, 50 cm3. h 2.0: the grid (102 x 91 x 104, padded to 8s) is 332k cells at 1.5 (refused), 229k at 1.7, 150k at 2.0: the direct solver took 8.8 GB on the tail unit's 287k cells and was killed (the CI runner has 7 GB; the hub deck runs at 184k)
 
 
 def bodies():
@@ -36,7 +36,7 @@ def bodies():
     cuts.append(box(L.FLOW_C[0] - bx / 2 - 12.0, L.FLOW_C[0] - bx / 2 + 2.0, -4.0, 4.0, L.FLOW_TOP - 7.0, L.FLOW_TOP + 3.0))   # the lead: out the tail end of the board, up the nose wall
     cuts.append(box(54.0, 62.0, -4.0, 4.0, L.FLOW_TOP - 7.0, 2.0))                                                # ... to the FC
     # the body: yoke under the plate, the wall down the receiver's nose face, a deck over the runner, the spine out to the camera
-    env += [box(28.5, 60.0, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(L.RX1 + 0.5, 62.0, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),
+    env += [box(28.5, 60.0, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(L.RX1 + 0.5, 66.0, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the wall room to x 66, the plate's nose end (run 1: index 0.60 at the wall's top in the funnel catch)
             box(L.RX1 + 1.0, L.CX + L.SEAT_L / 2, -33.4, 33.4, L.SEAT_Z + L.RUN_H, -8.0), box(60.0, 104.0, -20.0, 20.0, -8.0, 25.0),
             box(100.0, L.BOARD_BACK_X, -11.0, 11.0, 20.0, 60.0), box(99.0, L.BOARD_BACK_X, -18.0, 18.0, 20.0, 60.0),   # the neck and the block behind the posts (the disc cut trims it to what clears the props)
             box(100.0, 130.0, -12.0, 12.0, -2.0, 22.0)]
@@ -60,6 +60,7 @@ def bodies():
     for s in socks:
         drawn.append(s.collar()); cuts += s.bores(); cuts.append(s.clear())
         env.append(along(s.pt(-6.0), s.pt(s.t_mouth), L.BORE_R + L.WALL + 5.0))
+    L.check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
     return dict(drawn=U(drawn), cuts=U(cuts), env=U(env), pad_regs=pad_regs, boss_regs=boss_regs, seat_regs=seat_regs,
                 posts=posts, post_pts=post_pts, post_regs=post_regs, socks=socks)
 

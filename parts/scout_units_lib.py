@@ -35,7 +35,7 @@ INS_NOSE = [(48.28, 26.55), (48.28, -26.55)]                 # receiver inserts 
 INS_TAIL = [(-37.65, 26.55), (-37.65, -26.55)]
 REC_SET_G, REC_SET_CG = 155.0, np.array([1.5, 0.0, -20.0])  # the half each yoke carries (E), the set's CG (E)
 BOLT_NOSE = [(34.0, 14.0), (34.0, -14.0), (36.0, 0.0)]       # M3 down through the plate into inserts: (36, 0) is a Bee35 hole, the pair new (drill)
-BOLT_TAIL = [(-30.0, 14.0), (-30.0, -14.0), (-55.0, 20.0), (-55.0, -20.0)]   # all new (the belly mount v1 pair moved 5 aft: the FC ends at x -23.6)
+BOLT_TAIL = [(-30.0, 14.0), (-30.0, -14.0), (-55.0, 13.0), (-55.0, -13.0)]   # all new (the belly mount v1 pair moved 5 aft: the FC ends at x -23.6; the tail pair at |y| 13: at 20 their pads were sheared by the UBEC lead clearance, run 1)
 PAD_R, PAD_T, INS_R, INS_D = 5.0, 6.0, 2.0, 6.0               # pad O10 x 6 under the plate, M3 x 5.7 insert hole O4 x 6
 BOSS_R = 5.0                                                 # receiver boss O10, z 9.6..18.5, insert hole from below
 # ---- the funnel seat: runners to the Overseer receiver's 184 x 66.8 outline at z -44.3 (parts/box_funnel/make.py, parts/scout_belly_skirt)
@@ -56,6 +56,7 @@ RADXA_HOLES = [(-118.0 + 3.55, -15.0 + 3.60), (-118.0 + 3.60, -15.0 + 26.45), (-
 RADXA_PCB_BOT, RADXA_TOP = 5.9, 10.7
 RPOST_R, RPOST_Z0, RINS_R, RINS_D = 4.0, 0.5, 1.75, 4.0        # M2.5 x 4 insert (E) in a O8 post, z 0.5..5.9
 UBEC = (-114.5, -53.5, 17.5, 34.5, 7.5, 15.5)
+LAND_T = 4.0                                                 # tape lands 4 thick (4 Nov run 1: 2 mm lands left blobs on necks; the gate erodes 2)
 XR2 = (-96.5, -62.0, -30.0, -17.0, 8.0, 12.0)
 BOARDS_G, BOARDS_CG = 32.0, np.array([-85.0, 2.0, 9.0])      # Radxa 10 + UBEC 15 + XR2 1 + cables 6 (E)
 # ---- sockets (cage_node_lib: 3.0 rod, bore 3.2 x 10, floor 3, wall 2.5; the bore bottom 3.0 from the node centre, as the Overseer's node 17)
@@ -136,6 +137,15 @@ def socket_cases(p, socks, support, log_prefix=""):
         for sgn, lab in ((1, "tension"), (-1, "compression")):
             F = sgn * ld["axial"] * s.d + ld["side"] * s.side()
             p.load_multi(f"{log_prefix}{s.name.split()[1]} {lab} {ld['axial']:.0f} N + side {ld['side']:.0f} N", [(s.region(), F)], cls="crash", support=support)
+
+
+def check_collars(socks, cuts, keep=0.97):
+    """every socket collar must stand clear of the keep-outs: a collar sheared by a cut prints as a sliver the gate refuses (4 Nov run 1:
+    the arm clips' collars under the plate, the tail unit's under the UBEC lead clearance)"""
+    for s in socks:
+        c = s.collar(); v0 = float(c.volume()); v1 = float((c - cuts).volume())
+        if v1 < keep * v0:
+            raise ValueError(f"socket {s.name}: its collar loses {1 - v1 / v0:.0%} of itself to a keep-out cut; move the root or the cut")
 
 
 def node_socks(node, members, nodes):
@@ -241,7 +251,7 @@ def export_env(part, name):
 
 # ---- arm clips -------------------------------------------------------------------------------------------------------------------
 CLIP = {1: (1, -1, "A3", "B3"), 2: (-1, 1, "A1", "B1"), 3: (1, 1, "A0", "B0"), 4: (-1, -1, "A2", "B2")}   # PX4 motor k: arm signs, tie
-CLIP_Z0, CLIP_T, M2_R, M2_PAD_R, SHAFT_R = PLATE_Z - 4.0, 4.0, 1.1, 3.0, 3.0
+CLIP_Z0, CLIP_T, M2_R, M2_PAD_R, SHAFT_R = PLATE_Z - 8.0, 8.0, 1.1, 3.0, 3.0   # 8 thick (4 Nov run 1: at 4 the tie collar's top, root z 17, was sheared by the plate keep-out to a 1.1 sliver; roots now z 13.5)
 
 
 def arm_clip_setup(k, h):
@@ -257,6 +267,7 @@ def arm_clip_setup(k, h):
     cuts.append(hull([(mx + sx * 30, my + sy * 30, PLATE_Z - 0.5), (mx - sx * 20, my + sy * 30, PLATE_Z - 0.5), (mx + sx * 30, my - sy * 20, PLATE_Z - 0.5),
                       (mx + sx * 30, my + sy * 30, PLATE_Z + 4), (mx - sx * 20, my + sy * 30, PLATE_Z + 4), (mx + sx * 30, my - sy * 20, PLATE_Z + 4)]))
     s = Sock(f"{a} {a}-{b}", nodes[a], nodes[b])
+    check_collars([s], U(cuts))
     drawn.append(s.collar()); cuts += s.bores(); cuts.append(s.clear())
     env = U([box(mx - 14, mx + 14, my - 14, my + 14, CLIP_Z0, PLATE_Z), along(s.pt(-8.0), s.pt(s.t_mouth), BORE_R + WALL + 4.0),
              hull([(mx, my, CLIP_Z0), (mx, my, PLATE_Z), s.pt(-8.0) + [0, 0, -6], s.pt(-8.0) + [0, 0, 2], s.pt(s.t_mouth) + [0, 0, -6], s.pt(s.t_mouth) + [0, 0, 2]])])
