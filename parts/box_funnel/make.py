@@ -31,7 +31,7 @@ TAIL_BEAM = (-121.0, -109.0, 155.0 - ZW, 163.0 - ZW)  # seat x, W Z 155..163 in 
 END_PAD_Y = 200.0                                 # the beam ends drop to the sheet tops (W Z 145) over |y| 200..209
 BUTTRESS_TOP, BUTTRESS_Y = -20.0, 40.0            # the slab from the tail beam up behind the tail wall, top at h 24.3 where the wall's inner face is at seat x -107.5 (at -14 its inner edge x -109 stood 2.5 inside the wall at h 30 and the Scout's skirt grazed it between the descent check's states), |y| 40: at 48 an Overseer tube grazed its top corner (23 mm3) at the +x+y capture limit, h 30
 END_CUT_X, END_CUT_Y, END_CUT_H = 100.0, 50.0, 24.0   # the y walls' ends (|x| > 100) stop at h 24 outside |y| 50: the Overseer's loop corner grazed the tail end's top (h 25..28, 20 mm3) at the diagonal capture limit at h 30
-CORNER_Y = 48.0                                   # the x walls' top corners (h 28..40) stop at |y| 48: the Overseer's loop diagonals pass 15 outside them at its capture limits at its capture limits; the receiver still bears on them over |y| <= 48
+CORNER_Y = 45.0                                   # the x walls' top corners (h 28..40) stop at |y| 45 (at 48 an Overseer tube grazed the tail corner 1 mm3 at the diagonal capture limit, h 40) at its capture limits; the receiver still bears on them over |y| <= 48
 LEG_Y = 40.0                                       # the nose legs stand on the nose beam under the nose wall's end (|y| 40)      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
 
