@@ -108,7 +108,7 @@ def main(nox):
     # the two drones for the landing timeline (tools/landing_box.py): rigid copies of their current pages, posed seated
     scout = json.load(open(os.path.join(ROOT, "systems", "scout.assembly.json")))
     for p in scout["parts"]:
-        if p["id"] not in ("frame_plate_bee35_carbon", "fc", "pack_4s_1500", "camera", "scout_belly_skirt", "scout_cage_v17") and not p["id"].startswith(("scout_motor", "scout_prop")):
+        if p["id"] not in ("frame_plate_bee35_carbon", "fc", "pack_4s_1500", "camera", "scout_nose_unit", "scout_tail_unit", "scout_nose_unit_room", "scout_tail_unit_room", "scout_cage_v18") and not p["id"].startswith(("scout_motor", "scout_prop")):
             continue
         pid = slug("scout " + p["id"]); mesh, nf = copy_mesh(os.path.join(ROOT, p["mesh"]), pid)
         parts.append(dict(id=pid, name=f"Scout: {p['name']}", role=p.get("role", "bought"), group="landing: Scout", color=p.get("color"), mesh=mesh,
