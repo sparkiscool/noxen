@@ -155,7 +155,7 @@ def radxa():
 def ubec():
     """5 V UBEC, a heatshrunk brick (makers 43..50 x 17..25 x 7..10, Q4: 48 x 17 x 8 E) with leads out both short ends, in the layout's
     box x -178.6..-117.6, y 18.2..33.6, z 16..24 (tail bay, behind the rear disks)."""
-    cx, cy, cz = -90.5, 26.0, 11.5                                                   # 3 Nov compact layout: beside the Radxa under the plate's tail; 6.5 aft 4 Nov (its lead clearance cut the tail unit's yoke)
+    cx, cy, cz = -85.5, 26.0, 11.5                                                   # 3 Nov compact layout: beside the Radxa under the plate's tail; 1.5 aft 4 Nov (parts/scout_units_lib.UBEC)
     brick = union([cbox(cx, cy, cz, 48, 15, 8), cbox(cx, cy, cz, 50, 17, 6)])
     leads = [cylx(cx - 30.5, cx - 24, cy + dy, cz, 0.9) for dy in (-3, 3)] + [cylx(cx + 24, cx + 30.5, cy + dy, cz, 0.9) for dy in (-3, 3)]
     return union([brick] + leads)
