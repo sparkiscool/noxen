@@ -1,25 +1,28 @@
-"""Overseer front arm motor PAD, solid (5 Nov, Spark: the printed pads cracked at the motor base, printed flat with the layers across
-the thrust; demo tomorrow, be safe and fast: no topology, a drawn solid part). Arm 1 (+y); arm 4 is the y-mirror (mirror in the
-slicer). python parts/overseer_arm_front_pad_solid/make.py writes part.stl, in the drone frame.
+"""Overseer front arm motor PAD, solid v2 (5 Nov, Spark: the printed pads cracked at the motor base, printed flat with the layers across
+the thrust; demo tomorrow: no topology, a drawn solid, smooth not geometric, even more support round the motor plate). Arm 1 (+y);
+arm 4 is the y-mirror (mirror in the slicer). python parts/overseer_arm_front_pad_solid/make.py writes part.stl, in the drone frame
+(parts/arm_solid_lib.py: a blurred distance field meshed, then the arm lib's exact lugs added and its cuts subtracted).
 * The old pad stays glued; its 4 rods (the two 6/4 tubes, spokes 1.1 and 1.3) are cut flush behind it, one socket shorter. This pad
   sits where the old one was (motor at motors_xy[0], pad top z 45) and its sockets reach one socket length further along the rods:
-  tubes 17 toward the root (bore 21 long, O6.2, at z 14 / 36), spokes 12 further from the arm node (bore O3.2, 13 long).
-* Drop-on: every socket is open downward (a slot narrower than the rod: 5.4 / 2.7) so the pad lowers onto the 4 cut rod ends from
+  tubes 17 toward the root (bore O6.2, 21 long, at z 14 / 36), spokes 12 further from the arm node (bore O3.2, 13 long).
+* Drop-on: every socket is open downward (a slot narrower than the rod: 5.4 / 2.7), so the pad lowers onto the 4 cut rod ends from
   above, snaps over them and is glued (resin grooves as the nodes'); no rod comes out.
-* Solid: a 20 x 37 block along the arm over both tube sockets (s len-62..len-16, z 8..45), the motor disc O36 x 6 on top, each
-  spoke collar (O8.2) in a solid wedge back to the block, the arm lib's lugs, slots (r 8..9.5), head seats, driver sweeps and the
-  O8.6 shaft bore, the cage members near it cut clear (r 4.5), prop disc clear.
-* Print on its side (the block's flat side on the bed, the motor disc's axis horizontal): the layers run along the arm and through
-  the pad, so thrust and bending are in-layer. PETG, 100 % infill, 5 walls, 0.2 layers.
-Mass ~50 g (E, 1.27 g/cm3): the optimised pad was 23.5 g; the weight is the price of no lace and no wait."""
-import os, sys, numpy as np, trimesh, manifold3d as mf
+* Shape: a rounded 22 x 37 block along the arm over both tube sockets (s len-62..len-16, z 8..45), the motor disc O36 x 8 on a
+  bell under it (O36 at the pad down to O32 at z 14, outside the driver sweeps) blended into the block, each spoke collar (O10.4)
+  on a smooth capsule back into the block: one body; the lugs, slots (r 8..9.5), head seats, driver sweeps and O8.6 shaft bore cut
+  as the lib draws them, the cage members near it cut clear.
+* Print on its side (the block's flat side on the bed, the motor disc's axis horizontal): layers along the arm and through the pad,
+  thrust and bending in-layer. PETG, 5 walls, 50 % gyroid, 0.2 layers (half the time of solid, in-layer loads)."""
+import os, sys, numpy as np, manifold3d as mf
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.dirname(os.path.dirname(HERE)))
 from parts.overseer_tube_arm_lib import TubeArm, TUBE_Z, TUBE_DEPTH
-from parts.overseer_arm_lib import Z_PAD, PAD_T, cyl, along, U, NODE_R, SOCK_DEPTH, SOCK_BORE_R, SOCK_WALL
+from parts.overseer_arm_lib import Z_PAD, along, U, NODE_R, SOCK_DEPTH, SOCK_BORE_R
+from parts.arm_solid_lib import grid, rbox, cylinder, bell, capsule, softmax, mesh, export
 
 EXT_TUBE, EXT_SPOKE = 17.0, 12.0
 TUBE_GAP, SPOKE_GAP, DROP = 5.4, 2.7, 60.0
-BLOCK_V, BLOCK_Z0 = 10.0, 8.0
+PAD_T, BELL_Z0, BELL_R0 = 8.0, 14.0, 16.0
+BLOCK = (23.0, 11.0, 18.5)                                              # half sizes along, across, z (centre s L-39, z 26.5)
 
 
 class FrontPad(TubeArm):
@@ -37,27 +40,26 @@ def trough(P, u, s0, s1, w, drop):
 ARM = FrontPad("front", 45.0, 0, ["spoke 1.1", "spoke 1.3"], [178.94, 146.7, 8.0], "pad")
 drawn, cuts, env = ARM.drawn_cuts_env()
 a3 = ARM.a3; n3 = np.array([-a3[1], a3[0], 0.0]); R3 = np.array([ARM.R[0], ARM.R[1], 0.0]); L = ARM.len; M = ARM.M
-
-
-def beam(s0, s1, v0, v1, z0, z1):
-    return mf.Manifold.cube([s1 - s0, v1 - v0, z1 - z0]).translate([s0, v0, z0]).transform(np.c_[a3, n3, [0, 0, 1.0], R3])
-
-
-body = [beam(L - 62.0, L - 16.0, -BLOCK_V, BLOCK_V, BLOCK_Z0, Z_PAD), cyl(M[0], M[1], Z_PAD - PAD_T, Z_PAD, 18.0, 64),
-        beam(L - 30.0, L + 4.0, -14.0, 14.0, Z_PAD - PAD_T - 8.0, Z_PAD)]                      # block, motor disc, boss under it
-for sp in ARM.spokes:                                                                            # spoke collar + solid wedge to the block
-    col = along(ARM.node, sp["u"], ARM.node_r - 6.0, ARM.node_r + SOCK_DEPTH + 4.0, 5.2)       # O10.4 collar (wall 3.6: the slot lips stay over 2)
-    body.append(mf.Manifold.batch_hull([col, beam(L - 34.0, L - 16.0, -BLOCK_V, BLOCK_V, BLOCK_Z0, BLOCK_Z0 + 12.0)]))
+node = np.asarray(ARM.node, float)
+ends = [node + np.asarray(sp["u"]) * (ARM.node_r + SOCK_DEPTH + 4.0) for sp in ARM.spokes]
+lo = np.minimum.reduce([R3 + a3 * (L - 70.0) - 30, [M[0] - 25, M[1] - 25, 0.0]] + [e - 12 for e in ends])
+hi = np.maximum.reduce([R3 + a3 * (L - 10.0) + 30, [M[0] + 25, M[1] + 25, Z_PAD + 2]] + [e + 12 for e in ends])
+ax, P = grid(lo, hi)
+block_c = R3 + a3 * (L - 39.0) + [0, 0, 8.0 + BLOCK[2]]
+fields = [rbox(P, block_c, a3, n3, BLOCK, r=5.0), cylinder(P, M, Z_PAD - PAD_T, Z_PAD, 18.0), bell(P, M, BELL_Z0, BELL_R0, Z_PAD - PAD_T + 0.5, 18.0)]
+anchor = R3 + a3 * (L - 24.0) + [0, 0, 14.0]
+for sp, e in zip(ARM.spokes, ends):
+    s0 = node + np.asarray(sp["u"]) * (ARM.node_r - 6.0)
+    fields.append(capsule(P, s0, e, 5.2))                                  # the spoke collar
+    fields.append(capsule(P, 0.5 * (s0 + e), anchor, 6.0))                 # its smooth strut into the block
+body = mesh(ax, softmax(fields))
 slots = []
 for z in TUBE_Z:
-    slots.append(trough(ARM.p(ARM.pad_mouth + TUBE_DEPTH, 0.0, z), -a3, -2.0, TUBE_DEPTH + 7.0, TUBE_GAP, DROP))
-    slots.append(along(ARM.p(ARM.pad_mouth + TUBE_DEPTH, 0.0, z), -a3, -4.0, TUBE_DEPTH + 7.0, 3.1))   # the bore, 21 + long (no floor)
+    B = ARM.p(ARM.pad_mouth + TUBE_DEPTH, 0.0, z)
+    slots += [trough(B, -a3, -2.0, TUBE_DEPTH + 7.0, TUBE_GAP, DROP), along(B, -a3, -4.0, TUBE_DEPTH + 7.0, 3.1)]
 for sp in ARM.spokes:
-    slots.append(trough(ARM.node, sp["u"], ARM.node_r - 3.0, ARM.node_r + SOCK_DEPTH + 3.0, SPOKE_GAP, DROP))
-    slots.append(along(ARM.node, sp["u"], ARM.node_r - 3.0, ARM.node_r + SOCK_DEPTH + 3.0, SOCK_BORE_R))
-m = (U(body) + drawn) - cuts - U(slots)
-g = m.to_mesh(); t = trimesh.Trimesh(g.vert_properties[:, :3], g.tri_verts); t.merge_vertices()
-parts = t.split(only_watertight=False); t = max(parts, key=lambda q: abs(q.volume)) if len(parts) > 1 else t
-t.export(os.path.join(HERE, "part.stl"))
-b = t.bounds
-print(f"{abs(t.volume) / 1000:.1f} cm3 = {abs(t.volume) * 1.27e-3:.0f} g, bodies {len(parts)}, watertight {t.is_watertight}, box {np.round(b[1] - b[0], 1)}")
+    slots += [trough(node, sp["u"], ARM.node_r - 8.0, ARM.node_r + SOCK_DEPTH + 16.0, SPOKE_GAP, DROP),     # through both collar ends
+              along(node, sp["u"], ARM.node_r - 8.0, ARM.node_r + SOCK_DEPTH + 16.0, SOCK_BORE_R),
+              along(node, sp["u"], ARM.node_r + SOCK_DEPTH - 0.2, ARM.node_r + SOCK_DEPTH + 60.0, 7.0)]   # a flat collar end (the lib's O4.4 rod tunnel left a sliver in the rounded cap)
+m = (body + drawn) - cuts - U(slots)
+export(m, os.path.join(HERE, "part.stl"))
