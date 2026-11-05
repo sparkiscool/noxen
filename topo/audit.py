@@ -230,7 +230,7 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
 
     # env_neck: every loaded drawn body must reach the support through room at least one member wide
     room = (des | sol)
-    r_half = max(1, int(np.ceil(mm / 2.0 / h)))
+    r_half = max(1, int(mm / 2.0 / h))                                      # half a member in whole cells, rounded down: at h 2.0 and member 4.4 that is 1 cell (ceil gave 2: 8 mm of erosion, which cut a 9 mm yoke)
     core = ndi.binary_erosion(room, S6, iterations=r_half)
     core = ndi.binary_dilation(core, S6, iterations=r_half) & room          # the room without its slabs and stubs thinner than a member
     lab_c, nc = ndi.label(core, S26)
