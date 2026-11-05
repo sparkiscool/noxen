@@ -26,6 +26,11 @@ Checks (hard = raises, soft = logged + in the report):
                        4 Nov: the Scout tail unit's 2 mm tape lands under the UBEC and XR2 (two necks), the arm clips' tie collar
                        sheared by the plate keep-out to a 1.1 mm sliver. Thicken it (lands >= 4 mm and 2 cells), move it out of
                        the cut, or declare it thin_ok (the camera posts).
+  env_neck       hard  the room (design + drawn cells) eroded by half a member no longer joins every loaded drawn body to the
+                       support: the only way from that body to the support is a slab or a stub thinner than a member, so the
+                       engine builds a blob there on a neck the gate refuses. 5 Nov: the Scout tail unit's tail-node arm met its
+                       bay over a 4 mm overlap (three necks), the nose unit's lower camera posts had 1.2 mm of room beside their
+                       2 mm stubs behind the plug keep-out (two loose blobs). Widen the overlap or the room round the body.
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -223,6 +228,21 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
                      f"rotation: split the part into bolted pieces that each fit, joined so the positions it sets are kept "
                      f"(Spark 29 Oct).")
 
+    # env_neck: every loaded drawn body must reach the support through room at least one member wide
+    room = (des | sol)
+    r_half = max(1, int(mm / 2.0 / h))                                      # half a member in whole cells, rounded down: at h 2.0 and member 4.4 that is 1 cell (ceil gave 2: 8 mm of erosion, which cut a 9 mm yoke)
+    core = ndi.binary_erosion(room, S6, iterations=r_half)
+    core = ndi.binary_dilation(core, S6, iterations=r_half) & room          # the room without its slabs and stubs thinner than a member
+    lab_c, nc = ndi.label(core, S26)
+    sup_ids = set(np.unique(lab_c[sup & core])) - {0}
+    for b in bodies:
+        if not b["loaded"] or b["touches_support"]:
+            continue
+        cells = lab == b["id"]
+        ids = set(np.unique(lab_c[ndi.binary_dilation(cells, S6) & core])) - {0}
+        if sup_ids and not (ids & sup_ids):
+            fails.append(f"env_neck: loaded drawn body {b['id']} at {b['at']} reaches the support only through room thinner than one member "
+                         f"({mm:.1f} mm): a slab or a stub the engine can only bridge with a blob on a neck. Widen the overlap or the room round it.")
     thin = thin_drawn(part.drawn_m, part.cuts_m, getattr(part, "thin_ok", ()) or ())
     rep["drawn_thin"] = [dict(extent_mm=t[0], mm3=t[1], at=t[2]) for t in thin]
     for t in thin:

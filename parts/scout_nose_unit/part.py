@@ -16,7 +16,7 @@ from topo import Part
 from parts import scout_units_lib as L
 from parts.scout_units_lib import box, cyl, along, U
 
-SPEC = dict(h=2.2, gen_cm3=55.0, max_worst=0.5)      # E: belly mount v1 25 g + camera mount v1 22 g + a runner. Run 3 (h 2.3, 50): gate PASS 79.1 g, index 0.62 under the (36, 0) pad in the funnel catch. Run 4: h 2.2, 55 cm3, the camera 30 deg up. h 2.3 since the yoke reaches x -8 (FC on top): at 2.0 the grid is 194k cells and the direct solve peaked at 6.2 GB here (the CI runner has 7 GB); at 2.3 it is 147k. Run 1 (4 Nov, 40 cm3): gate PASS 60.4 g, index 0.60 in the funnel catch (seat up) at the nose wall's top (56.5, 19, 9): the wall room was 7 wide. Run 2: the wall room to x 66, 50 cm3. h 2.0: the grid (102 x 91 x 104, padded to 8s) is 332k cells at 1.5 (refused), 229k at 1.7, 150k at 2.0: the direct solver took 8.8 GB on the tail unit's 287k cells and was killed (the CI runner has 7 GB; the hub deck runs at 184k)
+SPEC = dict(h=2.2, gen_cm3=55.0, max_worst=0.5)      # E: belly mount v1 25 g + camera mount v1 22 g + a runner. Run 3 (h 2.3, 50): gate PASS 79.1 g, index 0.62 under the (36, 0) pad in the funnel catch. Run 4: h 2.2, 55 cm3, the camera 30 deg up: gate FAIL, the lower camera posts' stubs loose (room); index 0.42, 84 g. Run 5: the post block to the board's back and |y| 24. h 2.3 since the yoke reaches x -8 (FC on top): at 2.0 the grid is 194k cells and the direct solve peaked at 6.2 GB here (the CI runner has 7 GB); at 2.3 it is 147k. Run 1 (4 Nov, 40 cm3): gate PASS 60.4 g, index 0.60 in the funnel catch (seat up) at the nose wall's top (56.5, 19, 9): the wall room was 7 wide. Run 2: the wall room to x 66, 50 cm3. h 2.0: the grid (102 x 91 x 104, padded to 8s) is 332k cells at 1.5 (refused), 229k at 1.7, 150k at 2.0: the direct solver took 8.8 GB on the tail unit's 287k cells and was killed (the CI runner has 7 GB; the hub deck runs at 184k)
 
 
 def bodies():
@@ -38,7 +38,7 @@ def bodies():
     # the body: yoke under the plate, the wall down the receiver's nose face, a deck over the runner, the spine out to the camera
     env += [box(L.YOKE_SPLIT_X, 60.0, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(L.RX1 + 0.5, 66.0, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the yoke from the split at x -8 (the FC is on top of the plate: Spark 4 Nov) to the nose wall   # the wall room to x 66, the plate's nose end (run 1: index 0.60 at the wall's top in the funnel catch)
             box(L.RX1 + 1.0, L.CX + L.SEAT_L / 2, -33.4, 33.4, L.SEAT_Z + L.RUN_H, -8.0), box(60.0, 104.0, -20.0, 20.0, -8.0, 25.0),
-            box(100.0, 120.0, -11.0, 11.0, 8.0, 50.0), box(99.0, 120.0, -18.0, 18.0, 8.0, 50.0),   # the neck and the block behind the tilted posts (the disc cut trims it to what clears the props)
+            box(100.0, 126.0, -11.0, 11.0, 6.0, 52.0), box(99.0, 126.0, -24.0, 24.0, 6.0, 52.0),   # the neck and the block behind the tilted posts, to the board's back and |y| 24 (run 4: the lower posts' 2 mm stubs behind the plug keep-out had 1.2 of room beside them, two loose blobs); the disc cut trims it to what clears the props
             box(100.0, 130.0, -12.0, 12.0, -2.0, 22.0)]
     # camera, 30 deg up: 4 M2 posts behind the board back along -f, insert hole from the front; the board + body, the plugs and the view are cuts
     F, Uu, R = L.CAM_F, L.CAM_U, L.CAM_R
