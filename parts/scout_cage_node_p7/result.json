@@ -1,0 +1,393 @@
+{
+ "name": "scout_cage_node_p7",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   4615.3
+  ],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 0,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 953.5,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.0,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "frame P7-R7 axial 72 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.069,
+    "across": 0.06,
+    "at": [
+     130.0,
+     -45.4,
+     10.7
+    ]
+   },
+   {
+    "case": "frame P7-R7 side 11.0 N",
+    "cls": "crash",
+    "inlayer": 0.01,
+    "across": 0.011,
+    "at": [
+     133.0,
+     -60.4,
+     27.7
+    ]
+   },
+   {
+    "case": "frame P7-P6 axial 92 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.088,
+    "across": 0.055,
+    "at": [
+     138.0,
+     -45.4,
+     15.7
+    ]
+   },
+   {
+    "case": "frame P7-P6 side 0.9 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.001,
+    "at": [
+     126.0,
+     -44.4,
+     16.7
+    ]
+   },
+   {
+    "case": "frame B3-P7 axial 68 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.05,
+    "across": 0.027,
+    "at": [
+     138.0,
+     -45.4,
+     18.7
+    ]
+   },
+   {
+    "case": "frame B3-P7 side 1.3 N",
+    "cls": "crash",
+    "inlayer": 0.002,
+    "across": 0.001,
+    "at": [
+     126.0,
+     -44.4,
+     15.7
+    ]
+   }
+  ],
+  "worst": 0.088,
+  "worst_case": "frame P7-P6 axial 92 N (pull-out)",
+  "worst_at": [
+   138.0,
+   -45.4,
+   15.7
+  ]
+ },
+ "mass_g": 8.99,
+ "watertight": true,
+ "export": {
+  "faces_in": 54184,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 54184,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 178,
+   "folded": 0,
+   "caps_split": 0,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 75354
+  },
+  "volume_mm3": 7079.3,
+  "exact_mm3": 7079.4
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 7079.4,
+ "drawn_g": 3.82,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
+ "stl": "scout_cage_node_p7.stl",
+ "view_stl": "scout_cage_node_p7_view.stl",
+ "view_faces": 54184,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": false,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 6.44256687412536,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.054689847046069044,
+  "nd": 76559,
+  "sym_axes": [],
+  "n_real": 6,
+  "n_ties": 6,
+  "backend": "direct",
+  "iterations": 46,
+  "stopped": "grey"
+ },
+ "grid": {
+  "name": "scout_cage_node_p7",
+  "h": 1.0,
+  "shape": [
+   40,
+   64,
+   48
+  ],
+  "origin": [
+   110.5052,
+   -85.8713,
+   -2.8272
+  ],
+  "cells": 122880,
+  "design": 76372,
+  "drawn": 3082,
+  "cases": [
+   "frame P7-R7 axial 72 N (pull-out)",
+   "frame P7-R7 side 11.0 N",
+   "frame P7-P6 axial 92 N (pull-out)",
+   "frame P7-P6 side 0.9 N",
+   "frame B3-P7 axial 68 N (pull-out)",
+   "frame B3-P7 side 1.3 N"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 34.1,
+ "layout_s": 826,
+ "peak_gb": 4.764936,
+ "gen_cm3": 4.0,
+ "h": 1.0,
+ "audit": {
+  "drawn_share": 0.039,
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 1816,
+    "inscribed_mm": 3.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.97,
+    "room_depth_mm": 48.0,
+    "at": [
+     131.2,
+     -63.8,
+     21.5
+    ],
+    "core_mm": 3.0,
+    "share_of_drawn": 0.59
+   },
+   {
+    "id": 2,
+    "cells": 1266,
+    "inscribed_mm": 3.9,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.97,
+    "room_depth_mm": 52.0,
+    "at": [
+     132.5,
+     -38.1,
+     16.0
+    ],
+    "core_mm": 3.0
+   }
+  ],
+  "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 60.0,
+   "W_mm": 36.0,
+   "H_mm": 42.0,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "cases": 6,
+  "supports": 1,
+  "fails": []
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "frame P7-R7 axial 72 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.075,
+    "across": 0.064,
+    "at": [
+     130.0,
+     -44.4,
+     10.7
+    ]
+   },
+   {
+    "case": "frame P7-R7 side 11.0 N",
+    "cls": "crash",
+    "inlayer": 0.013,
+    "across": 0.021,
+    "at": [
+     133.0,
+     -60.4,
+     26.7
+    ]
+   },
+   {
+    "case": "frame P7-P6 axial 92 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.098,
+    "across": 0.057,
+    "at": [
+     138.0,
+     -45.4,
+     15.7
+    ]
+   },
+   {
+    "case": "frame P7-P6 side 0.9 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.001,
+    "at": [
+     126.0,
+     -44.4,
+     15.7
+    ]
+   },
+   {
+    "case": "frame B3-P7 axial 68 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.054,
+    "across": 0.03,
+    "at": [
+     138.0,
+     -45.4,
+     18.7
+    ]
+   },
+   {
+    "case": "frame B3-P7 side 1.3 N",
+    "cls": "crash",
+    "inlayer": 0.002,
+    "across": 0.001,
+    "at": [
+     126.0,
+     -44.4,
+     15.7
+    ]
+   }
+  ],
+  "worst": 0.098,
+  "worst_case": "frame P7-P6 axial 92 N (pull-out)",
+  "worst_at": [
+   138.0,
+   -45.4,
+   15.7
+  ],
+  "beta": 4.0,
+  "iteration": 14,
+  "max_worst": 0.5,
+  "k": 3.0
+ },
+ "baseline": null,
+ "total_s": 860,
+ "part_sha": "afd1ea5e3969",
+ "lib_sha": "b558a363b7b0",
+ "setup_sha": "2df08e81201f4d84",
+ "max_worst": 0.5,
+ "strength_ok": true
+}
