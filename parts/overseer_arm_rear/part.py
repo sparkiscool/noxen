@@ -7,8 +7,8 @@ v10:
 * Installs over core tie left.2 (right.2 on arm 3): that link crosses the arm 58 deg off its axis at z ~14, 67 from the motor,
   and v9 grew a closed tunnel round it. Its tunnel (r 3.5 + 0.5) is now swept straight down out of the envelope, so the arm is
   lowered onto the bottom plate over the rod with the top plate off (the assembly order) and the rod stays in.
-* The motor end: a drawn skirt 6 deep under the pad's rim (r 12.5..18, between the 4 motor-screw driver sweeps, which still cut
-  through it) gussets the 6 mm pad into the arm, and the material rises 32 -> 40 cm3. v9's worst was 0.30 at the pad in flight;
+* The motor end: a drawn skirt 8 deep under the pad's rim (r 12.5..18, between the 4 motor-screw driver sweeps, which still cut
+  through it) gussets the 6 mm pad into the arm, and the material rises 32 -> 46 cm3; the strength limit is 0.3 (v9 broke at 0.30). v9's worst was 0.30 at the pad in flight;
   it broke under thrust alone (Spark), so the layers, not the load, are the cause (below).
 * Printed on its side (build +x): v9 broke under thrust alone at 0.30 printed flat, so the joint under the pad fails across the
   layers well below the model; on its side thrust and bending are in-layer. Fits the A1 mini (about 120 x 45 on the bed, 60 tall).
@@ -18,7 +18,7 @@ from parts.overseer_arm_lib import Arm, build, CAGE, Z_PAD, PAD_D, PAD_T, cyl, a
 
 INSTALL_OVER = "core tie left.2"                 # the link the arm is lowered over (arm 3, the mirror: right.2)
 SLOT_R, SLOT_DROP = 4.0, 80.0
-SKIRT_R0, SKIRT_D = 12.5, 6.0
+SKIRT_R0, SKIRT_D = 12.5, 8.0
 
 
 class RearArm(Arm):
@@ -35,7 +35,7 @@ class RearArm(Arm):
 
 
 ARM = RearArm("rear", 135.0, 1, [], [-73.03, 139.5, 25.0])
-SPEC = dict(h=2.0, gen_cm3=40.0, max_worst=0.5)   # v10 (5 Nov): 32 -> 40 for the motor end; h 2.0 (29 Oct: at 1.2 the one-piece grid was 1.0 M cells)
+SPEC = dict(h=2.0, gen_cm3=46.0, max_worst=0.3)   # v10 (5 Nov): 32 -> 46 for the motor end, limit 0.5 -> 0.3 (v9 broke at 0.30 under thrust: 0.3 is the real margin); h 2.0 (29 Oct: at 1.2 the one-piece grid was 1.0 M cells)
 
 
 def setup(h):
