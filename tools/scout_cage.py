@@ -188,10 +188,14 @@ if __name__ == "__main__":
         if k in PRINTED:
             continue
         c = NODES[k]
-        a["parts"].append(dict(id=f"scout_cage_node_{k.lower()}", name=f"cage node {k}", role="cage", group="cage", color="#eef2f5", opacity=0.8, material="PETG",
-                               mesh=f"parts/scout_cage_node_{k.lower()}/part.stl", box=[c[0] - 5, c[0] + 5, c[1] - 5, c[1] + 5, c[2] - 5, c[2] + 5], mass_g=5.0, tag="E",   # a box of the collar's reach until the run lands (+-9 crossed the funnel's y walls in the descent gate at the -y limit; the node setups cut the funnel's sweep)
+        mesh_path = f"parts/scout_cage_node_{k.lower()}/part.stl"
+        e = dict(id=f"scout_cage_node_{k.lower()}", name=f"cage node {k}", role="cage", group="cage", color="#eef2f5", opacity=0.8, material="PETG",
+                 box=[c[0] - 5, c[0] + 5, c[1] - 5, c[1] + 5, c[2] - 5, c[2] + 5], mass_g=5.0, tag="E",   # a box of the collar's reach until the run lands (+-9 crossed the funnel's y walls in the descent gate at the -y limit; the node setups cut the funnel's sweep)
                                owner="scout v3", version="v19 nodes (4 Nov)", source="parts/scout_node_lib.py",
-                               note=f"the socket collars of the {sum(k in r for r in RODS + TIES)} rods and ties that end here, the rest generated (parts/scout_cage_node_{k.lower()}/part.py); a box until the run lands"))
+                 note=f"the socket collars of the {sum(k in r for r in RODS + TIES)} rods and ties that end here, the rest generated (parts/scout_cage_node_{k.lower()}/part.py); a box until the run lands")
+        if os.path.exists(os.path.join(ROOT, mesh_path)):
+            e["mesh"] = mesh_path                                                 # the run's mesh once it has landed (system_check resolves mesh paths strictly)
+        a["parts"].append(e)
     a["parts"].append(dict(id="scout_cage_v19", name="cage v19 rods and ties (low domed funnel cage on skid trusses, tail in to -116, 3 mm carbon, frame-checked)", role="cage", group="cage", color="#2b2b2b",
                            mesh="parts/scout_cage_v19/part.stl", mass_g=round(sum(L) * 0.011, 1), tag="E", owner="scout v3",
                            version="v19 (4 Nov)", source="tools/scout_cage.py",
