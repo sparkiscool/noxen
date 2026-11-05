@@ -44,10 +44,12 @@ YOKE_SPLIT_X = -8.0                                          # the nose unit's y
 CX, SEAT_L, SEAT_W, SEAT_Z, RUN_H = 1.5, 184.0, 66.8, -44.3, 20.0
 HOLE_X, HOLE_Y = 85.0, 25.0                                  # the funnel's hole 170 x 50: the seat ring is what bears
 RIM_T, CHAMFER, FACE_DEG = 3.0, 4.0, 55.0
-# ---- camera (tools/scout_meshes.camera, CAMERA_LENS): lens (126, 0, 40) looking +x, board back 12 behind the lens, M2 on 28 x 28
-LENS = np.array([126.0, 0.0, 40.0]); BOARD_BACK_X = LENS[0] - 12.0
+# ---- camera (tools/scout_meshes.camera, CAMERA_LENS / CAMERA_TILT): lens (128, 0, 32) looking 30 deg up, board back 12 behind the lens, M2 on 28 x 28
+LENS, TILT = np.array([130.0, 0.0, 38.0]), np.radians(30.0)             # 30 deg up (4 Nov, Spark: close-ups and ceilings); tools/scout_meshes.CAMERA_LENS / CAMERA_TILT
+CAM_F, CAM_U, CAM_R = np.array([np.cos(TILT), 0, np.sin(TILT)]), np.array([-np.sin(TILT), 0, np.cos(TILT)]), np.array([0, 1.0, 0])
+BOARD_BACK = LENS - 12.0 * CAM_F                                          # the board's back face centre
 CAM_SQ, POST_L, POST_R, CAM_INS_R, CAM_INS_D, PLUG_BACK = 14.0, 10.0, 2.8, 1.6, 5.7, 8.0
-CAM_G, CAM_CG = 10.0, np.array([118.0, 0.0, 40.0])
+CAM_G, CAM_CG = 10.0, LENS - 8.9 * CAM_F
 HFOV, VFOV = 44.5, 36.5
 # ---- flow sensor MTF-02P in the nose runner's window (tools/scout_meshes.FLOW_AT (70, 0, -24.5): lens; board 21.6 x 16, 6.5 tall)
 FLOW_C, FLOW_LENS_Z = (70.0, 0.0), -24.5

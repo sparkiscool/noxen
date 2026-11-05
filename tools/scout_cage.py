@@ -5,8 +5,8 @@ shared funnel (parts/box_funnel/make.py). Drone frame = seat frame (x nose, y le
 What sets the size, and only this:
   prop     every rod >= 12 from the four swept discs (r 44.45 + 4, z 41.2 +- 4): a rounded square of half-width 114.6 with corner
            arcs; the ring is the octagon tangent to it, flats at |y| 115, corner chamfers on x + y = 193.7
-  nose     the camera just ahead of the front discs (lens (122, 0, 40), board x 105..120): the nose flat at x 136, the window
-           between the dipped front nodes (z 20) and the roof, nothing in the 89 x 73 deg view
+  nose     the camera just ahead of the front discs, 30 deg up (lens (128, 0, 32); 4 Nov, Spark: close-ups and ceilings): the nose flat
+           at x 136, the window between the dipped front nodes (z 17) and the ring (z 58), nothing in the 89 x 73 deg view
   tail     the tail electronics sit on edge in the tail unit's bay over the tail runner (4 Nov, Spark: into the printed base): nothing
            behind the plate's tail but the tail node, so the tail flat comes in to x -116, the least the rear discs' 12 mm keep-out allows
            (54.1 + 48.45 + 12 = 114.6; v18 had -130 for the tail bay)
@@ -49,7 +49,7 @@ NODES = {
     "BM0": (0, YS, ZB), "BM1": (0, -YS, ZB),                                                                   # the rails' mid nodes (v17)
     "K0": (100, YK, ZK), "K1": (-100, YK, ZK), "K2": (-100, -YK, ZK), "K3": (100, -YK, ZK),                     # the skids' ends, under the rail ends
     "KM0": (0, YK, ZK), "KM1": (0, -YK, ZK),                                                                   # the skids' mid nodes (v17)
-    "NB": (118, 0, 8), "TB": (-112, 0, 10),                                                                    # nose and tail bottom nodes over the wall tops, printed into the nose and tail units (PRINTED); TB in to -112 with the tail flat (its rods to P3 / P4 pass the rear discs by 12.3)
+    "NB": (114, 0, 8), "TB": (-112, 0, 10),                                                                    # nose and tail bottom nodes over the wall tops, printed into the nose and tail units (PRINTED); NB 4 back from 118 (4 Nov: the tilted camera's plug keep-out nicked its collar toward P0); TB in to -112 with the tail flat (its rods to P3 / P4 pass the rear discs by 12.3)
 }
 RODS = [("R0", "P1"), ("P1", "P2"), ("P2", "P3"), ("P3", "P4"), ("P4", "P5"), ("P5", "P6"), ("P6", "R7"), ("R7", "R0"),   # the ring at z 62 (the roof's edge)
         ("P0", "R0"), ("P7", "R7"), ("P0", "P1"), ("P7", "P6"), ("P0", "P7"),                                  # the window's posts, the front slants, the window sill (z 17, under the view)
@@ -75,7 +75,8 @@ OPEN = [dict(ring=["K0", "KM0", "K1", "K2", "KM1", "K3"], what="bottom: the bell
         dict(ring=["P0", "R0", "R7", "P7"], what="nose window: the camera's view")]
 MOTORS = [(54.1, 54.1), (-54.1, 54.1), (-54.1, -54.1), (54.1, -54.1)]
 R_DISC, Z_DISC = 44.45 + 4.0, (37.2, 45.2)
-LENS, HFOV, VFOV = np.array([126.0, 0.0, 40.0]), math.radians(44.5), math.radians(36.5)   # lens: tools/scout_meshes.CAMERA_LENS
+LENS, TILT, HFOV, VFOV = np.array([130.0, 0.0, 38.0]), math.radians(30.0), math.radians(44.5), math.radians(36.5)   # lens and tilt: tools/scout_meshes.CAMERA_LENS / CAMERA_TILT (30 deg up, 4 Nov)
+CAM_F, CAM_U, CAM_R = np.array([math.cos(TILT), 0, math.sin(TILT)]), np.array([-math.sin(TILT), 0, math.cos(TILT)]), np.array([0, 1.0, 0])
 
 
 def seg_pts(a, b, n=60):
@@ -93,8 +94,8 @@ def disc_dist(p):
 
 
 def in_view(p):
-    d = p - LENS
-    return d[0] > 0 and abs(math.atan2(d[1], d[0])) < HFOV and abs(math.atan2(d[2], d[0])) < VFOV
+    d = p - LENS; f, r, u = d @ CAM_F, d @ CAM_R, d @ CAM_U
+    return f > 0 and abs(math.atan2(r, f)) < HFOV and abs(math.atan2(u, f)) < VFOV
 
 
 def all_nodes():

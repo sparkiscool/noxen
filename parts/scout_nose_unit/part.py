@@ -1,5 +1,5 @@
 """Scout nose unit (v1 setup, 4 Nov): ONE printed PETG piece under the plate's nose that holds the receiver's nose end, seats the
-Scout in the shared funnel, carries the camera and the flow sensor, and is cage node NB with the two nose tie sockets.
+Scout in the shared funnel, carries the camera (30 deg up since 4 Nov) and the flow sensor, and is cage node NB with the two nose tie sockets.
 Drawn (attachments only): 6 plate bolt pads (M3 x 5.7 inserts, all Bee35 holes: the nose bolt, the FC diamond's front three, the (3.9, +-31) pair; the FC sits on top of the plate since 4 Nov and its standoff bolts go on through the plate into the yoke), 2 receiver bosses
 (inserts, the receiver's bolts come up through its keys), the nose runner's seat rim and 55 deg lead-ins (what the funnel meets),
 the flow sensor's tape land over its window, 4 camera M2 posts (O5.6 x 10, 1.2 wall: the one thin exception), the socket collars
@@ -16,7 +16,7 @@ from topo import Part
 from parts import scout_units_lib as L
 from parts.scout_units_lib import box, cyl, along, U
 
-SPEC = dict(h=2.3, gen_cm3=50.0, max_worst=0.5)      # E: belly mount v1 25 g + camera mount v1 22 g + a runner. h 2.3 since the yoke reaches x -8 (FC on top): at 2.0 the grid is 194k cells and the direct solve peaked at 6.2 GB here (the CI runner has 7 GB); at 2.3 it is 147k. Run 1 (4 Nov, 40 cm3): gate PASS 60.4 g, index 0.60 in the funnel catch (seat up) at the nose wall's top (56.5, 19, 9): the wall room was 7 wide. Run 2: the wall room to x 66, 50 cm3. h 2.0: the grid (102 x 91 x 104, padded to 8s) is 332k cells at 1.5 (refused), 229k at 1.7, 150k at 2.0: the direct solver took 8.8 GB on the tail unit's 287k cells and was killed (the CI runner has 7 GB; the hub deck runs at 184k)
+SPEC = dict(h=2.2, gen_cm3=55.0, max_worst=0.5)      # E: belly mount v1 25 g + camera mount v1 22 g + a runner. Run 3 (h 2.3, 50): gate PASS 79.1 g, index 0.62 under the (36, 0) pad in the funnel catch. Run 4: h 2.2, 55 cm3, the camera 30 deg up. h 2.3 since the yoke reaches x -8 (FC on top): at 2.0 the grid is 194k cells and the direct solve peaked at 6.2 GB here (the CI runner has 7 GB); at 2.3 it is 147k. Run 1 (4 Nov, 40 cm3): gate PASS 60.4 g, index 0.60 in the funnel catch (seat up) at the nose wall's top (56.5, 19, 9): the wall room was 7 wide. Run 2: the wall room to x 66, 50 cm3. h 2.0: the grid (102 x 91 x 104, padded to 8s) is 332k cells at 1.5 (refused), 229k at 1.7, 150k at 2.0: the direct solver took 8.8 GB on the tail unit's 287k cells and was killed (the CI runner has 7 GB; the hub deck runs at 184k)
 
 
 def bodies():
@@ -38,22 +38,28 @@ def bodies():
     # the body: yoke under the plate, the wall down the receiver's nose face, a deck over the runner, the spine out to the camera
     env += [box(L.YOKE_SPLIT_X, 60.0, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(L.RX1 + 0.5, 66.0, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the yoke from the split at x -8 (the FC is on top of the plate: Spark 4 Nov) to the nose wall   # the wall room to x 66, the plate's nose end (run 1: index 0.60 at the wall's top in the funnel catch)
             box(L.RX1 + 1.0, L.CX + L.SEAT_L / 2, -33.4, 33.4, L.SEAT_Z + L.RUN_H, -8.0), box(60.0, 104.0, -20.0, 20.0, -8.0, 25.0),
-            box(100.0, L.BOARD_BACK_X, -11.0, 11.0, 20.0, 60.0), box(99.0, L.BOARD_BACK_X, -18.0, 18.0, 20.0, 60.0),   # the neck and the block behind the posts (the disc cut trims it to what clears the props)
+            box(100.0, 120.0, -11.0, 11.0, 8.0, 50.0), box(99.0, 120.0, -18.0, 18.0, 8.0, 50.0),   # the neck and the block behind the tilted posts (the disc cut trims it to what clears the props)
             box(100.0, 130.0, -12.0, 12.0, -2.0, 22.0)]
-    # camera: 4 M2 posts behind the board back (x 114), insert hole from the front; the board + body, the plugs and the view are cuts
+    # camera, 30 deg up: 4 M2 posts behind the board back along -f, insert hole from the front; the board + body, the plugs and the view are cuts
+    F, Uu, R = L.CAM_F, L.CAM_U, L.CAM_R
     posts, post_pts, post_regs = [], [], []
     for sy in (1, -1):
         for sz in (1, -1):
-            q = np.array([L.BOARD_BACK_X, sy * L.CAM_SQ, L.LENS[2] + sz * L.CAM_SQ])
-            q0 = q - np.array([L.POST_L, 0, 0])
+            q = L.BOARD_BACK + sy * L.CAM_SQ * R + sz * L.CAM_SQ * Uu
+            q0 = q - L.POST_L * F
             posts.append(along(q0, q, L.POST_R)); post_pts.append(q0)
-            cuts.append(along(q + [1.0, 0, 0], q - [L.CAM_INS_D, 0, 0], L.CAM_INS_R))
-            post_regs.append(along(q0 - [1.0, 0, 0], q0 + [3.0, 0, 0], L.POST_R + 0.6))
+            cuts.append(along(q + 1.0 * F, q - L.CAM_INS_D * F, L.CAM_INS_R))
+            post_regs.append(along(q0 - 1.0 * F, q0 + 3.0 * F, L.POST_R + 0.6))
     drawn += posts
-    cuts.append(box(L.BOARD_BACK_X - 0.5, L.LENS[0] + 6.0, -20.0, 20.0, L.LENS[2] - 20.0, L.LENS[2] + 20.0))        # board + body + clearance
-    cuts.append(box(L.BOARD_BACK_X - L.PLUG_BACK, L.BOARD_BACK_X, -19.0, 19.0, L.LENS[2] - 19.0, L.LENS[2] + 19.0) - U(posts))   # plugs behind the board
+    cam_box = lambda f0, f1, r_, u_: L.hull([L.BOARD_BACK + a * F + b * R + c * Uu for a in (f0, f1) for b in (-r_, r_) for c in (-u_, u_)])
+    cuts.append(cam_box(-0.5, 18.0, 20.0, 20.0))                                                    # board + body + clearance
+    cuts.append(cam_box(-L.PLUG_BACK, 0.0, 19.0, 19.0) - U(posts))                                   # plugs behind the board
     ha, hv = np.radians(L.HFOV + 2.0), np.radians(L.VFOV + 2.0); far = 400.0
-    cuts.append(L.hull([L.LENS - [0.5, 0, 0]] + [L.LENS + [far, sy * far * np.tan(ha), sz * far * np.tan(hv)] for sy in (1, -1) for sz in (1, -1)]))
+    cuts.append(L.hull([L.LENS - 0.5 * F] + [L.LENS + far * F + sy * far * np.tan(ha) * R + sz * far * np.tan(hv) * Uu for sy in (1, -1) for sz in (1, -1)]))
+    dc = U(L.disc_cuts())
+    for q in posts:                                                                                  # the posts must stand clear of the front discs' keep-out
+        if float((q - dc).volume()) < 0.97 * float(q.volume()):
+            raise ValueError("a camera post is inside the front discs' 12 mm keep-out: move the lens forward or down")
     cuts += L.disc_cuts()
     # cage node NB and the tie sockets C0 / C3
     socks = L.node_socks("NB", ["B0", "B3", "P0", "P7"], nodes) + [L.Sock("C0 C0-B0", nodes["C0"], nodes["B0"]), L.Sock("C3 C3-B3", nodes["C3"], nodes["B3"])]

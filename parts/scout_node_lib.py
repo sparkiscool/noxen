@@ -35,7 +35,7 @@ NODE_R = 7.0                                              # the cage model's nod
 WALL, FLOOR, MARGIN = 2.5, 3.0, 8.0
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 SKID = {"K0", "K1", "K2", "K3", "KM0", "KM1"}             # the skid nodes: a landing face under each (the TPU strip's seat)
-FOOT_R, FOOT_T = 8.0, 2.4
+FOOT_R, FOOT_T = 8.0, 3.0                                  # 3.0: the audit refuses drawn bodies under 2.5 (the Overseer feet are 2.4)
 LAND_G, DRONE_G, LAND_FEET = 6.0, 762.0, 3
 GN = 9.81e-3
 

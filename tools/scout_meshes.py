@@ -195,7 +195,8 @@ def camera():
     return union([board, holder, barrel, ring, front, plug] + chips) - union(holes + [glass_cut])
 
 
-CAMERA_LENS = (126.0, 0.0, 40.0)                                                # 4 Nov: 4 forward so the nose unit's M2 posts (10 behind the board back, |y| 14) clear the front discs' 12 mm keep-out
+CAMERA_LENS, CAMERA_TILT = (130.0, 0.0, 38.0), 30.0                            # 4 Nov (Spark: tilted up for close-ups and ceilings): 30 deg up, lens at z 38, 6 inside the nose flat: the view (89 x 73) spans 6.5 deg below the horizon to 66.5 above, 3 clear of the ring front rod at the window with the check 2 deg margin; the upper M2 posts 5 outside the front discs keep-out; at (128, 0, 32) the plug keep-out sheared the nose node NB collar and the body sat 0.4 from the rod NB-P0
+# was (126.0, 0.0, 40.0) level
 # was (122.0, 0.0, 40.0)                                                # 3 Nov compact layout: just ahead of the front discs (board x 105..120), lens low                                     # one camera at the nose, horizon, looking +x (dimensions.md System Scout v3)
 
 
@@ -209,4 +210,5 @@ if __name__ == "__main__":
     write("ubec", to_trimesh(ubec()))
     write("xr2", to_trimesh(xr2()))
     write("pack_4s_1500", to_trimesh(pack()))
-    write("camera", to_trimesh(frame(camera(), CAMERA_LENS, (0, 1, 0), (0, 0, 1), (1, 0, 0))))
+    t_ = np.radians(CAMERA_TILT)
+    write("camera", to_trimesh(frame(camera(), CAMERA_LENS, (0, 1, 0), (-np.sin(t_), 0, np.cos(t_)), (np.cos(t_), 0, np.sin(t_)))))

@@ -38,6 +38,7 @@ def core_mass():
     """the plate and everything on or under it: mass and CG from the assembly (every part but the cage)"""
     import assembly as A, system_check as sck
     asm = A.load(ASM_PATH)
+    asm.data["parts"] = [p for p in asm.parts if not p["id"].startswith("scout_cage")]   # the cage (rods, nodes: boxes until their runs land) is not the core
     rows = sck.mass_cg(asm.parts, asm.meshes())["parts"]
     by = {p["name"]: p["id"] for p in asm.parts}
     m, s = 0.0, np.zeros(3)
