@@ -17,7 +17,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.di
 from topo import Part
 from parts.cage_node_lib import U
 
-SPEC = dict(h=1.5, gen_cm3=40.0, max_worst=0.5)     # v7 (4 Nov): v6 34 cm3 on its side gave 0.81 at the front corner (51, +-23, -34) in the forward crash, the 20 x 20 front stop; the pads on 3.0 necks     # v5 (4 Nov): build +y; v2..v4 printed flat (+z) all failed ACROSS the layers near the rear bolt pads (1.22 / 0.94 / 1.22): a hanging bucket puts its side walls in vertical tension, across flat layers     # v3 (3 Nov): v2 22 cm3 gave 1.22 across the layers under the rear bolt pads (crash 2/3, +-y 35 g) and pads on 2.4 necks, 38.5 g
+SPEC = dict(h=1.5, gen_cm3=46.0, max_worst=0.5)     # v8 (5 Nov): v7 40 cm3 gave 0.53 in-layer at the front bolt pad (crash 0), 68.2 g, 3 blobs on 3.0 necks     # v7 (4 Nov): v6 34 cm3 on its side gave 0.81 at the front corner (51, +-23, -34) in the forward crash, the 20 x 20 front stop; the pads on 3.0 necks     # v5 (4 Nov): build +y; v2..v4 printed flat (+z) all failed ACROSS the layers near the rear bolt pads (1.22 / 0.94 / 1.22): a hanging bucket puts its side walls in vertical tension, across flat layers     # v3 (3 Nov): v2 22 cm3 gave 1.22 across the layers under the rear bolt pads (crash 2/3, +-y 35 g) and pads on 2.4 necks, 38.5 g
 G = 9.81e-3
 Z_MOUNT = -8.1
 BOLTS = [(-60.0, 25.0), (-60.0, -25.0), (20.0, 25.0), (20.0, -25.0)]
