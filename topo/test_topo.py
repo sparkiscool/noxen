@@ -757,6 +757,33 @@ def t_audit_drawn_thin():
         check("audit drawn_thin", False, str(e))
 
 
+def t_audit_env_neck():
+    """audit: env_neck (5 Nov: the Scout tail unit's node arm met its bay over a 4 mm overlap, the nose unit's camera posts had 1 mm of
+    room beside their stubs). A loaded pad whose only room to the support is a 2 mm slab is refused at min member 4; the same pad on a
+    10 mm slab passes."""
+    try:
+        import manifold3d as mf
+        from topo.audit import audit, SetupError
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        def part(slab_t):
+            base = box(0, 3, 0, 20, 0, 20); pad = box(30, 34, 6, 14, 6, 14)
+            env = box(0, 14, 0, 20, 0, 20) + box(14, 26, 0, 20, 10 - slab_t / 2, 10 + slab_t / 2) + box(26, 34, 0, 20, 0, 20)
+            p = Part("neckmini", 1.0, base + pad, box(100, 101, 100, 101, 100, 101), env, log=lambda s_: None)
+            p.support("default", box(-1, 1.5, -1, 21, -1, 21)); p.load("down", pad, (0, 0, -10.0))
+            return p
+        def refused(t):
+            try:
+                audit(part(t), 4.0, log=lambda s_: None); return False
+            except SetupError as e:
+                return "env_neck" in str(e)
+        a, b = refused(2.0), refused(10.0)
+        check("audit env_neck: a loaded pad on a 2 mm slab of room is refused at member 4, on a 10 mm slab it passes", a and not b, f"2 mm refused {a}, 10 mm refused {b}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit env_neck", False, str(e))
+
+
 def t_design_hash():
     """the design hash (topo/run.py) is the same for the same setup built twice and differs when a load, a cut or the budget
     changes (29 Oct: parts.yml stops a running part whose design main has since changed)."""
@@ -853,7 +880,7 @@ def t_skin_core():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_design_hash):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_design_hash):
         t()
     if not quick:
         t_end_to_end()
