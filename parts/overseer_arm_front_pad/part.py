@@ -8,4 +8,6 @@ SPEC = dict(h=1.5, gen_cm3=12.0, max_worst=0.5)     # 12 (29 Oct): 7 gave 17.1 g
 
 
 def setup(h):
-    return build_piece(ARM, h)
+    p = build_piece(ARM, h)
+    p.build = "+y"          # printed on its side (5 Nov): the rear arm v9 snapped at its pad under thrust alone at 0.30 printed flat; this
+    return p                # pad sat at 0.28 in-layer / 0.17 across in the same case. On its side (layers in xz) thrust is in-layer
