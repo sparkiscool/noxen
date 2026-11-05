@@ -49,6 +49,7 @@ LENS, TILT = np.array([130.0, 0.0, 38.0]), np.radians(30.0)             # 30 deg
 CAM_F, CAM_U, CAM_R = np.array([np.cos(TILT), 0, np.sin(TILT)]), np.array([-np.sin(TILT), 0, np.cos(TILT)]), np.array([0, 1.0, 0])
 BOARD_BACK = LENS - 12.0 * CAM_F                                          # the board's back face centre
 CAM_SQ, POST_L, POST_R, CAM_INS_R, CAM_INS_D, PLUG_BACK = 14.0, 10.0, 2.8, 1.6, 5.7, 8.0
+ROOT_R, ROOT_L = 5.0, 4.0                                    # the post's root boss O10 x 4 behind the plug keep-out (5 Nov: the 2 mm stubs were left loose twice)
 CAM_G, CAM_CG = 10.0, LENS - 8.9 * CAM_F
 HFOV, VFOV = 44.5, 36.5
 # ---- flow sensor MTF-02P in the nose runner's window (tools/scout_meshes.FLOW_AT (70, 0, -24.5): lens; board 21.6 x 16, 6.5 tall)
@@ -166,6 +167,16 @@ def check_collars(socks, cuts, keep=0.97):
 def node_socks(node, members, nodes):
     """sockets of a printed cage node: node = its key, members = the far node keys, nodes = tools/scout_cage.NODES + TIE_ROOTS"""
     return [Sock(f"{node} {node}-{m}", nodes[node], nodes[m]) for m in members]
+
+
+def tie_socks(roots, nodes, ties):
+    """the tie sockets on a unit: for each root (a tie's plate end) the socket toward the cage node the tie ends at (tools/scout_cage.TIES)"""
+    out = []
+    for r in roots:
+        far = [b for a, b in ties if a == r]
+        assert len(far) == 1, (r, far)
+        out.append(Sock(f"{r} {r}-{far[0]}", nodes[r], nodes[far[0]]))
+    return out
 
 
 def cage_nodes():

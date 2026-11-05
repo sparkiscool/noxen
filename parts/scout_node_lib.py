@@ -32,6 +32,8 @@ LOADS = json.load(open(os.path.join(ROOT, "systems", "scout.cage_loads.json")))[
 P = {**sc.NODES, **sc.TIE_ROOTS}
 KEYS = [k for k in sc.NODES if k not in sc.PRINTED]      # the 25 printed nodes
 NODE_R = 7.0                                              # the cage model's node sphere: where a bore starts unless a neighbour forces it out
+MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
+#   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
 WALL, FLOOR, MARGIN = 2.5, 3.0, 8.0
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 SKID = {"K0", "K1", "K2", "K3", "KM0", "KM1"}             # the skid nodes: a landing face under each (the TPU strip's seat)
@@ -103,6 +105,9 @@ def check_members(k, log=print):
     far = [f"{m['name']} from {m['s0']:.1f}" for m in ms if m["s0"] > NODE_R + 1e-6]
     if far:
         log(f"  sockets moved out so no bores overlap: {', '.join(far)} mm (others from {NODE_R})")
+    for m in ms:
+        if m["s0"] > MAX_START:
+            bad.append(f"{m['name']}: its bore starts {m['s0']:.0f} mm out to clear a near-parallel neighbour (limit {MAX_START:.0f}): a fork, not a node; retarget one of the two members")
     if bad:
         raise ValueError(f"node {k}: " + "; ".join(bad))
     return ms
