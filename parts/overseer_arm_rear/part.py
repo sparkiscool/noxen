@@ -9,7 +9,9 @@ v10:
   lowered onto the bottom plate over the rod with the top plate off (the assembly order) and the rod stays in.
 * The motor end: a drawn skirt 6 deep under the pad's rim (r 12.5..18, between the 4 motor-screw driver sweeps, which still cut
   through it) gussets the 6 mm pad into the arm, and the material rises 32 -> 40 cm3. v9's worst was 0.30 at the pad in flight;
-  the break came from a load the cases do not hold (a hit on the motor end), so no case is added for it (no guessed loads).
+  it broke under thrust alone (Spark), so the layers, not the load, are the cause (below).
+* Printed on its side (build +x): v9 broke under thrust alone at 0.30 printed flat, so the joint under the pad fails across the
+  layers well below the model; on its side thrust and bending are in-layer. Fits the A1 mini (about 120 x 45 on the bed, 60 tall).
 * h 2.0 as v9 (fastest that keeps the pad's features; Spark 5 Nov: as fast as possible)."""
 import numpy as np, manifold3d as mf
 from parts.overseer_arm_lib import Arm, build, CAGE, Z_PAD, PAD_D, PAD_T, cyl, along
@@ -37,4 +39,6 @@ SPEC = dict(h=2.0, gen_cm3=40.0, max_worst=0.5)   # v10 (5 Nov): 32 -> 40 for th
 
 
 def setup(h):
-    return build(ARM, h)
+    p = build(ARM, h)
+    p.build = "+x"          # printed on its side (5 Nov, Spark: v9 snapped at the pad under motor thrust alone, index 0.30 printed flat):
+    return p                # thrust pulls the pad up across flat layers; on its side thrust and the arm's bending run in-layer
