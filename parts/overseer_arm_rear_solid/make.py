@@ -8,7 +8,7 @@ arm 3 is the y-mirror (mirror in the slicer). python parts/overseer_arm_rear_sol
   bottom plate over the rod with the top plate off.
 * Shape: the root block, a rounded 16 x 33 beam along the arm (z 12..45, 5 mm corners), the motor disc O36 x 8 on a bell under
   it (O36 at the pad down to O32 at z 14, 23 deep, outside the driver sweeps) blended into the beam: all one smooth body; the lugs, slots (r 8..9.5), head
-  seats, driver sweeps and O8.6 shaft bore cut as the lib draws them, the cage members near it cut clear.
+  seats, driver sweeps and O8.6 shaft bore cut as the lib draws them, the cage members near it cut clear; the Pi 5 + cooler box + 1 cut off the root block's inboard corner.
 * Print on its side (a flat side of the beam on the bed, the motor disc's axis horizontal): layers along the arm and through the
   pad, thrust and bending in-layer. PETG, 5 walls, 50 % gyroid, 0.2 layers (half the time of solid, in-layer loads). Fits the A1 mini
   (~135 x 48, 47 tall)."""
@@ -36,9 +36,10 @@ F = softmax([
     cylinder(P, M, Z_PAD - PAD_T, Z_PAD, 18.0),                                             # the motor disc
     bell(P, M, BELL_Z0, BELL_R0, Z_PAD - PAD_T + 0.5, 18.0),                                # the bell under it
 ])
-body = mesh(ax, F)
+body = mesh(ax, F, z0=0.0, z1=Z_PAD)                     # exactly flat at the plates and the pad top
 p, q = (np.array(v, float) for v in CAGE["links"][INSTALL_OVER]); u = (q - p) / np.linalg.norm(q - p)
 tube = along(p, u, 0.0, float(np.linalg.norm(q - p)), SLOT_R)
 slot = mf.Manifold.batch_hull([tube, tube.translate([0.0, 0.0, -SLOT_DROP])])
-m = (body + drawn) - cuts - slot
+PI = mf.Manifold.cube([88.5 + 2.0, 59.0 + 2.0, 17.2 + 2.0]).translate([-56.0 - 1.0, -30.0 - 1.0, 8.0 - 1.0])   # Pi 5 + cooler mesh box + 1 (its rear corner met the root block's inboard corner by 1.8)
+m = (body + drawn) - cuts - slot - PI
 export(m, os.path.join(HERE, "part.stl"))

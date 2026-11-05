@@ -48,9 +48,15 @@ def softmax(fields, k=K):
     return (m + np.log(np.exp(F - m).sum(0))) * k
 
 
-def mesh(ax, F):
+def mesh(ax, F, P=None, z0=None, z1=None):
+    """z0 / z1: hard planes the body never crosses (plate and pad faces): applied after the blur so they stay exactly flat"""
     F = F.reshape(len(ax[0]), len(ax[1]), len(ax[2]))
     F = ndimage.gaussian_filter(F, BLUR / PITCH)
+    Z = ax[2][None, None, :]
+    if z1 is not None:
+        F = np.minimum(F, z1 - Z)
+    if z0 is not None:
+        F = np.minimum(F, Z - z0)
     F = np.pad(F, 1, constant_values=-1.0)
     v, f, _, _ = measure.marching_cubes(F, 0.0, spacing=(PITCH, PITCH, PITCH))
     v += np.array([ax[0][0], ax[1][0], ax[2][0]]) - PITCH
