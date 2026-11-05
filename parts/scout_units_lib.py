@@ -169,6 +169,16 @@ def node_socks(node, members, nodes):
     return [Sock(f"{node} {node}-{m}", nodes[node], nodes[m]) for m in members]
 
 
+def tie_socks(roots, nodes, ties):
+    """the tie sockets on a unit: for each root (a tie's plate end) the socket toward the cage node the tie ends at (tools/scout_cage.TIES)"""
+    out = []
+    for r in roots:
+        far = [b for a, b in ties if a == r]
+        assert len(far) == 1, (r, far)
+        out.append(Sock(f"{r} {r}-{far[0]}", nodes[r], nodes[far[0]]))
+    return out
+
+
 def cage_nodes():
     import sys
     sys.path.insert(0, os.path.join(ROOT, "tools"))

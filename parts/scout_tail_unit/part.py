@@ -51,7 +51,7 @@ def bodies():
     drawn.append(box(x1, x1 + L.LAND_T, y0, y1, z0, z1)); cuts.append(box(x0 - 0.5, x1 + 0.5, y0 - 0.5, y1 + 0.5, z0 - 0.5, z1 + 0.5))
     cuts.append(box(*L.XR2_ANT))                                                       # the antenna, flat along +y
     cuts += L.disc_cuts()
-    socks = L.node_socks("TB", ["B1", "B2", "P3", "P4"], nodes) + [L.Sock("C1 C1-B1", nodes["C1"], nodes["B1"]), L.Sock("C2 C2-B2", nodes["C2"], nodes["B2"])]
+    socks = L.node_socks("TB", ["B1", "B2", "P3", "P4"], nodes) + L.tie_socks(("C1", "C2"), nodes, ties)
     for s in socks:
         drawn.append(s.collar()); cuts += s.bores(); cuts.append(s.clear())
         env.append(along(s.pt(-6.0), s.pt(s.t_mouth), L.BORE_R + L.WALL + 5.0))

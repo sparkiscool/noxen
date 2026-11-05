@@ -65,7 +65,7 @@ def bodies():
             raise ValueError("a camera post is inside the front discs' 12 mm keep-out: move the lens forward or down")
     cuts += L.disc_cuts()
     # cage node NB and the tie sockets C0 / C3
-    socks = L.node_socks("NB", ["B0", "B3", "P0", "P7"], nodes) + [L.Sock("C0 C0-B0", nodes["C0"], nodes["B0"]), L.Sock("C3 C3-B3", nodes["C3"], nodes["B3"])]
+    socks = L.node_socks("NB", ["B0", "B3", "P0", "P7"], nodes) + L.tie_socks(("C0", "C3"), nodes, ties)
     for s in socks:
         drawn.append(s.collar()); cuts += s.bores(); cuts.append(s.clear())
         env.append(along(s.pt(-6.0), s.pt(s.t_mouth), L.BORE_R + L.WALL + 5.0))
