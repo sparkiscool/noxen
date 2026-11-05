@@ -218,13 +218,14 @@ class Arm:
             cuts.append(stadium(p0, p1, Z_BOT - 1.0, Z_PAD - PAD_T + HEAD_T, SWEEP_D / 2))              # driver sweep, whole envelope
         # (no ESC seat: the 4-in-1 ESC sits under the FC, none on the arms; dimensions.md System Overseer: arms, Spark 27 Oct)
         # --- spoke sockets (cage_node_lib rule: bore from NODE_R out, 10 deep, 3.0 floor, wall 2.0), aimed at their node
+        nr = getattr(self, "node_r", NODE_R)                                       # socket start from the node (a part may push it out)
         for sp in self.spokes:
             u, P0 = sp["u"], self.node
-            ro, s_end = SOCK_BORE_R + SOCK_WALL, NODE_R + SOCK_DEPTH
-            drawn.append(collar_shape(P0, u, NODE_R - FLOOR, s_end, SOCK_BORE_R, SOCK_WALL))
-            cuts += socket_cuts(P0, u, NODE_R, SOCK_DEPTH, SOCK_BORE_R)                 # coupon socket: grooves, lead-in, crown
+            ro, s_end = SOCK_BORE_R + SOCK_WALL, nr + SOCK_DEPTH
+            drawn.append(collar_shape(P0, u, nr - FLOOR, s_end, SOCK_BORE_R, SOCK_WALL))
+            cuts += socket_cuts(P0, u, nr, SOCK_DEPTH, SOCK_BORE_R)                     # coupon socket: grooves, lead-in, crown
             cuts.append(along(P0, u, s_end, s_end + 70.0, SOCK_BORE_R + 0.6))          # the rod beyond its collar: nothing grows on it
-            sp["lining"] = along(P0, u, NODE_R - FLOOR - 0.5, s_end, SOCK_BORE_R + 1.4)
+            sp["lining"] = along(P0, u, nr - FLOOR - 0.5, s_end, SOCK_BORE_R + 1.4)
         # --- neighbours: prop disc, pack / cartridge / receiver zone, every other cage member near the envelope
         cuts.append(cyl(M[0], M[1], Z_THRUST - 14.0, Z_THRUST + 12.0, 127.0, 96))
         cuts.append(box(-125.0, 65.0, -40.0, 40.0, -110.0, 0.0))
