@@ -149,10 +149,7 @@ def shell_report(spec):
 def mesh():
     P = all_nodes()
     parts = [trimesh.creation.cylinder(radius=1.5, segment=[P[i], P[j]], sections=12) for i, j in RODS + TIES]
-    for k, p in NODES.items():
-        if k in PRINTED:
-            continue                                                          # drawn by its unit
-        s = trimesh.creation.icosphere(subdivisions=1, radius=7.0); s.apply_translation(p); parts.append(s)
+    # no node spheres since 4 Nov: the 25 printed nodes are parts of their own (parts/scout_node_lib.py), NB / TB are in the units
     return trimesh.util.concatenate(parts)
 
 
@@ -185,9 +182,18 @@ if __name__ == "__main__":
     F = os.path.join(ROOT, "systems", "scout.assembly.json"); raw = open(F).read(); a = json.loads(raw)
     a["cage_shell"] = spec
     a["parts"] = [p for p in a["parts"] if p["id"] not in ("scout_cage_pattern", "scout_cage_v14", "scout_cage_v15", "scout_cage_v16", "scout_cage_v17", "scout_cage_v18", "scout_cage_v19")]
-    a["parts"].append(dict(id="scout_cage_v19", name="cage v19 (low domed funnel cage on skid trusses, tail in to -116, 3 mm rods, frame-checked)", role="cage", group="cage", color="#2b2b2b",
-                           mesh="parts/scout_cage_v19/part.stl", mass_g=round(sum(L) * 0.011 + len(NODES) * 5.0, 1), tag="E", owner="scout v3",
+    a["parts"] = [p for p in a["parts"] if not p["id"].startswith("scout_cage_node_")]
+    for k in keys:
+        if k in PRINTED:
+            continue
+        c = NODES[k]
+        a["parts"].append(dict(id=f"scout_cage_node_{k.lower()}", name=f"cage node {k}", role="cage", group="cage", color="#eef2f5", opacity=0.8, material="PETG",
+                               mesh=f"parts/scout_cage_node_{k.lower()}/part.stl", box=[c[0] - 9, c[0] + 9, c[1] - 9, c[1] + 9, c[2] - 9, c[2] + 9], mass_g=5.0, tag="E",
+                               owner="scout v3", version="v19 nodes (4 Nov)", source="parts/scout_node_lib.py",
+                               note=f"the socket collars of the {sum(k in r for r in RODS + TIES)} rods and ties that end here, the rest generated (parts/scout_cage_node_{k.lower()}/part.py); a box until the run lands"))
+    a["parts"].append(dict(id="scout_cage_v19", name="cage v19 rods and ties (low domed funnel cage on skid trusses, tail in to -116, 3 mm carbon, frame-checked)", role="cage", group="cage", color="#2b2b2b",
+                           mesh="parts/scout_cage_v19/part.stl", mass_g=round(sum(L) * 0.011, 1), tag="E", owner="scout v3",
                            version="v19 (4 Nov)", source="tools/scout_cage.py",
-                           note=f"{len(NODES)} nodes, {len(RODS)} rods 3.0 ({sum(L) / 1000:.2f} m), an octagonal prism tangent to the prop keep-out, base rails z 0, two skids at |y| 84, z -48 (TPU strips) as Warren trusses braced to the ring, 8 ties to the plate, ring z 54 and a 12 dome, nose window for the camera, NB / TB printed into the nose / tail units; nodes E 5 g each until designed; frame model tools/scout_cage_loads.py"))
+                           note=f"{len(NODES)} nodes, {len(RODS)} rods 3.0 ({sum(L) / 1000:.2f} m), an octagonal prism tangent to the prop keep-out, base rails z 0, two skids at |y| 84, z -48 (TPU strips) as Warren trusses braced to the ring, 8 ties to the plate, ring z 54 and a 12 dome, nose window for the camera, NB / TB printed into the nose / tail units, the other 25 nodes their own printed parts (parts/scout_node_lib.py); frame model tools/scout_cage_loads.py"))
     open(F, "w").write(json.dumps(a, indent=0, ensure_ascii=False) + ("\n" if raw.endswith("\n") else ""))
     print("  written: parts/scout_cage_v19/part.stl and systems/scout.assembly.json cage_shell")

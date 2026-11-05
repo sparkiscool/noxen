@@ -149,24 +149,24 @@ def radxa():
     soc = cbox(30, 14, 0.6, 12, 12, 1.2); ram = cbox(44, 20, 0.5, 8, 8, 1.0); wifi = cbox(62, 15, 0.6, 3, 10, 1.2)
     sd = box(0, 4.9, 7.8, 22.3, -PCB - 2.86, -PCB)
     m = union([b, hdmi, soc, ram, wifi, sd] + usb) - union(holes)
-    return frame(m, (-80.0, -32.5, 7.0), (0, 1, 0), (0, 0, -1), (-1, 0, 0))   # 4 Nov (Spark: the electronics into the printed base): on edge in the tail unit's bay over the tail runner, long side along y, PCB x -80..-78.4, components to -x (toward the UBEC), its posts to +x, ports edge up (plugs up between the arms), SD end at -y
+    return frame(m, (-80.0, -32.5, 15.0), (0, 1, 0), (0, 0, -1), (-1, 0, 0))   # 4 Nov (Spark: the electronics into the printed base): on edge in the tail unit's bay over the tail runner, long side along y, PCB x -80..-78.4, components to -x, its posts to +x, z -15..15 (the UBEC lies flat under it), ports edge up (plugs up between the arms), SD end at -y; its M2.5 screws come in from the open tail end
 
 
 def ubec():
     """5 V UBEC, a heatshrunk brick (makers 43..50 x 17..25 x 7..10, Q4: 48 x 17 x 8 E) with leads out both short ends. 4 Nov: on edge in the
-    tail unit's bay behind the Radxa, length along y (y -33..28), 8 thick along x (x -95..-87), 17 tall (z -23..-6), leads out the +-y ends."""
+    tail unit's bay flat on the runner under the Radxa, length along y (y -33..28), 17 along x (x -94..-77), 8 tall (z -24.3..-16.3), leads out the +-y ends."""
     brick = union([cbox(0, 0, 0, 48, 15, 8), cbox(0, 0, 0, 50, 17, 6)])
     leads = [cylx(-30.5, -24, dy, 0, 0.9) for dy in (-3, 3)] + [cylx(24, 30.5, dy, 0, 0.9) for dy in (-3, 3)]
-    return frame(union([brick] + leads), (-91.0, -2.5, -14.5), (0, 1, 0), (0, 0, 1), (1, 0, 0))
+    return frame(union([brick] + leads), (-85.5, -2.5, -20.3), (0, -1, 0), (1, 0, 0), (0, 0, 1))
 
 
 def xr2():
     """RadioMaster XR2 nano: 16 x 12 x 6 board with a T antenna (dimensions.md M). 4 Nov: on edge in the tail unit's bay ahead of the Radxa,
-    board x -72..-71 (components to +x), 16 along y, 12 along z (-22.5..-10.5), the antenna flat along -y."""
+    board x -75..-74 on its land (components to -x, to -78, 1.4 clear of the Radxa's post tips), 16 along y, 12 along z (-12..0), the antenna flat along +y."""
     board = cbox(0, 0, 0.5, 16, 12, 1.0)
     chip = cbox(0, 0, 1.0 + 1.0, 5, 5, 2.0); rf = cbox(5, -3, 1.0 + 0.8, 3, 3, 1.6); conn = cbox(-6, 0, 1.0 + 1.5, 3, 8, 3.0)
     ant = union([cylx(-26, -6, 4, 2.0, 0.5, 12), cbox(-26, 4, 2.0, 1.0, 6.0, 1.0)])      # T antenna, flat along local -x = drone -y
-    return frame(union([board, chip, rf, conn, ant]), (-72.0, 0.0, -16.5), (0, 1, 0), (0, 0, 1), (1, 0, 0))
+    return frame(union([board, chip, rf, conn, ant]), (-74.0, 0.0, -6.0), (0, -1, 0), (0, 0, 1), (-1, 0, 0))
 
 
 def pack():
