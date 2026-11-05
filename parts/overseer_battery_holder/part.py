@@ -21,7 +21,7 @@ SPEC = dict(h=1.5, gen_cm3=46.0, max_worst=0.5)     # v8 (5 Nov): v7 40 cm3 gave
 G = 9.81e-3
 Z_MOUNT = -8.1
 BOLTS = [(-60.0, 25.0), (-60.0, -25.0), (20.0, 25.0), (20.0, -25.0)]
-PAD_R, PAD_T, SHANK_R, HEAD_R, HEAD_D = 5.5, 6.0, 1.6, 3.4, 3.2
+PAD_R, PAD_T, SHANK_R, HEAD_R, HEAD_D = 8.0, 6.0, 1.6, 3.4, 3.2   # v9 (5 Nov): pads O11 -> O16: each pad joined the body only through the 1.9 ring round its O7 driver path (v7 0.53, v8 0.527 at the front pad root, volume 40 -> 46 moved nothing)
 PACK = (138.0, 47.0, 48.0); CLR = 0.5; PACK_G = 480.0
 X0, X1 = -20.0 - PACK[0] / 2 - CLR, -20.0 + PACK[0] / 2 + CLR      # cavity x -89.5..49.5
 YW = PACK[1] / 2 + CLR                                              # cavity y +-24
