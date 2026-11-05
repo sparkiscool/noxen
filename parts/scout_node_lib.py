@@ -3,7 +3,8 @@ Overseer's parts/cage_node_lib.py (28 Oct: "nodes dont look like topology, sharp
 
 Drawn: ONLY the socket walls and floors (a collar of 2.5 round each bore, 3.0 floor behind it) and, on the six skid nodes, a flat
 landing face under the node (the TPU strip's seat). Everything joining them is generated inside a compact envelope (the sockets'
-box + 8 mm, cut to a ball). The rods themselves are cuts through the whole envelope.
+box + 8 mm, cut to a ball). The rods themselves are cuts through the whole envelope, and so is the shared funnel swept over the whole
+descent (funnel_sweep): a skid or rail node may not grow toward the funnel's walls.
 
 Members of node k come from tools/scout_cage.py: the cage rods (every one 3.0 solid carbon: bore 3.2, 10 deep, 3.0 floor) and the
 ties that end at k. Socket axis = the direction from the node centre to the member's far end; the bore starts NODE_R (7, the
@@ -121,6 +122,24 @@ def verify_cuts(k, ms, cuts, log=print):
     log(f"  members check: {len(ms)} sockets, every member lands in a bore of node {k}")
 
 
+_SWEEP = {}
+
+
+def funnel_sweep():
+    """the shared funnel as the drone sees it over the whole descent (tools/seat_check.descent_states: the capture limits, heights every
+    3..5), each state also shifted +-1.5 in x and y for margin, all unioned: a keep-out no node may grow into (4 Nov: the first descent
+    gate on the node placeholders had the skid nodes' boxes in the funnel's y walls at the -y capture limit)"""
+    if "m" not in _SWEEP:
+        import manifold3d as mf, trimesh, seat_check as skc
+        fun = man(trimesh.load(os.path.join(ROOT, "parts", "box_funnel", "part.stl")))
+        copies = []
+        for lab, ox, oy, hh in skc.descent_states("scout"):
+            for dx, dy in ((0, 0), (1.5, 0), (-1.5, 0), (0, 1.5), (0, -1.5)):
+                copies.append(fun.translate([-ox + dx, -oy + dy, -hh]))
+        _SWEEP["m"] = mf.Manifold.batch_boolean(copies, mf.OpType.Add)
+    return _SWEEP["m"]
+
+
 def build(k, h, log=print):
     import manifold3d as mf
     ms = check_members(k, log); c = np.array(P[k], float); base = k in SKID
@@ -143,7 +162,7 @@ def build(k, h, log=print):
     box = mf.Manifold.cube((hi - lo).tolist()).translate(lo.tolist())
     ball = mf.Manifold.sphere(max(np.linalg.norm(pts - c, axis=1)) + MARGIN * 0.75, 48).translate(c.tolist())
     env = box ^ ball
-    drawn = U(collars + ([foot] if base else [])); cuts = U(bores + keep)
+    drawn = U(collars + ([foot] if base else [])); cuts = U(bores + keep + [funnel_sweep()])   # the funnel's sweep: no growth toward it
     verify_cuts(k, ms, cuts, log)
     p = Part(f"scout_cage_node_{k.lower()}", h, drawn, cuts, env, build="+z", material="PETG")
     sup = sorted(ms, key=lambda m: -m["axial"])[:2]
