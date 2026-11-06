@@ -26,9 +26,9 @@ Checks (hard = raises, soft = logged + in the report):
                        4 Nov: the Scout tail unit's 2 mm tape lands under the UBEC and XR2 (two necks), the arm clips' tie collar
                        sheared by the plate keep-out to a 1.1 mm sliver. Thicken it (lands >= 4 mm and 2 cells), move it out of
                        the cut, or declare it thin_ok (the camera posts).
-  load_room      hard  a load case with over a third (and over 2) of its loaded cells in design room, not drawn: the region
-                       reaches past the drawn face it loads, so the engine grows a knob or a lip out to those cells that
-                       carries nothing. 5 Nov: the Scout nose unit's seat side-face regions ran 2.7 mm above the 3 mm rim up the
+  load_room      hard  a load case with over a third (and over 2) of its loaded cells in design room, not drawn and not beside
+                       a cut (a bolt hole's lining is the wall the engine builds round the hole): the region reaches past the
+                       drawn face it loads, so the engine grows a knob or a lip out to those cells that carries nothing. 5 Nov: the Scout nose unit's seat side-face regions ran 2.7 mm above the 3 mm rim up the
                        chamfer (two 150 mm3 knobs on necks). Clip the region to the drawn face.
   env_neck       hard  the room (design + drawn cells) eroded by half a member no longer joins every loaded drawn body to the
                        support: the only way from that body to the support is a slab or a stub thinner than a member, so the
@@ -150,9 +150,12 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
     # are design room, not drawn, are nodes the engine must grow material out to so the load is carried: a knob or a lip that carries
     # nothing (5 Nov, Scout nose run 6: the seat's side-face regions reached 2.7 mm above the 3 mm rim up the chamfer, 2 of their 3
     # cell layers were room, two 150 mm3 knobs on necks at the rim). A region that wraps a body by a margin has a few room cells on
-    # its surface (the camera posts' root regions, 0.6 over the boss): under a third is fine.
+    # its surface (the camera posts' root regions, 0.6 over the boss): under a third is fine. Room cells beside a cut are a bearing
+    # lining (a bolt's shear on its hole's wall, the Overseer arms): the wall the engine builds round the hole is the attachment
+    # itself, so they do not count.
     rep["load_room"] = []
     nx, ny, nz = sh
+    lining = ndi.binary_dilation(cut, S6)
     for c in part.cases:
         if c.nodes is None or not len(c.nodes):
             continue
@@ -164,12 +167,13 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
                 for cc in (0, 1):
                     cells &= ln[a:a + nx, b:b + ny, cc:cc + nz]
         cells &= (sol | des)
-        n_all, n_room = int(cells.sum()), int((cells & des & ~sol).sum())
+        room_c = cells & des & ~sol & ~lining
+        n_all, n_room = int(cells.sum()), int(room_c.sum())
         if n_all and n_room > 2 and n_room > n_all / 3.0:
-            ii, jj, kk = np.nonzero(cells & des & ~sol)
+            ii, jj, kk = np.nonzero(room_c)
             at = [round(float(part.origin[d] + (v.mean() + 0.5) * h), 1) for d, v in enumerate((ii, jj, kk))]
             rep["load_room"].append(dict(case=c.name, cells=n_all, in_room=n_room, at=at))
-            fails.append(f"load_room: case '{c.name}' loads {n_room} of {n_all} cells in design room (not drawn) near {at}: the engine grows "
+            fails.append(f"load_room: case '{c.name}' loads {n_room} of {n_all} cells in design room (not drawn, not a cut's lining) near {at}: the engine grows "
                          f"material out to them to carry the load, a knob or a lip that carries nothing. Clip the region to the drawn face it loads.")
 
     # drawn bodies
