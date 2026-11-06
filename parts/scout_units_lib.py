@@ -228,9 +228,12 @@ def runner(x0, x1, nose=True):
     wedge = U(wedges)
     drawn = U(rim) - wedge
     block = box(x0, x1, -W2, W2, SEAT_Z, SEAT_Z + RUN_H) - wedge
+    # the load regions stop at the rim's top (z1): the chamfer face goes on up the block, but a region reaching into design room
+    # makes the engine grow material there to carry the load (5 Nov, nose run 6: two 150 mm3 knobs on the side bands at the chamfer,
+    # joined over 16 mm2; the audit's load_room check refuses it)
     regs = dict(bottom=box(xe0 if nose else x0, x1 if nose else xe1, -W2, W2, z0 - 0.3, z0 + 1.0),
-                end=box(xe - se * (ch + 1.5), xe + 1, -W2, W2, z0 - 0.3, z0 + ch * t + 1),
-                sides=U([box(x0, x1, s * (W2 - ch - 1.5), s * (W2 + 1), z0 - 0.3, z0 + ch * t + 1) for s in (-1, 1)]))
+                end=box(xe - se * (ch + 1.5), xe + 1, -W2, W2, z0 - 0.3, z1),
+                sides=U([box(x0, x1, s * (W2 - ch - 1.5), s * (W2 + 1), z0 - 0.3, z1) for s in (-1, 1)]))
     return drawn, block, regs, wedge
 
 

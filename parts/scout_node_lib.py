@@ -34,7 +34,7 @@ KEYS = [k for k in sc.NODES if k not in sc.PRINTED]      # the 25 printed nodes
 NODE_R = 7.0                                              # the cage model's node sphere: where a bore starts unless a neighbour forces it out
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
 #   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
-WALL, FLOOR, MARGIN = 2.5, 3.0, 8.0
+WALL, FLOOR, MARGIN = 2.0, 2.0, 8.0                        # 5 Nov (Spark: the nodes are overweight): 2.5 / 3.0 drew 119 g of collars over 25 nodes, 2.0 / 2.0 draws 83 (the 2 mm floor)
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 SKID = {"K0", "K1", "K2", "K3", "KM0", "KM1"}             # the skid nodes: a landing face under each (the TPU strip's seat)
 FOOT_R, FOOT_T = 8.0, 3.0                                  # 3.0: the audit refuses drawn bodies under 2.5 (the Overseer feet are 2.4)
@@ -195,4 +195,4 @@ def make(k):
     return lambda h: build(k, h)
 
 
-SPEC = dict(h=1.0, gen_cm3=4.0, max_worst=0.5)            # h 1.0 as the Overseer nodes (a node ball ~60 across is 262k cells at 1.0, 512k at 0.8); 4 cm3 for 3.0 rods only (E)
+SPEC = dict(h=1.0, gen_cm3=2.0, max_worst=0.5)            # h 1.0 as the Overseer nodes (a node ball ~60 across is 262k cells at 1.0, 512k at 0.8); 2 cm3 (5 Nov, Spark: overweight; at 4 the 23 run-1 nodes were 8.3..10.5 g with indices 0.01..0.16, so half the volume keeps every index under 0.35)
