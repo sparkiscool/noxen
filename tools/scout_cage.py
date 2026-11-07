@@ -188,9 +188,27 @@ def shell_report(spec):
     return sc.cage_shell({"machine": "scout", "cage_shell": spec}, [{"role": "cage"}])
 
 
+def rod_ends():
+    """each carbon rod and tie as it is cut: from the floor of its socket at one end to the floor at the other (the node library's
+    socket starts; 3.0 at a clip or a unit), {name: (p0, p1, cut mm)}. Node to node the rods met at the node centres, and the page's
+    mesh cleanup merged two in-line rods through a mid node into one body and dropped it: RF-RM-RB, the rails and the skids showed
+    no rod on the page (7 Nov, Spark: "nodes with place for rods that dont have rods")."""
+    import importlib
+    if ROOT not in sys.path:
+        sys.path.insert(0, ROOT)
+    nl = importlib.import_module("parts.scout_node_lib")
+    P = all_nodes(); out = {}
+    for i, j in RODS_CARBON + TIES:
+        a, b = np.array(P[i], float), np.array(P[j], float); u = (b - a) / np.linalg.norm(b - a)
+        sa = nl.SOCKET_START.get((i, f"{i}-{j}"), 3.0) if i in NODES and i not in PRINTED else 3.0
+        sb = nl.SOCKET_START.get((j, f"{i}-{j}"), 3.0) if j in NODES and j not in PRINTED else 3.0
+        p0, p1 = a + u * sa, b - u * sb
+        out[f"{i}-{j}"] = (p0, p1, float(np.linalg.norm(p1 - p0)))
+    return out
+
+
 def mesh():
-    P = all_nodes()
-    parts = [trimesh.creation.cylinder(radius=1.5, segment=[P[i], P[j]], sections=12) for i, j in RODS_CARBON + TIES]   # the bridges are printed
+    parts = [trimesh.creation.cylinder(radius=1.5, segment=[p0, p1], sections=12) for p0, p1, L in rod_ends().values()]   # the rods as cut, the bridges printed
     # no node spheres since 4 Nov: the 25 printed nodes are parts of their own (parts/scout_node_lib.py), NB / TB are in the units
     return trimesh.util.concatenate(parts)
 
@@ -211,8 +229,10 @@ if __name__ == "__main__":
     print(f"  funnel:        least clearance {fw[0]:.1f} mm ({fw[1]} at {fw[2]}; need 2, exact gate tools/seat_check.py scout --descent)")
     LT = [float(np.linalg.norm(np.array(P[i]) - np.array(P[j]))) for i, j in TIES]
     print(f"  ties:          {len(TIES)} rods 3.0, {sum(LT) / 1000:.2f} m, {min(LT):.0f}..{max(LT):.0f}")
+    RC = rod_ends(); print(f"  cut list:      {len(RC)} rods as cut (socket floor to socket floor) {sum(v[2] for v in RC.values()) / 1000:.2f} m, {min(v[2] for v in RC.values()):.0f}..{max(v[2] for v in RC.values()):.0f} mm (systems/scout.assembly.json cage_shell.rod_cuts_mm)")
     spec = dict(nodes=[list(map(float, NODES[k])) for k in keys], rods=[[idx[i], idx[j]] for i, j in RODS], node_r_mm=7.0, rod_r_mm=1.5,
                 total_rods=len(RODS) + len(TIES), open=[dict(ring=[idx[k] for k in o["ring"]], what=o["what"]) for o in OPEN],
+                rod_cuts_mm={k: round(v[2], 1) for k, v in rod_ends().items()},
                 ties=dict(roots={k: list(map(float, v)) for k, v in TIE_ROOTS.items()}, rods=[[i, keys.index(j)] for i, j in TIES],
                           what="3.0 rods from clips under the four arm tips (A, parts/scout_arm_clip_*) and the nose / tail units' yoke corners (C) to the base rail corners B0..B3; NB and TB are printed into the units"),
                 note="cage v19, the compact funnel cage on skid trusses, lowered, domed and shortened (tools/scout_cage.py, 4 Nov): a closed 3 mm rod octagonal prism formed to the Scout in the shared funnel, landing on two skids hung from its base rails as Warren trusses, their ends braced to the ring; NB and TB printed into the nose and tail units")

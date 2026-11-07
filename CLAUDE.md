@@ -31,7 +31,7 @@ audit report; `python -m topo.run parts/<name> --h <SPEC h> --maxit 1 --no-coars
 in cells, a coarser h can pass a setup the run refuses).
 
 ## Never
-- Run a full optimisation in a session. Never read meshes, logs, images or `inputs/`.
+- Run a full optimisation in a session. Never read meshes as text, logs or `inputs/`. Always look at what Spark looks at (Spark 7 Nov: "you should always be looking at the same artifact as me"): every new result's `parts/<name>/preview.png`, and the page itself rendered with the headless browser, before reporting it or judging a shape.
 - Edit `topo/` in a part session, except the audit check a failure calls for. Other engine changes are their own session, which THIS session starts itself (`create_session` on the repo, the whole brief in the prompt, `python -m topo.test_topo` in it); Spark never pastes a prompt (Spark 29 Oct).
 - Patch a failed run by drawing more solid. Fix the setup: room, cuts, loads, volume.
 
