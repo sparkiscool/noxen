@@ -35,7 +35,7 @@ BRIDGE_R = 6.0                                            # the room round a pri
 NODE_R = 5.0                                              # where a bore starts unless a neighbour forces it out (5 Nov: 7 -> 5, the collars 2 mm closer in, every strut 2 mm shorter; the cage model's sphere stays 7)
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
 #   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
-WALL, FLOOR, STRUT_M = 2.0, 2.0, 1.5                        # 5 Nov (Spark: the nodes are overweight): 2.5 / 3.0 drew 119 g of collars over 25 nodes, 2.0 / 2.0 draws 83 (the 2 mm floor); STRUT_M: the room round each collar (2.5 -> 1.5, 5 Nov: the run-1 strut nodes left 1.1 mm flakes in the room the 6.25 members did not fill)
+WALL, FLOOR, STRUT_M = 2.0, 2.0, 2.5                        # 5 Nov (Spark: the nodes are overweight): 2.5 / 3.0 drew 119 g of collars over 25 nodes, 2.0 / 2.0 draws 83 (the 2 mm floor); STRUT_M: the room round each collar (2.5: at 1.5 the audit's drawn share is 35 % on RF, 34 on RM, limit 30; the flakes in the room the 6.25 members did not fill are the engine's, its own session)
 ROD_R, ROD_GAP = 1.5, 1.0                                 # a passing rod's radius and the least gap to a collar's surface
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 SKID = {"K0", "K1", "K2", "K3", "KM0", "KM1"}             # the skid nodes: a landing face under each (the TPU strip's seat)
@@ -237,12 +237,14 @@ MEMBER_MM = 6.25                                          # the engine's member 
 
 
 def skeleton_cm3(group):
-    """the least generated volume that joins every collar of the structure: a hub ball of NODE_R + WALL at each node and a member of
-    MEMBER_MM from the hub's surface to each collar's mouth, plus a bridge of the same section between merged nodes"""
+    """the least generated volume that joins every collar of the structure: a member of MEMBER_MM from the node's centre to each
+    collar's mouth, the members' overlap at the centre (the first NODE_R of all but one) taken out, plus a bridge of the same
+    section between merged nodes"""
     group = (group,) if isinstance(group, str) else tuple(group)
-    A = np.pi * (MEMBER_MM / 2) ** 2; hub_r = NODE_R + WALL; v = 0.0
+    A = np.pi * (MEMBER_MM / 2) ** 2; v = 0.0
     for k in group:
-        v += 4.0 / 3.0 * np.pi * hub_r ** 3 + sum(max(0.0, m["s0"] + m["depth"] - hub_r) * A for m in members(k))
+        ms = members(k)
+        v += A * (sum(m["s0"] + m["depth"] for m in ms) - (len(ms) - 1) * NODE_R)
     for a, b in sc.BRIDGES:
         if a in group and b in group:
             v += float(np.linalg.norm(np.array(P[a], float) - np.array(P[b], float))) * A
