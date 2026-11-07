@@ -78,6 +78,6 @@ def setup(h):
     return p
 
 
-SPEC = dict(h=1.0, gen_cm3=2.5, max_worst=0.5, settings=dict(near_sym=True))   # 2.0 -> 2.5 with the top post bar (30 Oct 10 pm)   # near_sym: mirrored but for 0.4 % (29 Oct)      # as light as it goes (Spark 28 Oct); 2.5 gave 8.7 g at index 0.09 on 100 N rod estimates, the frame
+SPEC = dict(h=1.0, gen_cm3=3.5, max_worst=0.3, settings=dict(near_sym=True))   # 7 Nov: 2.5 -> 3.5, limit 0.5 -> 0.3 (the bottom nodes cracked in the body between sockets in testing; printed PETG broke at 0.30 of the engine strength on the arms); 2.0 -> 2.5 with the top post bar (30 Oct 10 pm)   # near_sym: mirrored but for 0.4 % (29 Oct)      # as light as it goes (Spark 28 Oct); 2.5 gave 8.7 g at index 0.09 on 100 N rod estimates, the frame
 #   model (29 Oct) puts 13 N on the rods: O7.6 bosses and no drawn frame (Spark 29 Oct: "not very optimised"); 1.2 gave 4.1 g with two bosses
 #   standing proud of the body (their cores off at the gate) and a 3 mm neck: 2.0 so the body envelops the bosses

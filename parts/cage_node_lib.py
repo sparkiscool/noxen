@@ -28,8 +28,7 @@ CAGE = json.load(open(os.path.join(HERE, "..", "systems", "overseer.cage.json"))
 NODES = np.array(CAGE["nodes"], float)
 NODE_R = float(CAGE["node_r_mm"])                     # 10.15: where a bore starts unless a neighbour forces it further out (SOCKET_START)
 BASE = {0, 1, 2, 3, 4, 5}                             # the base loop, z -79.9
-WALL, FLOOR, MARGIN = 3.5, 4.0, 8.0                   # wall 3.5 / floor 4.0 (7 Nov, Spark: the bottom nodes cracked in testing; was 2.5 / 3.0): 2.7 is left at the
-                                                      # injection annulus, 3.0 at the resin grooves; a printed PETG collar is notched there and loaded across its layers
+WALL, FLOOR, MARGIN = 2.5, 3.0, 8.0                   # wall 2.5 (29 Oct, was 2.0): 2.0 is left at the resin grooves, 2.2 at the injection annulus (7 Nov: the test breaks were in the body between sockets, not the collars)
 KIND = {"tube": dict(bore_r=3.1, depth=15.0), "link": dict(bore_r=1.6, depth=10.0)}   # bore 6.2 / 3.2
 GROOVE_D, GROOVE_H, LEAD_IN = 0.5, 1.5, 1.0            # the coupon socket (socket_cuts below): resin grooves, lead-in
 CROWN_MIN_SIN = 0.3                                    # a bore within ~17 deg of vertical prints without a crown
