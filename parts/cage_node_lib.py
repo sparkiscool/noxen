@@ -28,7 +28,7 @@ CAGE = json.load(open(os.path.join(HERE, "..", "systems", "overseer.cage.json"))
 NODES = np.array(CAGE["nodes"], float)
 NODE_R = float(CAGE["node_r_mm"])                     # 10.15: where a bore starts unless a neighbour forces it further out (SOCKET_START)
 BASE = {0, 1, 2, 3, 4, 5}                             # the base loop, z -79.9
-WALL, FLOOR, MARGIN = 2.5, 3.0, 8.0                   # wall 2.5 (29 Oct, was 2.0): 2.0 is left at the resin grooves, 2.2 at the injection annulus (7 Nov: the test breaks were in the body between sockets, not the collars)
+WALL, FLOOR, MARGIN = 3.0, 3.0, 8.0                   # wall 3.0 (7 Nov: 2.5 beyond the 0.5 injection annulus, as 2.5 was beyond nothing before); 2.5 at the resin grooves
 KIND = {"tube": dict(bore_r=3.1, depth=15.0), "link": dict(bore_r=1.6, depth=10.0)}   # bore 6.2 / 3.2
 GROOVE_D, GROOVE_H, LEAD_IN = 0.5, 1.5, 1.0            # the coupon socket (socket_cuts below): resin grooves, lead-in
 PORT_R, PORT_S, PORT_CLEAR_DEG = 1.0, 1.5, 30.0         # resin injection port (Spark 5 Nov: "nodes need to be resin injectable"): O2 through the collar wall PORT_S above the floor, out between the members (none within PORT_CLEAR_DEG of it: at 40 the 6..8-member Scout nodes had none, their freest 30..38), so the resin fills from the floor and shows at the mouth
@@ -276,7 +276,7 @@ from parts.socket_inject import injectable_socket_cuts
 def inject_port(c, m, ms, log=print):
     """the direction the socket's fill port and vent leave the node: the crown side if that line clears every other member's collar
     by 1 mm out to 40 mm, else the first clear direction round the socket axis (45 deg steps); the crown side with a warning if none"""
-    from parts.socket_inject import FEED_H
+    from parts.socket_inject import FEED_H, PORT_R, GAP
     u = m["u"]; base = crown_dir(u)
     if base is None:
         base = np.cross(u, [1.0, 0, 0]) if abs(u[0]) < 0.9 else np.cross(u, [0, 1.0, 0])
@@ -294,11 +294,11 @@ def inject_port(c, m, ms, log=print):
                     return False
         return True
     dirs = [np.cos(np.radians(22.5 * k)) * base + np.sin(np.radians(22.5 * k)) * e2 for k in range(16)]
-    for margin in (WALL + 1.0, 1.5):                       # clear of the neighbour's whole collar; else at least of its bore and grooves
+    for margin in (WALL + PORT_R + 2.0, GAP + PORT_R + 2.0):   # the hole's wall 2 mm off the neighbour's collar; else 2 mm off its annulus
         for e in dirs:
             if clear(e, margin):
-                if margin < WALL:
-                    log(f"  inject port for {m['name']}: passes through a neighbour's collar wall (clear of its bore)")
+                if margin < WALL + PORT_R + 2.0:
+                    log(f"  inject port for {m['name']}: passes through a neighbour's collar wall (2 mm off its annulus)")
                 return e
     log(f"  inject port for {m['name']}: no clear direction, using the crown side")
     return base
@@ -365,7 +365,7 @@ def build(n, h, log=print, extra=None):
         p.load_multi(f"crash 35 g through the longest tube {L['name']} ({L['len']:.0f} mm), axial + side",
                      [(lining(L), -L["axial"] * L["u"] + L["side"] * sd)], cls="crash")
     if base:
-        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + 1.0, FOOT_R - 0.5)   # inside the drawn foot (load_room audit)
+        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + 2.5, FOOT_R - 0.5)   # inside the drawn 3.0 foot, tall enough to hold cell centres at h 1.25 (load_room audit: node 5 at h 1.2 had none in a 1.0 slab and took every cell it touched)
         fz = LAND_G * DRONE_G * GN / LAND_FEET
         p.load_multi(f"landing 6 g on the foot ({fz:.0f} N up, 3 of 6 feet)", [(face, np.array([0, 0, fz]))], cls="flight")
     if ex.get("loads"):
