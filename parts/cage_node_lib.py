@@ -31,6 +31,7 @@ BASE = {0, 1, 2, 3, 4, 5}                             # the base loop, z -79.9
 WALL, FLOOR, MARGIN = 2.5, 3.0, 8.0                   # wall 2.5 (29 Oct, was 2.0): 2.0 is left at the resin grooves
 KIND = {"tube": dict(bore_r=3.1, depth=15.0), "link": dict(bore_r=1.6, depth=10.0)}   # bore 6.2 / 3.2
 GROOVE_D, GROOVE_H, LEAD_IN = 0.5, 1.5, 1.0            # the coupon socket (socket_cuts below): resin grooves, lead-in
+PORT_R, PORT_S, PORT_CLEAR_DEG = 1.0, 1.5, 30.0         # resin injection port (Spark 5 Nov: "nodes need to be resin injectable"): O2 through the collar wall PORT_S above the floor, out between the members (none within PORT_CLEAR_DEG of it: at 40 the 6..8-member Scout nodes had none, their freest 30..38), so the resin fills from the floor and shows at the mouth
 CROWN_MIN_SIN = 0.3                                    # a bore within ~17 deg of vertical prints without a crown
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
 LAND_FEET = 3                                         # a flat landing may rest on 3 of the 6 feet (E)
@@ -139,6 +140,53 @@ def socket_cuts(c, u, s0, depth, r, build=(0.0, 0.0, 1.0), beyond=1.0):
         poly = [(r * np.cos(t), r * np.sin(t)) for t in a] + [(r * np.sqrt(2.0), 0.0)]
         cuts.append(_prism(poly, c, u, s0, s_end + beyond, e1, e2))
     return cuts
+
+
+def seg_dist(a0, a1, b0, b1, n=41):
+    """the least distance between two segments (sampled, 1/40 of each)"""
+    a0, a1, b0, b1 = (np.asarray(x, float) for x in (a0, a1, b0, b1))
+    u, v = a1 - a0, b1 - b0; A, C = max(u @ u, 1e-12), max(v @ v, 1e-12); best = 1e9
+    for t in np.linspace(0, 1, n):
+        q = b0 + t * v; s_ = np.clip((q - a0) @ u / A, 0, 1); best = min(best, float(np.linalg.norm(a0 + s_ * u - q)))
+        q = a0 + t * u; t2 = np.clip((q - b0) @ v / C, 0, 1); best = min(best, float(np.linalg.norm(b0 + t2 * v - q)))
+    return best
+
+
+def port_dir(u, prefer, others=(), blockers=(), origin=None, length=40.0, clear_r=0.0, log=None):
+    """the direction of a socket's injection port: perpendicular to the bore axis u, as close to `prefer` as the room allows: no other
+    member axis (others, unit vectors) within PORT_CLEAR_DEG of it, and its channel (from origin, length) clear of every blocker
+    segment ((p0, p1, radius): other collars) by clear_r. Falls back to the freest direction and says so."""
+    u = np.asarray(u, float) / np.linalg.norm(u); pref = np.asarray(prefer, float)
+    e1 = pref - (pref @ u) * u
+    if np.linalg.norm(e1) < 1e-6:
+        e1 = np.cross(u, [0, 0, 1.0] if abs(u[2]) < 0.9 else [1.0, 0, 0])
+    e1 /= np.linalg.norm(e1); e2 = np.cross(u, e1)
+    best, best_free = None, (-1e9, None)
+    for a in np.radians(np.arange(0, 360, 10)):
+        d = np.cos(a) * e1 + np.sin(a) * e2
+        free = min([np.degrees(np.arccos(np.clip(abs(d @ np.asarray(o, float)), -1, 1))) for o in others] + [90.0])
+        ok = free >= PORT_CLEAR_DEG
+        if ok and origin is not None:
+            o = np.asarray(origin, float)
+            for p0, p1, r in blockers:
+                if seg_dist(o, o + d * length, p0, p1) < r + clear_r:
+                    ok = False; break
+        score = d @ pref
+        if ok and (best is None or score > best[0]):
+            best = (score, d)
+        if free > best_free[0]:
+            best_free = (free, d)
+    if best is None:
+        if log:
+            log(f"  port: no direction clears the members by {PORT_CLEAR_DEG:.0f} deg; the freest ({best_free[0]:.0f} deg) taken")
+        return best_free[1]
+    return best[1]
+
+
+def port_cut(c, u, s0, d, length=40.0):
+    """the injection port: a O2 PORT_R channel from the bore axis at s0 + PORT_S out along d through the whole envelope"""
+    u = np.asarray(u, float) / np.linalg.norm(u)
+    return along(np.asarray(c, float) + u * (s0 + PORT_S), np.asarray(d, float), 0.0, length, PORT_R)
 
 
 def crown_dir(u, build=(0.0, 0.0, 1.0)):

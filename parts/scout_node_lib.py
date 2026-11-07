@@ -21,7 +21,7 @@ import json, os, sys
 import numpy as np
 from topo import Part
 from topo.part import man
-from parts.cage_node_lib import socket_cuts, collar_shape, along, U, GROOVE_D
+from parts.cage_node_lib import socket_cuts, collar_shape, along, U, GROOVE_D, port_dir, port_cut, PORT_R
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -41,6 +41,7 @@ BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 1
 SKID = {"K0", "K1", "K2", "K3", "KM0", "KM1"}             # the skid nodes: a landing face under each (the TPU strip's seat)
 FOOT_R, FOOT_T = 8.0, 3.0                                  # 3.0: the audit refuses drawn bodies under 2.5 (the Overseer feet are 2.4)
 LAND_G, DRONE_G, LAND_FEET = 6.0, 762.0, 3
+CAGE_CENTRE = (0.0, 0.0, 10.0)                            # ports point away from here (out of the cage) where the members allow
 GN = 9.81e-3
 
 
@@ -152,6 +153,8 @@ def verify_cuts(k, ms, cuts, log=print):
                 raise ValueError(f"node {k}: {m['name']} bore not cut at {s:.1f} mm from the node centre")
         if inside(c + m["u"] * (m["s0"] - FLOOR / 2)):
             raise ValueError(f"node {k}: {m['name']} floor is cut")
+        if "port_d" in m and not inside(c + m["u"] * (m["s0"] + 1.5) + m["port_d"] * (m["bore_r"] + WALL + 0.5)):
+            raise ValueError(f"node {k}: {m['name']} injection port is not open through the collar wall")
     log(f"  members check: {len(ms)} sockets, every member lands in a bore of node {k}")
 
 
@@ -198,12 +201,23 @@ def build(group, h, log=print):
             drawn_extra.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + FOOT_T, FOOT_R))
             struts.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, c[2], FOOT_R + STRUT_M))   # from the foot's face up: no room under the landing face (load_room)
             feet[k] = zb
+    bridge_u = {}
     for a, b in sc.BRIDGES:                                                     # the printed bridge between two merged nodes: its room, the whole span
         if a in group and b in group:
             ca, cb = np.array(P[a], float), np.array(P[b], float); d = cb - ca; L = float(np.linalg.norm(d))
-            struts.append(along(ca, d / L, 0.0, L, BRIDGE_R))
+            struts.append(along(ca, d / L, 0.0, L, BRIDGE_R)); bridge_u[a] = d / L; bridge_u[b] = -d / L
     env = U(struts)
-    drawn = U(collars + drawn_extra); cuts = U(bores + keep + [funnel_sweep()])   # the funnel's sweep: no growth toward it
+    # resin injection ports (Spark 5 Nov): one O2 channel per socket from the bore 1.5 above its floor out through the collar wall and the
+    # strut, as near outward from the cage as the members allow (none within 40 deg), its channel clear of the other collars
+    ports = []
+    for m in allm:
+        k, c = m["node"], m["c"]
+        others = [o["u"] for o in allm if o["node"] == k and o is not m] + ([bridge_u[k]] if k in bridge_u else []) + ([np.array([0, 0, -1.0])] if k in SKID else [])
+        blockers = [(o["c"] + o["u"] * (o["s0"] - FLOOR), o["c"] + o["u"] * o["s_end"], o["ro"]) for o in allm if o is not m]
+        prefer = c - np.array(CAGE_CENTRE, float); prefer /= np.linalg.norm(prefer)
+        m["port_d"] = port_dir(m["u"], prefer, others, blockers, origin=c + m["u"] * (m["s0"] + 1.5), clear_r=PORT_R + 0.5, log=log)
+        ports.append(port_cut(c, m["u"], m["s0"], m["port_d"]))
+    drawn = U(collars + drawn_extra); cuts = U(bores + keep + ports + [funnel_sweep()])   # the funnel's sweep: no growth toward it
     for k in group:
         verify_cuts(k, [m for m in allm if m["node"] == k], cuts, log)
     p = Part(sc.group_id(group), h, drawn, cuts, env, build="+z", material="PETG")

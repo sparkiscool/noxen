@@ -142,6 +142,13 @@ class Sock:
         s = np.cross(self.d, [0, 0, 1.0])
         return unit(s) if np.linalg.norm(s) > 1e-6 else np.array([1.0, 0, 0])
 
+    def port(self, prefer, others=()):
+        """the resin injection port (Spark 5 Nov): a O2 channel from the bore 1.5 above the floor out through the collar and the body
+        along the direction nearest `prefer` that no other socket axis is within 40 deg of; cut through the whole envelope"""
+        from parts.cage_node_lib import port_dir, port_cut
+        self.port_d = port_dir(self.d, prefer, [o.d for o in others if o is not self])
+        return port_cut(self.pt(FLOOR), self.d, 0.0, self.port_d, length=120.0)
+
 
 def socket_cases(p, socks, support, log_prefix=""):
     """the frame model's member forces at each socket (F): tension pulls the unit toward the member's far end, compression pushes
@@ -297,7 +304,7 @@ def arm_clip_setup(k, h):
                       (mx + sx * 30, my + sy * 30, PLATE_Z + 4), (mx - sx * 20, my + sy * 30, PLATE_Z + 4), (mx + sx * 30, my - sy * 20, PLATE_Z + 4)]))
     s = Sock(f"{a} {a}-{b}", nodes[a], nodes[b])
     check_collars([s], U(cuts))
-    drawn.append(s.collar()); cuts += s.bores(); cuts.append(s.clear())
+    drawn.append(s.collar()); cuts += s.bores(); cuts.append(s.clear()); cuts.append(s.port((0, 0, -1.0)))   # the port down, under the arm tip
     env = U([box(mx - 14, mx + 14, my - 14, my + 14, CLIP_Z0, PLATE_Z), along(s.pt(-8.0), s.pt(s.t_mouth), BORE_R + WALL + 4.0),
              hull([(mx, my, CLIP_Z0), (mx, my, PLATE_Z), s.pt(-8.0) + [0, 0, -6], s.pt(-8.0) + [0, 0, 2], s.pt(s.t_mouth) + [0, 0, -6], s.pt(s.t_mouth) + [0, 0, 2]])])
     from topo import Part
