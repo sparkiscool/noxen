@@ -162,7 +162,7 @@ def build(k, h, log=print):
     if base:
         zb = c[2] - NODE_R - WALL
         foot = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + FOOT_T, FOOT_R)
-        struts.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb - 0.5, c[2], FOOT_R + STRUT_M))
+        struts.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, c[2], FOOT_R + STRUT_M))   # from the foot's face up: no room under the landing face (load_room)
     env = U(struts + [mf.Manifold.sphere(NODE_R + WALL + STRUT_M, 48).translate(c.tolist())])
     drawn = U(collars + ([foot] if base else [])); cuts = U(bores + keep + [funnel_sweep()])   # the funnel's sweep: no growth toward it
     verify_cuts(k, ms, cuts, log)
