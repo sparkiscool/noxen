@@ -32,10 +32,10 @@ LOADS = json.load(open(os.path.join(ROOT, "systems", "scout.cage_loads.json")))[
 P = {**sc.NODES, **sc.TIE_ROOTS}
 KEYS = [k for k in sc.NODES if k not in sc.PRINTED]      # the 25 printed nodes, in sc.GROUPS printed structures (a pair closer than sc.MERGE_MM is one part)
 BRIDGE_R = 6.0                                            # the room round a printed bridge between two merged nodes (O12, the engine keeps what the rod's load needs)
-NODE_R = 7.0                                              # the cage model's node sphere: where a bore starts unless a neighbour forces it out
+NODE_R = 5.0                                              # where a bore starts unless a neighbour forces it out (5 Nov: 7 -> 5, the collars 2 mm closer in, every strut 2 mm shorter; the cage model's sphere stays 7)
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
 #   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
-WALL, FLOOR, STRUT_M = 2.0, 2.0, 2.5                        # 5 Nov (Spark: the nodes are overweight): 2.5 / 3.0 drew 119 g of collars over 25 nodes, 2.0 / 2.0 draws 83 (the 2 mm floor); STRUT_M: the room round each collar
+WALL, FLOOR, STRUT_M = 2.0, 2.0, 1.5                        # 5 Nov (Spark: the nodes are overweight): 2.5 / 3.0 drew 119 g of collars over 25 nodes, 2.0 / 2.0 draws 83 (the 2 mm floor); STRUT_M: the room round each collar (2.5 -> 1.5, 5 Nov: the run-1 strut nodes left 1.1 mm flakes in the room the 6.25 members did not fill)
 ROD_R, ROD_GAP = 1.5, 1.0                                 # a passing rod's radius and the least gap to a collar's surface
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 SKID = {"K0", "K1", "K2", "K3", "KM0", "KM1"}             # the skid nodes: a landing face under each (the TPU strip's seat)
@@ -233,5 +233,29 @@ def make(group):
     return lambda h: build(group, h)
 
 
-SPEC = dict(h=1.0, gen_cm3=2.0, max_worst=0.5)            # h 1.0 as the Overseer nodes (a node ball ~60 across is 262k cells at 1.0, 512k at 0.8); 2 cm3 (5 Nov, Spark: overweight; at 4 the 23 run-1 nodes were 8.3..10.5 g with indices 0.01..0.16, so half the volume keeps every index under 0.35)
-SPEC_PAIR = dict(SPEC, h=1.2, gen_cm3=5.0)                # a merged pair: two nodes' 2 cm3 and a printed bridge's worth (O8 x 40 = 2 cm3, E); h 1.2: a 57 mm pair is 230k cells at 1.0 (the tail unit's 163k took 5.6 of the runner's 7 GB), 133k at 1.2
+MEMBER_MM = 6.25                                          # the engine's member floor at the gate's 2.0 mm erosion (topo.layout.gate_member_mm: 2 x 2.0 + 2.25)
+
+
+def skeleton_cm3(group):
+    """the least generated volume that joins every collar of the structure: a hub ball of NODE_R + WALL at each node and a member of
+    MEMBER_MM from the hub's surface to each collar's mouth, plus a bridge of the same section between merged nodes"""
+    group = (group,) if isinstance(group, str) else tuple(group)
+    A = np.pi * (MEMBER_MM / 2) ** 2; hub_r = NODE_R + WALL; v = 0.0
+    for k in group:
+        v += 4.0 / 3.0 * np.pi * hub_r ** 3 + sum(max(0.0, m["s0"] + m["depth"] - hub_r) * A for m in members(k))
+    for a, b in sc.BRIDGES:
+        if a in group and b in group:
+            v += float(np.linalg.norm(np.array(P[a], float) - np.array(P[b], float))) * A
+    return v / 1000.0
+
+
+def spec_for(group):
+    """SPEC per structure: the budget is the skeleton and a tenth over (5 Nov: at a flat 2 cm3 the five strut singles came in at 5.2..6.2 g
+    with indices 0.04..0.28 but half-filled rooms, flakes and an unjoined collar; the budget a node needs is what its members weigh
+    at the gate's 6.25 floor, 3..5 cm3 a single, 7..9 a pair); h 1.0 for a single, 1.2 for a pair (a 57 mm pair is 230k cells at 1.0,
+    the tail unit's 163k took 5.6 of the runner's 7 GB)"""
+    group = (group,) if isinstance(group, str) else tuple(group)
+    return dict(h=1.0 if len(group) == 1 else 1.2, gen_cm3=round(1.1 * skeleton_cm3(group), 1), max_worst=0.5)
+
+
+SPEC = dict(h=1.0, gen_cm3=2.0, max_worst=0.5)            # the flat spec of the 5 Nov strut run (kept for the record; the parts use spec_for)
