@@ -17,7 +17,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.di
 from topo import Part
 from parts.cage_node_lib import U
 
-SPEC = dict(h=1.5, gen_cm3=46.0, max_worst=0.5)     # v8 (5 Nov): v7 40 cm3 gave 0.53 in-layer at the front bolt pad (crash 0), 68.2 g, 3 blobs on 3.0 necks     # v7 (4 Nov): v6 34 cm3 on its side gave 0.81 at the front corner (51, +-23, -34) in the forward crash, the 20 x 20 front stop; the pads on 3.0 necks     # v5 (4 Nov): build +y; v2..v4 printed flat (+z) all failed ACROSS the layers near the rear bolt pads (1.22 / 0.94 / 1.22): a hanging bucket puts its side walls in vertical tension, across flat layers     # v3 (3 Nov): v2 22 cm3 gave 1.22 across the layers under the rear bolt pads (crash 2/3, +-y 35 g) and pads on 2.4 necks, 38.5 g
+SPEC = dict(h=1.6, gen_cm3=46.0, max_worst=0.5)     # v8 (5 Nov): v7 40 cm3 gave 0.53 in-layer at the front bolt pad (crash 0), 68.2 g, 3 blobs on 3.0 necks     # v7 (4 Nov): v6 34 cm3 on its side gave 0.81 at the front corner (51, +-23, -34) in the forward crash, the 20 x 20 front stop; the pads on 3.0 necks     # v5 (4 Nov): build +y; v2..v4 printed flat (+z) all failed ACROSS the layers near the rear bolt pads (1.22 / 0.94 / 1.22): a hanging bucket puts its side walls in vertical tension, across flat layers     # v3 (3 Nov): v2 22 cm3 gave 1.22 across the layers under the rear bolt pads (crash 2/3, +-y 35 g) and pads on 2.4 necks, 38.5 g   # v11: h 1.5 -> 1.6 (the lower envelope made 326k cells at 1.5)
 G = 9.81e-3
 Z_MOUNT = -8.1
 BOLTS = [(-60.0, 25.0), (-60.0, -25.0), (20.0, 25.0), (20.0, -25.0)]
@@ -56,7 +56,7 @@ def bodies():
     sides = [box(x - 8, x + 8, YW, YW + PAD, PACK_CG[2] - 8, PACK_CG[2] + 8) for x in (-75.0, 35.0)] + \
             [box(x - 8, x + 8, -YW - PAD, -YW, PACK_CG[2] - 8, PACK_CG[2] + 8) for x in (-75.0, 35.0)]
     front = [box(X1, X1 + PAD, -FRONT, FRONT, PACK_CG[2] - FRONT, PACK_CG[2] + FRONT)]   # v7: across most of the pack's front face
-    clip = [box(RX0, RX1, -9.0, 9.0, CLIP_Z1, ZB - 0.5)]                # the clip pad: off the pack by 0.5
+    clip = [box(RX0, RX1, -15.0, 15.0, CLIP_Z1, ZB - 0.5)]              # the clip pad (v11: 30 wide, was 18: the clip channel left it hanging on two 2 mm strips, drawn_not_in_main)
     cuts = [box(X0, X1, -YW, YW, ZB, ZT),                              # the pack
             box(X0 - 60.0, X0, -YW, YW, ZB, ZT + 0.01),                     # its slide-out path aft
             box(X0 - 14.0, RX1 + 1.0, -CLIP_W / 2 - 1.0, CLIP_W / 2 + 1.0, ZB - 20.0, CLIP_Z1),   # the clip and its flex room below
@@ -64,7 +64,7 @@ def bodies():
     cuts += [cyl(x, 0.0, ZB - 20.0, CLIP_Z1 + 6.0, 2.0) for x in CLIP_SCREWS]                   # insert holes
     cuts += [cyl(x, y, Z_MOUNT - 80, Z_MOUNT + 1, SHANK_R) for x, y in BOLTS]
     cuts += [cyl(x, y, Z_MOUNT - 80, Z_MOUNT - PAD_T + HEAD_D, HEAD_R + 0.1) for x, y in BOLTS]   # head recess + driver path
-    env = box(X0 - 4.0, X1 + 7.0, -YW - 12.0, YW + 12.0, ZB - 8.0, Z_MOUNT)   # v10 (5 Nov): side walls 8 -> 12 (v8 0.527, v9 0.534 in the wall beside the cavity's top front corner, crash 0: the forward load runs from the front stop to the front inserts through it)
+    env = box(X0 - 4.0, X1 + 7.0, -YW - 12.0, YW + 12.0, ZB - 12.0, Z_MOUNT)   # v11: 4 lower, room under the clip pad's wings   # v10 (5 Nov): side walls 8 -> 12 (v8 0.527, v9 0.534 in the wall beside the cavity's top front corner, crash 0: the forward load runs from the front stop to the front inserts through it)
     drawn = pads + floor + sides + front + clip
     return U(drawn), U(cuts), env, dict(pads=pads, floor=floor, sides=sides, front=front, clip=clip)
 
@@ -79,7 +79,7 @@ def setup(h):
            "+y": U([box(x - 8, x + 8, YW, YW + e, PACK_CG[2] - 8, PACK_CG[2] + 8) for x in (-75.0, 35.0)]),
            "-y": U([box(x - 8, x + 8, -YW - e, -YW, PACK_CG[2] - 8, PACK_CG[2] + 8) for x in (-75.0, 35.0)]),
            "+x": box(X1, X1 + e, -FRONT, FRONT, PACK_CG[2] - FRONT, PACK_CG[2] + FRONT),
-           "-x": box(RX0, RX1, -9.0, 9.0, CLIP_Z1, CLIP_Z1 + e)}          # the clip's root on its pad (the clip carries the pack's aft push)
+           "-x": box(RX0, RX1, -15.0, 15.0, CLIP_Z1, CLIP_Z1 + e)}        # the clip's root on its pad (the clip carries the pack's aft push)
 
     def pack(name, a, cls):
         F = -PACK_G * G * np.asarray(a, float)                          # the pack's push on the holder
