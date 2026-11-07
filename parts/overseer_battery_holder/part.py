@@ -64,7 +64,7 @@ def bodies():
     cuts += [cyl(x, 0.0, ZB - 20.0, CLIP_Z1 + 6.0, 2.0) for x in CLIP_SCREWS]                   # insert holes
     cuts += [cyl(x, y, Z_MOUNT - 80, Z_MOUNT + 1, SHANK_R) for x, y in BOLTS]
     cuts += [cyl(x, y, Z_MOUNT - 80, Z_MOUNT - PAD_T + HEAD_D, HEAD_R + 0.1) for x, y in BOLTS]   # head recess + driver path
-    env = box(X0 - 4.0, X1 + 7.0, -YW - 8.0, YW + 8.0, ZB - 8.0, Z_MOUNT)
+    env = box(X0 - 4.0, X1 + 7.0, -YW - 12.0, YW + 12.0, ZB - 8.0, Z_MOUNT)   # v10 (5 Nov): side walls 8 -> 12 (v8 0.527, v9 0.534 in the wall beside the cavity's top front corner, crash 0: the forward load runs from the front stop to the front inserts through it)
     drawn = pads + floor + sides + front + clip
     return U(drawn), U(cuts), env, dict(pads=pads, floor=floor, sides=sides, front=front, clip=clip)
 
