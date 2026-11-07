@@ -1,0 +1,1 @@
+5 Nov (Spark, from the page): "the nodes still look fucked" (run 1, every node: the 4 cm3 ball-envelope webs; also "the nodes seem so overweight"). Applies to all 25 scout_cage_node_* (one library, parts/scout_node_lib.py): collars 2.0, 2 cm3, strut envelope.

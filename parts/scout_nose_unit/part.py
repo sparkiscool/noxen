@@ -36,7 +36,7 @@ def bodies():
     cuts.append(box(L.FLOW_C[0] - bx / 2 - 12.0, L.FLOW_C[0] - bx / 2 + 2.0, -4.0, 4.0, L.FLOW_TOP - 7.0, L.FLOW_TOP + 3.0))   # the lead: out the tail end of the board, up the nose wall
     cuts.append(box(54.0, 62.0, -4.0, 4.0, L.FLOW_TOP - 7.0, 2.0))                                                # ... to the FC
     # the body: yoke under the plate, the wall down the receiver's nose face, a deck over the runner, the spine out to the camera
-    env += [box(L.YOKE_SPLIT_X, 60.0, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(L.RX1 + 0.5, 66.0, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z),   # the yoke from the split at x -8 (the FC is on top of the plate: Spark 4 Nov) to the nose wall   # the wall room to x 66, the plate's nose end (run 1: index 0.60 at the wall's top in the funnel catch)
+    env += [box(L.YOKE_SPLIT_X, 60.0, -34.0, 34.0, L.RZ1, L.PLATE_Z), box(L.RX1 + 0.5, 66.0, -33.4, 33.4, L.SEAT_Z, L.PLATE_Z) - wedge,   # the yoke from the split at x -8 (the FC is on top of the plate: Spark 4 Nov) to the nose wall   # the wall room to x 66, the plate's nose end (run 1: index 0.60 at the wall's top in the funnel catch)
             box(L.RX1 + 1.0, L.CX + L.SEAT_L / 2, -33.4, 33.4, L.SEAT_Z + L.RUN_H, -8.0), box(60.0, 104.0, -20.0, 20.0, -8.0, 25.0),
             box(100.0, 126.0, -11.0, 11.0, 6.0, 52.0), box(99.0, 126.0, -24.0, 24.0, 6.0, 52.0),   # the neck and the block behind the tilted posts, to the board's back and |y| 24 (run 4: the lower posts' 2 mm stubs behind the plug keep-out had 1.2 of room beside them, two loose blobs); the disc cut trims it to what clears the props
             box(100.0, 130.0, -12.0, 12.0, -2.0, 22.0)]

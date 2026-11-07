@@ -34,7 +34,7 @@ KEYS = [k for k in sc.NODES if k not in sc.PRINTED]      # the 25 printed nodes
 NODE_R = 7.0                                              # the cage model's node sphere: where a bore starts unless a neighbour forces it out
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
 #   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
-WALL, FLOOR, MARGIN = 2.5, 3.0, 8.0
+WALL, FLOOR, STRUT_M = 2.0, 2.0, 2.5                        # 5 Nov (Spark: the nodes are overweight): 2.5 / 3.0 drew 119 g of collars over 25 nodes, 2.0 / 2.0 draws 83 (the 2 mm floor); STRUT_M: the room round each collar
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 SKID = {"K0", "K1", "K2", "K3", "KM0", "KM1"}             # the skid nodes: a landing face under each (the TPU strip's seat)
 FOOT_R, FOOT_T = 8.0, 3.0                                  # 3.0: the audit refuses drawn bodies under 2.5 (the Overseer feet are 2.4)
@@ -148,25 +148,22 @@ def funnel_sweep():
 def build(k, h, log=print):
     import manifold3d as mf
     ms = check_members(k, log); c = np.array(P[k], float); base = k in SKID
-    collars, bores, keep, pts = [], [], [], []
+    collars, bores, keep = [], [], []
     for m in ms:
         ro = m["bore_r"] + WALL; s_end = m["s0"] + m["depth"]
         collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL))
         bores += socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"])
         keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))
         m["ro"], m["s_end"] = ro, s_end
-        for s in (m["s0"] - FLOOR, s_end):
-            for a in np.linspace(0, 2 * np.pi, 8, endpoint=False):
-                e1 = np.cross(m["u"], [0, 0, 1.0] if abs(m["u"][2]) < 0.9 else [1.0, 0, 0]); e1 /= np.linalg.norm(e1); e2 = np.cross(m["u"], e1)
-                pts.append(c + m["u"] * s + ro * (np.cos(a) * e1 + np.sin(a) * e2))
-    pts = np.array(pts); lo, hi = pts.min(0) - MARGIN, pts.max(0) + MARGIN
-    foot = None
+    # the envelope: a strut round each member from the node's centre to its collar's mouth (STRUT_M of room round the collar) and a
+    # hub ball at the centre, so the engine only decides how much of each strut to keep: a node, not a web (5 Nov, Spark: run 1's
+    # nodes, grown in a ball to 56 mm across, were spindly blobs of webs between far-apart collars)
+    foot = None; struts = [along(c, m["u"], 0.0, m["s_end"], m["ro"] + STRUT_M) for m in ms]
     if base:
         zb = c[2] - NODE_R - WALL
-        foot = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + FOOT_T, FOOT_R); lo[2] = min(lo[2], zb - 0.5)
-    box = mf.Manifold.cube((hi - lo).tolist()).translate(lo.tolist())
-    ball = mf.Manifold.sphere(max(np.linalg.norm(pts - c, axis=1)) + MARGIN * 0.75, 48).translate(c.tolist())
-    env = box ^ ball
+        foot = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + FOOT_T, FOOT_R)
+        struts.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, c[2], FOOT_R + STRUT_M))   # from the foot's face up: no room under the landing face (load_room)
+    env = U(struts + [mf.Manifold.sphere(NODE_R + WALL + STRUT_M, 48).translate(c.tolist())])
     drawn = U(collars + ([foot] if base else [])); cuts = U(bores + keep + [funnel_sweep()])   # the funnel's sweep: no growth toward it
     verify_cuts(k, ms, cuts, log)
     p = Part(f"scout_cage_node_{k.lower()}", h, drawn, cuts, env, build="+z", material="PETG")
@@ -185,7 +182,7 @@ def build(k, h, log=print):
         sd = np.cross(L["u"], [0, 0, 1.0] if abs(L["u"][2]) < 0.9 else [1.0, 0, 0]); sd /= np.linalg.norm(sd)
         p.load_multi(f"crash 35 g through the longest rod {L['name']} ({L['len']:.0f} mm), axial + side", [(lining(L), -L["axial"] * L["u"] + L["side"] * sd)], cls="crash")
     if base:
-        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb - 0.5, zb + 1.0, FOOT_R + 0.5)
+        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + 1.0, FOOT_R + 0.5)   # from the face up: the cell layer under the face is envelope skin, design room to the audit (load_room)
         fz = LAND_G * DRONE_G * GN / LAND_FEET
         p.load_multi(f"landing 6 g on the skid face ({fz:.0f} N up, 3 of 6 skid nodes)", [(face, np.array([0, 0, fz]))], cls="flight")
     return p
@@ -195,4 +192,4 @@ def make(k):
     return lambda h: build(k, h)
 
 
-SPEC = dict(h=1.0, gen_cm3=4.0, max_worst=0.5)            # h 1.0 as the Overseer nodes (a node ball ~60 across is 262k cells at 1.0, 512k at 0.8); 4 cm3 for 3.0 rods only (E)
+SPEC = dict(h=1.0, gen_cm3=2.0, max_worst=0.5)            # h 1.0 as the Overseer nodes (a node ball ~60 across is 262k cells at 1.0, 512k at 0.8); 2 cm3 (5 Nov, Spark: overweight; at 4 the 23 run-1 nodes were 8.3..10.5 g with indices 0.01..0.16, so half the volume keeps every index under 0.35)
