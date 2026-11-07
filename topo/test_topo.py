@@ -494,6 +494,109 @@ def t_export_cleanup():
         check("export cleanup", False, str(e))
 
 
+def _strut_part(wall, post=False, h=1.0):
+    """the Scout node pattern (parts/scout_node_lib.py), self-contained: two socket collars (a cylinder of 1.6 + wall round a 1.6 bore,
+    two 0.5 resin grooves, 10 deep) whose strut rooms (2.5 round the collar) meet at 60 deg in a hub ball; support on the first socket,
+    a pull-out load on the second. post: a drawn O5.6 post round a O3.2 bore (1.2 wall, the camera insert post) standing on the hub,
+    declared thin_ok."""
+    import trimesh
+    import manifold3d as mf
+    from .part import Part, man
+    cyl = lambda c, u, s0, s1, r: man(trimesh.creation.cylinder(r, s1 - s0, sections=40, segment=np.vstack([c + u * s0, c + u * s1])))
+    C = np.zeros(3); U = [np.array([1.0, 0.0, 0.0]), np.array([0.5, np.sqrt(0.75), 0.0])]
+    s0, depth, bore = 7.0, 10.0, 1.6
+    collars, cuts, struts, linings = [], [], [], []
+    for u in U:
+        collars.append(cyl(C, u, s0 - 2.0, s0 + depth, bore + wall))
+        cuts.append(cyl(C, u, s0, s0 + depth + 1.0, bore))
+        for f in (1.0 / 3.0, 2.0 / 3.0):
+            cuts.append(cyl(C, u, s0 + f * depth - 0.75, s0 + f * depth + 0.75, bore + 0.5))
+        cuts.append(cyl(C, u, s0 + depth, s0 + depth + 40.0, bore + 0.6))
+        struts.append(cyl(C, u, 0.0, s0 + depth, bore + wall + 2.5))
+        linings.append(cyl(C, u, s0 - 2.5, s0 + depth, bore + 1.0))
+    struts.append(mf.Manifold.sphere(11.5, 48))
+    drawn = mf.Manifold.batch_boolean(collars, mf.OpType.Add)
+    thin_ok = []
+    if post:
+        z = np.array([0.0, 0.0, 1.0])
+        tube = cyl(C, z, 6.0, 16.0, 2.8)
+        cuts.append(cyl(C, z, 10.3, 17.0, 1.6))
+        drawn = drawn + tube; thin_ok = [tube]
+    p = Part("strut60", h, drawn, mf.Manifold.batch_boolean(cuts, mf.OpType.Add), mf.Manifold.batch_boolean(struts, mf.OpType.Add),
+             build="+z", material="PETG", log=lambda s: None, thin_ok=thin_ok)
+    p.support("default", linings[0])
+    p.load_multi("pull-out 60 N", [(linings[1], 60.0 * U[1])], cls="crash")
+    return p, U
+
+
+def _strut_build(p, U):
+    """the organic build of _strut_part on a synthetic layout field: a O14 hub ball, a O8 rod along each strut axis from the hub to its
+    collar's floor, so both collars stand exposed beyond the generated material, and the drawn cells the organic finish opens to the
+    design (the post's solid base). Returns (gate ok, gate info, cleanup report, function check, the part)."""
+    from . import build as B
+    from .layout import Layout, Settings
+    from .part import tm
+    L = Layout(p, gen_cm3=1.5, settings=Settings(), log=lambda s_: None)
+    cen = p.cell_centres()
+    d = np.full(p.nel, 1e9)
+    for u in U:
+        s = np.clip(cen @ u, -2.0, 6.0)
+        d = np.minimum(d, np.linalg.norm(cen - s[:, None] * u[None, :], axis=1))
+    d = np.minimum(d, np.linalg.norm(cen, axis=1) - 3.0)
+    d[p.solid & ~L.solid] = 0.0
+    xt = np.clip(0.5 + (4.0 - d) / 1.5, 0.0, 1.0)
+    rho = np.maximum((xt > 0.5).astype(float), L.solid.astype(float))
+    L.result = dict(x=None, xt=xt, rho_n=rho, rho_e=rho, beta=32.0)
+    gm = B.surface(L, log=lambda s_: None)
+    P, _ = B.assemble(L, gm, log=lambda s_: None)
+    P2, rep = B.export_cleanup(P, p, log=lambda s_: None)
+    PT, _ = B.export_mesh(P2, log=lambda s_: None)
+    ok, info = B.solid_check(PT, [tm(p.drawn_m - p.cuts_m)], thin_ok=[tm(m - p.cuts_m) for m in p.thin_ok])
+    fc = B.function_check(P2, p, L)
+    return ok, info, rep, fc, P2
+
+
+def t_organic_drawn_walls():
+    """the organic finish and the export cleanup on drawn walls (7 Nov: the five Scout strut nodes passed every strength case and
+    failed the gate on 2..10 'flakes' of 1.0..1.4 mm at their collars; the cleanup listed them as slivers removed and took off ~1 mm3,
+    the gate then failed the same spots). The flakes are the collars' own walls at the resin grooves (2.0 wall - 0.5 groove = 1.5, under
+    the 2 mm floor), drawn material the cleanup may not cut. (a) A 2.5-wall node (2.0 at the grooves) with a declared 1.2 mm post: the
+    audit passes, the build passes the gate with no thin wall, the post is kept whole and reported as thin_allowed, the cleanup touches
+    no drawn material. (b) The same node with a 2.0 wall: the audit refuses it (drawn_wall at the grooves) and, built anyway, the gate
+    fails the groove rings, which the cleanup reports as kept drawn walls, not as removed, and leaves whole."""
+    try:
+        from .audit import audit
+        from .part import tm
+        p, U = _strut_part(2.5, post=True)
+        ra = audit(p, 6.25, log=lambda s_: None, hard=False)
+        ok_a, ia, ca, fa, Pa = _strut_build(p, U)
+        post_fin = p.thin_ok[0] - p.cuts_m
+        post_kept = (Pa ^ post_fin).volume() / post_fin.volume()
+        drawn_lost = (p.drawn_m - p.cuts_m - Pa).volume()
+        allowed = [t for t in ia["thin_allowed"] if t.get("kind") != "neck"]
+        good_a = (not ra["fails"] and not ra["drawn_walls"] and ok_a and not ia["thin_walls"] and len(allowed) >= 1
+                  and all(1.0 <= t["thick_mm"] <= 1.6 for t in allowed) and fa["ok"] and not ca["slivers"] and ca["removed_mm3"] < 1.0
+                  and post_kept > 0.95 and drawn_lost < 25.0)
+        p2, U2 = _strut_part(2.0)
+        rb = audit(p2, 6.25, log=lambda s_: None, hard=False)
+        ok_b, ib, cb, fb, Pb = _strut_build(p2, U2)
+        kept_drawn = [w for w in cb["kept_walls"] if w.get("drawn")]
+        drawn_lost_b = (p2.drawn_m - p2.cuts_m - Pb).volume()
+        good_b = (any(f.startswith("drawn_wall") for f in rb["fails"]) and len(rb["drawn_walls"]) == 4
+                  and all(1.0 <= w["thick_mm"] <= 1.8 for w in rb["drawn_walls"]) and not ok_b and len(ib["thin_walls"]) >= 1
+                  and all(t["thick_mm"] <= 1.8 for t in ib["thin_walls"]) and not cb["slivers"] and len(kept_drawn) >= 1
+                  and cb["removed_mm3"] < 1.0 and drawn_lost_b < 25.0)
+        check("organic drawn walls: a 2.5-wall node with a 1.2 post passes whole; a 2.0-wall node is refused (1.5 at its 4 groove rings), built anyway "
+              "the gate fails the rings and the cleanup keeps them as drawn walls", good_a and good_b,
+              f"(a) audit {ra['fails']} walls {ra['drawn_walls']}; gate {ok_a} thin {ia['thin_walls']} allowed {allowed} necks {ia['necks']}; cleanup {ca['slivers']} "
+              f"{ca['kept_walls']} removed {ca['removed_mm3']}; function {fa}; post kept {post_kept:.3f}, drawn lost {drawn_lost:.1f} mm3; "
+              f"(b) audit {[f[:60] for f in rb['fails']]} walls {rb['drawn_walls']}; gate {ok_b} thin {ib['thin_walls']}; cleanup slivers {cb['slivers']} "
+              f"kept {cb['kept_walls']} removed {cb['removed_mm3']}, drawn lost {drawn_lost_b:.1f} mm3")
+    except Exception as e:
+        traceback.print_exc()
+        check("organic drawn walls", False, str(e))
+
+
 def t_gate_drawn_body():
     """gate, drawn bodies (tools/solid_check.py): (a) a 2.5 mm drawn plate on a 3.6 mm wall passes though a 4 mm generated block
     wraps its far end (the old measure took the body's thickness from the part round it, eroded 2.0 and asked for a 4 mm joint:
@@ -906,7 +1009,7 @@ def t_skin_core():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_design_hash):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_design_hash):
         t()
     if not quick:
         t_end_to_end()

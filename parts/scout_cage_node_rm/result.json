@@ -1,56 +1,23 @@
 {
  "name": "scout_cage_node_rm",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   2270.4
+   2772.5
   ],
   "necks": [],
   "drawn_not_in_main": [],
-  "thin_walls": [
-   {
-    "kind": "wall",
-    "thick_mm": 1.0,
-    "core_mm3": 4.84,
-    "at": [
-     -13.8,
-     0.0,
-     68.8
-    ],
-    "span": [
-     2.2,
-     1.6,
-     0.2
-    ],
-    "mm3": 19.8
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.0,
-    "core_mm3": 4.84,
-    "at": [
-     13.8,
-     0.0,
-     68.8
-    ],
-    "span": [
-     2.2,
-     1.6,
-     0.2
-    ],
-    "mm3": 19.8
-   }
-  ],
+  "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 10,
-  "ok": false
+  "acute_edges": 2,
+  "ok": true
  },
  "function_check": {
-  "skin_mm3": 577.2,
+  "skin_mm3": 575.6,
   "skin_missing_mm3": 0.0,
   "in_cuts_mm3": 0.0,
   "outside_env_mm3": 0.0,
@@ -61,12 +28,12 @@
    {
     "case": "frame RM-P1 axial 27 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.009,
-    "across": 0.004,
+    "inlayer": 0.007,
+    "across": 0.003,
     "at": [
-     5.5,
-     6.5,
-     65.5
+     0.5,
+     9.5,
+     67.5
     ]
    },
    {
@@ -75,20 +42,20 @@
     "inlayer": 0.001,
     "across": 0.0,
     "at": [
-     0.5,
      10.5,
-     67.5
+     6.5,
+     68.5
     ]
    },
    {
     "case": "frame RM-P6 axial 129 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.042,
-    "across": 0.019,
+    "inlayer": 0.033,
+    "across": 0.016,
     "at": [
-     5.5,
-     -6.5,
-     65.5
+     0.5,
+     -9.5,
+     67.5
     ]
    },
    {
@@ -97,20 +64,20 @@
     "inlayer": 0.001,
     "across": 0.0,
     "at": [
-     0.5,
-     -10.5,
-     67.5
+     10.5,
+     -6.5,
+     68.5
     ]
    },
    {
     "case": "frame RM-P2 axial 146 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.046,
-    "across": 0.021,
+    "inlayer": 0.038,
+    "across": 0.018,
     "at": [
-     -5.5,
-     6.5,
-     65.5
+     -0.5,
+     9.5,
+     67.5
     ]
    },
    {
@@ -119,20 +86,20 @@
     "inlayer": 0.001,
     "across": 0.0,
     "at": [
-     -0.5,
-     10.5,
-     67.5
+     -10.5,
+     6.5,
+     68.5
     ]
    },
    {
     "case": "frame RM-P5 axial 86 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.027,
-    "across": 0.012,
+    "inlayer": 0.022,
+    "across": 0.011,
     "at": [
-     -5.5,
-     -6.5,
-     65.5
+     -0.5,
+     -9.5,
+     67.5
     ]
    },
    {
@@ -141,35 +108,35 @@
     "inlayer": 0.001,
     "across": 0.0,
     "at": [
-     -0.5,
      -10.5,
-     67.5
+     -6.5,
+     68.5
     ]
    },
    {
     "case": "crash 35 g through the longest rod RM-P1 (140 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.009,
-    "across": 0.004,
+    "inlayer": 0.007,
+    "across": 0.003,
     "at": [
-     5.5,
-     6.5,
+     4.5,
+     8.5,
      65.5
     ]
    }
   ],
-  "worst": 0.046,
+  "worst": 0.038,
   "worst_case": "frame RM-P2 axial 146 N (pull-out)",
   "worst_at": [
-   -5.5,
-   6.5,
-   65.5
+   -0.5,
+   9.5,
+   67.5
   ]
  },
- "mass_g": 5.72,
+ "mass_g": 6.37,
  "watertight": true,
  "export": {
-  "faces_in": 47894,
+  "faces_in": 49400,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -177,21 +144,21 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 47894,
+  "faces": 49400,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 120,
+   "degenerate": 152,
    "folded": 0,
-   "caps_split": 3,
+   "caps_split": 0,
    "caps_left": 0,
    "watertight": true,
-   "faces": 72322
+   "faces": 67022
   },
-  "volume_mm3": 4506.9,
-  "exact_mm3": 4506.8
+  "volume_mm3": 5013.9,
+  "exact_mm3": 5013.7
  },
  "bodies": {
   "bodies_raw": 1,
@@ -199,41 +166,20 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 4506.8,
- "drawn_g": 3.13,
+ "volume_mm3": 5013.7,
+ "drawn_g": 3.12,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
   "specks_mm3": [],
-  "slivers": [
-   {
-    "at": [
-     -13.8,
-     -0.1,
-     68.8
-    ],
-    "thick_mm": 1.0,
-    "core_mm3": 4.97,
-    "mm3": 40.7
-   },
-   {
-    "at": [
-     13.8,
-     -0.1,
-     68.8
-    ],
-    "thick_mm": 1.0,
-    "core_mm3": 4.97,
-    "mm3": 40.7
-   }
-  ],
+  "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 1.24
+  "removed_mm3": 0.0
  },
  "stl": "scout_cage_node_rm.stl",
  "view_stl": "scout_cage_node_rm_view.stl",
- "view_faces": 47894,
+ "view_faces": 49400,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -298,8 +244,8 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.26413100898045433,
-  "nd": 7572,
+  "volfrac": 0.40903141361256545,
+  "nd": 6112,
   "sym_axes": [
    0,
    1
@@ -307,7 +253,7 @@
   "n_real": 9,
   "n_ties": 0,
   "backend": "direct",
-  "iterations": 69,
+  "iterations": 81,
   "stopped": "max_stage"
  },
  "grid": {
@@ -316,16 +262,16 @@
   "shape": [
    40,
    40,
-   32
+   24
   ],
   "origin": [
    -20.0,
    -20.0,
-   54.0
+   58.0
   ],
-  "cells": 51200,
-  "design": 7572,
-  "drawn": 2524,
+  "cells": 38400,
+  "design": 6112,
+  "drawn": 2520,
   "cases": [
    "frame RM-P1 axial 27 N (pull-out)",
    "frame RM-P1 side 1.3 N",
@@ -341,28 +287,28 @@
    "default"
   ]
  },
- "build_s": 23.6,
- "layout_s": 68,
- "peak_gb": 0.764552,
- "gen_cm3": 2.0,
+ "build_s": 17.0,
+ "layout_s": 61,
+ "peak_gb": 0.652544,
+ "gen_cm3": 2.5,
  "h": 1.0,
  "audit": {
-  "drawn_share": 0.25,
+  "drawn_share": 0.292,
   "load_room": [],
   "bodies": [
    {
     "id": 1,
-    "cells": 2524,
-    "inscribed_mm": 1.8,
+    "cells": 2520,
+    "inscribed_mm": 2.5,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
-    "room": 0.92,
+    "room": 0.9,
     "room_depth_mm": 33.0,
     "at": [
      0.0,
      0.0,
-     69.7
+     69.8
     ],
     "core_mm": 1.8,
     "share_of_drawn": 1.0
@@ -372,7 +318,7 @@
   "plate": {
    "L_mm": 34.0,
    "W_mm": 34.0,
-   "H_mm": 22.0,
+   "H_mm": 18.0,
    "fits": true
   },
   "drawn_thin": [],
@@ -386,11 +332,11 @@
     "case": "frame RM-P1 axial 27 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.008,
-    "across": 0.006,
+    "across": 0.004,
     "at": [
      4.5,
-     5.5,
-     73.5
+     7.5,
+     65.5
     ]
    },
    {
@@ -399,20 +345,20 @@
     "inlayer": 0.001,
     "across": 0.0,
     "at": [
-     3.5,
-     12.5,
+     10.5,
+     7.5,
      69.5
     ]
    },
    {
     "case": "frame RM-P6 axial 129 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.037,
-    "across": 0.026,
+    "inlayer": 0.035,
+    "across": 0.019,
     "at": [
      4.5,
-     -5.5,
-     73.5
+     -7.5,
+     65.5
     ]
    },
    {
@@ -421,20 +367,20 @@
     "inlayer": 0.001,
     "across": 0.0,
     "at": [
-     3.5,
-     -12.5,
+     10.5,
+     -7.5,
      69.5
     ]
    },
    {
     "case": "frame RM-P2 axial 146 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.042,
-    "across": 0.03,
+    "inlayer": 0.04,
+    "across": 0.021,
     "at": [
      -4.5,
-     5.5,
-     73.5
+     7.5,
+     65.5
     ]
    },
    {
@@ -443,8 +389,8 @@
     "inlayer": 0.001,
     "across": 0.0,
     "at": [
-     -3.5,
-     12.5,
+     -10.5,
+     7.5,
      69.5
     ]
    },
@@ -452,53 +398,53 @@
     "case": "frame RM-P5 axial 86 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.024,
-    "across": 0.018,
+    "across": 0.012,
     "at": [
      -4.5,
-     -5.5,
-     73.5
+     -7.5,
+     65.5
     ]
    },
    {
     "case": "frame RM-P5 side 1.4 N",
     "cls": "crash",
     "inlayer": 0.001,
-    "across": 0.001,
+    "across": 0.0,
     "at": [
-     -3.5,
-     -12.5,
+     -10.5,
+     -7.5,
      69.5
     ]
    },
    {
     "case": "crash 35 g through the longest rod RM-P1 (140 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.008,
-    "across": 0.005,
+    "inlayer": 0.007,
+    "across": 0.003,
     "at": [
      4.5,
-     5.5,
-     73.5
+     7.5,
+     65.5
     ]
    }
   ],
-  "worst": 0.042,
+  "worst": 0.04,
   "worst_case": "frame RM-P2 axial 146 N (pull-out)",
   "worst_at": [
    -4.5,
-   5.5,
-   73.5
+   7.5,
+   65.5
   ],
   "beta": 4.0,
-  "iteration": 14,
+  "iteration": 25,
   "max_worst": 0.5,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 91,
- "part_sha": "0113ed1c91de",
- "lib_sha": "58559bb5e931",
- "setup_sha": "10d28612f1a62c34",
+ "total_s": 78,
+ "part_sha": "375896fb3146",
+ "lib_sha": "d1ad932747b4",
+ "setup_sha": "0441849ed55f30b3",
  "max_worst": 0.5,
  "strength_ok": true
 }
