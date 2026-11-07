@@ -4,10 +4,10 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 2,
+  "specks_plain": 1,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   7915.5
+   7799.3
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -17,10 +17,10 @@
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 1951.6,
+  "skin_mm3": 1891.0,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": 0.0,
-  "outside_env_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
+  "outside_env_mm3": -0.0,
   "ok": true
  },
  "strength": {
@@ -28,8 +28,8 @@
    {
     "case": "frame B3-BM1 axial 91 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.044,
-    "across": 0.025,
+    "inlayer": 0.045,
+    "across": 0.024,
     "at": [
      7.8,
      -113.0,
@@ -51,7 +51,7 @@
     "case": "frame BM1-B2 axial 46 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.023,
-    "across": 0.013,
+    "across": 0.012,
     "at": [
      -7.8,
      -113.0,
@@ -88,7 +88,7 @@
     "at": [
      11.4,
      -107.0,
-     -2.8
+     -1.6
     ]
    },
    {
@@ -117,7 +117,7 @@
     "case": "frame BM1-P6 axial 62 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.037,
-    "across": 0.043,
+    "across": 0.045,
     "at": [
      3.0,
      -115.5,
@@ -128,18 +128,18 @@
     "case": "frame BM1-P6 side 0.9 N",
     "cls": "crash",
     "inlayer": 0.001,
-    "across": 0.002,
+    "across": 0.001,
     "at": [
-     10.2,
-     -110.6,
-     8.0
+     11.4,
+     -109.5,
+     5.6
     ]
    },
    {
     "case": "frame BM1-P5 axial 48 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.03,
-    "across": 0.034,
+    "across": 0.036,
     "at": [
      -3.0,
      -115.5,
@@ -153,15 +153,15 @@
     "across": 0.001,
     "at": [
      -10.2,
-     -108.3,
-     5.6
+     -109.5,
+     6.8
     ]
    },
    {
     "case": "crash 35 g through the longest rod BM1-K3 (115 mm), axial + side",
     "cls": "crash",
     "inlayer": 0.014,
-    "across": 0.011,
+    "across": 0.012,
     "at": [
      9.0,
      -109.5,
@@ -171,16 +171,16 @@
    {
     "case": "landing 6 g on the skid face of KM1 (15 N up, 3 of 6 skid nodes)",
     "cls": "flight",
-    "inlayer": 0.013,
-    "across": 0.006,
+    "inlayer": 0.024,
+    "across": 0.017,
     "at": [
-     -0.6,
+     0.6,
      -86.6,
      -50.8
     ]
    }
   ],
-  "worst": 0.044,
+  "worst": 0.045,
   "worst_case": "frame B3-BM1 axial 91 N (pull-out)",
   "worst_at": [
    7.8,
@@ -188,10 +188,10 @@
    -0.4
   ]
  },
- "mass_g": 16.97,
+ "mass_g": 16.84,
  "watertight": true,
  "export": {
-  "faces_in": 140912,
+  "faces_in": 143426,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -199,21 +199,21 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 140912,
+  "faces": 143426,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 474,
+   "degenerate": 484,
    "folded": 8,
-   "caps_split": 7,
+   "caps_split": 13,
    "caps_left": 0,
    "watertight": true,
-   "faces": 207558
+   "faces": 207962
   },
-  "volume_mm3": 13362.2,
-  "exact_mm3": 13362.1
+  "volume_mm3": 13257.7,
+  "exact_mm3": 13257.6
  },
  "bodies": {
   "bodies_raw": 1,
@@ -221,20 +221,19 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 13362.1,
- "drawn_g": 7.78,
+ "volume_mm3": 13257.6,
+ "drawn_g": 7.71,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
   "specks_mm3": [
-   0.016,
    0.016
   ],
   "slivers": [],
   "kept_walls": [],
   "removed_mm3": 0.0,
-  "specks": 2
+  "specks": 1
  },
  "stl": "scout_cage_node_bm1_km1.stl",
  "view_stl": "scout_cage_node_bm1_km1_view.stl",
@@ -309,7 +308,7 @@
   "n_real": 14,
   "n_ties": 6,
   "backend": "direct",
-  "iterations": 79,
+  "iterations": 78,
   "stopped": "max_stage"
  },
  "grid": {
@@ -327,7 +326,7 @@
   ],
   "cells": 165888,
   "design": 12203,
-  "drawn": 3466,
+  "drawn": 3419,
   "cases": [
    "frame B3-BM1 axial 91 N (pull-out)",
    "frame B3-BM1 side 0.3 N",
@@ -348,19 +347,19 @@
    "default"
   ]
  },
- "build_s": 88.5,
- "layout_s": 230,
- "peak_gb": 1.2816,
+ "build_s": 100.1,
+ "layout_s": 239,
+ "peak_gb": 1.303072,
  "gen_cm3": 7.3,
  "h": 1.2,
  "audit": {
-  "drawn_share": 0.221,
+  "drawn_share": 0.219,
   "load_room": [],
   "bodies": [
    {
     "id": 1,
-    "cells": 2570,
-    "inscribed_mm": 4.2,
+    "cells": 2523,
+    "inscribed_mm": 3.6,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
@@ -369,7 +368,7 @@
     "at": [
      0.0,
      -111.4,
-     1.0
+     1.1
     ],
     "core_mm": 3.0,
     "share_of_drawn": 0.74
@@ -410,7 +409,7 @@
     "case": "frame B3-BM1 axial 91 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.056,
-    "across": 0.028,
+    "across": 0.027,
     "at": [
      7.8,
      -113.0,
@@ -453,12 +452,12 @@
    {
     "case": "frame BM1-K3 axial 30 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.016,
-    "across": 0.016,
+    "inlayer": 0.015,
+    "across": 0.015,
     "at": [
-     7.8,
-     -110.6,
-     -8.8
+     6.6,
+     -111.8,
+     -2.8
     ]
    },
    {
@@ -498,7 +497,7 @@
     "case": "frame BM1-P6 axial 62 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.045,
-    "across": 0.075,
+    "across": 0.074,
     "at": [
      4.2,
      -111.8,
@@ -519,8 +518,8 @@
    {
     "case": "frame BM1-P5 axial 48 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.037,
-    "across": 0.061,
+    "inlayer": 0.036,
+    "across": 0.06,
     "at": [
      -4.2,
      -111.8,
@@ -541,11 +540,11 @@
    {
     "case": "crash 35 g through the longest rod BM1-K3 (115 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.016,
-    "across": 0.014,
+    "inlayer": 0.015,
+    "across": 0.013,
     "at": [
-     7.8,
-     -110.6,
+     9.0,
+     -109.5,
      -8.8
     ]
    },
@@ -561,7 +560,7 @@
     ]
    }
   ],
-  "worst": 0.075,
+  "worst": 0.074,
   "worst_case": "frame BM1-P6 axial 62 N (pull-out)",
   "worst_at": [
    4.2,
@@ -574,10 +573,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 319,
+ "total_s": 339,
  "part_sha": "fec9b5257012",
- "lib_sha": "96f321b3ee42",
- "setup_sha": "2aea60e91998c249",
+ "lib_sha": "03e8bcab748d",
+ "setup_sha": "613624dca6fc0a0a",
  "max_worst": 0.5,
  "strength_ok": true
 }
