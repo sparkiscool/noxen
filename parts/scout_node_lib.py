@@ -237,7 +237,7 @@ def build(group, h, log=print):
         p.load_multi(f"crash 35 g through the longest rod {L['name']} ({L['len']:.0f} mm), axial + side", [(lining(L), -L["axial"] * L["u"] + L["side"] * sd)], cls="crash")
     for k, zb in feet.items():
         c = np.array(P[k], float)
-        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + 1.0, FOOT_R + 0.5)   # from the face up: the cell layer under the face is envelope skin, design room to the audit (load_room)
+        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb + 0.2, zb + FOOT_T - 0.2, FOOT_R - 0.2)   # the foot's own volume, not its face: at h 1.2 a 1 mm face band caught a layer of cells outside the foot (load_room refused BM0+KM0, 7 Nov)
         fz = LAND_G * DRONE_G * GN / LAND_FEET
         p.load_multi(f"landing 6 g on the skid face of {k} ({fz:.0f} N up, 3 of 6 skid nodes)", [(face, np.array([0, 0, fz]))], cls="flight")
     return p
