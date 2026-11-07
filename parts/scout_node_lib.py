@@ -35,7 +35,7 @@ BRIDGE_R = 6.0                                            # the room round a pri
 NODE_R = 5.0                                              # where a bore starts unless a neighbour forces it out (5 Nov: 7 -> 5, the collars 2 mm closer in, every strut 2 mm shorter; the cage model's sphere stays 7)
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
 #   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
-WALL, FLOOR, STRUT_M = 2.0, 2.0, 2.5                        # 5 Nov (Spark: the nodes are overweight): 2.5 / 3.0 drew 119 g of collars over 25 nodes, 2.0 / 2.0 draws 83 (the 2 mm floor); STRUT_M: the room round each collar (2.5: at 1.5 the audit's drawn share is 35 % on RF, 34 on RM, limit 30; the flakes in the room the 6.25 members did not fill are the engine's, its own session)
+WALL, FLOOR, STRUT_M = 2.5, 2.0, 3.0                        # WALL 2.5 = 2.0 at the 0.5 resin grooves (7 Nov: at 2.0 every collar was 1.5 at its grooves, the gate's thin walls on all 15 structures; the audit's drawn_wall refuses it now); FLOOR 2.0; STRUT_M 3.0 keeps the audit's drawn share under 30 % with the thicker collars
 ROD_R, ROD_GAP = 1.5, 1.0                                 # a passing rod's radius and the least gap to a collar's surface
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 SKID = {"K0", "K1", "K2", "K3", "KM0", "KM1"}             # the skid nodes: a landing face under each (the TPU strip's seat)
@@ -221,7 +221,7 @@ def build(group, h, log=print):
     for k in group:
         verify_cuts(k, [m for m in allm if m["node"] == k], cuts, log)
     p = Part(sc.group_id(group), h, drawn, cuts, env, build="+z", material="PETG")
-    sup = sorted(allm, key=lambda m: -m["axial"])[:2]
+    sup = [m for k in group for m in sorted([x for x in allm if x["node"] == k], key=lambda m: -m["axial"])[:2]]   # the two stiffest members at EACH node (7 Nov: with two for the pair, every pull at the other node ran through the bridge: P2+P3 1.40 in the bridge)
     lining = lambda m, grow=1.0: along(m["c"], m["u"], m["s0"] - FLOOR - 0.5, m["s_end"], m["bore_r"] + grow)
     p.support("default", U([lining(m, 1.4) for m in sup])); held = {(m["node"], m["name"]) for m in sup}
     log(f"  supports: {sorted(n for _, n in held)}")
