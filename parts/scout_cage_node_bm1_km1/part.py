@@ -1,0 +1,6 @@
+"""Scout cage nodes BM1 + KM1, one printed structure (5 Nov, Spark: nodes closer than 60 mm are one part): the socket
+collars of every rod and tie that ends at either node, a printed bridge where the rod BM1-KM1 was, the rest generated.
+Geometry, loads and the other nodes: parts/scout_node_lib.py."""
+from parts.scout_node_lib import make, spec_for   # noqa: F401
+setup = make(('BM1', 'KM1'))
+SPEC = spec_for(('BM1', 'KM1'))
