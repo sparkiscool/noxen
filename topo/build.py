@@ -252,7 +252,9 @@ def export_cleanup(P, part, log=print, pitch=0.25, erode_mm=0.9, core_mm3=10.0, 
         opening leaves it. A wall with core_mm3 or more of core is structure, not detail: it stays for the gate to judge.
     Every drawn body is left untouched (the subtraction excludes it) and so is every member over 2 x erode_mm: the opening
     does not reach into it (where a sliver stands on a member's edge, the edge loses the under-0.4 mm residue the opening
-    takes there). The thin-wall measure is the gate's own (tools/solid_check.py thin_walls). Returns (P, report)."""
+    takes there). A thin wall that is itself drawn material (over half its residue inside the drawn bodies: a collar wall at a
+    resin groove) is reported under kept_walls with drawn=True, never as removed; the audit (topo/audit.py drawn_wall) refuses such
+    a setup before the run. The thin-wall measure is the gate's own (tools/solid_check.py thin_walls). Returns (P, report)."""
     import trimesh
     SC = _solid_check_module()
     t0 = time.time()
@@ -272,14 +274,27 @@ def export_cleanup(P, part, log=print, pitch=0.25, erode_mm=0.9, core_mm3=10.0, 
             rep["specks_mm3"] = sorted([round(float(vol0[k]), 3) for k in small], reverse=True)[:20]
             rep["specks"] = int(len(small))
     R, labr, thin, _ = SC.thin_walls(V, pitch, erode_mm, lo)
+    Dv = None
     for t in thin:
         if t["kind"] != "wall":
             continue
+        row = dict(at=t["at"], thick_mm=t["thick_mm"], core_mm3=t["core_mm3"], mm3=t["mm3"])
         if t["core_mm3"] < core_mm3 and t["mm3"] <= max_mm3:
-            rm |= labr == t["label"]
-            rep["slivers"].append(dict(at=t["at"], thick_mm=t["thick_mm"], core_mm3=t["core_mm3"], mm3=t["mm3"]))
+            # a thin wall that is drawn material (a collar wall at a resin groove, a chamfered rim) is the setup's, not surface detail:
+            # the subtraction below excludes the drawn bodies, so it is reported as kept, not as removed (7 Nov: the Scout nodes listed
+            # 2..10 such "slivers removed" and the gate failed the same spots)
+            if Dv is None:
+                D = part.drawn_m - part.cuts_m if getattr(part, "cuts_m", None) is not None else part.drawn_m
+                Dv = SC.voxels(tm(D), pitch, lo, shape) if D.volume() > 0 else np.zeros(shape, bool)
+            w = labr == t["label"]
+            row["drawn_share"] = round(float(Dv[w].mean()), 2)
+            if row["drawn_share"] > 0.5:
+                rep["kept_walls"].append(dict(row, drawn=True))
+                continue
+            rm |= w
+            rep["slivers"].append(row)
         else:
-            rep["kept_walls"].append(dict(at=t["at"], thick_mm=t["thick_mm"], core_mm3=t["core_mm3"], mm3=t["mm3"]))
+            rep["kept_walls"].append(row)
     if not rm.any():
         log(f"build: export cleanup: nothing to remove ({time.time() - t0:.0f} s)")
         return P, rep
@@ -292,7 +307,8 @@ def export_cleanup(P, part, log=print, pitch=0.25, erode_mm=0.9, core_mm3=10.0, 
     rep["removed_mm3"] = round(v0 - P2.volume(), 2)
     log(f"build: export cleanup: {len(rep['specks_mm3'])} speck(s) {rep['specks_mm3'][:6]} mm3, {len(rep['slivers'])} sliver(s) "
         f"{[(w['thick_mm'], w['core_mm3']) for w in rep['slivers']]} (thick, core mm3) removed, {rep['removed_mm3']} mm3 in all; "
-        f"{len(rep['kept_walls'])} thin wall(s) over {core_mm3} mm3 of core kept for the gate; {time.time() - t0:.0f} s")
+        f"{len(rep['kept_walls'])} thin wall(s) kept for the gate (over {core_mm3} mm3 of core, or drawn: "
+        f"{len([w for w in rep['kept_walls'] if w.get('drawn')])}); {time.time() - t0:.0f} s")
     return P2, rep
 
 
