@@ -120,7 +120,10 @@ def U(ms):
 def _prism(poly, c, u, s0, s1, e1, e2):
     """the 2D polygon poly (in the e1, e2 plane) extruded along u from s0 to s1"""
     import manifold3d as mf
-    cs = mf.CrossSection([[(float(x), float(y)) for x, y in poly]])
+    pts = [(float(x), float(y)) for x, y in poly]
+    if sum(x0 * y1 - x1 * y0 for (x0, y0), (x1, y1) in zip(pts, pts[1:] + pts[:1])) < 0:   # manifold wants the outline counter-clockwise (7 Nov: a clockwise pocket sector extruded to nothing)
+        pts = pts[::-1]
+    cs = mf.CrossSection([pts])
     m = mf.Manifold.extrude(cs, float(s1 - s0))                       # along local z from 0 to s1 - s0
     R = np.column_stack([e1, e2, u]); t = c + u * s0
     return m.transform(np.column_stack([R, t]).astype(np.float64))
