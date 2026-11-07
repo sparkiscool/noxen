@@ -8,7 +8,7 @@ the lip at the bore radius keeps it in. The ports are cut 40 out, through whatev
 import numpy as np
 from parts.cage_node_lib import along, _prism, crown_dir, socket_cuts
 
-GAP, LAND_W, FEED_H, PORT_R, VENT_R = 0.3, 1.2, 1.5, 1.0, 0.75
+GAP, LAND_W, FEED_H, PORT_R, VENT_R = 0.5, 1.2, 1.5, 1.0, 0.75   # gap 0.5 (7 Nov, was 0.3: one export cell wide, 6 of 13 nodes came out not watertight)
 
 
 def inject_cuts(c, u, s0, depth, r, port, lip):
@@ -17,8 +17,8 @@ def inject_cuts(c, u, s0, depth, r, port, lip):
     for k in range(3):                                                  # the annulus less 3 lands at 60, 180, 300 deg (180 = opposite the port)
         t = np.linspace(np.radians(60 + 120 * k) + a_l, np.radians(180 + 120 * k) - a_l, 16)
         poly = [(ro * np.cos(x), ro * np.sin(x)) for x in t] + [(r * 0.98 * np.cos(x), r * 0.98 * np.sin(x)) for x in t[::-1]]
-        out.append(_prism(poly, c, u, s0, s_top, e1, e2))
-    out.append(along(c, u, s0, s0 + FEED_H, ro))                       # feed ring at the floor
+        out.append(_prism(poly, c, u, s0 + FEED_H / 2, s_top, e1, e2))     # from inside the feed ring: no face on the floor plane
+    out.append(along(c, u, s0 - 0.5, s0 + FEED_H, ro))                 # feed ring at the floor, 0.5 into it: its end face off the bore's floor plane (7 Nov: coincident faces left the export non-manifold at the floor centre)
     out.append(along(c + u * (s0 + FEED_H / 2), e1, 0.0, r + 40.0, PORT_R, 24))   # fill port, needle side
     out.append(along(c + u * (s_top - VENT_R), e1, 0.0, r + 40.0, VENT_R, 24))    # vent, same side, top of the annulus
     return out
