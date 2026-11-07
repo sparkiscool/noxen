@@ -36,6 +36,7 @@ NODE_R = 7.0                                              # the cage model's nod
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
 #   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
 WALL, FLOOR, STRUT_M = 2.0, 2.0, 2.5                        # 5 Nov (Spark: the nodes are overweight): 2.5 / 3.0 drew 119 g of collars over 25 nodes, 2.0 / 2.0 draws 83 (the 2 mm floor); STRUT_M: the room round each collar
+ROD_R, ROD_GAP = 1.5, 1.0                                 # a passing rod's radius and the least gap to a collar's surface
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 SKID = {"K0", "K1", "K2", "K3", "KM0", "KM1"}             # the skid nodes: a landing face under each (the TPU strip's seat)
 FOOT_R, FOOT_T = 8.0, 3.0                                  # 3.0: the audit refuses drawn bodies under 2.5 (the Overseer feet are 2.4)
@@ -43,11 +44,13 @@ LAND_G, DRONE_G, LAND_FEET = 6.0, 762.0, 3
 GN = 9.81e-3
 
 
-def _raw_members(k):
+def _raw_members(k, bridges=False):
     """the rods and ties that end at node k and get a socket there: the bridges (sc.BRIDGES, the rod to a node merged into the same
-    printed structure) are printed, not socketed"""
+    printed structure) are printed, not socketed, but they still take their room in the hub (bridges=True: the socket-start rule
+    counts them, so a bridged node's sockets sit where they did; 5 Nov: with P0-R0 bridged, P0-P1's bore came in from 17 to 8.5 and
+    its collar's mouth landed in the K0-R0 brace rod)"""
     c = np.array(P[k], float); out = []
-    for a, b in sc.RODS_CARBON + sc.TIES:
+    for a, b in (sc.RODS if bridges else sc.RODS_CARBON) + sc.TIES:
         if k in (a, b):
             o = b if a == k else a
             out.append(dict(name=f"{a}-{b}", far=np.array(P[o], float), other=o if o in sc.NODES else None))
@@ -56,10 +59,23 @@ def _raw_members(k):
     return out
 
 
+def _seg_dist(a0, a1, b0, b1):
+    """the least distance between two segments"""
+    u, v = a1 - a0, b1 - b0; A, C = u @ u, v @ v
+    best = 1e9
+    for t in np.linspace(0, 1, 41):                         # sample one segment, project onto the other (exact enough at 1/40 of a rod)
+        q = b0 + t * v; s_ = np.clip((q - a0) @ u / A, 0, 1)
+        best = min(best, float(np.linalg.norm(a0 + s_ * u - q)))
+    for s_ in np.linspace(0, 1, 41):
+        q = a0 + s_ * u; t = np.clip((q - b0) @ v / C, 0, 1)
+        best = min(best, float(np.linalg.norm(b0 + t * v - q)))
+    return best
+
+
 def _socket_starts():
     st = {}
     for k in sc.NODES:
-        ms = _raw_members(k)
+        ms = _raw_members(k, bridges=True)
         for m in ms:
             s0 = NODE_R
             for o in ms:
@@ -106,6 +122,14 @@ def check_members(k, log=print):
             t = np.arccos(np.clip(a["u"] @ b["u"], -1, 1)); r = max(a["s0"], b["s0"])
             if 2 * r * np.sin(t / 2) < a["bore_r"] + b["bore_r"] + 2 * GROOVE_D + WALL - 1e-6:
                 bad.append(f"{a['name']} / {b['name']}: {np.degrees(t):.0f} deg apart, bores overlap at {r:.1f} mm")
+    for m in ms:                                              # a rod that passes this node must clear every collar (5 Nov: K0-R0 through P0-P1's mouth)
+        a0, a1 = c + m["u"] * (m["s0"] - FLOOR), c + m["u"] * (m["s0"] + m["depth"])
+        for i, j in sc.RODS + sc.TIES:
+            if k in (i, j):
+                continue
+            gap = _seg_dist(a0, a1, np.array(P[i], float), np.array(P[j], float)) - (m["bore_r"] + WALL) - ROD_R
+            if gap < ROD_GAP:
+                bad.append(f"{m['name']}: the rod {i}-{j} passes {gap:.1f} mm from its collar (need {ROD_GAP}): move the socket out or re-route the rod")
     far = [f"{m['name']} from {m['s0']:.1f}" for m in ms if m["s0"] > NODE_R + 1e-6]
     if far:
         log(f"  sockets moved out so no bores overlap: {', '.join(far)} mm (others from {NODE_R})")
@@ -210,4 +234,4 @@ def make(group):
 
 
 SPEC = dict(h=1.0, gen_cm3=2.0, max_worst=0.5)            # h 1.0 as the Overseer nodes (a node ball ~60 across is 262k cells at 1.0, 512k at 0.8); 2 cm3 (5 Nov, Spark: overweight; at 4 the 23 run-1 nodes were 8.3..10.5 g with indices 0.01..0.16, so half the volume keeps every index under 0.35)
-SPEC_PAIR = dict(SPEC, gen_cm3=5.0)                       # a merged pair: two nodes' 2 cm3 and a printed bridge's worth (O8 x 40 = 2 cm3, E)
+SPEC_PAIR = dict(SPEC, h=1.2, gen_cm3=5.0)                # a merged pair: two nodes' 2 cm3 and a printed bridge's worth (O8 x 40 = 2 cm3, E); h 1.2: a 57 mm pair is 230k cells at 1.0 (the tail unit's 163k took 5.6 of the runner's 7 GB), 133k at 1.2

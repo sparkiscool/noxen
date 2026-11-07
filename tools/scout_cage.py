@@ -60,7 +60,7 @@ RODS = [("R0", "P1"), ("P1", "P2"), ("P2", "P3"), ("P3", "P4"), ("P4", "P5"), ("
         ("K0", "KM0"), ("KM0", "K1"), ("K3", "KM1"), ("KM1", "K2"),                                            # the skids, two halves
         ("B0", "K0"), ("B1", "K1"), ("B3", "K3"), ("B2", "K2"), ("BM0", "KM0"), ("BM1", "KM1"),                 # the skid trusses' posts
         ("BM0", "K0"), ("BM0", "K1"), ("BM1", "K3"), ("BM1", "K2"),                                            # the skid trusses' diagonals
-        ("K0", "R0"), ("K3", "R7"), ("K1", "P3"), ("K2", "P4"),                                                # the skid ends braced out of plane
+        ("K0", "P0"), ("K3", "P7"), ("K1", "P3"), ("K2", "P4"),                                                # the skid ends braced out of plane (5 Nov: K0-R0 / K3-R7 passed 16 mm from P0 / P7, through their P0-P1 / P7-P6 collars; to P0 / P7, one printed structure with R0 / R7 now)
         ("B0", "R0"), ("B3", "R7"),                                                                            # close the nose brace's skew quad K0-B0-P0-R0 into triangles
         ("B0", "P0"), ("B0", "P1"), ("B1", "P2"), ("B1", "P3"), ("B2", "P4"), ("B2", "P5"), ("B3", "P6"), ("B3", "P7"),   # lower band
         ("BM0", "P1"), ("BM0", "P2"), ("BM1", "P6"), ("BM1", "P5"),                                            # the side faces fanned from the rails' mid nodes
@@ -70,6 +70,7 @@ TIE_ROOTS = {"A0": (62, 62, 13.5), "A1": (-62, 62, 13.5), "A2": (-62, -62, 13.5)
 PRINTED = {"NB": "scout_nose_unit", "TB": "scout_tail_unit"}   # cage nodes printed into a unit bolted to the plate (v18; v17's tail ties T0/T1 to TB are the tail unit itself:
 TIES = [("A0", "B0"), ("A1", "B1"), ("A2", "B2"), ("A3", "B3"), ("C0", "BM0"), ("C1", "BM0"), ("C2", "BM1"), ("C3", "BM1")]   # 3.0 rods: the arm-tip ties to the rail corners, the yoke-corner ties to the rail mid nodes (5 Nov: at a corner the two ties arrived 2..13 deg apart, their bores had to start 39 mm out and the node grew past the cell limit)
 #   without a stiff tail link a 35 g tail-first wall hit racked the cage 17 mm with 1157 N in a corner tie, frame model 4 Nov; with one 0.2 mm, 144 N)
+NODE_CLEAR = 20.0                                              # a rod passing a node it does not end at keeps its axis this far from the centre (a screen: a socket reaches ~27 but points at its own rod; the node library checks every collar exactly, K0-R0 passed P0 at 15.9)
 MERGE_MM = 60.0                                                # two nodes closer than this are one printed structure (5 Nov, Spark: "if any two nodes are too
 BRIDGES = [(i, j) for i, j in RODS if np.linalg.norm(np.array(NODES[i], float) - np.array(NODES[j], float)) <= MERGE_MM]   # close together ... make that into
 #   one structure, the same all across the scout"): the rod between them is printed PETG (a bridge), its two sockets are gone. At 60: the
@@ -156,7 +157,7 @@ def funnel_check(margin=2.0):
 def checks():
     import seat_envelope as se
     body = [(nm, m) for nm, m in se.parts_of("scout") if not any(k in nm.lower() for k in ("cage", "legs", "unit", "clip"))]   # the units and clips are the cage's own sockets
-    worst = dict(prop=(1e9, ""), body=(1e9, ""), camera=[])
+    worst = dict(prop=(1e9, ""), body=(1e9, ""), camera=[], node=(1e9, ""))
     P = all_nodes()
     for i, j in RODS + TIES:
         pts = seg_pts(P[i], P[j])
@@ -173,6 +174,12 @@ def checks():
                 worst["body"] = (dd, f"{i}-{j} vs {nm}")
         if any(in_view(p) for p in pts):
             worst["camera"].append(f"{i}-{j}")
+        for k in NODES:                                                          # a rod passing another node: its axis must clear the node's socket reach
+            if k in (i, j) or k in GROUP_OF.get(i, ()) or k in GROUP_OF.get(j, ()):
+                continue
+            d = float(np.linalg.norm(pts - np.array(P[k], float), axis=1).min())
+            if d < worst["node"][0]:
+                worst["node"] = (d, f"{i}-{j} past {k}")
     return worst
 
 
@@ -199,6 +206,7 @@ if __name__ == "__main__":
     print(f"  prop keep-out: nearest rod {w['prop'][0]:.1f} mm ({w['prop'][1]}; need 12)")
     print(f"  body margin:   nearest rod surface {w['body'][0]:.1f} mm ({w['body'][1]}; need 3)")
     print(f"  camera view:   {'clear' if not w['camera'] else 'BLOCKED by ' + ', '.join(w['camera'])}")
+    print(f"  passing rods:  nearest rod axis to a node it does not end at {w['node'][0]:.1f} mm ({w['node'][1]}; need {NODE_CLEAR}: the node library checks every collar exactly)")
     fw = funnel_check()
     print(f"  funnel:        least clearance {fw[0]:.1f} mm ({fw[1]} at {fw[2]}; need 2, exact gate tools/seat_check.py scout --descent)")
     LT = [float(np.linalg.norm(np.array(P[i]) - np.array(P[j]))) for i, j in TIES]
