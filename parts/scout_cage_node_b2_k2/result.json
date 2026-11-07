@@ -4,10 +4,10 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 2,
+  "specks_plain": 1,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   6591.1
+   6538.7
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -17,7 +17,7 @@
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 1480.2,
+  "skin_mm3": 1425.0,
   "skin_missing_mm3": 0.0,
   "in_cuts_mm3": -0.0,
   "outside_env_mm3": 0.0,
@@ -95,10 +95,10 @@
     "case": "frame KM1-K2 axial 29 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.014,
-    "across": 0.012,
+    "across": 0.013,
     "at": [
-     -81.2,
-     -86.6,
+     -83.6,
+     -83.1,
      -43.9
     ]
    },
@@ -106,10 +106,10 @@
     "case": "frame KM1-K2 side 0.5 N",
     "cls": "crash",
     "inlayer": 0.001,
-    "across": 0.001,
+    "across": 0.0,
     "at": [
      -81.2,
-     -86.6,
+     -85.5,
      -43.9
     ]
    },
@@ -133,10 +133,10 @@
    -43.9
   ]
  },
- "mass_g": 14.19,
+ "mass_g": 14.12,
  "watertight": true,
  "export": {
-  "faces_in": 122222,
+  "faces_in": 123710,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -144,21 +144,21 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 122222,
+  "faces": 123710,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 420,
-   "folded": 10,
-   "caps_split": 12,
+   "degenerate": 218,
+   "folded": 4,
+   "caps_split": 6,
    "caps_left": 0,
    "watertight": true,
-   "faces": 175636
+   "faces": 175300
   },
-  "volume_mm3": 11171.3,
-  "exact_mm3": 11171.3
+  "volume_mm3": 11119.8,
+  "exact_mm3": 11120.0
  },
  "bodies": {
   "bodies_raw": 1,
@@ -166,20 +166,19 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 11171.3,
- "drawn_g": 6.31,
+ "volume_mm3": 11120.0,
+ "drawn_g": 6.24,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
   "specks_mm3": [
-   0.031,
    0.016
   ],
   "slivers": [],
   "kept_walls": [],
   "removed_mm3": 0.0,
-  "specks": 2
+  "specks": 1
  },
  "stl": "scout_cage_node_b2_k2.stl",
  "view_stl": "scout_cage_node_b2_k2_view.stl",
@@ -254,7 +253,7 @@
   "n_real": 9,
   "n_ties": 24,
   "backend": "direct",
-  "iterations": 83,
+  "iterations": 87,
   "stopped": "max_stage"
  },
  "grid": {
@@ -272,7 +271,7 @@
   ],
   "cells": 110592,
   "design": 11771,
-  "drawn": 2812,
+  "drawn": 2784,
   "cases": [
    "frame BM1-B2 axial 46 N (pull-out)",
    "frame BM1-B2 side 0.3 N",
@@ -288,18 +287,18 @@
    "default"
   ]
  },
- "build_s": 74.8,
- "layout_s": 224,
- "peak_gb": 1.266184,
+ "build_s": 41.4,
+ "layout_s": 196,
+ "peak_gb": 1.258852,
  "gen_cm3": 6.3,
  "h": 1.2,
  "audit": {
-  "drawn_share": 0.193,
+  "drawn_share": 0.191,
   "load_room": [],
   "bodies": [
    {
     "id": 1,
-    "cells": 1590,
+    "cells": 1575,
     "inscribed_mm": 3.6,
     "touches_cut": true,
     "touches_support": true,
@@ -332,7 +331,7 @@
    },
    {
     "id": 3,
-    "cells": 307,
+    "cells": 301,
     "inscribed_mm": 2.2,
     "touches_cut": true,
     "touches_support": true,
@@ -348,7 +347,7 @@
    },
    {
     "id": 4,
-    "cells": 644,
+    "cells": 637,
     "inscribed_mm": 4.2,
     "touches_cut": true,
     "touches_support": true,
@@ -382,7 +381,7 @@
     "case": "frame BM1-B2 axial 46 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.034,
-    "across": 0.031,
+    "across": 0.026,
     "at": [
      -90.8,
      -110.6,
@@ -426,7 +425,7 @@
     "case": "frame B2-P5 axial 30 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.031,
-    "across": 0.044,
+    "across": 0.042,
     "at": [
      -98.0,
      -114.3,
@@ -469,8 +468,8 @@
    {
     "case": "landing 6 g on the skid face of K2 (15 N up, 3 of 6 skid nodes)",
     "cls": "flight",
-    "inlayer": 0.032,
-    "across": 0.015,
+    "inlayer": 0.033,
+    "across": 0.014,
     "at": [
      -102.8,
      -81.9,
@@ -478,7 +477,7 @@
     ]
    }
   ],
-  "worst": 0.044,
+  "worst": 0.042,
   "worst_case": "frame B2-P5 axial 30 N (pull-out)",
   "worst_at": [
    -98.0,
@@ -491,10 +490,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 299,
+ "total_s": 237,
  "part_sha": "29a1c3ab4523",
- "lib_sha": "96f321b3ee42",
- "setup_sha": "cab478bc6413c047",
+ "lib_sha": "03e8bcab748d",
+ "setup_sha": "f4be395f00638e9b",
  "max_worst": 0.5,
  "strength_ok": true
 }
