@@ -30,7 +30,8 @@ import scout_cage as sc                                   # noqa: E402
 
 LOADS = json.load(open(os.path.join(ROOT, "systems", "scout.cage_loads.json")))["node_loads"]
 P = {**sc.NODES, **sc.TIE_ROOTS}
-KEYS = [k for k in sc.NODES if k not in sc.PRINTED]      # the 25 printed nodes
+KEYS = [k for k in sc.NODES if k not in sc.PRINTED]      # the 25 printed nodes, in sc.GROUPS printed structures (a pair closer than sc.MERGE_MM is one part)
+BRIDGE_R = 6.0                                            # the room round a printed bridge between two merged nodes (O12, the engine keeps what the rod's load needs)
 NODE_R = 7.0                                              # the cage model's node sphere: where a bore starts unless a neighbour forces it out
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
 #   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
@@ -43,8 +44,10 @@ GN = 9.81e-3
 
 
 def _raw_members(k):
+    """the rods and ties that end at node k and get a socket there: the bridges (sc.BRIDGES, the rod to a node merged into the same
+    printed structure) are printed, not socketed"""
     c = np.array(P[k], float); out = []
-    for a, b in sc.RODS + sc.TIES:
+    for a, b in sc.RODS_CARBON + sc.TIES:
         if k in (a, b):
             o = b if a == k else a
             out.append(dict(name=f"{a}-{b}", far=np.array(P[o], float), other=o if o in sc.NODES else None))
@@ -84,7 +87,8 @@ def members(k):
 
 def check_members(k, log=print):
     c, ms, bad = np.array(P[k], float), members(k), []
-    names = {m["name"] for m in ms}; loads = set(LOADS.get(k, {}))
+    bridged = {f"{a}-{b}" for a, b in sc.BRIDGES}
+    names = {m["name"] for m in ms}; loads = set(LOADS.get(k, {})) - bridged
     if names != loads:
         bad.append(f"frame model members differ: no load for {sorted(names - loads)}, no member for {sorted(loads - names)}")
     for m in ms:
@@ -145,51 +149,65 @@ def funnel_sweep():
     return _SWEEP["m"]
 
 
-def build(k, h, log=print):
+def build(group, h, log=print):
+    """one printed structure: the node(s) of group (a key, or sc.GROUPS' tuple of keys bridged together), each with its collars, struts and
+    hub, a printed bridge's room between merged nodes, a landing face under a skid node"""
     import manifold3d as mf
-    ms = check_members(k, log); c = np.array(P[k], float); base = k in SKID
-    collars, bores, keep = [], [], []
-    for m in ms:
-        ro = m["bore_r"] + WALL; s_end = m["s0"] + m["depth"]
-        collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL))
-        bores += socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"])
-        keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))
-        m["ro"], m["s_end"] = ro, s_end
-    # the envelope: a strut round each member from the node's centre to its collar's mouth (STRUT_M of room round the collar) and a
-    # hub ball at the centre, so the engine only decides how much of each strut to keep: a node, not a web (5 Nov, Spark: run 1's
-    # nodes, grown in a ball to 56 mm across, were spindly blobs of webs between far-apart collars)
-    foot = None; struts = [along(c, m["u"], 0.0, m["s_end"], m["ro"] + STRUT_M) for m in ms]
-    if base:
-        zb = c[2] - NODE_R - WALL
-        foot = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + FOOT_T, FOOT_R)
-        struts.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, c[2], FOOT_R + STRUT_M))   # from the foot's face up: no room under the landing face (load_room)
-    env = U(struts + [mf.Manifold.sphere(NODE_R + WALL + STRUT_M, 48).translate(c.tolist())])
-    drawn = U(collars + ([foot] if base else [])); cuts = U(bores + keep + [funnel_sweep()])   # the funnel's sweep: no growth toward it
-    verify_cuts(k, ms, cuts, log)
-    p = Part(f"scout_cage_node_{k.lower()}", h, drawn, cuts, env, build="+z", material="PETG")
-    sup = sorted(ms, key=lambda m: -m["axial"])[:2]
-    lining = lambda m, grow=1.0: along(c, m["u"], m["s0"] - FLOOR - 0.5, m["s_end"], m["bore_r"] + grow)
-    p.support("default", U([lining(m, 1.4) for m in sup])); held = {m["name"] for m in sup}
-    log(f"  supports: {sorted(held)}")
-    for m in ms:
-        if m["name"] in held:
+    group = (group,) if isinstance(group, str) else tuple(group)
+    collars, bores, keep, struts, drawn_extra, allm, feet = [], [], [], [], [], [], {}
+    for k in group:
+        ms = check_members(k, log); c = np.array(P[k], float)
+        for m in ms:
+            ro = m["bore_r"] + WALL; s_end = m["s0"] + m["depth"]
+            collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL))
+            bores += socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"])
+            keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))
+            m["ro"], m["s_end"], m["node"], m["c"] = ro, s_end, k, c
+            allm.append(m)
+        # the envelope: a strut round each member from the node's centre to its collar's mouth (STRUT_M of room round the collar) and a
+        # hub ball at the centre, so the engine only decides how much of each strut to keep: a node, not a web (5 Nov, Spark: run 1's
+        # nodes, grown in a ball to 56 mm across, were spindly blobs of webs between far-apart collars)
+        struts += [along(c, m["u"], 0.0, m["s_end"], m["ro"] + STRUT_M) for m in ms]
+        struts.append(mf.Manifold.sphere(NODE_R + WALL + STRUT_M, 48).translate(c.tolist()))
+        if k in SKID:
+            zb = c[2] - NODE_R - WALL
+            drawn_extra.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + FOOT_T, FOOT_R))
+            struts.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, c[2], FOOT_R + STRUT_M))   # from the foot's face up: no room under the landing face (load_room)
+            feet[k] = zb
+    for a, b in sc.BRIDGES:                                                     # the printed bridge between two merged nodes: its room, the whole span
+        if a in group and b in group:
+            ca, cb = np.array(P[a], float), np.array(P[b], float); d = cb - ca; L = float(np.linalg.norm(d))
+            struts.append(along(ca, d / L, 0.0, L, BRIDGE_R))
+    env = U(struts)
+    drawn = U(collars + drawn_extra); cuts = U(bores + keep + [funnel_sweep()])   # the funnel's sweep: no growth toward it
+    for k in group:
+        verify_cuts(k, [m for m in allm if m["node"] == k], cuts, log)
+    p = Part(sc.group_id(group), h, drawn, cuts, env, build="+z", material="PETG")
+    sup = sorted(allm, key=lambda m: -m["axial"])[:2]
+    lining = lambda m, grow=1.0: along(m["c"], m["u"], m["s0"] - FLOOR - 0.5, m["s_end"], m["bore_r"] + grow)
+    p.support("default", U([lining(m, 1.4) for m in sup])); held = {(m["node"], m["name"]) for m in sup}
+    log(f"  supports: {sorted(n for _, n in held)}")
+    for m in allm:
+        if (m["node"], m["name"]) in held:
             continue
         p.load_multi(f"frame {m['name']} axial {m['axial']:.0f} N (pull-out)", [(lining(m), m["axial"] * m["u"])], cls="crash")
         side = np.cross(m["u"], [0, 0, 1.0] if abs(m["u"][2]) < 0.9 else [1.0, 0, 0]); side /= np.linalg.norm(side)
         p.load_multi(f"frame {m['name']} side {m['side']:.1f} N", [(lining(m), m["side"] * side)], cls="crash")
-    L = max(ms, key=lambda m: m["len"])
-    if L["name"] not in held:
+    L = max(allm, key=lambda m: m["len"])
+    if (L["node"], L["name"]) not in held:
         sd = np.cross(L["u"], [0, 0, 1.0] if abs(L["u"][2]) < 0.9 else [1.0, 0, 0]); sd /= np.linalg.norm(sd)
         p.load_multi(f"crash 35 g through the longest rod {L['name']} ({L['len']:.0f} mm), axial + side", [(lining(L), -L["axial"] * L["u"] + L["side"] * sd)], cls="crash")
-    if base:
+    for k, zb in feet.items():
+        c = np.array(P[k], float)
         face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + 1.0, FOOT_R + 0.5)   # from the face up: the cell layer under the face is envelope skin, design room to the audit (load_room)
         fz = LAND_G * DRONE_G * GN / LAND_FEET
-        p.load_multi(f"landing 6 g on the skid face ({fz:.0f} N up, 3 of 6 skid nodes)", [(face, np.array([0, 0, fz]))], cls="flight")
+        p.load_multi(f"landing 6 g on the skid face of {k} ({fz:.0f} N up, 3 of 6 skid nodes)", [(face, np.array([0, 0, fz]))], cls="flight")
     return p
 
 
-def make(k):
-    return lambda h: build(k, h)
+def make(group):
+    return lambda h: build(group, h)
 
 
 SPEC = dict(h=1.0, gen_cm3=2.0, max_worst=0.5)            # h 1.0 as the Overseer nodes (a node ball ~60 across is 262k cells at 1.0, 512k at 0.8); 2 cm3 (5 Nov, Spark: overweight; at 4 the 23 run-1 nodes were 8.3..10.5 g with indices 0.01..0.16, so half the volume keeps every index under 0.35)
+SPEC_PAIR = dict(SPEC, gen_cm3=5.0)                       # a merged pair: two nodes' 2 cm3 and a printed bridge's worth (O8 x 40 = 2 cm3, E)

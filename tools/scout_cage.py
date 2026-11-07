@@ -70,6 +70,40 @@ TIE_ROOTS = {"A0": (62, 62, 13.5), "A1": (-62, 62, 13.5), "A2": (-62, -62, 13.5)
 PRINTED = {"NB": "scout_nose_unit", "TB": "scout_tail_unit"}   # cage nodes printed into a unit bolted to the plate (v18; v17's tail ties T0/T1 to TB are the tail unit itself:
 TIES = [("A0", "B0"), ("A1", "B1"), ("A2", "B2"), ("A3", "B3"), ("C0", "BM0"), ("C1", "BM0"), ("C2", "BM1"), ("C3", "BM1")]   # 3.0 rods: the arm-tip ties to the rail corners, the yoke-corner ties to the rail mid nodes (5 Nov: at a corner the two ties arrived 2..13 deg apart, their bores had to start 39 mm out and the node grew past the cell limit)
 #   without a stiff tail link a 35 g tail-first wall hit racked the cage 17 mm with 1157 N in a corner tie, frame model 4 Nov; with one 0.2 mm, 144 N)
+MERGE_MM = 60.0                                                # two nodes closer than this are one printed structure (5 Nov, Spark: "if any two nodes are too
+BRIDGES = [(i, j) for i, j in RODS if np.linalg.norm(np.array(NODES[i], float) - np.array(NODES[j], float)) <= MERGE_MM]   # close together ... make that into
+#   one structure, the same all across the scout"): the rod between them is printed PETG (a bridge), its two sockets are gone. At 60: the
+#   two window posts P0-R0 / P7-R7 (41) and the six skid-truss posts B-K / BM-KM (57); the next pair up is NB-P0 at 62 (NB is in the
+#   nose unit), then B0-P0 at 70 and the corner diagonals B0-R0 at 89. Frame model with the bridges as PETG O8: 241 Hz (246), crash
+#   deflection 1.44 mm (1.41), Euler and rod forces unchanged, a bridge under 8 MPa; mass a wash (a bridge O8 weighs what the rod,
+#   its two collars and the engine's material behind them did, +-1 g a pair).
+
+
+def _groups():
+    """the printed structures: nodes joined by bridges (union-find), the rest single; PRINTED nodes left out"""
+    par = {k: k for k in NODES}
+    def f(x):
+        while par[x] != x:
+            par[x] = par[par[x]]; x = par[x]
+        return x
+    for i, j in BRIDGES:
+        par[f(i)] = f(j)
+    out = {}
+    for k in NODES:
+        if k not in PRINTED:
+            out.setdefault(f(k), []).append(k)
+    return [tuple(sorted(g, key=list(NODES).index)) for g in out.values()]
+
+
+GROUPS = _groups()
+GROUP_OF = {k: g for g in GROUPS for k in g}
+RODS_CARBON = [r for r in RODS if r not in BRIDGES]
+
+
+def group_id(g):
+    return "scout_cage_node_" + "_".join(k.lower() for k in g)
+
+
 OPEN = [dict(ring=["K0", "KM0", "K1", "K2", "KM1", "K3"], what="bottom: the belly skirt into the funnel"), dict(ring=["B0", "B3", "NB"], what="bottom, nose V"), dict(ring=["B1", "TB", "B2"], what="bottom, tail V"),
         dict(ring=["K0", "B0", "B3", "K3"], what="bottom, nose end between the skids"), dict(ring=["K1", "B1", "B2", "K2"], what="bottom, tail end between the skids"),
         dict(ring=["P0", "R0", "R7", "P7"], what="nose window: the camera's view")]
@@ -149,7 +183,7 @@ def shell_report(spec):
 
 def mesh():
     P = all_nodes()
-    parts = [trimesh.creation.cylinder(radius=1.5, segment=[P[i], P[j]], sections=12) for i, j in RODS + TIES]
+    parts = [trimesh.creation.cylinder(radius=1.5, segment=[P[i], P[j]], sections=12) for i, j in RODS_CARBON + TIES]   # the bridges are printed
     # no node spheres since 4 Nov: the 25 printed nodes are parts of their own (parts/scout_node_lib.py), NB / TB are in the units
     return trimesh.util.concatenate(parts)
 
@@ -158,7 +192,7 @@ if __name__ == "__main__":
     keys = list(NODES); idx = {k: n for n, k in enumerate(keys)}; P = all_nodes()
     L = [float(np.linalg.norm(np.array(NODES[i]) - np.array(NODES[j]))) for i, j in RODS]
     xs = [n[0] for n in NODES.values()]; ys = [n[1] for n in NODES.values()]; zs = [n[2] for n in NODES.values()]
-    print(f"cage v19: {len(NODES)} nodes, {len(RODS)} rods, {sum(L) / 1000:.2f} m of 3.0 rod ({sum(L) * 0.011:.0f} g), shortest {min(L):.0f}, longest {max(L):.0f}; "
+    print(f"cage v19: {len(NODES)} nodes, {len(RODS)} rods of which {len(BRIDGES)} printed bridges, {sum(l for l, r in zip(L, RODS) if r not in BRIDGES) / 1000:.2f} m of 3.0 rod, {len(GROUPS)} printed structures, shortest rod {min(L):.0f}, longest {max(L):.0f}; "
           f"node extents {max(xs) - min(xs):.0f} x {max(ys) - min(ys):.0f} x {max(zs) - min(zs):.0f}")
     w = checks()
     print("  shortest rods: " + ", ".join(f"{i}-{j} {l:.0f}" for l, (i, j) in sorted(zip(L, RODS))[:4]))
@@ -184,21 +218,20 @@ if __name__ == "__main__":
     a["cage_shell"] = spec
     a["parts"] = [p for p in a["parts"] if p["id"] not in ("scout_cage_pattern", "scout_cage_v14", "scout_cage_v15", "scout_cage_v16", "scout_cage_v17", "scout_cage_v18", "scout_cage_v19")]
     a["parts"] = [p for p in a["parts"] if not p["id"].startswith("scout_cage_node_")]
-    for k in keys:
-        if k in PRINTED:
-            continue
-        c = NODES[k]
-        mesh_path = f"parts/scout_cage_node_{k.lower()}/part.stl"
-        e = dict(id=f"scout_cage_node_{k.lower()}", name=f"cage node {k}", role="cage", group="cage", color="#eef2f5", opacity=0.8, material="PETG",
-                 box=[c[0] - 5, c[0] + 5, c[1] - 5, c[1] + 5, c[2] - 5, c[2] + 5], mass_g=5.0, tag="E",   # a box of the collar's reach until the run lands (+-9 crossed the funnel's y walls in the descent gate at the -y limit; the node setups cut the funnel's sweep)
-                               owner="scout v3", version="v19 nodes (4 Nov)", source="parts/scout_node_lib.py",
-                 note=f"the socket collars of the {sum(k in r for r in RODS + TIES)} rods and ties that end here, the rest generated (parts/scout_cage_node_{k.lower()}/part.py); a box until the run lands")
+    for g in GROUPS:
+        cs = np.array([NODES[k] for k in g], float); lo, hi = cs.min(0) - 5, cs.max(0) + 5
+        mesh_path = f"parts/{group_id(g)}/part.stl"; n_m = sum(any(k in r for k in g) for r in RODS_CARBON + TIES)
+        e = dict(id=group_id(g), name="cage node " + "+".join(g), role="cage", group="cage", color="#eef2f5", opacity=0.8, material="PETG",
+                 box=[lo[0], hi[0], lo[1], hi[1], lo[2], hi[2]], mass_g=5.0 * len(g), tag="E",   # a box over the centres until the run lands (+-9 crossed the funnel's y walls in the descent gate; the node setups cut the funnel's sweep)
+                 owner="scout v3", version="v19 nodes (5 Nov: struts, merged pairs)", source="parts/scout_node_lib.py",
+                 note=f"the socket collars of the {n_m} rods and ties that end here, the rest generated (parts/{group_id(g)}/part.py)"
+                      + (f"; nodes {' and '.join(g)} are one printed structure, the rod between them a printed bridge (MERGE_MM {MERGE_MM:.0f})" if len(g) > 1 else "") + "; a box until the run lands")
         if os.path.exists(os.path.join(ROOT, mesh_path)):
             e["mesh"] = mesh_path                                                 # the run's mesh once it has landed (system_check resolves mesh paths strictly)
         a["parts"].append(e)
     a["parts"].append(dict(id="scout_cage_v19", name="cage v19 rods and ties (low domed funnel cage on skid trusses, tail in to -116, 3 mm carbon, frame-checked)", role="cage", group="cage", color="#2b2b2b",
-                           mesh="parts/scout_cage_v19/part.stl", mass_g=round(sum(L) * 0.011, 1), tag="E", owner="scout v3",
+                           mesh="parts/scout_cage_v19/part.stl", mass_g=round(sum(l for l, r in zip(L, RODS) if r not in BRIDGES) * 0.011 + sum(LT) * 0.011, 1), tag="E", owner="scout v3",
                            version="v19 (4 Nov)", source="tools/scout_cage.py",
-                           note=f"{len(NODES)} nodes, {len(RODS)} rods 3.0 ({sum(L) / 1000:.2f} m), an octagonal prism tangent to the prop keep-out, base rails z 0, two skids at |y| 84, z -48 (TPU strips) as Warren trusses braced to the ring, 8 ties to the plate, ring z 54 and a 12 dome, nose window for the camera, NB / TB printed into the nose / tail units, the other 25 nodes their own printed parts (parts/scout_node_lib.py); frame model tools/scout_cage_loads.py"))
+                           note=f"{len(NODES)} nodes, {len(RODS_CARBON)} rods 3.0 ({sum(l for l, r in zip(L, RODS) if r not in BRIDGES) / 1000:.2f} m) and {len(BRIDGES)} printed bridges ({len(GROUPS)} printed structures), an octagonal prism tangent to the prop keep-out, base rails z 0, two skids at |y| 84, z -48 (TPU strips) as Warren trusses braced to the ring, 8 ties to the plate, ring z 54 and a 12 dome, nose window for the camera, NB / TB printed into the nose / tail units, the other 25 nodes their own printed parts (parts/scout_node_lib.py); frame model tools/scout_cage_loads.py"))
     open(F, "w").write(json.dumps(a, indent=0, ensure_ascii=False) + ("\n" if raw.endswith("\n") else ""))
     print("  written: parts/scout_cage_v19/part.stl and systems/scout.assembly.json cage_shell")

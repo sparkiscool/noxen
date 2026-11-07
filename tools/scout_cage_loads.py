@@ -30,6 +30,7 @@ import scout_cage as sc                                      # noqa: E402
 OUT_PATH = os.path.join(ROOT, "systems", "scout.cage_loads.json")
 ASM_PATH = os.path.join(ROOT, "systems", "scout.assembly.json")
 ROD_G_MM, NODE_G = 0.011, 5.0
+BRIDGE = dict(E=2100.0, A=np.pi * 4.0 ** 2, I=np.pi / 4 * 4.0 ** 4); BRIDGE_G_MM = 0.064   # a printed PETG bridge between two merged nodes (sc.BRIDGES), O8 solid (E)
 CAP = dict(pull_out=940.0, side=1200.0, moment_socket=2000.0, moment_rod=2650.0)    # N, N, N mm, N mm (E, docstring)
 ROUGH_G, ROUGH_DEG = 6.0, 20.0
 
@@ -62,7 +63,9 @@ def build(nodes, rods, ties, core):
         load[pid[k]] += NODE_G
     for i, j in rods:
         L = float(np.linalg.norm(np.array(P[i]) - np.array(P[j])))
-        fr.member(f"{i}-{j}", pid[i], pid[j], cl.RODS, "rod"); load[pid[i]] += ROD_G_MM * L / 2; load[pid[j]] += ROD_G_MM * L / 2
+        br = (i, j) in sc.BRIDGES or (j, i) in sc.BRIDGES
+        fr.member(f"{i}-{j}", pid[i], pid[j], BRIDGE if br else cl.RODS, "bridge" if br else "rod")
+        g = (BRIDGE_G_MM if br else ROD_G_MM) * L / 2; load[pid[i]] += g; load[pid[j]] += g
     for i, j in ties:
         L = float(np.linalg.norm(np.array(P[i]) - np.array(P[j])))
         fr.member(f"{i}-{j}", pid[i], pid[j], cl.RODS, "tie"); load[pid[i]] += ROD_G_MM * L / 2; load[pid[j]] += ROD_G_MM * L / 2
