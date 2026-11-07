@@ -182,7 +182,7 @@ def build(k, h, log=print):
         sd = np.cross(L["u"], [0, 0, 1.0] if abs(L["u"][2]) < 0.9 else [1.0, 0, 0]); sd /= np.linalg.norm(sd)
         p.load_multi(f"crash 35 g through the longest rod {L['name']} ({L['len']:.0f} mm), axial + side", [(lining(L), -L["axial"] * L["u"] + L["side"] * sd)], cls="crash")
     if base:
-        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb - 0.5, zb + 1.0, FOOT_R + 0.5)
+        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + 1.0, FOOT_R + 0.5)   # from the face up: the cell layer under the face is envelope skin, design room to the audit (load_room)
         fz = LAND_G * DRONE_G * GN / LAND_FEET
         p.load_multi(f"landing 6 g on the skid face ({fz:.0f} N up, 3 of 6 skid nodes)", [(face, np.array([0, 0, fz]))], cls="flight")
     return p
