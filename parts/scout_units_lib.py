@@ -130,7 +130,9 @@ class Sock:
         return collar_shape(self.c, self.d, 0.0, self.t_mouth, BORE_R, WALL)
 
     def bores(self):
-        return socket_cuts(self.pt(FLOOR), self.d, 0.0, DEPTH, BORE_R)
+        """the bore, grooves, lead-in, crown and the three resin pockets, the first under the injection port (call port() first)"""
+        from parts.cage_node_lib import POCKETS
+        return socket_cuts(self.pt(FLOOR), self.d, 0.0, DEPTH, BORE_R, pockets=POCKETS, pocket_dir=getattr(self, "port_d", None))
 
     def clear(self, length=300.0):
         return along(self.pt(self.t_mouth + 0.5), self.pt(self.t_mouth + length), BORE_R + 0.9)
@@ -304,7 +306,7 @@ def arm_clip_setup(k, h):
                       (mx + sx * 30, my + sy * 30, PLATE_Z + 4), (mx - sx * 20, my + sy * 30, PLATE_Z + 4), (mx + sx * 30, my - sy * 20, PLATE_Z + 4)]))
     s = Sock(f"{a} {a}-{b}", nodes[a], nodes[b])
     check_collars([s], U(cuts))
-    drawn.append(s.collar()); cuts += s.bores(); cuts.append(s.clear()); cuts.append(s.port((0, 0, -1.0)))   # the port down, under the arm tip
+    drawn.append(s.collar()); cuts.append(s.port((0, 0, -1.0))); cuts += s.bores(); cuts.append(s.clear())   # the port down, under the arm tip; the bore's pockets fed by it
     env = U([box(mx - 14, mx + 14, my - 14, my + 14, CLIP_Z0, PLATE_Z), along(s.pt(-8.0), s.pt(s.t_mouth), BORE_R + WALL + 4.0),
              hull([(mx, my, CLIP_Z0), (mx, my, PLATE_Z), s.pt(-8.0) + [0, 0, -6], s.pt(-8.0) + [0, 0, 2], s.pt(s.t_mouth) + [0, 0, -6], s.pt(s.t_mouth) + [0, 0, 2]])])
     from topo import Part

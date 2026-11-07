@@ -21,7 +21,7 @@ import json, os, sys
 import numpy as np
 from topo import Part
 from topo.part import man
-from parts.cage_node_lib import socket_cuts, collar_shape, along, U, GROOVE_D, port_dir, port_cut, PORT_R
+from parts.cage_node_lib import socket_cuts, collar_shape, along, U, GROOVE_D, port_dir, port_cut, PORT_R, POCKETS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -187,7 +187,6 @@ def build(group, h, log=print):
         for m in ms:
             ro = m["bore_r"] + WALL; s_end = m["s0"] + m["depth"]
             collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL))
-            bores += socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"])
             keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))
             m["ro"], m["s_end"], m["node"], m["c"] = ro, s_end, k, c
             allm.append(m)
@@ -217,6 +216,7 @@ def build(group, h, log=print):
         prefer = c - np.array(CAGE_CENTRE, float); prefer /= np.linalg.norm(prefer)
         m["port_d"] = port_dir(m["u"], prefer, others, blockers, origin=c + m["u"] * (m["s0"] + 1.5), clear_r=PORT_R + 0.5, log=log)
         ports.append(port_cut(c, m["u"], m["s0"], m["port_d"]))
+        bores += socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"], pockets=POCKETS, pocket_dir=m["port_d"])   # the bore, grooves, lead-in, crown and the three resin pockets, the first under the port
     drawn = U(collars + drawn_extra); cuts = U(bores + keep + ports + [funnel_sweep()])   # the funnel's sweep: no growth toward it
     for k in group:
         verify_cuts(k, [m for m in allm if m["node"] == k], cuts, log)

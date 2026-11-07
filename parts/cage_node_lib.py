@@ -31,6 +31,9 @@ BASE = {0, 1, 2, 3, 4, 5}                             # the base loop, z -79.9
 WALL, FLOOR, MARGIN = 2.5, 3.0, 8.0                   # wall 2.5 (29 Oct, was 2.0): 2.0 is left at the resin grooves, 2.2 at the injection annulus (7 Nov: the test breaks were in the body between sockets, not the collars)
 KIND = {"tube": dict(bore_r=3.1, depth=15.0), "link": dict(bore_r=1.6, depth=10.0)}   # bore 6.2 / 3.2
 GROOVE_D, GROOVE_H, LEAD_IN = 0.5, 1.5, 1.0            # the coupon socket (socket_cuts below): resin grooves, lead-in
+POCKETS, POCKET_D, POCKET_DEG = 3, 0.3, 60.0                # resin pockets (Spark 7 Nov: "the inner pattern where the resin can make the best contact with the rod"):
+#   three 0.3 deep, 60 deg wide channels along the bore from above the floor out of the mouth, between three 60 deg lands of the plain bore that
+#   centre the rod; the port feeds the first pocket, the two grooves join them round the rod, the resin shows at the mouth through them
 PORT_R, PORT_S, PORT_CLEAR_DEG = 1.0, 1.5, 30.0         # resin injection port (Spark 5 Nov: "nodes need to be resin injectable"): O2 through the collar wall PORT_S above the floor, out between the members (none within PORT_CLEAR_DEG of it: at 40 the 6..8-member Scout nodes had none, their freest 30..38), so the resin fills from the floor and shows at the mouth
 CROWN_MIN_SIN = 0.3                                    # a bore within ~17 deg of vertical prints without a crown
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
@@ -123,12 +126,23 @@ def _prism(poly, c, u, s0, s1, e1, e2):
     return m.transform(np.column_stack([R, t]).astype(np.float64))
 
 
-def socket_cuts(c, u, s0, depth, r, build=(0.0, 0.0, 1.0), beyond=1.0):
+def socket_cuts(c, u, s0, depth, r, build=(0.0, 0.0, 1.0), beyond=1.0, pockets=0, pocket_dir=None):
     """cuts of one socket whose bore bottom is at c + u s0 and mouth at c + u (s0 + depth), bore radius r: the bore (to beyond past
-    the mouth), two resin grooves, the lead-in cone, and the teardrop crown toward the build direction where the bore overhangs"""
+    the mouth), two resin grooves, the lead-in cone, the teardrop crown toward the build direction where the bore overhangs, and
+    (pockets > 0) that many POCKET_D deep resin channels of POCKET_DEG along the bore from PORT_S - 0.5 above the floor out of the
+    mouth, the first centred on pocket_dir (the injection port's direction) so the port feeds it"""
     u = np.asarray(u, float) / np.linalg.norm(u); z = np.asarray(build, float)
     s_end = s0 + depth
     cuts = [along(c, u, s0, s_end + beyond, r)]
+    if pockets:
+        d = np.asarray(pocket_dir, float) if pocket_dir is not None else np.cross(u, [0, 0, 1.0] if abs(u[2]) < 0.9 else [1.0, 0, 0])
+        e1 = d - (d @ u) * u; e1 /= np.linalg.norm(e1); e2 = np.cross(u, e1)
+        half = np.radians(POCKET_DEG / 2)
+        for k in range(pockets):
+            a0 = 2 * np.pi * k / pockets
+            arc = np.linspace(a0 - half, a0 + half, 9)
+            poly = [((r - 0.2) * np.cos(t), (r - 0.2) * np.sin(t)) for t in arc] + [((r + POCKET_D) * np.cos(t), (r + POCKET_D) * np.sin(t)) for t in arc[::-1]]
+            cuts.append(_prism(poly, c, u, s0 + PORT_S - 0.5, s_end + beyond, e1, e2))
     for f in (1.0 / 3.0, 2.0 / 3.0):
         sg = s0 + f * depth - 0.5 * GROOVE_H
         cuts.append(along(c, u, sg, sg + GROOVE_H, r + GROOVE_D))

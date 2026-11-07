@@ -67,8 +67,9 @@ def bodies():
     # cage node NB and the tie sockets C0 / C3
     socks = L.node_socks("NB", ["B0", "B3", "P0", "P7"], nodes) + L.tie_socks(("C0", "C3"), nodes, ties)
     for s in socks:
-        drawn.append(s.collar()); cuts += s.bores(); cuts.append(s.clear())
+        drawn.append(s.collar())
         cuts.append(s.port((0, 0, -1.0) if s.name.startswith(("NB", "TB")) else (0, np.sign(s.c[1]), 0), socks))   # resin injection port: the node's down out of the unit's underside, a tie's out of the yoke's side
+        cuts += s.bores(); cuts.append(s.clear())                                                        # the bore's three resin pockets fed by the port
         env.append(along(s.pt(-6.0), s.pt(s.t_mouth), L.BORE_R + L.WALL + 5.0))
     L.check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
     return dict(drawn=U(drawn), cuts=U(cuts), env=U(env), pad_regs=pad_regs, boss_regs=boss_regs, seat_regs=seat_regs,
