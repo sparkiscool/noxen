@@ -2,8 +2,8 @@
 up-to-date box mechanism CAD, as real as it gets, one artifact other sessions can reach). Copies the real meshes into
 parts/box_<slug>/part.stl (a folder belongs to one system) and writes systems/box.assembly.json in the box W frame:
   swap arm v7      nox/box/box_swap_arm.assembly.json (hub, stub, rails, heads, grabbers, detent, drives, the bay receivers and two
-                   packs; meshes runs/arm/v7/asm), poses as in the file (cycle t 0, park); the two bays nearest the top (30 and -210 deg)
-                   are dropped (Spark 3 Nov): their receivers rose through the deck, so 7 bays stay (4 Overseer, 3 Scout)
+                   packs; meshes runs/arm/v7/asm), poses as in the file (cycle t 0, park); all 9 bays (the two nearest the top, 30 and -210 deg,
+                   dropped 3 Nov when they rose through the deck, are back 8 Nov: the seat is 65 higher and there is no deck)
   stand            nox/box/box_structure.assembly.json: mast, cradle keel, kb, toe, the two cross bars (the built demo v1); the v1
                    ring frames, posts, brackets and v4i bay modules are left out: the v2 layout superseded them with the 9 bays
                    the arm file carries, and nothing of v2's bodies is drawn yet
@@ -17,7 +17,7 @@ import numpy as np, trimesh
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SEAT_TO_W = [[0, -1.0, 0, 0], [1.0, 0, 0, 167.1], [0, 0, 1.0, 220.3], [0, 0, 0, 1.0]]   # catch_system.py's Y_FUN 167.1; Z_SEAT 220.3 = the catch's 155.3 + 65 (3 Nov: the head extends 65 more at the drone slot)
-DROPPED_BAYS = {"rec30", "rec-210"}                 # the two bays nearest the top (Spark 3 Nov): their receivers reached W Z 85, through the deck (66) and into the Overseer's loop; 7 bays stay
+DROPPED_BAYS = set()                                # 3 Nov rec30 and rec-210 were dropped (through the deck at W Z 66); 8 Nov back: no deck, seat at W Z 220, 49.8 clear of the Overseer's loop
 BOUGHT = {"motor", "shaft", "p20", "p80", "belt", "brg", "axles", "servo", "detent_roller", "detent_springs", "detent_tower", "ties", "stub_bolts", "pack"}
 GROUP = {"rec": ("bays", "#8a94a6"), "pack": ("packs", "#2f4fbf"), "motor": ("arm drives", "#555555"), "servo": ("arm drives", "#555555"),
          "brg": ("arm drives", "#9a9a9a"), "shaft": ("arm drives", "#9a9a9a"), "p20": ("arm drives", "#777777"), "p80": ("arm drives", "#777777"),
@@ -59,6 +59,37 @@ def box_check(parts):
             if v > 0.5:
                 hits.append((p["name"], nm, v, sc.to_tri(mp ^ mm).bounds.round(0).tolist()))
     print(f"box parts vs deck / funnel: {len(hits)} crossings" + "".join(f"\n  {a} x {b}: {v:.0f} mm3 at W {bb}" for a, b, v, bb in hits))
+    land = landing_check(parts)
+    if hits or land:
+        sys.exit("import_box: a box part crosses the funnel or a landing path (above); move or drop it")
+
+
+def landing_check(parts):
+    """every box part with a mesh against both drones seated and at each descent state (seat_check.descent_states, the capture
+    limits): a bay or arm part may not cross a landing path (8 Nov: the bays nearest the top came back after the seat rose 65)"""
+    import seat_check as sc, seat_envelope as se
+    W2S = np.linalg.inv(np.array(SEAT_TO_W))
+    box = []
+    for p in parts:
+        if not p.get("mesh") or p.get("group", "").startswith("landing") or p["id"] in ("box_funnel", "box_deck"):
+            continue
+        m = trimesh.load(os.path.join(ROOT, p["mesh"]), force="mesh")
+        m.apply_transform(W2S @ (np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4)))
+        box.append((p["name"], m, sc.man(m)))
+    hits = []
+    for drone in ("scout", "overseer"):
+        dparts = [(nm, m, sc.man(m) or sc.man(m.convex_hull)) for nm, m in se.parts_of(drone)]
+        for lab, ox, oy, h in sc.descent_states(drone):
+            off = np.array([ox, oy, h])
+            for bn, bm, bmm in box:
+                for dn, dm, dmm in dparts:
+                    if bmm is None or dmm is None or not ((bm.bounds[0] <= dm.bounds[1] + off).all() and (bm.bounds[1] >= dm.bounds[0] + off).all()):
+                        continue
+                    v = sc.volume(bmm ^ dmm.translate(off.tolist()))
+                    if v > 0.5:
+                        hits.append((bn, f"{drone} {dn}", lab, v))
+    print(f"box parts vs both drones landing: {len(hits)} crossings" + "".join(f"\n  {a} x {b} at {l}: {v:.0f} mm3" for a, b, l, v in hits))
+    return hits
 
 
 def main(nox):
@@ -144,7 +175,7 @@ def main(nox):
                           note="the Overseer latch set back in its base slot (out since 29 Oct): 184 x 67 x 72 from the arm's bay envelope; the cartridge width is a CHECK"))
     a = dict(name="Nox Ground Unit", title="Nox Ground Unit", readme_view="iso", artifact=None, machine="box",
              note=("Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3): "
-                   "the catch's SEAT_TO_W raised 65, the arm's head extending 65 more at the drone slot, Spark 3 Nov). In: the swap arm v7 at park with 7 bay receivers (the two nearest the top dropped) and two packs, "
+                   "the catch's SEAT_TO_W raised 65, the arm's head extending 65 more at the drone slot, Spark 3 Nov). In: the swap arm v7 at park with 9 bay receivers (the two nearest the top back 8 Nov) and two packs, "
                    "a placeholder extended head at the drone, the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the funnel on its nose and tail beams across the side sheets, both drones seated in it. "
                    "Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, "
                    "the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). "
