@@ -48,11 +48,11 @@ class FrontPad(TubeArm):
         for z in TUBE_Z:
             B = self.p(self.pad_mouth + TUBE_DEPTH, 0.0, z)
             slots.append(trough(B, -self.a3, n3, 0.0, TUBE_DEPTH + 7.0, TUBE_GAP, DROP, 2.6, 18.0))    # from the floor plane (not into the 3 mm floor: a 1 mm sliver of it failed the audit) to past the mouth
-            rings.append(along(B, -self.a3, -1.0, TUBE_DEPTH + 1.0, 3.1 + RING_T))
+            rings.append(along(B, -self.a3, 0.0, TUBE_DEPTH + 1.0, 3.1 + RING_T))         # from the floor plane: a ring past it left a 1 mm slab beside the channel's clearance
         node = np.asarray(self.node, float)
         for sp in self.spokes:
             slots.append(trough(node, sp["u"], n3, self.node_r, self.node_r + SOCK_DEPTH + 16.0, SPOKE_GAP, DROP, 1.9, 14.0))   # from the floor plane to past the mouth; walls >= 2.0 to d 1.9
-            rings.append(along(node, sp["u"], self.node_r - 3.0, self.node_r + SOCK_DEPTH + 1.0, 1.6 + RING_S))
+            rings.append(along(node, sp["u"], self.node_r, self.node_r + SOCK_DEPTH + 1.0, 1.6 + RING_S))
         for sp in self.spokes:                                             # room round the pushed-out spoke collars (they leave z 0..45)
             env = env + along(node, sp["u"], self.node_r - 6.0, self.node_r + SOCK_DEPTH + 4.0, 9.0)
         return drawn + boss + mf.Manifold.batch_boolean(rings, mf.OpType.Add), cuts + mf.Manifold.batch_boolean(slots, mf.OpType.Add), env
