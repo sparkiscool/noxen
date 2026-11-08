@@ -38,6 +38,7 @@ PORT_R, PORT_S, PORT_CLEAR_DEG = 1.0, 1.5, 30.0         # resin injection port (
 CROWN_MIN_SIN = 0.3                                    # a bore within ~17 deg of vertical prints without a crown
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
 LAND_FEET = 3                                         # a flat landing may rest on 3 of the 6 feet (E)
+HIT_N = 1300.0                                        # ground hit on one base node (8 Nov, Spark: the rear base node broke in three in testing): 1.65 kg from 0.6 m, 9.6 J, stopped in ~15 mm of rod flex, peak ~2x the 640 N average
 FOOT_R, FOOT_T = 8.0, 3.0                             # landing face: Ø16 x 3.0 (7 Nov: 2.4 fails the 2.5 drawn_thin audit), bottom under the node sphere's lowest point
 GN = 9.81e-3
 
@@ -392,6 +393,7 @@ def build(n, h, log=print, extra=None):
         face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + 2.5, FOOT_R - 0.5)   # inside the drawn 3.0 foot, tall enough to hold cell centres at h 1.25 (load_room audit: node 5 at h 1.2 had none in a 1.0 slab and took every cell it touched)
         fz = LAND_G * DRONE_G * GN / LAND_FEET
         p.load_multi(f"landing 6 g on the foot ({fz:.0f} N up, 3 of 6 feet)", [(face, np.array([0, 0, fz]))], cls="flight")
+        p.load_multi(f"ground hit {HIT_N:.0f} N on the foot (a 0.6 m drop onto this node alone, 8 Nov)", [(face, np.array([0, 0, HIT_N]))], cls="crash")
     if ex.get("loads"):
         ex["loads"](p)
     return p
