@@ -1,0 +1,493 @@
+<title>Lantern morph frame</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a drafting sheet. One wide explorer (controls | plan + end view | gate map), then the reasoning below in prose-width columns. */
+:root{
+  --bg:#eef1f3; --panel:#ffffff; --fg:#1b2228; --muted:#5c6a74; --line:#c9d1d8; --grid:#dfe5ea;
+  --accent:#c9780a; --glow:rgba(217,130,11,.16); --prop:#3b5f80; --propfill:rgba(59,95,128,.16);
+  --good:#1f8a4c; --goodfill:rgba(31,138,76,.14); --bad:#c8322b; --badfill:rgba(200,50,43,.22);
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#10161b; --panel:#171f26; --fg:#e6ebee; --muted:#93a1ab; --line:#2b3740; --grid:#1f2a33;
+  --accent:#f0a030; --glow:rgba(240,160,48,.14); --prop:#7fa6c8; --propfill:rgba(127,166,200,.18);
+  --good:#3ec47a; --goodfill:rgba(62,196,122,.16); --bad:#ef5b52; --badfill:rgba(239,91,82,.26); color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#10161b; --panel:#171f26; --fg:#e6ebee; --muted:#93a1ab; --line:#2b3740; --grid:#1f2a33;
+  --accent:#f0a030; --glow:rgba(240,160,48,.14); --prop:#7fa6c8; --propfill:rgba(127,166,200,.18);
+  --good:#3ec47a; --goodfill:rgba(62,196,122,.16); --bad:#ef5b52; --badfill:rgba(239,91,82,.26); color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.sheet{max-width:1280px;margin:0 auto}
+header{display:grid;grid-template-columns:1fr auto;gap:12px 32px;align-items:end;padding:28px 0 18px;border-bottom:2px solid var(--fg)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,5vw,56px);line-height:.95;margin:0;letter-spacing:.005em;text-wrap:balance}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.thesis{max-width:62ch;margin:10px 0 0;font-size:16px}
+.thesis b{font-weight:600}
+.stamp{font-family:var(--mono);font-size:11.5px;color:var(--muted);text-align:right;line-height:1.7}
+h2{font-family:var(--display);font-weight:600;font-size:26px;margin:0 0 6px;line-height:1.1}
+h3{font-family:var(--display);font-weight:600;font-size:19px;margin:0 0 4px}
+p{margin:0 0 10px;max-width:68ch}
+.muted{color:var(--muted)}
+section{padding:28px 0 0}
+
+/* explorer */
+.explorer{display:grid;grid-template-columns:260px minmax(0,1fr) 330px;gap:18px;margin-top:18px}
+.controls{display:flex;flex-direction:column;gap:14px}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:500}
+.ctl .val{font-family:var(--mono);font-size:12.5px;color:var(--fg)}
+.ctl input[type=range]{width:100%;accent-color:var(--accent);margin:4px 0 0}
+.ctl .ends{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.04em}
+.group{border-top:1px solid var(--line);padding-top:12px}
+.group .eyebrow{margin-bottom:8px}
+.presets{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+button{font:inherit;font-size:13px;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:7px 9px;cursor:pointer;text-align:left}
+button:hover{border-color:var(--fg)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.play{grid-column:1/-1;text-align:center;font-weight:600;border-color:var(--fg)}
+.toggle{display:flex;gap:8px;align-items:center;font-size:13px}
+.toggle input{accent-color:var(--accent);margin:0}
+
+.views{display:flex;flex-direction:column;gap:14px;min-width:0}
+figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:10px 12px 8px;min-width:0}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.4}
+figcaption b{color:var(--fg);font-weight:600}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* readouts */
+.readouts{display:flex;flex-direction:column;gap:12px}
+.verdict{background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--good);border-radius:4px;padding:12px 14px}
+.verdict.fail{border-left-color:var(--bad)}
+.verdict .big{font-family:var(--display);font-size:38px;font-weight:600;line-height:1;margin:2px 0 4px;font-variant-numeric:tabular-nums}
+.verdict .big small{font-size:16px;font-family:var(--mono);font-weight:400;color:var(--muted);margin-left:6px}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#fff;background:var(--good)}
+.verdict.fail .pill{background:var(--bad)}
+table.kv{width:100%;border-collapse:collapse;font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:4px}
+table.kv td{padding:6px 10px;border-top:1px solid var(--line);vertical-align:top}
+table.kv tr:first-child td{border-top:0}
+table.kv td:last-child{font-family:var(--mono);font-size:12.5px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+table.kv td .sub{display:block;color:var(--muted);font-size:11.5px}
+table.kv td.warn{color:var(--bad)}
+
+/* reasoning */
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:14px}
+.cols figure{padding:12px}
+.cols figure h3{margin-bottom:6px}
+.mark{font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:1px 6px;border-radius:3px;color:#fff}
+.mark.no{background:var(--bad)} .mark.yes{background:var(--good)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 40px;margin-top:12px}
+ol,ul{margin:0 0 10px;padding-left:20px;max-width:68ch}
+li{margin-bottom:6px}
+li b{font-weight:600}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.foot{margin-top:28px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+
+@media (max-width:1080px){ .explorer{grid-template-columns:240px minmax(0,1fr)} .readouts{grid-column:1/-1;flex-direction:row;flex-wrap:wrap} .readouts>*{flex:1 1 300px} }
+@media (max-width:760px){ .explorer{grid-template-columns:1fr} .pair{grid-template-columns:1fr} .cols{grid-template-columns:1fr} .two{grid-template-columns:1fr} header{grid-template-columns:1fr} .stamp{text-align:left} .readouts{flex-direction:column} }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+
+<div class="sheet">
+<header>
+  <div>
+    <div class="eyebrow">Noxen · concept sheet · not a part</div>
+    <h1>Lantern morph frame</h1>
+    <p class="thesis">The LiDAR rides a boom that swings over the drone like a lantern on a pole. The four arms sweep between an X and a narrow line. One rule ties them together: <b>the LiDAR's base plane always has every propeller behind it</b>, so it sees its whole hemisphere, all around, in every pose the mechanism can reach.</p>
+  </div>
+  <div class="stamp">x forward · y left · z up · mm<br>sensor model: Unitree L2 field 360° × 90°,<br>96° in negative-angle mode (6° below its base)</div>
+</header>
+
+<section>
+<h2>Explorer</h2>
+<p class="muted">Two things move: the arm sweep and the boom angle. Everything else is a size you can change. The check is three-dimensional on every rim, motor, leg and hub corner; the drawings are the two projections.</p>
+<div class="explorer">
+  <div class="controls">
+    <div class="ctl"><label for="beta">Arm sweep <span class="val" id="betaV"></span></label><input type="range" id="beta" min="0" max="45" step="0.5" value="45"><div class="ends"><span>narrow line</span><span>X</span></div></div>
+    <div class="ctl"><label for="alpha">Boom angle <span class="val" id="alphaV"></span></label><input type="range" id="alpha" min="0" max="180" step="1" value="0"><div class="ends"><span>LiDAR up</span><span>over the left</span><span>LiDAR down</span></div></div>
+    <label class="toggle"><input type="checkbox" id="lock" checked> Interlock on (the gate stops a slider at the wall)</label>
+    <div class="group"><div class="eyebrow">Poses</div>
+      <div class="presets">
+        <button data-pose="45,0">Open sky</button>
+        <button data-pose="0,0">Roof cavity</button>
+        <button data-pose="0,180">Between pipes</button>
+        <button data-pose="45,180">Wide, scanning down</button>
+        <button data-pose="0,90">Mid-swing</button>
+        <button class="play" id="play">▶ Run the full cycle</button>
+      </div>
+    </div>
+    <div class="group"><div class="eyebrow">Sizes</div>
+      <div class="controls">
+        <div class="ctl"><label for="B">Boom length, hinge to LiDAR base <span class="val" id="BV"></span></label><input type="range" id="B" min="120" max="420" step="5" value="250"></div>
+        <div class="ctl"><label for="D">Propeller diameter <span class="val" id="DV"></span></label><input type="range" id="D" min="127" max="330" step="1" value="254"></div>
+        <div class="ctl"><label for="L">Arm length, pivot to motor <span class="val" id="LV"></span></label><input type="range" id="L" min="120" max="360" step="5" value="230"></div>
+        <div class="ctl"><label for="hp">Hub half-width <span class="val" id="hpV"></span></label><input type="range" id="hp" min="30" max="90" step="1" value="45"></div>
+        <div class="ctl"><label for="h">Left / right arm stagger <span class="val" id="hV"></span></label><input type="range" id="h" min="0" max="70" step="1" value="25"></div>
+        <div class="ctl"><label for="margin">Safety below the 6° line <span class="val" id="marginV"></span></label><input type="range" id="margin" min="0" max="20" step="0.5" value="6"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="views">
+    <div class="pair">
+      <figure><svg id="plan" viewBox="0 0 520 520" role="img" aria-label="Plan view of the frame: four swept arms with propeller disks, the hub, and the LiDAR boom projected onto the plane"></svg>
+        <figcaption><b>Plan.</b> Nose up, left side on the left. Left arms ride high, right arms low, so the disks may overlap in the narrow line. The boom lies in the plane x = 0, the gap between front and rear props.</figcaption></figure>
+      <figure><svg id="end" viewBox="0 0 520 520" role="img" aria-label="End view from the tail: the boom swings over the left side; the LiDAR's lit field is shaded and every propeller must stay in the dark"></svg>
+        <figcaption><b>End view, from the tail.</b> Amber is what the LiDAR sees, down to 6° below its base plus the safety. Props, arms, legs and hub must stay in the dark. The dot is the worst frame point in 3D with its true angle.</figcaption></figure>
+    </div>
+    <figure><svg id="gate" viewBox="0 0 760 300" role="img" aria-label="Map of every boom angle against every arm sweep, green where the LiDAR sees no propeller, red where it would; the current pose is a dot"></svg>
+      <figcaption><b>The gate.</b> Every boom angle against every sweep; green where the whole frame is below the LiDAR's horizon. Cut this shape as a window in a plate on the boom hinge, put the sweep slider's pin in the window, and the mechanism cannot reach a red pose. The dashed line is the cycle the play button runs.</figcaption></figure>
+  </div>
+
+  <div class="readouts">
+    <div class="verdict" id="verdict">
+      <div class="eyebrow">Worst frame point, seen from the LiDAR</div>
+      <div class="big"><span id="elev">–</span><small id="need"></small></div>
+      <span class="pill" id="pill">CLEAR</span> <span class="muted" id="worstWhat" style="font-size:12.5px"></span>
+    </div>
+    <table class="kv" id="kv"></table>
+  </div>
+</div>
+</section>
+
+<section>
+<h2>Why a swing boom</h2>
+<p>Seeing up needs the LiDAR above every prop; seeing down needs it below every prop. The hard part is the path between. Three ways to carry one LiDAR from the top to the bottom, drawn at the moment that decides them:</p>
+<div class="cols">
+  <figure>
+    <h3>Mast through the hub <span class="mark no">blocked</span></h3>
+    <svg viewBox="0 0 300 200" role="img" aria-label="A LiDAR on a vertical mast passing the propeller plane; its field covers the propellers">
+      <defs><clipPath id="c1"><rect x="0" y="0" width="300" height="200"/></clipPath></defs>
+      <g clip-path="url(#c1)"><path d="M150 100 L-60 -70 L360 -70 Z" fill="var(--glow)"/><path d="M150 100 L-60 100 L-60 -70 L360 -70 L360 100 Z" fill="none"/>
+      <path d="M150 100 L-60 122 M150 100 L360 122" stroke="var(--accent)" stroke-dasharray="4 3" fill="none"/></g>
+      <line x1="150" y1="20" x2="150" y2="190" stroke="currentColor" stroke-width="3"/>
+      <rect x="131" y="88" width="38" height="24" fill="var(--accent)"/>
+      <line x1="40" y1="96" x2="112" y2="96" stroke="var(--prop)" stroke-width="5"/><line x1="188" y1="104" x2="260" y2="104" stroke="var(--prop)" stroke-width="5"/>
+      <circle cx="76" cy="110" r="8" fill="currentColor"/><circle cx="224" cy="118" r="8" fill="currentColor"/>
+      <text x="150" y="40" font-size="12" text-anchor="middle" fill="currentColor">mast</text>
+      <text x="76" y="140" font-size="11" text-anchor="middle" fill="var(--prop)">prop</text><text x="224" y="148" font-size="11" text-anchor="middle" fill="var(--prop)">prop</text>
+      <text x="246" y="80" font-size="11" fill="var(--accent)">lit field</text>
+    </svg>
+    <figcaption>The carriage must cross the prop plane, and the LiDAR must flip there. At the crossing its horizon runs straight through the disks.</figcaption>
+  </figure>
+  <figure>
+    <h3>Umbrella runner <span class="mark no">blocked</span></h3>
+    <svg viewBox="0 0 300 200" role="img" aria-label="Arms tilted by a runner on a mast that carries the LiDAR; at mid-stroke the LiDAR sits level with the arms">
+      <defs><clipPath id="c2"><rect x="0" y="0" width="300" height="200"/></clipPath></defs>
+      <g clip-path="url(#c2)"><path d="M150 104 L-60 -66 L360 -66 Z" fill="var(--glow)"/><path d="M150 104 L-60 126 M150 104 L360 126" stroke="var(--accent)" stroke-dasharray="4 3" fill="none"/></g>
+      <line x1="150" y1="30" x2="150" y2="190" stroke="currentColor" stroke-width="3"/>
+      <line x1="150" y1="120" x2="50" y2="96" stroke="currentColor" stroke-width="4"/><line x1="150" y1="120" x2="250" y2="96" stroke="currentColor" stroke-width="4"/>
+      <line x1="150" y1="150" x2="90" y2="106" stroke="currentColor" stroke-width="2"/><line x1="150" y1="150" x2="210" y2="106" stroke="currentColor" stroke-width="2"/>
+      <rect x="131" y="92" width="38" height="24" fill="var(--accent)"/>
+      <line x1="20" y1="92" x2="80" y2="92" stroke="var(--prop)" stroke-width="5"/><line x1="220" y1="92" x2="280" y2="92" stroke="var(--prop)" stroke-width="5"/>
+      <text x="150" y="172" font-size="12" text-anchor="middle" fill="currentColor">runner</text>
+      <text x="50" y="135" font-size="11" text-anchor="middle" fill="var(--prop)">prop</text><text x="250" y="135" font-size="11" text-anchor="middle" fill="var(--prop)">prop</text>
+    </svg>
+    <figcaption>Arms tilt as the LiDAR slides, one actuator for both, and the props do drop away at the ends. At mid-stroke the LiDAR is level with them and sees every disk.</figcaption>
+  </figure>
+  <figure>
+    <h3>Swing boom <span class="mark yes">clear throughout</span></h3>
+    <svg viewBox="0 0 300 200" role="img" aria-label="A LiDAR on the end of a boom swung out to the side; its base plane is vertical and every propeller is behind it">
+      <defs><clipPath id="c3"><rect x="0" y="0" width="300" height="200"/></clipPath></defs>
+      <g clip-path="url(#c3)"><path d="M40 100 L40 -60 L-120 -60 L-120 260 L40 260 Z" fill="var(--glow)"/><path d="M40 100 L62 -60 M40 100 L62 260" stroke="var(--accent)" stroke-dasharray="4 3" fill="none"/></g>
+      <path d="M260 100 A110 110 0 0 1 150 210" fill="none" stroke="var(--line)" stroke-dasharray="3 4"/><path d="M260 100 A110 110 0 0 0 150 -10" fill="none" stroke="var(--line)" stroke-dasharray="3 4"/>
+      <line x1="150" y1="100" x2="40" y2="100" stroke="currentColor" stroke-width="4"/>
+      <rect x="16" y="81" width="24" height="38" fill="var(--accent)"/>
+      <circle cx="150" cy="100" r="6" fill="currentColor"/>
+      <line x1="100" y1="80" x2="140" y2="80" stroke="var(--prop)" stroke-width="5"/><line x1="160" y1="120" x2="260" y2="120" stroke="var(--prop)" stroke-width="5"/>
+      <line x1="110" y1="80" x2="150" y2="100" stroke="currentColor" stroke-width="3"/><line x1="150" y1="100" x2="210" y2="120" stroke="currentColor" stroke-width="3"/>
+      <text x="150" y="150" font-size="11" text-anchor="middle" fill="var(--muted)">hinge on the x axis</text>
+      <text x="120" y="68" font-size="11" text-anchor="middle" fill="var(--prop)">prop (swept in)</text>
+      <text x="210" y="140" font-size="11" text-anchor="middle" fill="var(--prop)">prop</text>
+    </svg>
+    <figcaption>The LiDAR's axis is always along the boom, so its base plane faces the frame all the way round. The only demand is that the boom reaches past the props in its own plane, which the sweep provides by pulling the arms in before the swing.</figcaption>
+  </figure>
+</div>
+</section>
+
+<section>
+<div class="two">
+  <div>
+    <h2>What moves</h2>
+    <ol>
+      <li><b>Arm sweep, one degree of freedom.</b> Four arms on vertical pivots at the hub corners. The front pair sweeps forward, the rear pair back, mirrored by a single scissor link so one servo sets the sweep. Left arms sit one stagger above the right arms; in the narrow line the left and right disks overlap in plan and pass over each other.</li>
+      <li><b>Boom swing, one degree of freedom.</b> A hollow boom on a hinge along the x axis through the hub centre, worm-driven so it holds any angle without power. The LiDAR sits on its end, axis along the boom, cable inside. Up: scans the ceiling and all around. Down: scans the floor and all around. The boom plane x = 0 is the gap between front and rear props at every sweep.</li>
+      <li><b>The gate, no degree of freedom.</b> A plate on the boom hinge carries the green shape from the map as a window; a pin on the sweep slider rides in it. Wide arms allow the boom only near up or down. Pull the arms in and the boom may swing over. The clearance is a fact of the hardware, not of the flight code.</li>
+    </ol>
+    <h3>What it buys</h3>
+    <ul>
+      <li>One LiDAR, full 360° azimuth, whole hemisphere, nothing of the drone in it, in every pose.</li>
+      <li>Width shrinks to about half between pipes and joists; the boom then lifts the LiDAR a boom length above the frame into a roof cavity, or drops it the same below between pipes.</li>
+      <li>Wide X in open air for gust margin, narrow line indoors, chosen in flight.</li>
+    </ul>
+  </div>
+  <div>
+    <h2>What it asks of a real build</h2>
+    <ul>
+      <li><b>Overlapping props.</b> In the narrow line the left and right disks overlap heavily; expect a thrust loss of roughly a fifth there, and keep the narrow line for transits.</li>
+      <li><b>Boom load.</b> The LiDAR mass at the end of the boom is a bending load on the hinge and a moment on the flight controller; the readout shows the holding torque at horizontal. A worm gear or a brake holds it; the servo only moves it.</li>
+      <li><b>Landing.</b> Legs hang under the motors. The frame lands with the boom up or wide-and-up; a down pose is a flight pose only.</li>
+      <li><b>Centre of gravity.</b> The CG moves a few centimetres with the boom; the flight controller must take the pose as an input.</li>
+      <li><b>Inertia.</b> Sweeping the arms changes the yaw and roll inertia by a large factor; the attitude gains must follow the sweep.</li>
+      <li><b>Cables.</b> Four motor leads pass the arm pivots; the LiDAR cable passes the boom hinge. Both need a slip loop sized for the full travel.</li>
+    </ul>
+    <p class="muted">Nothing here is a bought part yet. Sizes default to today's props and the L2 so the numbers mean something, and every size on the sheet is a slider.</p>
+  </div>
+</div>
+<div class="foot">Field model: anything within the LiDAR's hemisphere plus 6° below its base plane is lit; the check adds a safety below that line. Frame points checked: 48 on each prop rim, 12 on each motor skirt, each leg tip, each arm tube top and bottom at three stations, eight hub corners. Elevation angles are measured in 3D from the LiDAR base centre. Prop disks are flat planes at motor height plus 20 mm. No prop cone, no flex, no gust.</div>
+</section>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const P={D:254,L:230,hp:45,h:25,B:250,neg:6,margin:6,mh:20,motorR:14,armR:8,hubZ:25,legLen:60,lidarW:75,lidarH:65,boomR:8};
+const S={beta:45,alpha:0};
+const rad=d=>d*Math.PI/180;
+const CYCLE=[[45,0],[0,0],[0,180],[45,180],[0,180],[0,0],[45,0]];
+
+function arms(beta){
+  const b=rad(beta),out=[];
+  for(const sx of [1,-1]) for(const sy of [1,-1]){
+    const px=sx*P.hp,py=sy*P.hp;
+    out.push({px,py,mx:px+sx*P.L*Math.cos(b),my:py+sy*P.L*Math.sin(b),z:sy*P.h,sx,sy});
+  }
+  return out;
+}
+function framePoints(A){
+  const pts=[],r=P.D/2;
+  for(const a of A){
+    const zd=a.z+P.mh;
+    for(let i=0;i<48;i++){const t=i/48*2*Math.PI;pts.push([a.mx+r*Math.cos(t),a.my+r*Math.sin(t),zd,'prop rim']);}
+    for(let i=0;i<12;i++){const t=i/12*2*Math.PI;pts.push([a.mx+P.motorR*Math.cos(t),a.my+P.motorR*Math.sin(t),a.z-10,'motor']);}
+    pts.push([a.mx,a.my,a.z-P.legLen,'leg tip']);
+    for(const f of [0,.5,1]){const x=a.px+(a.mx-a.px)*f,y=a.py+(a.my-a.py)*f;pts.push([x,y,a.z+P.armR,'arm']);pts.push([x,y,a.z-P.armR,'arm']);}
+  }
+  for(const sx of [1,-1]) for(const sy of [1,-1]) for(const sz of [1,-1]) pts.push([sx*P.hp,sy*P.hp,sz*P.hubZ,'hub corner']);
+  return pts;
+}
+function worst(pts,alpha){
+  const a=rad(alpha),ny=Math.sin(a),nz=Math.cos(a),Oy=P.B*ny,Oz=P.B*nz;
+  let best=-Infinity,bp=null;
+  for(const p of pts){
+    const dx=p[0],dy=p[1]-Oy,dz=p[2]-Oz,s=dy*ny+dz*nz;
+    const perp=Math.sqrt(Math.max(0,dx*dx+dy*dy+dz*dz-s*s));
+    const e=Math.atan2(s,perp)*180/Math.PI;
+    if(e>best){best=e;bp=p;}
+  }
+  return{elev:best,pt:bp};
+}
+const thr=()=>-(P.neg+P.margin);
+function clearAt(beta,alpha){return worst(framePoints(arms(beta)),alpha).elev<=thr();}
+
+/* ---------- gate map ---------- */
+let gateGrid=null;const GA=2,GB=1;
+function computeGate(){
+  gateGrid=[];
+  for(let b=0;b<=45;b+=GB){const row=[];const pts=framePoints(arms(b));for(let a=0;a<=180;a+=GA)row.push(worst(pts,a).elev<=thr());gateGrid.push(row);}
+}
+function swingLimit(){ // largest sweep at which the boom may pass horizontal
+  let best=null;for(let i=0;i<gateGrid.length;i++){if(gateGrid[i][90/GA])best=i*GB;}return best;
+}
+
+/* ---------- metrics ---------- */
+function lens(c,r){if(c>=2*r)return 0;if(c<=0)return 1;const A=2*r*r*Math.acos(c/(2*r))-(c/2)*Math.sqrt(4*r*r-c*c);return A/(Math.PI*r*r);}
+function lidarBox(alpha){ // corners of the LiDAR body in (y,z), x = ±W/2
+  const a=rad(alpha),ny=Math.sin(a),nz=Math.cos(a),ey=Math.cos(a),ez=-Math.sin(a),w=P.lidarW/2;
+  const c=[];for(const t of [0,P.lidarH])for(const s of [-w,w])c.push([P.B*ny+t*ny+s*ey,P.B*nz+t*nz+s*ez]);return c;
+}
+function metrics(A,W){
+  const r=P.D/2,b=rad(S.beta);
+  const halfW=P.hp+P.L*Math.sin(b)+r,halfL=P.hp+P.L*Math.cos(b)+r;
+  const box=lidarBox(S.alpha);
+  const ly=Math.max(...box.map(c=>Math.abs(c[0]))),lzmax=Math.max(...box.map(c=>c[1])),lzmin=Math.min(...box.map(c=>c[1]));
+  const top=Math.max(P.h+P.mh,lzmax),bot=Math.min(-P.h-P.legLen,lzmin);
+  const c=2*(P.hp+P.L*Math.sin(b));
+  return{
+    width:2*Math.max(halfW,ly),frameWidth:2*halfW,length:2*halfL,height:top-bot,
+    baseZ:P.B*Math.cos(rad(S.alpha)),baseY:P.B*Math.sin(rad(S.alpha)),
+    overlap:lens(c,r),wheelbase:2*Math.hypot(P.hp+P.L*Math.cos(b),P.hp+P.L*Math.sin(b)),
+    boomGap:P.hp+P.L*Math.cos(b)-r-P.boomR,
+    torque:(0.28*(P.B+32)/1000+0.04*P.B/2000)*9.81,
+    swing:swingLimit()
+  };
+}
+
+/* ---------- drawing helpers ---------- */
+const NS='http://www.w3.org/2000/svg';
+function el(n,at,txt){const e=document.createElementNS(NS,n);for(const k in at)e.setAttribute(k,at[k]);if(txt!=null)e.textContent=txt;return e;}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function extent(){return Math.max(P.hp+P.L+P.D/2,P.B+P.lidarH)+12;}
+function grid(svg,cx,cy,k,W,H){
+  const g=el('g',{stroke:'var(--grid)','stroke-width':1});
+  for(let m=-800;m<=800;m+=100){const x=cx-m*k,y=cy-m*k;if(x>0&&x<W)g.appendChild(el('line',{x1:x,y1:0,x2:x,y2:H}));if(y>0&&y<H)g.appendChild(el('line',{x1:0,y1:y,x2:W,y2:y}));}
+  svg.appendChild(g);
+  svg.appendChild(el('text',{x:8,y:H-8,'font-size':10,'font-family':'var(--mono)',fill:'var(--muted)'},'grid 100 mm'));
+}
+
+function drawPlan(A,W){
+  const svg=$('plan'),Wd=520,H=520,cx=260,cy=260,k=240/extent();clear(svg);grid(svg,cx,cy,k,Wd,H);
+  const X=y=>cx-y*k,Y=x=>cy-x*k,r=P.D/2;
+  // disks: low (right) first, then high (left) on top
+  const order=A.slice().sort((p,q)=>p.z-q.z);
+  for(const a of order){
+    svg.appendChild(el('line',{x1:X(a.py),y1:Y(a.px),x2:X(a.my),y2:Y(a.mx),stroke:'currentColor','stroke-width':Math.max(2,2*P.armR*k),'stroke-linecap':'round',opacity:a.z<0?.55:1}));
+  }
+  for(const a of order){
+    svg.appendChild(el('circle',{cx:X(a.my),cy:Y(a.mx),r:r*k,fill:'var(--propfill)',stroke:'var(--prop)','stroke-width':a.z<0?1:1.8,'stroke-dasharray':a.z<0?'4 3':'none'}));
+    svg.appendChild(el('circle',{cx:X(a.my),cy:Y(a.mx),r:P.motorR*k,fill:'currentColor'}));
+  }
+  svg.appendChild(el('rect',{x:X(P.hp),y:Y(P.hp),width:2*P.hp*k,height:2*P.hp*k,fill:'var(--panel)',stroke:'currentColor','stroke-width':1.5}));
+  // boom projection
+  const by=P.B*Math.sin(rad(S.alpha));
+  svg.appendChild(el('line',{x1:X(0),y1:Y(0),x2:X(by),y2:Y(0),stroke:'var(--accent)','stroke-width':Math.max(3,2*P.boomR*k),'stroke-linecap':'round'}));
+  const box=lidarBox(S.alpha),ys=box.map(c=>c[0]),y0=Math.min(...ys),y1=Math.max(...ys);
+  const span=Math.max(y1-y0,4);
+  svg.appendChild(el('rect',{x:X(y1),y:Y(P.lidarW/2),width:span*k,height:P.lidarW*k,fill:'var(--accent)',opacity:.9,rx:2}));
+  if(W.pt){svg.appendChild(el('circle',{cx:X(W.pt[1]),cy:Y(W.pt[0]),r:5,fill:W.elev<=thr()?'var(--good)':'var(--bad)',stroke:'var(--panel)','stroke-width':1.5}));}
+  const lab=(x,y,t,o)=>svg.appendChild(el('text',Object.assign({x,y,'font-size':11,'font-family':'var(--mono)',fill:'var(--muted)'},o||{}),t));
+  lab(cx,16,'nose  +x',{'text-anchor':'middle'});lab(10,cy-6,'left  +y');
+  lab(X(A[0].my),Y(A[0].mx)-r*k-6,'high',{'text-anchor':'middle',fill:'var(--prop)'});
+  lab(X(A[1].my),Y(A[1].mx)-r*k-6,'low',{'text-anchor':'middle',fill:'var(--prop)'});
+  lab(X(0)+6,Y(0)-P.hp*k-6,'boom hinge',{});
+}
+
+function drawEnd(A,W){
+  const svg=$('end'),Wd=520,H=520,cx=260,cy=260,k=240/extent();clear(svg);
+  const X=y=>cx-y*k,Y=z=>cy-z*k,r=P.D/2;
+  // lit field (slice in the boom plane): cone of half-angle 90-thr about the boom direction
+  const a=rad(S.alpha),ny=Math.sin(a),nz=Math.cos(a),Oy=P.B*ny,Oz=P.B*nz;
+  const half=rad(90-thr()),R=2000;
+  const d1=[Math.sin(a-half),Math.cos(a-half)],d2=[Math.sin(a+half),Math.cos(a+half)];
+  const pts=[[Oy,Oz],[Oy+R*d1[0],Oz+R*d1[1]]];
+  for(let t=a-half;t<=a+half+1e-9;t+=rad(6))pts.push([Oy+R*Math.sin(t),Oz+R*Math.cos(t)]);
+  pts.push([Oy+R*d2[0],Oz+R*d2[1]]);
+  svg.appendChild(el('polygon',{points:pts.map(p=>X(p[0])+','+Y(p[1])).join(' '),fill:'var(--glow)'}));
+  grid(svg,cx,cy,k,Wd,H);
+  // base plane and threshold line
+  const ey=Math.cos(a),ez=-Math.sin(a);
+  svg.appendChild(el('line',{x1:X(Oy-R*ey),y1:Y(Oz-R*ez),x2:X(Oy+R*ey),y2:Y(Oz+R*ez),stroke:'var(--accent)','stroke-width':1,'stroke-dasharray':'2 4'}));
+  svg.appendChild(el('line',{x1:X(Oy),y1:Y(Oz),x2:X(Oy+R*d1[0]),y2:Y(Oz+R*d1[1]),stroke:'var(--accent)','stroke-width':1.2,'stroke-dasharray':'6 4'}));
+  svg.appendChild(el('line',{x1:X(Oy),y1:Y(Oz),x2:X(Oy+R*d2[0]),y2:Y(Oz+R*d2[1]),stroke:'var(--accent)','stroke-width':1.2,'stroke-dasharray':'6 4'}));
+  // boom arc
+  svg.appendChild(el('path',{d:`M ${X(0)} ${Y(P.B)} A ${P.B*k} ${P.B*k} 0 0 1 ${X(0)} ${Y(-P.B)}`,fill:'none',stroke:'var(--line)','stroke-dasharray':'3 5'}));
+  // frame: arms edge-on, legs, motors, prop disks as lines at their z
+  const order=A.slice().sort((p,q)=>p.sx-q.sx);
+  for(const ar of order){
+    const op=ar.sx<0?.5:1;
+    svg.appendChild(el('line',{x1:X(ar.py),y1:Y(ar.z),x2:X(ar.my),y2:Y(ar.z),stroke:'currentColor','stroke-width':Math.max(2,2*P.armR*k),'stroke-linecap':'round',opacity:op}));
+    svg.appendChild(el('rect',{x:X(ar.my+P.motorR),y:Y(ar.z+P.mh-2),width:2*P.motorR*k,height:(P.mh+8)*k,fill:'currentColor',opacity:op}));
+    svg.appendChild(el('line',{x1:X(ar.my),y1:Y(ar.z-10),x2:X(ar.my),y2:Y(ar.z-P.legLen),stroke:'currentColor','stroke-width':2,opacity:op}));
+    svg.appendChild(el('line',{x1:X(ar.my-r),y1:Y(ar.z+P.mh),x2:X(ar.my+r),y2:Y(ar.z+P.mh),stroke:'var(--prop)','stroke-width':4,'stroke-linecap':'round',opacity:op}));
+  }
+  svg.appendChild(el('rect',{x:X(P.hp),y:Y(P.hubZ),width:2*P.hp*k,height:2*P.hubZ*k,fill:'var(--panel)',stroke:'currentColor','stroke-width':1.5}));
+  // boom + lidar
+  svg.appendChild(el('line',{x1:X(0),y1:Y(0),x2:X(Oy),y2:Y(Oz),stroke:'var(--accent)','stroke-width':Math.max(3,2*P.boomR*k),'stroke-linecap':'round'}));
+  const box=lidarBox(S.alpha);
+  svg.appendChild(el('polygon',{points:[box[0],box[1],box[3],box[2]].map(c=>X(c[0])+','+Y(c[1])).join(' '),fill:'var(--accent)'}));
+  svg.appendChild(el('circle',{cx:X(0),cy:Y(0),r:4,fill:'var(--panel)',stroke:'currentColor','stroke-width':1.5}));
+  // worst point + its ray
+  if(W.pt){
+    const ok=W.elev<=thr(),col=ok?'var(--good)':'var(--bad)';
+    svg.appendChild(el('line',{x1:X(Oy),y1:Y(Oz),x2:X(W.pt[1]),y2:Y(W.pt[2]),stroke:col,'stroke-width':1,'stroke-dasharray':'3 3'}));
+    svg.appendChild(el('circle',{cx:X(W.pt[1]),cy:Y(W.pt[2]),r:5.5,fill:col,stroke:'var(--panel)','stroke-width':1.5}));
+    const tx=X(W.pt[1])+(W.pt[1]>0?-10:10);
+    svg.appendChild(el('text',{x:tx,y:Y(W.pt[2])+18,'font-size':11.5,'font-family':'var(--mono)','font-weight':500,fill:col,'text-anchor':W.pt[1]>0?'end':'start'},W.elev.toFixed(1)+'°'));
+  }
+  const lab=(x,y,t,o)=>svg.appendChild(el('text',Object.assign({x,y,'font-size':11,'font-family':'var(--mono)',fill:'var(--muted)'},o||{}),t));
+  lab(cx,16,'up  +z',{'text-anchor':'middle'});lab(10,cy-6,'left  +y');
+  const bz=box.map(c=>c[1]),ly=(Math.max(...bz)+Math.min(...bz))/2;
+  lab(X(Math.max(...box.map(c=>c[0])))-6,Y(ly)+4,'LiDAR',{'text-anchor':'end',fill:'var(--accent)'});
+}
+
+function drawGate(W){
+  const svg=$('gate'),Wd=760,H=300,x0=60,y0=20,x1=740,y1=250;clear(svg);
+  const cw=(x1-x0)/(180/GA+1),ch=(y1-y0)/(45/GB+1);
+  const X=al=>x0+al/GA*cw,Y=be=>y1-(be/GB+1)*ch;
+  svg.appendChild(el('rect',{x:x0,y:y0,width:x1-x0,height:y1-y0,fill:'var(--goodfill)'}));
+  const g=el('g',{fill:'var(--badfill)'});
+  for(let i=0;i<gateGrid.length;i++){const row=gateGrid[i];let j=0;while(j<row.length){if(row[j]){j++;continue;}let j2=j;while(j2<row.length&&!row[j2])j2++;g.appendChild(el('rect',{x:X(j*GA),y:Y(i*GB),width:(j2-j)*cw+.5,height:ch+.5}));j=j2;}}
+  svg.appendChild(g);
+  // boundary rows: draw a thin line where clear meets blocked
+  const bl=el('g',{stroke:'var(--bad)','stroke-width':1.2,fill:'none'});
+  for(let i=0;i<gateGrid.length;i++){const row=gateGrid[i];for(let j=1;j<row.length;j++){if(row[j]!==row[j-1]){const xx=X(j*GA);bl.appendChild(el('line',{x1:xx,y1:Y(i*GB),x2:xx,y2:Y(i*GB)+ch}));}}}
+  svg.appendChild(bl);
+  // axes
+  svg.appendChild(el('rect',{x:x0,y:y0,width:x1-x0,height:y1-y0,fill:'none',stroke:'currentColor','stroke-width':1}));
+  const lab=(x,y,t,o)=>svg.appendChild(el('text',Object.assign({x,y,'font-size':11,'font-family':'var(--mono)',fill:'var(--muted)'},o||{}),t));
+  for(const a of [0,45,90,135,180]){lab(X(a)+cw/2,y1+16,a+'°',{'text-anchor':'middle'});svg.appendChild(el('line',{x1:X(a)+cw/2,y1:y1,x2:X(a)+cw/2,y2:y1+4,stroke:'currentColor'}));}
+  lab(X(0)+cw/2,y1+32,'LiDAR up',{'text-anchor':'start'});lab(X(90)+cw/2,y1+32,'boom horizontal, over the left',{'text-anchor':'middle'});lab(X(180)+cw/2,y1+32,'LiDAR down',{'text-anchor':'end'});
+  for(const b of [0,15,30,45]){lab(x0-8,Y(b)+ch/2+4,b+'°',{'text-anchor':'end'});}
+  lab(x0-8,y0-6,'sweep: X',{'text-anchor':'end'});lab(x0-8,y1+14,'narrow',{'text-anchor':'end'});
+  lab(x1,y0-6,'boom angle →',{'text-anchor':'end'});
+  // cycle path
+  const d=CYCLE.map((p,i)=>(i?'L':'M')+(X(p[1])+cw/2)+' '+(Y(p[0])+ch/2)).join(' ');
+  svg.appendChild(el('path',{d,fill:'none',stroke:'currentColor','stroke-width':1.2,'stroke-dasharray':'5 4',opacity:.7}));
+  // current pose
+  const ok=W.elev<=thr();
+  svg.appendChild(el('circle',{cx:X(S.alpha)+cw/2,cy:Y(S.beta)+ch/2,r:7,fill:ok?'var(--good)':'var(--bad)',stroke:'var(--panel)','stroke-width':2}));
+}
+
+function fmt(v,d){return (d?v.toFixed(d):Math.round(v).toString());}
+function render(){
+  const A=arms(S.beta),pts=framePoints(A),W=worst(pts,S.alpha),ok=W.elev<=thr(),M=metrics(A,W);
+  drawPlan(A,W);drawEnd(A,W);drawGate(W);
+  $('betaV').textContent=S.beta.toFixed(1)+'°';$('alphaV').textContent=S.alpha.toFixed(0)+'°';
+  $('BV').textContent=P.B+' mm';$('DV').textContent=P.D+' mm';$('LV').textContent=P.L+' mm';$('hpV').textContent=P.hp+' mm';$('hV').textContent=P.h+' mm';$('marginV').textContent=P.margin.toFixed(1)+'°';
+  $('elev').textContent=(W.elev>0?'+':'')+W.elev.toFixed(1)+'°';$('need').textContent='must be ≤ '+thr().toFixed(1)+'°';
+  $('pill').textContent=ok?'CLEAR':'PROP IN VIEW';$('verdict').classList.toggle('fail',!ok);
+  $('worstWhat').textContent=W.pt?('a '+W.pt[3]+' at ('+fmt(W.pt[0])+', '+fmt(W.pt[1])+', '+fmt(W.pt[2])+')'):'';
+  const rows=[
+    ['Envelope W × L × H','incl. the LiDAR body',fmt(M.width)+' × '+fmt(M.length)+' × '+fmt(M.height)],
+    ['Frame width','prop tip to prop tip',fmt(M.frameWidth)+' mm'],
+    ['Wheelbase','diagonal motor to motor',fmt(M.wheelbase)+' mm'],
+    ['LiDAR base','(y, z) from the hub centre','('+fmt(M.baseY)+', '+fmt(M.baseZ)+') mm'],
+    ['Prop overlap','left on right, by disk area',fmt(M.overlap*100)+' %'],
+    ['Boom gap to props','at x = 0, each side',fmt(M.boomGap)+' mm'],
+    ['Boom may swing over','only at sweep ≤',M.swing==null?'never at this boom':M.swing+'°'],
+    ['Boom holding torque','LiDAR 280 g + boom, horizontal',M.torque.toFixed(2)+' N·m'],
+  ];
+  $('kv').innerHTML=rows.map(r=>'<tr><td>'+r[0]+'<span class="sub">'+r[1]+'</span></td><td'+((r[0]==='Boom gap to props'&&M.boomGap<10)||(r[0]==='Boom may swing over'&&M.swing==null)?' class="warn"':'')+'>'+r[2]+'</td></tr>').join('');
+}
+
+/* ---------- interaction ---------- */
+function setPose(beta,alpha,fromSlider){
+  if($('lock').checked&&!clearAt(beta,alpha)){
+    // walk back along the axis that moved until clear
+    if(fromSlider==='beta'){const dir=beta>S.beta?-1:1;let b=beta;while(b>=0&&b<=45&&!clearAt(b,alpha))b+=dir*0.5;beta=Math.min(45,Math.max(0,b));}
+    else if(fromSlider==='alpha'){const dir=alpha>S.alpha?-1:1;let a=alpha;while(a>=0&&a<=180&&!clearAt(beta,a))a+=dir;alpha=Math.min(180,Math.max(0,a));}
+    if(!clearAt(beta,alpha)){beta=S.beta;alpha=S.alpha;}
+  }
+  S.beta=beta;S.alpha=alpha;$('beta').value=beta;$('alpha').value=alpha;render();
+}
+$('beta').addEventListener('input',e=>{stopPlay();setPose(+e.target.value,S.alpha,'beta');});
+$('alpha').addEventListener('input',e=>{stopPlay();setPose(S.beta,+e.target.value,'alpha');});
+for(const id of ['B','D','L','hp','h','margin']){$(id).addEventListener('input',e=>{P[id]=+e.target.value;computeGate();render();});}
+$('lock').addEventListener('change',render);
+document.querySelectorAll('[data-pose]').forEach(b=>b.addEventListener('click',()=>{stopPlay();const [be,al]=b.dataset.pose.split(',').map(Number);
+  // move through the gate: via narrow if needed
+  if(!$('lock').checked||clearAt(be,al)){setPose(be,al);}else{setPose(0,S.alpha);setPose(0,al);setPose(be,al);}
+}));
+
+let playing=null;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function stopPlay(){if(playing){cancelAnimationFrame(playing.raf);clearTimeout(playing.t);playing=null;$('play').textContent='▶ Run the full cycle';}}
+$('play').addEventListener('click',()=>{
+  if(playing){stopPlay();return;}
+  $('play').textContent='■ Stop';
+  if(reduced){let i=0;playing={};const step=()=>{if(!playing)return;const p=CYCLE[i%CYCLE.length];S.beta=p[0];S.alpha=p[1];$('beta').value=p[0];$('alpha').value=p[1];render();i++;playing.t=setTimeout(step,1200);};step();return;}
+  const segDur=1500;let seg=0,t0=null;playing={};
+  const frame=ts=>{if(!playing)return;if(t0==null)t0=ts;let u=(ts-t0)/segDur;if(u>=1){seg=(seg+1)%(CYCLE.length-1);t0=ts;u=0;}
+    const a=CYCLE[seg],b=CYCLE[seg+1],e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+    S.beta=a[0]+(b[0]-a[0])*e;S.alpha=a[1]+(b[1]-a[1])*e;$('beta').value=S.beta;$('alpha').value=S.alpha;render();playing.raf=requestAnimationFrame(frame);};
+  playing.raf=requestAnimationFrame(frame);
+});
+
+computeGate();render();
+})();
+</script>
