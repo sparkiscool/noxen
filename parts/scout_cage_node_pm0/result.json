@@ -1,0 +1,434 @@
+{
+ "name": "scout_cage_node_pm0",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   2910.3
+  ],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 0,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 870.3,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "frame RM-PM0 axial 50 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.014,
+    "across": 0.006,
+    "at": [
+     5.5,
+     110.9,
+     59.6
+    ]
+   },
+   {
+    "case": "frame RM-PM0 side 17.0 N",
+    "cls": "crash",
+    "inlayer": 0.008,
+    "across": 0.004,
+    "at": [
+     6.5,
+     107.9,
+     60.6
+    ]
+   },
+   {
+    "case": "frame PM0-K0 axial 19 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.007,
+    "across": 0.013,
+    "at": [
+     9.5,
+     116.9,
+     53.6
+    ]
+   },
+   {
+    "case": "frame PM0-K0 side 4.5 N",
+    "cls": "crash",
+    "inlayer": 0.005,
+    "across": 0.011,
+    "at": [
+     10.5,
+     116.9,
+     53.6
+    ]
+   },
+   {
+    "case": "frame PM0-K1 axial 14 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.005,
+    "across": 0.01,
+    "at": [
+     -9.5,
+     117.9,
+     52.6
+    ]
+   },
+   {
+    "case": "frame PM0-K1 side 3.8 N",
+    "cls": "crash",
+    "inlayer": 0.004,
+    "across": 0.006,
+    "at": [
+     -11.5,
+     112.9,
+     53.6
+    ]
+   },
+   {
+    "case": "crash 35 g through the longest rod PM0-K0 (146 mm), axial + side",
+    "cls": "crash",
+    "inlayer": 0.008,
+    "across": 0.008,
+    "at": [
+     6.5,
+     110.9,
+     48.6
+    ]
+   }
+  ],
+  "worst": 0.014,
+  "worst_case": "frame RM-PM0 axial 50 N (pull-out)",
+  "worst_at": [
+   5.5,
+   110.9,
+   59.6
+  ]
+ },
+ "mass_g": 6.43,
+ "watertight": true,
+ "export": {
+  "faces_in": 46512,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 46512,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 204,
+   "folded": 2,
+   "caps_split": 1,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 66220
+  },
+  "volume_mm3": 5065.0,
+  "exact_mm3": 5065.0
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 5065.0,
+ "drawn_g": 3.45,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
+ "stl": "scout_cage_node_pm0.stl",
+ "view_stl": "scout_cage_node_pm0_view.stl",
+ "view_faces": 46512,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": false,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 6.44256687412536,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.2926829268292683,
+  "nd": 7872,
+  "sym_axes": [],
+  "n_real": 7,
+  "n_ties": 18,
+  "backend": "direct",
+  "iterations": 76,
+  "stopped": "max_stage"
+ },
+ "grid": {
+  "name": "scout_cage_node_pm0",
+  "h": 1.0,
+  "shape": [
+   40,
+   32,
+   32
+  ],
+  "origin": [
+   -20.0,
+   96.4226,
+   38.0884
+  ],
+  "cells": 40960,
+  "design": 7868,
+  "drawn": 2757,
+  "cases": [
+   "frame RM-PM0 axial 50 N (pull-out)",
+   "frame RM-PM0 side 17.0 N",
+   "frame PM0-K0 axial 19 N (pull-out)",
+   "frame PM0-K0 side 4.5 N",
+   "frame PM0-K1 axial 14 N (pull-out)",
+   "frame PM0-K1 side 3.8 N",
+   "crash 35 g through the longest rod PM0-K0 (146 mm), axial + side"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 18.6,
+ "layout_s": 154,
+ "peak_gb": 0.852116,
+ "gen_cm3": 2.3,
+ "h": 1.0,
+ "audit": {
+  "drawn_share": 0.259,
+  "load_room": [],
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 1097,
+    "inscribed_mm": 3.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.86,
+    "room_depth_mm": 36.0,
+    "at": [
+     -10.8,
+     114.8,
+     53.8
+    ],
+    "core_mm": 2.5
+   },
+   {
+    "id": 2,
+    "cells": 554,
+    "inscribed_mm": 3.0,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.81,
+    "room_depth_mm": 24.0,
+    "at": [
+     0.0,
+     106.4,
+     59.2
+    ],
+    "core_mm": 1.8
+   },
+   {
+    "id": 3,
+    "cells": 1106,
+    "inscribed_mm": 3.0,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.85,
+    "room_depth_mm": 36.0,
+    "at": [
+     10.4,
+     114.8,
+     53.9
+    ],
+    "core_mm": 1.8,
+    "share_of_drawn": 0.4
+   }
+  ],
+  "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 37.0,
+   "W_mm": 26.0,
+   "H_mm": 28.0,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "drawn_walls": [],
+  "cases": 7,
+  "supports": 1,
+  "fails": []
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "frame RM-PM0 axial 50 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.02,
+    "across": 0.009,
+    "at": [
+     4.5,
+     105.9,
+     59.6
+    ]
+   },
+   {
+    "case": "frame RM-PM0 side 17.0 N",
+    "cls": "crash",
+    "inlayer": 0.012,
+    "across": 0.005,
+    "at": [
+     -4.5,
+     105.9,
+     59.6
+    ]
+   },
+   {
+    "case": "frame PM0-K0 axial 19 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.009,
+    "across": 0.015,
+    "at": [
+     9.5,
+     116.9,
+     53.6
+    ]
+   },
+   {
+    "case": "frame PM0-K0 side 4.5 N",
+    "cls": "crash",
+    "inlayer": 0.006,
+    "across": 0.012,
+    "at": [
+     10.5,
+     115.9,
+     53.6
+    ]
+   },
+   {
+    "case": "frame PM0-K1 axial 14 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.006,
+    "across": 0.01,
+    "at": [
+     -9.5,
+     116.9,
+     53.6
+    ]
+   },
+   {
+    "case": "frame PM0-K1 side 3.8 N",
+    "cls": "crash",
+    "inlayer": 0.005,
+    "across": 0.009,
+    "at": [
+     -8.5,
+     110.9,
+     50.6
+    ]
+   },
+   {
+    "case": "crash 35 g through the longest rod PM0-K0 (146 mm), axial + side",
+    "cls": "crash",
+    "inlayer": 0.01,
+    "across": 0.008,
+    "at": [
+     5.5,
+     110.9,
+     49.6
+    ]
+   }
+  ],
+  "worst": 0.02,
+  "worst_case": "frame RM-PM0 axial 50 N (pull-out)",
+  "worst_at": [
+   4.5,
+   105.9,
+   59.6
+  ],
+  "beta": 4.0,
+  "iteration": 17,
+  "max_worst": 0.5,
+  "k": 3.0
+ },
+ "baseline": null,
+ "total_s": 173,
+ "part_sha": "42ce9953b983",
+ "lib_sha": "3b63db92c59c",
+ "setup_sha": "ea5a82dde43d246a",
+ "max_worst": 0.5,
+ "strength_ok": true
+}
