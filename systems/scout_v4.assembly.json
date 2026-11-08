@@ -5,7 +5,7 @@
 "machine": "scout_v4",
 "order": 0,
 "readme_view": "iso",
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..160 x -160..160 x -44..78 mm, ~767 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -162..162 x -162..162 x -44..66 mm, ~747 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -15,7 +15,7 @@
 "group": "frame",
 "color": "#d9d2c3",
 "mesh": "parts/scout_v4_frame/part.stl",
-"mass_g": 58.9,
+"mass_g": 70.7,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
@@ -352,31 +352,31 @@
 },
 {
 "id": "scout_v4_cage_rods",
-"name": "half cage v4 concept, rods (3 mm carbon: the v21 topology on the 5.1 in discs)",
+"name": "half cage v4, rods (3 mm carbon: the ring, the flat roof, end Vs and side fans)",
 "role": "cage",
 "group": "cage",
 "color": "#2b2b2b",
 "mesh": "parts/scout_v4_cage_rods/part.stl",
-"mass_g": 42.9,
+"mass_g": 35.1,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "31 rods and 4 ties, 3.90 m: ring at z 61 with flats at 155 (310 across), ridge at z 73, waist hoop, nose window, side knees; ties from the motor pods (no clips: the frame is printed)"
+"note": "28 rods, 3.19 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the four outrigger nodes"
 },
 {
 "id": "scout_v4_cage_nodes",
-"name": "half cage v4 concept, nodes (printed PCTG, spheres for now)",
+"name": "half cage v4, nodes (spheres for now: the node design comes once the geometry is settled)",
 "role": "cage",
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_cage_nodes/part.stl",
-"mass_g": 102.0,
+"mass_g": 78.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "17 nodes; NB / TB printed into the base's booms",
+"note": "13 cage nodes; NB, TB, S0, S1 (the larger spheres) printed into the frame's outriggers",
 "opacity": 0.9
 }
 ]
