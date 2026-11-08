@@ -1,0 +1,313 @@
+{
+ "name": "scout_cage_node_p5",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 1,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   1516.3
+  ],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 0,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 511.1,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.0,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "frame K2-P5 axial 15 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.006,
+    "across": 0.014,
+    "at": [
+     -83.6,
+     -116.8,
+     51.5
+    ]
+   },
+   {
+    "case": "frame K2-P5 side 3.2 N",
+    "cls": "crash",
+    "inlayer": 0.002,
+    "across": 0.004,
+    "at": [
+     -82.6,
+     -108.8,
+     51.5
+    ]
+   },
+   {
+    "case": "crash 35 g through the longest rod K2-P5 (108 mm), axial + side",
+    "cls": "crash",
+    "inlayer": 0.007,
+    "across": 0.007,
+    "at": [
+     -77.6,
+     -117.8,
+     49.5
+    ]
+   }
+  ],
+  "worst": 0.014,
+  "worst_case": "frame K2-P5 axial 15 N (pull-out)",
+  "worst_at": [
+   -83.6,
+   -116.8,
+   51.5
+  ]
+ },
+ "mass_g": 3.61,
+ "watertight": true,
+ "export": {
+  "faces_in": 29716,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 29716,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 74,
+   "folded": 10,
+   "caps_split": 12,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 40728
+  },
+  "volume_mm3": 2846.2,
+  "exact_mm3": 2846.2
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 2846.2,
+ "drawn_g": 2.05,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [
+   0.016
+  ],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0,
+  "specks": 1
+ },
+ "stl": "scout_cage_node_p5.stl",
+ "view_stl": "scout_cage_node_p5_view.stl",
+ "view_faces": 29716,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": false,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 6.44256687412536,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.2151694459386767,
+  "nd": 5577,
+  "sym_axes": [],
+  "n_real": 3,
+  "n_ties": 0,
+  "backend": "direct",
+  "iterations": 76,
+  "stopped": "max_stage"
+ },
+ "grid": {
+  "name": "scout_cage_node_p5",
+  "h": 1.0,
+  "shape": [
+   40,
+   32,
+   32
+  ],
+  "origin": [
+   -99.1196,
+   -128.3304,
+   39.0407
+  ],
+  "cells": 40960,
+  "design": 5577,
+  "drawn": 1643,
+  "cases": [
+   "frame K2-P5 axial 15 N (pull-out)",
+   "frame K2-P5 side 3.2 N",
+   "crash 35 g through the longest rod K2-P5 (108 mm), axial + side"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 13.7,
+ "layout_s": 53,
+ "peak_gb": 0.585044,
+ "gen_cm3": 1.2,
+ "h": 1.0,
+ "audit": {
+  "drawn_share": 0.228,
+  "load_room": [],
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 1643,
+    "inscribed_mm": 3.0,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.93,
+    "room_depth_mm": 24.0,
+    "at": [
+     -78.4,
+     -112.6,
+     55.5
+    ],
+    "core_mm": 1.8,
+    "share_of_drawn": 1.0
+   }
+  ],
+  "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 32.8,
+   "W_mm": 22.6,
+   "H_mm": 26.0,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "drawn_walls": [],
+  "cases": 3,
+  "supports": 1,
+  "fails": []
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "frame K2-P5 axial 15 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.006,
+    "across": 0.016,
+    "at": [
+     -83.6,
+     -116.8,
+     51.5
+    ]
+   },
+   {
+    "case": "frame K2-P5 side 3.2 N",
+    "cls": "crash",
+    "inlayer": 0.002,
+    "across": 0.005,
+    "at": [
+     -83.6,
+     -108.8,
+     50.5
+    ]
+   },
+   {
+    "case": "crash 35 g through the longest rod K2-P5 (108 mm), axial + side",
+    "cls": "crash",
+    "inlayer": 0.008,
+    "across": 0.008,
+    "at": [
+     -83.6,
+     -116.8,
+     51.5
+    ]
+   }
+  ],
+  "worst": 0.016,
+  "worst_case": "frame K2-P5 axial 15 N (pull-out)",
+  "worst_at": [
+   -83.6,
+   -116.8,
+   51.5
+  ],
+  "beta": 4.0,
+  "iteration": 14,
+  "max_worst": 0.5,
+  "k": 3.0
+ },
+ "baseline": null,
+ "total_s": 67,
+ "part_sha": "37c077e797f2",
+ "lib_sha": "3b63db92c59c",
+ "setup_sha": "774b6634fbc8a8b3",
+ "max_worst": 0.5,
+ "strength_ok": true
+}

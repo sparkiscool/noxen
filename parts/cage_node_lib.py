@@ -28,13 +28,17 @@ CAGE = json.load(open(os.path.join(HERE, "..", "systems", "overseer.cage.json"))
 NODES = np.array(CAGE["nodes"], float)
 NODE_R = float(CAGE["node_r_mm"])                     # 10.15: where a bore starts unless a neighbour forces it further out (SOCKET_START)
 BASE = {0, 1, 2, 3, 4, 5}                             # the base loop, z -79.9
-WALL, FLOOR, MARGIN = 2.5, 3.0, 8.0                   # wall 2.5 (29 Oct, was 2.0): 2.0 is left at the resin grooves
+WALL, FLOOR, MARGIN = 3.0, 3.0, 8.0                   # wall 3.0 (7 Nov: 2.5 beyond the 0.5 injection annulus, as 2.5 was beyond nothing before); 2.5 at the resin grooves
 KIND = {"tube": dict(bore_r=3.1, depth=15.0), "link": dict(bore_r=1.6, depth=10.0)}   # bore 6.2 / 3.2
 GROOVE_D, GROOVE_H, LEAD_IN = 0.5, 1.5, 1.0            # the coupon socket (socket_cuts below): resin grooves, lead-in
+POCKETS, POCKET_D, POCKET_DEG = 3, 0.3, 60.0                # resin pockets (Spark 7 Nov: "the inner pattern where the resin can make the best contact with the rod"):
+#   three 0.3 deep, 60 deg wide channels along the bore from above the floor out of the mouth, between three 60 deg lands of the plain bore that
+#   centre the rod; the port feeds the first pocket, the two grooves join them round the rod, the resin shows at the mouth through them
+PORT_R, PORT_S, PORT_CLEAR_DEG = 1.0, 1.5, 30.0         # resin injection port (Spark 5 Nov: "nodes need to be resin injectable"): O2 through the collar wall PORT_S above the floor, out between the members (none within PORT_CLEAR_DEG of it: at 40 the 6..8-member Scout nodes had none, their freest 30..38), so the resin fills from the floor and shows at the mouth
 CROWN_MIN_SIN = 0.3                                    # a bore within ~17 deg of vertical prints without a crown
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
 LAND_FEET = 3                                         # a flat landing may rest on 3 of the 6 feet (E)
-FOOT_R, FOOT_T = 8.0, 2.4                             # landing face: Ø16 x 2.4, bottom 2.0 under the node sphere's lowest point
+FOOT_R, FOOT_T = 8.0, 3.0                             # landing face: Ø16 x 3.0 (7 Nov: 2.4 fails the 2.5 drawn_thin audit), bottom under the node sphere's lowest point
 GN = 9.81e-3
 
 
@@ -116,18 +120,32 @@ def U(ms):
 def _prism(poly, c, u, s0, s1, e1, e2):
     """the 2D polygon poly (in the e1, e2 plane) extruded along u from s0 to s1"""
     import manifold3d as mf
-    cs = mf.CrossSection([[(float(x), float(y)) for x, y in poly]])
+    pts = [(float(x), float(y)) for x, y in poly]
+    if sum(x0 * y1 - x1 * y0 for (x0, y0), (x1, y1) in zip(pts, pts[1:] + pts[:1])) < 0:   # manifold wants the outline counter-clockwise (7 Nov: a clockwise pocket sector extruded to nothing)
+        pts = pts[::-1]
+    cs = mf.CrossSection([pts])
     m = mf.Manifold.extrude(cs, float(s1 - s0))                       # along local z from 0 to s1 - s0
     R = np.column_stack([e1, e2, u]); t = c + u * s0
     return m.transform(np.column_stack([R, t]).astype(np.float64))
 
 
-def socket_cuts(c, u, s0, depth, r, build=(0.0, 0.0, 1.0), beyond=1.0):
+def socket_cuts(c, u, s0, depth, r, build=(0.0, 0.0, 1.0), beyond=1.0, pockets=0, pocket_dir=None):
     """cuts of one socket whose bore bottom is at c + u s0 and mouth at c + u (s0 + depth), bore radius r: the bore (to beyond past
-    the mouth), two resin grooves, the lead-in cone, and the teardrop crown toward the build direction where the bore overhangs"""
+    the mouth), two resin grooves, the lead-in cone, the teardrop crown toward the build direction where the bore overhangs, and
+    (pockets > 0) that many POCKET_D deep resin channels of POCKET_DEG along the bore from PORT_S - 0.5 above the floor out of the
+    mouth, the first centred on pocket_dir (the injection port's direction) so the port feeds it"""
     u = np.asarray(u, float) / np.linalg.norm(u); z = np.asarray(build, float)
     s_end = s0 + depth
     cuts = [along(c, u, s0, s_end + beyond, r)]
+    if pockets:
+        d = np.asarray(pocket_dir, float) if pocket_dir is not None else np.cross(u, [0, 0, 1.0] if abs(u[2]) < 0.9 else [1.0, 0, 0])
+        e1 = d - (d @ u) * u; e1 /= np.linalg.norm(e1); e2 = np.cross(u, e1)
+        half = np.radians(POCKET_DEG / 2)
+        for k in range(pockets):
+            a0 = 2 * np.pi * k / pockets
+            arc = np.linspace(a0 - half, a0 + half, 9)
+            poly = [((r - 0.2) * np.cos(t), (r - 0.2) * np.sin(t)) for t in arc] + [((r + POCKET_D) * np.cos(t), (r + POCKET_D) * np.sin(t)) for t in arc[::-1]]
+            cuts.append(_prism(poly, c, u, s0 + PORT_S - 0.5, s_end + beyond, e1, e2))
     for f in (1.0 / 3.0, 2.0 / 3.0):
         sg = s0 + f * depth - 0.5 * GROOVE_H
         cuts.append(along(c, u, sg, sg + GROOVE_H, r + GROOVE_D))
@@ -139,6 +157,53 @@ def socket_cuts(c, u, s0, depth, r, build=(0.0, 0.0, 1.0), beyond=1.0):
         poly = [(r * np.cos(t), r * np.sin(t)) for t in a] + [(r * np.sqrt(2.0), 0.0)]
         cuts.append(_prism(poly, c, u, s0, s_end + beyond, e1, e2))
     return cuts
+
+
+def seg_dist(a0, a1, b0, b1, n=41):
+    """the least distance between two segments (sampled, 1/40 of each)"""
+    a0, a1, b0, b1 = (np.asarray(x, float) for x in (a0, a1, b0, b1))
+    u, v = a1 - a0, b1 - b0; A, C = max(u @ u, 1e-12), max(v @ v, 1e-12); best = 1e9
+    for t in np.linspace(0, 1, n):
+        q = b0 + t * v; s_ = np.clip((q - a0) @ u / A, 0, 1); best = min(best, float(np.linalg.norm(a0 + s_ * u - q)))
+        q = a0 + t * u; t2 = np.clip((q - b0) @ v / C, 0, 1); best = min(best, float(np.linalg.norm(b0 + t2 * v - q)))
+    return best
+
+
+def port_dir(u, prefer, others=(), blockers=(), origin=None, length=40.0, clear_r=0.0, log=None):
+    """the direction of a socket's injection port: perpendicular to the bore axis u, as close to `prefer` as the room allows: no other
+    member axis (others, unit vectors) within PORT_CLEAR_DEG of it, and its channel (from origin, length) clear of every blocker
+    segment ((p0, p1, radius): other collars) by clear_r. Falls back to the freest direction and says so."""
+    u = np.asarray(u, float) / np.linalg.norm(u); pref = np.asarray(prefer, float)
+    e1 = pref - (pref @ u) * u
+    if np.linalg.norm(e1) < 1e-6:
+        e1 = np.cross(u, [0, 0, 1.0] if abs(u[2]) < 0.9 else [1.0, 0, 0])
+    e1 /= np.linalg.norm(e1); e2 = np.cross(u, e1)
+    best, best_free = None, (-1e9, None)
+    for a in np.radians(np.arange(0, 360, 10)):
+        d = np.cos(a) * e1 + np.sin(a) * e2
+        free = min([np.degrees(np.arccos(np.clip(abs(d @ np.asarray(o, float)), -1, 1))) for o in others] + [90.0])
+        ok = free >= PORT_CLEAR_DEG
+        if ok and origin is not None:
+            o = np.asarray(origin, float)
+            for p0, p1, r in blockers:
+                if seg_dist(o, o + d * length, p0, p1) < r + clear_r:
+                    ok = False; break
+        score = d @ pref
+        if ok and (best is None or score > best[0]):
+            best = (score, d)
+        if free > best_free[0]:
+            best_free = (free, d)
+    if best is None:
+        if log:
+            log(f"  port: no direction clears the members by {PORT_CLEAR_DEG:.0f} deg; the freest ({best_free[0]:.0f} deg) taken")
+        return best_free[1]
+    return best[1]
+
+
+def port_cut(c, u, s0, d, length=40.0):
+    """the injection port: a O2 PORT_R channel from the bore axis at s0 + PORT_S out along d through the whole envelope"""
+    u = np.asarray(u, float) / np.linalg.norm(u)
+    return along(np.asarray(c, float) + u * (s0 + PORT_S), np.asarray(d, float), 0.0, length, PORT_R)
 
 
 def crown_dir(u, build=(0.0, 0.0, 1.0)):
@@ -222,6 +287,46 @@ def verify_cuts(n, ms, cuts, log=print):
     log(f"  members check: {len(ms)} sockets, every member lands in a bore of node {n}")
 
 
+from parts.socket_inject import injectable_socket_cuts
+
+
+def inject_port(c, m, ms, log=print, avoid=()):
+    """the direction the socket's fill port and vent leave the node: the crown side if that line clears every other member's collar
+    by 1 mm out to 40 mm, else the first clear direction round the socket axis (45 deg steps); the crown side with a warning if none"""
+    from parts.socket_inject import FEED_H, PORT_R, GAP
+    u = m["u"]; base = crown_dir(u)
+    if base is None:
+        base = np.cross(u, [1.0, 0, 0]) if abs(u[0]) < 0.9 else np.cross(u, [0, 1.0, 0])
+    base = base - (base @ u) * u; base /= np.linalg.norm(base); e2 = np.cross(u, base)
+    starts = [c + u * (m["s0"] + FEED_H / 2), c + u * (m["s0"] + m["depth"] - (3.0 if m["bore_r"] > 2.5 else 2.0) - 0.75)]
+    def clear(e, margin):
+        if avoid:                                                                # a node's extra bodies and cuts (node 21: the camera)
+            for p0 in starts:
+                hole = along(p0, e, 0.0, m["bore_r"] + 40.0, PORT_R + 2.0, 16)
+                for body in avoid:
+                    if (hole ^ body).volume() > 1e-6:
+                        return False
+        for o in ms:
+            if o is m:
+                continue
+            A = c + o["u"] * (o["s0"] - FLOOR); B = c + o["u"] * (o["s0"] + o["depth"] + 60.0); AB = B - A
+            for p0 in starts:
+                P = p0[None, :] + e[None, :] * np.linspace(0.0, m["bore_r"] + 40.0, 60)[:, None]
+                t = np.clip(((P - A) @ AB) / (AB @ AB), 0, 1); d = np.linalg.norm(P - (A + t[:, None] * AB), axis=1)
+                if d.min() < o["bore_r"] + margin:
+                    return False
+        return True
+    dirs = [np.cos(np.radians(22.5 * k)) * base + np.sin(np.radians(22.5 * k)) * e2 for k in range(16)]
+    for margin in (WALL + PORT_R + 2.0, GAP + PORT_R + 2.0):   # the hole's wall 2 mm off the neighbour's collar; else 2 mm off its annulus
+        for e in dirs:
+            if clear(e, margin):
+                if margin < WALL + PORT_R + 2.0:
+                    log(f"  inject port for {m['name']}: passes through a neighbour's collar wall (2 mm off its annulus)")
+                return e
+    log(f"  inject port for {m['name']}: no clear direction, using the crown side")
+    return base
+
+
 def build(n, h, log=print, extra=None):
     """extra(c, ms) -> dict(drawn=[...], cuts=[...], env=[...], loads=fn(p)): what a node carries besides its sockets (node 21: the camera)"""
     ms = check_members(n, log)
@@ -235,7 +340,9 @@ def build(n, h, log=print, extra=None):
         ro = m["bore_r"] + WALL
         s_end = m["s0"] + m["depth"]
         collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL))
-        bores += socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"])     # bore, resin grooves, lead-in, teardrop crown
+        bores += injectable_socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"],
+                                        port=inject_port(c, m, ms, log, avoid=ex.get("drawn", []) + ex.get("cuts", [])))   # bore, grooves, lead-in,
+        #   crown + the resin injection pattern (parts/socket_inject.py: annulus with 3 lands, feed ring, O2 fill port, O1.5 vent; Spark 7 Nov)
         keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))     # the member itself, and room to wrap it: no growth
         m["ro"], m["s_end"] = ro, s_end
         for s in (m["s0"] - FLOOR, s_end):
@@ -249,7 +356,7 @@ def build(n, h, log=print, extra=None):
     if base:
         zb = c[2] - NODE_R - WALL                                # landing face bottom (z -92.05 on the base loop)
         foot = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + FOOT_T, FOOT_R)
-        lo[2] = min(lo[2], zb - 0.5)
+        lo[2] = min(lo[2], zb)                                  # the envelope ends at the foot's face: no room under it (load_room audit)
     import manifold3d as mf
     box = mf.Manifold.cube((hi - lo).tolist()).translate(lo.tolist())
     ball = mf.Manifold.sphere(max(np.linalg.norm(pts - c, axis=1)) + MARGIN * 0.75, 48).translate(c.tolist())
@@ -282,7 +389,7 @@ def build(n, h, log=print, extra=None):
         p.load_multi(f"crash 35 g through the longest tube {L['name']} ({L['len']:.0f} mm), axial + side",
                      [(lining(L), -L["axial"] * L["u"] + L["side"] * sd)], cls="crash")
     if base:
-        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb - 0.5, zb + 1.0, FOOT_R + 0.5)
+        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + 2.5, FOOT_R - 0.5)   # inside the drawn 3.0 foot, tall enough to hold cell centres at h 1.25 (load_room audit: node 5 at h 1.2 had none in a 1.0 slab and took every cell it touched)
         fz = LAND_G * DRONE_G * GN / LAND_FEET
         p.load_multi(f"landing 6 g on the foot ({fz:.0f} N up, 3 of 6 feet)", [(face, np.array([0, 0, fz]))], cls="flight")
     if ex.get("loads"):

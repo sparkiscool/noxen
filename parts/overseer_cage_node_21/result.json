@@ -1,22 +1,39 @@
 {
  "name": "overseer_cage_node_21",
  "engine": "nox/topo",
- "solid_ok": true,
+ "solid_ok": false,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 1,
+  "specks_plain": 4,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   2993.5
+   4049.3
   ],
   "necks": [],
   "drawn_not_in_main": [],
-  "thin_walls": [],
+  "thin_walls": [
+   {
+    "kind": "wall",
+    "thick_mm": 1.41,
+    "core_mm3": 5.14,
+    "at": [
+     -244.1,
+     13.8,
+     33.3
+    ],
+    "span": [
+     1.1,
+     0.9,
+     0.2
+    ],
+    "mm3": 24.0
+   }
+  ],
   "thin_allowed": [
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 58.53,
+    "core_mm3": 59.03,
     "at": [
      -243.3,
      -14.0,
@@ -24,15 +41,15 @@
     ],
     "span": [
      1.6,
-     1.6,
+     1.5,
      1.5
     ],
-    "mm3": 96.4
+    "mm3": 96.9
    },
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 58.22,
+    "core_mm3": 58.92,
     "at": [
      -261.3,
      -14.0,
@@ -43,12 +60,12 @@
      1.5,
      1.5
     ],
-    "mm3": 95.9
+    "mm3": 96.6
    },
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 58.19,
+    "core_mm3": 58.83,
     "at": [
      -243.3,
      14.0,
@@ -56,15 +73,15 @@
     ],
     "span": [
      1.6,
-     1.6,
+     1.5,
      1.5
     ],
-    "mm3": 96.1
+    "mm3": 96.7
    },
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 54.59,
+    "core_mm3": 58.66,
     "at": [
      -261.3,
      14.0,
@@ -75,15 +92,15 @@
      1.5,
      1.5
     ],
-    "mm3": 95.7
+    "mm3": 96.3
    }
   ],
   "acute_edges": 4,
-  "ok": true
+  "ok": false
  },
  "function_check": {
-  "skin_mm3": 1310.2,
-  "skin_missing_mm3": 23.78,
+  "skin_mm3": 1565.3,
+  "skin_missing_mm3": 35.74,
   "in_cuts_mm3": -0.0,
   "outside_env_mm3": 0.0,
   "ok": false
@@ -93,12 +110,12 @@
    {
     "case": "frame camera rod 20 axial 9 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.006,
-    "across": 0.007,
+    "inlayer": 0.005,
+    "across": 0.005,
     "at": [
-     -239.0,
-     -3.5,
-     47.3
+     -235.9,
+     -4.5,
+     45.5
     ]
    },
    {
@@ -107,143 +124,137 @@
     "inlayer": 0.001,
     "across": 0.001,
     "at": [
-     -239.0,
+     -236.9,
      4.5,
-     45.3
+     47.5
     ]
    },
    {
     "case": "camera flight 4 g",
     "cls": "flight",
     "inlayer": 0.006,
-    "across": 0.016,
+    "across": 0.015,
     "at": [
-     -241.0,
+     -240.9,
      12.5,
-     26.3
+     26.5
     ]
    },
    {
     "case": "camera landing 6 g",
     "cls": "flight",
-    "inlayer": 0.009,
-    "across": 0.023,
+    "inlayer": 0.01,
+    "across": 0.022,
     "at": [
-     -241.0,
+     -240.9,
      12.5,
-     26.3
+     26.5
     ]
    },
    {
     "case": "camera crash 35 g +x",
     "cls": "crash",
-    "inlayer": 0.032,
-    "across": 0.049,
+    "inlayer": 0.018,
+    "across": 0.023,
     "at": [
-     -238.0,
+     -236.9,
      7.5,
-     36.3
+     35.5
     ]
    },
    {
     "case": "camera crash 35 g -x",
     "cls": "crash",
-    "inlayer": 0.032,
-    "across": 0.045,
+    "inlayer": 0.018,
+    "across": 0.03,
     "at": [
-     -245.0,
-     6.5,
-     37.3
+     -240.9,
+     12.5,
+     26.5
     ]
    },
    {
     "case": "camera crash 35 g +y",
     "cls": "crash",
     "inlayer": 0.019,
-    "across": 0.037,
+    "across": 0.028,
     "at": [
-     -240.0,
-     -11.5,
-     25.3
+     -240.9,
+     15.5,
+     26.5
     ]
    },
    {
     "case": "camera crash 35 g -y",
     "cls": "crash",
     "inlayer": 0.019,
-    "across": 0.039,
+    "across": 0.027,
     "at": [
-     -240.0,
+     -239.9,
      11.5,
-     25.3
+     24.5
     ]
    },
    {
     "case": "camera crash 35 g +z",
     "cls": "crash",
     "inlayer": 0.015,
-    "across": 0.038,
+    "across": 0.036,
     "at": [
-     -241.0,
+     -240.9,
      12.5,
-     26.3
+     26.5
     ]
    },
    {
     "case": "camera crash 35 g -z",
     "cls": "crash",
     "inlayer": 0.015,
-    "across": 0.016,
+    "across": 0.015,
     "at": [
-     -239.0,
-     6.5,
-     34.3
+     -241.9,
+     15.5,
+     25.5
     ]
    }
   ],
-  "worst": 0.049,
-  "worst_case": "camera crash 35 g +x",
+  "worst": 0.036,
+  "worst_case": "camera crash 35 g +z",
   "worst_at": [
-   -238.0,
-   7.5,
-   36.3
+   -240.9,
+   12.5,
+   26.5
   ]
  },
- "mass_g": 7.84,
+ "mass_g": 9.61,
  "watertight": true,
  "export": {
-  "faces_in": 68186,
+  "faces_in": 74914,
   "degenerate": 0,
-  "folded": 6,
-  "caps_split": 5,
-  "caps_left": 6,
-  "dropped_shells": [
-   {
-    "faces": 14,
-    "mm3": 0.0,
-    "closed": true
-   }
-  ],
-  "n_dropped_shells": 1,
+  "folded": 0,
+  "caps_split": 1,
+  "caps_left": 2,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 68166,
+  "faces": 74914,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 740,
-   "folded": 387,
-   "caps_split": 225,
-   "caps_left": 42,
+   "degenerate": 670,
+   "folded": 322,
+   "caps_split": 184,
+   "caps_left": 54,
    "watertight": true,
-   "faces": 89748
+   "faces": 99630
   },
-  "volume_mm3": 6177.1,
-  "exact_mm3": 6176.5
+  "volume_mm3": 7571.0,
+  "exact_mm3": 7570.5
  },
  "bodies": {
-  "bodies_raw": 25,
+  "bodies_raw": 20,
   "dropped_specks_mm3": [
    0.0,
    0.0,
@@ -259,32 +270,28 @@
    0.0,
    0.0,
    0.0,
-   0.0,
-   0.0,
-   0.0,
-   0.0,
-   0.0,
-   0.0,
-   0.0,
-   0.0,
-   2.13,
    0.0
   ],
-  "cavities_mm3": [],
-  "bodies": 31
+  "cavities_mm3": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "bodies": 33
  },
- "volume_mm3": 6176.5,
- "drawn_g": 4.42,
+ "volume_mm3": 7570.5,
+ "drawn_g": 4.91,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
   "specks_mm3": [
-   0.156,
-   0.078,
-   0.062,
+   0.172,
    0.062,
    0.031,
+   0.016,
+   0.016,
    0.016,
    0.016,
    0.016
@@ -298,38 +305,38 @@
      43.0
     ],
     "thick_mm": 1.5,
-    "core_mm3": 54.62,
-    "mm3": 95.5
+    "core_mm3": 56.73,
+    "mm3": 96.4
    },
    {
     "at": [
      -261.3,
-     14.1,
+     14.0,
      43.0
     ],
     "thick_mm": 1.5,
-    "core_mm3": 56.7,
-    "mm3": 95.8
+    "core_mm3": 58.17,
+    "mm3": 96.6
    },
    {
     "at": [
-     -245.8,
-     -9.8,
-     35.5
+     -244.6,
+     13.3,
+     36.4
     ],
     "thick_mm": 1.5,
-    "core_mm3": 4.38,
-    "mm3": 120.4
+    "core_mm3": 12.39,
+    "mm3": 168.0
    },
    {
     "at": [
-     -243.3,
-     -14.0,
+     -243.2,
+     -14.1,
      21.5
     ],
     "thick_mm": 1.5,
-    "core_mm3": 56.61,
-    "mm3": 120.4
+    "core_mm3": 56.33,
+    "mm3": 127.6
    },
    {
     "at": [
@@ -338,16 +345,16 @@
      21.5
     ],
     "thick_mm": 1.5,
-    "core_mm3": 56.55,
-    "mm3": 142.3
+    "core_mm3": 54.72,
+    "mm3": 168.0
    }
   ],
-  "removed_mm3": 0.24,
+  "removed_mm3": 0.27,
   "specks": 8
  },
  "stl": "overseer_cage_node_21.stl",
  "view_stl": "overseer_cage_node_21_view.stl",
- "view_faces": 68166,
+ "view_faces": 74914,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -412,15 +419,15 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.0448339676664688,
-  "nd": 57278,
+  "volfrac": 0.06158957768645624,
+  "nd": 57185,
   "sym_axes": [
    1
   ],
   "n_real": 10,
   "n_ties": 18,
   "backend": "direct",
-  "iterations": 57,
+  "iterations": 71,
   "stopped": "grey"
  },
  "grid": {
@@ -432,13 +439,13 @@
    56
   ],
   "origin": [
-   -272.5287,
+   -272.3563,
    -28.0,
-   9.8439
+   10.025
   ],
   "cells": 175616,
-  "design": 57210,
-  "drawn": 3471,
+  "design": 57163,
+  "drawn": 3845,
   "cases": [
    "frame camera rod 20 axial 9 N (pull-out)",
    "frame camera rod 20 side 0.6 N",
@@ -455,30 +462,31 @@
    "default"
   ]
  },
- "build_s": 36.7,
- "layout_s": 1068,
- "peak_gb": 4.182716,
- "gen_cm3": 2.5,
+ "build_s": 42.7,
+ "layout_s": 1786,
+ "peak_gb": 4.32396,
+ "gen_cm3": 3.5,
  "h": 1.0,
  "audit": {
-  "drawn_share": 0.057,
+  "drawn_share": 0.063,
+  "load_room": [],
   "bodies": [
    {
     "id": 1,
-    "cells": 2451,
-    "inscribed_mm": 5.0,
+    "cells": 2701,
+    "inscribed_mm": 5.3,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
-    "room": 0.71,
-    "room_depth_mm": 42.0,
+    "room": 0.7,
+    "room_depth_mm": 41.0,
     "at": [
-     -252.9,
+     -252.6,
      -0.0,
-     45.2
+     45.1
     ],
-    "core_mm": 3.9,
-    "share_of_drawn": 0.71
+    "core_mm": 4.7,
+    "share_of_drawn": 0.7
    },
    {
     "id": 2,
@@ -487,23 +495,23 @@
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
-    "room": 0.7,
+    "room": 0.67,
     "room_depth_mm": 40.0,
     "at": [
      -241.3,
-     -14.1,
+     -14.0,
      23.2
     ],
     "core_mm": 1.8
    },
    {
     "id": 3,
-    "cells": 193,
+    "cells": 191,
     "inscribed_mm": 3.5,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
-    "room": 0.7,
+    "room": 0.68,
     "room_depth_mm": 40.0,
     "at": [
      -241.2,
@@ -514,17 +522,17 @@
    },
    {
     "id": 4,
-    "cells": 626,
-    "inscribed_mm": 3.0,
+    "cells": 752,
+    "inscribed_mm": 2.5,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
-    "room": 0.97,
-    "room_depth_mm": 37.0,
+    "room": 0.96,
+    "room_depth_mm": 36.0,
     "at": [
-     -234.3,
+     -234.0,
      0.0,
-     48.8
+     49.0
     ],
     "core_mm": 1.8
    }
@@ -533,19 +541,145 @@
   "plate": {
    "L_mm": 54.0,
    "W_mm": 52.0,
-   "H_mm": 52.0,
+   "H_mm": 54.0,
    "fits": true
   },
+  "drawn_thin": [],
+  "drawn_walls": [],
   "cases": 10,
   "supports": 1,
   "fails": []
  },
- "early": null,
+ "early": {
+  "rows": [
+   {
+    "case": "frame camera rod 20 axial 9 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.005,
+    "across": 0.008,
+    "at": [
+     -236.9,
+     4.5,
+     45.5
+    ]
+   },
+   {
+    "case": "frame camera rod 20 side 0.6 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.001,
+    "at": [
+     -236.9,
+     4.5,
+     45.5
+    ]
+   },
+   {
+    "case": "camera flight 4 g",
+    "cls": "flight",
+    "inlayer": 0.008,
+    "across": 0.019,
+    "at": [
+     -240.9,
+     -12.5,
+     26.5
+    ]
+   },
+   {
+    "case": "camera landing 6 g",
+    "cls": "flight",
+    "inlayer": 0.013,
+    "across": 0.028,
+    "at": [
+     -240.9,
+     -12.5,
+     26.5
+    ]
+   },
+   {
+    "case": "camera crash 35 g +x",
+    "cls": "crash",
+    "inlayer": 0.019,
+    "across": 0.029,
+    "at": [
+     -236.9,
+     -13.5,
+     25.5
+    ]
+   },
+   {
+    "case": "camera crash 35 g -x",
+    "cls": "crash",
+    "inlayer": 0.019,
+    "across": 0.041,
+    "at": [
+     -240.9,
+     -12.5,
+     26.5
+    ]
+   },
+   {
+    "case": "camera crash 35 g +y",
+    "cls": "crash",
+    "inlayer": 0.024,
+    "across": 0.047,
+    "at": [
+     -239.9,
+     -11.5,
+     25.5
+    ]
+   },
+   {
+    "case": "camera crash 35 g -y",
+    "cls": "crash",
+    "inlayer": 0.024,
+    "across": 0.035,
+    "at": [
+     -239.9,
+     11.5,
+     24.5
+    ]
+   },
+   {
+    "case": "camera crash 35 g +z",
+    "cls": "crash",
+    "inlayer": 0.02,
+    "across": 0.045,
+    "at": [
+     -240.9,
+     -12.5,
+     26.5
+    ]
+   },
+   {
+    "case": "camera crash 35 g -z",
+    "cls": "crash",
+    "inlayer": 0.02,
+    "across": 0.022,
+    "at": [
+     -236.9,
+     -13.5,
+     25.5
+    ]
+   }
+  ],
+  "worst": 0.047,
+  "worst_case": "camera crash 35 g +y",
+  "worst_at": [
+   -239.9,
+   -11.5,
+   25.5
+  ],
+  "beta": 4.0,
+  "iteration": 35,
+  "max_worst": 0.3,
+  "k": 3.0
+ },
  "baseline": null,
- "total_s": 1104,
- "part_sha": "7f3dbcc45073",
- "lib_sha": "15c5499fc866",
- "setup_sha": "515aab9740d26d17",
- "max_worst": 0.5,
+ "total_s": 1828,
+ "part_sha": "b129722594f3",
+ "lib_sha": "f6c514020983",
+ "setup_sha": "29d87c42bd573233",
+ "max_worst": 0.3,
  "strength_ok": true
 }

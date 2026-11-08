@@ -21,12 +21,30 @@ Checks (hard = raises, soft = logged + in the report):
                        by any sensible load path, they only cost solve time. Reported as a share.
   plate          hard  the envelope (plan hull's smallest rectangle x height) does not fit the printer's 180 mm cube at any
                        rotation (Spark 29 Oct): the part must be split into bolted pieces that each fit.
+  drawn_thin     hard  a drawn body (exact geometry after its cuts, thin_ok bodies left out) under 2.5 mm across its smallest
+                       extent: a plate the gate's 2.0 mm erosion leaves no core, so the engine's material round it ends as blobs on necks.
+                       4 Nov: the Scout tail unit's 2 mm tape lands under the UBEC and XR2 (two necks), the arm clips' tie collar
+                       sheared by the plate keep-out to a 1.1 mm sliver. Thicken it (lands >= 4 mm and 2 cells), move it out of
+                       the cut, or declare it thin_ok (the camera posts).
+  load_room      hard  a load case with over a third (and over 2) of its loaded cells in design room, not drawn and not beside
+                       a cut (a bolt hole's lining is the wall the engine builds round the hole): the region reaches past the
+                       drawn face it loads, so the engine grows a knob or a lip out to those cells that carries nothing. 5 Nov: the Scout nose unit's seat side-face regions ran 2.7 mm above the 3 mm rim up the
+                       chamfer (two 150 mm3 knobs on necks). Clip the region to the drawn face.
+  env_neck       hard  the room (design + drawn cells) eroded by half a member no longer joins every loaded drawn body to the
+                       support: the only way from that body to the support is a slab or a stub thinner than a member, so the
+                       engine builds a blob there on a neck the gate refuses. 5 Nov: the Scout tail unit's tail-node arm met its
+                       bay over a 4 mm overlap (three necks), the nose unit's lower camera posts had 1.2 mm of room beside their
+                       2 mm stubs behind the plug keep-out (two loose blobs). Widen the overlap or the room round the body.
+  drawn_wall     hard  a drawn body (after its cuts, thin_ok bodies left out) with a wall under the gate's thin rule (the 0.9 mm
+                       opening's residue: under the 2 mm floor) anywhere: the gate fails it wherever the engine leaves it exposed
+                       and the export cleanup may not cut drawn material (7 Nov: the Scout node collars at their resin grooves).
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
 """
 import numpy as np
 from scipy import ndimage as ndi
+
 
 S6 = ndi.generate_binary_structure(3, 1)
 S26 = np.ones((3, 3, 3), bool)
@@ -73,6 +91,66 @@ def diameter_mm(mask, h):
     return max(0.0, (2.0 * float(ndi.distance_transform_edt(mask).max()) - 1.0) * h)
 
 
+THIN_MM = 2.5             # a drawn body thinner than this across its smallest extent: the gate's 2.0 mm erosion leaves it no core (PETG: nothing under 2)
+
+
+def thin_drawn(drawn_m, cuts_m, thin_ok=(), thin_mm=THIN_MM, min_mm3=5.0):
+    """exact geometry, independent of the pitch: the drawn bodies less the cuts and the declared-thin bodies, split into pieces; a
+    piece whose smallest bounding-box extent is under thin_mm is a plate or a sliver. Returns [(extent_mm, volume_mm3, centre)]"""
+    body = drawn_m - cuts_m
+    for t in thin_ok:
+        body = body - t
+    out = []
+    for piece in body.decompose():
+        v = float(piece.volume())
+        if v < min_mm3:
+            continue
+        bb = piece.bounding_box(); ext = [bb[k + 3] - bb[k] for k in range(3)]
+        if min(ext) < thin_mm:
+            out.append((round(min(ext), 2), round(v, 1), [round((bb[k] + bb[k + 3]) / 2, 1) for k in range(3)]))
+    return out
+
+
+WALL_CORE_MM3 = 1.0       # a drawn wall under the gate's thin rule counts from this much core (voxel noise at an acute edge is less)
+WALL_PITCHES = (0.15, 0.2, 0.25, 0.4, 0.5, 0.8)   # drawn_walls samples at one of these: a 2.0 wall holds a whole number of cells, so its
+#   middle cell is 1.0 from both faces and the 0.9 opening keeps it (at 0.3 a 2.0 wall can cover 6 cells, middle 0.88: a false thin wall)
+
+
+def drawn_walls(drawn_m, cuts_m, thin_ok=(), pitch=0.15, erode_mm=0.9, min_core_mm3=WALL_CORE_MM3, max_voxels=20e6, min_mm3=5.0):
+    """the gate's own thin rule (tools/solid_check.py thin_walls: the residue of a 2 x erode_mm opening, walls under the 2 mm floor)
+    on the drawn geometry alone, body by body: the drawn bodies less the cuts and the declared-thin bodies, each piece voxelised at
+    pitch (finer than the gate's 0.25: a 1.5 mm ring on a grid axis is 6 voxels there and its residue breaks into edge pieces; coarsened
+    so a piece stays under max_voxels). A wall found here is in the part whatever the engine does: where the generated
+    material leaves it exposed the gate fails it, and the cleanup may not touch drawn material. Returns [dict(thick_mm, core_mm3, mm3,
+    at, pitch)] (7 Nov: the Scout node collars, 2.0 wall round a 1.6 bore with 0.5 resin grooves, are 1.5 at every groove ring)."""
+    from .build import _solid_check_module
+    from .part import tm
+    SC = _solid_check_module()
+    body = drawn_m - cuts_m
+    for t in thin_ok:
+        body = body - t
+    out = []
+    for piece in body.decompose():
+        if float(piece.volume()) < min_mm3:
+            continue
+        T = tm(piece)
+        if not len(T.faces):
+            continue
+        ext = T.bounds[1] - T.bounds[0]
+        p = float(pitch)
+        for p in [q for q in WALL_PITCHES if q >= pitch]:                 # pitches a 2.0 wall sits on with a centre 1.0 from its faces
+            if np.prod((ext + 4 * p) / p) <= max_voxels:
+                break
+        lo = T.bounds[0] - 2 * p
+        shape = tuple(int(np.ceil((ext[k] + 4 * p) / p)) for k in range(3))
+        V = SC.voxels(T, p, lo, shape)
+        _, _, thin, _ = SC.thin_walls(V, p, erode_mm, lo)
+        for t in thin:
+            if t["kind"] == "wall" and t["core_mm3"] >= min_core_mm3:
+                out.append(dict(thick_mm=t["thick_mm"], core_mm3=t["core_mm3"], mm3=t["mm3"], at=t["at"], pitch=round(p, 3)))
+    return sorted(out, key=lambda t: -t["core_mm3"])
+
+
 def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
     sh, h = part.shape, part.h
     sol = (part.solid & ~part.insert_cells).reshape(sh)
@@ -110,6 +188,36 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
                         ok = (ii >= 0) & (ii < nx) & (jj >= 0) & (jj < ny) & (kk >= 0) & (kk < nz)
                         loaded[np.ravel_multi_index((ii[ok], jj[ok], kk[ok]), sh)] = True
     loaded = loaded.reshape(sh) & sol
+
+    # load_room: a load region must lie on drawn material. Its cells are the part cells whose centre it holds (Part.elems); those that
+    # are design room, not drawn, are nodes the engine must grow material out to so the load is carried: a knob or a lip that carries
+    # nothing (5 Nov, Scout nose run 6: the seat's side-face regions reached 2.7 mm above the 3 mm rim up the chamfer, 2 of their 3
+    # cell layers were room, two 150 mm3 knobs on necks at the rim). A region that wraps a body by a margin has a few room cells on
+    # its surface (the camera posts' root regions, 0.6 over the boss): under a third is fine. Room cells beside a cut are a bearing
+    # lining (a bolt's shear on its hole's wall, the Overseer arms): the wall the engine builds round the hole is the attachment
+    # itself, so they do not count.
+    rep["load_room"] = []
+    nx, ny, nz = sh
+    lining = ndi.binary_dilation(cut, S6)
+    for c in part.cases:
+        if c.nodes is None or not len(c.nodes):
+            continue
+        ln = np.zeros((nx + 1) * (ny + 1) * (nz + 1), bool); ln[np.asarray(c.nodes)] = True
+        ln = ln.reshape(nx + 1, ny + 1, nz + 1)
+        cells = np.ones(sh, bool)                                           # a cell is loaded when all 8 of its corner nodes are
+        for a in (0, 1):
+            for b in (0, 1):
+                for cc in (0, 1):
+                    cells &= ln[a:a + nx, b:b + ny, cc:cc + nz]
+        cells &= (sol | des)
+        room_c = cells & des & ~sol & ~lining
+        n_all, n_room = int(cells.sum()), int(room_c.sum())
+        if n_all and n_room > 2 and n_room > n_all / 3.0:
+            ii, jj, kk = np.nonzero(room_c)
+            at = [round(float(part.origin[d] + (v.mean() + 0.5) * h), 1) for d, v in enumerate((ii, jj, kk))]
+            rep["load_room"].append(dict(case=c.name, cells=n_all, in_room=n_room, at=at))
+            fails.append(f"load_room: case '{c.name}' loads {n_room} of {n_all} cells in design room (not drawn, not a cut's lining) near {at}: the engine grows "
+                         f"material out to them to carry the load, a knob or a lip that carries nothing. Clip the region to the drawn face it loads.")
 
     # drawn bodies
     lab, nb = ndi.label(sol, S26)
@@ -196,6 +304,35 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         fails.append(f"plate: the envelope is {L:.0f} x {W:.0f} x {H:.0f} mm and does not fit the {PLATE_MM:.0f} mm plate at any "
                      f"rotation: split the part into bolted pieces that each fit, joined so the positions it sets are kept "
                      f"(Spark 29 Oct).")
+
+    # env_neck: every loaded drawn body must reach the support through room at least one member wide
+    room = (des | sol)
+    r_half = max(1, int(mm / 2.0 / h))                                      # half a member in whole cells, rounded down: at h 2.0 and member 4.4 that is 1 cell (ceil gave 2: 8 mm of erosion, which cut a 9 mm yoke)
+    core = ndi.binary_erosion(room, S6, iterations=r_half)
+    core = ndi.binary_dilation(core, S6, iterations=r_half) & room          # the room without its slabs and stubs thinner than a member
+    lab_c, nc = ndi.label(core, S26)
+    sup_ids = set(np.unique(lab_c[sup & core])) - {0}
+    for b in bodies:
+        if not b["loaded"] or b["touches_support"]:
+            continue
+        cells = lab == b["id"]
+        ids = set(np.unique(lab_c[ndi.binary_dilation(cells, S6) & core])) - {0}
+        if sup_ids and not (ids & sup_ids):
+            fails.append(f"env_neck: loaded drawn body {b['id']} at {b['at']} reaches the support only through room thinner than one member "
+                         f"({mm:.1f} mm): a slab or a stub the engine can only bridge with a blob on a neck. Widen the overlap or the room round it.")
+    thin = thin_drawn(part.drawn_m, part.cuts_m, getattr(part, "thin_ok", ()) or ())
+    rep["drawn_thin"] = [dict(extent_mm=t[0], mm3=t[1], at=t[2]) for t in thin]
+    for t in thin:
+        fails.append(f"drawn_thin: a drawn body at {t[2]} ({t[1]:.0f} mm3) is {t[0]:.1f} mm across its smallest extent (limit {THIN_MM}): a plate or "
+                     f"sliver the gate's 2 mm erosion leaves no core (a 2 mm tape land, a collar sheared by a keep-out). Thicken it, move it "
+                     f"out of the cut, or declare it thin_ok.")
+    walls = drawn_walls(part.drawn_m, part.cuts_m, getattr(part, "thin_ok", ()) or ())
+    rep["drawn_walls"] = walls
+    for i, w in enumerate(walls[:6]):
+        more = f" (and {len(walls) - 6} more)" if i == 5 and len(walls) > 6 else ""
+        fails.append(f"drawn_wall: a drawn body has a wall under 2 mm at {w['at']} after its cuts ({w['thick_mm']:.1f} mm by the gate's rule, "
+                     f"{w['core_mm3']:.1f} mm3){more}: the gate fails it wherever the engine leaves it exposed, and the cleanup may not cut drawn "
+                     f"material (a 2.0 collar wall with 0.5 resin grooves is 1.5 at the grooves). Thicken the wall, shallow the cut, or declare it thin_ok.")
 
     rep["cases"] = len(part.cases)
     rep["supports"] = len(part.supports)

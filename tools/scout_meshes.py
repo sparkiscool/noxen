@@ -20,7 +20,7 @@ PLATE_TOP = 22.0
 MOTORS_XY = [(54.1, -54.1), (-54.1, 54.1), (54.1, 54.1), (-54.1, -54.1)]      # PX4 quad X: 1 FR, 2 RL, 3 FL, 4 RR (y left)
 MOTOR_D, MOTOR_H = 24.7, 19.2                                                 # bell, arm top to prop hub face (listing, E)
 PROP_R, PROP_HUB_D, PROP_HUB_H, PITCH_MM = 44.45, 11.0, 5.5, 50.8
-FLOW_AT = (0.0, -30.0, -30.0)                                                 # lens; belly mount concept v1 had y -40, moved in 10 (3 Nov) to clear the funnel's y face
+FLOW_AT = (70.0, 0.0, -24.5)                                                  # lens: in the nose unit's runner, looking down through a window in it (4 Nov; beside the receiver there is no room between it and the funnel's y face, and under the plate the receiver clips its view)
 
 
 def box(x0, x1, y0, y1, z0, z1):
@@ -120,19 +120,22 @@ PCB = 1.6
 # ---- the bought parts of the layout (dimensions.md A, H, M), each at the centre of the box that stood on the page (layout v3 / v12);
 #      the Bee35 plate itself is traced from SpeedyBee's render by tools/bee35_plate.py
 def fc_aio():
-    """MicoAir743 AIO, 36 x 36 x 1.6 as a diamond at (1.9, 0), hanging under the plate on 4 grommet standoffs (25.5 holes), component side
-    down, lowest point z 9.5 (dimensions.md A, H); USB-C at the tail corner, slightly right; the 4-in-1 FETs and caps on the same board."""
-    cx, zb = 1.9, 14.4                                                  # board bottom (components below it reach z 9.5)
+    """MicoAir743 AIO, 36 x 36 x 1.6 as a diamond at (1.9, 0), ON TOP of the plate (Spark 4 Nov: "we can keep the fc on top of the base plate";
+    was under it, lowest point z 9.5) on 4 standoffs through the 25.5 holes, component side up, board bottom z 26 (4 over the plate top 22),
+    tallest parts (the caps) to z 32.5; USB-C at the tail corner, slightly right; the 4-in-1 FETs and caps on the same board.
+    The same M3 bolts go on through the plate into the nose unit's inserts (parts/scout_units_lib.BOLT_NOSE)."""
+    cx, zb = 1.9, 26.0                                                  # board bottom
+    zt = zb + PCB                                                       # board top: components above it
     board = cbox(0, 0, zb + PCB / 2, 36, 36, PCB)
-    posts = [cyl(sx * 12.75, sy * 12.75, zb + PCB, PLATE_TOP - 3.5, 2.5, 6) for sx in (-1, 1) for sy in (-1, 1)]
-    holes = [cyl(sx * 12.75, sy * 12.75, zb - 1, PLATE_TOP - 3.5 + 1, 1.5) for sx in (-1, 1) for sy in (-1, 1)]
-    fets = [cbox(sx * 11, sy * 11, zb - 0.9, 6.0, 5.0, 1.8) for sx in (-1, 1) for sy in (-1, 1)]
-    caps = [cyl(0, sy * 13, zb - 4.9, zb, 3.2) for sy in (-1, 1)]
-    mcu = cbox(0, 0, zb - 0.6, 8, 8, 1.2); gyro = cbox(-8, 0, zb - 0.5, 3, 3, 1.0); baro = cbox(8, 4, zb - 0.6, 3, 3, 1.2)
-    usb = cbox(-14, -5, zb - 1.6, 7.5, 9.0, 3.2)                        # tail corner (-x), slightly right (-y)
-    pads = [cbox(sx * 15, 0, zb - 0.3, 4, 10, 0.6) for sx in (-1, 1)]
+    posts = [cyl(sx * 12.75, sy * 12.75, PLATE_TOP, zb, 2.5, 6) for sx in (-1, 1) for sy in (-1, 1)]
+    holes = [cyl(sx * 12.75, sy * 12.75, PLATE_TOP - 1, zb + PCB + 1, 1.5) for sx in (-1, 1) for sy in (-1, 1)]
+    fets = [cbox(sx * 11, sy * 11, zt + 0.9, 6.0, 5.0, 1.8) for sx in (-1, 1) for sy in (-1, 1)]
+    caps = [cyl(0, sy * 13, zt, zt + 4.9, 3.2) for sy in (-1, 1)]
+    mcu = cbox(0, 0, zt + 0.6, 8, 8, 1.2); gyro = cbox(-8, 0, zt + 0.5, 3, 3, 1.0); baro = cbox(8, 4, zt + 0.6, 3, 3, 1.2)
+    usb = cbox(-14, -5, zt + 1.6, 7.5, 9.0, 3.2)                        # tail corner (-x), slightly right (-y)
+    pads = [cbox(sx * 15, 0, zt + 0.3, 4, 10, 0.6) for sx in (-1, 1)]
     m = union([board, mcu, gyro, baro, usb] + posts + fets + caps + pads) - union(holes)
-    return rotz(m, 45.0).translate([cx, 0, 0])
+    return m
 
 
 def radxa():
@@ -146,25 +149,24 @@ def radxa():
     soc = cbox(30, 14, 0.6, 12, 12, 1.2); ram = cbox(44, 20, 0.5, 8, 8, 1.0); wifi = cbox(62, 15, 0.6, 3, 10, 1.2)
     sd = box(0, 4.9, 7.8, 22.3, -PCB - 2.86, -PCB)
     m = union([b, hdmi, soc, ram, wifi, sd] + usb) - union(holes)
-    return frame(m, (-118.0, -15.0, 7.5), (1, 0, 0), (0, 1, 0), (0, 0, 1))   # 3 Nov compact layout: flat under the plate's tail, x -118..-53, z 7.5..15, over the funnel mouth
+    return frame(m, (-80.0, -32.5, 15.0), (0, 1, 0), (0, 0, -1), (-1, 0, 0))   # 4 Nov (Spark: the electronics into the printed base): on edge in the tail unit's bay over the tail runner, long side along y, PCB x -80..-78.4, components to -x, its posts to +x, z -15..15 (the UBEC lies flat under it), ports edge up (plugs up between the arms), SD end at -y; its M2.5 screws come in from the open tail end
 
 
 def ubec():
-    """5 V UBEC, a heatshrunk brick (makers 43..50 x 17..25 x 7..10, Q4: 48 x 17 x 8 E) with leads out both short ends, in the layout's
-    box x -178.6..-117.6, y 18.2..33.6, z 16..24 (tail bay, behind the rear disks)."""
-    cx, cy, cz = -84.0, 26.0, 11.5                                                   # 3 Nov compact layout: beside the Radxa under the plate's tail
-    brick = union([cbox(cx, cy, cz, 48, 15, 8), cbox(cx, cy, cz, 50, 17, 6)])
-    leads = [cylx(cx - 30.5, cx - 24, cy + dy, cz, 0.9) for dy in (-3, 3)] + [cylx(cx + 24, cx + 30.5, cy + dy, cz, 0.9) for dy in (-3, 3)]
-    return union([brick] + leads)
+    """5 V UBEC, a heatshrunk brick (makers 43..50 x 17..25 x 7..10, Q4: 48 x 17 x 8 E) with leads out both short ends. 4 Nov: on edge in the
+    tail unit's bay flat on the runner under the Radxa, length along y (y -33..28), 17 along x (x -94..-77), 8 tall (z -24.3..-16.3), leads out the +-y ends."""
+    brick = union([cbox(0, 0, 0, 48, 15, 8), cbox(0, 0, 0, 50, 17, 6)])
+    leads = [cylx(-30.5, -24, dy, 0, 0.9) for dy in (-3, 3)] + [cylx(24, 30.5, dy, 0, 0.9) for dy in (-3, 3)]
+    return frame(union([brick] + leads), (-85.5, -2.5, -20.3), (0, -1, 0), (1, 0, 0), (0, 0, 1))
 
 
 def xr2():
-    """RadioMaster XR2 nano: 16 x 12 x 6 board with the antenna up (dimensions.md M), in the layout's box x -110..-94, y -27..-15, z 23..45."""
-    cx, cy, z0 = -70.0, -24.0, 8.0                                                    # 3 Nov compact layout: under the plate's tail; antenna laid flat along -x
-    board = cbox(cx, cy, z0 + 0.5, 16, 12, 1.0)
-    chip = cbox(cx, cy, z0 + 1.0 + 1.0, 5, 5, 2.0); rf = cbox(cx + 5, cy - 3, z0 + 1.0 + 0.8, 3, 3, 1.6); conn = cbox(cx - 6, cy, z0 + 1.0 + 1.5, 3, 8, 3.0)
-    ant = union([cylx(cx - 26, cx - 6, cy + 4, z0 + 2.0, 0.5, 12), cbox(cx - 26, cy + 4, z0 + 2.0, 1.0, 6.0, 1.0)])      # T antenna, flat along -x (3 Nov)
-    return union([board, chip, rf, conn, ant])
+    """RadioMaster XR2 nano: 16 x 12 x 6 board with a T antenna (dimensions.md M). 4 Nov: on edge in the tail unit's bay ahead of the Radxa,
+    board x -75..-74 on its land (components to -x, to -78, 1.4 clear of the Radxa's post tips), 16 along y, 12 along z (-12..0), the antenna flat along +y."""
+    board = cbox(0, 0, 0.5, 16, 12, 1.0)
+    chip = cbox(0, 0, 1.0 + 1.0, 5, 5, 2.0); rf = cbox(5, -3, 1.0 + 0.8, 3, 3, 1.6); conn = cbox(-6, 0, 1.0 + 1.5, 3, 8, 3.0)
+    ant = union([cylx(-26, -6, 4, 2.0, 0.5, 12), cbox(-26, 4, 2.0, 1.0, 6.0, 1.0)])      # T antenna, flat along local -x = drone -y
+    return frame(union([board, chip, rf, conn, ant]), (-74.0, 0.0, -6.0), (0, -1, 0), (0, 0, 1), (-1, 0, 0))
 
 
 def pack():
@@ -193,7 +195,9 @@ def camera():
     return union([board, holder, barrel, ring, front, plug] + chips) - union(holes + [glass_cut])
 
 
-CAMERA_LENS = (122.0, 0.0, 40.0)                                                # 3 Nov compact layout: just ahead of the front discs (board x 105..120), lens low                                     # one camera at the nose, horizon, looking +x (dimensions.md System Scout v3)
+CAMERA_LENS, CAMERA_TILT = (130.0, 0.0, 38.0), 30.0                            # 4 Nov (Spark: tilted up for close-ups and ceilings): 30 deg up, lens at z 38, 6 inside the nose flat: the view (89 x 73) spans 6.5 deg below the horizon to 66.5 above, 3 clear of the ring front rod at the window with the check 2 deg margin; the upper M2 posts 5 outside the front discs keep-out; at (128, 0, 32) the plug keep-out sheared the nose node NB collar and the body sat 0.4 from the rod NB-P0
+# was (126.0, 0.0, 40.0) level
+# was (122.0, 0.0, 40.0)                                                # 3 Nov compact layout: just ahead of the front discs (board x 105..120), lens low                                     # one camera at the nose, horizon, looking +x (dimensions.md System Scout v3)
 
 
 if __name__ == "__main__":
@@ -206,4 +210,5 @@ if __name__ == "__main__":
     write("ubec", to_trimesh(ubec()))
     write("xr2", to_trimesh(xr2()))
     write("pack_4s_1500", to_trimesh(pack()))
-    write("camera", to_trimesh(frame(camera(), CAMERA_LENS, (0, 1, 0), (0, 0, 1), (1, 0, 0))))
+    t_ = np.radians(CAMERA_TILT)
+    write("camera", to_trimesh(frame(camera(), CAMERA_LENS, (0, 1, 0), (-np.sin(t_), 0, np.cos(t_)), (np.cos(t_), 0, np.sin(t_)))))

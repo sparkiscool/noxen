@@ -21,13 +21,17 @@ python tools/dim.py <section>                                     # one section 
 ## Setup audit (runs before every solve, `topo/audit.py`)
 A run refuses to start when: drawn solid is over 30 % of the part; one drawn body holds over 60 % of the drawn
 material with a thick core (a drawn structure); any drawn body has a core over 8 mm away from every hole and face (a
-block); a loaded drawn body has less than one member of design room behind it. The fix is always the setup, never a
+block); a loaded drawn body has less than one member of design room behind it; a drawn body is under 2.5 mm across its
+smallest extent after its cuts, or has a wall under 2 mm anywhere after them (the gate erodes it; a 2.0 collar with 0.5 resin
+grooves is 1.5 at the grooves, 7 Nov; thin_ok for the camera posts); a loaded drawn body reaches the support only
+through room thinner than a member (a slab or a stub: the engine bridges it with a blob on a neck); a load region reaches off its
+drawn face into room (the engine grows a knob out to the loaded nodes). The fix is always the setup, never a
 `--set audit=warn`: delete the block, open the envelope behind the feature, move the cut. `result.json` carries the
 audit report; `python -m topo.run parts/<name> --h <SPEC h> --maxit 1 --no-coarse` runs it in a minute (at the SPEC h: room is measured
 in cells, a coarser h can pass a setup the run refuses).
 
 ## Never
-- Run a full optimisation in a session. Never read meshes, logs, images or `inputs/`.
+- Run a full optimisation in a session. Never read meshes as text, logs or `inputs/`. Always look at what Spark looks at (Spark 7 Nov: "you should always be looking at the same artifact as me"): every new result's `parts/<name>/preview.png`, and the page itself rendered with the headless browser, before reporting it or judging a shape.
 - Edit `topo/` in a part session, except the audit check a failure calls for. Other engine changes are their own session, which THIS session starts itself (`create_session` on the repo, the whole brief in the prompt, `python -m topo.test_topo` in it); Spark never pastes a prompt (Spark 29 Oct).
 - Patch a failed run by drawing more solid. Fix the setup: room, cuts, loads, volume.
 
@@ -35,7 +39,7 @@ in cells, a coarser h can pass a setup the run refuses).
 - Draw only attachments: pads, bosses, socket walls, seats, contact faces, and the gusset into the body. Everything between them is generated.
 - Cut bolts, nuts, rods and tool sweeps through the whole envelope, not just to the pad.
 - Supports are the faces it really bolts to. Loads are the masses it carries at their CG plus the joint reactions from the system, each as its own case (flight, crash, handling). No guessed loads: if a case is missing, say so.
-- PETG, nothing under 2 mm (one exception: the camera M2 insert posts, Ø5.6 round Ø3.2, 1.2 wall, Spark 29 Oct by coupon), 3 mm and 6 mm carbon only (socket bores 3.2 / 6.2), Bambu A1 mini 180 cube, largest flat face down.
+- PETG, nothing under 2 mm (one exception: the camera M2 insert posts, Ø5.6 round Ø3.2, 1.2 wall, Spark 29 Oct by coupon), 3 mm and 6 mm carbon only (socket bores 3.2 / 6.2, every socket with a Ø2 resin injection port 1.5 above its floor out between the members and three 0.3 resin pockets along the bore the port feeds: `cage_node_lib.port_cut` / `socket_cuts(pockets=3)`, Spark 5 and 7 Nov), Bambu A1 mini 180 cube, largest flat face down.
 - Numbers come from `systems/dimensions.md`, tagged M measured, C CAD, E estimate. Every bought part is proposed with an Amazon listing (Spark 29 Oct: "everything needs to be on Amazon"); a part only a distributor sells is named as the fallback, never the proposal.
 
 ## Runs and check-ins (how Spark hears about results)

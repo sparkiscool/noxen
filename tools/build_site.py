@@ -113,7 +113,7 @@ def note(p, r):
     """What the part's line on the artifact page says: the run's numbers for a generated part, the layout model's for the rest."""
     if r:
         stg = r.get("strength") or {}
-        s = f"{r.get('mass_g', 0):.1f} g (M, run {'PASS' if r.get('solid_ok') and r.get('strength_ok', True) else 'FAIL'}"
+        s = f"{(r.get('mass_g') or 0):.1f} g (M, run {'PASS' if r.get('solid_ok') and r.get('strength_ok', True) else 'FAIL'}"
         if stg.get("worst") is not None:
             s += f", worst {stg['worst']} {stg.get('worst_case', '')}".rstrip()
         return s + ")"

@@ -14,13 +14,18 @@ Grey parts are placeholders still to be generated, red ones failed their last ru
 [![Scout, current assembly](https://sparkiscool.github.io/noxen/scout.png)](https://sparkiscool.github.io/noxen/scout.html?view=iso&still)
 
 [Open the Scout viewer](https://sparkiscool.github.io/noxen/scout.html?view=iso&still): the Bee35 plate and the bought parts drawn to their
-dimensions; the cage and the battery mechanism are off the page while the shared landing funnel is decided.
+dimensions, the nose and tail units that hold the receiver, seat the Scout in the shared funnel and carry the camera, flow sensor
+and the tail electronics on edge in a bay over the tail runner (the FC rides on top of the plate) (`parts/scout_units_lib.py`, engine setups: their drawn attachments and design rooms show until the runs land), and
+cage v19 (`tools/scout_cage.py`: 3 mm rods in PETG nodes, low and domed, shortened to the rear discs, on two skid trusses, checked against the funnel on the whole
+descent and as a frame under crash and landing loads, `tools/scout_cage_loads.py`); the battery mechanism is off the page until its
+hold-down is designed.
 
 ## Nox Ground Unit (the box)
 [![Nox Ground Unit, current assembly](https://sparkiscool.github.io/noxen/box.png)](https://sparkiscool.github.io/noxen/box.html?view=iso&still)
 
-[Open the box viewer](https://sparkiscool.github.io/noxen/box.html?view=iso&still): the swap arm v7 with its nine bays, the stand, the
-enclosure, and the landing funnel drawn on the latch footprint so both drones seat at one height (`tools/import_box.py` brings the
+[Open the box viewer](https://sparkiscool.github.io/noxen/box.html?view=iso&still): the swap arm v7 with seven bays, the stand, the
+enclosure, and the landing funnel drawn on the latch footprint so both drones seat at one height, 65 above the arm's grip height
+so the wheel turns clear under them, standing on two beams across the enclosure's side sheets (`tools/import_box.py` brings the
 mechanism's meshes over from the nox repo; `parts/box_funnel/make.py` draws the funnel).
 
 ## xswap short lock (the Overseer's battery mechanism)

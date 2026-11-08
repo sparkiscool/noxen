@@ -3,7 +3,7 @@
 "title": "Scout v3",
 "artifact": "https://claude.ai/artifact/WHdjYkzKPifXuHT1dWeqoR",
 "machine": "scout",
-"note": "Scout built against the shared funnel (3 Nov): the Bee35 plate, the EMAX ECO II 2004 motors and Gemfan 3520 props, the electronics and the 4S 1500 pack from layout v3 / v12, the belly skirt that seats in the funnel, and cage v15, a closed 3 mm rod octagonal prism of 22 nodes and 48 rods tangent to the prop keep-out (tools/scout_cage.py: every member above the funnel's wall tops on the whole descent, base rails at z 0 with four legs to the feet, one ring at z 62 as prop keep-out and roof edge, nose window for the camera), 266 x 230 x 112; the tail electronics sit flat under the plate's tail and the camera just ahead of the front discs (3 Nov compact layout) so nothing but the belly is below the funnel mouth; the latch set stays off the page until the hold-down is designed. Until 3 Nov the assembly placed the Overseer's folders for the cage, motors, props and flow sensor, so the page showed the Overseer's cage on the Scout (the migration of 28 Oct shared the folder names). v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
+"note": "Scout built against the shared funnel (3 Nov): the Bee35 plate, the EMAX ECO II 2004 motors and Gemfan 3520 props, the FC on top of the plate (4 Nov), the tail electronics and the 4S 1500 pack from layout v3 / v12, the nose and tail units that hold the receiver, seat the Scout in the funnel and carry the camera, flow sensor and tail electronics (4 Nov, parts/scout_units_lib.py: engine setups, their drawn attachments and design rooms on the page until the runs land), and cage v19, a closed 3 mm rod octagonal prism of 27 nodes and 71 rods tangent to the prop keep-out, its tail flat in to the rear discs' keep-out, hung on the plate by 8 ties and its two end nodes printed into the units (tools/scout_cage.py: every member outboard of the funnel's walls on the whole descent, base rails at z 0, the cage lands on two skids at |y| 84 hung from the rails as Warren trusses braced to the ring (4 Nov, Spark: no standalone legs, the bottom triangulated, every node PETG), the ring at z 58 with a 12 dome ridge over it (4 Nov, Spark: the look), nose window for the camera; frame model tools/scout_cage_loads.py: first mode 231 Hz, a 35 g crash bends it under 0.2 mm except upside down on the roof 1.4, no rod over 0.55 of its Euler load), 252 x 230 x 118; CG (-0.35, 0.12) on the thrust centre; the tail electronics stand on edge in the tail unit's bay over the tail runner, inside the funnel's bowl, and the camera just ahead of the front discs, 30 deg up (4 Nov), so the cage's tail comes in to the rear discs' keep-out; the latch set stays off the page until the hold-down is designed; the units are designed to the receiver v3's inserts. Until 3 Nov the assembly placed the Overseer's folders for the cage, motors, props and flow sensor, so the page showed the Overseer's cage on the Scout (the migration of 28 Oct shared the folder names). v12 Scout manifest with the camera mount v1 (runs/scout_camera_mount/v1) in place of the layout's cradle, arms and clips. Layout v3 / cage v2 (27 Oct, Spark: the latest Scout layout (PR 94), a triangulated shell cage, the bottom ring exactly the Overseer's so the funnel is interchangeable, one camera, the carbon base kept; then every rod 3 mm, half the rods, any rod length) from nox/scout/v3/layout_v3.py. Rough layout: C geometry on E sizes. Drone frame: x nose, y left, z up, plate underside 18.5, thrust centre and tab line x 0. Left out: keep-alive contacts (the new funnel's), catch features, ESC (AIO).",
 "cg_ref": [
 0.0,
 0.0,
@@ -104,17 +104,32 @@
 1000000000.0
 ],
 [
-"mount + nose legs (Scout)",
+"nose unit (Scout)",
 "frame plate (Bee35 carbon)",
 1000000000.0
 ],
 [
-"mount + nose legs (Scout)",
+"tail unit (Scout)",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"nose unit (Scout)",
 "FC",
 1000000000.0
 ],
 [
-"mount + nose legs (Scout)",
+"tail unit (Scout)",
+"FC",
+1000000000.0
+],
+[
+"nose unit (Scout)",
+"UBEC",
+1000000000.0
+],
+[
+"tail unit (Scout)",
 "UBEC",
 1000000000.0
 ],
@@ -125,12 +140,22 @@
 ],
 [
 "Radxa Zero 3W",
-"mount + nose legs (Scout)",
+"nose unit (Scout)",
+1000000000.0
+],
+[
+"Radxa Zero 3W",
+"tail unit (Scout)",
 1000000000.0
 ],
 [
 "flow MTF-02P",
-"mount + nose legs (Scout)",
+"nose unit (Scout)",
+1000000000.0
+],
+[
+"flow MTF-02P",
+"tail unit (Scout)",
 1000000000.0
 ],
 [
@@ -150,7 +175,12 @@
 ],
 [
 "wires",
-"mount + nose legs (Scout)",
+"nose unit (Scout)",
+1000000000.0
+],
+[
+"wires",
+"tail unit (Scout)",
 1000000000.0
 ],
 [
@@ -164,318 +194,138 @@
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
-"Radxa Zero 3W",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"frame plate (Bee35 carbon)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
-"flow MTF-02P",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "camera",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
-"wires",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "motor 4",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
-"mount + nose legs (Scout)",
+"tail unit (Scout)",
+"nose unit (Scout)",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "prop 3",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "motor 1",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "prop 4",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
-"UBEC",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "XR2",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
-"tail bay mount block (Scout electronics, E)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "prop 1",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "pack XT60 plug",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
-"tail bay carrier (Scout electronics, E)",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "prop 2",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "motor 3",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
-"FC",
-1000000000.0
-],
-[
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "motor 2",
 1000000000.0
 ],
 [
-"tail bay cables (Scout electronics, E)",
+"tail unit (Scout)",
 "pack 4S 1500",
 1000000000.0
 ],
 [
-"tail bay mount block (Scout electronics, E)",
-"Radxa Zero 3W",
+"nose unit (Scout)",
+"nose unit room (design space)",
 1000000000.0
 ],
 [
-"tail bay mount block (Scout electronics, E)",
-"frame plate (Bee35 carbon)",
+"nose unit (Scout)",
+"tail unit room (design space)",
 1000000000.0
 ],
 [
-"tail bay mount block (Scout electronics, E)",
-"flow MTF-02P",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
+"nose unit (Scout)",
 "camera",
 1000000000.0
 ],
 [
-"tail bay mount block (Scout electronics, E)",
-"wires",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"motor 4",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"mount + nose legs (Scout)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"prop 3",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"motor 1",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"tail bay cables (Scout electronics, E)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"prop 4",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"UBEC",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
+"nose unit (Scout)",
 "XR2",
 1000000000.0
 ],
 [
-"tail bay mount block (Scout electronics, E)",
-"prop 1",
+"tail unit (Scout)",
+"nose unit room (design space)",
 1000000000.0
 ],
 [
-"tail bay mount block (Scout electronics, E)",
-"pack XT60 plug",
+"tail unit (Scout)",
+"tail unit room (design space)",
 1000000000.0
 ],
 [
-"tail bay mount block (Scout electronics, E)",
-"tail bay carrier (Scout electronics, E)",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"prop 2",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"motor 3",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"FC",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"motor 2",
-1000000000.0
-],
-[
-"tail bay mount block (Scout electronics, E)",
-"pack 4S 1500",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"Radxa Zero 3W",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
+"arm clip 1 (Scout)",
 "frame plate (Bee35 carbon)",
 1000000000.0
 ],
 [
-"tail bay carrier (Scout electronics, E)",
-"flow MTF-02P",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"camera",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"wires",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"motor 4",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"mount + nose legs (Scout)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"prop 3",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
+"arm clip 1 (Scout)",
 "motor 1",
 1000000000.0
 ],
 [
-"tail bay carrier (Scout electronics, E)",
-"tail bay cables (Scout electronics, E)",
+"arm clip 2 (Scout)",
+"frame plate (Bee35 carbon)",
 1000000000.0
 ],
 [
-"tail bay carrier (Scout electronics, E)",
-"prop 4",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"UBEC",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"XR2",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"tail bay mount block (Scout electronics, E)",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"prop 1",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"pack XT60 plug",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"prop 2",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"motor 3",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
-"FC",
-1000000000.0
-],
-[
-"tail bay carrier (Scout electronics, E)",
+"arm clip 2 (Scout)",
 "motor 2",
 1000000000.0
 ],
 [
-"tail bay carrier (Scout electronics, E)",
-"pack 4S 1500",
+"arm clip 3 (Scout)",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"arm clip 3 (Scout)",
+"motor 3",
+1000000000.0
+],
+[
+"arm clip 4 (Scout)",
+"frame plate (Bee35 carbon)",
+1000000000.0
+],
+[
+"arm clip 4 (Scout)",
+"motor 4",
 1000000000.0
 ]
 ],
@@ -552,8 +402,9 @@
 ]
 },
 "ignore": [
-"mount + nose legs (Scout)",
-"wires"
+"wires",
+"nose unit (Scout)",
+"tail unit (Scout)"
 ]
 }
 ],
@@ -715,7 +566,7 @@
 "id": "fc",
 "group": "bought",
 "color": "#2e7d32",
-"note": "MicoAir743 AIO 36 x 36 diamond at (1.9, 0) under the plate on grommet standoffs, lowest point z 9.5 (dimensions.md A, H)",
+"note": "MicoAir743 AIO 36 x 36 diamond at (1.9, 0) ON TOP of the plate on 4 mm standoffs through its 25.5 holes, component side up, board z 26..27.6, caps to 32.5 (Spark 4 Nov; was under the plate); its M3 bolts continue through the plate into the nose unit's inserts",
 "pose": null
 },
 {
@@ -731,7 +582,7 @@
 "id": "ubec",
 "group": "bought",
 "color": "#2e7d32",
-"note": "5 V UBEC brick 48 x 17 x 8 with leads (Q4, E) at the layout's place in the tail bay",
+"note": "UBEC brick flat on the tail runner under the Radxa: x -94..-77, y -33..28, z -24.3..-16.3, leads out the +-y ends (4 Nov)",
 "pose": null
 },
 {
@@ -747,7 +598,7 @@
 "id": "xr2",
 "group": "bought",
 "color": "#2e7d32",
-"note": "RadioMaster XR2 nano 16 x 12 x 6 with the antenna up (dimensions.md M) at the layout's place",
+"note": "XR2 on its land ahead of the Radxa's posts: board x -75..-74, |y| 8, z -12..0, components to -x, antenna flat along +y (4 Nov)",
 "pose": null
 },
 {
@@ -763,7 +614,7 @@
 "id": "radxa_zero_3w",
 "group": "bought",
 "color": "#2e7d32",
-"note": "Radxa Zero 3W 65 x 30 from the STEP (dimensions.md H), on edge in the tail bay at the layout's place; ports edge down, components to -y (E)",
+"note": "Radxa Zero 3W 65 x 30 from the STEP (dimensions.md H), on edge in the tail unit's bay over the tail runner (4 Nov): PCB x -80..-78.4, z -15..15, components to -x, long side along y, ports edge up, SD end at -y; its four M2.5 screws come in from the open tail end",
 "pose": null
 },
 {
@@ -781,20 +632,6 @@
 "color": "#2d5a2d",
 "pose": null,
 "note": "at the belly mount concept's (0, -40, -30), face down (dimensions.md System Scout v3; E until the mount is designed)"
-},
-{
-"name": "mount + nose legs (Scout)",
-"role": "structure",
-"mesh": "parts/mount_nose_legs_scout/part.stl",
-"material": "PETG",
-"mass_g": 25.0,
-"tag": "E",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "mount_nose_legs_scout",
-"group": "printed",
-"color": "#99a6b3"
 },
 {
 "name": "pack 4S 1500",
@@ -829,47 +666,6 @@
 "color": "#c9a400"
 },
 {
-"name": "tail bay mount block (Scout electronics, E)",
-"role": "structure",
-"mesh": "parts/tail_bay_mount_block_scout_electronics_e/part.stl",
-"material": "PETG",
-"mass_g": 15.92,
-"tag": "E",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "tail_bay_mount_block_scout_electronics_e",
-"group": "printed",
-"color": "#99a6b3"
-},
-{
-"name": "tail bay carrier (Scout electronics, E)",
-"role": "structure",
-"mesh": "parts/tail_bay_carrier_scout_electronics_e/part.stl",
-"material": "PETG",
-"mass_g": 33.28,
-"tag": "E",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "tail_bay_carrier_scout_electronics_e",
-"group": "printed",
-"color": "#99a6b3"
-},
-{
-"name": "tail bay cables (Scout electronics, E)",
-"role": "structure",
-"mesh": "parts/tail_bay_cables_scout_electronics_e/part.stl",
-"mass_g": 6.27,
-"tag": "E",
-"owner": "scout v3",
-"version": "layout v3 / cage v2",
-"source": "nox/scout/v3/layout_v3.py",
-"id": "tail_bay_cables_scout_electronics_e",
-"group": "wires",
-"color": "#99a6b3"
-},
-{
 "name": "camera",
 "role": "bought",
 "protect": true,
@@ -882,7 +678,7 @@
 "id": "camera",
 "group": "bought",
 "color": "#2d5a2d",
-"note": "DECXIN 2633V2 board 38 x 38, M2 holes on 28 x 28, lens (149, 0, 42) looking +x (dimensions.md A, System Scout v3)",
+"note": "DECXIN 2633V2 board 38 x 38, M2 holes on 28 x 28, lens (130, 0, 38) looking 30 deg up (4 Nov, Spark: close-ups and ceilings; the view 89 x 73 spans 6.5 deg below the horizon to 66.5 above through the cage's nose window)",
 "pose": null
 },
 {
@@ -893,46 +689,543 @@
 24.86,
 -25.46,
 25.46,
-9.5,
-17.5
+26.0,
+34.0
 ],
 "mass_g": 20.0,
 "tag": "E",
 "owner": "scout v3",
 "version": "layout v3",
 "source": "nox/scout/v3/layout_v3.py",
-"note": "envelope = the FC's (E)",
+"note": "envelope = the FC's, on top of the plate (E)",
 "id": "wires",
 "group": "wires",
 "color": "#99a6b3"
 },
 {
-"id": "scout_belly_skirt",
-"name": "belly skirt (the Scout's seat, 184 x 67)",
+"id": "scout_nose_unit",
+"name": "nose unit (Scout)",
+"color": "#e07020",
+"mesh": "parts/scout_nose_unit/part.stl",
+"mass_g": 84.0,
+"note": "the nose yoke (plate to the receiver's nose inserts), the nose runner (the seat in the shared funnel, the flow sensor's window), the camera boom (4 M2 posts), cage node NB and the nose tie sockets; the engine's run 3 (4 Nov, h 2.3) (parts/scout_nose_unit/part.py)",
 "role": "structure",
 "group": "printed",
-"color": "#e07020",
-"mesh": "parts/scout_belly_skirt/part.stl",
 "material": "PETG",
-"tag": "E",
+"tag": "F",
 "owner": "scout v3",
-"version": "v1 drawn 3 Nov",
-"source": "parts/scout_belly_skirt/make.py",
-"note": "runners fore and aft of the receiver v3 to the Overseer receiver's 184 x 67 outline at z -44.3: what the shared funnel seats; built into the belly mount later"
+"version": "v1 setup 4 Nov",
+"source": "parts/scout_units_lib.py"
 },
 {
-"id": "scout_cage_v15",
-"name": "cage v15 (compact funnel cage, 3 mm rods, layout model)",
+"id": "scout_tail_unit",
+"name": "tail unit (Scout)",
+"color": "#e07020",
+"mesh": "parts/scout_tail_unit/part.stl",
+"mass_g": 80.8,
+"note": "the tail yoke (plate to the receiver's tail inserts, through the FC diamond's tail hole and one drilled pair), the tail runner with the electronics bay over it (Radxa on edge on 4 M2.5 posts, UBEC and XR2 on edge on tape lands), cage node TB and the tail tie sockets; the engine's run 3 (4 Nov)",
+"role": "structure",
+"group": "printed",
+"material": "PETG",
+"tag": "F",
+"owner": "scout v3",
+"version": "v1 setup 4 Nov",
+"source": "parts/scout_units_lib.py"
+},
+{
+"id": "scout_nose_unit_room",
+"name": "nose unit room (design space)",
+"color": "#e07020",
+"opacity": 0.18,
+"mesh": "parts/scout_nose_unit/envelope.stl",
+"mass_g": 0.0,
+"role": "placeholder",
+"group": "printed",
+"tag": "E",
+"owner": "scout v3",
+"version": "v1 setup 4 Nov",
+"source": "parts/scout_nose_unit/part.py",
+"note": "what the engine may fill: the setup's envelope less its cuts (receiver, plate, camera, view, discs grown 12, rods); the checks run on it"
+},
+{
+"id": "scout_tail_unit_room",
+"name": "tail unit room (design space)",
+"color": "#e07020",
+"opacity": 0.18,
+"mesh": "parts/scout_tail_unit/envelope.stl",
+"mass_g": 0.0,
+"role": "placeholder",
+"group": "printed",
+"tag": "E",
+"owner": "scout v3",
+"version": "v1 setup 4 Nov",
+"source": "parts/scout_tail_unit/part.py",
+"note": "what the engine may fill: the setup's envelope less its cuts (receiver, plate, boards and their plugs, rods); the checks run on it"
+},
+{
+"id": "scout_arm_clip_1",
+"name": "arm clip 1 (Scout)",
+"color": "#99a6b3",
+"mesh": "parts/scout_arm_clip_1/part.stl",
+"mass_g": 3.7,
+"note": "the clip under arm 1's tip on the motor's four M2 screws with the socket of the cage tie to the base rail corner; the engine's run 2 (4 Nov)",
+"role": "structure",
+"group": "printed",
+"material": "PETG",
+"tag": "F",
+"owner": "scout v3",
+"version": "v1 setup 4 Nov",
+"source": "parts/scout_units_lib.py"
+},
+{
+"id": "scout_arm_clip_2",
+"name": "arm clip 2 (Scout)",
+"color": "#99a6b3",
+"mesh": "parts/scout_arm_clip_2/part.stl",
+"mass_g": 3.7,
+"note": "the clip under arm 2's tip on the motor's four M2 screws with the socket of the cage tie to the base rail corner; the engine's run 2 (4 Nov)",
+"role": "structure",
+"group": "printed",
+"material": "PETG",
+"tag": "F",
+"owner": "scout v3",
+"version": "v1 setup 4 Nov",
+"source": "parts/scout_units_lib.py"
+},
+{
+"id": "scout_arm_clip_3",
+"name": "arm clip 3 (Scout)",
+"color": "#99a6b3",
+"mesh": "parts/scout_arm_clip_3/part.stl",
+"mass_g": 3.7,
+"note": "the clip under arm 3's tip on the motor's four M2 screws with the socket of the cage tie to the base rail corner; the engine's run 2 (4 Nov)",
+"role": "structure",
+"group": "printed",
+"material": "PETG",
+"tag": "F",
+"owner": "scout v3",
+"version": "v1 setup 4 Nov",
+"source": "parts/scout_units_lib.py"
+},
+{
+"id": "scout_arm_clip_4",
+"name": "arm clip 4 (Scout)",
+"color": "#99a6b3",
+"mesh": "parts/scout_arm_clip_4/part.stl",
+"mass_g": 3.7,
+"note": "the clip under arm 4's tip on the motor's four M2 screws with the socket of the cage tie to the base rail corner; the engine's run 2 (4 Nov)",
+"role": "structure",
+"group": "printed",
+"material": "PETG",
+"tag": "F",
+"owner": "scout v3",
+"version": "v1 setup 4 Nov",
+"source": "parts/scout_units_lib.py"
+},
+{
+"id": "scout_cage_node_p0_r0",
+"name": "cage node P0+R0",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+131.0,
+141.0,
+52.69999999999999,
+62.69999999999999,
+12.0,
+63.0
+],
+"mass_g": 10.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 6 rods and ties that end here, the rest generated (parts/scout_cage_node_p0_r0/part.py); nodes P0 and R0 are one printed structure, the rod between them a printed bridge (MERGE_MM 45); a box until the run lands"
+},
+{
+"id": "scout_cage_node_p7_r7",
+"name": "cage node P7+R7",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+131.0,
+141.0,
+-62.69999999999999,
+-52.69999999999999,
+12.0,
+63.0
+],
+"mass_g": 10.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 6 rods and ties that end here, the rest generated (parts/scout_cage_node_p7_r7/part.py); nodes P7 and R7 are one printed structure, the rod between them a printed bridge (MERGE_MM 45); a box until the run lands"
+},
+{
+"id": "scout_cage_node_p1",
+"name": "cage node P1",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+73.69999999999999,
+83.69999999999999,
+110.0,
+120.0,
+53.0,
+63.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 3 rods and ties that end here, the rest generated (parts/scout_cage_node_p1/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_pm0",
+"name": "cage node PM0",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+-5.0,
+5.0,
+110.0,
+120.0,
+53.0,
+63.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 5 rods and ties that end here, the rest generated (parts/scout_cage_node_pm0/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_p2",
+"name": "cage node P2",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+-83.69999999999999,
+-73.69999999999999,
+110.0,
+120.0,
+53.0,
+63.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 3 rods and ties that end here, the rest generated (parts/scout_cage_node_p2/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_p3",
+"name": "cage node P3",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+-121.0,
+-111.0,
+72.69999999999999,
+82.69999999999999,
+53.0,
+63.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 5 rods and ties that end here, the rest generated (parts/scout_cage_node_p3/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_p4",
+"name": "cage node P4",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+-121.0,
+-111.0,
+-82.69999999999999,
+-72.69999999999999,
+53.0,
+63.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 5 rods and ties that end here, the rest generated (parts/scout_cage_node_p4/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_p5",
+"name": "cage node P5",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+-83.69999999999999,
+-73.69999999999999,
+-120.0,
+-110.0,
+53.0,
+63.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 3 rods and ties that end here, the rest generated (parts/scout_cage_node_p5/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_pm1",
+"name": "cage node PM1",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+-5.0,
+5.0,
+-120.0,
+-110.0,
+53.0,
+63.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 5 rods and ties that end here, the rest generated (parts/scout_cage_node_pm1/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_p6",
+"name": "cage node P6",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+73.69999999999999,
+83.69999999999999,
+-120.0,
+-110.0,
+53.0,
+63.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 3 rods and ties that end here, the rest generated (parts/scout_cage_node_p6/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_rf",
+"name": "cage node RF",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+65.0,
+75.0,
+-5.0,
+5.0,
+65.0,
+75.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 3 rods and ties that end here, the rest generated (parts/scout_cage_node_rf/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_rm",
+"name": "cage node RM",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+-5.0,
+5.0,
+-5.0,
+5.0,
+65.0,
+75.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 4 rods and ties that end here, the rest generated (parts/scout_cage_node_rm/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_rb",
+"name": "cage node RB",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+-75.0,
+-65.0,
+-5.0,
+5.0,
+65.0,
+75.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 3 rods and ties that end here, the rest generated (parts/scout_cage_node_rb/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_k0",
+"name": "cage node K0",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+95.0,
+105.0,
+105.0,
+115.0,
+-53.0,
+-43.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 5 rods and ties that end here, the rest generated (parts/scout_cage_node_k0/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_k1",
+"name": "cage node K1",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+-105.0,
+-95.0,
+105.0,
+115.0,
+-53.0,
+-43.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 5 rods and ties that end here, the rest generated (parts/scout_cage_node_k1/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_k2",
+"name": "cage node K2",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+-105.0,
+-95.0,
+-115.0,
+-105.0,
+-53.0,
+-43.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 5 rods and ties that end here, the rest generated (parts/scout_cage_node_k2/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_node_k3",
+"name": "cage node K3",
+"role": "cage",
+"group": "cage",
+"color": "#eef2f5",
+"opacity": 0.8,
+"material": "PETG",
+"box": [
+95.0,
+105.0,
+-115.0,
+-105.0,
+-53.0,
+-43.0
+],
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v3",
+"version": "v20 nodes (8 Nov: 19 structures)",
+"source": "parts/scout_node_lib.py",
+"note": "the socket collars of the 5 rods and ties that end here, the rest generated (parts/scout_cage_node_k3/part.py); a box until the run lands"
+},
+{
+"id": "scout_cage_v20",
+"name": "cage v20 rods and ties (the light funnel cage: ring, ridge, waist hoop, skids on A-frames, 3 mm carbon, frame-checked)",
 "role": "cage",
 "group": "cage",
 "color": "#2b2b2b",
-"mesh": "parts/scout_cage_v15/part.stl",
-"mass_g": 163.9,
+"mesh": "parts/scout_cage_v20/part.stl",
+"mass_g": 45.9,
 "tag": "E",
 "owner": "scout v3",
-"version": "v15 (3 Nov)",
+"version": "v20 (8 Nov)",
 "source": "tools/scout_cage.py",
-"note": "22 nodes, 48 rods 3.0 (4.90 m), an octagonal prism tangent to the prop keep-out, base ring z -48 with TPU feet, roof z 63, nose window for the camera; nodes E 5 g each until designed"
+"note": "21 nodes, 37 rods 3.0 (3.83 m) and 2 printed bridges (17 printed structures), 4 ties to the arm clips; an octagonal ring tangent to the prop keep-out at z 58, a three-node ridge at z 70 with a waist hoop to the ring's side mids, two skids at |y| 110, z -48 (TPU strips) on A-frames, nose window for the camera, NB / TB printed into the nose / tail units, the other 19 nodes their own printed parts (parts/scout_node_lib.py); frame model tools/scout_cage_loads.py"
 }
 ],
 "mass_budget_g": 500,
@@ -951,102 +1244,97 @@
 [
 136.0,
 57.69999999999999,
-62.0
+58.0
 ],
 [
 136.0,
 -57.69999999999999,
-62.0
+58.0
 ],
 [
 78.69999999999999,
 115.0,
-62.0
+58.0
+],
+[
+0.0,
+115.0,
+58.0
 ],
 [
 -78.69999999999999,
 115.0,
-62.0
+58.0
 ],
 [
--130.0,
-63.69999999999999,
-62.0
+-116.0,
+77.69999999999999,
+58.0
 ],
 [
--130.0,
--63.69999999999999,
-62.0
+-116.0,
+-77.69999999999999,
+58.0
 ],
 [
 -78.69999999999999,
 -115.0,
-62.0
+58.0
+],
+[
+0.0,
+-115.0,
+58.0
 ],
 [
 78.69999999999999,
 -115.0,
-62.0
+58.0
 ],
 [
 70.0,
 0.0,
-62.0
+70.0
+],
+[
+0.0,
+0.0,
+70.0
 ],
 [
 -70.0,
 0.0,
-62.0
+70.0
 ],
 [
 100.0,
-115.0,
-0.0
+110.0,
+-48.0
 ],
 [
 -100.0,
-115.0,
-0.0
+110.0,
+-48.0
 ],
 [
 -100.0,
--115.0,
-0.0
+-110.0,
+-48.0
 ],
 [
 100.0,
--115.0,
-0.0
+-110.0,
+-48.0
 ],
 [
-100.0,
-115.0,
--50.0
-],
-[
--100.0,
-115.0,
--50.0
-],
-[
--100.0,
--115.0,
--50.0
-],
-[
-100.0,
--115.0,
--50.0
-],
-[
-118.0,
+114.0,
 0.0,
 8.0
 ],
 [
--130.0,
+-112.0,
 0.0,
-8.0
+10.0
 ]
 ],
 "rods": [
@@ -1076,6 +1364,14 @@
 ],
 [
 9,
+10
+],
+[
+10,
+11
+],
+[
+11,
 3
 ],
 [
@@ -1092,185 +1388,173 @@
 ],
 [
 0,
-4
-],
-[
-1,
-9
-],
-[
-0,
 1
 ],
 [
-10,
+12,
 2
 ],
 [
-10,
+12,
 3
 ],
 [
-10,
-4
-],
-[
-10,
-9
-],
-[
-10,
-11
-],
-[
-11,
-4
-],
-[
-11,
-9
-],
-[
-11,
-5
-],
-[
-11,
-8
-],
-[
-11,
-6
-],
-[
-11,
-7
-],
-[
 12,
 13
 ],
 [
-15,
+13,
 14
 ],
 [
-12,
+14,
+7
+],
+[
+14,
+8
+],
+[
+13,
+5
+],
+[
+13,
+10
+],
+[
+19,
+0
+],
+[
+19,
+1
+],
+[
+20,
+7
+],
+[
+20,
+8
+],
+[
+15,
 16
 ],
 [
-13,
+18,
 17
 ],
 [
-14,
+5,
+15
+],
+[
+5,
+16
+],
+[
+10,
 18
 ],
 [
+10,
+17
+],
+[
 15,
-19
-],
-[
-12,
-0
-],
-[
-12,
 4
 ],
 [
-13,
-5
-],
-[
-13,
+16,
 6
 ],
 [
-14,
-7
+18,
+11
 ],
 [
-14,
-8
-],
-[
-15,
+17,
 9
 ],
 [
 15,
-1
-],
-[
-12,
-5
-],
-[
-15,
-8
-],
-[
-20,
-12
-],
-[
-20,
-15
-],
-[
-20,
 0
 ],
 [
-20,
+18,
 1
 ],
 [
-21,
-13
-],
-[
-21,
-14
-],
-[
-21,
-6
-],
-[
-21,
+16,
 7
+],
+[
+17,
+8
 ]
 ],
 "node_r_mm": 7.0,
 "rod_r_mm": 1.5,
-"total_rods": 48,
+"total_rods": 43,
 "open": [
 {
 "ring": [
-12,
-13,
-14,
-15
+15,
+16,
+17,
+18
 ],
-"what": "bottom: the belly skirt into the funnel"
+"what": "bottom: the belly skirt into the funnel, between the skids"
 },
 {
 "ring": [
-12,
 15,
+0,
+19
+],
+"what": "bottom, nose end: under the sill and the nose-bottom rods, between the skid ends (the funnel's end wall sweeps here)"
+},
+{
+"ring": [
+19,
+1,
+18
+],
+"what": "bottom, nose end"
+},
+{
+"ring": [
+15,
+19,
+18
+],
+"what": "bottom, nose end"
+},
+{
+"ring": [
+16,
+7,
 20
 ],
-"what": "bottom, nose V"
+"what": "bottom, tail end: under the tail flat, between the skid ends"
 },
 {
 "ring": [
-13,
-21,
-14
+20,
+8,
+17
 ],
-"what": "bottom, tail V"
+"what": "bottom, tail end"
+},
+{
+"ring": [
+16,
+20,
+17
+],
+"what": "bottom, tail end"
 },
 {
 "ring": [
@@ -1280,8 +1564,194 @@
 1
 ],
 "what": "nose window: the camera's view"
+},
+{
+"ring": [
+4,
+5,
+13,
+12
+],
+"what": "roof, front left panel: ring to ridge; a flat ceiling touches the ring and the ridge first"
+},
+{
+"ring": [
+2,
+4,
+12
+],
+"what": "roof, front left corner"
+},
+{
+"ring": [
+13,
+5,
+6,
+14
+],
+"what": "roof, rear left panel"
+},
+{
+"ring": [
+6,
+7,
+14
+],
+"what": "roof, rear left corner"
+},
+{
+"ring": [
+11,
+10,
+13,
+12
+],
+"what": "roof, front right panel"
+},
+{
+"ring": [
+3,
+11,
+12
+],
+"what": "roof, front right corner"
+},
+{
+"ring": [
+13,
+10,
+9,
+14
+],
+"what": "roof, rear right panel"
+},
+{
+"ring": [
+9,
+8,
+14
+],
+"what": "roof, rear right corner"
+},
+{
+"ring": [
+15,
+0,
+2
+],
+"what": "side, front left: under the window post, between the sill brace and the vertical"
+},
+{
+"ring": [
+15,
+2,
+4
+],
+"what": "side, front left"
+},
+{
+"ring": [
+18,
+1,
+3
+],
+"what": "side, front right"
+},
+{
+"ring": [
+18,
+3,
+11
+],
+"what": "side, front right"
 }
 ],
-"note": "cage v15, the compact funnel cage (tools/scout_cage.py, 3 Nov): a closed 3 mm rod octagonal prism formed to the Scout in the shared funnel"
+"rod_cuts_mm": {
+"R0-P1": 70.7,
+"P1-PM0": 65.2,
+"PM0-P2": 65.2,
+"P2-P3": 41.8,
+"P3-P4": 130.6,
+"P4-P5": 41.8,
+"P5-PM1": 65.2,
+"PM1-P6": 65.2,
+"P6-R7": 70.7,
+"R7-R0": 99.2,
+"P0-P7": 80.8,
+"RF-R0": 75.2,
+"RF-R7": 75.2,
+"RF-RM": 60.0,
+"RM-RB": 60.0,
+"RB-P3": 73.7,
+"RB-P4": 73.7,
+"RM-PM0": 105.6,
+"RM-PM1": 105.6,
+"NB-P0": 42.1,
+"NB-P7": 42.1,
+"TB-P3": 76.1,
+"TB-P4": 76.1,
+"K0-K1": 183.0,
+"K3-K2": 183.0,
+"PM0-K0": 125.1,
+"PM0-K1": 125.1,
+"PM1-K3": 125.1,
+"PM1-K2": 125.1,
+"K0-P1": 90.7,
+"K1-P2": 88.8,
+"K3-P6": 90.7,
+"K2-P5": 88.8,
+"K0-P0": 77.8,
+"K3-P7": 77.8,
+"K1-P3": 92.2,
+"K2-P4": 92.2,
+"A0-K0": 73.2,
+"A1-K1": 73.2,
+"A2-K2": 73.2,
+"A3-K3": 73.2
+},
+"ties": {
+"roots": {
+"A0": [
+62.0,
+62.0,
+13.5
+],
+"A1": [
+-62.0,
+62.0,
+13.5
+],
+"A2": [
+-62.0,
+-62.0,
+13.5
+],
+"A3": [
+62.0,
+-62.0,
+13.5
+]
+},
+"rods": [
+[
+"A0",
+15
+],
+[
+"A1",
+16
+],
+[
+"A2",
+17
+],
+[
+"A3",
+18
+]
+],
+"what": "3.0 rods from clips under the four arm tips (A, parts/scout_arm_clip_*) down to the skid ends K0..K3; NB and TB are printed into the units"
+},
+"note": "cage v20, the light funnel cage (tools/scout_cage.py, 8 Nov): a 3 mm rod octagonal ring tangent to the prop keep-out with a three-node ridge, a waist hoop between the discs, two skids on A-frames from the ring's side mids, the window sill and the nose / tail bottoms into the units; 39 rods, 4 ties, nothing over a disc but the rear ridge's last 51 mm"
 }
 }

@@ -1,0 +1,315 @@
+{
+ "name": "scout_arm_clip_2",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   1456.8
+  ],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 0,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 386.8,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
+  "outside_env_mm3": -0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "A1-K1 tension 91 N + side 22 N",
+    "cls": "crash",
+    "inlayer": 0.212,
+    "across": 0.27,
+    "at": [
+     -62.7,
+     57.6,
+     16.0
+    ]
+   },
+   {
+    "case": "A1-K1 compression 91 N + side 22 N",
+    "cls": "crash",
+    "inlayer": 0.165,
+    "across": 0.169,
+    "at": [
+     -58.7,
+     63.2,
+     15.2
+    ]
+   }
+  ],
+  "worst": 0.27,
+  "worst_case": "A1-K1 tension 91 N + side 22 N",
+  "worst_at": [
+   -62.7,
+   57.6,
+   16.0
+  ]
+ },
+ "mass_g": 3.69,
+ "watertight": true,
+ "export": {
+  "faces_in": 44842,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 44842,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 146,
+   "folded": 2,
+   "caps_split": 5,
+   "caps_left": 2,
+   "watertight": true,
+   "faces": 63282
+  },
+  "volume_mm3": 2906.2,
+  "exact_mm3": 2906.4
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 2906.4,
+ "drawn_g": 1.75,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
+ "stl": "scout_arm_clip_2.stl",
+ "view_stl": "scout_arm_clip_2_view.stl",
+ "view_faces": 44842,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 5.33,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": false,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 5.494221030254107,
+  "R_cells": 6.867776287817634,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.23566136645001542,
+  "nd": 12924,
+  "sym_axes": [],
+  "n_real": 2,
+  "n_ties": 30,
+  "backend": "direct",
+  "iterations": 84,
+  "stopped": "max_stage"
+ },
+ "grid": {
+  "name": "scout_arm_clip_2",
+  "h": 0.8,
+  "shape": [
+   48,
+   48,
+   40
+  ],
+  "origin": [
+   -76.7275,
+   38.8135,
+   -4.4145
+  ],
+  "cells": 92160,
+  "design": 12869,
+  "drawn": 2698,
+  "cases": [
+   "A1-K1 tension 91 N + side 22 N",
+   "A1-K1 compression 91 N + side 22 N"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 23.0,
+ "layout_s": 239,
+ "peak_gb": 1.05914,
+ "gen_cm3": 1.5,
+ "h": 0.8,
+ "audit": {
+  "drawn_share": 0.173,
+  "load_room": [],
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 1189,
+    "inscribed_mm": 2.8,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.76,
+    "room_depth_mm": 28.0,
+    "at": [
+     -64.9,
+     65.6,
+     9.4
+    ],
+    "core_mm": 2.8,
+    "share_of_drawn": 0.44
+   },
+   {
+    "id": 2,
+    "cells": 368,
+    "inscribed_mm": 2.4,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.7,
+    "room_depth_mm": 23.2,
+    "at": [
+     -62.6,
+     54.1,
+     14.7
+    ],
+    "core_mm": 0.8
+   },
+   {
+    "id": 3,
+    "cells": 360,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.86,
+    "room_depth_mm": 24.8,
+    "at": [
+     -54.0,
+     45.6,
+     14.8
+    ],
+    "core_mm": 0.8
+   },
+   {
+    "id": 4,
+    "cells": 361,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.7,
+    "room_depth_mm": 23.2,
+    "at": [
+     -54.0,
+     62.5,
+     14.7
+    ],
+    "core_mm": 1.5
+   },
+   {
+    "id": 5,
+    "cells": 420,
+    "inscribed_mm": 2.4,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.87,
+    "room_depth_mm": 23.2,
+    "at": [
+     -45.6,
+     54.1,
+     14.8
+    ],
+    "core_mm": 1.5
+   }
+  ],
+  "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 35.2,
+   "W_mm": 35.2,
+   "H_mm": 25.6,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "drawn_walls": [],
+  "cases": 2,
+  "supports": 1,
+  "fails": []
+ },
+ "early": null,
+ "baseline": null,
+ "total_s": 262,
+ "part_sha": "d125d6979cb9",
+ "lib_sha": "39633b6cfe73",
+ "setup_sha": "0582b31f1bf93c47",
+ "max_worst": 0.5,
+ "strength_ok": true
+}

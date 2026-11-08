@@ -11,7 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import seat_envelope as se
 
-SEAT_TO_W = np.array([[0, -1.0, 0, 0], [1.0, 0, 0, 167.1], [0, 0, 1.0, 155.3], [0, 0, 0, 1.0]])
+SEAT_TO_W = np.array([[0, -1.0, 0, 0], [1.0, 0, 0, 167.1], [0, 0, 1.0, 220.3], [0, 0, 0, 1.0]])   # seat z 0 at W Z 220.3 (3 Nov: +65)
 
 
 def load_make(rel):
@@ -38,11 +38,11 @@ def to_tri(mm):
 
 
 def solids():
+    """the funnel (seat frame) and the enclosure top (W Z 145, the sheets' top edge as a 3 mm band, seat frame): there is no deck (3 Nov)"""
     fun = load_make("parts/box_funnel/make.py").funnel()
-    dk = load_make("parts/box_deck/make.py")
-    deck = dk.box(dk.X0, dk.X1, dk.Y0, dk.Y1, dk.Z_TOP - dk.T, dk.Z_TOP) - dk.box(-dk.HOLE_X / 2, dk.HOLE_X / 2, dk.YC - dk.HOLE_Y / 2, dk.YC + dk.HOLE_Y / 2, dk.Z_TOP - dk.T - 1, dk.Z_TOP + 1)
-    deck = deck.transform(np.linalg.inv(SEAT_TO_W)[:3, :])
-    return [("funnel", fun, to_tri(fun)), ("deck", deck, to_tri(deck))]
+    top = mf.Manifold.cube([418.0, 409.0, 3.0]).translate([-209.0, -69.0, 142.0]) - mf.Manifold.cube([412.0, 403.0, 5.0]).translate([-206.0, -66.0, 141.0])
+    top = top.transform(np.linalg.inv(SEAT_TO_W)[:3, :])
+    return [("funnel", fun, to_tri(fun)), ("enclosure top", top, to_tri(top))]
 
 
 def descent_states(drone):
@@ -53,7 +53,7 @@ def descent_states(drone):
     X = 28.0 if drone == "scout" else 18.0                 # the Overseer's x capture is +-18: its loop diagonals meet the end walls' top corners beyond that
     for lab, ox, oy in ((f"+x {X:.0f}", X, 0.0), (f"-x {X:.0f}", -X, 0.0), ("+y 20", 0.0, 20.0), ("-y 20", 0.0, -20.0), ("+x+y", X * 0.7, 14.0)):
         o0 = math.hypot(ox, oy)
-        for h in (60.0, 45.0, 30.0, 20.0, 12.0, 6.0):
+        for h in (60.0, 45.0, 40.0, 35.0, 30.0, 27.0, 24.0, 20.0, 16.0, 12.0, 9.0, 6.0, 3.0):   # 4 Nov: every 3..5 (at 6 steps the skirt's graze on the buttress between 26 and 30 was missed)
             k = min(1.0, (h / tan) / o0)
             out.append((f"{lab} at h {h:.0f}", ox * k, oy * k, h))
     return out
