@@ -7,9 +7,9 @@ Every part of the box, the Scout and the Overseer: what it is, how many, where i
 ## Scout (aircraft; carried into v3)
 | Part | Qty | Role | Status | Mount data |
 |---|---|---|---|---|
-| SpeedyBee Bee35 frame, aluminium bottom plate (Pro), ducts off | 1 | airframe, 153 wheelbase | on hand | M: Bee35 |
+| SpeedyBee Bee35 frame, aluminium bottom plate (Pro), ducts off | 1 | airframe, 153 wheelbase; retires for Spark's own frame (8 Nov: the 5125 discs overlap at its hubs) | on hand | M: Bee35 |
 | EMAX ECO II 2004 motor (KV not recorded) | 4 | propulsion | on hand | M: ECO II 2004 |
-| Gemfan Hurricane 3520 prop, 3 blade, T-mount | 4 + spares | propulsion, props on top | on hand | M: 3520 |
+| Gemfan Hurricane SL 5125 prop, 5.1 in, 3 blade, T-mount 1.5 (default, Spark 8 Nov; the 3520s on hand are retired with the Bee35) | 4 + spares | propulsion, props on top | to buy: [Amazon, 16 pack](https://www.amazon.com/Durable-Propellers-2204-2206-Toothpick-Quadcopter/dp/B094VKG28Q) | M: 5125 |
 | MicoAir743v2-AIO-35A (FC + 35 A ESC) | 1 | flight controller | on hand | M, H |
 | Grommets for the FC | 4 | soft mount (Spark 14 Oct) | CHECK (size not published) | M |
 | RadioMaster XR2 (Nano) ELRS 2.4 | 1 | RC receiver, on the GPS port | on hand | M |
