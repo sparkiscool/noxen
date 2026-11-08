@@ -2,10 +2,10 @@
 
   scout_nose_unit   the nose yoke (plate to the receiver's nose inserts), the nose runner (the Scout's seat in the shared funnel,
                     with a window the flow sensor looks down through), the camera boom (four M2 posts behind the board), cage node
-                    NB printed in, and the two nose tie sockets (C0 / C3 -> B0 / B3)
+                    NB printed in (v20, 8 Nov: the yoke tie sockets C0 / C3 went with the base rails)
   scout_tail_unit   the tail yoke (plate to the receiver's tail inserts), the tail runner, the electronics tray (Radxa Zero 3W on
-                    four M2.5 posts, UBEC and XR2 on tape lands), cage node TB printed in, the two tail tie sockets (C1 / C2)
-  scout_arm_clip_k  a clip under each arm tip on the motor's four M2 screws with the socket of tie A -> B (k = PX4 motor 1..4)
+                    four M2.5 posts, UBEC and XR2 on tape lands), cage node TB printed in
+  scout_arm_clip_k  a clip under each arm tip on the motor's four M2 screws with the socket of tie A -> K, down to the skid end (k = PX4 motor 1..4)
 
 Drawn = attachments only (CLAUDE.md): bolt pads with M3 x 5.7 inserts, receiver bosses, the seat rims and 55 deg lead-ins the
 funnel meets, tape lands, M2 / M2.5 posts, socket collars. Everything between them is generated. Keep-outs are cuts: the receiver
@@ -288,13 +288,13 @@ def export_env(part, name):
 
 
 # ---- arm clips -------------------------------------------------------------------------------------------------------------------
-CLIP = {1: (1, -1, "A3", "B3"), 2: (-1, 1, "A1", "B1"), 3: (1, 1, "A0", "B0"), 4: (-1, -1, "A2", "B2")}   # PX4 motor k: arm signs, tie
+CLIP = {1: (1, -1, "A3", "K3"), 2: (-1, 1, "A1", "K1"), 3: (1, 1, "A0", "K0"), 4: (-1, -1, "A2", "K2")}   # PX4 motor k: arm signs, tie (v20, 8 Nov: down to the skid ends, was up to the rail corners B)
 CLIP_Z0, CLIP_T, M2_R, M2_PAD_R, SHAFT_R = PLATE_Z - 8.0, 8.0, 1.1, 3.0, 3.0   # 8 thick (4 Nov run 1: at 4 the tie collar's top, root z 17, was sheared by the plate keep-out to a 1.1 sliver; roots now z 13.5)
 
 
 def arm_clip_setup(k, h):
     """the clip under arm k's tip: 4 pads on the motor's M2 screws (12 x 12 along x / y, M2 x 10 through clip + plate into the
-    motor), the shaft clearance, the socket collar of tie A -> B hanging under the arm tip"""
+    motor), the shaft clearance, the socket collar of tie A -> K hanging under the arm tip"""
     sx, sy, a, b = CLIP[k]
     nodes, rods, ties = cage_nodes()
     mx, my = sx * 54.1, sy * 54.1

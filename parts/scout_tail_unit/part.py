@@ -1,11 +1,11 @@
 """Scout tail unit (v1 setup, 4 Nov): ONE printed PETG piece under the plate's tail that holds the receiver's tail end, seats the
 Scout in the shared funnel, carries the tail electronics in a bay over the runner (Radxa Zero 3W on edge, UBEC flat under it, XR2; 4 Nov, Spark: into the printed base, every
 screw reachable: the Radxa's four from the open tail end),
-and is cage node TB with the two tail tie
-sockets (the frame model: without a stiff tail link a 35 g tail-first wall hit racked the cage 17 mm).
+and is cage node TB
+(the frame model: without a stiff tail link a 35 g tail-first wall hit racked the cage 17 mm).
 Drawn (attachments only): 3 plate bolt pads (M3 x 5.7 inserts: the FC diamond's tail hole, a drilled pair at (-55, +-13)), 2 receiver bosses,
 the tail runner's seat rim and 55 deg lead-ins, 4 Radxa posts (O8 along +x behind the PCB, M2.5 x 4 inserts), the UBEC's and XR2's
-4 mm tape lands, the socket collars of TB (rods to B1, B2, P3, P4) and of ties C1 / C2. Cuts: the receiver and its clearance, the plate,
+4 mm tape lands, the socket collars of TB (rods to P3, P4; v20, 8 Nov: the rails and the yoke ties are gone). Cuts: the receiver and its clearance, the plate,
 the boards with their plugs (USB-C / HDMI out the right edge, the SD card out the tail, the UBEC's leads, the XR2's antenna), the
 rods beyond their mouths, the insert holes. Loads: the receiver set's tail share (155 g E) and the boards (32 g E) in 35 g crashes
 (14 directions) and flight; a 35 g landing into the funnel on the seat and the lead-ins; every socket's frame-model force (F).
@@ -51,7 +51,7 @@ def bodies():
     drawn.append(box(x1, x1 + L.LAND_T, y0, y1, z0, z1)); cuts.append(box(x0 - 0.5, x1 + 0.5, y0 - 0.5, y1 + 0.5, z0 - 0.5, z1 + 0.5))
     cuts.append(box(*L.XR2_ANT))                                                       # the antenna, flat along +y
     cuts += L.disc_cuts()
-    socks = L.node_socks("TB", ["B1", "B2", "P3", "P4"], nodes) + L.tie_socks(("C1", "C2"), nodes, ties)
+    socks = L.node_socks("TB", ["P3", "P4"], nodes)                                                  # cage v20 (8 Nov): TB-B1 / TB-B2 went with the base rails, the yoke ties C1 / C2 with them
     for s in socks:
         drawn.append(s.collar())
         cuts.append(s.port((0, 0, -1.0) if s.name.startswith(("NB", "TB")) else (0, np.sign(s.c[1]), 0), socks))   # resin injection port: the node's down out of the unit's underside, a tie's out of the yoke's side
