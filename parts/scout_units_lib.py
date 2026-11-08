@@ -5,7 +5,10 @@
                     NB printed in (v20, 8 Nov: the yoke tie sockets C0 / C3 went with the base rails)
   scout_tail_unit   the tail yoke (plate to the receiver's tail inserts), the tail runner, the electronics tray (Radxa Zero 3W on
                     four M2.5 posts, UBEC and XR2 on tape lands), cage node TB printed in
-  scout_arm_clip_k  a clip under each arm tip on the motor's four M2 screws with the socket of tie A -> K, down to the skid end (k = PX4 motor 1..4)
+  scout_arm_clip_k  a clip under each arm tip on the motor's four M2 screws with the socket of tie A -> S, in under the disc to that side's
+                    knee (k = PX4 motor 1..4; v21, the half cage: v20 took it down to the skid end)
+The half cage (v21, 8 Nov) stands on the two runners: on flat ground they are the Scout's landing gear, so each takes the ground hit
+alone (catch_cases), as the cage's skid nodes did.
 
 Drawn = attachments only (CLAUDE.md): bolt pads with M3 x 5.7 inserts, receiver bosses, the seat rims and 55 deg lead-ins the
 funnel meets, tape lands, M2 / M2.5 posts, socket collars. Everything between them is generated. Keep-outs are cuts: the receiver
@@ -84,6 +87,7 @@ DIRS14 = [np.array(v, float) / np.linalg.norm(v) for v in
           [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)] + [(a, b, c) for a in (1, -1) for b in (1, -1) for c in (1, -1)]]
 FLIGHT = {"flight 4 g": np.array([0, 0, 4.0]), "flight 2 g x": np.array([2.0, 0, 1]), "flight 2 g y": np.array([0, 2.0, 1]), "landing 6 g": np.array([0, 0, 6.0])}
 CATCH_G, DRONE_G = 35.0, 765.0                               # a hard landing into the funnel: 35 g of the drone on the seat (E), half a runner's share
+HIT_N = round(2 * DRONE_G * G * 600.0 / 15.0, -1)            # ground hit on ONE runner (v21, the half cage lands on the runners; the Overseer's rule, 8 Nov: 2 m g h / 15 mm from 0.6 m): 600 N
 
 
 def box(x0, x1, y0, y1, z0, z1):
@@ -268,13 +272,15 @@ def payload_cases(p, name_prefix, pts, regs, mass_g, cg, support, cls_crash="cra
 
 def catch_cases(p, regs, nose, support):
     """a hard landing into the funnel: the drone's 35 g on the seat, this runner's share 0.42 (its band of the ring, E): up on the
-    bottom band, and the funnel's end face / side faces pushing the lead-ins at 55 deg"""
+    bottom band, and the funnel's end face / side faces pushing the lead-ins at 55 deg; and on flat ground the ground hit, HIT_N up on
+    the bottom band (the half cage has no feet: the runners are the landing gear, v21)"""
     F = CATCH_G * DRONE_G * G * 0.42
     c, s = np.cos(np.radians(FACE_DEG)), np.sin(np.radians(FACE_DEG))
     p.load("funnel catch 35 g: seat up", regs["bottom"], (0, 0, F), cls="crash", support=support)
     sx = -1 if nose else 1
     p.load("funnel catch 35 g: end face", regs["end"], (sx * F * c, 0, F * s), cls="crash", support=support)
     p.load("funnel catch 35 g: side faces", regs["sides"], (0, 0, F * s), cls="crash", support=support)
+    p.load(f"ground hit {HIT_N:.0f} N on the runner (a 0.6 m drop onto this end alone, flat ground: the half cage lands on the base units)", regs["bottom"], (0, 0, HIT_N), cls="crash", support=support)
 
 
 def preview(part, name):
@@ -293,13 +299,13 @@ def export_env(part, name):
 
 
 # ---- arm clips -------------------------------------------------------------------------------------------------------------------
-CLIP = {1: (1, -1, "A3", "K3"), 2: (-1, 1, "A1", "K1"), 3: (1, 1, "A0", "K0"), 4: (-1, -1, "A2", "K2")}   # PX4 motor k: arm signs, tie (v20, 8 Nov: down to the skid ends, was up to the rail corners B)
+CLIP = {1: (1, -1, "A3", "S1"), 2: (-1, 1, "A1", "S0"), 3: (1, 1, "A0", "S0"), 4: (-1, -1, "A2", "S1")}   # PX4 motor k: arm signs, tie (v21, 8 Nov: in to the side knee; v20 down to the skid ends, v19 up to the rail corners B)
 CLIP_Z0, CLIP_T, M2_R, M2_PAD_R, SHAFT_R = PLATE_Z - 8.0, 8.0, 1.1, 3.0, 3.0   # 8 thick (4 Nov run 1: at 4 the tie collar's top, root z 17, was sheared by the plate keep-out to a 1.1 sliver; roots now z 13.5)
 
 
 def arm_clip_setup(k, h):
     """the clip under arm k's tip: 4 pads on the motor's M2 screws (12 x 12 along x / y, M2 x 10 through clip + plate into the
-    motor), the shaft clearance, the socket collar of tie A -> K hanging under the arm tip"""
+    motor), the shaft clearance, the socket collar of tie A -> S hanging under the arm tip"""
     sx, sy, a, b = CLIP[k]
     nodes, rods, ties = cage_nodes()
     mx, my = sx * 54.1, sy * 54.1

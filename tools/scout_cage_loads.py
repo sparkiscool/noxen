@@ -3,15 +3,16 @@ as a 3D beam frame on the Overseer's engine (tools/cage_loads.py: Euler beams, r
 CG ray leaves through, a pulled contact node lifts off).
 
 Model: every cage rod and tie a 3.0 solid carbon beam (E 120 GPa); the plate with everything on and under it (motors, pack,
-units, electronics) one rigid body at its CG, hung on the tie roots and the printed nodes NB / TB (in the nose and tail units,
+units, electronics) one rigid body at its CG, hung on the tie roots, the runner corners and the printed nodes NB / TB (in the nose and tail units,
 scout_cage.PRINTED) by stiff links; masses from systems/scout.assembly.json
 (cage nodes 5 g each, rods and ties 0.011 g/mm, half to each end).
 Joints: a 3.0 rod in a 10 deep PETG socket turns against the socket wall: k_theta ~ E_petg L^3 / 12 ~ 230 N m/rad (Winkler, E),
 5..12x the rod's own 4EI/L (19 N m/rad at 100 mm, 42 at 45), so rigid joints read the frame right to the rods' compliance; what
 the PETG limits is strength: pull-out ~940 N (epoxy, pi 3 x 10 at 10 MPa, E), side bearing ~1200 N (40 MPa over 3 x 10, E),
 end moment ~2.0 N m (40 MPa over d L^2 / 6, E); the rod itself bends to ~2.6 N m (1 GPa over pi r^3 / 4, E).
-Cases: 35 g crash in 14 directions (6 axes, 8 diagonals; one case per hull face), landing 6 g flat on the four skid ends, rough
-landing 6 g rolled 20 deg about x and pitched 20 deg about y (onto a skid edge, a nose or tail edge).
+Cases: 35 g crash in 14 directions (6 axes, 8 diagonals; one case per hull face of the cage nodes and the base: the runners' seat
+rim corners, scout_cage.BASE, stiff to the core, since the half cage, v21, lands on the base units), landing 6 g flat on the runners,
+rough landing 6 g rolled 20 deg about x and pitched 20 deg about y (onto a runner edge, a knee, a nose or tail edge).
 Reads: deflection (largest cage node displacement per case), rod axial force and compression / Euler pinned-end buckling load,
 end shears and moments against the socket, free-free modes (lumped masses; the first elastic one is the cage's stiffness
 number), and the pin-jointed count: a closed shell of n nodes needs 3n - 6 rods to stand with pins alone; every rod short of
@@ -51,10 +52,12 @@ def core_mass():
 
 
 def build(nodes, rods, ties, core):
-    fr = cl.Frame(); keys = list(nodes)
+    fr = cl.Frame(); keys = list(nodes); base = getattr(sc, "BASE", {})
     for k in keys:
         fr.node(nodes[k], tol=1e-6)
-    P = {**nodes, **sc.TIE_ROOTS}
+    for k in base:                                           # the units' runner corners right after the cage nodes: contact indices = frame indices
+        fr.node(base[k], tol=1e-6)
+    P = {**nodes, **base, **sc.TIE_ROOTS}
     for k in sc.TIE_ROOTS:
         fr.node(sc.TIE_ROOTS[k], tol=1e-6)
     pid = {k: fr.node(P[k], tol=1e-6) for k in P}
@@ -70,7 +73,7 @@ def build(nodes, rods, ties, core):
         L = float(np.linalg.norm(np.array(P[i]) - np.array(P[j])))
         fr.member(f"{i}-{j}", pid[i], pid[j], cl.RODS, "tie"); load[pid[i]] += ROD_G_MM * L / 2; load[pid[j]] += ROD_G_MM * L / 2
     cg_m, cg_c = core; ic = fr.node(cg_c, tol=1e-6); load[ic] = load.get(ic, 0.0) + cg_m
-    for k in list(sc.TIE_ROOTS) + [k for k in sc.PRINTED if k in nodes]:      # the tie roots and the printed nodes ride on the plate's units
+    for k in list(sc.TIE_ROOTS) + list(base) + [k for k in sc.PRINTED if k in nodes]:      # the tie roots, the runner corners and the printed nodes ride on the plate's units
         fr.member(f"core {k}", ic, pid[k], cl.STIFF, "stiff")
     return fr, load, pid, keys
 
@@ -108,7 +111,8 @@ def run(nodes=None, rods=None, ties=None, dry=False, log=print):
     core = core_mass()
     fr, load, pid, keys = build(nodes, rods, ties, core)
     n = len(fr.pts); total = sum(load.values())
-    N = np.array([nodes[k] for k in keys], float)
+    base = getattr(sc, "BASE", {}); ckeys = keys + list(base)          # contact: the cage nodes and the units' runner corners (the half cage lands on the base units)
+    N = np.array([nodes[k] for k in keys] + [base[k] for k in base], float)
     cg = sum(g * fr.pts[i] for i, g in load.items()) / total
     mech, need, have = mechanisms(nodes, rods)
     log(f"frame: {n} points, {len(rods)} rods + {len(ties)} ties 3.0, core {core[0]:.0f} g at {np.round(core[1], 1).tolist()}, "
@@ -122,12 +126,15 @@ def run(nodes=None, rods=None, ties=None, dry=False, log=print):
         if key in seen:
             continue
         seen[key] = True
-        cases.append(dict(name=f"crash 35 g dir ({d[0]:+.2f} {d[1]:+.2f} {d[2]:+.2f}) on {'-'.join(keys[i] for i in touch)}", d=d, n=nrm, g=cl.CRASH_G, touch=touch))
-    kk = [keys.index(k) for k in ("K0", "K1", "K2", "K3")]
-    cases.append(dict(name="landing 6 g flat on the skids", d=np.array([0, 0, -1.0]), n=np.array([0, 0, -1.0]), g=cl.LAND_G, touch=kk))
+        cases.append(dict(name=f"crash 35 g dir ({d[0]:+.2f} {d[1]:+.2f} {d[2]:+.2f}) on {'-'.join(ckeys[i] for i in touch)}", d=d, n=nrm, g=cl.CRASH_G, touch=touch))
+    if base:
+        kk = [ckeys.index(k) for k in base]; what = "the base units' runners"
+    else:
+        kk = [keys.index(k) for k in ("K0", "K1", "K2", "K3")]; what = "the skids"
+    cases.append(dict(name=f"landing 6 g flat on {what}", d=np.array([0, 0, -1.0]), n=np.array([0, 0, -1.0]), g=cl.LAND_G, touch=kk))
     for d in rough_dirs():
         touch, nrm = cl.contact(N, d, cg)
-        cases.append(dict(name=f"rough landing {ROUGH_G:.0f} g dir ({d[0]:+.2f} {d[1]:+.2f} {d[2]:+.2f}) on {'-'.join(keys[i] for i in touch)}", d=d, n=nrm, g=ROUGH_G, touch=touch))
+        cases.append(dict(name=f"rough landing {ROUGH_G:.0f} g dir ({d[0]:+.2f} {d[1]:+.2f} {d[2]:+.2f}) on {'-'.join(ckeys[i] for i in touch)}", d=d, n=nrm, g=ROUGH_G, touch=touch))
     results = []
     for c in cases:
         F = np.zeros((n, 3))
@@ -151,7 +158,7 @@ def run(nodes=None, rods=None, ties=None, dry=False, log=print):
         disp = {k: float(np.linalg.norm(u[pid[k]][:3])) for k in keys}
         # displacement relative to the touching nodes' rigid motion is what bends the cage: take the largest over the cage less the smallest
         rel = max(disp.values()) - min(disp.values())
-        results.append(dict(name=c["name"], d=np.round(c["d"], 4).tolist(), g=c["g"], touch=[keys[i] for i in touch], reactions={keys[i]: v for i, v in reac.items()},
+        results.append(dict(name=c["name"], d=np.round(c["d"], 4).tolist(), g=c["g"], touch=[ckeys[i] for i in touch], reactions={ckeys[i]: v for i, v in reac.items()},
                             deflection_mm=round(rel, 2), worst_node=max(disp, key=disp.get),
                             members={m["name"]: dict(N=round(r["N"], 1), shear_i=round(r["shear_i"], 1), shear_j=round(r["shear_j"], 1),
                                                      M_i=round(r["M_i"], 0), M_j=round(r["M_j"], 0)) for m, r in zip(fr.members, mem) if m["kind"] != "stiff"}))

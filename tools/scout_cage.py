@@ -1,37 +1,39 @@
-"""Scout cage v20, the light funnel cage (8 Nov, Spark: "for the scout this is way too ridiculously heavy ... keep material near props as
-little as possible so it doesn't take away thrust ... reduce the number of rods by half, keep in mind this is a drone"). v19 was 77 rods as
-cut in 25 printed nodes (199 g of nodes, 79 g of rod, 1.74 m of rod over or under the prop discs) on a 340 g core and a 500 g budget.
-v20 keeps v19's ring, window, ridge and skids and drops the base rails, the rail and skid mid nodes, the lower band, the roof fans
-and the yoke ties: 39 rods (2 printed bridges) in 21 nodes, 4 ties, 41 rods as cut; nothing over or under a disc but the tie under
-each arm (under the plate anyway) and the last 51 mm of the two rear ridge rods. What holds the ring's sides instead of the lower
-band and the fans is a waist hoop across the roof at x 0 (the ring's side mid nodes PM0 / PM1 to the ridge's mid node RM: the one
-transverse line that passes between the four discs), and the skids hang on A-frames from those side mids (3 Nov..7 Nov history in
-systems/dimensions.md "Cage v19"). A closed triangulated shell of 3.0 carbon rods in printed PETG nodes, formed to the Scout as it sits
-in the shared funnel (parts/box_funnel/make.py). Drone frame = seat frame (x nose, y left, z up).
+"""Scout cage v21, the half cage (8 Nov, Spark: "why are we still keeping the lower half of the cage, it provides little value as the
+bottom shape for the funnel already had plenty of material ... get rid of any ongoing full cage and focus on the new half cage design";
+the Overseer's brief the same day: a half cage is fine, it protects the top: the electronics, the camera, the props; the bottom has the
+base units). v20 (the light funnel cage, 39 rods and 4 ties in 17 printed structures) kept v19's skids; v21 drops them with their
+A-frames, verticals, braces, skid nodes and TPU feet: the Scout lands on the nose and tail units' runners, the funnel covers the belly.
+What is left is the top: the ring, the ridge with its waist hoop, the nose window, the nose and tail rods into the units, and at each
+side one knee node under the ring's side mid (S0 / S1, at x 0 between the discs, under the plate's height) that holds the ring's side
+to two arm-tip clips: a leg up to the side mid, a fan to the two ring corners of that side, and the two ties in from the clips.
+31 rods (2 printed bridges) in 15 printed structures, 4 ties, 4 clips. A closed shell over the top of 3.0 carbon rods in printed PCTG
+nodes, its bottom declared open. Drone frame = seat frame (x nose, y left, z up).
 What sets the size, and only this:
   prop     every rod >= 12 from the four swept discs (r 44.45 + 4, z 41.2 +- 4): a rounded square of half-width 114.6 with corner
-           arcs; the ring is the octagon tangent to it, flats at |y| 115, corner chamfers on x + y = 193.7. And since v20 the rods
-           stay out of the discs' plan too (disc_shadow): a 3.0 rod across a disc's inflow or wash costs thrust (E: a 90 mm rod is 4 %
-           of a disc's area), so no roof fan crosses a disc and the skids sit at |y| 110, outboard of the discs' |y| 102.6
+           arcs; the ring is the octagon tangent to it, flats at |y| 115, corner chamfers on x + y = 193.7. The rods stay out of the
+           discs' plan too (disc_shadow; a 3.0 rod across a disc's inflow or wash costs thrust, E: a 90 mm rod is 4 % of a disc's area):
+           only the last 51 mm of the two rear ridge rods and the four clip ties (under the arm tips, 25 under the disc) cross a plan
   nose     the camera just ahead of the front discs, 30 deg up (lens (130, 0, 38); 4 Nov, Spark: close-ups and ceilings): the nose flat
            at x 136, the window between the dipped front nodes (z 17) and the ring (z 58), nothing in the 89 x 73 deg view
   tail     the tail electronics sit on edge in the tail unit's bay over the tail runner (4 Nov, Spark: into the printed base): nothing
            behind the plate's tail but the tail node, so the tail flat comes in to x -116, the least the rear discs' 12 mm keep-out allows
   roof     one ring at z 58 is both the prop keep-out ring and the roof's edge, the roof a ridge of three nodes at z 70 (a 12 dome) with
-           a triangle to the window's top and to the tail flat, and the waist hoop to the ring's side mids. The roof's four side panels
-           are declared openings (ring to ridge, 70 x 110): a flat ceiling touches the ring and the ridge first at any roll under 46 deg
-           and any pitch (the ring stands 12 outside and 13 above every disc edge), so only a poker can reach a disc through them
-  bottom   the whole shell stays above z 0 over the funnel's wall tops (z -4.3) in every state of the descent but the skids, which hang
-           outboard of the funnel's y walls (|y| >= 77 - 0.7 h at seated height h): nose and tail bottom nodes at z 8 / 10 in the units,
-           the window sill at z 17
-  skids    the cage lands on four TPU 95A feet under the skid nodes (8 Nov, the Overseer's cap over the O16 landing face, 6 tall; their faces at z -56, 11.5 under the belly skirt and the cartridge), the skids at |y| 110, z -48 each a
-           200 mm rod K0-K1 hung from the ring's side mid node as an A-frame (PM0-K0, PM0-K1) with a vertical from each end to the ring's
-           corner (K0-P1, K1-P2) and a brace from each end to the window sill (K0-P0) or the tail flat (K1-P3); the four arm ties come down
-           to the skid ends (v19 took them up to the base rails). Nothing crosses under the belly or at the ends below the wall tops
+           a triangle to the window's top and to the tail flat, and the waist hoop to the ring's side mids (the one transverse line that
+           passes between the four discs). The roof's side panels are declared openings (ring to ridge, 70 x 110): a flat ceiling
+           touches the ring and the ridge first at any roll under 46 deg and any pitch (the ring stands 12 outside and 13 above every
+           disc edge), so only a poker can reach a disc through them
+  sides    the side flats are planes at |y| 115, 12.4 outside every disc in plan, so the knee and its leg and fan stand in them at any
+           height: the knee at z 12 (6.5 under the plate's underside, so the clip ties run level under the arm tips; at z 18 the leg is
+           40 long and merges into a printed bridge, MERGE_MM). Without the knees the ring hangs on the four unit rods alone: 26 mm and
+           2.6 N m over the socket's 2.0 in a side crash (8 Nov frame model); the leg alone 13.7 mm and 2.02 N m; with the fan 13.0 mm,
+           1.86 N m. The yoke instead of the clips (a rod in at x 0 to the nose unit's side) put 2.9 N m on that rod's sockets
+  bottom   open (the half cage): the Scout lands on the base units, the nose and tail runners' seat rims at z -44.3 (184 x 66.8,
+           BASE: the frame model's contact points there, stiff to the core); the whole shell stays above z 0 over the funnel's wall
+           tops (z -4.3) in every state of the descent: nose and tail bottom nodes at z 8 / 10 in the units, the window sill at z 17,
+           the knees at z 12
   funnel   nothing of the cage inside the funnel's walls when seated or during the +-28 / +-20 descent (tools/seat_check.py)
-  shell    closed, mirror-exact, declared openings: the belly between the skids, the nose and tail bottoms, the nose window, the four roof
-           panels, the two front side quads under the window posts, the two tail side triangles
-Writes parts/scout_cage_v20/part.stl (the rods as cut), the shell into systems/scout.assembly.json (cage_shell, the part entries) and
+  shell    closed over the top, mirror-exact, declared openings: the bottom (in planar pieces), the nose window, the roof panels
+Writes parts/scout_cage_v21/part.stl (the rods as cut), the shell into systems/scout.assembly.json (cage_shell, the part entries) and
 prints the checks. Run: python tools/scout_cage.py
 """
 import json, math, os, sys
@@ -40,30 +42,28 @@ import numpy as np, trimesh
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 
-ZR, ZF, ZK, YK, ZS = 58.0, 17.0, -48.0, 110.0, 70.0  # the ring (prop keep-out and roof edge), the dipped front nodes, the skids (z, |y|; v20: 110, outboard of the discs' plan, was 84), the roof ridge
+ZR, ZF, ZS, ZKN = 58.0, 17.0, 70.0, 12.0          # the ring (prop keep-out and roof edge), the dipped front nodes, the roof ridge, the side knees
 XN, XT, YS, C = 136.0, -116.0, 115.0, 193.7          # nose flat, tail flat, side flats, the corner chamfer line |x| + |y| = C
 NODES = {
     "P0": (XN, C - XN, ZF), "P7": (XN, -(C - XN), ZF),                                                         # front nodes, dipped: the window's bottom corners
     "R0": (XN, C - XN, ZR), "R7": (XN, -(C - XN), ZR),                                                         # front nodes, roof: the window's top corners
-    "P1": (C - YS, YS, ZR), "PM0": (0.0, YS, ZR), "P2": (-(C - YS), YS, ZR), "P3": (XT, C + XT, ZR),             # the ring, left half (nose -> tail); PM0 the side flat's mid (v20: the hoop's foot)
+    "P1": (C - YS, YS, ZR), "PM0": (0.0, YS, ZR), "P2": (-(C - YS), YS, ZR), "P3": (XT, C + XT, ZR),             # the ring, left half (nose -> tail); PM0 the side flat's mid (the hoop's foot, the leg's top)
     "P4": (XT, -(C + XT), ZR), "P5": (-(C - YS), -YS, ZR), "PM1": (0.0, -YS, ZR), "P6": (C - YS, -YS, ZR),       # right half
     "RF": (70, 0, ZS), "RM": (0, 0, ZS), "RB": (-70, 0, ZS),                                                   # roof ridge; RM the hoop's apex
-    "K0": (100, YK, ZK), "K1": (-95, YK, ZK), "K2": (-95, -YK, ZK), "K3": (100, -YK, ZK),                       # the skids' ends; the rear pair at x -95 (8 Nov: at -100 the O22 TPU caps crossed the funnel's rear outer wall by 2 mm when seated, |y| 116.3)
+    "S0": (0.0, YS, ZKN), "S1": (0.0, -YS, ZKN),                                                               # the side knees (v21): under the side mids, in the side flats' planes, between the discs
     "NB": (114, 0, 8), "TB": (-112, 0, 10),                                                                    # nose and tail bottom nodes over the wall tops, printed into the nose and tail units (PRINTED)
 }
+BASE = {"G0": (93.5, 33.4, -44.3), "G1": (-90.5, 33.4, -44.3), "G2": (-90.5, -33.4, -44.3), "G3": (93.5, -33.4, -44.3)}   # what the Scout lands on: the runners' seat rim corners (parts/scout_units_lib: CX 1.5, SEAT_L 184, SEAT_W 66.8, SEAT_Z -44.3; the frame model's contact points, stiff to the core)
 RODS = [("R0", "P1"), ("P1", "PM0"), ("PM0", "P2"), ("P2", "P3"), ("P3", "P4"), ("P4", "P5"), ("P5", "PM1"), ("PM1", "P6"), ("P6", "R7"), ("R7", "R0"),   # the ring at z 58 (the roof's edge), side flats in two
         ("P0", "R0"), ("P7", "R7"), ("P0", "P7"),                                                              # the window's posts (printed bridges) and sill (z 17, under the view)
         ("RF", "R0"), ("RF", "R7"), ("RF", "RM"), ("RM", "RB"), ("RB", "P3"), ("RB", "P4"),                     # the ridge: a triangle to the window's top, the spine in two, a triangle to the tail flat
-        ("RM", "PM0"), ("RM", "PM1"),                                                                          # the waist hoop (v20): ridge mid to the ring's side mids, between the discs (5.65 from their edges in plan, 19 above)
+        ("RM", "PM0"), ("RM", "PM1"),                                                                          # the waist hoop: ridge mid to the ring's side mids, between the discs (5.65 from their edges in plan, 19 above)
         ("NB", "P0"), ("NB", "P7"), ("TB", "P3"), ("TB", "P4"),                                                # nose and tail bottoms to the units' printed nodes
-        ("K0", "K1"), ("K3", "K2"),                                                                            # the skids (200; the TPU feet under their end nodes carry the landing, the rods 10 above the ground)
-        ("PM0", "K0"), ("PM0", "K1"), ("PM1", "K3"), ("PM1", "K2"),                                            # the skids' A-frames from the side mids
-        ("K0", "P1"), ("K1", "P2"), ("K3", "P6"), ("K2", "P5"),                                                # verticals from the skid ends to the ring's corners (close the side panels)
-        ("K0", "P0"), ("K3", "P7"), ("K1", "P3"), ("K2", "P4")]                                                # the skid ends braced to the window sill and the tail flat
+        ("PM0", "S0"), ("PM1", "S1"),                                                                          # the side legs (v21): side mid down to the knee, 46
+        ("S0", "P1"), ("S0", "P2"), ("S1", "P6"), ("S1", "P5")]                                                # the side fans: knee to the ring's corners on that side (in the side flat's plane, 12.4 from the discs)
 TIE_ROOTS = {"A0": (62, 62, 13.5), "A1": (-62, 62, 13.5), "A2": (-62, -62, 13.5), "A3": (62, -62, 13.5)}      # clips under the four arm tips (the motor's M2 screws), z 13.5 under the plate (4 Nov run 1: at 17 the collar's top was sheared by the plate)
-#   v19's yoke-corner ties C0..C3 (the units' yoke corners to the rail mid nodes) are gone with the rails (8 Nov): the units hold the core at NB / TB
 PRINTED = {"NB": "scout_nose_unit", "TB": "scout_tail_unit"}   # cage nodes printed into a unit bolted to the plate
-TIES = [("A0", "K0"), ("A1", "K1"), ("A2", "K2"), ("A3", "K3")]   # 3.0 rods: the arm-tip ties down and out to the skid ends (v19: up to the base rail corners); they lean 48 in y over 61.5 down, the cross-section's diagonals
+TIES = [("A0", "S0"), ("A1", "S0"), ("A2", "S1"), ("A3", "S1")]   # 3.0 rods: from each arm-tip clip in under the disc to that side's knee (v21; v20 down to the skid ends), level at z 13.5 -> 12, 25 under the disc
 NODE_CLEAR = 20.0                                              # a rod passing a node it does not end at keeps its axis this far from the centre (a screen: the node library checks every collar exactly)
 MERGE_MM = 45.0                                                # two nodes closer than this are one printed structure (5 Nov, Spark: "if any two nodes are too
 BRIDGES = [(i, j) for i, j in RODS if np.linalg.norm(np.array(NODES[i], float) - np.array(NODES[j], float)) <= MERGE_MM]   # close together ... make that into
@@ -97,16 +97,17 @@ def group_id(g):
     return "scout_cage_node_" + "_".join(k.lower() for k in g)
 
 
-OPEN = [dict(ring=["K0", "K1", "K2", "K3"], what="bottom: the belly skirt into the funnel, between the skids"),   # every ring planar (system_check projects a ring onto one plane: a bent pentagon left sliver gaps along its folds, 8 Nov)
-        dict(ring=["K0", "P0", "NB"], what="bottom, nose end: under the sill and the nose-bottom rods, between the skid ends (the funnel's end wall sweeps here)"), dict(ring=["NB", "P7", "K3"], what="bottom, nose end"), dict(ring=["K0", "NB", "K3"], what="bottom, nose end"),
-        dict(ring=["K1", "P3", "TB"], what="bottom, tail end: under the tail flat, between the skid ends"), dict(ring=["TB", "P4", "K2"], what="bottom, tail end"), dict(ring=["K1", "TB", "K2"], what="bottom, tail end"),
+OPEN = [dict(ring=["NB", "P0", "S0"], what="bottom (the half cage: the base units and the funnel below), nose end"),   # every ring planar (system_check projects a ring onto one plane: a bent pentagon left sliver gaps along its folds, 8 Nov)
+        dict(ring=["NB", "S0", "S1"], what="bottom, the belly between the knees, nose half"), dict(ring=["NB", "S1", "P7"], what="bottom, nose end"),
+        dict(ring=["TB", "S0", "S1"], what="bottom, the belly between the knees, tail half"), dict(ring=["S0", "P3", "TB"], what="bottom, tail end"), dict(ring=["S1", "TB", "P4"], what="bottom, tail end"),
+        dict(ring=["P0", "R0", "P1"], what="side, front left: under the ring between the window post and the fan"), dict(ring=["P0", "P1", "S0"], what="side, front left"),
+        dict(ring=["S0", "P2", "P3"], what="side, rear left: under the ring behind the fan"),
+        dict(ring=["P7", "R7", "P6"], what="side, front right"), dict(ring=["P7", "P6", "S1"], what="side, front right"), dict(ring=["S1", "P5", "P4"], what="side, rear right"),
         dict(ring=["P0", "R0", "R7", "P7"], what="nose window: the camera's view"),
         dict(ring=["P1", "PM0", "RM", "RF"], what="roof, front left panel: ring to ridge; a flat ceiling touches the ring and the ridge first"), dict(ring=["R0", "P1", "RF"], what="roof, front left corner"),
         dict(ring=["RM", "PM0", "P2", "RB"], what="roof, rear left panel"), dict(ring=["P2", "P3", "RB"], what="roof, rear left corner"),
         dict(ring=["P6", "PM1", "RM", "RF"], what="roof, front right panel"), dict(ring=["R7", "P6", "RF"], what="roof, front right corner"),
-        dict(ring=["RM", "PM1", "P5", "RB"], what="roof, rear right panel"), dict(ring=["P5", "P4", "RB"], what="roof, rear right corner"),
-        dict(ring=["K0", "P0", "R0"], what="side, front left: under the window post, between the sill brace and the vertical"), dict(ring=["K0", "R0", "P1"], what="side, front left"),
-        dict(ring=["K3", "P7", "R7"], what="side, front right"), dict(ring=["K3", "R7", "P6"], what="side, front right")]
+        dict(ring=["RM", "PM1", "P5", "RB"], what="roof, rear right panel"), dict(ring=["P5", "P4", "RB"], what="roof, rear right corner")]
 MOTORS = [(54.1, 54.1), (-54.1, 54.1), (-54.1, -54.1), (54.1, -54.1)]
 R_DISC, Z_DISC = 44.45 + 4.0, (37.2, 45.2)
 LENS, TILT, HFOV, VFOV = np.array([130.0, 0.0, 38.0]), math.radians(30.0), math.radians(44.5), math.radians(36.5)   # lens and tilt: tools/scout_meshes.CAMERA_LENS / CAMERA_TILT (30 deg up, 4 Nov)
@@ -229,7 +230,7 @@ def mesh():
 
 def _current_mesh(gid):
     """the run's mesh for a node structure, only when its result was made from the setup part.py builds now (tools/part_sha.stale):
-    a stale mesh is v19's node shape on v20's rods (8 Nov)"""
+    a stale mesh is an older cage's node shape on this cage's rods (8 Nov)"""
     d = os.path.join(ROOT, "parts", gid); stl, res = os.path.join(d, "part.stl"), os.path.join(d, "result.json")
     if not (os.path.exists(stl) and os.path.exists(res)):
         return None
@@ -245,7 +246,7 @@ if __name__ == "__main__":
     L = [float(np.linalg.norm(np.array(NODES[i]) - np.array(NODES[j]))) for i, j in RODS]
     xs = [n[0] for n in NODES.values()]; ys = [n[1] for n in NODES.values()]; zs = [n[2] for n in NODES.values()]
     m_rod = sum(l for l, r in zip(L, RODS) if r not in BRIDGES)
-    print(f"cage v20: {len(NODES)} nodes, {len(RODS)} rods of which {len(BRIDGES)} printed bridges, {m_rod / 1000:.2f} m of 3.0 rod, {len(GROUPS)} printed structures, shortest rod {min(L):.0f}, longest {max(L):.0f}; "
+    print(f"cage v21 (half cage): {len(NODES)} nodes, {len(RODS)} rods of which {len(BRIDGES)} printed bridges, {m_rod / 1000:.2f} m of 3.0 rod, {len(GROUPS)} printed structures, shortest rod {min(L):.0f}, longest {max(L):.0f}; "
           f"node extents {max(xs) - min(xs):.0f} x {max(ys) - min(ys):.0f} x {max(zs) - min(zs):.0f}")
     w = checks()
     print("  shortest rods: " + ", ".join(f"{i}-{j} {l:.0f}" for l, (i, j) in sorted(zip(L, RODS))[:4]))
@@ -263,43 +264,35 @@ if __name__ == "__main__":
                 total_rods=len(RODS) + len(TIES), open=[dict(ring=[idx[k] for k in o["ring"]], what=o["what"]) for o in OPEN],
                 rod_cuts_mm={k: round(v[2], 1) for k, v in RC.items()},
                 ties=dict(roots={k: list(map(float, v)) for k, v in TIE_ROOTS.items()}, rods=[[i, keys.index(j)] for i, j in TIES],
-                          what="3.0 rods from clips under the four arm tips (A, parts/scout_arm_clip_*) down to the skid ends K0..K3; NB and TB are printed into the units"),
-                note="cage v20, the light funnel cage (tools/scout_cage.py, 8 Nov): a 3 mm rod octagonal ring tangent to the prop keep-out with a three-node ridge, a waist hoop between the discs, "
-                     "two skids on A-frames from the ring's side mids, the window sill and the nose / tail bottoms into the units; 39 rods, 4 ties, nothing over a disc but the rear ridge's last 51 mm")
+                          what="3.0 rods from clips under the four arm tips (A, parts/scout_arm_clip_*) in under the discs to the side knees S0 / S1; NB and TB are printed into the units"),
+                note="cage v21, the half cage (tools/scout_cage.py, 8 Nov): a 3 mm rod octagonal ring tangent to the prop keep-out with a three-node ridge, a waist hoop between the discs, "
+                     "a knee under each side mid (leg, fan to the ring corners, ties in from the arm clips), the window sill and the nose / tail bottoms into the units; the bottom open, "
+                     "the Scout lands on the base units' runners; 31 rods, 4 ties")
     try:
         r = shell_report(spec)
         print("  shell:         " + ", ".join(f"{k} {v}" for k, v in r.items() if k not in ("tris",)))
     except Exception as e:
         print("  shell:         (system_check unavailable:", e, ")")
-    m = mesh(); d = os.path.join(ROOT, "parts", "scout_cage_v20"); os.makedirs(d, exist_ok=True); m.export(os.path.join(d, "part.stl"))
+    m = mesh(); d = os.path.join(ROOT, "parts", "scout_cage_v21"); os.makedirs(d, exist_ok=True); m.export(os.path.join(d, "part.stl"))
     F = os.path.join(ROOT, "systems", "scout.assembly.json"); raw = open(F).read(); a = json.loads(raw)
     a["cage_shell"] = spec
-    a["parts"] = [p for p in a["parts"] if p["id"] not in ("scout_cage_pattern", "scout_cage_v14", "scout_cage_v15", "scout_cage_v16", "scout_cage_v17", "scout_cage_v18", "scout_cage_v19", "scout_cage_v20")]
+    a["parts"] = [p for p in a["parts"] if p["id"] not in ("scout_cage_pattern", "scout_cage_v14", "scout_cage_v15", "scout_cage_v16", "scout_cage_v17", "scout_cage_v18", "scout_cage_v19", "scout_cage_v20", "scout_cage_v21")]
     a["parts"] = [p for p in a["parts"] if not p["id"].startswith("scout_cage_node_") and p["id"] != "scout_tpu_feet"]
     for g in GROUPS:
         cs = np.array([NODES[k] for k in g], float); lo, hi = cs.min(0) - 5, cs.max(0) + 5
         n_m = sum(any(k in r for k in g) for r in RODS_CARBON + TIES)
         e = dict(id=group_id(g), name="cage node " + "+".join(g), role="cage", group="cage", color="#eef2f5", opacity=0.8, material="PCTG",
                  box=[lo[0], hi[0], lo[1], hi[1], lo[2], hi[2]], mass_g=5.0 * len(g), tag="E",   # a box over the centres until the run lands
-                 owner="scout v3", version="v20 nodes (8 Nov: 19 structures)", source="parts/scout_node_lib.py",
+                 owner="scout v3", version="v21 nodes (8 Nov: the half cage, 15 structures)", source="parts/scout_node_lib.py",
                  note=f"the socket collars of the {n_m} rods and ties that end here, the rest generated (parts/{group_id(g)}/part.py)"
                       + (f"; nodes {' and '.join(g)} are one printed structure, the rod between them a printed bridge (MERGE_MM {MERGE_MM:.0f})" if len(g) > 1 else "") + "; a box until the run lands")
         mp = _current_mesh(group_id(g))
         if mp:
             e["mesh"] = mp                                                         # the run's mesh once it has landed on this setup
         a["parts"].append(e)
-    foot = trimesh.load(os.path.join(ROOT, "parts", "overseer_tpu_foot", "part.stl"))          # the Overseer's TPU 95A foot (parts/overseer_tpu_foot/make.py): O22 x 6 cap, O16.6 x 2.6 recess over the node's O16 x 3 landing face
-    feet = []
-    for k in ("K0", "K1", "K2", "K3"):
-        c = np.array(NODES[k], float); zb = c[2] - 5.0 - 3.0                                        # the foot face: NODE_R + WALL under the node centre (parts/scout_node_lib)
-        f = foot.copy(); f.apply_translation([c[0], c[1], zb + 2.6 - 6.0]); feet.append(f)        # the recess's floor on the landing face
-    fm = trimesh.util.concatenate(feet); fd = os.path.join(ROOT, "parts", "scout_tpu_feet"); os.makedirs(fd, exist_ok=True); fm.export(os.path.join(fd, "part.stl"))
-    a["parts"].append(dict(id="scout_tpu_feet", name="TPU feet under the four skid nodes (the Overseer's O22 x 6 cap, glued over the O16 landing face)", role="cage", group="cage", color="#333333", material="TPU",
-                           mesh="parts/scout_tpu_feet/part.stl", mass_g=round(abs(foot.volume) * 1.21e-3 * 4, 1), tag="E", owner="scout v3", version="8 Nov", source="parts/overseer_tpu_foot/make.py",
-                           note="TPU 95A, 6 tall (the cage's contact <= 6 rule), 2.6 recess: the Scout stands on these four at z -59.4; the skid rods hang 10 above the ground (Spark via the Overseer, 8 Nov: yes, if it still clears the funnel: tools/seat_check.py scout --descent)"))
-    a["parts"].append(dict(id="scout_cage_v20", name="cage v20 rods and ties (the light funnel cage: ring, ridge, waist hoop, skids on A-frames, 3 mm carbon, frame-checked)", role="cage", group="cage", color="#2b2b2b",
-                           mesh="parts/scout_cage_v20/part.stl", mass_g=round(m_rod * 0.011 + sum(LT) * 0.011, 1), tag="E", owner="scout v3",
-                           version="v20 (8 Nov)", source="tools/scout_cage.py",
-                           note=f"{len(NODES)} nodes, {len(RODS_CARBON)} rods 3.0 ({m_rod / 1000:.2f} m) and {len(BRIDGES)} printed bridges ({len(GROUPS)} printed structures), 4 ties to the arm clips; an octagonal ring tangent to the prop keep-out at z 58, a three-node ridge at z 70 with a waist hoop to the ring's side mids, two skids at |y| 110, z -48 on A-frames, TPU feet under their end nodes, nose window for the camera, NB / TB printed into the nose / tail units, the other 19 nodes their own printed parts (parts/scout_node_lib.py); frame model tools/scout_cage_loads.py"))
+    a["parts"].append(dict(id="scout_cage_v21", name="cage v21 rods and ties (the half cage: ring, ridge, waist hoop, side knees, 3 mm carbon, frame-checked)", role="cage", group="cage", color="#2b2b2b",
+                           mesh="parts/scout_cage_v21/part.stl", mass_g=round(m_rod * 0.011 + sum(LT) * 0.011, 1), tag="E", owner="scout v3",
+                           version="v21 (8 Nov)", source="tools/scout_cage.py",
+                           note=f"{len(NODES)} nodes, {len(RODS_CARBON)} rods 3.0 ({m_rod / 1000:.2f} m) and {len(BRIDGES)} printed bridges ({len(GROUPS)} printed structures), 4 ties to the arm clips; an octagonal ring tangent to the prop keep-out at z 58, a three-node ridge at z 70 with a waist hoop to the ring's side mids, a knee at z 12 under each side mid (a leg, a fan to the ring's two corners on that side, two ties in from the arm clips), nose window for the camera, NB / TB printed into the nose / tail units, the other nodes their own printed parts (parts/scout_node_lib.py); the bottom open: the Scout lands on the base units' runners; frame model tools/scout_cage_loads.py"))
     open(F, "w").write(json.dumps(a, indent=0, ensure_ascii=False) + ("\n" if raw.endswith("\n") else ""))
-    print("  written: parts/scout_cage_v20/part.stl and systems/scout.assembly.json cage_shell")
+    print("  written: parts/scout_cage_v21/part.stl and systems/scout.assembly.json cage_shell")
