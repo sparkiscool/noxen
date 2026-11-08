@@ -51,12 +51,12 @@ def cyl(x, y, z0, z1, r, n=40):
 
 def bodies():
     pads = [cyl(x, y, Z_MOUNT - PAD_T, Z_MOUNT, PAD_R) for x, y in BOLTS]
-    floor = [box(x - 8, x + 8, s * 7.0, s * 23.0, ZB - PAD, ZB) if s > 0 else box(x - 8, x + 8, -23.0, -7.0, ZB - PAD, ZB)
+    floor = [box(x - 8, x + 8, s * 7.0, s * (YW + PAD), ZB - PAD, ZB) if s > 0 else box(x - 8, x + 8, -(YW + PAD), -7.0, ZB - PAD, ZB)   # v12: out to the side pad, an L at each corner
              for x in (-75.0, 35.0) for s in (1, -1)]
-    sides = [box(x - 8, x + 8, YW, YW + PAD, PACK_CG[2] - 8, PACK_CG[2] + 8) for x in (-75.0, 35.0)] + \
-            [box(x - 8, x + 8, -YW - PAD, -YW, PACK_CG[2] - 8, PACK_CG[2] + 8) for x in (-75.0, 35.0)]
+    sides = [box(x - 8, x + 8, YW, YW + PAD, ZB - PAD, PACK_CG[2] + 8) for x in (-75.0, 35.0)] + \
+            [box(x - 8, x + 8, -YW - PAD, -YW, ZB - PAD, PACK_CG[2] + 8) for x in (-75.0, 35.0)]       # v12: down to the floor pad (a blob on a 3 mm neck sat in the corner)
     front = [box(X1, X1 + PAD, -FRONT, FRONT, PACK_CG[2] - FRONT, PACK_CG[2] + FRONT)]   # v7: across most of the pack's front face
-    clip = [box(RX0, RX1, -15.0, 15.0, CLIP_Z1, ZB - 0.5)]              # the clip pad (v11: 30 wide, was 18: the clip channel left it hanging on two 2 mm strips, drawn_not_in_main)
+    clip = [box(RX0, RX1, -15.0, 15.0, CLIP_Z1, ZB)]                    # the clip pad, flush with the cavity floor (v12: a 0.5 gap under the floor was skinned 1.0 thin); 30 wide (v11)
     cuts = [box(X0, X1, -YW, YW, ZB, ZT),                              # the pack
             box(X0 - 60.0, X0, -YW, YW, ZB, ZT + 0.01),                     # its slide-out path aft
             box(X0 - 14.0, RX1 + 1.0, -CLIP_W / 2 - 1.0, CLIP_W / 2 + 1.0, ZB - 20.0, CLIP_Z1),   # the clip and its flex room below

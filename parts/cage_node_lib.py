@@ -290,7 +290,7 @@ def verify_cuts(n, ms, cuts, log=print):
 from parts.socket_inject import injectable_socket_cuts
 
 
-def inject_port(c, m, ms, log=print):
+def inject_port(c, m, ms, log=print, avoid=()):
     """the direction the socket's fill port and vent leave the node: the crown side if that line clears every other member's collar
     by 1 mm out to 40 mm, else the first clear direction round the socket axis (45 deg steps); the crown side with a warning if none"""
     from parts.socket_inject import FEED_H, PORT_R, GAP
@@ -300,6 +300,12 @@ def inject_port(c, m, ms, log=print):
     base = base - (base @ u) * u; base /= np.linalg.norm(base); e2 = np.cross(u, base)
     starts = [c + u * (m["s0"] + FEED_H / 2), c + u * (m["s0"] + m["depth"] - (3.0 if m["bore_r"] > 2.5 else 2.0) - 0.75)]
     def clear(e, margin):
+        if avoid:                                                                # a node's extra bodies and cuts (node 21: the camera)
+            for p0 in starts:
+                hole = along(p0, e, 0.0, m["bore_r"] + 40.0, PORT_R + 2.0, 16)
+                for body in avoid:
+                    if (hole ^ body).volume() > 1e-6:
+                        return False
         for o in ms:
             if o is m:
                 continue
@@ -334,7 +340,8 @@ def build(n, h, log=print, extra=None):
         ro = m["bore_r"] + WALL
         s_end = m["s0"] + m["depth"]
         collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL))
-        bores += injectable_socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"], port=inject_port(c, m, ms, log))   # bore, grooves, lead-in,
+        bores += injectable_socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"],
+                                        port=inject_port(c, m, ms, log, avoid=ex.get("drawn", []) + ex.get("cuts", [])))   # bore, grooves, lead-in,
         #   crown + the resin injection pattern (parts/socket_inject.py: annulus with 3 lands, feed ring, O2 fill port, O1.5 vent; Spark 7 Nov)
         keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))     # the member itself, and room to wrap it: no growth
         m["ro"], m["s_end"] = ro, s_end
