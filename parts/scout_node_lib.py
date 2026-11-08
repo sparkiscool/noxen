@@ -198,7 +198,7 @@ def build(group, h, log=print):
         if k in SKID:
             zb = c[2] - NODE_R - WALL
             drawn_extra.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + FOOT_T, FOOT_R))
-            struts.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, c[2], FOOT_R + STRUT_M))   # from the foot's face up: no room under the landing face (load_room)
+            struts.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, c[2], FOOT_R + 2 * STRUT_M))   # from the foot's face up: no room under the landing face (load_room); twice the room round the foot (8 Nov: KM0 alone, 2 collars and the foot, was 33 % drawn)
             feet[k] = zb
     bridge_u = {}
     for a, b in sc.BRIDGES:                                                     # the printed bridge between two merged nodes: its room, the whole span

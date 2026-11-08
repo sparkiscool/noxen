@@ -71,11 +71,11 @@ PRINTED = {"NB": "scout_nose_unit", "TB": "scout_tail_unit"}   # cage nodes prin
 TIES = [("A0", "B0"), ("A1", "B1"), ("A2", "B2"), ("A3", "B3"), ("C0", "BM0"), ("C1", "BM0"), ("C2", "BM1"), ("C3", "BM1")]   # 3.0 rods: the arm-tip ties to the rail corners, the yoke-corner ties to the rail mid nodes (5 Nov: at a corner the two ties arrived 2..13 deg apart, their bores had to start 39 mm out and the node grew past the cell limit)
 #   without a stiff tail link a 35 g tail-first wall hit racked the cage 17 mm with 1157 N in a corner tie, frame model 4 Nov; with one 0.2 mm, 144 N)
 NODE_CLEAR = 20.0                                              # a rod passing a node it does not end at keeps its axis this far from the centre (a screen: a socket reaches ~27 but points at its own rod; the node library checks every collar exactly, K0-R0 passed P0 at 15.9)
-MERGE_MM = 60.0                                                # two nodes closer than this are one printed structure (5 Nov, Spark: "if any two nodes are too
+MERGE_MM = 45.0                                                # two nodes closer than this are one printed structure (5 Nov, Spark: "if any two nodes are too
 BRIDGES = [(i, j) for i, j in RODS if np.linalg.norm(np.array(NODES[i], float) - np.array(NODES[j], float)) <= MERGE_MM]   # close together ... make that into
-#   one structure, the same all across the scout"): the rod between them is printed PETG (a bridge), its two sockets are gone. At 60: the
-#   two window posts P0-R0 / P7-R7 (41) and the six skid-truss posts B-K / BM-KM (57); the next pair up is NB-P0 at 62 (NB is in the
-#   nose unit), then B0-P0 at 70 and the corner diagonals B0-R0 at 89. Frame model with the bridges as PETG O8: 241 Hz (246), crash
+#   one structure, the same all across the scout"): the rod between them is printed PETG (a bridge), its two sockets are gone. At 45 (8 Nov,
+#   Spark: "the nodes are super long": a 57 mm pair was a 112 mm part, a single node 43..58): only the window posts P0-R0 / P7-R7 (41)
+#   merge; the ring's tail corners P2-P3 (53) and the skid-truss posts B-K / BM-KM (57) are single nodes again. Next up: NB-P0 62, B0-P0 70. Frame model with the bridges as PETG O8: 241 Hz (246), crash
 #   deflection 1.44 mm (1.41), Euler and rod forces unchanged, a bridge under 8 MPa; mass a wash (a bridge O8 weighs what the rod,
 #   its two collars and the engine's material behind them did, +-1 g a pair).
 

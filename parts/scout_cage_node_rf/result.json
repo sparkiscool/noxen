@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   2853.7
+   2853.4
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -26,32 +26,32 @@
  "strength": {
   "rows": [
    {
-    "case": "frame RF-R7 axial 243 N (pull-out)",
+    "case": "frame RF-R0 axial 239 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.114,
+    "inlayer": 0.112,
     "across": 0.071,
     "at": [
      81.4,
-     -4.5,
+     4.5,
      68.5
     ]
    },
    {
-    "case": "frame RF-R7 side 3.4 N",
+    "case": "frame RF-R0 side 3.4 N",
     "cls": "crash",
     "inlayer": 0.004,
-    "across": 0.002,
+    "across": 0.003,
     "at": [
      79.4,
-     -2.5,
+     2.5,
      68.5
     ]
    },
    {
-    "case": "frame RF-P1 axial 191 N (pull-out)",
+    "case": "frame RF-P1 axial 176 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.097,
-    "across": 0.038,
+    "inlayer": 0.077,
+    "across": 0.049,
     "at": [
      74.4,
      10.5,
@@ -59,7 +59,7 @@
     ]
    },
    {
-    "case": "frame RF-P1 side 2.2 N",
+    "case": "frame RF-P1 side 2.0 N",
     "cls": "crash",
     "inlayer": 0.003,
     "across": 0.001,
@@ -70,10 +70,10 @@
     ]
    },
    {
-    "case": "frame RF-P6 axial 195 N (pull-out)",
+    "case": "frame RF-P6 axial 188 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.085,
-    "across": 0.054,
+    "inlayer": 0.095,
+    "across": 0.037,
     "at": [
      74.4,
      -10.5,
@@ -81,10 +81,10 @@
     ]
    },
    {
-    "case": "frame RF-P6 side 2.2 N",
+    "case": "frame RF-P6 side 2.0 N",
     "cls": "crash",
     "inlayer": 0.003,
-    "across": 0.002,
+    "across": 0.001,
     "at": [
      74.4,
      -11.5,
@@ -94,8 +94,8 @@
    {
     "case": "crash 35 g through the longest rod RF-P1 (116 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.099,
-    "across": 0.029,
+    "inlayer": 0.079,
+    "across": 0.035,
     "at": [
      74.4,
      10.5,
@@ -103,18 +103,18 @@
     ]
    }
   ],
-  "worst": 0.114,
-  "worst_case": "frame RF-R7 axial 243 N (pull-out)",
+  "worst": 0.112,
+  "worst_case": "frame RF-R0 axial 239 N (pull-out)",
   "worst_at": [
    81.4,
-   -4.5,
+   4.5,
    68.5
   ]
  },
  "mass_g": 6.45,
  "watertight": true,
  "export": {
-  "faces_in": 50190,
+  "faces_in": 50380,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -122,7 +122,7 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 50190,
+  "faces": 50380,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -133,7 +133,7 @@
    "caps_split": 6,
    "caps_left": 0,
    "watertight": true,
-   "faces": 69854
+   "faces": 69860
   },
   "volume_mm3": 5079.5,
   "exact_mm3": 5079.5
@@ -157,7 +157,7 @@
  },
  "stl": "scout_cage_node_rf.stl",
  "view_stl": "scout_cage_node_rf_view.stl",
- "view_faces": 50190,
+ "view_faces": 50380,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -248,21 +248,21 @@
   "design": 8108,
   "drawn": 2698,
   "cases": [
-   "frame RF-R7 axial 243 N (pull-out)",
-   "frame RF-R7 side 3.4 N",
-   "frame RF-P1 axial 191 N (pull-out)",
-   "frame RF-P1 side 2.2 N",
-   "frame RF-P6 axial 195 N (pull-out)",
-   "frame RF-P6 side 2.2 N",
+   "frame RF-R0 axial 239 N (pull-out)",
+   "frame RF-R0 side 3.4 N",
+   "frame RF-P1 axial 176 N (pull-out)",
+   "frame RF-P1 side 2.0 N",
+   "frame RF-P6 axial 188 N (pull-out)",
+   "frame RF-P6 side 2.0 N",
    "crash 35 g through the longest rod RF-P1 (116 mm), axial + side"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 22.8,
- "layout_s": 164,
- "peak_gb": 0.862096,
+ "build_s": 23.5,
+ "layout_s": 161,
+ "peak_gb": 0.844252,
  "gen_cm3": 2.4,
  "h": 1.0,
  "audit": {
@@ -290,7 +290,7 @@
     "cells": 1090,
     "inscribed_mm": 3.5,
     "touches_cut": true,
-    "touches_support": false,
+    "touches_support": true,
     "loaded": true,
     "room": 0.86,
     "room_depth_mm": 38.0,
@@ -307,7 +307,7 @@
     "cells": 1090,
     "inscribed_mm": 3.5,
     "touches_cut": true,
-    "touches_support": true,
+    "touches_support": false,
     "loaded": true,
     "room": 0.86,
     "room_depth_mm": 38.0,
@@ -335,32 +335,32 @@
  "early": {
   "rows": [
    {
-    "case": "frame RF-R7 axial 243 N (pull-out)",
+    "case": "frame RF-R0 axial 239 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.099,
-    "across": 0.089,
+    "inlayer": 0.097,
+    "across": 0.088,
     "at": [
      78.4,
-     -5.5,
+     5.5,
      72.5
     ]
    },
    {
-    "case": "frame RF-R7 side 3.4 N",
+    "case": "frame RF-R0 side 3.4 N",
     "cls": "crash",
     "inlayer": 0.005,
-    "across": 0.002,
+    "across": 0.004,
     "at": [
      75.4,
-     -10.5,
+     10.5,
      68.5
     ]
    },
    {
-    "case": "frame RF-P1 axial 191 N (pull-out)",
+    "case": "frame RF-P1 axial 176 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.099,
-    "across": 0.043,
+    "inlayer": 0.096,
+    "across": 0.063,
     "at": [
      74.4,
      10.5,
@@ -368,10 +368,10 @@
     ]
    },
    {
-    "case": "frame RF-P1 side 2.2 N",
+    "case": "frame RF-P1 side 2.0 N",
     "cls": "crash",
-    "inlayer": 0.004,
-    "across": 0.002,
+    "inlayer": 0.003,
+    "across": 0.001,
     "at": [
      74.4,
      10.5,
@@ -379,10 +379,10 @@
     ]
    },
    {
-    "case": "frame RF-P6 axial 195 N (pull-out)",
+    "case": "frame RF-P6 axial 188 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.106,
-    "across": 0.07,
+    "inlayer": 0.097,
+    "across": 0.042,
     "at": [
      74.4,
      -10.5,
@@ -390,7 +390,7 @@
     ]
    },
    {
-    "case": "frame RF-P6 side 2.2 N",
+    "case": "frame RF-P6 side 2.0 N",
     "cls": "crash",
     "inlayer": 0.004,
     "across": 0.003,
@@ -403,8 +403,8 @@
    {
     "case": "crash 35 g through the longest rod RF-P1 (116 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.103,
-    "across": 0.031,
+    "inlayer": 0.099,
+    "across": 0.041,
     "at": [
      74.4,
      10.5,
@@ -412,11 +412,11 @@
     ]
    }
   ],
-  "worst": 0.106,
-  "worst_case": "frame RF-P6 axial 195 N (pull-out)",
+  "worst": 0.099,
+  "worst_case": "crash 35 g through the longest rod RF-P1 (116 mm), axial + side",
   "worst_at": [
    74.4,
-   -10.5,
+   10.5,
    70.5
   ],
   "beta": 4.0,
@@ -425,10 +425,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 186,
+ "total_s": 185,
  "part_sha": "a11637343a4b",
- "lib_sha": "03e8bcab748d",
- "setup_sha": "d618f8d9e4caea87",
+ "lib_sha": "5b9b502f40d6",
+ "setup_sha": "94bd94bbaecb34fa",
  "max_worst": 0.5,
  "strength_ok": true
 }
