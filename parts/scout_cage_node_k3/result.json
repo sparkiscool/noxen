@@ -7,147 +7,158 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   3692.7
+   9189.0
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 0,
+  "acute_edges": 1,
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 877.9,
+  "skin_mm3": 1575.1,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
   "outside_env_mm3": -0.0,
   "ok": true
  },
  "strength": {
   "rows": [
    {
-    "case": "frame K3-K2 axial 44 N (pull-out)",
+    "case": "frame K3-K2 axial 42 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.03,
+    "inlayer": 0.011,
+    "across": 0.015,
     "at": [
-     106.3,
-     -105.8,
-     -46.2
+     109.5,
+     -106.0,
+     -42.3
     ]
    },
    {
-    "case": "frame K3-K2 side 1.5 N",
+    "case": "frame K3-K2 side 1.6 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.001,
+    "at": [
+     88.5,
+     -102.0,
+     -44.3
+    ]
+   },
+   {
+    "case": "frame PM1-K3 axial 64 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.015,
+    "across": 0.016,
+    "at": [
+     91.5,
+     -106.0,
+     -36.3
+    ]
+   },
+   {
+    "case": "frame PM1-K3 side 4.4 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.001,
+    "at": [
+     87.5,
+     -102.0,
+     -33.3
+    ]
+   },
+   {
+    "case": "frame K3-P6 axial 65 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.016,
+    "across": 0.026,
+    "at": [
+     100.5,
+     -109.0,
+     -39.3
+    ]
+   },
+   {
+    "case": "frame K3-P6 side 8.1 N",
     "cls": "crash",
     "inlayer": 0.002,
     "across": 0.002,
     "at": [
-     91.3,
-     -104.8,
-     -45.2
+     92.5,
+     -102.0,
+     -30.3
     ]
    },
    {
-    "case": "frame PM1-K3 axial 62 N (pull-out)",
+    "case": "crash 35 g through the longest rod K3-K2 (195 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.033,
-    "across": 0.042,
-    "at": [
-     89.3,
-     -112.8,
-     -42.2
-    ]
-   },
-   {
-    "case": "frame PM1-K3 side 4.3 N",
-    "cls": "crash",
-    "inlayer": 0.006,
-    "across": 0.004,
-    "at": [
-     90.3,
-     -105.8,
-     -37.2
-    ]
-   },
-   {
-    "case": "frame K3-P6 axial 63 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.03,
-    "across": 0.057,
-    "at": [
-     101.3,
-     -110.8,
-     -35.2
-    ]
-   },
-   {
-    "case": "frame K3-P6 side 7.9 N",
-    "cls": "crash",
-    "inlayer": 0.012,
+    "inlayer": 0.011,
     "across": 0.012,
     "at": [
-     94.3,
-     -113.8,
-     -35.2
-    ]
-   },
-   {
-    "case": "crash 35 g through the longest rod K3-K2 (200 mm), axial + side",
-    "cls": "crash",
-    "inlayer": 0.02,
-    "across": 0.027,
-    "at": [
-     92.3,
-     -103.8,
-     -45.2
+     87.5,
+     -103.0,
+     -43.3
     ]
    },
    {
     "case": "landing 6 g on the skid face of K3 (21 N up, 2 of 4 skid ends)",
     "cls": "flight",
-    "inlayer": 0.029,
-    "across": 0.023,
+    "inlayer": 0.017,
+    "across": 0.015,
     "at": [
-     103.3,
-     -109.8,
-     -44.2
+     103.5,
+     -110.0,
+     -45.3
+    ]
+   },
+   {
+    "case": "ground hit 550 N on the foot of K3 (a 0.6 m drop onto this node alone, 8 Nov)",
+    "cls": "crash",
+    "inlayer": 0.125,
+    "across": 0.107,
+    "at": [
+     103.5,
+     -110.0,
+     -45.3
     ]
    }
   ],
-  "worst": 0.057,
-  "worst_case": "frame K3-P6 axial 63 N (pull-out)",
+  "worst": 0.125,
+  "worst_case": "ground hit 550 N on the foot of K3 (a 0.6 m drop onto this node alone, 8 Nov)",
   "worst_at": [
-   101.3,
-   -110.8,
-   -35.2
+   103.5,
+   -110.0,
+   -45.3
   ]
  },
- "mass_g": 7.7,
+ "mass_g": 15.7,
  "watertight": true,
  "export": {
-  "faces_in": 53758,
+  "faces_in": 66060,
   "degenerate": 0,
-  "folded": 2,
-  "caps_split": 2,
+  "folded": 0,
+  "caps_split": 1,
   "caps_left": 0,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 53756,
+  "faces": 66060,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 136,
-   "folded": 2,
-   "caps_split": 1,
-   "caps_left": 0,
+   "degenerate": 128,
+   "folded": 6,
+   "caps_split": 39,
+   "caps_left": 2,
    "watertight": true,
-   "faces": 73320
+   "faces": 93084
   },
-  "volume_mm3": 6063.6,
-  "exact_mm3": 6063.6
+  "volume_mm3": 12361.4,
+  "exact_mm3": 12361.7
  },
  "bodies": {
   "bodies_raw": 1,
@@ -155,8 +166,8 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 6063.6,
- "drawn_g": 4.18,
+ "volume_mm3": 12361.7,
+ "drawn_g": 5.46,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
@@ -168,7 +179,7 @@
  },
  "stl": "scout_cage_node_k3.stl",
  "view_stl": "scout_cage_node_k3_view.stl",
- "view_faces": 53756,
+ "view_faces": 66060,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -233,209 +244,205 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.2845136921624174,
-  "nd": 10590,
+  "volfrac": 0.5652477320307048,
+  "nd": 14330,
   "sym_axes": [],
-  "n_real": 8,
-  "n_ties": 6,
+  "n_real": 9,
+  "n_ties": 0,
   "backend": "direct",
-  "iterations": 76,
+  "iterations": 69,
   "stopped": "max_stage"
  },
  "grid": {
   "name": "scout_cage_node_k3",
   "h": 1.0,
   "shape": [
-   40,
+   48,
    40,
    40
   ],
   "origin": [
-   76.8067,
-   -128.3457,
-   -61.6619
+   72.9529,
+   -128.5274,
+   -61.8196
   ],
-  "cells": 64000,
-  "design": 10377,
-  "drawn": 3280,
+  "cells": 76800,
+  "design": 14330,
+  "drawn": 4255,
   "cases": [
-   "frame K3-K2 axial 44 N (pull-out)",
-   "frame K3-K2 side 1.5 N",
-   "frame PM1-K3 axial 62 N (pull-out)",
-   "frame PM1-K3 side 4.3 N",
-   "frame K3-P6 axial 63 N (pull-out)",
-   "frame K3-P6 side 7.9 N",
-   "crash 35 g through the longest rod K3-K2 (200 mm), axial + side",
-   "landing 6 g on the skid face of K3 (21 N up, 2 of 4 skid ends)"
+   "frame K3-K2 axial 42 N (pull-out)",
+   "frame K3-K2 side 1.6 N",
+   "frame PM1-K3 axial 64 N (pull-out)",
+   "frame PM1-K3 side 4.4 N",
+   "frame K3-P6 axial 65 N (pull-out)",
+   "frame K3-P6 side 8.1 N",
+   "crash 35 g through the longest rod K3-K2 (195 mm), axial + side",
+   "landing 6 g on the skid face of K3 (21 N up, 2 of 4 skid ends)",
+   "ground hit 550 N on the foot of K3 (a 0.6 m drop onto this node alone, 8 Nov)"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 22.6,
- "layout_s": 146,
- "peak_gb": 0.965436,
- "gen_cm3": 2.8,
+ "build_s": 31.2,
+ "layout_s": 210,
+ "peak_gb": 1.229668,
+ "gen_cm3": 8.1,
  "h": 1.0,
  "audit": {
-  "drawn_share": 0.24,
+  "drawn_share": 0.229,
   "load_room": [],
   "bodies": [
    {
     "id": 1,
-    "cells": 2677,
+    "cells": 4255,
     "inscribed_mm": 3.5,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
-    "room": 0.89,
-    "room_depth_mm": 31.0,
+    "room": 0.94,
+    "room_depth_mm": 34.0,
     "at": [
-     94.5,
-     -107.3,
-     -38.7
+     95.1,
+     -107.6,
+     -40.7
     ],
-    "core_mm": 2.5,
-    "share_of_drawn": 0.82
-   },
-   {
-    "id": 2,
-    "cells": 603,
-    "inscribed_mm": 3.0,
-    "touches_cut": false,
-    "touches_support": false,
-    "loaded": true,
-    "room": 0.9,
-    "room_depth_mm": 28.0,
-    "at": [
-     100.0,
-     -110.1,
-     -54.2
-    ],
-    "core_mm": 3.0
+    "core_mm": 3.0,
+    "share_of_drawn": 1.0
    }
   ],
   "envelope_waste": 0.0,
   "plate": {
-   "L_mm": 33.4,
-   "W_mm": 31.9,
-   "H_mm": 34.0,
+   "L_mm": 38.0,
+   "W_mm": 34.0,
+   "H_mm": 36.0,
    "fits": true
   },
   "drawn_thin": [],
   "drawn_walls": [],
-  "cases": 8,
+  "cases": 9,
   "supports": 1,
   "fails": []
  },
  "early": {
   "rows": [
    {
-    "case": "frame K3-K2 axial 44 N (pull-out)",
+    "case": "frame K3-K2 axial 42 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.025,
+    "inlayer": 0.011,
+    "across": 0.011,
     "at": [
-     106.3,
-     -105.8,
-     -46.2
+     92.5,
+     -106.0,
+     -44.3
     ]
    },
    {
-    "case": "frame K3-K2 side 1.5 N",
+    "case": "frame K3-K2 side 1.6 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.001,
+    "at": [
+     94.5,
+     -106.0,
+     -45.3
+    ]
+   },
+   {
+    "case": "frame PM1-K3 axial 64 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.015,
+    "across": 0.022,
+    "at": [
+     84.5,
+     -114.0,
+     -35.3
+    ]
+   },
+   {
+    "case": "frame PM1-K3 side 4.4 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.001,
+    "at": [
+     87.5,
+     -102.0,
+     -33.3
+    ]
+   },
+   {
+    "case": "frame K3-P6 axial 65 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.015,
+    "across": 0.026,
+    "at": [
+     100.5,
+     -109.0,
+     -39.3
+    ]
+   },
+   {
+    "case": "frame K3-P6 side 8.1 N",
     "cls": "crash",
     "inlayer": 0.002,
     "across": 0.002,
     "at": [
-     88.3,
-     -110.8,
-     -42.2
+     92.5,
+     -102.0,
+     -30.3
     ]
    },
    {
-    "case": "frame PM1-K3 axial 62 N (pull-out)",
+    "case": "crash 35 g through the longest rod K3-K2 (195 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.029,
-    "across": 0.052,
+    "inlayer": 0.011,
+    "across": 0.011,
     "at": [
-     88.3,
-     -110.8,
-     -42.2
-    ]
-   },
-   {
-    "case": "frame PM1-K3 side 4.3 N",
-    "cls": "crash",
-    "inlayer": 0.007,
-    "across": 0.004,
-    "at": [
-     91.3,
-     -105.8,
-     -36.2
-    ]
-   },
-   {
-    "case": "frame K3-P6 axial 63 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.034,
-    "across": 0.066,
-    "at": [
-     101.3,
-     -109.8,
-     -35.2
-    ]
-   },
-   {
-    "case": "frame K3-P6 side 7.9 N",
-    "cls": "crash",
-    "inlayer": 0.012,
-    "across": 0.013,
-    "at": [
-     95.3,
-     -113.8,
-     -37.2
-    ]
-   },
-   {
-    "case": "crash 35 g through the longest rod K3-K2 (200 mm), axial + side",
-    "cls": "crash",
-    "inlayer": 0.02,
-    "across": 0.026,
-    "at": [
-     91.3,
-     -103.8,
-     -43.2
+     92.5,
+     -100.0,
+     -47.3
     ]
    },
    {
     "case": "landing 6 g on the skid face of K3 (21 N up, 2 of 4 skid ends)",
     "cls": "flight",
-    "inlayer": 0.031,
-    "across": 0.023,
+    "inlayer": 0.017,
+    "across": 0.014,
     "at": [
-     103.3,
-     -109.8,
-     -44.2
+     102.5,
+     -109.0,
+     -45.3
+    ]
+   },
+   {
+    "case": "ground hit 550 N on the foot of K3 (a 0.6 m drop onto this node alone, 8 Nov)",
+    "cls": "crash",
+    "inlayer": 0.122,
+    "across": 0.105,
+    "at": [
+     102.5,
+     -109.0,
+     -45.3
     ]
    }
   ],
-  "worst": 0.066,
-  "worst_case": "frame K3-P6 axial 63 N (pull-out)",
+  "worst": 0.122,
+  "worst_case": "ground hit 550 N on the foot of K3 (a 0.6 m drop onto this node alone, 8 Nov)",
   "worst_at": [
-   101.3,
-   -109.8,
-   -35.2
+   102.5,
+   -109.0,
+   -45.3
   ],
   "beta": 4.0,
-  "iteration": 17,
-  "max_worst": 0.5,
+  "iteration": 14,
+  "max_worst": 0.2,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 168,
+ "total_s": 241,
  "part_sha": "089026443777",
- "lib_sha": "3b63db92c59c",
- "setup_sha": "23e5838a4f1720d8",
- "max_worst": 0.5,
+ "lib_sha": "f32ec22c3e79",
+ "setup_sha": "46f908e11df6ece7",
+ "max_worst": 0.2,
  "strength_ok": true
 }
