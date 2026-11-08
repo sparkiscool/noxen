@@ -26,20 +26,20 @@
  "strength": {
   "rows": [
    {
-    "case": "frame RM-RB axial 162 N (pull-out)",
+    "case": "frame RM-RB axial 166 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.026,
-    "across": 0.014,
+    "across": 0.015,
     "at": [
      -67.5,
-     -4.5,
+     4.5,
      70.5
     ]
    },
    {
-    "case": "frame RM-RB side 17.8 N",
+    "case": "frame RM-RB side 20.7 N",
     "cls": "crash",
-    "inlayer": 0.005,
+    "inlayer": 0.006,
     "across": 0.003,
     "at": [
      -67.5,
@@ -49,10 +49,10 @@
    }
   ],
   "worst": 0.026,
-  "worst_case": "frame RM-RB axial 162 N (pull-out)",
+  "worst_case": "frame RM-RB axial 166 N (pull-out)",
   "worst_at": [
    -67.5,
-   -4.5,
+   4.5,
    70.5
   ]
  },
@@ -195,16 +195,16 @@
   "design": 7642,
   "drawn": 2324,
   "cases": [
-   "frame RM-RB axial 162 N (pull-out)",
-   "frame RM-RB side 17.8 N"
+   "frame RM-RB axial 166 N (pull-out)",
+   "frame RM-RB side 20.7 N"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 16.1,
- "layout_s": 79,
- "peak_gb": 0.79228,
+ "build_s": 12.8,
+ "layout_s": 69,
+ "peak_gb": 0.80964,
  "gen_cm3": 1.7,
  "h": 1.0,
  "audit": {
@@ -245,21 +245,21 @@
  "early": {
   "rows": [
    {
-    "case": "frame RM-RB axial 162 N (pull-out)",
+    "case": "frame RM-RB axial 166 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.038,
+    "inlayer": 0.039,
     "across": 0.021,
     "at": [
      -63.5,
-     -1.5,
+     1.5,
      74.5
     ]
    },
    {
-    "case": "frame RM-RB side 17.8 N",
+    "case": "frame RM-RB side 20.7 N",
     "cls": "crash",
-    "inlayer": 0.006,
-    "across": 0.003,
+    "inlayer": 0.007,
+    "across": 0.004,
     "at": [
      -67.5,
      4.5,
@@ -267,11 +267,11 @@
     ]
    }
   ],
-  "worst": 0.038,
-  "worst_case": "frame RM-RB axial 162 N (pull-out)",
+  "worst": 0.039,
+  "worst_case": "frame RM-RB axial 166 N (pull-out)",
   "worst_at": [
    -63.5,
-   -1.5,
+   1.5,
    74.5
   ],
   "beta": 4.0,
@@ -280,10 +280,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 96,
+ "total_s": 82,
  "part_sha": "de9e1a737b26",
- "lib_sha": "f32ec22c3e79",
- "setup_sha": "0425b2c1323426f5",
+ "lib_sha": "665ca921fde1",
+ "setup_sha": "2e09feb9aabe31dc",
  "max_worst": 0.3,
  "strength_ok": true
 }
