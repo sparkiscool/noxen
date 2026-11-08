@@ -76,7 +76,7 @@ LAND_T = 4.0                                                 # the UBEC's and XR
 LEAD_CH = (8.0, 5.0, 6.0)                                    # lead channel: width (x here), height (z), length out of each UBEC end
 BOARDS_G, BOARDS_CG = 32.0, np.array([-82.0, 0.0, -6.0])    # Radxa 10 + UBEC 15 + XR2 1 + cables 6 (E)
 # ---- sockets (cage_node_lib: 3.0 rod, bore 3.2 x 10, floor 3, wall 2.5; the bore bottom 3.0 from the node centre, as the Overseer's node 17)
-BORE_R, DEPTH, FLOOR, WALL = 1.6, 10.0, 3.0, 2.5
+BORE_R, DEPTH, FLOOR, WALL = 1.6, 10.0, 3.0, 3.0            # WALL 3.0 (8 Nov: 2.5 beyond the 0.5 injection annulus, as the cage nodes)
 # ---- prop keep-out: the cage rule for anything printed too (12 beyond the swept discs)
 MOTORS = [(54.1, 54.1), (-54.1, 54.1), (-54.1, -54.1), (54.1, -54.1)]
 DISC_R, DISC_Z = 44.45 + 4.0 + 12.0, (37.2 - 12.0, 45.2 + 12.0)
@@ -130,9 +130,10 @@ class Sock:
         return collar_shape(self.c, self.d, 0.0, self.t_mouth, BORE_R, WALL)
 
     def bores(self):
-        """the bore, grooves, lead-in, crown and the three resin pockets, the first under the injection port (call port() first)"""
-        from parts.cage_node_lib import POCKETS
-        return socket_cuts(self.pt(FLOOR), self.d, 0.0, DEPTH, BORE_R, pockets=POCKETS, pocket_dir=getattr(self, "port_d", None))
+        """the bore, grooves, lead-in, crown and the injection pattern (parts/socket_inject.py: 0.5 annulus on 3 lands, feed ring, O2 fill
+        port and O1.5 vent 40 out), the port and vent on the side port() chose (call port() first; 8 Nov, as the cage nodes)"""
+        from parts.socket_inject import injectable_socket_cuts
+        return injectable_socket_cuts(self.pt(FLOOR), self.d, 0.0, DEPTH, BORE_R, port=getattr(self, "port_d", None))
 
     def clear(self, length=300.0):
         return along(self.pt(self.t_mouth + 0.5), self.pt(self.t_mouth + length), BORE_R + 0.9)
@@ -145,11 +146,15 @@ class Sock:
         return unit(s) if np.linalg.norm(s) > 1e-6 else np.array([1.0, 0, 0])
 
     def port(self, prefer, others=()):
-        """the resin injection port (Spark 5 Nov): a O2 channel from the bore 1.5 above the floor out through the collar and the body
-        along the direction nearest `prefer` that no other socket axis is within 40 deg of; cut through the whole envelope"""
-        from parts.cage_node_lib import port_dir, port_cut
+        """the resin injection side (Spark 5 Nov): the direction nearest `prefer` that no other socket axis is within 40 deg of; returns the
+        injection pattern's O2 fill port (at the feed ring, FEED_H / 2 above the floor) and O1.5 vent (under the lip) continued 150 out along
+        it, through the whole unit (the pattern's own holes reach 40 mm, a unit's body is thicker; 8 Nov)"""
+        from parts.cage_node_lib import port_dir
+        from parts.socket_inject import FEED_H, PORT_R, VENT_R
         self.port_d = port_dir(self.d, prefer, [o.d for o in others if o is not self])
-        return port_cut(self.pt(FLOOR), self.d, 0.0, self.port_d, length=120.0)
+        lip = 2.0                                                            # socket_inject: 2.0 for a 3 mm rod
+        f, v = self.pt(FLOOR + FEED_H / 2), self.pt(FLOOR + DEPTH - lip - VENT_R)
+        return U([along(f, f + self.port_d * 150.0, PORT_R), along(v, v + self.port_d * 150.0, VENT_R)])
 
 
 def socket_cases(p, socks, support, log_prefix=""):
