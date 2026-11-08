@@ -24,13 +24,17 @@ What sets the shape, and only this:
            12 from the swept discs (r 64.7 + 4, z prop plane +- 4): the octagon ring tangent to that keep-out (flats at |x|, |y|
            155, chamfers on |x| + |y| = 262.7) at z 61 (13 over the sweep); a FLAT roof in the ring's plane: a spine on y 0 and a
            hoop on x 0 (never over a disc) with the nose and tail triangles from RF / RB at x +-130 (at x 90 they crossed the front
-           discs); the cage hangs on four nodes printed into the frame's outriggers, NB / TB at the ends of the base's booms and
-           S0 / S1 at the ends of two side spars on x 0 between the discs, all at z 12 in the flats' planes (every point there 12
-           from the discs), with a V up to the ring at each end and a fan at each side. Why (frame model, frame_check): rods
-           rising from below the props to the ring can only stand in the flats' planes, and the core's crash load must reach the
-           cage axially: on ties under the arm tips (v21's way) the 35 g load went through level rods in bending (31 mm, 2 rods
-           over Euler); a ridge 12 over the ring took the upside-down hit alone and pushed its triangles into the ring at 1.3 x
-           Euler; flat, the hit spreads over the whole roof. Bottom open, the Scout lands on the runners
+           discs); a V up to the ring at each end and a fan at each side from four bottom nodes at z 12 in the flats' planes (every
+           point there 12 from the discs). How the cage holds the core, with no long printed outriggers (8 Nov, Spark: "the solids
+           that extend out do not seem optimal at all"): rods rising past the props can only stand in the flats' planes, and rods
+           from the body out to them only in the strips between the discs (x 0 and y 0), so each side node S0 / S1 hangs on a rod
+           triangle on x 0 to two sockets on a small lug on the deck's side (0, +-40, z 22 and -10, beside the receiver), the tail
+           node TB on a triangle on y 0 to the deck's tail end (-60, 0, 21) and the tail runner's end (-90.5, 0, -2), and the nose
+           node NB sits on the camera's mount, which reaches out to the front flat anyway (the camera must be ahead of the front
+           discs). Why (frame model, frame_check): on ties under the arm tips (v21's way) the 35 g load went through level rods in
+           bending (31 mm, 2 rods over Euler); a ridge 12 over the ring took the upside-down hit alone (1.3 x Euler); the four
+           printed outriggers of the first try passed (1.0 mm) but put 115 mm spars and a tail boom on the frame, modelled rigid.
+           Bottom open, the Scout lands on the runners
 Writes parts/scout_v4_<part>/part.stl (one folder per v4 part, build_site: a folder belongs to one drone), systems/scout_v4.assembly.json
 and prints the checks. Run: python tools/scout_v4_shape.py
 """
@@ -60,23 +64,27 @@ TILT, HFOV, VFOV = math.radians(30.0), math.radians(44.5), math.radians(36.5)
 CAM_F, CAM_U, CAM_R = np.array([math.cos(TILT), 0, math.sin(TILT)]), np.array([-math.sin(TILT), 0, math.cos(TILT)]), np.array([0, 1.0, 0])
 FLAT = HUB + R_KEEP + KEEP                       # 155.0: the ring's flats
 CH_LINE = 2 * HUB + (R_KEEP + KEEP) * math.sqrt(2)   # 262.7: the corner chamfers |x| + |y| = CH_LINE
-ZR, ZB, XR = 61.0, 12.0, 130.0                    # ring and flat roof, the outrigger nodes, the roof's nose / tail apex
+ZR, ZB, XR = 61.0, 12.0, 130.0                    # ring and flat roof, the bottom nodes, the roof's nose / tail apex
 ZR = max(ZR, Z_PROP + Z_SWEEP + 13.0)
 YC = CH_LINE - FLAT                              # 107.7: where a flat meets a chamfer
 NODES = {
     "R0": (FLAT, YC, ZR), "P1": (YC, FLAT, ZR), "PM0": (0.0, FLAT, ZR), "P2": (-YC, FLAT, ZR), "P3": (-FLAT, YC, ZR),       # the ring (left half, nose -> tail)
     "P4": (-FLAT, -YC, ZR), "P5": (-YC, -FLAT, ZR), "PM1": (0.0, -FLAT, ZR), "P6": (YC, -FLAT, ZR), "R7": (FLAT, -YC, ZR),   # right half
     "RF": (XR, 0, ZR), "RM": (0.0, 0, ZR), "RB": (-XR, 0, ZR),                                                              # the flat roof's spine
-    "NB": (FLAT, 0, ZB), "TB": (-FLAT, 0, ZB), "S0": (0.0, FLAT, ZB), "S1": (0.0, -FLAT, ZB),                               # printed into the frame's outriggers (PRINTED)
+    "TB": (-FLAT, 0, ZB), "S0": (0.0, FLAT, ZB), "S1": (0.0, -FLAT, ZB),                                                    # the bottom nodes in the flats' planes
+    "NB": (FLAT, 0, ZB),                                                                                                     # on the camera's mount (PRINTED)
+    "DS0": (0.0, 40.0, 22.0), "BS0": (0.0, 40.0, -10.0), "DS1": (0.0, -40.0, 22.0), "BS1": (0.0, -40.0, -10.0),            # sockets on the deck's side lugs (PRINTED)
+    "DT": (-60.0, 0, 21.0), "BT": (CX - SEAT_L / 2, 0, -2.0),                                                               # sockets on the deck's tail end and the tail runner's end (PRINTED)
 }
-PRINTED = ("NB", "TB", "S0", "S1")
+PRINTED = ("NB", "DS0", "BS0", "DS1", "BS1", "DT", "BT")
 ROOTS = {}
 RODS = [("R0", "P1"), ("P1", "PM0"), ("PM0", "P2"), ("P2", "P3"), ("P3", "P4"), ("P4", "P5"), ("P5", "PM1"), ("PM1", "P6"), ("P6", "R7"), ("R7", "R0"),   # the ring
         ("RF", "R0"), ("RF", "R7"), ("RF", "RM"), ("RM", "RB"), ("RB", "P3"), ("RB", "P4"), ("RM", "PM0"), ("RM", "PM1"),                                 # the flat roof: nose and tail triangles, spine, hoop
         ("NB", "R0"), ("NB", "R7"), ("TB", "P3"), ("TB", "P4"),                                                                                            # the end Vs (the camera's window stays clear between them)
-        ("S0", "P1"), ("S0", "PM0"), ("S0", "P2"), ("S1", "P6"), ("S1", "PM1"), ("S1", "P5")]                                                              # the side fans
+        ("S0", "P1"), ("S0", "PM0"), ("S0", "P2"), ("S1", "P6"), ("S1", "PM1"), ("S1", "P5"),                                                              # the side fans
+        ("DS0", "S0"), ("BS0", "S0"), ("DS1", "S1"), ("BS1", "S1"), ("DT", "TB"), ("BT", "TB")]                                                            # the triangles that hold the bottom nodes, on x 0 and y 0
 TIES = []
-SPAR_W = 12.0                                     # the side spars on x 0, between the discs (their keep-out edges at |x| 5.6 at y 74.3: 21 under the sweep)
+LUG = (8.0, 36.0, 44.0, -14.0)                   # the deck's side lugs: |x| 8, |y| 36..44 (3.2 outside the receiver), down to z -14 (over the funnel's y walls, -16.3)
 ROD_G_MM, NODE_G = 0.011, 6.0                    # 3.0 carbon rod; a printed PCTG node (v21 run: 5..13 g, E)
 PCTG = 1.23e-3                                   # g / mm3
 
@@ -126,8 +134,8 @@ def union(ms):
 
 
 def frame():
-    """the printed deck: the body plate, four arms from its corners to the pods, the pods, two side spars out to the cage's side nodes
-    S0 / S1 (an envelope: the engine sizes it)"""
+    """the printed deck: the body plate, four arms from its corners to the pods, the pods, a lug down each side for the side
+    triangles' sockets (an envelope: the engine sizes it)"""
     x0, x1, yb = DECK
     parts = [box(x0, x1, -yb, yb, DECK_Z0, DECK_TOP)]
     for mx, my in MOTORS:
@@ -137,15 +145,16 @@ def frame():
         T[:2, :2] = [[c, -s], [s, c]]; T[:2, 3] = (a + b) / 2
         arm.apply_transform(T); parts.append(arm)
         parts.append(cyl(mx, my, DECK_Z0, DECK_TOP, POD_R))
-    for s in (1, -1):                                                # the side spars to S0 / S1: under the deck, dropping to the node at z 12
-        parts.append(box(-SPAR_W / 2, SPAR_W / 2, *sorted((s * (yb - 2.0), s * (FLAT + 6.0))), ZB - 6.0, DECK_Z0 + 0.5))
+    lx, ly0, ly1, lz = LUG
+    for s in (1, -1):                                                # the side lugs: the two sockets of each side triangle
+        parts.append(box(-lx, lx, *sorted((s * ly0, s * ly1)), lz, DECK_Z0 + 0.5))
     return union(parts)
 
 
 def base():
     """the v3 base kept: the nose and tail runners on the receiver's outline (184 x 66.8 at the ledge, 4 mm 55 deg lead-ins) and the
-    keel |y| <= 33.4 from the runners up to the deck, the receiver's room cut out; the nose boom forward to the camera and NB, the
-    tail boom back to TB, both under the props' sweep less 12 (z <= 27.7)"""
+    keel |y| <= 33.4 from the runners up to the deck, the receiver's room cut out; the camera's mount forward under the board to NB
+    (18 wide, z 3..15)"""
     import manifold3d as mf
     xa, xb, W2 = CX - SEAT_L / 2, CX + SEAT_L / 2, SEAT_W / 2
     t = math.tan(math.radians(55.0))
@@ -156,9 +165,8 @@ def base():
     lower = trimesh.convex.convex_hull(np.array(pts + [(xa, s * W2, SEAT_Z + RUN_H) for s in (-1, 1)] + [(xb, s * W2, SEAT_Z + RUN_H) for s in (-1, 1)]
                                                  + [(xa + CH, s * (W2 - CH), SEAT_Z) for s in (-1, 1)] + [(xb - CH, s * (W2 - CH), SEAT_Z) for s in (-1, 1)], float))
     keel = box(xa, xb, -W2, W2, SEAT_Z + RUN_H - 0.5, DECK_Z0)
-    nose_boom = box(xb - 2, FLAT + 4.0, -12.0, 12.0, 0.0, Z_PROP - Z_SWEEP - KEEP)
-    tail_boom = box(-FLAT - 4.0, xa + 2, -12.0, 12.0, 0.0, 16.0)
-    m = union([lower, keel, nose_boom, tail_boom])
+    cam_mount = box(xb - 2, FLAT + 6.0, -9.0, 9.0, 3.0, 15.0)        # the camera's mount, under the board, out to NB at the front flat
+    m = union([lower, keel, cam_mount])
     rec = trimesh.load(os.path.join(ROOT, "parts", "box_ctx_scout_receiver_v3", "part.stl"), force="mesh")
     lo, hi = rec.bounds
     cut = box(lo[0] - 0.5, hi[0] + 0.5, lo[1] - 0.5, hi[1] + 0.5, SEAT_Z - 1, hi[2] + 0.5)
@@ -189,14 +197,14 @@ def cage():
         return a + u * back, b - u * back
     rods = [rod(*cut(i, j)) for i, j in RODS + TIES]
     nodes = [trimesh.creation.icosphere(subdivisions=1, radius=5.0).apply_translation(P(k)) for k in NODES if k not in PRINTED]
-    nodes += [trimesh.creation.icosphere(subdivisions=1, radius=7.0).apply_translation(P(k)) for k in PRINTED]   # the outriggers' printed nodes
+    nodes += [trimesh.creation.icosphere(subdivisions=1, radius=7.0).apply_translation(P(k)) for k in PRINTED]   # the sockets printed into the frame and the base
     return trimesh.util.concatenate(rods), trimesh.util.concatenate(nodes)
 
 
 def frame_check(core_g):
     """the Scout's frame model (tools/scout_cage_loads.py, the standard cases: 35 g crash on the hull face the CG ray leaves through, 14
     directions, landing and rough landing 6 g on the runners) on these tables: the core one rigid body at the origin with the
-    outriggers' printed nodes and the runner corners stiff to it"""
+    sockets printed into the frame and the base and the runner corners stiff to it"""
     import io, contextlib, scout_cage as sc, scout_cage_loads as sl
     sc.NODES, sc.RODS, sc.TIES, sc.TIE_ROOTS = dict(NODES), list(RODS), list(TIES), dict(ROOTS)
     sc.PRINTED = {k: "frame" for k in PRINTED}
@@ -265,9 +273,9 @@ def entries(meshes):
         rows.append(e)
     fv = abs(meshes["frame"].volume); bv = abs(meshes["base"].volume)
     add("frame", "frame v4 room (printed PCTG deck, arms and motor pods: the design envelope)", "placeholder", "frame", "#d9d2c3", fv * PCTG * 0.45, "E",
-        f"replaces the Bee35 plate: deck x {DECK[0]:.0f}..{DECK[1]:.0f}, |y| {DECK[2]:.0f}, z {DECK_Z0}..{DECK_TOP} (the plate's underside kept, the units bolt up into it), arms {ARM_W:.0f} wide to O{2 * POD_R:.0f} pods at (+-{HUB}, +-{HUB}); mass at 45 % of the envelope (E, the engine sizes it); printed in PCTG", None, 0.85)
+        f"replaces the Bee35 plate: deck x {DECK[0]:.0f}..{DECK[1]:.0f}, |y| {DECK[2]:.0f}, z {DECK_Z0}..{DECK_TOP} (the plate's underside kept, the units bolt up into it), arms {ARM_W:.0f} wide to O{2 * POD_R:.0f} pods at (+-{HUB}, +-{HUB}), a lug down each side to z {LUG[3]:.0f} for the cage's side triangles, a socket at the tail end; mass at 45 % of the envelope (E, the engine sizes it); printed in PCTG", None, 0.85)
     add("base", "base v4 room (the v3 nose and tail units' envelope: runners, keel, camera and tail booms)", "placeholder", "base", "#c9c2b5", bv * PCTG * 0.30, "E",
-        "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; nose boom to the camera and NB, tail boom to TB; mass at 30 % of the envelope (E); printed in PCTG", None, 0.55)
+        "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; the camera's mount out to the cage's nose node NB, a socket on the tail runner's end; mass at 30 % of the envelope (E); printed in PCTG", None, 0.55)
     for k in range(1, 5):
         add(f"motor_{k}", f"motor {k} (EMAX ECO II 2004)", "bought", "motors", "#8b8f96", 18.0, "listing", f"on its pod at (+-{HUB}, +-{HUB}), base z {DECK_TOP}")
         add(f"prop_{k}", f"prop {k} disc (Gemfan 5125, O{PROP_D}, swept)", "bought", "props", "#9fd3ff", 0.0, "listing", f"prop plane z {Z_PROP:.1f}", opacity=0.18)
@@ -283,9 +291,9 @@ def entries(meshes):
     add("box_ctx_scout_cartridge_v6", "cartridge v6", "structure", "battery", "#95a5a6", 30.0, "E", "unchanged")
     L = sum(float(np.linalg.norm(P(i) - P(j))) for i, j in RODS + TIES)
     add("cage_rods", "half cage v4, rods (3 mm carbon: the ring, the flat roof, end Vs and side fans)", "cage", "cage", "#2b2b2b", L * ROD_G_MM, "E",
-        f"{len(RODS)} rods, {L / 1000:.2f} m, every one 12 from the swept discs and none over or under a disc: ring at z {ZR:.0f} with flats at {FLAT:.0f} (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the four outrigger nodes")
+        f"{len(RODS)} rods, {L / 1000:.2f} m, every one 12 from the swept discs and none over or under a disc: ring at z {ZR:.0f} with flats at {FLAT:.0f} (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)")
     add("cage_nodes", "half cage v4, nodes (spheres for now: the node design comes once the geometry is settled)", "cage", "cage", "#eef2f5", (len(NODES) - len(PRINTED)) * NODE_G, "E",
-        f"{len(NODES) - len(PRINTED)} cage nodes; NB, TB, S0, S1 (the larger spheres) printed into the frame's outriggers", opacity=0.9)
+        f"{len(NODES) - len(PRINTED)} cage nodes; the larger spheres are sockets printed into the frame and the base (NB on the camera's mount, two on each side lug, the deck's tail end, the tail runner's end)", opacity=0.9)
     return rows
 
 

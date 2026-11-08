@@ -5,7 +5,7 @@
 "machine": "scout_v4",
 "order": 0,
 "readme_view": "iso",
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -162..162 x -162..162 x -44..66 mm, ~747 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -44..66 mm, ~735 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -15,12 +15,12 @@
 "group": "frame",
 "color": "#d9d2c3",
 "mesh": "parts/scout_v4_frame/part.stl",
-"mass_g": 70.7,
+"mass_g": 54.1,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "replaces the Bee35 plate: deck x -60..60, |y| 40, z 18.5..24.5 (the plate's underside kept, the units bolt up into it), arms 18 wide to O30 pods at (+-74.3, +-74.3); mass at 45 % of the envelope (E, the engine sizes it); printed in PCTG",
+"note": "replaces the Bee35 plate: deck x -60..60, |y| 40, z 18.5..24.5 (the plate's underside kept, the units bolt up into it), arms 18 wide to O30 pods at (+-74.3, +-74.3), a lug down each side to z -14 for the cage's side triangles, a socket at the tail end; mass at 45 % of the envelope (E, the engine sizes it); printed in PCTG",
 "opacity": 0.85
 },
 {
@@ -30,12 +30,12 @@
 "group": "base",
 "color": "#c9c2b5",
 "mesh": "parts/scout_v4_base/part.stl",
-"mass_g": 167.7,
+"mass_g": 147.2,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; nose boom to the camera and NB, tail boom to TB; mass at 30 % of the envelope (E); printed in PCTG",
+"note": "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; the camera's mount out to the cage's nose node NB, a socket on the tail runner's end; mass at 30 % of the envelope (E); printed in PCTG",
 "opacity": 0.55
 },
 {
@@ -357,12 +357,12 @@
 "group": "cage",
 "color": "#2b2b2b",
 "mesh": "parts/scout_v4_cage_rods/part.stl",
-"mass_g": 35.1,
+"mass_g": 41.9,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "28 rods, 3.19 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the four outrigger nodes"
+"note": "34 rods, 3.81 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)"
 },
 {
 "id": "scout_v4_cage_nodes",
@@ -371,12 +371,12 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_cage_nodes/part.stl",
-"mass_g": 78.0,
+"mass_g": 96.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "13 cage nodes; NB, TB, S0, S1 (the larger spheres) printed into the frame's outriggers",
+"note": "16 cage nodes; the larger spheres are sockets printed into the frame and the base (NB on the camera's mount, two on each side lug, the deck's tail end, the tail runner's end)",
 "opacity": 0.9
 }
 ]
