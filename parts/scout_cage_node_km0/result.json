@@ -212,9 +212,9 @@
    "default"
   ]
  },
- "build_s": 8.0,
- "layout_s": 38,
- "peak_gb": 0.569536,
+ "build_s": 13.9,
+ "layout_s": 8,
+ "peak_gb": 0.530044,
  "gen_cm3": 1.2,
  "h": 1.0,
  "audit": {
@@ -252,56 +252,9 @@
   "supports": 1,
   "fails": []
  },
- "early": {
-  "rows": [
-   {
-    "case": "frame BM0-KM0 axial 2 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.001,
-    "across": 0.002,
-    "at": [
-     1.5,
-     90.5,
-     -44.5
-    ]
-   },
-   {
-    "case": "frame BM0-KM0 side 1.0 N",
-    "cls": "crash",
-    "inlayer": 0.001,
-    "across": 0.002,
-    "at": [
-     -3.5,
-     85.5,
-     -41.5
-    ]
-   },
-   {
-    "case": "landing 6 g on the skid face of KM0 (15 N up, 3 of 6 skid nodes)",
-    "cls": "flight",
-    "inlayer": 0.01,
-    "across": 0.007,
-    "at": [
-     2.5,
-     79.5,
-     -51.5
-    ]
-   }
-  ],
-  "worst": 0.01,
-  "worst_case": "landing 6 g on the skid face of KM0 (15 N up, 3 of 6 skid nodes)",
-  "worst_at": [
-   2.5,
-   79.5,
-   -51.5
-  ],
-  "beta": 4.0,
-  "iteration": 12,
-  "max_worst": 0.5,
-  "k": 3.0
- },
+ "early": null,
  "baseline": null,
- "total_s": 46,
+ "total_s": 22,
  "part_sha": "960482e2dbe7",
  "lib_sha": "5b9b502f40d6",
  "setup_sha": "6d815c928cf0c774",
