@@ -184,7 +184,10 @@ def moved(src, dx=0.0, dy=0.0, dz=0.0):
 
 
 def cage():
-    rods = [rod(P(i), P(j)) for i, j in RODS + TIES]
+    def cut(i, j, back=3.0):                 # each rod stops 3 inside its nodes' spheres: two in-line rods through a node must not share an end
+        a, b = P(i), P(j); u = (b - a) / np.linalg.norm(b - a)   # ring (the page's mesh cleanup welds them and drops the body, 7 Nov)
+        return a + u * back, b - u * back
+    rods = [rod(*cut(i, j)) for i, j in RODS + TIES]
     nodes = [trimesh.creation.icosphere(subdivisions=1, radius=5.0).apply_translation(P(k)) for k in NODES if k not in PRINTED]
     nodes += [trimesh.creation.icosphere(subdivisions=1, radius=7.0).apply_translation(P(k)) for k in PRINTED]   # the outriggers' printed nodes
     return trimesh.util.concatenate(rods), trimesh.util.concatenate(nodes)
