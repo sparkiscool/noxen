@@ -23,7 +23,7 @@ What sets the size, and only this:
            touches the ring and the ridge first at any roll under 46 deg and any pitch (the ring stands 12 outside and 13 above every
            disc edge), so only a poker can reach a disc through them
   sides    the side flats are planes at |y| 115, 12.4 outside every disc in plan, so the knee and its leg and fan stand in them at any
-           height: the knee at z 12 (6.5 under the plate's underside, so the clip ties run level under the arm tips; at z 18 the leg is
+           height: the knee at z 12 (6.5 under the plate's underside, level with the clip roots, so the ties run level under the arm tips; at z 18 the leg is
            40 long and merges into a printed bridge, MERGE_MM). Without the knees the ring hangs on the four unit rods alone: 26 mm and
            2.6 N m over the socket's 2.0 in a side crash (8 Nov frame model); the leg alone 13.7 mm and 2.02 N m; with the fan 13.0 mm,
            1.86 N m. The yoke instead of the clips (a rod in at x 0 to the nose unit's side) put 2.9 N m on that rod's sockets
@@ -61,9 +61,9 @@ RODS = [("R0", "P1"), ("P1", "PM0"), ("PM0", "P2"), ("P2", "P3"), ("P3", "P4"), 
         ("NB", "P0"), ("NB", "P7"), ("TB", "P3"), ("TB", "P4"),                                                # nose and tail bottoms to the units' printed nodes
         ("PM0", "S0"), ("PM1", "S1"),                                                                          # the side legs (v21): side mid down to the knee, 46
         ("S0", "P1"), ("S0", "P2"), ("S1", "P6"), ("S1", "P5")]                                                # the side fans: knee to the ring's corners on that side (in the side flat's plane, 12.4 from the discs)
-TIE_ROOTS = {"A0": (62, 62, 13.5), "A1": (-62, 62, 13.5), "A2": (-62, -62, 13.5), "A3": (62, -62, 13.5)}      # clips under the four arm tips (the motor's M2 screws), z 13.5 under the plate (4 Nov run 1: at 17 the collar's top was sheared by the plate)
+TIE_ROOTS = {"A0": (62, 62, 12.0), "A1": (-62, 62, 12.0), "A2": (-62, -62, 12.0), "A3": (62, -62, 12.0)}      # clips under the four arm tips (the motor's M2 screws), z 12 under the plate (4 Nov run 1: at 17 the collar's top was sheared by the plate; 8 Nov v21: at 13.5 the level tie's collar ran along under the plate and lost 6 % to its keep-out, clear from 12.5)
 PRINTED = {"NB": "scout_nose_unit", "TB": "scout_tail_unit"}   # cage nodes printed into a unit bolted to the plate
-TIES = [("A0", "S0"), ("A1", "S0"), ("A2", "S1"), ("A3", "S1")]   # 3.0 rods: from each arm-tip clip in under the disc to that side's knee (v21; v20 down to the skid ends), level at z 13.5 -> 12, 25 under the disc
+TIES = [("A0", "S0"), ("A1", "S0"), ("A2", "S1"), ("A3", "S1")]   # 3.0 rods: from each arm-tip clip in under the disc to that side's knee (v21; v20 down to the skid ends), level at z 12, 25 under the disc
 NODE_CLEAR = 20.0                                              # a rod passing a node it does not end at keeps its axis this far from the centre (a screen: the node library checks every collar exactly)
 MERGE_MM = 45.0                                                # two nodes closer than this are one printed structure (5 Nov, Spark: "if any two nodes are too
 BRIDGES = [(i, j) for i, j in RODS if np.linalg.norm(np.array(NODES[i], float) - np.array(NODES[j], float)) <= MERGE_MM]   # close together ... make that into
