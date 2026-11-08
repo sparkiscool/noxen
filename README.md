@@ -39,7 +39,7 @@ mechanism's meshes over from the nox repo; `parts/box_funnel/make.py` draws the 
 ## Live artifacts (the pages above as claude.ai artifacts, republished by the sessions)
 Each system's `artifact` URL is in its `systems/<name>.assembly.json`; a session publishes `site/<name>.html` there after `python tools/build_site.py --inline`.
 - Overseer: https://claude.ai/artifact/VhDfnp75uoVsj8SnyrW2Qg
-- Scout v4: (published by the Scout session, URL in `systems/scout_v4.assembly.json`)
+- Scout v4: https://claude.ai/artifact/AqA1sXuqfs4APM6zRdf2iL
 - Scout v3: https://claude.ai/artifact/WHdjYkzKPifXuHT1dWeqoR
 - Nox Ground Unit: https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z
 
