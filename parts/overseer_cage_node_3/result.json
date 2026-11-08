@@ -7,7 +7,7 @@
   "specks_plain": 2,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   11002.5
+   14379.5
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -28,10 +28,10 @@
    {
     "case": "frame tube 3-4 axial 186 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.045,
-    "across": 0.026,
+    "inlayer": 0.028,
+    "across": 0.022,
     "at": [
-     37.6,
+     31.6,
      111.2,
      -82.2
     ]
@@ -39,45 +39,45 @@
    {
     "case": "frame tube 3-4 side 8.9 N",
     "cls": "crash",
-    "inlayer": 0.005,
+    "inlayer": 0.004,
     "across": 0.003,
     "at": [
-     57.6,
-     104.2,
+     58.6,
+     103.2,
      -79.2
     ]
    },
    {
     "case": "frame tube 3-11 axial 260 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.068,
-    "across": 0.054,
+    "inlayer": 0.041,
+    "across": 0.046,
     "at": [
-     54.6,
-     129.2,
-     -73.2
+     62.6,
+     108.2,
+     -87.2
     ]
    },
    {
     "case": "frame tube 3-11 side 3.4 N",
     "cls": "crash",
-    "inlayer": 0.002,
+    "inlayer": 0.001,
     "across": 0.001,
     "at": [
-     61.6,
-     126.2,
-     -78.2
+     64.6,
+     127.2,
+     -76.2
     ]
    },
    {
     "case": "frame bay tie -1+1.2 axial 488 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.138,
-    "across": 0.188,
+    "inlayer": 0.127,
+    "across": 0.089,
     "at": [
-     39.6,
-     108.2,
-     -77.2
+     44.6,
+     110.2,
+     -68.2
     ]
    },
    {
@@ -88,14 +88,25 @@
     "at": [
      57.6,
      104.2,
-     -79.2
+     -75.2
     ]
    },
    {
     "case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
     "cls": "flight",
-    "inlayer": 0.066,
-    "across": 0.057,
+    "inlayer": 0.061,
+    "across": 0.052,
+    "at": [
+     56.6,
+     109.2,
+     -83.2
+    ]
+   },
+   {
+    "case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
+    "cls": "crash",
+    "inlayer": 0.328,
+    "across": 0.277,
     "at": [
      56.6,
      109.2,
@@ -103,18 +114,18 @@
     ]
    }
   ],
-  "worst": 0.188,
-  "worst_case": "frame bay tie -1+1.2 axial 488 N (pull-out)",
+  "worst": 0.328,
+  "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
   "worst_at": [
-   39.6,
-   108.2,
-   -77.2
+   56.6,
+   109.2,
+   -83.2
   ]
  },
- "mass_g": 20.48,
+ "mass_g": 25.06,
  "watertight": true,
  "export": {
-  "faces_in": 98302,
+  "faces_in": 99018,
   "degenerate": 0,
   "folded": 2,
   "caps_split": 1,
@@ -122,21 +133,21 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 98300,
+  "faces": 99016,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 74,
+   "degenerate": 76,
    "folded": 14,
    "caps_split": 40,
    "caps_left": 2,
    "watertight": true,
-   "faces": 140098
+   "faces": 146874
   },
-  "volume_mm3": 16123.1,
-  "exact_mm3": 16123.6
+  "volume_mm3": 19730.0,
+  "exact_mm3": 19730.7
  },
  "bodies": {
   "bodies_raw": 1,
@@ -144,7 +155,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 16123.6,
+ "volume_mm3": 19730.7,
  "drawn_g": 9.89,
  "export_cleanup": {
   "pitch": 0.25,
@@ -160,7 +171,7 @@
  },
  "stl": "overseer_cage_node_3.stl",
  "view_stl": "overseer_cage_node_3_view.stl",
- "view_faces": 98300,
+ "view_faces": 99016,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -225,13 +236,13 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.07448228940766254,
+  "volfrac": 0.10509843942679764,
   "nd": 117585,
   "sym_axes": [],
-  "n_real": 7,
+  "n_real": 8,
   "n_ties": 30,
   "backend": "direct",
-  "iterations": 52,
+  "iterations": 59,
   "stopped": "grey"
  },
  "grid": {
@@ -257,16 +268,17 @@
    "frame tube 3-11 side 3.4 N",
    "frame bay tie -1+1.2 axial 488 N (pull-out)",
    "frame bay tie -1+1.2 side 0.7 N",
-   "landing 6 g on the foot (67 N up, 3 of 6 feet)"
+   "landing 6 g on the foot (67 N up, 3 of 6 feet)",
+   "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 71.4,
- "layout_s": 7656,
- "peak_gb": 8.91078,
- "gen_cm3": 8.4,
+ "build_s": 73.2,
+ "layout_s": 8617,
+ "peak_gb": 8.954048,
+ "gen_cm3": 12.0,
  "h": 1.0,
  "audit": {
   "drawn_share": 0.062,
@@ -347,7 +359,7 @@
   },
   "drawn_thin": [],
   "drawn_walls": [],
-  "cases": 7,
+  "cases": 8,
   "supports": 1,
   "fails": []
  },
@@ -356,56 +368,56 @@
    {
     "case": "frame tube 3-4 axial 186 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.049,
-    "across": 0.036,
+    "inlayer": 0.037,
+    "across": 0.03,
     "at": [
-     39.6,
-     114.2,
-     -85.2
-    ]
-   },
-   {
-    "case": "frame tube 3-4 side 8.9 N",
-    "cls": "crash",
-    "inlayer": 0.006,
-    "across": 0.003,
-    "at": [
-     36.6,
+     33.6,
      122.2,
      -78.2
     ]
    },
    {
+    "case": "frame tube 3-4 side 8.9 N",
+    "cls": "crash",
+    "inlayer": 0.004,
+    "across": 0.003,
+    "at": [
+     58.6,
+     103.2,
+     -79.2
+    ]
+   },
+   {
     "case": "frame tube 3-11 axial 260 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.079,
-    "across": 0.065,
+    "inlayer": 0.041,
+    "across": 0.057,
     "at": [
-     54.6,
-     129.2,
-     -73.2
+     61.6,
+     107.2,
+     -86.2
     ]
    },
    {
     "case": "frame tube 3-11 side 3.4 N",
     "cls": "crash",
-    "inlayer": 0.002,
+    "inlayer": 0.001,
     "across": 0.001,
     "at": [
-     63.6,
-     125.2,
-     -77.2
+     65.6,
+     126.2,
+     -75.2
     ]
    },
    {
     "case": "frame bay tie -1+1.2 axial 488 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.246,
-    "across": 0.209,
+    "inlayer": 0.175,
+    "across": 0.12,
     "at": [
-     44.6,
-     110.2,
-     -69.2
+     43.6,
+     112.2,
+     -68.2
     ]
    },
    {
@@ -414,16 +426,27 @@
     "inlayer": 0.0,
     "across": 0.0,
     "at": [
-     35.6,
-     112.2,
-     -74.2
+     58.6,
+     103.2,
+     -78.2
     ]
    },
    {
     "case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
     "cls": "flight",
-    "inlayer": 0.069,
-    "across": 0.059,
+    "inlayer": 0.063,
+    "across": 0.053,
+    "at": [
+     56.6,
+     109.2,
+     -83.2
+    ]
+   },
+   {
+    "case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
+    "cls": "crash",
+    "inlayer": 0.338,
+    "across": 0.286,
     "at": [
      56.6,
      109.2,
@@ -431,23 +454,23 @@
     ]
    }
   ],
-  "worst": 0.246,
-  "worst_case": "frame bay tie -1+1.2 axial 488 N (pull-out)",
+  "worst": 0.338,
+  "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
   "worst_at": [
-   44.6,
-   110.2,
-   -69.2
+   56.6,
+   109.2,
+   -83.2
   ],
   "beta": 4.0,
-  "iteration": 19,
-  "max_worst": 0.3,
+  "iteration": 27,
+  "max_worst": 0.2,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 7727,
- "part_sha": "1d7f0a4b71b4",
- "lib_sha": "f6c514020983",
- "setup_sha": "e05a2eb8f3445fa6",
- "max_worst": 0.3,
- "strength_ok": true
+ "total_s": 8690,
+ "part_sha": "1b79d4b0e91d",
+ "lib_sha": "9152dab653d7",
+ "setup_sha": "3196f065b0b13b67",
+ "max_worst": 0.2,
+ "strength_ok": false
 }
