@@ -49,7 +49,9 @@ section{padding:28px 0 0}
 button{font:inherit;font-size:13px;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:7px 9px;cursor:pointer;text-align:left}
 button:hover{border-color:var(--fg)}
 button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-button.play{grid-column:1/-1;text-align:center;font-weight:600;border-color:var(--fg)}
+.herobar{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.posename{font-family:var(--display);font-size:22px;font-weight:600;line-height:1;flex:1;min-width:0}
+.playbtn{font-weight:600;border-color:var(--fg);white-space:nowrap}
 .toggle{display:flex;gap:8px;align-items:center;font-size:13px}
 .toggle input{accent-color:var(--accent);margin:0}
 
@@ -118,7 +120,6 @@ li b{font-weight:600}
         <button data-pose="0,180">Between pipes</button>
         <button data-pose="45,180">Wide, scanning down</button>
         <button data-pose="0,90">Mid-swing</button>
-        <button class="play" id="play">▶ Run the full cycle</button>
       </div>
     </div>
     <div class="group"><div class="eyebrow">Sizes</div>
@@ -134,6 +135,9 @@ li b{font-weight:600}
   </div>
 
   <div class="views">
+    <figure class="hero"><div class="herobar"><span class="eyebrow">Cycle</span><span id="poseName" class="posename">Open sky</span><button id="play" class="playbtn">❚❚ Pause</button></div>
+      <svg id="iso" viewBox="0 0 760 440" role="img" aria-label="Three-quarter view of the frame animating through its cycle: arms sweeping in, the LiDAR boom swinging over the left side, arms sweeping out again"></svg>
+      <figcaption><b>Seen from the front left.</b> The amber disc is the LiDAR's base plane; the frame must stay on the dark side of it. Move any slider to pause and pose it by hand.</figcaption></figure>
     <div class="pair">
       <figure><svg id="plan" viewBox="0 0 520 520" role="img" aria-label="Plan view of the frame: four swept arms with propeller disks, the hub, and the LiDAR boom projected onto the plane"></svg>
         <figcaption><b>Plan.</b> Nose up, left side on the left. Left arms ride high, right arms low, so the disks may overlap in the narrow line. The boom lies in the plane x = 0, the gap between front and rear props.</figcaption></figure>
@@ -250,6 +254,19 @@ const P={D:254,L:230,hp:45,h:25,B:250,neg:6,margin:6,mh:20,motorR:14,armR:8,hubZ
 const S={beta:45,alpha:0};
 const rad=d=>d*Math.PI/180;
 const CYCLE=[[45,0],[0,0],[0,180],[45,180],[0,180],[0,0],[45,0]];
+// animation script: from pose, to pose, seconds, caption
+const SCRIPT=[
+ [[45,0],[45,0],1.4,'Open sky: wide X, LiDAR up'],
+ [[45,0],[0,0],1.8,'Arms sweep in'],
+ [[0,0],[0,0],1.2,'Roof cavity: a narrow line, LiDAR up'],
+ [[0,0],[0,180],3.2,'Boom swings over the left side'],
+ [[0,180],[0,180],1.2,'Between pipes: LiDAR below, scanning down'],
+ [[0,180],[45,180],1.8,'Arms sweep out'],
+ [[45,180],[45,180],1.4,'Wide, scanning down'],
+ [[45,180],[0,180],1.8,'Arms sweep in to free the boom'],
+ [[0,180],[0,0],3.2,'Boom swings back up'],
+ [[0,0],[45,0],1.8,'Arms sweep out']
+];
 
 function arms(beta){
   const b=rad(beta),out=[];
@@ -433,10 +450,59 @@ function drawGate(W){
   svg.appendChild(el('circle',{cx:X(S.alpha)+cw/2,cy:Y(S.beta)+ch/2,r:7,fill:ok?'var(--good)':'var(--bad)',stroke:'var(--panel)','stroke-width':2}));
 }
 
+/* ---------- three-quarter view ---------- */
+const AZ=rad(210),EL=rad(30);
+function drawIso(A,W){
+  const svg=$('iso'),Wd=760,H=440,cx=380,cy=250,k=Math.min(330/extent(),.82);clear(svg);
+  const pr=p=>{const xr=p[0]*Math.cos(AZ)-p[1]*Math.sin(AZ),yr=p[0]*Math.sin(AZ)+p[1]*Math.cos(AZ);
+    return{x:cx+xr*k,y:cy-(p[2]*Math.cos(EL)+yr*Math.sin(EL))*k,d:yr*Math.cos(EL)-p[2]*Math.sin(EL)};};
+  const items=[];const add=(d,e)=>items.push({d,e});
+  const poly=(pts,at)=>{const P2=pts.map(pr);return el('polygon',Object.assign({points:P2.map(q=>q.x+','+q.y).join(' ')},at));};
+  const ring=(c,r,n,ax)=>{const out=[];for(let i=0;i<n;i++){const t=i/n*2*Math.PI;out.push(ax==='z'?[c[0]+r*Math.cos(t),c[1]+r*Math.sin(t),c[2]]:null);}return out;};
+  // ground grid
+  const g=el('g',{stroke:'var(--grid)','stroke-width':1});const gz=-P.h-P.legLen;
+  for(let m=-400;m<=400;m+=100){let a=pr([m,-400,gz]),b=pr([m,400,gz]);g.appendChild(el('line',{x1:a.x,y1:a.y,x2:b.x,y2:b.y}));a=pr([-400,m,gz]);b=pr([400,m,gz]);g.appendChild(el('line',{x1:a.x,y1:a.y,x2:b.x,y2:b.y}));}
+  svg.appendChild(g);
+  const r=P.D/2;
+  for(const a of A){
+    const m=[a.mx,a.my,a.z],p0=[a.px,a.py,a.z],d=pr([(a.px+a.mx)/2,(a.py+a.my)/2,a.z]).d;
+    const q0=pr(p0),q1=pr(m);
+    add(d,el('line',{x1:q0.x,y1:q0.y,x2:q1.x,y2:q1.y,stroke:'currentColor','stroke-width':Math.max(2.5,2*P.armR*k),'stroke-linecap':'round'}));
+    const l0=pr([a.mx,a.my,a.z-10]),l1=pr([a.mx,a.my,a.z-P.legLen]);
+    add(pr(m).d+1,el('line',{x1:l0.x,y1:l0.y,x2:l1.x,y2:l1.y,stroke:'currentColor','stroke-width':2.5,'stroke-linecap':'round'}));
+    const mo=pr([a.mx,a.my,a.z+P.mh/2]);
+    add(pr(m).d,el('line',{x1:q1.x,y1:q1.y,x2:mo.x,y2:mo.y,stroke:'currentColor','stroke-width':Math.max(4,2*P.motorR*k),'stroke-linecap':'butt'}));
+    add(pr([a.mx,a.my,a.z+P.mh]).d-0.5,poly(ring([a.mx,a.my,a.z+P.mh],r,48,'z'),{fill:'var(--propfill)',stroke:'var(--prop)','stroke-width':1.6}));
+  }
+  // hub box: three visible faces approximated by the full wire box
+  const hb=[];for(const sx of [1,-1])for(const sy of [1,-1])for(const sz of [1,-1])hb.push([sx*P.hp,sy*P.hp,sz*P.hubZ]);
+  const top=poly([[P.hp,P.hp,P.hubZ],[-P.hp,P.hp,P.hubZ],[-P.hp,-P.hp,P.hubZ],[P.hp,-P.hp,P.hubZ]],{fill:'var(--panel)',stroke:'currentColor','stroke-width':1.3});
+  const fr=poly([[P.hp,P.hp,P.hubZ],[P.hp,-P.hp,P.hubZ],[P.hp,-P.hp,-P.hubZ],[P.hp,P.hp,-P.hubZ]],{fill:'var(--panel)',stroke:'currentColor','stroke-width':1.3,opacity:.9});
+  const lf=poly([[P.hp,P.hp,P.hubZ],[-P.hp,P.hp,P.hubZ],[-P.hp,P.hp,-P.hubZ],[P.hp,P.hp,-P.hubZ]],{fill:'var(--panel)',stroke:'currentColor','stroke-width':1.3,opacity:.9});
+  add(pr([0,0,0]).d,fr);add(pr([0,0,0]).d,lf);add(pr([0,0,0]).d-0.1,top);
+  // boom, lidar, base plane disc
+  const a=rad(S.alpha),n=[0,Math.sin(a),Math.cos(a)],O=[0,P.B*n[1],P.B*n[2]];
+  const o0=pr([0,0,0]),o1=pr(O);
+  add(pr([0,O[1]/2,O[2]/2]).d-0.2,el('line',{x1:o0.x,y1:o0.y,x2:o1.x,y2:o1.y,stroke:'var(--accent)','stroke-width':Math.max(3,2*P.boomR*k),'stroke-linecap':'round'}));
+  const e1=[1,0,0],e2=[0,Math.cos(a),-Math.sin(a)],w=P.lidarW/2,hgt=P.lidarH;
+  const corner=(t,u,v)=>[O[0]+t*n[0]+u*e1[0]+v*e2[0],O[1]+t*n[1]+u*e1[1]+v*e2[1],O[2]+t*n[2]+u*e1[2]+v*e2[2]];
+  const faces=[[[0,-w,-w],[0,w,-w],[0,w,w],[0,-w,w]],[[hgt,-w,-w],[hgt,w,-w],[hgt,w,w],[hgt,-w,w]],[[0,-w,-w],[hgt,-w,-w],[hgt,w,-w],[0,w,-w]],[[0,-w,w],[hgt,-w,w],[hgt,w,w],[0,w,w]],[[0,-w,-w],[hgt,-w,-w],[hgt,-w,w],[0,-w,w]],[[0,w,-w],[hgt,w,-w],[hgt,w,w],[0,w,w]]];
+  const ld=pr(corner(hgt/2,0,0)).d;
+  for(const f of faces){const pts=f.map(c=>corner(c[0],c[1],c[2]));add(ld-0.3,poly(pts,{fill:'var(--accent)',stroke:'var(--panel)','stroke-width':.8,opacity:.95}));}
+  const R=Math.max(P.hp+P.L*Math.sin(rad(S.beta))+r,P.hp+P.L*Math.cos(rad(S.beta))+r)*0.55;
+  const disc=[];for(let i=0;i<60;i++){const t=i/60*2*Math.PI;disc.push(corner(0,R*Math.cos(t),R*Math.sin(t)));}
+  add(ld-0.25,poly(disc,{fill:'var(--glow)',stroke:'var(--accent)','stroke-width':1,'stroke-dasharray':'4 4'}));
+  if(W.pt){const q=pr(W.pt);add(-1e9,el('circle',{cx:q.x,cy:q.y,r:5.5,fill:W.elev<=thr()?'var(--good)':'var(--bad)',stroke:'var(--panel)','stroke-width':1.5}));}
+  items.sort((p,q)=>q.d-p.d);for(const it of items)svg.appendChild(it.e);
+  const lab=(x,y,t,o)=>svg.appendChild(el('text',Object.assign({x,y,'font-size':11,'font-family':'var(--mono)',fill:'var(--muted)'},o||{}),t));
+  const nz=pr([P.hp+P.L+r+40,0,gz]),lz=pr([0,P.hp+P.L+r+40,gz]);
+  lab(nz.x,nz.y,'nose',{'text-anchor':'middle'});lab(lz.x,lz.y,'left',{'text-anchor':'middle'});
+}
+
 function fmt(v,d){return (d?v.toFixed(d):Math.round(v).toString());}
 function render(){
   const A=arms(S.beta),pts=framePoints(A),W=worst(pts,S.alpha),ok=W.elev<=thr(),M=metrics(A,W);
-  drawPlan(A,W);drawEnd(A,W);drawGate(W);
+  drawIso(A,W);drawPlan(A,W);drawEnd(A,W);drawGate(W);
   $('betaV').textContent=S.beta.toFixed(1)+'°';$('alphaV').textContent=S.alpha.toFixed(0)+'°';
   $('BV').textContent=P.B+' mm';$('DV').textContent=P.D+' mm';$('LV').textContent=P.L+' mm';$('hpV').textContent=P.hp+' mm';$('hV').textContent=P.h+' mm';$('marginV').textContent=P.margin.toFixed(1)+'°';
   $('elev').textContent=(W.elev>0?'+':'')+W.elev.toFixed(1)+'°';$('need').textContent='must be ≤ '+thr().toFixed(1)+'°';
@@ -469,25 +535,27 @@ $('beta').addEventListener('input',e=>{stopPlay();setPose(+e.target.value,S.alph
 $('alpha').addEventListener('input',e=>{stopPlay();setPose(S.beta,+e.target.value,'alpha');});
 for(const id of ['B','D','L','hp','h','margin']){$(id).addEventListener('input',e=>{P[id]=+e.target.value;computeGate();render();});}
 $('lock').addEventListener('change',render);
-document.querySelectorAll('[data-pose]').forEach(b=>b.addEventListener('click',()=>{stopPlay();const [be,al]=b.dataset.pose.split(',').map(Number);
+document.querySelectorAll('[data-pose]').forEach(b=>b.addEventListener('click',()=>{stopPlay();$('poseName').textContent=b.textContent;const [be,al]=b.dataset.pose.split(',').map(Number);
   // move through the gate: via narrow if needed
   if(!$('lock').checked||clearAt(be,al)){setPose(be,al);}else{setPose(0,S.alpha);setPose(0,al);setPose(be,al);}
 }));
 
 let playing=null;
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-function stopPlay(){if(playing){cancelAnimationFrame(playing.raf);clearTimeout(playing.t);playing=null;$('play').textContent='▶ Run the full cycle';}}
-$('play').addEventListener('click',()=>{
-  if(playing){stopPlay();return;}
-  $('play').textContent='■ Stop';
-  if(reduced){let i=0;playing={};const step=()=>{if(!playing)return;const p=CYCLE[i%CYCLE.length];S.beta=p[0];S.alpha=p[1];$('beta').value=p[0];$('alpha').value=p[1];render();i++;playing.t=setTimeout(step,1200);};step();return;}
-  const segDur=1500;let seg=0,t0=null;playing={};
-  const frame=ts=>{if(!playing)return;if(t0==null)t0=ts;let u=(ts-t0)/segDur;if(u>=1){seg=(seg+1)%(CYCLE.length-1);t0=ts;u=0;}
-    const a=CYCLE[seg],b=CYCLE[seg+1],e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
-    S.beta=a[0]+(b[0]-a[0])*e;S.alpha=a[1]+(b[1]-a[1])*e;$('beta').value=S.beta;$('alpha').value=S.alpha;render();playing.raf=requestAnimationFrame(frame);};
+function stopPlay(){if(playing){cancelAnimationFrame(playing.raf);clearTimeout(playing.t);playing=null;$('play').textContent='▶ Play';$('poseName').textContent='Paused, posed by hand';}}
+function startPlay(){
+  if(playing)return;$('play').textContent='❚❚ Pause';
+  if(reduced){let i=0;playing={};const step=()=>{if(!playing)return;const sg=SCRIPT[i%SCRIPT.length];S.beta=sg[1][0];S.alpha=sg[1][1];$('beta').value=S.beta;$('alpha').value=S.alpha;$('poseName').textContent=sg[3];render();i++;playing.t=setTimeout(step,1800);};step();return;}
+  let seg=0,t0=null;playing={};
+  const frame=ts=>{if(!playing)return;if(t0==null)t0=ts;const sg=SCRIPT[seg];let u=(ts-t0)/(sg[2]*1000);
+    if(u>=1){seg=(seg+1)%SCRIPT.length;t0=ts;u=0;}
+    const cur=SCRIPT[seg],a=cur[0],b=cur[1],e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+    S.beta=a[0]+(b[0]-a[0])*e;S.alpha=a[1]+(b[1]-a[1])*e;$('beta').value=S.beta;$('alpha').value=S.alpha;$('poseName').textContent=cur[3];render();playing.raf=requestAnimationFrame(frame);};
   playing.raf=requestAnimationFrame(frame);
-});
+}
+$('play').addEventListener('click',()=>{if(playing)stopPlay();else startPlay();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopPlay();});
 
-computeGate();render();
+computeGate();render();startPlay();
 })();
 </script>
