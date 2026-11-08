@@ -1,7 +1,7 @@
-"""Scout cage node setups, one generator for all 25 printed nodes (4 Nov, Spark: "generate the nodes for the cage"), after the
+"""Scout cage node setups, one generator for all 19 printed nodes (4 Nov, Spark: "generate the nodes for the cage"; 8 Nov: cage v20, 21 nodes, 19 printed), after the
 Overseer's parts/cage_node_lib.py (28 Oct: "nodes dont look like topology, sharp corners, not organic").
 
-Drawn: ONLY the socket walls and floors (a collar of 2.5 round each bore, 3.0 floor behind it) and, on the six skid nodes, a flat
+Drawn: ONLY the socket walls and floors (a collar of 2.5 round each bore, 3.0 floor behind it) and, on the four skid nodes, a flat
 landing face under the node (the TPU strip's seat). Everything joining them is generated inside a compact envelope (the sockets'
 box + 8 mm, cut to a ball). The rods themselves are cuts through the whole envelope, and so is the shared funnel swept over the whole
 descent (funnel_sweep): a skid or rail node may not grow toward the funnel's walls.
@@ -14,7 +14,7 @@ grooves, lead-in, teardrop crown toward the build direction). NB and TB are prin
 
 Loads (drone frame, N; frame model F = systems/scout.cage_loads.json node_loads, tools/scout_cage_loads.py): per member its axial
 force as a pull-out along the socket axis and its side force across it as separate cases ("crash"), the longest rod pushed into its
-socket as a combined case, and on a skid node landing 6 g on its face (the drone's 762 g on 3 of the 6 skid nodes, E).
+socket as a combined case, and on a skid node landing 6 g on its face (the drone's 700 g on 2 of the 4 skid ends, E).
 Supports: the sockets of the two members with the largest frame-model axial force (the stiffest load paths).
 Run: parts/scout_cage_node_<key>/part.py -> setup(h) = make("<key>")."""
 import json, os, sys
@@ -30,7 +30,7 @@ import scout_cage as sc                                   # noqa: E402
 
 LOADS = json.load(open(os.path.join(ROOT, "systems", "scout.cage_loads.json")))["node_loads"]
 P = {**sc.NODES, **sc.TIE_ROOTS}
-KEYS = [k for k in sc.NODES if k not in sc.PRINTED]      # the 25 printed nodes, in sc.GROUPS printed structures (a pair closer than sc.MERGE_MM is one part)
+KEYS = [k for k in sc.NODES if k not in sc.PRINTED]      # the 19 printed nodes, in sc.GROUPS printed structures (a pair closer than sc.MERGE_MM is one part)
 BRIDGE_R = 6.0                                            # the room round a printed bridge between two merged nodes (O12, the engine keeps what the rod's load needs)
 NODE_R = 5.0                                              # where a bore starts unless a neighbour forces it out (5 Nov: 7 -> 5, the collars 2 mm closer in, every strut 2 mm shorter; the cage model's sphere stays 7)
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
@@ -38,9 +38,9 @@ MAX_START = 25.0                                          # a bore pushed furthe
 WALL, FLOOR, STRUT_M = 2.5, 2.0, 3.0                        # WALL 2.5 = 2.0 at the 0.5 resin grooves (7 Nov: at 2.0 every collar was 1.5 at its grooves, the gate's thin walls on all 15 structures; the audit's drawn_wall refuses it now); FLOOR 2.0; STRUT_M 3.0 keeps the audit's drawn share under 30 % with the thicker collars
 ROD_R, ROD_GAP = 1.5, 1.0                                 # a passing rod's radius and the least gap to a collar's surface
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
-SKID = {"K0", "K1", "K2", "K3", "KM0", "KM1"}             # the skid nodes: a landing face under each (the TPU strip's seat)
+SKID = {"K0", "K1", "K2", "K3"}                           # the skid nodes (v20: the four skid ends, no mid nodes): a landing face under each (the TPU strip's seat)
 FOOT_R, FOOT_T = 8.0, 3.0                                  # 3.0: the audit refuses drawn bodies under 2.5 (the Overseer feet are 2.4)
-LAND_G, DRONE_G, LAND_FEET = 6.0, 762.0, 3
+LAND_G, DRONE_G, LAND_FEET = 6.0, 700.0, 2                 # 6 g on 2 of the 4 skid ends (a rough landing on one skid), the Scout 700 g E (v20)
 CAGE_CENTRE = (0.0, 0.0, 10.0)                            # ports point away from here (out of the cage) where the members allow
 GN = 9.81e-3
 
@@ -239,7 +239,7 @@ def build(group, h, log=print):
         c = np.array(P[k], float)
         face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb + 0.2, zb + FOOT_T - 0.2, FOOT_R - 0.2)   # the foot's own volume, not its face: at h 1.2 a 1 mm face band caught a layer of cells outside the foot (load_room refused BM0+KM0, 7 Nov)
         fz = LAND_G * DRONE_G * GN / LAND_FEET
-        p.load_multi(f"landing 6 g on the skid face of {k} ({fz:.0f} N up, 3 of 6 skid nodes)", [(face, np.array([0, 0, fz]))], cls="flight")
+        p.load_multi(f"landing 6 g on the skid face of {k} ({fz:.0f} N up, 2 of 4 skid ends)", [(face, np.array([0, 0, fz]))], cls="flight")
     return p
 
 

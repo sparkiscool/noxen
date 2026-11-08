@@ -1,9 +1,9 @@
 """Scout nose unit (v1 setup, 4 Nov): ONE printed PETG piece under the plate's nose that holds the receiver's nose end, seats the
-Scout in the shared funnel, carries the camera (30 deg up since 4 Nov) and the flow sensor, and is cage node NB with the two nose tie sockets.
+Scout in the shared funnel, carries the camera (30 deg up since 4 Nov) and the flow sensor, and is cage node NB.
 Drawn (attachments only): 6 plate bolt pads (M3 x 5.7 inserts, all Bee35 holes: the nose bolt, the FC diamond's front three, the (3.9, +-31) pair; the FC sits on top of the plate since 4 Nov and its standoff bolts go on through the plate into the yoke), 2 receiver bosses
 (inserts, the receiver's bolts come up through its keys), the nose runner's seat rim and 55 deg lead-ins (what the funnel meets),
 the flow sensor's tape land over its window, 4 camera M2 posts (O5.6 x 10, 1.2 wall: the one thin exception), the socket collars
-of NB (rods to B0, B3, P0, P7) and of ties C0 / C3. Cuts: the receiver and its clearance, the plate, the camera body, plugs and view,
+of NB (rods to P0, P7; v20, 8 Nov: the rails and the yoke ties are gone). Cuts: the receiver and its clearance, the plate, the camera body, plugs and view,
 the flow board, window and lead channel, the front discs grown 12 (cage rule), the rods beyond their mouths, the insert holes.
 Loads: the receiver set's nose share (155 g E) in 35 g crashes (14 directions) and flight; the camera (10 g) the same; a 35 g
 landing into the funnel on the seat and the lead-ins; every socket's frame-model force (systems/scout.cage_loads.json, F).
@@ -64,8 +64,8 @@ def bodies():
         if float((q - dc).volume()) < 0.97 * float(q.volume()):
             raise ValueError("a camera post is inside the front discs' 12 mm keep-out: move the lens forward or down")
     cuts += L.disc_cuts()
-    # cage node NB and the tie sockets C0 / C3
-    socks = L.node_socks("NB", ["B0", "B3", "P0", "P7"], nodes) + L.tie_socks(("C0", "C3"), nodes, ties)
+    # cage node NB
+    socks = L.node_socks("NB", ["P0", "P7"], nodes)                                                  # cage v20 (8 Nov): NB-B0 / NB-B3 went with the base rails, the yoke ties C0 / C3 with them
     for s in socks:
         drawn.append(s.collar())
         cuts.append(s.port((0, 0, -1.0) if s.name.startswith(("NB", "TB")) else (0, np.sign(s.c[1]), 0), socks))   # resin injection port: the node's down out of the unit's underside, a tie's out of the yoke's side
