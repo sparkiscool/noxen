@@ -10,8 +10,8 @@
 "parts": [
 {
 "id": "scout_v4_frame",
-"name": "frame v4 (printed PCTG deck, arms and motor pods: the envelope)",
-"role": "structure",
+"name": "frame v4 room (printed PCTG deck, arms and motor pods: the design envelope)",
+"role": "placeholder",
 "group": "frame",
 "color": "#d9d2c3",
 "mesh": "parts/scout_v4_frame/part.stl",
@@ -20,14 +20,13 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "replaces the Bee35 plate: deck x -60..60, |y| 40, z 18.5..24.5 (the plate's underside kept, the units bolt up into it), arms 18 wide to O30 pods at (+-74.3, +-74.3); mass at 45 % of the envelope (E, the engine sizes it)",
-"material": "PCTG",
+"note": "replaces the Bee35 plate: deck x -60..60, |y| 40, z 18.5..24.5 (the plate's underside kept, the units bolt up into it), arms 18 wide to O30 pods at (+-74.3, +-74.3); mass at 45 % of the envelope (E, the engine sizes it); printed in PCTG",
 "opacity": 0.85
 },
 {
 "id": "scout_v4_base",
-"name": "base v4 (the v3 nose and tail units' envelope: runners, keel, camera and tail booms)",
-"role": "structure",
+"name": "base v4 room (the v3 nose and tail units' envelope: runners, keel, camera and tail booms)",
+"role": "placeholder",
 "group": "base",
 "color": "#c9c2b5",
 "mesh": "parts/scout_v4_base/part.stl",
@@ -36,8 +35,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; nose boom to the camera and NB, tail boom to TB; mass at 30 % of the envelope (E)",
-"material": "PCTG",
+"note": "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; nose boom to the camera and NB, tail boom to TB; mass at 30 % of the envelope (E); printed in PCTG",
 "opacity": 0.55
 },
 {

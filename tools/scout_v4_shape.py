@@ -236,10 +236,10 @@ def entries(meshes):
             e["opacity"] = opacity
         rows.append(e)
     fv = abs(meshes["frame"].volume); bv = abs(meshes["base"].volume)
-    add("frame", "frame v4 (printed PCTG deck, arms and motor pods: the envelope)", "structure", "frame", "#d9d2c3", fv * PCTG * 0.45, "E",
-        f"replaces the Bee35 plate: deck x {DECK[0]:.0f}..{DECK[1]:.0f}, |y| {DECK[2]:.0f}, z {DECK_Z0}..{DECK_TOP} (the plate's underside kept, the units bolt up into it), arms {ARM_W:.0f} wide to O{2 * POD_R:.0f} pods at (+-{HUB}, +-{HUB}); mass at 45 % of the envelope (E, the engine sizes it)", "PCTG", 0.85)
-    add("base", "base v4 (the v3 nose and tail units' envelope: runners, keel, camera and tail booms)", "structure", "base", "#c9c2b5", bv * PCTG * 0.30, "E",
-        "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; nose boom to the camera and NB, tail boom to TB; mass at 30 % of the envelope (E)", "PCTG", 0.55)
+    add("frame", "frame v4 room (printed PCTG deck, arms and motor pods: the design envelope)", "placeholder", "frame", "#d9d2c3", fv * PCTG * 0.45, "E",
+        f"replaces the Bee35 plate: deck x {DECK[0]:.0f}..{DECK[1]:.0f}, |y| {DECK[2]:.0f}, z {DECK_Z0}..{DECK_TOP} (the plate's underside kept, the units bolt up into it), arms {ARM_W:.0f} wide to O{2 * POD_R:.0f} pods at (+-{HUB}, +-{HUB}); mass at 45 % of the envelope (E, the engine sizes it); printed in PCTG", None, 0.85)
+    add("base", "base v4 room (the v3 nose and tail units' envelope: runners, keel, camera and tail booms)", "placeholder", "base", "#c9c2b5", bv * PCTG * 0.30, "E",
+        "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; nose boom to the camera and NB, tail boom to TB; mass at 30 % of the envelope (E); printed in PCTG", None, 0.55)
     for k in range(1, 5):
         add(f"motor_{k}", f"motor {k} (EMAX ECO II 2004)", "bought", "motors", "#8b8f96", 18.0, "listing", f"on its pod at (+-{HUB}, +-{HUB}), base z {DECK_TOP}")
         add(f"prop_{k}", f"prop {k} disc (Gemfan 5125, O{PROP_D}, swept)", "bought", "props", "#9fd3ff", 0.0, "listing", f"prop plane z {Z_PROP:.1f}", opacity=0.18)
