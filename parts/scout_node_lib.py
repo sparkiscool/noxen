@@ -215,7 +215,7 @@ def build(group, h, log=print):
     drawn = U(collars); cuts = U(bores + keep + [funnel_sweep()])   # the funnel's sweep: no growth toward it
     for k in group:
         verify_cuts(k, [m for m in allm if m["node"] == k], cuts, log)
-    p = Part(sc.group_id(group), h, drawn, cuts, env, build="+z", material="PETG")   # the engine's PETG model; printed in PCTG (CLAUDE.md 8 Nov: 90 % of the stiffness, 10-20x the toughness), as the Overseer's nodes
+    p = Part(sc.group_id(group), h, drawn, cuts, env, build="+z", material="PCTG")   # printed in PCTG (CLAUDE.md 8 Nov), topo/material.py E numbers until a coupon
     sup = [m for k in group for m in sorted([x for x in allm if x["node"] == k], key=lambda m: -m["axial"])[:2]]   # the two stiffest members at EACH node (7 Nov: with two for the pair, every pull at the other node ran through the bridge: P2+P3 1.40 in the bridge)
     lining = lambda m, grow=1.0: along(m["c"], m["u"], m["s0"] - FLOOR - 0.5, m["s_end"], m["bore_r"] + grow)
     p.support("default", U([lining(m, 1.4) for m in sup])); held = {(m["node"], m["name"]) for m in sup}

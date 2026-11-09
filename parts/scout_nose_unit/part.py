@@ -78,7 +78,7 @@ def bodies():
 
 def setup(h):
     B = bodies()
-    p = Part("scout_nose_unit", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PETG", thin_ok=B["posts"])
+    p = Part("scout_nose_unit", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PCTG", thin_ok=B["posts"])
     p.support("default", U(B["pad_regs"]))
     L.payload_cases(p, "receiver set", [(x, y, L.RZ1) for x, y in L.INS_NOSE], B["boss_regs"], L.REC_SET_G, L.REC_SET_CG, "default")
     L.payload_cases(p, "camera", B["post_pts"], B["post_regs"], L.CAM_G, L.CAM_CG, "default")

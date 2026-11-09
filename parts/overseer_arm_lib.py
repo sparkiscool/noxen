@@ -282,7 +282,7 @@ class Arm:
 
 def build(arm, h, log=print):
     drawn, cuts, env = arm.drawn_cuts_env()
-    p = Part(f"overseer_arm_{arm.name}", h, drawn, cuts, env, build="+z", material="PETG", log=log,
+    p = Part(f"overseer_arm_{arm.name}", h, drawn, cuts, env, build="+z", material="PCTG", log=log,
              solid_ok=[arm.pad_solid])          # the solid motor pad + cone (9 Nov, Spark)
 
     # ---- supports: plate contact lips (top and bottom faces of the 4 stadiums), and + the 3 spoke sockets
