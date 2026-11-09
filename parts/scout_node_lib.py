@@ -39,7 +39,9 @@ NODE_R = 5.0                                              # where a bore starts 
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
 #   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
 WALL, FLOOR, STRUT_M = 3.0, 3.0, 4.0                        # 8 Nov (the Overseer's nodes the same): WALL 3.0 = 2.5 beyond the 0.5 injection annulus (7 Nov: at 2.0 every collar was 1.5 at its grooves, the audit's drawn_wall refuses it); FLOOR 3.0, the feed ring cuts 0.5 into it; STRUT_M 4.0 of room round the collar (3.0 with the 3.0 collars put PM0 / RM at 30 / 34 % drawn, the audit's limit)
-ROD_R, ROD_GAP = 1.5, 1.0                                 # a passing rod's radius and the least gap to a collar's surface
+DRAWN_WALL = None                                         # the drawn collar's wall; None = WALL. The room, clearances and ports always use WALL, so a thinner
+#   drawn wall (the v4 nodes, 9 Nov) leaves the engine the same strut to grow the root in where the load needs it
+ROD_R, ROD_GAP = 1.5, 1.0                                # a passing rod's radius and the least gap to a collar's surface
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 CAGE_CENTRE = (0.0, 0.0, 10.0)                            # ports point away from here (out of the cage) where the members allow
 GN = 9.81e-3
@@ -186,7 +188,7 @@ def build(group, h, log=print):
         ms = check_members(k, log); c = np.array(P[k], float)
         for m in ms:
             ro = m["bore_r"] + WALL; s_end = m["s0"] + m["depth"]
-            collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL))
+            collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL if DRAWN_WALL is None else DRAWN_WALL))
             keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))
             m["ro"], m["s_end"], m["node"], m["c"] = ro, s_end, k, c
             allm.append(m)
