@@ -63,7 +63,7 @@ def timeline(a):
         S = np.eye(4); S[2, 2] = k; S[2, 3] = Z0 * (1 - k)                       # the blades' stub stretched about the throat top
         turn = e / R_WOUND                                                       # the spool's turn for the length paid out
         P = {n: R for n in names}
-        for nm, M in (("probe_head", lift), ("probe_tilt", nod @ lift), ("probe_leds", nod @ lift), ("probe_mast_a", S), ("probe_mast_b", S),
+        for nm, M in (("head_frame", lift), ("probe_servo", lift), ("cradle", nod @ lift), ("probe_tilt", nod @ lift), ("probe_leds", nod @ lift), ("probe_mast_a", S), ("probe_mast_b", S),
                       ("probe_spool", rot_y(-turn, (SPOOL[0], 0, SPOOL[1]))), ("probe_pinion", rot_y(turn * RATIO, (PINION[0], 0, PINION[1])))):
             if get(nm):
                 P[get(nm)] = R @ M
