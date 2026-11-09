@@ -54,7 +54,10 @@ L.DRAWN_WALL = 2.6
 # (the 25 mm limit was set on 5 Nov for ties 39-85 mm out, 290k-586k cells; these stay under 36 mm). v4-only.
 L.MAX_START = 36.0
 
-BUDGET_X = {"TB": 1.25, "NB": 1.25, "S0": 1.25, "S1": 1.25}
+# 9 Nov, run 2 (the frame's sockets moved: NB / TB / S0 / S1 are Ys held at the fork's two sockets 29-34 mm out, the load path from the
+# cage rods' sockets runs through the hub and the fork): at 1.25 x NB 0.357 / TB 0.378 (fail), S0 0.266 / S1 0.283. Index ~ V^-1.25:
+# NB / TB 1.25 -> 1.7, S0 / S1 1.25 -> 1.35, each toward 0.25.
+BUDGET_X = {"TB": 1.7, "NB": 1.7, "S0": 1.35, "S1": 1.35}
 
 
 def spec_for(group):
