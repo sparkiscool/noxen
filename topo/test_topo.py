@@ -1043,10 +1043,44 @@ def t_skin_core():
         check("thick drawn skins erode", False, str(e))
 
 
+def t_coarse_setup_fails():
+    """a setup that cannot be built at 2h skips the coarse stage instead of killing the run (9 Nov, scout_v4_base_nose: a thin
+    side land's load region was empty at h 3.0, Part.load_multi raised outside the coarse stage's try, the run died at 2 min)."""
+    import os
+    import tempfile
+    import manifold3d as mf
+    from .part import Part
+    from .run import optimise
+    box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+
+    def setup(h):   # a 0.4 mm load slab: the 3 x 3 x 3 samples catch it at h 1.0, fall either side of it at h 2.0
+        p = Part("thin_load", h, box(0, 3, 0, 10, 0, 10) + box(20, 24, 2, 8, 2, 8), box(100, 101, 100, 101, 100, 101),
+                 box(0, 24, 0, 10, 0, 10), log=lambda s_: None)
+        p.support("default", box(-1, 1.5 * h, -1, 11, -1, 11))
+        p.load("down", box(21.8, 22.2, 3, 7, 3, 7), (0, 0, -10.0))
+        return p
+    lines = []
+    try:
+        try:
+            setup(2.0)
+            raised = False
+        except ValueError:
+            raised = True
+        out = tempfile.mkdtemp(prefix="topo_coarse_skip_")
+        s = Settings(min_member_mm=3.0, max_stage=2, min_stage=1, audit="warn", time_limit_s=120)
+        optimise(setup, 1.0, 0.6, out, "thin_load", settings=s, coarse=True, maxit=1, log=lines.append)
+        skipped = any("coarse stage skipped" in l and "empty region" in l for l in lines)
+        check("coarse: a setup that raises at 2h skips the coarse stage, the fine run goes on", raised and skipped,
+              f"2h setup raised {raised}, skip logged {skipped}")
+    except Exception as e:
+        traceback.print_exc()
+        check("coarse: a setup that raises at 2h skips the coarse stage", False, f"{type(e).__name__}: {e}; log tail {lines[-3:]}")
+
+
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_design_hash):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_design_hash, t_coarse_setup_fails):
         t()
     if not quick:
         t_end_to_end()

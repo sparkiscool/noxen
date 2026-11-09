@@ -186,9 +186,11 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
     _own_checkpoints(out_dir, log)
     xh_c = part_c = None
     if coarse and not os.path.exists(ck):
-        part_c = setup(2.0 * h)
         sc = replace(s, reach_check="off", geometric=False, max_stage=25)
         try:
+            # the setup itself can fail at 2h too (9 Nov, scout_v4_base_nose: a 3.2 mm side land's load region is empty at h 3.0,
+            # Part.load_multi raised and the run died at 2 min): same skip
+            part_c = setup(2.0 * h)
             Lc = Layout(part_c, gen_cm3=gen_cm3, settings=sc, log=log)
         except ValueError as e:
             # the 2h grid cannot resolve a small feature the fine grid can (29 Oct, node 21: the O5.6 camera posts' load faces fell
