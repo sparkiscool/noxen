@@ -4,16 +4,16 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 2,
+  "specks_plain": 15,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   12811.3
+   12643.1
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 3,
+  "acute_edges": 9,
   "ok": true
  },
  "function_check": {
@@ -166,32 +166,32 @@
    81.9
   ]
  },
- "mass_g": 24.94,
+ "mass_g": 24.83,
  "watertight": true,
  "export": {
-  "faces_in": 153308,
+  "faces_in": 144398,
   "degenerate": 0,
-  "folded": 0,
-  "caps_split": 0,
-  "caps_left": 0,
+  "folded": 8,
+  "caps_split": 14,
+  "caps_left": 4,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 153308,
+  "faces": 144390,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 190,
-   "folded": 8,
-   "caps_split": 58,
-   "caps_left": 6,
+   "degenerate": 3920,
+   "folded": 280,
+   "caps_split": 490,
+   "caps_left": 64,
    "watertight": true,
-   "faces": 209790
+   "faces": 195992
   },
-  "volume_mm3": 19636.4,
-  "exact_mm3": 19636.5
+  "volume_mm3": 19554.4,
+  "exact_mm3": 19554.0
  },
  "bodies": {
   "bodies_raw": 1,
@@ -199,7 +199,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 19636.5,
+ "volume_mm3": 19554.4,
  "drawn_g": 12.76,
  "export_cleanup": {
   "pitch": 0.25,
@@ -207,12 +207,29 @@
   "core_limit_mm3": 10.0,
   "specks_mm3": [
    0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
    0.016
   ],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.01,
-  "specks": 2
+  "removed_mm3": 0.02,
+  "specks": 19
  },
  "stl": "overseer_cage_node_13.stl",
  "view_stl": "overseer_cage_node_13_view.stl",
@@ -530,8 +547,13 @@
  "baseline": null,
  "total_s": 4044,
  "part_sha": "b916d6d37823",
- "lib_sha": "f6c514020983",
- "setup_sha": "fe4a584d3423b5e6",
+ "lib_sha": "da00f5663581",
+ "setup_sha": "1035aa8964b4080a",
  "max_worst": 0.3,
- "strength_ok": true
+ "strength_ok": true,
+ "recut": {
+  "at": "2026-11-09 00:07",
+  "removed_cm3": 0.082,
+  "note": "holes recut from the current setup; strength not re-solved"
+ }
 }

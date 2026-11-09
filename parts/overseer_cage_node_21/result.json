@@ -4,10 +4,10 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 2,
+  "specks_plain": 9,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   4147.1
+   4071.3
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -16,23 +16,7 @@
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 59.11,
-    "at": [
-     -261.3,
-     -14.0,
-     43.0
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 96.8
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 59.03,
+    "core_mm3": 59.17,
     "at": [
      -243.3,
      -14.0,
@@ -43,16 +27,48 @@
      1.5,
      1.5
     ],
+    "mm3": 97.1
+   },
+   {
+    "kind": "wall",
+    "thick_mm": 1.5,
+    "core_mm3": 59.0,
+    "at": [
+     -243.3,
+     14.0,
+     21.5
+    ],
+    "span": [
+     1.6,
+     1.6,
+     1.5
+    ],
     "mm3": 96.9
    },
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 58.84,
+    "core_mm3": 58.98,
     "at": [
-     -243.3,
+     -261.3,
+     -14.0,
+     43.0
+    ],
+    "span": [
+     1.6,
+     1.5,
+     1.5
+    ],
+    "mm3": 96.8
+   },
+   {
+    "kind": "wall",
+    "thick_mm": 1.5,
+    "core_mm3": 58.94,
+    "at": [
+     -261.3,
      14.0,
-     21.5
+     43.0
     ],
     "span": [
      1.6,
@@ -62,23 +78,21 @@
     "mm3": 96.7
    },
    {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 58.2,
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 6.5,
+    "joint_mm2": 141.4,
+    "blob_mm3": 146.0,
     "at": [
-     -261.3,
-     14.0,
-     43.0
+     -254.4,
+     -11.6,
+     47.2
     ],
-    "span": [
-     1.6,
-     1.5,
-     1.5
-    ],
-    "mm3": 96.5
+    "kind": "neck",
+    "thin_wall_mm": 1.5,
+    "neck_over_mm": 2.4
    }
   ],
-  "acute_edges": 2,
+  "acute_edges": 5,
   "ok": true
  },
  "function_check": {
@@ -209,32 +223,32 @@
    26.5
   ]
  },
- "mass_g": 9.66,
+ "mass_g": 9.61,
  "watertight": true,
  "export": {
-  "faces_in": 72818,
+  "faces_in": 70452,
   "degenerate": 0,
-  "folded": 0,
-  "caps_split": 1,
-  "caps_left": 2,
+  "folded": 4,
+  "caps_split": 7,
+  "caps_left": 0,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 72818,
+  "faces": 70448,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 666,
-   "folded": 324,
-   "caps_split": 190,
-   "caps_left": 56,
+   "degenerate": 1672,
+   "folded": 204,
+   "caps_split": 335,
+   "caps_left": 49,
    "watertight": true,
-   "faces": 97600
+   "faces": 92488
   },
-  "volume_mm3": 7607.7,
-  "exact_mm3": 7607.3
+  "volume_mm3": 7568.8,
+  "exact_mm3": 7568.5
  },
  "bodies": {
   "bodies_raw": 18,
@@ -261,15 +275,22 @@
   ],
   "bodies": 32
  },
- "volume_mm3": 7607.3,
+ "volume_mm3": 7568.8,
  "drawn_g": 4.93,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
   "specks_mm3": [
-   0.219,
-   0.141,
+   0.094,
+   0.031,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
+   0.016,
    0.016,
    0.016,
    0.016
@@ -283,8 +304,8 @@
      43.0
     ],
     "thick_mm": 1.5,
-    "core_mm3": 56.75,
-    "mm3": 96.4
+    "core_mm3": 58.84,
+    "mm3": 96.5
    },
    {
     "at": [
@@ -294,31 +315,31 @@
     ],
     "thick_mm": 1.5,
     "core_mm3": 58.2,
-    "mm3": 96.7
-   },
-   {
-    "at": [
-     -243.3,
-     -14.1,
-     21.5
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 56.64,
-    "mm3": 127.7
+    "mm3": 96.5
    },
    {
     "at": [
      -243.2,
-     14.1,
+     -14.0,
      21.5
     ],
     "thick_mm": 1.5,
-    "core_mm3": 54.83,
-    "mm3": 136.8
+    "core_mm3": 56.09,
+    "mm3": 121.7
+   },
+   {
+    "at": [
+     -243.1,
+     14.0,
+     21.5
+    ],
+    "thick_mm": 1.5,
+    "core_mm3": 53.56,
+    "mm3": 147.0
    }
   ],
-  "removed_mm3": 0.38,
-  "specks": 5
+  "removed_mm3": 0.01,
+  "specks": 12
  },
  "stl": "overseer_cage_node_21.stl",
  "view_stl": "overseer_cage_node_21_view.stl",
@@ -646,8 +667,13 @@
  "baseline": null,
  "total_s": 1646,
  "part_sha": "b129722594f3",
- "lib_sha": "7c5d4cb0770b",
- "setup_sha": "86d832c1352e7687",
+ "lib_sha": "da00f5663581",
+ "setup_sha": "f7575f54c06a2720",
  "max_worst": 0.3,
- "strength_ok": true
+ "strength_ok": true,
+ "recut": {
+  "at": "2026-11-09 00:04",
+  "removed_cm3": 0.039,
+  "note": "holes recut from the current setup; strength not re-solved"
+ }
 }

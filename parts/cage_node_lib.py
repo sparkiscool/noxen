@@ -34,7 +34,7 @@ GROOVE_D, GROOVE_H, LEAD_IN = 0.5, 1.5, 1.0            # the coupon socket (sock
 POCKETS, POCKET_D, POCKET_DEG = 3, 0.3, 60.0                # resin pockets (Spark 7 Nov: "the inner pattern where the resin can make the best contact with the rod"):
 #   three 0.3 deep, 60 deg wide channels along the bore from above the floor out of the mouth, between three 60 deg lands of the plain bore that
 #   centre the rod; the port feeds the first pocket, the two grooves join them round the rod, the resin shows at the mouth through them
-PORT_R, PORT_S, PORT_CLEAR_DEG = 1.0, 1.5, 30.0         # resin injection port (Spark 5 Nov: "nodes need to be resin injectable"): O2 through the collar wall PORT_S above the floor, out between the members (none within PORT_CLEAR_DEG of it: at 40 the 6..8-member Scout nodes had none, their freest 30..38), so the resin fills from the floor and shows at the mouth
+PORT_R, PORT_S, PORT_CLEAR_DEG = 1.25, 1.5, 30.0        # resin injection port (Spark 5 Nov: "nodes need to be resin injectable"; 8 Nov: O2.5 for the one 14 G tip, O2.11): through the collar wall PORT_S above the floor, out between the members (none within PORT_CLEAR_DEG of it: at 40 the 6..8-member Scout nodes had none, their freest 30..38), so the resin fills from the floor and shows at the mouth
 CROWN_MIN_SIN = 0.3                                    # a bore within ~17 deg of vertical prints without a crown
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
 LAND_FEET = 3                                         # a flat landing may rest on 3 of the 6 feet (E)
