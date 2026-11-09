@@ -170,7 +170,7 @@ def hub_deck_bodies():
 
 def hub_deck_setup(h):
     drawn, cuts, env, feet, ph, socks = hub_deck_bodies()
-    p = Part("overseer_hub_deck", h, drawn, cuts, env, build="+z", material="PETG")
+    p = Part("overseer_hub_deck", h, drawn, cuts, env, build="+z", material="PCTG")
     foot_sup = [cyl(x, y, -0.5, 3.0, FOOT_R + 0.5) for x, y in feet]
     p.support("default", U(foot_sup))
     pi_c = M[PI_NM].centroid

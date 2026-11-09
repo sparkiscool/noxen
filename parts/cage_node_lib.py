@@ -367,7 +367,7 @@ def build(n, h, log=print, extra=None):
     if ex.get("env"):
         env = U([env] + ex["env"])
     verify_cuts(n, ms, cuts, log)
-    p = Part(f"overseer_cage_node_{n}", h, drawn, cuts, env, build="+z", material="PETG")
+    p = Part(f"overseer_cage_node_{n}", h, drawn, cuts, env, build="+z", material="PCTG")
     # ---- supports: the sockets of the two tubes with the largest frame-model axial force
     tubes = sorted([m for m in ms if m["kind"] == "tube"] or ms, key=lambda m: -m["axial"])     # a node on rods only (21): its rods hold it
     sup = tubes[:2]

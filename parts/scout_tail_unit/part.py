@@ -64,7 +64,7 @@ def bodies():
 
 def setup(h):
     B = bodies()
-    p = Part("scout_tail_unit", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PETG")
+    p = Part("scout_tail_unit", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PCTG")
     p.support("default", U(B["pad_regs"]))
     L.payload_cases(p, "receiver set", [(x, y, L.RZ1) for x, y in L.INS_TAIL], B["boss_regs"], L.REC_SET_G, L.REC_SET_CG, "default")
     L.payload_cases(p, "boards", B["post_pts"], B["post_regs"], L.BOARDS_G, L.BOARDS_CG, "default")

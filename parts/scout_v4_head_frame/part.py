@@ -75,7 +75,7 @@ def bodies():
 
 def setup(h):
     B = bodies()
-    p = Part("scout_v4_head_frame", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PETG")
+    p = Part("scout_v4_head_frame", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PCTG")
     p.support("default", B["clip_reg"])
     _, tilt, led = S.head_parts()
     g = ASM["scout_v4_probe_tilt"]["mass_g"] + ASM["scout_v4_probe_leds"]["mass_g"] + ASM["scout_v4_cradle"]["mass_g"]
