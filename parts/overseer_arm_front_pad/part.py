@@ -59,7 +59,7 @@ class FrontPad(TubeArm):
 
 
 ARM = FrontPad("front", 45.0, 0, ["spoke 1.1", "spoke 1.3"], [178.94, 146.7, 8.0], "pad")
-SPEC = dict(h=1.5, gen_cm3=18.0, max_worst=0.3)     # v3 (7 Nov): 18 (v2 passed at 18 with a skirt, 36 g, 0.27), limit 0.3 (printed PETG broke at 0.30 of the engine's strength)
+SPEC = dict(h=1.5, gen_cm3=28.0, max_worst=0.3)     # 9 Nov: two sockets back the spoke collars reach 24 further out: 18 stopped at 1.03 (cage crash, spoke 1.1 -238 N) -> 28   # v3 (7 Nov): 18 (v2 passed at 18 with a skirt, 36 g, 0.27), limit 0.3 (printed PETG broke at 0.30 of the engine's strength)
 
 
 def setup(h):
