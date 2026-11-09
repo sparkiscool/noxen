@@ -9,7 +9,7 @@ belongs to one system (tools/build_site.py refuses a shared one).
   scout_prop_1..4          Gemfan Hurricane 3520: 3 blades r 44.45, hub O11 x 5.5 on the T-mount, chord 10 -> 13 -> 5, pitch 2.0 in;
                            blades along the arm diagonal so a nose-on view sees them edge-on (E look; the swept disc is the keep-out)
   scout_flow_mtf_02p       MTF-02P from the MicoAir drawing (as bought_meshes.flow), face down at the belly mount concept's
-                           (0, -40, -30) (dimensions.md System Scout v3, Belly mount row; E until the mount is designed)
+                           (0, -40, -30) (archive/dimensions_scout_v3.md, Belly mount row; E until the mount is designed)
 Run: python tools/scout_meshes.py
 """
 import os
