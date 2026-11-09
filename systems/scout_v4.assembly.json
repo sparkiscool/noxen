@@ -34,7 +34,7 @@
 ]
 ]
 },
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, a half cage on the new discs; the battery mechanism (receiver, cartridge, pack, 266 g) not drawn: it mounts on 4 M3 bolts. -160..160 x -160..160 x -19..134 mm, ~722 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, a half cage on the new discs; the battery mechanism (receiver, cartridge, pack, 266 g) not drawn: it mounts on 4 M3 bolts. -160..160 x -160..160 x -19..142 mm, ~723 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -237,7 +237,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "nods with the cradle about the SG90's axis from -20 to +90 deg; parked 15 deg up it is the front camera, lens (27, 0, 116), 61 x 50 deg, autofocus 10 cm to inf, 1080p 30 live, 12 MP stills; the case is its heat spreader (Spark 9 Nov); 36 square, depth 20 E: measure"
+"note": "nods with the cradle about the SG90's axis from -20 to +90 deg; parked 15 deg up it is the front camera, lens (30, 0, 124), 61 x 50 deg, autofocus 10 cm to inf, 1080p 30 live, 12 MP stills; the case is its heat spreader (Spark 9 Nov); 36 square, depth 20 E: measure"
 },
 {
 "id": "scout_v4_cradle",
@@ -294,7 +294,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "blade A held by an M2 across the clip, blade B in a +-3 slot; an M3 screw is the idler; PCTG",
+"note": "a 14 mm sleeve round the lens: blade A held by an M2 at its top, blade B's M2 in an 8 mm slot (on one spool B pays out 7.5 mm less than A over the 150: the ribbon between them, tools/probe_mast_sim.py), the ribbon's 4 mm loop; an M3 screw is the idler; PCTG",
 "material": "PCTG"
 },
 {
@@ -309,22 +309,22 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "side plates the size of the spool and the drum, a 32 mm throat: 3 (thin walls), TPU lip 1, wires 1 (E); drawn see-through until the run lands",
+"note": "side plates the size of the spool and the drum, the roller's slots and spring pockets, a 32 mm throat: 4 (thin walls), TPU lip 1, wires 1 (E); drawn see-through until the run lands",
 "opacity": 0.22
 },
 {
 "id": "scout_v4_probe_spool",
-"name": "probe spool, hub O20, with its 40 T gear (module 0.8) on an M3 screw",
+"name": "probe spool, hub O28, with its 40 T gear (module 0.8) on an M3 screw",
 "role": "placeholder",
 "group": "camera",
 "color": "#d08a1e",
 "mesh": "parts/scout_v4_probe_spool/part.stl",
-"mass_g": 3.0,
+"mass_g": 4.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "hub O20 23.4 wide, flanges O29, the two 19 mm blades and the camera cable wound to ~O27; ~2.1 turns for the 150 mm roll-out; the blades' ends clamped in it, so fully out is a hard stop"
+"note": "hub O28 23.4 wide, flanges O31.8; the stack (blade A outside, the 0.6 ribbon, blade B on the hub) wound 1.6 turns to O30.8 for the 150 mm roll-out; A coils equal sense, B opposite (von Mises <= 1283 MPa at t 0.13); the blades' ends clamped in it, so fully out is a hard stop"
 },
 {
 "id": "scout_v4_probe_pinion",
@@ -342,7 +342,7 @@
 },
 {
 "id": "scout_v4_probe_motor",
-"name": "N20 6 V 300 rpm gear motor, no encoder (Augiimor, B0BZDC951L)",
+"name": "N20 6 V 100 rpm gear motor (B07MZH851L; replaces the 300 rpm B0BZDC951L)",
 "role": "bought",
 "group": "camera",
 "color": "#8b8f96",
@@ -352,7 +352,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "37 long (can 17 x O12, 3 mm D shaft 10); under the spool and the drum facing +y, in a pocket through the deck (the base's room must keep it out, z 15.2 up); it runs out or in to a stall (the blades' anchor out, the head seated in); at 5 V ~250 rpm"
+"note": "the same body: 37 long (can 17 x O12, 3 mm D shaft 10); under the spool and the drum facing +y, in a pocket through the deck; the coil's own unwind is ~100 N mm on the spool and winding in needs up to ~170 (sims): the 300 rpm stalls at ~140 through 40 / 12, the 100 rpm at ~420 (E); ~4.5 s for the 150; parked: the DRV8833 in brake, the head seated (the coil's push is ~35 N mm at the gearbox)"
 },
 {
 "id": "scout_v4_probe_drum",
@@ -366,7 +366,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "6 thin conductors (the head carries the camera, the servo and the LED bars): 5 V and GND in 26 AWG (shared; the 470 uF at the servo covers its start), USB D+ / D- twisted, the servo's signal and the LED bars' switched minus in 30 AWG; a JST ZH 1.5 mm 4-pin lead into the camera; up between the blades, round the spool, 3.5 turns of room in the drum for ~2; the USB pair to the USB-C breakout on the Radxa"
+"note": "a flat ribbon of 6 x 30 AWG PTFE wire (Remington 30KITSTRPTFE, B0722LL645; 0.6 thick, 3.3 wide, kapton-bound; the 26 AWG pair made it 1.2 and the blades' fight 17 mm): 5 V, GND, USB D+ / D- (side by side), the servo's signal, the LED bars' minus; the 470 uF at the servo covers its start; a JST ZH 1.5 mm 4-pin lead into the camera; up inside the lens on A, wound between the blades, its spool end through the hub into the drum's loose coil (3.5 turns of room for 1.6); the USB pair to the USB-C breakout on the Radxa"
 },
 {
 "id": "scout_v4_probe_feed",
@@ -380,7 +380,21 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "two 19 mm (3/4 in) steel tape strips, 0.2 m each with 0.15 m used, cut from one ordinary 3 m tape measure (its case and spring not used; 13 spare strips), curves facing (~22 g/m, E); ends set in printed clamp slots with epoxy (hardened steel: not drilled); their mass is all here"
+"note": "two 19 mm (3/4 in) steel tape strips, 0.2 m each with 0.15 m used, cut from the Topzone 16 ft tape (B00ZMHXV4I; its case and spring not used), curves facing (~22 g/m, E); spool ends set in printed clamp slots with epoxy, tip ends with an O2.2 hole each for the head's M2s (a carbide bit or a punch: hardened steel); their mass is all here"
+},
+{
+"id": "scout_v4_probe_roller",
+"name": "the coil's pressure roller: a printed O8 x 19 tube on two MR63ZZ (uxcell B075CLH2WM), an M3 axle, two 4 x 0.5 x 15 springs (uxcell B076LQCBR1)",
+"role": "bought",
+"group": "camera",
+"color": "#7a8590",
+"mesh": "parts/scout_v4_probe_roller/part.stl",
+"mass_g": 2.5,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "30 deg before the exit, its axle's ends in radial slots of the turret's walls, the two springs pushing it on the coil: 12 N full, 7.8 N empty (E: the springs' rate ~1.5 N/mm); the sims: a coil whose mast is pushed out lifts its outer turn (blossoms) unless something locks it; the roller's friction locks a push of up to 2.4 N (mu 0.3)"
 },
 {
 "id": "scout_v4_probe_mast_a",
@@ -577,7 +591,7 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_node_p3/part.stl",
-"mass_g": 4.7,
+"mass_g": 4.6,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
@@ -593,7 +607,7 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_node_p4/part.stl",
-"mass_g": 4.7,
+"mass_g": 4.6,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
@@ -625,7 +639,7 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_node_p6/part.stl",
-"mass_g": 4.7,
+"mass_g": 4.6,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
@@ -657,7 +671,7 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_node_rf/part.stl",
-"mass_g": 3.7,
+"mass_g": 3.6,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
@@ -673,7 +687,7 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_node_rb/part.stl",
-"mass_g": 3.8,
+"mass_g": 3.6,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
@@ -689,7 +703,7 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_node_rs0/part.stl",
-"mass_g": 3.7,
+"mass_g": 3.6,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
@@ -705,7 +719,7 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_node_rs1/part.stl",
-"mass_g": 3.8,
+"mass_g": 3.7,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
@@ -753,7 +767,7 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_node_s1/part.stl",
-"mass_g": 8.9,
+"mass_g": 7.4,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",

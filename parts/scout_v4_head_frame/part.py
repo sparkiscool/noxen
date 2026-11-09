@@ -1,7 +1,8 @@
 """Scout v4 probe head frame (9 Nov, Spark: "generate everything with topology"): the printed frame on the two tape blades' tip that
 carries the SG90 and the tilt cradle's idler (tools/scout_v4_shape.head_parts: the head's CG over the mast, the tilt axis 37 over the throat).
-Drawn (attachments only): the clip round the blades' tips (blade A held by an M2 across both walls, blade B in a +-3 mm slot: the
-two blades pay out ~2 mm apart over the roll-out); the SG90's two tab pads (M2 into its 32.8 tabs, holes 27.7 apart: the typical
+Drawn (attachments only): the clip, a 14 mm sleeve round the lens at the blades' tips (blade A held by an M2 through the +x wall at
+y +5 at its top, blade B's M2 and nut ride an 11 mm slot in the -x wall at y -5: on one spool B pays out 7.5 mm less than A over the
+150, the ribbon being between them, tools/probe_mast_sim.py; the ribbon's 4 mm loop under the sleeve's top); the SG90's two tab pads (M2 into its 32.8 tabs, holes 27.7 apart: the typical
 drawing, E); the idler's boss (an M3 screw along the tilt axis into the cradle's insert).
 Cuts: the SG90 and its spline; the cradle, camera and LED bars swept over the nod (-20..+90 deg) with 1 mm to spare; the blades'
 lens and the mast below; the screws and their drivers.
@@ -46,12 +47,14 @@ def bodies():
     h = S.CAM["side"] / 2; w = h + 2.0; sv = w + 3.0; hw = S.BLADE_W / 2
     drawn, cuts = [], []
     # the clip: round the blades' tip, the lens slot through it
-    clip = box(mx - 6.5, mx + 6.5, -hw - 2.5, hw + 2.5, hz, hz + 8.0); drawn.append(clip)
-    lens = box(mx - 4.6, mx + 4.6, -hw - 0.3, hw + 0.3, hz - 1, hz + 5.5); cuts.append(lens)
-    cuts.append(xcyl(0.0, hz + 3.0, 1.1, mx - 20, mx + 20))                              # blade A's M2 across both walls
-    cuts.append(box(mx - 20, mx + 20, -1.1, 1.1, hz + 0.0, hz + 6.0)) if False else None
-    cuts.append(box(mx + 1.0, mx + 20, 5.0 - 1.1, 5.0 + 1.1, hz + 0.5, hz + 6.5))         # blade B's pin in a +-3 slot (z) on the +x wall
-    clip_reg = lens.offset(0.6) - lens if hasattr(lens, "offset") else box(mx - 5.2, mx + 5.2, -hw - 0.9, hw + 0.9, hz, hz + 5.5) - lens
+    top = hz + S.HEAD["clip"]
+    clip = box(mx - 6.5, mx + 6.5, -hw - 2.5, hw + 2.5, hz, top + 2.0); drawn.append(clip)
+    lens = box(mx - 4.6, mx + 4.6, -hw - 0.3, hw + 0.3, hz - 1, top - 0.5); cuts.append(lens)
+    cuts.append(xcyl(5.0, top - 3.0, 0.8, mx, mx + 20))                                  # blade A's M2 (self-tapping) through the +x wall at y +5
+    cuts.append(xcyl(5.0, top - 3.0, 2.0, mx + 6.5, mx + 30))                            #   its head and driver
+    cuts.append(box(mx - 30, mx - 1.0, -5.0 - 1.15, -5.0 + 1.15, hz + 1.0, hz + 12.0))   # blade B's M2 in an 11 mm slot of the -x wall (8.8 of travel)
+    cuts.append(box(mx - 1.0, mx + 1.0, -2.0, 2.0, top - 1.0, top + 3.0))                # the ribbon up out of the sleeve
+    clip_reg = box(mx - 5.2, mx + 5.2, -hw - 0.9, hw + 0.9, hz, top - 0.5) - lens
     # the SG90: its tab pads (+y) and its body / spline as cuts
     xc = ax + (-16.4 + 6.0) / 2; pads, pad_pts, pad_regs = [], [], []
     for s in (-1, 1):
