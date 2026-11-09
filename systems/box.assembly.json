@@ -4,7 +4,7 @@
 "readme_view": "iso",
 "artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
 "machine": "box",
-"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3): the catch's SEAT_TO_W raised 65, the arm's head extending 65 more at the drone slot, Spark 3 Nov). In: the swap arm v7 at park with 9 bay receivers (the two nearest the top back 8 Nov) and two packs, a placeholder extended head at the drone, the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the funnel on its nose and tail beams across the side sheets, both drones seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3): the catch's SEAT_TO_W raised 65, the arm's head extending 65 more at the drone slot, Spark 3 Nov). In: the swap arm v7 at park with 11 bay receivers, every slot of the ring but the drone's (8 Nov) and two packs, a placeholder extended head at the drone, the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the funnel on its nose and tail beams across the side sheets, both drones seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
 "cg_ref": null,
 "timeline": "tools/landing_box.py:timeline",
 "parts": [
@@ -2180,6 +2180,88 @@
 "version": "v7",
 "source": "nox/box/box_swap_arm.assembly.json (runs/arm/v7/asm)",
 "note": "scout bay at -210 deg: latch receiver + a seated cartridge; back 8 Nov: with the seat 65 higher and no deck it clears the funnel and both drones' landing paths (closest the Overseer's loop node, 49.8 mm)"
+},
+{
+"id": "box_arm_rec60",
+"name": "arm: rec60",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec60/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7 + 8 Nov",
+"source": "tools/import_box.py (rec0 turned about the axle)",
+"note": "overseer bay at 60 deg, beside the drone slot (8 Nov): latch receiver + a seated cartridge, the 0 deg bay turned"
+},
+{
+"id": "box_arm_rec120",
+"name": "arm: rec120",
+"role": "structure",
+"group": "bays",
+"color": "#8a94a6",
+"mesh": "parts/box_arm_rec120/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": "PETG",
+"mass_g": null,
+"tag": "C",
+"owner": "box swap arm v7",
+"version": "v7 + 8 Nov",
+"source": "tools/import_box.py (rec0 turned about the axle)",
+"note": "overseer bay at 120 deg, beside the drone slot (8 Nov): latch receiver + a seated cartridge, the 0 deg bay turned"
 },
 {
 "id": "box_arm_pack_charged",
