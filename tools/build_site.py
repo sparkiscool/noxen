@@ -193,6 +193,10 @@ def artifact_page(a, S, meshes, commit, path):
     for nm, v in (a.get("views") or {}).items():                                    # the assembly's own close-ups: {"name": {"eye": [..], "target": [..]}}
         s.view(nm, tuple(v["eye"]), tuple(v.get("target", (0, 0, 0))))
     s.write(path)
+    if a.get("appendix"):                          # an HTML fragment shown under the viewer (the Scout v4's ceiling probe, 9 Nov): its styles scoped, its ids its own
+        page = open(path).read(); frag = open(os.path.join(ROOT, a["appendix"])).read()
+        i = page.rfind("</body>")
+        open(path, "w").write(page[:i] + frag + "\n" + page[i:] if i >= 0 else page + frag)
 
 
 def status(pid):

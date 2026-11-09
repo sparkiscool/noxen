@@ -68,7 +68,9 @@ SADDLE = (-25.0, 25.0)              # the crossbar 15-16 saddle, y range
 TUBE_MOUTH, ROD_MOUTH = FLOOR + TUBE_DEPTH, FLOOR + ROD_DEPTH   # mouth distance from the node centre: bore bottom 3.0 from the centre (E)
 L2_MASS = 230.0                                                  # P
 CAM_MASS = 25.0                                                  # E: board 15 + a heatsink on its back 10 (Spark 29 Oct)
-FIELD_R = 220.0                                                  # L2 field half ball
+FIELD_R = 220.0                                                  # L2 field: R 220 from its window
+FIELD_EYE, FIELD_HALF = 40.0, 98.0                               # 9 Nov: the field is the L2's 96 deg cone (+2) from its window 40 ahead of the base, not a half ball
+                                                                 #   ahead of the base plane: v10's L2 sits 60 up, node 17 is 9.7 ahead of that plane but 116 deg off the axis
 
 DIRS14 = [np.array(v, float) / np.linalg.norm(v) for v in
           [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)] + [(a, b, c) for a in (1, -1) for b in (1, -1) for c in (1, -1)]]
@@ -253,9 +255,11 @@ def bodies():
         cuts += s.bores()
         cuts.append(s.clear())
     # --- L2 field: half ball R 220 ahead of the base plane; cable slot below the L2 flange (the cable leaves the base downward)
-    half = fbox(B, A, Y, P, (0.0, FIELD_R + 5), (-FIELD_R - 5, FIELD_R + 5), (-FIELD_R - 5, FIELD_R + 5))
-    ball = mf.Manifold.sphere(FIELD_R, 96).translate(list(B))
-    cuts.append(ball ^ half)
+    eye = B + A * FIELD_EYE
+    ball = mf.Manifold.sphere(FIELD_R, 96).translate(list(eye))
+    back = cone(eye, -A, 0.0, FIELD_R + 5.0, 0.0, (FIELD_R + 5.0) * np.tan(np.radians(180.0 - FIELD_HALF)), 96)   # the unseen cone behind the window
+    cuts.append(ball - back)
+    cuts.append(along(B, B + A * 70.0, 39.0, 96))                                   # the L2 body (O75 x 65, + 1)
     dn = np.cos(np.radians(-CABLE_ROLL)) * CABLE + np.sin(np.radians(-CABLE_ROLL)) * Y   # v9: the cable leaves 22.5 deg off down (-y side)
     cuts.append(fbox(B, A, np.cross(A, dn), -dn, (-60.0, 1.0), (-7.0, 7.0), (-120.0, -32.5)))
     # --- envelope: slab behind the base (O80 x 46), camera blocks behind the boards, a seat round every collar (+4), one hull over all

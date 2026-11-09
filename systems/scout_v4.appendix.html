@@ -1,0 +1,596 @@
+<!-- Scout v4: the ceiling probe and front camera (9 Nov; Spark: "make all updates on the probe on the Scout v4 page, this is where we will continue the work").
+     Appended to site/scout_v4.html by tools/build_site.py (the assembly's "appendix"). Styles scoped to #probe, ids prefixed pr-; it uses the viewer page's three r128 and OrbitControls. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+
+#probe {
+  --bg: #eef0ee;
+  --surface: #f8f9f7;
+  --ink: #1c2226;
+  --muted: #56616a;
+  --rule: #cfd5d7;
+  --tape: #f2b705;
+  --tape-ink: #765600;
+  --scene: #d9dee0;
+  --warn: #a8321f;
+  --display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) #probe {
+    --bg: #121618; --surface: #191e21; --ink: #e5e9ea; --muted: #9ba6ad; --rule: #2a3236;
+    --tape: #f2b705; --tape-ink: #f3c94a; --scene: #0d1012; --warn: #ef7a62; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] #probe {
+  --bg: #121618; --surface: #191e21; --ink: #e5e9ea; --muted: #9ba6ad; --rule: #2a3236;
+  --tape: #f2b705; --tape-ink: #f3c94a; --scene: #0d1012; --warn: #ef7a62; color-scheme: dark;
+}
+#probe, #probe * { box-sizing: border-box; }
+#probe { background: var(--bg); color: var(--ink); font: 400 15px/1.6 var(--body); border-top: 1px solid var(--rule); }
+#probe .wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
+#probe header { display: grid; gap: 6px; margin-bottom: 18px; }
+#probe .eyebrow { font: 500 12px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+#probe h1 { font: 700 clamp(40px, 7vw, 68px)/0.95 var(--display); letter-spacing: .005em; margin: 0; text-wrap: balance; }
+#probe h1 .tape { background: linear-gradient(transparent 62%, var(--tape) 62%, var(--tape) 92%, transparent 92%); padding: 0 .06em; }
+#probe .lede { max-width: 66ch; font-size: 17px; color: var(--ink); margin: 6px 0 0; }
+#probe h2 { font: 700 30px/1.05 var(--display); letter-spacing: .01em; margin: 48px 0 10px; text-wrap: balance; }
+#probe h3 { font: 600 15px/1.3 var(--body); margin: 22px 0 6px; }
+#probe p, #probe li { max-width: 68ch; }
+#probe p { margin: 0 0 12px; }
+#probe a { color: inherit; text-decoration-color: var(--tape); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+#probe a:hover { color: var(--tape-ink); }
+#probe a:focus-visible, #probe button:focus-visible { outline: 2px solid var(--tape); outline-offset: 2px; }
+#probe .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+#probe .tag { font: 500 11px/1 var(--mono); color: var(--muted); letter-spacing: .04em; }
+
+
+#probe .pr-stage { position: relative; border: 1px solid var(--rule); background: var(--scene); border-radius: 4px; overflow: hidden; }
+#probe #pr-scene { display: block; width: 100%; height: min(62vw, 560px); min-height: 340px; touch-action: none; }
+#probe .insetlabel { position: absolute; top: 10px; right: 10px; font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: #f2f4f4; background: rgba(12,15,17,.72); padding: 5px 7px; border-radius: 2px; pointer-events: none; }
+#probe .scenelabel { position: absolute; left: 12px; top: 10px; font: 500 11px/1.35 var(--mono); color: var(--muted); pointer-events: none; max-width: 46%; }
+#probe .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 12px; border-top: 1px solid var(--rule); background: var(--surface); }
+#probe .controls button { font: 500 13px/1 var(--body); color: var(--ink); background: transparent; border: 1px solid var(--rule); border-radius: 3px; padding: 7px 11px; cursor: pointer; }
+#probe .controls button:hover { border-color: var(--tape); }
+#probe #pr-scrub { flex: 1 1 200px; accent-color: var(--tape); min-width: 0; }
+#probe #pr-clock { font: 500 12px/1 var(--mono); color: var(--muted); min-width: 5.5em; text-align: right; }
+#probe .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--rule); background: var(--surface); }
+#probe .steps li { padding: 9px 10px 11px; border-left: 1px solid var(--rule); font-size: 12.5px; line-height: 1.3; color: var(--muted); cursor: pointer; position: relative; max-width: none; }
+#probe .steps li:first-child { border-left: 0; }
+#probe .steps li b { display: block; font: 600 12px/1 var(--mono); color: var(--muted); margin-bottom: 4px; }
+#probe .steps li.on { color: var(--ink); }
+#probe .steps li.on::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 4px; background: var(--tape); }
+#probe .steps li.on b { color: var(--tape-ink); }
+@media (max-width: 720px) { #probe .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } #probe .steps li:nth-child(4) { border-left: 0; } #probe .steps li:nth-child(n+4) { border-top: 1px solid var(--rule); } }
+
+
+#probe .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 18px 0 0; border-top: 2px solid var(--ink); }
+#probe .facts div { padding: 10px 12px 4px 0; }
+#probe .facts dt { font: 500 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+#probe .facts dd { margin: 4px 0 0; font: 700 28px/1 var(--display); }
+#probe .facts dd small { font: 400 13px/1.3 var(--body); color: var(--muted); display: block; margin-top: 4px; }
+@media (max-width: 720px) { #probe .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+
+#probe .tbl { overflow-x: auto; margin: 10px 0 6px; border-top: 1px solid var(--rule); }
+#probe table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 13.5px; }
+#probe th, #probe td { text-align: left; vertical-align: top; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--rule); }
+#probe th { font: 500 11px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+#probe td.r, #probe th.r { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+#probe tfoot td { font-weight: 600; border-bottom: 0; border-top: 2px solid var(--ink); }
+#probe .cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+@media (max-width: 760px) { #probe .cols { grid-template-columns: minmax(0, 1fr); } }
+#probe ol.seq { padding-left: 1.3em; margin: 6px 0 12px; }
+#probe ol.seq li { margin-bottom: 6px; }
+#probe ul.plain { padding-left: 1.1em; margin: 6px 0 12px; }
+#probe ul.plain li { margin-bottom: 6px; }
+#probe .pr-note { border-left: 4px solid var(--tape); padding: 2px 0 2px 12px; color: var(--ink); margin: 14px 0; }
+#probe .risk b { color: var(--warn); font-weight: 600; }
+#probe .sources { font-size: 12.5px; color: var(--muted); columns: 2 320px; column-gap: 28px; padding-left: 1.1em; }
+#probe .sources li { break-inside: avoid; margin-bottom: 5px; max-width: none; }
+#probe footer { margin-top: 40px; font: 400 12px/1.5 var(--mono); color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { #probe, #probe * { scroll-behavior: auto; } }
+
+#probe header { justify-content: normal; align-items: normal; flex-wrap: nowrap; grid-area: auto; }
+#probe h1 small { all: unset; }
+</style>
+
+
+<section id="probe" aria-label="Ceiling probe and front camera">
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Scout v4 · the camera and ceiling probe · work continues here</div>
+    <h1>The Scout looks into the ceiling on a <span class="tape">tape&#8209;measure mast</span></h1>
+    <p class="lede">The drone flies up to 12 cm under the ceiling grid. Two steel tape blades, curves facing so they lock into a stiff tube, roll 30 cm up out of the roof and lift a 5 MP autofocus camera through an open tile into the ceiling void. The drone yaws to pan, a servo tilts, and every pipe, conduit, fitting and cable run is photographed from close range. Parked, the same head is the Scout's only camera, filming 1080p at 30 fps over the nose. The probe weighs about 55 g and its parts cost about $93.</p>
+  </header>
+
+  <div class="pr-stage" id="pr-stage">
+    <canvas id="pr-scene" aria-label="Animated cutaway: the Scout under a suspended ceiling extends a tape mast through an open tile and scans the pipes, duct, conduit and cable tray above"></canvas>
+    <div class="scenelabel" id="pr-scenelabel">Cutaway: tiles drawn see-through. The mast is two tape blades, curves facing (two shades). Drag to orbit.</div>
+    <div class="insetlabel" id="pr-insetlabel">probe camera</div>
+    <div class="controls">
+      <button id="pr-play" type="button" aria-pressed="true">Pause</button>
+      <input id="pr-scrub" type="range" min="0" max="300" value="150" aria-label="Animation time">
+      <span id="pr-clock">15.0 s</span>
+      <button id="pr-reset" type="button">Reset view</button>
+    </div>
+    <ol class="steps" id="pr-steps">
+      <li data-t="0"><b>1</b>Fly under the open tile</li>
+      <li data-t="4.2"><b>2</b>Hold 12 cm below the grid</li>
+      <li data-t="6.2"><b>3</b>Roll the tape up</li>
+      <li data-t="11.2"><b>4</b>Yaw 360°, step the tilt</li>
+      <li data-t="23.2"><b>5</b>Roll the tape back</li>
+      <li data-t="27.2"><b>6</b>Fly to the next tile</li>
+    </ol>
+  </div>
+
+  <dl class="facts">
+    <div><dt>Probe mass</dt><dd class="num">≈ 55 g<small>it is also the front camera</small></dd></div>
+    <div><dt>Parts cost</dt><dd class="num">≈ $93<small>you have the inserts and screws</small></dd></div>
+    <div><dt>Reach</dt><dd class="num">0.3 m<small>12 cm to the grid, 19 cm into the void</small></dd></div>
+    <div><dt>Video</dt><dd class="num">1080p 30<small>5 MP stills at 15 fps, autofocus to ~5 cm</small></dd></div>
+  </dl>
+
+  <h2>How ceiling voids are inspected today</h2>
+  <p>Nobody flies a drone into a drop-ceiling void as a routine product. Inspectors push a camera up from below, crawl a robot across the tiles, or fly a large caged drone in open industrial ceilings. Each one teaches something for the Scout.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Approach</th><th>What it is</th><th>What we take from it</th></tr></thead>
+    <tbody>
+      <tr><td>Pole inspection camera</td><td>A camera with a light on a telescopic pole up to 5–7 m, often with a head that articulates 90° each way (<a href="https://www.fiberscope.net/hd-pole-inspection-camera/" target="_blank" rel="noopener">Cyclops HD</a>, <a href="https://www.amazon.com/Telescopic-Teslong-Inspection-Telescoping-Automotive/dp/B0BG27Q1JS" target="_blank" rel="noopener">Teslong 5 ft</a>).</td><td>The pole is the right idea: lift only the camera into the void and keep everything else below. The Scout replaces the person holding the pole.</td></tr>
+      <tr><td>Drop-ceiling crawler</td><td><a href="https://www.superdroidrobots.com/a-new-way-to-inspect-drop-ceilings" target="_blank" rel="noopener">SuperDroid GPK-32</a>: a tracked robot that drives across the tiles with a 360° camera and a light ring, $4,600, about 8 lb.</td><td>A light ring and a camera that looks all around are what the job needs. Driving on tiles is not open to us, and 8 lb is far too heavy.</td></tr>
+      <tr><td>Caged inspection drone</td><td><a href="https://mfe-is.com/product/elios-3/" target="_blank" rel="noopener">Flyability Elios 3</a>: collision cage, 16,000 lm of light, LiDAR or close-up payloads; flight time drops from 12.5 to 9.1 min with the LiDAR.</td><td>Light matters as much as the camera, and every payload gram costs flight time. Its cage flies in large open ceilings, not inside a 600 mm void.</td></tr>
+      <tr><td>Void-mapping robot</td><td><a href="https://ingenia.org.uk/articles/heating-homes-with-robots/" target="_blank" rel="noopener">Q-Bot</a>: maps underfloor voids with a camera and a laser rangefinder into a 3D model, then surveys again after the work.</td><td>Pair every photo with a distance reading: it gives scale and lets the stills become a 3D model. A tiny 8×8 time-of-flight sensor does this for 0.5 g.</td></tr>
+      <tr><td>USB endoscope</td><td>5.5–12.5 mm heads on semi-rigid cable, 720p to 5 MP, some autofocus (<a href="https://www.amazon.com/DEPSTECH-Ultra-Thin-Inspection-Semi-Rigid-Adpater-16-5ft/dp/B0836XWPJH" target="_blank" rel="noopener">DEPSTECH 5.5 mm</a>).</td><td>Built to look inside a tube. With its cable it weighs ~200 g, and it sees a narrow cone at 720p, so it is a poor fit for a whole void.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>What the Scout's ceiling demands</h2>
+  <div class="cols">
+    <div>
+      <h3>The void</h3>
+      <p>Suspended ceilings hang on a grid of 600 mm (2 ft) tiles. The void above is typically 150–600 mm deep, and 600–900 mm in ducted offices (<a href="https://www.securedengineers.com/architects/clearances/above-ceiling-plenum/" target="_blank" rel="noopener">clearance guide</a>). It holds sprinkler mains and branches, ducts, conduit with couplings and junction boxes, cable trays, and the hanger wires that hold the grid. It is dark and dusty.</p>
+      <h3>The ceiling effect</h3>
+      <p>A rotor close under a surface gains thrust. Research finds the effect smaller and steadier than ground effect (<a href="https://arxiv.org/pdf/2109.04918.pdf" target="_blank" rel="noopener">indoor airflow study</a>), but a flight controller that holds altitude keeps adding thrust when the drone stops climbing, and pilots report quads being sucked onto the ceiling (<a href="https://intofpv.com/printthread.php?tid=22238" target="_blank" rel="noopener">forum report</a>). Prop wash also lifts loose tiles. Spark's call is that the Scout can fly close, so it holds its roof 120 mm below the grid. Its props are then 137 mm below, about one prop diameter, where the effect is noticeable but modest, and the mast does the rest of the reaching.</p>
+    </div>
+    <div>
+      <h3>Where a mast can stand</h3>
+      <p>Every part of the Scout keeps 12 mm from the swept 5.1 in prop discs. A vertical mast clears all four only within about 24 mm of the drone's centre on the diagonals, and 43 mm on the axes. The centre is also where yawing spins the head in place. So the probe lives in the flat roof's middle node, with its spool hanging under it above the FC. At its corners the spool is 15 mm from the discs.</p>
+      <h3>Weight and money</h3>
+      <p>The Scout is already about 735 g (E) on 5.1 in props. Spark's limit for this probe is cheap and light. The design keeps to parts under $40 each and adds no second pan axis, because the drone's own yaw is a free pan axis.</p>
+    </div>
+  </div>
+
+  <h2>What the camera records</h2>
+  <p>The camera is the <a href="https://www.arducam.com/arducam-ov5648-auto-focus-usb-camera-ub0238-6.html" target="_blank" rel="noopener">Arducam UB0238</a>, a 5 MP autofocus board with the OmniVision OV5648 sensor, on the Radxa over USB 2.0. Its sister board, the B0441 first proposed, records 1080p at only 5 fps, so it was swapped out.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>What</th><th>Spec</th><th>What it means here</th></tr></thead>
+    <tbody>
+      <tr><td>Video</td><td class="num">1920 × 1080 and 1280 × 720 at 30 fps, MJPEG</td><td>Smooth front-camera video and a live view while scanning.</td></tr>
+      <tr><td>Stills</td><td class="num">2592 × 1944 (5 MP) at up to 15 fps</td><td>The scan's photos. 0.49 mm per pixel at 1 m, 0.25 at 0.5 m.</td></tr>
+      <tr><td>Focus</td><td>Autofocus, about 5–10 cm to infinity</td><td>Sharp on a fitting a hand's width away and on the slab beyond.</td></tr>
+      <tr><td>View</td><td class="num">65° × 51° (77° diagonal)</td><td>12 shots of 30° make a full turn with overlap. The maker's quick guide says 50° across, so measure it on the bench.</td></tr>
+      <tr><td>Sensor</td><td>1/4 in, 1.4 µm pixels, rolling shutter</td><td>Small pixels are noisy in the dark, so the LEDs matter. Fast flight smears video; hovering stills are sharp.</td></tr>
+      <tr><td>Power</td><td class="num">5 V, 250 mA max</td><td>From the Radxa's USB port.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>The mast, part by part</h2>
+  <p>The turret sits under the roof's middle node, where the flight controller used to be. The controller moves to a bay under the nose. Everything that has to stand in the props' height band is within 24 mm of the centre, the only place a part stays 12 mm from all four props. The gear motor lies in a pocket in the deck, below that band.</p>
+  <figure style="margin:14px 0 6px">
+  <div class="tbl" style="border:0">
+  <svg viewBox="0 0 560 380" width="100%" style="max-width:560px;display:block" role="img" aria-label="Side section of the probe turret: motor in the deck turning the spool through gears, the clock-spring drum behind, the two blades rising through the throat beside the roof's ring node to the head">
+    <style>
+      .ln{stroke:var(--ink);fill:none;stroke-width:1.4}.fl{fill:var(--surface);stroke:var(--ink);stroke-width:1.2}.tp{fill:var(--tape);stroke:var(--tape-ink);stroke-width:1}
+      .mu{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3}.tx{fill:var(--ink);font:500 11px var(--mono)}.tm{fill:var(--muted);font:400 10.5px var(--mono)}
+      .rd{fill:var(--ink)}
+    </style>
+    <!-- scale: 3 px per mm; x = 200 + 3*x_mm ; y = 340 - 3*z_mm -->
+    <rect x="0" y="0" width="560" height="380" fill="var(--bg)"/>
+    <rect x="20" y="223" width="420" height="9" class="mu" style="stroke-dasharray:none;fill:none"/>
+    <path d="M20 256.9 H440 M20 160.9 H440" class="mu"/>
+    <text x="446" y="208" class="tm">props' band</text><text x="446" y="221" class="tm">z 27.7–59.7</text>
+    <rect x="80" y="266.5" width="240" height="18" class="fl"/><text x="86" y="280" class="tm">deck z 18.5–24.5</text>
+    <circle cx="200" cy="277" r="18" class="fl"/><text x="226" y="304" class="tx">N20 in a deck pocket</text>
+    <circle cx="200" cy="277" r="9.6" class="ln"/><text x="226" y="318" class="tm">15 T pinion</text>
+    <circle cx="200" cy="211" r="50.4" class="fl"/><circle cx="200" cy="211" r="45" class="ln"/><circle cx="200" cy="211" r="39" class="mu"/>
+    <text x="130" y="140" class="tm">40 T gear on the spool</text>
+    <text x="175" y="214" class="tx">spool</text><text x="160" y="228" class="tm">blades + cable</text>
+    <rect x="242" y="121" width="21" height="90" class="fl"/>
+    <rect x="249.5" y="40" width="6" height="171" class="tp"/>
+    <text x="270" y="160" class="tx">throat, 30 mm</text><text x="270" y="174" class="tm">forms the lens</text>
+    <rect x="98" y="145" width="36" height="24" class="fl"/><rect x="266" y="145" width="36" height="24" class="fl"/>
+    <text x="40" y="135" class="tm">roof's middle node,</text><text x="40" y="148" class="tm">a ring r 22–34</text>
+    <path d="M20 157 H98 M302 157 H440" class="ln"/><text x="380" y="150" class="tm">roof rods z 61</text>
+    <rect x="236" y="40" width="70" height="10" class="fl"/><rect x="218" y="22" width="96" height="16" class="fl"/>
+    <circle cx="384" cy="26" r="5" class="rd"/><path d="M314 30 H380" class="ln"/>
+    <text x="330" y="16" class="tx">head: camera on a tilt servo</text>
+    <path d="M252.5 40 V8" class="ln"/><path d="M247 14 L252.5 4 L258 14" class="ln"/><text x="262" y="66" class="tm">0.3 m up</text>
+    <circle cx="200" cy="211" r="2" class="rd"/><text x="22" y="372" class="tm">side section at y 0 · 3 px per mm · the clock-spring drum sits behind the spool</text>
+    <g transform="translate(470 260)"><text x="-12" y="-46" class="tm">blade lens</text>
+      <path d="M-30 0 Q0 -22 30 0" class="tp" style="fill:none;stroke-width:2"/><path d="M-30 0 Q0 22 30 0" class="tp" style="fill:none;stroke-width:2"/>
+      <rect x="-9" y="-1.5" width="18" height="3" class="rd"/><text x="-26" y="40" class="tm">cable inside</text></g>
+  </svg></div>
+  </figure>
+  <ol class="seq">
+    <li><b>Two blades.</b> Two 10 mm steel tape blades, 0.4 m each with 0.3 m used, with their curves facing. Out of the throat they spring into a lens-shaped tube, and each braces the direction the other folds easily. This is the bi-STEM idea from spacecraft booms. The flat cable runs inside the lens, protected.</li>
+    <li><b>One spool.</b> Both blades and the cable wind flat together on one printed spool: hub Ø30, about Ø33 wound, Ø34 flanges, axis across the drone at 43 mm above the deck's datum. About 4 turns pay out 0.4 m.</li>
+    <li><b>Drive.</b> An N20 300 rpm gear motor with encoder lies in a pocket in the deck and turns the spool through a printed 15 / 40 tooth pair (module 0.8, centres 22 mm apart). 0.3 m takes about 1.6 s. The encoder gives the length in millimetres.</li>
+    <li><b>Clock spring.</b> The spool turns, so the cable can't leave from its axle. Beside the spool, a 300 mm flat-cable spiral in a drum tightens and loosens like a watch spring. It has room for about 6 turns and the mast uses about 4.</li>
+    <li><b>Throat.</b> A 30 mm printed guide beside the roof's middle node. It takes the blades off the spool and curls them into the lens, and it grips the mast's base, where a knock bends it hardest. The middle node becomes a ring around it; the four roof rods end in the ring's sides.</li>
+    <li><b>Head.</b> A clip on the blades' tip, an SG90 servo on its side to tilt from 20° down to straight up, a cradle with the camera board, 2–4 white LEDs and a VL53L0X distance sensor beside the lens, and a thin TPU bumper. Parked, it rests on the throat's top with its lens 90 mm above the deck's datum, looking forward 20° up.</li>
+  </ol>
+  <h3>If something hits the mast</h3>
+  <ul class="plain">
+    <li>The two-blade tube is far harder to fold than one blade, and the 30 mm throat holds its base.</li>
+    <li>The bumper makes a knock glance off and flexes before the blades do.</li>
+    <li>The distance sensor stops the yaw before the head is within 60 mm of anything.</li>
+    <li>If the view suddenly jumps, the software rolls the mast in, and the throat straightens the blades on the way down.</li>
+    <li>The blades are turned so that a fold falls along the roof's centre rods, not into an open roof panel over a prop.</li>
+  </ul>
+
+  <h2>The cheapest parts</h2>
+  <p>You already have the heat-set inserts and screws. The camera is the one part worth paying for: it is the Scout's only camera.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Part</th><th>Choice</th><th>Why this one</th><th class="r">Mass g</th><th class="r">Cost $</th></tr></thead>
+    <tbody>
+      <tr><td>Camera</td><td><a href="https://www.arducam.com/arducam-ov5648-auto-focus-usb-camera-ub0238-6.html" target="_blank" rel="noopener">Arducam UB0238</a> (Arducam's store; confirm the Amazon listing is this board)</td><td>1080p at 30 fps, autofocus, 9 mm wide</td><td class="r">5 E</td><td class="r">35 E</td></tr>
+      <tr><td>Drive</td><td><a href="https://www.amazon.com/ACROBOTIC-Gearmotor-Encoder-Raspberry-Speedometer/dp/B07LG18HBL" target="_blank" rel="noopener">N20 gear motor with encoder</a>, choose 300 rpm</td><td>Counts the length; holds the mast without power</td><td class="r">10.5 E</td><td class="r">12 E</td></tr>
+      <tr><td>Blades</td><td>2 × <a href="https://www.amazon.com/clp/B07HQ7F1C6" target="_blank" rel="noopener">10 mm steel tape measure</a></td><td>0.4 m from each; skip if you have 10 mm tapes</td><td class="r">7.6</td><td class="r">16 E</td></tr>
+      <tr><td>Cable</td><td><a href="https://amazon.com/20-300mm-Printer-16pin-0-5mm-40mm/dp/B0DZ6QLBXT" target="_blank" rel="noopener">0.5 mm flat cable set</a>, 8-way, 300 mm, same-side</td><td>One piece up the mast, one in the clock spring</td><td class="r">2 E</td><td class="r">8 E</td></tr>
+      <tr><td>Cable ends</td><td><a href="https://www.amazon.com/MTCELL-Converter-2-54mm-Couple-Adapter/dp/B0CLVPPGRN" target="_blank" rel="noopener">0.5 mm, 8-pin flat-cable adapter boards</a></td><td>Join the flat cable to normal wires; check the socket is 0.5 mm</td><td class="r">1 E</td><td class="r">8 E</td></tr>
+      <tr><td>Light</td><td><a href="https://www.amazon.com/Generic-200pcs-Diodes-12-15lm-Lighting/dp/B0D548TL6D" target="_blank" rel="noopener">5050 white LED chips</a>, 2–4, with a 33 Ω resistor each</td><td>Run from the motor driver's second channel, so no extra switch</td><td class="r">0.3</td><td class="r">6 E</td></tr>
+      <tr><td>Driver</td><td><a href="https://www.amazon.com/NOYITO-DRV8833-2-Channel-Ultra-small-Voltage/dp/B07FZY8GX2" target="_blank" rel="noopener">DRV8833 board</a>, pack of 2</td><td>Channel A the motor, channel B the LEDs</td><td class="r">1 E</td><td class="r">4 E</td></tr>
+      <tr><td>Distance</td><td><a href="https://www.amazon.com/ALAMSCN-Breakout-VL53L0XV2-Distance-Measurement/dp/B08V8SKKZ4" target="_blank" rel="noopener">VL53L0X</a>, from a 4-pack</td><td>Stops the yaw before a touch; up to ~2 m</td><td class="r">0.7 E</td><td class="r">3 E</td></tr>
+      <tr><td>Tilt</td><td><a href="https://www.amazon.com/Hosyond-Helicopter-Airplane-Control-Arduino/dp/B09GFN98X9" target="_blank" rel="noopener">SG90</a>, from a 10-pack</td><td>$2 each; the EMAX ES9051 saves 5 g for $8 more</td><td class="r">9</td><td class="r">2 E</td></tr>
+      <tr><td>Printed</td><td>Spool and gear, pinion, drum, housing and throat, cradle and clip in PCTG; lip and bumper in TPU</td><td>Your filament, a 3 mm steel pin for the spool's free side</td><td class="r">18 E</td><td class="r">–</td></tr>
+    </tbody>
+    <tfoot><tr><td>Total</td><td></td><td></td><td class="r">≈ 55</td><td class="r">≈ 93</td></tr></tfoot>
+  </table></div>
+  <p class="tag">E = estimate: masses without a published figure until weighed, prices not shown on the listings when checked.</p>
+
+  <div class="cols">
+    <div>
+      <h3>A scan at one opening</h3>
+      <ol class="seq">
+        <li>Fly under the open tile, centred by the flow sensor; the probe's distance sensor sees the opening as far and the tiles as near.</li>
+        <li>Hold the roof 120 mm below the grid.</li>
+        <li>Roll the tape out 200 mm, until the head is 90 mm above the grid, LED on.</li>
+        <li>At 20° down, 15° up, 55° up and straight up, yaw a full turn in 30° steps and take a still at each: 37 stills.</li>
+        <li>Roll out the full 300 mm, to 190 mm above the grid, and repeat: 74 stills in about 2 minutes of hover at 1.5 s per still. In a deep void the 55° and 90° tilts reach the slab and the pipes on it.</li>
+        <li>Roll the mast back until the head rests on the throat, and fly to the next opening.</li>
+      </ol>
+    </div>
+    <div>
+      <h3>What the pictures resolve</h3>
+      <div class="tbl"><table style="min-width:0">
+        <thead><tr><th>Distance</th><th class="r">mm per pixel</th><th class="r">20 mm coupling</th></tr></thead>
+        <tbody>
+          <tr><td>0.5 m</td><td class="r">0.25</td><td class="r">81 px</td></tr>
+          <tr><td>1.0 m</td><td class="r">0.49</td><td class="r">41 px</td></tr>
+          <tr><td>2.0 m</td><td class="r">0.98</td><td class="r">20 px</td></tr>
+        </tbody>
+      </table></div>
+      <p class="tag">5 MP stills, 2592 px across a 65° view. Beyond about 2 m a fitting is better seen from the next opening.</p>
+      <h3>From stills to a map</h3>
+      <p>Each still is saved with its yaw, tilt, tape length and 8 × 8 distances. Free photogrammetry software such as <a href="https://colmap.github.io/" target="_blank" rel="noopener">COLMAP</a> or Meshroom turns a set into a 3D model of the void, with the distances setting its scale. The stills are still worth having without the model: every fitting is in at least two of them.</p>
+    </div>
+  </div>
+
+  <h3>Wiring and control</h3>
+  <p>The probe camera goes on the Radxa Zero 3W's second USB-C port in host mode, since the Radxa is powered from its pads. The distance sensor, servo and motor driver run from the Radxa's I²C and PWM pins. The scan runs on the Radxa and asks PX4 for each yaw step over MAVLink. Power comes from the UBEC's 5 V, at about 0.5 A peak with the motor and servo running.</p>
+
+  <h2>One camera for the whole Scout</h2>
+  <p>Parked, the head rests on the throat with its lens at (62, 0, 90.5) mm in the drone's frame, about 30 mm above the roof rods. Tilted 20° up, its 65 × 51° frame spans 5.5° below the horizon to 45.5° above it, and no rod or prop is in the picture. The servo tilts it further up for ceilings. The old DECXIN camera and its posts are gone.</p>
+  <ul class="plain">
+    <li><b>Gained:</b> autofocus, 5 MP stills, 1080p at 30 fps, one USB camera on the Radxa.</li>
+    <li><b>Given up:</b> a 65° view instead of about 89°, a rolling shutter that smears fast video, and a second camera if the head is damaged.</li>
+  </ul>
+
+  <h2>How we build it</h2>
+  <p>Each step ends with a test that has to pass before the next step. The mast and the cable are the two unknowns, so they are proven on the bench before anything flies.</p>
+  <ol class="seq">
+    <li><b>Order the parts</b> in the cheapest-parts table, about $93, plus a spare tape and a spare cable set.</li>
+    <li><b>Draw the mechanism parts in the repo.</b> The spool with its gear, the pinion, the drum, the housing and throat, the cradle and the clip are fits and slots, not loaded structure, so each is a drawn part with its own <span class="num">make.py</span>, like the Overseer's TPU foot. Print them in PCTG, and the lip and bumper in TPU 95A.</li>
+    <li><b>Build the mast on the bench.</b> Cut 0.4 m from each tape, drill a 2 mm hole at each end, clamp both blades to the spool hub curves facing, and fit the gears and the N20. Pass: 500 roll-outs with no jam, the lens fully formed above the throat, and a 20 g dummy head at 0.3 m settling within a second after a tap. Then push the head sideways with a spring scale until it folds, and do the same with one blade, so the gain is a measured number.</li>
+    <li><b>Prove the cable.</b> Lay the flat cable between the blades and fold the drum's spiral. Plug the camera into the Radxa through it and stream 1080p for 10 minutes while the mast cycles 100 times. Pass: no USB drop-out. If it fails, switch to a thin coiled USB cable beside the blade.</li>
+    <li><b>Assemble the head.</b> Fit the servo, camera board, LEDs and distance sensor on the cradle. Pass: autofocus sharp at 10 cm, 0.5 m and 2 m, and a usable still in a dark box with the LEDs on.</li>
+    <li><b>Write the probe service on the Radxa.</b> Home by retracting until the head seats on the lip (the encoder stalls), extend to a length in millimetres, stop the yaw when the distance sensor reads under 60 mm, and save each still with its yaw, tilt, length and 8 × 8 distances. When parked, stream the front view.</li>
+    <li><b>Write the scan.</b> The Radxa asks PX4 over MAVLink for each 30° yaw step and waits for it to settle before each still. Run it in PX4's simulator first, then on the bench with the props off.</li>
+    <li><b>Fit it to v4.</b> The roof's middle node is designed with the turret's mount when the cage nodes are designed. Bolt the turret on, wire it to the Radxa and the UBEC, weigh the Scout and check the centre of gravity.</li>
+    <li><b>Fly under a test ceiling.</b> Hang a 2 × 2 tile grid with one tile open over a frame. Hover 30 cm under it, then 20, then 12, logging thrust and altitude. Pass: no pull toward the grid. Then roll the tape out in the hover, run a full scan, and build a COLMAP model from the stills.</li>
+    <li><b>Fly a real ceiling,</b> one opening first.</li>
+  </ol>
+
+  <h2>Options I weighed and dropped</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Option</th><th>Why not</th></tr></thead>
+    <tbody>
+      <tr><td>One tape blade</td><td>Stiff only while it holds its curve; a sideways knock can fold it over, and a fold halfway up could drop the head into a prop.</td></tr>
+      <tr><td>Arducam B0441 (the 62 × 9 board first proposed)</td><td>Its datasheet gives 1080p at only 5 fps.</td></tr>
+      <tr><td>Intel RealSense D405 3D camera</td><td>Built for 7–50 cm and sub-millimetre depth, but 60 g for the camera alone, before the head that carries it, and far over the budget of this probe.</td></tr>
+      <tr><td>180° fisheye camera, no tilt</td><td>One shot covers the whole hemisphere, but a 5 MP sensor spread over 180° puts a 20 mm fitting at about 16 px at 1 m.</td></tr>
+      <tr><td>USB endoscope on a probe</td><td>About 200 g with its cable and 720p in the light ones; made for inside tubes.</td></tr>
+      <tr><td>Two-servo pan and tilt head</td><td>The drone's yaw already pans for free. A second servo adds weight and a cable twist.</td></tr>
+      <tr><td>Fixed carbon mast, drone climbs</td><td>Puts the props right under the grid, in the ceiling effect and the tiles' way.</td></tr>
+      <tr><td>Crawler that drives on the tiles</td><td>A separate robot; tiles may not hold it, and the GPK-32 class is $4,600.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>What to prove first</h2>
+  <ul class="plain risk">
+    <li><b>Ceiling effect at 12 cm.</b> The props are about one diameter below the grid. Test the hover there first. If PX4 starts climbing into the ceiling, hold a few centimetres lower and roll the tape out further.</li>
+    <li><b>Folding.</b> The two-blade tube should take several times the push of one blade. That is a judgement until the bench test measures it.</li>
+    <li><b>Gear mesh.</b> A printed module 0.8 pair needs its centre distance right to 0.1 mm. Print the housing with the two shaft holes in one piece.</li>
+    <li><b>USB over flat cable.</b> USB 2.0 over 0.6 m of unshielded flat cable should work, but it is unshielded. Test the camera through the rolled ribbon; the fallback is a thin coiled USB cable beside the tape.</li>
+    <li><b>Snagging.</b> The head must not catch a pipe or hanger wire while the drone yaws. The distance sensor stops the yaw under 60 mm, and the yaw runs slowly.</li>
+    <li><b>Hover time.</b> The probe is about 55 g, but dropping the runners and keel saves more, so the Scout is about 697 g all-up (E), with about 2 minutes of hover per opening.</li>
+    <li><b>Parking.</b> The parked head is the highest point of the Scout. Its TPU bumper takes an upside-down landing first.</li>
+  </ul>
+  <p class="pr-note">The probe touches nothing below the deck, so the funnel seat and the battery swapper do not change.</p>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="https://www.superdroidrobots.com/a-new-way-to-inspect-drop-ceilings" target="_blank" rel="noopener">SuperDroid: a new way to inspect drop ceilings</a></li>
+    <li><a href="https://www.superdroidrobots.com/compare-superdroid-uplinks-crawlspace-robots" target="_blank" rel="noopener">SuperDroid crawler comparison</a></li>
+    <li><a href="https://www.fiberscope.net/hd-pole-inspection-camera/" target="_blank" rel="noopener">Cyclops HD pole inspection camera</a></li>
+    <li><a href="https://usaborescopes.com/news/pole-cameras-in-action-industrial-inspection-applications/" target="_blank" rel="noopener">Pole cameras in industrial inspection</a></li>
+    <li><a href="https://www.amazon.com/Telescopic-Teslong-Inspection-Telescoping-Automotive/dp/B0BG27Q1JS" target="_blank" rel="noopener">Teslong telescopic ceiling endoscope</a></li>
+    <li><a href="https://mfe-is.com/product/elios-3/" target="_blank" rel="noopener">Flyability Elios 3</a></li>
+    <li><a href="https://ingenia.org.uk/articles/heating-homes-with-robots/" target="_blank" rel="noopener">Q-Bot underfloor survey</a></li>
+    <li><a href="https://arxiv.org/pdf/2109.04918.pdf" target="_blank" rel="noopener">Indoor quadrotor airflow and the ceiling effect</a></li>
+    <li><a href="https://iris.polito.it/handle/11583/2993441" target="_blank" rel="noopener">Ground and ceiling thrust models</a></li>
+    <li><a href="https://intofpv.com/printthread.php?tid=22238" target="_blank" rel="noopener">Quad sucked onto a ceiling (forum)</a></li>
+    <li><a href="https://www.securedengineers.com/architects/clearances/above-ceiling-plenum/" target="_blank" rel="noopener">Above-ceiling plenum clearances</a></li>
+    <li><a href="https://www.paclights.com/?p=84444" target="_blank" rel="noopener">Drop ceiling clearance range</a></li>
+    <li><a href="https://ntrs.nasa.gov/citations/20110024131" target="_blank" rel="noopener">NASA self-deployable spring-strip booms</a></li>
+    <li><a href="https://patents.google.com/patent/US8770522" target="_blank" rel="noopener">Bi-stable tape-spring boom patent</a></li>
+    <li><a href="https://www.intelrealsense.com/depth-camera-d405/" target="_blank" rel="noopener">RealSense D405</a></li>
+    <li><a href="https://www.pololu.com/product/3417" target="_blank" rel="noopener">Pololu VL53L5CX carrier, 0.5 g</a></li>
+    <li><a href="https://servodatabase.com/servo/emax/es9051" target="_blank" rel="noopener">EMAX ES9051 specs</a></li>
+    <li><a href="https://www.arducam.com/?p=95058" target="_blank" rel="noopener">Arducam 5MP autofocus USB camera</a></li>
+    <li><a href="https://www.ebay.com/itm/224643065468" target="_blank" rel="noopener">ELP 180° fisheye OV5640</a></li>
+  </ul>
+
+  <footer>Scout v4 · ceiling probe proposal. The animation is to scale: Scout v4 cage (310 mm across), 5.1 in props, a 600 mm tile grid, a 600 mm void, the roof 120 mm under the grid. Design only: nothing here is ordered or printed.</footer>
+</div>
+</section>
+<script>
+(function () {
+  const canvas = document.getElementById('pr-scene');
+  if (!window.THREE) { document.getElementById('pr-scenelabel').textContent = 'The 3D scene could not load.'; return; }
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const scene = new THREE.Scene();
+  const css = n => getComputedStyle(document.getElementById('probe') || document.documentElement).getPropertyValue(n).trim();
+  function applyTheme() { scene.background = new THREE.Color(css('--scene') || '#d9dee0'); }
+  applyTheme();
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme); } catch (e) {}
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // drone frame (x nose, y left, z up, mm) -> three (X, Y up, Z) in metres
+  const V = (x, y, z) => new THREE.Vector3(x / 1000, z / 1000, -y / 1000);
+  const mat = (c, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.7, metalness: 0.05 }, o));
+  function rod(a, b, r, m) {
+    const d = new THREE.Vector3().subVectors(b, a); const L = d.length();
+    const g = new THREE.Mesh(new THREE.CylinderGeometry(r, r, L, 10), m);
+    g.position.copy(a).addScaledVector(d, 0.5); g.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); return g;
+  }
+  function box(x0, x1, y0, y1, z0, z1, m) {   // drone-frame mm box
+    const g = new THREE.Mesh(new THREE.BoxGeometry((x1 - x0) / 1000, (z1 - z0) / 1000, (y1 - y0) / 1000), m);
+    g.position.set((x0 + x1) / 2000, (z0 + z1) / 2000, -(y0 + y1) / 2000); return g;
+  }
+
+  scene.add(new THREE.HemisphereLight(0xf4f6f8, 0x5a5f63, 0.75));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.55); sun.position.set(1.5, -0.6, 2.2); scene.add(sun);
+
+  // ---- the room: floor below, tile grid, void, slab
+  const GRID = 181;                       // tile plane z (mm), the Scout's roof at 61 sits 120 under it
+  const VOID = 600, SLAB = GRID + VOID;
+  const tileM = mat(0xf3f3ef, { transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide });
+  const tbarM = mat(0xb9bec2, { metalness: 0.4, roughness: 0.4 });
+  const T = 600, N = 4;
+  for (let i = -N; i < N; i++) for (let j = -N; j < N; j++) {
+    if (i === -1 && j === -1) { }
+    const x0 = i * T + 0, y0 = j * T + 0;
+    const cx = x0 + T / 2 - 300, cy = y0 + T / 2 - 300;    // tiles centred so one is centred over the drone
+    if (Math.abs(cx) < 1 && Math.abs(cy) < 1) continue;   // the open tile
+    scene.add(box(cx - 297, cx + 297, cy - 297, cy + 297, GRID - 8, GRID, tileM));
+  }
+  for (let k = -N; k <= N; k++) {
+    const c = k * T - 300 + 300 - 300;
+    scene.add(box(-N * T - 300, N * T - 300, c - 6, c + 6, GRID - 10, GRID, tbarM));
+    scene.add(box(c - 6, c + 6, -N * T - 300, N * T - 300, GRID - 10, GRID, tbarM));
+  }
+  const slab = box(-2700, 2700, -2700, 2700, SLAB, SLAB + 120, mat(0x6f7479, { roughness: 0.95 }));
+  scene.add(slab);
+  const floorM = mat(0x9ea4a8, { transparent: true, opacity: 0.25 });
+  scene.add(box(-2700, 2700, -2700, 2700, -1250, -1240, floorM));
+  // hanger wires
+  const wireM = mat(0x6e7378, { metalness: 0.6, roughness: 0.4 });
+  for (const [x, y] of [[-1500, -900], [-300, -900], [900, -900], [-1500, 900], [-300, 900], [900, 900], [300, 300], [-900, 300]]) scene.add(rod(V(x, y, GRID), V(x, y, SLAB), 1.4 / 1000, wireM));
+  // sprinkler main and a branch with tees, a drop to a head
+  const redM = mat(0xc0392b, { roughness: 0.5 });
+  scene.add(rod(V(-2600, 520, SLAB - 140), V(2600, 520, SLAB - 140), 0.032, redM));
+  scene.add(rod(V(420, 520, SLAB - 140), V(420, -2200, SLAB - 140), 0.017, redM));
+  for (const y of [520, 0, -600, -1200]) scene.add(rod(V(420, y + 22, SLAB - 140), V(420, y - 22, SLAB - 140), 0.024, redM));
+  scene.add(rod(V(420, 0, SLAB - 140), V(420, 0, GRID - 20), 0.012, redM));
+  scene.add(box(395, 445, -25, 25, GRID - 40, GRID - 20, mat(0xd9d4c6, { metalness: 0.5 })));
+  // supply duct and a flex branch
+  const ductM = mat(0xb4bcc2, { metalness: 0.65, roughness: 0.35 });
+  scene.add(box(-1000, -620, -2600, 2600, SLAB - 330, SLAB - 60, ductM));
+  scene.add(rod(V(-620, -300, SLAB - 200), V(-260, -300, GRID + 40), 0.07, mat(0xcfd3d6, { roughness: 0.9 })));
+  // cable tray with cables
+  const trayM = mat(0x7e8790, { metalness: 0.6, roughness: 0.4 });
+  scene.add(box(-2600, 2600, -760, -460, SLAB - 300, SLAB - 296, trayM));
+  scene.add(box(-2600, 2600, -762, -756, SLAB - 300, SLAB - 250, trayM));
+  scene.add(box(-2600, 2600, -464, -458, SLAB - 300, SLAB - 250, trayM));
+  const cab = [0x2f6db5, 0x2f6db5, 0xe1e4e6, 0x3c8d5a, 0xd9a21b, 0x2f6db5, 0x8c4fb0];
+  cab.forEach((c, k) => scene.add(rod(V(-2600, -740 + k * 38, SLAB - 284 + (k % 2) * 8), V(2600, -740 + k * 38, SLAB - 284 + (k % 2) * 8), 0.006, mat(c, { roughness: 0.5 }))));
+  // conduit run with couplings and a junction box
+  const emtM = mat(0xc8cdd1, { metalness: 0.8, roughness: 0.3 });
+  for (const dy of [0, 45, 90]) {
+    const x = 760 + dy;
+    scene.add(rod(V(x, -2600, SLAB - 70), V(x, 180, SLAB - 70), 0.0105, emtM));
+    for (const y of [-1800, -900, -300]) scene.add(rod(V(x, y - 18, SLAB - 70), V(x, y + 18, SLAB - 70), 0.0135, emtM));
+  }
+  scene.add(box(720, 920, 180, 300, SLAB - 130, SLAB - 20, mat(0x9aa1a6, { metalness: 0.5 })));
+  scene.add(rod(V(820, 300, SLAB - 70), V(820, 1600, SLAB - 70), 0.0105, emtM));
+  scene.add(rod(V(820, 300, SLAB - 75), V(300, 900, GRID + 30), 0.006, mat(0x333333)));   // a loose whip to a fixture
+
+  // ---- Scout v4 (tools/scout_v4_shape.py numbers)
+  const drone = new THREE.Group(); scene.add(drone);
+  const F = 155, Y = 107.7, ZR = 61, ZB = 12, HUB = 74.3, PR = 64.7, ZP = 43.7;
+  const N4 = { R0: [F, Y, ZR], P1: [Y, F, ZR], PM0: [0, F, ZR], P2: [-Y, F, ZR], P3: [-F, Y, ZR], P4: [-F, -Y, ZR], P5: [-Y, -F, ZR], PM1: [0, -F, ZR], P6: [Y, -F, ZR], R7: [F, -Y, ZR],
+    RF: [130, 0, ZR], RM: [0, 0, ZR], RB: [-130, 0, ZR], TB: [-F, 0, ZB], S0: [0, F, ZB], S1: [0, -F, ZB], NB: [F, 0, ZB],
+    DS0: [0, 40, 22], BS0: [0, 40, -10], DS1: [0, -40, 22], BS1: [0, -40, -10], DT: [-60, 0, 21], BT: [-90.5, 0, -2] };
+  const RODS = [['R0','P1'],['P1','PM0'],['PM0','P2'],['P2','P3'],['P3','P4'],['P4','P5'],['P5','PM1'],['PM1','P6'],['P6','R7'],['R7','R0'],
+    ['RF','R0'],['RF','R7'],['RF','RM'],['RM','RB'],['RB','P3'],['RB','P4'],['RM','PM0'],['RM','PM1'],['NB','R0'],['NB','R7'],['TB','P3'],['TB','P4'],
+    ['S0','P1'],['S0','PM0'],['S0','P2'],['S1','P6'],['S1','PM1'],['S1','P5'],['DS0','S0'],['BS0','S0'],['DS1','S1'],['BS1','S1'],['DT','TB'],['BT','TB']];
+  const rodM = mat(0x24282b, { roughness: 0.5 });
+  const nodeM = mat(0xe9edf0, { roughness: 0.55 });
+  RODS.forEach(([a, b]) => drone.add(rod(V(...N4[a]), V(...N4[b]), 0.0015, rodM)));
+  Object.entries(N4).forEach(([k, p]) => { if (k === 'RM') return; const s = new THREE.Mesh(new THREE.SphereGeometry(['DS0','BS0','DS1','BS1','DT','BT'].includes(k) ? 0.004 : 0.0055, 12, 10), nodeM); s.position.copy(V(...p)); drone.add(s); });
+  const frameM = mat(0xd8d1c1, { roughness: 0.8 });
+  drone.add(box(-60, 60, -40, 40, 18.5, 24.5, frameM));
+  for (const [sx, sy] of [[1, 1], [-1, 1], [-1, -1], [1, -1]]) {
+    drone.add(rod(V(sx * 30, sy * 30, 21.5), V(sx * HUB, sy * HUB, 21.5), 0.009, frameM));
+    const pod = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.006, 24), frameM); pod.position.copy(V(sx * HUB, sy * HUB, 21.5)); drone.add(pod);
+    const mot = new THREE.Mesh(new THREE.CylinderGeometry(0.0135, 0.0135, 0.019, 24), mat(0x8b9097, { metalness: 0.6, roughness: 0.35 })); mot.position.copy(V(sx * HUB, sy * HUB, 34)); drone.add(mot);
+  }
+  drone.add(box(-8, 8, 36, 44, -14, 18.5, frameM)); drone.add(box(-8, 8, -44, -36, -14, 18.5, frameM));
+  const baseM = mat(0xc5beb0, { transparent: true, opacity: 0.6 });
+  drone.add(box(-51.3, 54.3, -34, 34, 9.6, 18.5, baseM)); drone.add(box(54.3, 93, -22, 22, -2.3, 18.5, baseM)); drone.add(box(54.3, 70.5, -12, 12, -19.1, -2.3, baseM)); drone.add(box(-90.5, -51.3, -34, 34, -2.3, 18.5, baseM));
+  drone.add(box(-51.3, 54.3, -32.8, 32.8, -44.3, 9.6, mat(0x7f8c8d, { transparent: true, opacity: 0.7 })));
+  drone.add(box(-42, 37, -16.5, 16.5, -32.5, -0.5, mat(0xc0392b, { transparent: true, opacity: 0.85 })));
+  drone.add(box(93, 161, -6, 6, 4, 14, frameM));
+  drone.add(box(56, 92, -18, 18, 1, 11, mat(0x1f6f3f)));
+  const props = [];
+  const discM = mat(0x9fd3ff, { transparent: true, opacity: 0.14, depthWrite: false, side: THREE.DoubleSide });
+  const bladeM = mat(0x3b6ea8, { roughness: 0.6 });
+  for (const [sx, sy, dir] of [[1, -1, 1], [-1, 1, 1], [1, 1, -1], [-1, -1, -1]]) {
+    const g = new THREE.Group(); g.position.copy(V(sx * HUB, sy * HUB, ZP));
+    const disc = new THREE.Mesh(new THREE.CircleGeometry(PR / 1000, 48), discM); disc.rotation.x = -Math.PI / 2; g.add(disc);
+    const bl = new THREE.Group();
+    for (let k = 0; k < 3; k++) { const b = new THREE.Mesh(new THREE.BoxGeometry(PR / 1000, 0.0015, 0.011), bladeM); b.position.x = PR / 2000; const h = new THREE.Group(); h.rotation.y = k * 2 * Math.PI / 3; h.add(b); bl.add(h); }
+    g.add(bl); g.userData = { bl, dir }; drone.add(g); props.push(g);
+  }
+
+  // ---- the probe: roof node with bumper ring, spool housing under it, tape, head
+  const tapeYellow = 0xf2b705;
+  const hubM = mat(0xe9edf0, { roughness: 0.55 });
+  const hub = new THREE.Mesh(new THREE.TorusGeometry(0.028, 0.006, 10, 40), hubM); hub.rotation.x = Math.PI / 2; hub.position.copy(V(0, 0, ZR)); drone.add(hub);
+  const housM = mat(0x3a3f43, { roughness: 0.6 });
+  const spool = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.014, 32), mat(tapeYellow, { roughness: 0.4, metalness: 0.3 })); spool.rotation.x = Math.PI / 2; spool.position.copy(V(0, 0, 43)); drone.add(spool);
+  const drum = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.013, 0.010, 32), housM); drum.rotation.x = Math.PI / 2; drum.position.copy(V(0, -12, 43)); drone.add(drum);
+  const gear = new THREE.Mesh(new THREE.CylinderGeometry(0.0168, 0.0168, 0.003, 40), housM); gear.rotation.x = Math.PI / 2; gear.position.copy(V(0, 8.5, 43)); drone.add(gear);
+  drone.add(box(-6, 6, 10, 46, 15, 27, mat(0x8b9097, { metalness: 0.5 })));
+  drone.add(box(14, 21, -7, 7, 43, 73, housM));
+  // the two blades, curves facing: each a curved strip 10 mm wide, bulging outward, so together they form a lens-shaped tube (drawn 3x thick to read at this scale)
+  function bladeShape(sign) {
+    const R = 0.008, half = 0.005, th = 0.0006, base = Math.sqrt(R * R - half * half), pts = [];
+    for (let k = 0; k <= 12; k++) { const t = -half + 2 * half * k / 12; pts.push([sign * (Math.sqrt(R * R - t * t) - base + 0.0004), t]); }
+    const sh = new THREE.Shape(); sh.moveTo(pts[0][0], pts[0][1]); pts.forEach(p => sh.lineTo(p[0], p[1]));
+    for (let k = pts.length - 1; k >= 0; k--) sh.lineTo(pts[k][0] + sign * th, pts[k][1]);
+    const g = new THREE.ExtrudeGeometry(sh, { depth: 1, bevelEnabled: false }); return g;
+  }
+  const tape = new THREE.Group();
+  const bA = new THREE.Mesh(bladeShape(1), mat(tapeYellow, { roughness: 0.35, metalness: 0.4 })), bB = new THREE.Mesh(bladeShape(-1), mat(0xc99400, { roughness: 0.35, metalness: 0.4 }));
+  [bA, bB].forEach(b => { b.rotation.x = -Math.PI / 2; tape.add(b); }); drone.add(tape);
+  const head = new THREE.Group(); drone.add(head);
+  const servo = new THREE.Mesh(new THREE.BoxGeometry(0.0083, 0.0232, 0.0197), mat(0x1b1d1f)); servo.position.y = 0.0116; head.add(servo);
+  const tilt = new THREE.Group(); tilt.position.y = 0.022; head.add(tilt);
+  const board = new THREE.Mesh(new THREE.BoxGeometry(0.062, 0.006, 0.012), mat(0x1d5e3a, { roughness: 0.6 })); board.position.x = 0.012; tilt.add(board);
+  const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.0045, 0.0045, 0.006, 16), mat(0x111111, { metalness: 0.4 })); lens.rotation.z = Math.PI / 2; lens.position.set(0.045, 0, 0); tilt.add(lens);
+  const ledM = new THREE.MeshBasicMaterial({ color: 0xfff6d8 }); const led = new THREE.Mesh(new THREE.BoxGeometry(0.002, 0.008, 0.008), ledM); led.position.set(0.044, 0.008, 0); tilt.add(led);
+  const spot = new THREE.SpotLight(0xfff3d6, 0, 2.0, Math.PI / 4.2, 0.6, 2.0); spot.position.set(0.046, 0.008, 0); tilt.add(spot);
+  const spotT = new THREE.Object3D(); spotT.position.set(1, 0.008, 0); tilt.add(spotT); spot.target = spotT;
+  // the view cone (69 x 52 deg)
+  const hf = Math.tan(34.5 * Math.PI / 180), vf = Math.tan(26 * Math.PI / 180), D = 0.42;
+  const fg = new THREE.BufferGeometry();
+  const P0 = [0.048, 0, 0], c = [[D, D * vf, D * hf], [D, D * vf, -D * hf], [D, -D * vf, -D * hf], [D, -D * vf, D * hf]].map(p => [p[0] + 0.048, p[1], p[2]]);
+  const tri = []; for (let k = 0; k < 4; k++) { const a = c[k], b = c[(k + 1) % 4]; tri.push(...P0, ...a, ...b); }
+  fg.setAttribute('position', new THREE.Float32BufferAttribute(tri, 3)); fg.computeVertexNormals();
+  const cone = new THREE.Mesh(fg, new THREE.MeshBasicMaterial({ color: tapeYellow, transparent: true, opacity: 0.13, side: THREE.DoubleSide, depthWrite: false })); tilt.add(cone);
+  const coneEdges = new THREE.LineSegments(new THREE.EdgesGeometry(fg), new THREE.LineBasicMaterial({ color: tapeYellow, transparent: true, opacity: 0.55 })); tilt.add(coneEdges);
+  const probeCam = new THREE.PerspectiveCamera(52, 4 / 3, 0.005, 6); probeCam.position.set(0.049, 0, 0); probeCam.rotation.y = -Math.PI / 2; tilt.add(probeCam);
+
+  // ---- main camera
+  const camera = new THREE.PerspectiveCamera(38, 2, 0.02, 30);
+  const HOME = new THREE.Vector3(0.66, -0.06, 0.80), TARGET = new THREE.Vector3(0, 0.22, 0);
+  camera.position.copy(HOME);
+  const controls = THREE.OrbitControls ? new THREE.OrbitControls(camera, canvas) : null;
+  if (controls) { controls.target.copy(TARGET); controls.enableDamping = true; controls.minDistance = 0.4; controls.maxDistance = 5; controls.update(); }
+  else camera.lookAt(TARGET);
+
+  // ---- the sequence (s): approach, hold, extend, scan, retract, depart
+  const LOOP = 30, TAPE_MAX = 0.30, PARK = 0.0;
+  const ease = x => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+  function state(t) {
+    let x = 0, ext = 0, yaw = 0, tiltDeg = 0, step = 0, lit = false;
+    if (t < 4) { x = -1.7 * (1 - ease(t / 4)); step = 0; }
+    else if (t < 6) { step = 1; }
+    else if (t < 11) { ext = 0.20 * ease((t - 6) / 5); step = 2; lit = t > 8; tiltDeg = 15 * ease((t - 9) / 2); }
+    else if (t < 23) { const u = (t - 11) / 12; ext = 0.20 + 0.10 * ease((u - 0.47) / 0.06); step = 3; lit = true; yaw = 2 * Math.PI * 2 * u; tiltDeg = u < 0.5 ? 15 : 55; if (u > 0.47 && u < 0.53) tiltDeg = 15 + 40 * ease((u - 0.47) / 0.06); }
+    else if (t < 27) { ext = TAPE_MAX * (1 - ease((t - 23) / 4)); step = 4; tiltDeg = 55 * (1 - ease((t - 23) / 2)); lit = t < 24; }
+    else { x = 1.7 * ease((t - 27) / 3); step = 5; }
+    return { x, ext, yaw, tiltDeg, step, lit };
+  }
+  const stepsEl = [...document.querySelectorAll('#pr-steps li')];
+  stepsEl.forEach(li => li.addEventListener('click', () => { tNow = parseFloat(li.dataset.t); scrub.value = Math.round(tNow * 10); }));
+  let lastStep = -1;
+  function pose(t) {
+    const s = state(t);
+    drone.position.set(s.x, 0, 0); drone.rotation.y = s.yaw;
+    const bob = Math.sin(t * 2.1) * 0.002; drone.position.y = bob;
+    const base = (ZR + 12) / 1000;
+    tape.scale.y = Math.max(s.ext, 0.001); tape.position.set(0.0175, base - 0.004, 0);
+    head.position.set(0.0175, base + s.ext, 0);
+    tilt.rotation.z = s.tiltDeg * Math.PI / 180;
+    spool.rotation.z = -s.ext / 0.011;
+    spot.intensity = s.lit ? 0.9 : 0; ledM.color.set(s.lit ? 0xfff6d8 : 0x777777);
+    cone.visible = coneEdges.visible = s.ext > 0.15;
+    props.forEach(g => { g.userData.bl.rotation.y += g.userData.dir * 0.9; });
+    if (s.step !== lastStep) { stepsEl.forEach((li, k) => li.classList.toggle('on', k === s.step)); lastStep = s.step; }
+    return s;
+  }
+
+  // ---- render loop
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let playing = !reduce, tNow = 15.0, last = performance.now();
+  const playBtn = document.getElementById('pr-play'), scrub = document.getElementById('pr-scrub'), clock = document.getElementById('pr-clock');
+  function setPlay(p) { playing = p; playBtn.textContent = p ? 'Pause' : 'Play'; playBtn.setAttribute('aria-pressed', String(p)); }
+  setPlay(playing);
+  playBtn.addEventListener('click', () => setPlay(!playing));
+  scrub.addEventListener('input', () => { tNow = scrub.value / 10; });
+  document.getElementById('pr-reset').addEventListener('click', () => { camera.position.copy(HOME); if (controls) { controls.target.copy(TARGET); controls.update(); } });
+  function size() {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (canvas.width !== Math.round(w * renderer.getPixelRatio()) || canvas.height !== Math.round(h * renderer.getPixelRatio())) { renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+    return [w, h];
+  }
+  const insetLabel = document.getElementById('pr-insetlabel');
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (playing) { tNow = (tNow + dt) % LOOP; scrub.value = Math.round(tNow * 10); }
+    clock.textContent = tNow.toFixed(1) + ' s';
+    const s = pose(tNow);
+    if (controls) controls.update();
+    const [w, h] = size();
+    renderer.setScissorTest(false); renderer.setViewport(0, 0, w, h); renderer.render(scene, camera);
+    const iw = Math.round(Math.min(w * 0.34, 300)), ih = Math.round(iw * 0.75), m = 10;
+    const showInset = s.ext > 0.15;
+    insetLabel.hidden = !showInset;
+    if (showInset) {
+      cone.visible = coneEdges.visible = false;
+      renderer.setScissorTest(true); renderer.setScissor(w - iw - m, h - ih - m, iw, ih); renderer.setViewport(w - iw - m, h - ih - m, iw, ih);
+      renderer.render(scene, probeCam);
+      renderer.setScissorTest(false);
+      cone.visible = coneEdges.visible = true;
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.__probe = { set: t => { tNow = t; setPlay(false); }, solo: () => { const [w, h] = size(); pose(tNow); renderer.setScissorTest(false); renderer.setViewport(0, 0, w, h); probeCam.aspect = w / h; probeCam.updateProjectionMatrix(); cone.visible = coneEdges.visible = false; renderer.render(scene, probeCam); probeCam.aspect = 4 / 3; probeCam.updateProjectionMatrix(); } };
+})();
+</script>
