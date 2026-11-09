@@ -36,7 +36,7 @@ def ins_cut(x, y, z, r_d, up=True, extra=1.0):
     return cyl(x, y, z - (0 if up else d), z + (d if up else 0), r) if True else None
 
 
-def socks_of(node, ring_r=None):
+def socks_of(node, ring_r=None, cls=None):
     """the 3 mm rod sockets of a printed node: one per rod ending there, toward its far node. ring_r: the node is a ring (RM): its
     sockets sit with their mouths at ring_r from the centre, along each rod"""
     out = []
@@ -46,7 +46,7 @@ def socks_of(node, ring_r=None):
             c, far = np.array(S.P(node), float), np.array(S.P(o), float)
             if ring_r is not None:
                 u = unit(far - c); c = c + u * (ring_r - FLOOR - DEPTH)
-            out.append(Sock(f"{node} {a}-{b}", c, far))
+            out.append((cls or Sock)(f"{node} {a}-{b}", c, far))
     return out
 
 
@@ -107,8 +107,19 @@ def region_bot(x, y, z, r=BOSS_R, t=1.5):
 
 # ---- the interfaces the parts share (all drone frame, with BX where the part is under the deck) ---------------------------------
 DZ0, DZ1 = S.DECK_Z0, S.DECK_TOP                               # 18.5, 24.5: the deck's underside and top
-BASE_BOLTS = [(12.0, 25.0), (12.0, -25.0), (40.0, 25.0), (40.0, -25.0), (-12.0, 25.0), (-12.0, -25.0), (-40.0, 18.0), (-40.0, -18.0)]   # (-40, +-18): ahead of the Radxa, clear of the UBEC and the battery bolts   # M3 from the deck's top down into inserts in the base units (12+ from the battery bolts)
-NOSE_BOLTS, TAIL_BOLTS = BASE_BOLTS[:4], BASE_BOLTS[4:]
-SPLIT_X = 0.0 + S.BX                                           # the base splits into a nose unit and a tail unit here (183 mm long: the A1 mini prints 180)
 TURRET_BOLTS = [(S.SPOOL["c"][0] + dx, dy) for dx in (-13.0, 13.0) for dy in (-21.0, 19.0)]   # M3 down through the turret's floor into the deck's inserts, beside the gear and the drum (driver from above)
-REC_BOLTS = [(x + S.BX, y) for x, y in S.REC_BOLTS]           # the battery mechanism's 4 M3, up into inserts in the base units' yokes
+REC_BOLTS = [(x + S.BX, y) for x, y in S.REC_BOLTS]           # the battery mechanism's 4 M3, up into inserts in the frame's yokes (9 Nov: one body)
+
+
+class SockDown(Sock):
+    """a socket printed with the build axis down (-z: the one-body frame prints deck-top down, 9 Nov): its collar's and bore's teardrop
+    crown point to -z, the print's up"""
+    BUILD = (0.0, 0.0, -1.0)
+
+    def collar(self):
+        from parts.cage_node_lib import collar_shape
+        return collar_shape(self.c, self.d, 0.0, self.t_mouth, BORE_R, WALL, build=self.BUILD)
+
+    def bores(self):
+        from parts.socket_inject import injectable_socket_cuts
+        return injectable_socket_cuts(self.pt(FLOOR), self.d, 0.0, DEPTH, BORE_R, build=self.BUILD, port=getattr(self, "port_d", None))

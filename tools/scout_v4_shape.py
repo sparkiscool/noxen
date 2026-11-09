@@ -14,8 +14,8 @@ What sets the shape, and only this:
            in it, at the v3 place in the seat frame (x -51.3..54.3, |y| 32.8, z -44.3..9.6)
   funnel   the shared funnel seats the Scout on its receiver alone (9 Nov, Spark: "seat the scout on the receiver alone"; the box
            session moves the funnel's end walls in): below z -4.3 nothing outside the 55 deg faces rising from the receiver's outline
-           (zmin_walls_in + 2). So no runners or keel: the base is the yokes over the receiver, a nose bay (the FC), the flow sensor's
-           pod, a tail tray (Radxa, UBEC, XR2) and the nose stub; four TPU feet on the receiver's bottom corners are the foot on flat
+           (zmin_walls_in + 2). So no runners or keel: the base (one body with the deck, 9 Nov) is the yokes over the receiver (the FC,
+           the Radxa, the XR2, the DRV8833 under the deck), a nose block and the flow sensor's pod, a tail tray (the UBEC); four TPU feet on the receiver's bottom corners are the foot on flat
            ground and four bare pads meet the box's keep-alive probes. Gate: tools/seat_check.py scout_v4 --descent (walls in)
   camera   ONE camera (9 Nov, Spark: the probe is the front camera too, colour; bought: the Arducam 12MP autofocus USB camera,
            B0FLX58WKZ): 1/2.43" colour, IR-cut, AF 3.95 mm f/1.8 focusing 10 cm to inf (settable over UVC), 75 D / 61 H / 50 V deg,
@@ -65,6 +65,8 @@ R_KEEP, Z_SWEEP = PROP_R + 4.0, 4.0             # the disc grown 4 and swept +-4
 KEEP = 12.0                                      # every rod 12 from the swept disc
 DECK = (-60.0, 60.0, 40.0)                       # the deck's body: x0, x1, |y| (E), arms from its corners to the pods
 ARM_W, POD_R = 18.0, 15.0                        # arm width, motor pod radius (the 2004's base O27 + 1.5)
+FC_X, FC_Z0, UBEC_YC = (15.5, 51.5), 10.0, 0.0       # 9 Nov: the FC hangs under the deck over the receiver (x 15.5..51.5, z 10..20.5); the UBEC across the tail tray
+BED = 89.3                                       # 9 Nov (Spark: deck, arms, pods and base as ONE body): the body inside |x|, |y| <= 89.3, the A1 mini's 180 less 1.4
 # ---- the v3 base and the battery, unchanged ---------------------------------------------------------------------------------
 BX = 1.3                                          # 9 Nov (Spark: "the center of gravity ... perfectly centered"): everything under the deck (receiver, cartridge, pack, base,
                                                   # FC, flow, tail electronics) moved along x as one group, to put the Scout's CG on the thrust centre; the funnel moves with the receiver
@@ -103,9 +105,9 @@ NODES = {
     "RF": (XR, 0, ZR), "RM": (PROBE_DX, 0, ZR), "RB": (-XR, 0, ZR), "RS0": (0.0, XR, ZR), "RS1": (0.0, -XR, ZR),            # the flat roof: a cross from RM to four apexes 25 in from the ring (9 Nov: the same on all four sides)                                                              # the flat roof's spine
     "TB": (-FLAT, 0, ZB), "S0": (0.0, FLAT, ZB), "S1": (0.0, -FLAT, ZB),                                                    # the bottom nodes in the flats' planes
     "NB": (FLAT, 0, ZB),                                                                                                     # the nose node: on a rod triangle to the deck's nose end and the nose bay (9 Nov: was a solid stub of the base, there for the old front camera)
-    "DS0": (0.0, 40.0, 23.0), "BS0": (0.0, 40.0, -10.8), "DS1": (0.0, -40.0, 23.0), "BS1": (0.0, -40.0, -10.8),           # (9 Nov: 33.8 apart, so the two rods to S0 / S1 are 17 deg apart and their sockets stay a node; DS under the discs' 27.7)            # sockets on the deck's side lugs (PRINTED)
-    "DN": (93.0 + BX, 0, 21.0), "BN": (93.0 + BX, 0, 3.0),                                                                            # two sockets on the nose bay's front face, 62 mm rods to NB (PRINTED; DN on the deck's nose end, 95 mm, read 1.1 x Euler nose-first)
-    "DT": (CX - SEAT_L / 2, 0, 23.5), "BT": (CX - SEAT_L / 2, 0, 3.0),                                                     # both on the tail tray's end, 17 deg apart from TB (9 Nov: DT on the deck's tail end was 11 deg off BT, a fork)                                                                # sockets on the deck's tail end and the tail tray's end, its socket's bottom over the moved tail wall's top + 2 (PRINTED)
+    "DS0": (0.0, 40.0, 19.9), "BS0": (0.0, 40.0, -8.8), "DS1": (0.0, -40.0, 19.9), "BS1": (0.0, -40.0, -8.8),               # 9 Nov one body (printed deck-top down): DS's collar top on the bed (24.5), BS's crown (down in print) over the funnel's y walls           # (9 Nov: 33.8 apart, so the two rods to S0 / S1 are 17 deg apart and their sockets stay a node; DS under the discs' 27.7)            # sockets on the deck's side lugs (PRINTED)
+    "DN": (75.5, 0, 19.9), "BN": (75.5, 0, 2.7),                                                                           # 9 Nov one body: the collars (13 toward NB, crowns down) end at x 89.2, inside the A1 mini's 180; BN's crown (down in print) on the funnel's -2.3                                                                            # two sockets on the nose bay's front face, 62 mm rods to NB (PRINTED; DN on the deck's nose end, 95 mm, read 1.1 x Euler nose-first)
+    "DT": (-75.5, 0, 19.9), "BT": (-75.5, 0, 2.7),                                                                         # 9 Nov one body: as DN / BN at the tail                                                     # both on the tail tray's end, 17 deg apart from TB (9 Nov: DT on the deck's tail end was 11 deg off BT, a fork)                                                                # sockets on the deck's tail end and the tail tray's end, its socket's bottom over the moved tail wall's top + 2 (PRINTED)
 }
 PRINTED = ("DN", "BN", "DS0", "BS0", "DS1", "BS1", "DT", "BT")
 ROOTS = {}
@@ -181,7 +183,11 @@ def frame():
     lx, ly0, ly1, lz = LUG
     for s in (1, -1):                                                # the side lugs: the two sockets of each side triangle
         parts.append(box(-lx, lx, *sorted((s * ly0, s * ly1)), lz, DECK_Z0 + 0.5))
-    return union(parts)
+    parts.append(base())                                             # 9 Nov: the base is part of the same body (Spark: "design the whole thing ... as one body")
+    import manifold3d as mf
+    b = union(parts)
+    bm = mf.Manifold(mf.Mesh(np.asarray(b.vertices, np.float32), np.asarray(b.faces, np.uint32))) ^ mf.Manifold.cube([2 * BED, 2 * BED, 200.0]).translate([-BED, -BED, -100.0])
+    t = bm.to_mesh(); return trimesh.Trimesh(np.asarray(t.vert_properties)[:, :3], np.asarray(t.tri_verts), process=False)
 
 
 def zmin_walls_in(x):
@@ -192,17 +198,17 @@ def zmin_walls_in(x):
 
 
 def base():
-    """v4 base on the receiver-only seat (9 Nov): no runners, no keel. The yokes over the receiver (its top z 9.6 to the deck's
-    underside 18.5, where the v3 units bolted it up), a nose bay for the FC (x 54.3..93, |y| 22, z -2.3..18.5), the flow sensor's pod
-    under it (x 54.3..70.5: its bottom at -19.1, the rule's -21.1 + 2), a tail tray for the Radxa, UBEC and XR2 (x -90.5..-51.3, z -2.3
-    up), the stub out to the cage's nose node NB; every bottom on zmin_walls_in + 2"""
-    rec = moved("box_ctx_scout_receiver_v3", dx=BX)
-    lo, hi = rec.bounds
-    parts = [box(lo[0], hi[0], -34.0, 34.0, hi[2], DECK_Z0),                         # the yokes over the receiver
-             box(hi[0], 93.0 + BX, -22.0, 22.0, -2.3, DECK_Z0),                      # the nose bay
-             box(hi[0], 70.5 + BX, -12.0, 12.0, -19.1, -2.3),                        # the flow sensor's pod (open below: its window)
-             box(CX - SEAT_L / 2, lo[0], -34.0, 34.0, -2.3, DECK_Z0),                # the tail tray
-             ]                                                                        # (the nose stub out to NB is gone: NB hangs on rods to DN and BN)
+    """v4 base on the receiver-only seat, now the under-deck part of the one body (9 Nov). The yokes over the receiver (its top z 9.6
+    to the deck), where the FC, the Radxa, the XR2 and the DRV8833 hang under the deck (the nose bay is gone: with the nose sockets'
+    collars inside the A1 mini's 180 there is no room for the FC between DN and BN); the nose block (x 55.6..89.3, |y| 26) for DN /
+    BN and the flow sensor's pod under it (its bottom at -19.1, the rule's -21.1 + 2); the tail tray (x -89.3..-50, z -2.3 up) for DT /
+    BT and the UBEC on its floor; every bottom on zmin_walls_in + 2"""
+    lo, hi = np.array([-51.3 + BX, -32.8, -44.3]), np.array([54.3 + BX, 32.8, REC_TOP])   # the receiver v3 (C), not drawn
+    parts = [box(lo[0], hi[0], -DECK[2], DECK[2], hi[2], DECK_Z0 + 0.5),             # the yokes over the receiver, the deck's width
+             box(hi[0], BED, -26.0, 26.0, -2.3, DECK_Z0 + 0.5),                      # the nose block
+             box(hi[0], 71.8, -12.0, 12.0, -19.1, -2.0),                             # the flow sensor's pod (open below: its window)
+             box(-BED, lo[0], -34.0, 34.0, -2.3, DECK_TOP),                          # the tail tray
+             ]
     return union(parts)
 
 
@@ -482,7 +488,7 @@ def checks(meshes):
     out["probe vs cage"] = ("clear" if not clash else "CLASH: " + ", ".join(clash), "every probe part against the cage's nodes, sockets and rods (parked)")
     gap, hit = tilt_sweep()
     out["head tilt sweep"] = (f"clear, {gap} over the base plate" if gap > 0 and not hit else f"HITS at {hit} deg, gap {gap}", f"the cradle, camera and LED bars over {HEAD['range'][0]:.0f}..+{HEAD['range'][1]:.0f} deg")
-    for nm in ("frame", "base_nose", "base_tail"):
+    for nm in ("frame",):
         v = np.asarray(meshes[nm].vertices); top = v[:, 2].max()
         out[f"{nm} to discs"] = (round(min(disc_dist(p) for p in v if p[2] > DECK_Z0 - 7), 1), f"top z {top:.1f}; the props sweep down to {Z_PROP - Z_SWEEP:.1f}")
     return out
@@ -490,24 +496,25 @@ def checks(meshes):
 
 def write():
     meshes = {}
-    meshes["frame"] = frame()
-    b = base()                                                                       # the base in two units (parts/scout_v4_base_lib.py: split at x = BX, the A1 mini's 180)
-    meshes["base_nose"] = trimesh.intersections.slice_mesh_plane(b, [1, 0, 0], [BX + 0.5, 0, 0], cap=True)
-    meshes["base_tail"] = trimesh.intersections.slice_mesh_plane(b, [-1, 0, 0], [BX - 0.5, 0, 0], cap=True)
+    meshes["frame"] = frame()                                                        # 9 Nov: deck, arms, pods, lugs and the base in one body (parts/scout_v4_frame)
     for k, (mx, my) in enumerate(MOTORS, 1):
         sx, sy = np.sign(mx), np.sign(my)
         meshes[f"motor_{k}"] = moved("scout_motor_" + str(k), sx * (HUB - 54.1), sy * (HUB - 54.1), DECK_TOP - 22.0)
         meshes[f"prop_{k}"], meshes[f"blades_{k}"] = prop(mx, my)
     meshes.update(probe())
     meshes["probe_mast_a"], meshes["probe_mast_b"] = mast()
-    meshes["fc"] = place("fc", lo=(56.0 + BX, 4.0))     # 9 Nov: up 3, so its posts stand on more than the bay's 3.3 floor                                              # the FC in the nose bay (its place on the deck is the turret's)
     meshes["scout_flow_mtf_02p"] = place("scout_flow_mtf_02p", rot=([0, 0, 1], 90), lo=(54.5 + BX, -19.1))   # turned 90 deg, in the pod: outer edge x 70.5
-    # 9 Nov (the base units' setups): the UBEC on a tape land under the deck, lengthwise in the yokes' room (under the Radxa it left the tail tray's
-    # roof 1.6 thick); the Radxa low in the tail tray on four floor posts; the XR2 and the DRV8833 on edge in the nose bay either side of the FC
-    meshes["ubec"] = place("ubec", rot=([0, 0, 1], 90), lo=(-75.0, DECK_Z0 - 8.0), yc=-3.7)                  # yc: the CG on the thrust centre in y (the head sits 3.8 to -y over its mast)
-    meshes["radxa_zero_3w"] = place("radxa_zero_3w", rot=([0, 1, 0], 90), lo=(-86.0 + BX, 2.5), yc=1.0)     # 9 Nov: up 1.5, room under it for its posts; its top 0.4 under the UBEC (61 long, under the deck x -75..-14)
-    meshes["xr2"] = place("xr2", rot=([0, 0, 1], 90), lo=(60.0 + BX, 1.0), yc=21.0)
-    meshes["drv8833"] = box(62.0 + BX, 80.5 + BX, -23.0, -20.0, 1.0, 17.0)                    # KOOBOOK DRV8833 18.5 x 16 (listing), ~3 thick E, on edge
+    # 9 Nov (one body, the nose bay gone): the FC and the Radxa hang under the deck over the receiver on posts (inserts in the deck),
+    # the XR2 and the DRV8833 flat on tape lands beside the FC, the UBEC on the tail tray's floor across the drone
+    meshes["fc"] = place("fc", lo=(FC_X[0], FC_Z0))                                  # 36 square, component side up, its posts down from the deck
+    meshes["radxa_zero_3w"] = place("radxa_zero_3w", rot=([0, 1, 0], 90), lo=(-72.6, 10.4), yc=0.0)
+    meshes["radxa_zero_3w"].apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [0, 0, 1], meshes["radxa_zero_3w"].bounds.mean(0)))   # 65 along x
+    meshes["radxa_zero_3w"].apply_translation([-72.6 - meshes["radxa_zero_3w"].bounds[0][0], 0, 0])
+    meshes["ubec"] = place("ubec", lo=(-71.5, 0.3), yc=UBEC_YC)                        # 61 along y on the tail tray's land
+    meshes["xr2"] = place("xr2", rot=([0, 0, 1], 90), lo=(4.0, 10.0), yc=28.5)        # flat, 34.5 x 13 x 4, under its land at +y
+    meshes["xr2"].apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [1, 0, 0], meshes["xr2"].bounds.mean(0)))
+    meshes["xr2"].apply_translation([0, 0, 10.0 - meshes["xr2"].bounds[0][2]])
+    meshes["drv8833"] = box(4.0, 22.5, -38.8, -22.8, 10.0, 13.0)                     # KOOBOOK DRV8833 18.5 x 16 (listing), ~3 thick E, flat under its land at -y
     # the battery mechanism (receiver, cartridge, pack, its feet and pads) is not part of this design: it mounts on receiver_bolts
     meshes["receiver_bolts"] = receiver_bolts()
     meshes["cage_rods"], _ = cage()
@@ -532,12 +539,9 @@ def entries(meshes):
             e["opacity"] = opacity
         rows.append(e)
     fv = abs(meshes["frame"].volume)
-    add("frame", "frame v4: deck, arms, motor pods and side lugs (generated, parts/scout_v4_frame)", "structure", "frame", "#d9d2c3", 54.0 if not os.path.exists(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")) else json.load(open(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")))["mass_g"], "E",
-        f"deck x {DECK[0]:.0f}..{DECK[1]:.0f}, |y| {DECK[2]:.0f}, z {DECK_Z0}..{DECK_TOP} (the base units bolt to its flat underside), arms to O28 motor pads at (+-{HUB}, +-{HUB}), the side lugs' four rod sockets, the turret's four insert bosses, the UBEC's tape land; the room until the run lands; PCTG", "PCTG", 0.85)
-    for u, nm in (("nose", "nose unit: the FC, the flow sensor, the XR2 and the DRV8833, the nose node's sockets, two battery bolts"), ("tail", "tail unit: the Radxa, the tail node's sockets, two battery bolts")):
-        rj = os.path.join(ROOT, "parts", f"scout_v4_base_{u}", "result.json")
-        add(f"base_{u}", f"base {nm} (generated, parts/scout_v4_base_{u})", "structure", "base", "#c9c2b5", 31.0 if not os.path.exists(rj) else json.load(open(rj))["mass_g"], "E",
-            "the base split at x = BX to fit the A1 mini; bolted up to the deck (4 x M3 into its inserts); every bottom on the walls-in rule + 2; the room until the run lands; PCTG", "PCTG", 0.55)
+    add("frame", "frame v4, one body: deck, arms, motor pods, side lugs and the base (yokes, nose block, flow pod, tail tray) (generated, parts/scout_v4_frame)", "structure", "frame", "#d9d2c3", 110.0 if not os.path.exists(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")) else json.load(open(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")))["mass_g"], "E",
+        f"one print inside |x|, |y| {BED} (the A1 mini's 180), deck-top down on the bed: deck z {DECK_Z0}..{DECK_TOP} and the yokes over the receiver down to its top 9.6, arms to O28 motor pads at (+-{HUB}, +-{HUB}), "
+        "the battery mechanism's 4 M3 inserts, the FC's and the Radxa's posts, the XR2's, DRV8833's, UBEC's and flow sensor's lands, the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1), the turret's four insert bosses; the room until the run lands; PCTG", "PCTG", 0.85)
     for k in range(1, 5):
         add(f"motor_{k}", f"motor {k} (EMAX ECO II 2004)", "bought", "motors", "#8b8f96", 18.0, "listing", f"on its pod at (+-{HUB}, +-{HUB}), base z {DECK_TOP}")
         add(f"prop_{k}", f"prop {k} disc (Gemfan 5125, O{PROP_D}, swept)", "bought", "props", "#9fd3ff", 0.0, "listing", f"prop plane z {Z_PROP:.1f}", opacity=0.18)
@@ -567,10 +571,10 @@ def entries(meshes):
     for k, col in (("a", "#e8c547"), ("b", "#b8902a")):
         add(f"probe_mast_{k}", f"probe mast, blade {k.upper()} (10 mm steel tape, curves facing)", "placeholder", "camera", col, 0.0, "E",
             f"drawn 1 mm long above the throat; the page's timeline rolls it out to {REACH:.0f} mm and back (tools/scout_v4_timeline.py). Its mass is in the feed's")
-    add("fc", "FC MicoAir743 AIO (in the nose bay)", "bought", "electronics", "#1f6f3f", 10.0, "P", "36 x 36 at x 56..92 under the deck (its place at the deck's centre is the turret's); set its IMU offset in PX4 (EKF2_IMU_POS_X ~ +0.074 m)")
-    for src, nm, g, note in (("ubec", "UBEC", 15.0, "on a tape land under the deck, lengthwise in the yokes' room (x -47..-14, |y| 8.5)"), ("xr2", "XR2", 1.0, "on edge in the nose bay beside the FC (+y)"),
-                             ("drv8833", "DRV8833 (KOOBOOK, B07S7Z8CFL)", 1.0, "on edge in the nose bay beside the FC (-y): channel A the probe's N20, B its LED bars"),
-                             ("radxa_zero_3w", "Radxa Zero 3W", 10.0, "low in the tail tray on four M2.5 floor posts"),
+    add("fc", "FC MicoAir743 AIO (under the deck, over the receiver)", "bought", "electronics", "#1f6f3f", 10.0, "P", f"36 x 36 at x {FC_X[0]}..{FC_X[1]}, z {FC_Z0}..{FC_Z0 + 10.5}, component side up on 4 M3 posts down from the deck (grommets; heads from below with the receiver off); set its IMU offset in PX4 (EKF2_IMU_POS_X ~ +{(FC_X[0] + FC_X[1]) / 2000:.3f} m)")
+    for src, nm, g, note in (("ubec", "UBEC", 15.0, "on the tail tray's tape land, across the drone (x -71.5..-54.5, |y| 30.5), under the Radxa"), ("xr2", "XR2", 1.0, "flat under its tape land beside the FC (+y)"),
+                             ("drv8833", "DRV8833 (KOOBOOK, B07S7Z8CFL)", 1.0, "flat under its tape land beside the FC (-y): channel A the probe's N20, B its LED bars"),
+                             ("radxa_zero_3w", "Radxa Zero 3W", 10.0, "under the deck behind the turret's N20 on four M2.5 posts (inserts in the deck), 65 along x, its USB-C plugs out the -y edge"),
                              ("scout_flow_mtf_02p", "flow MTF-02P", 1.5, "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn")):
         add(src, nm, "bought", "electronics", "#2b5d8a", g, "P", note)
     add("receiver_bolts", "battery mount: 4 x M3 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)", "bought", "battery", "#5a5f66", 4.0, "E",
