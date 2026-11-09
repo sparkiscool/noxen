@@ -187,6 +187,10 @@ def artifact_page(a, S, meshes, commit, path):
         at_k = c + k * (np.array(at, float) - np.array([60, 0, 20]))
         s.view(nm, tuple(np.round(at_k + k * (np.array(eye, float) - np.array(at, float)), 1)), tuple(np.round(at_k, 1)))
     s.write(path)
+    if a.get("appendix"):                          # an HTML fragment shown under the viewer (the Scout v4's ceiling probe, 9 Nov): its styles scoped, its ids its own
+        page = open(path).read(); frag = open(os.path.join(ROOT, a["appendix"])).read()
+        i = page.rfind("</body>")
+        open(path, "w").write(page[:i] + frag + "\n" + page[i:] if i >= 0 else page + frag)
 
 
 def status(pid):
