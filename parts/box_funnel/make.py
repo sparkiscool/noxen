@@ -12,7 +12,7 @@ y walls, the flow clip 2 over the x walls' rim. With base v8 chamfered to |y| <=
 clip 17 aft, the faces could all rise to h 50 and capture +-35 (the alternative, not drawn).
 Legs: four 12 square under the x walls' ends (x -115 / +118, y +-40) down to the deck (W Z 66 = seat z -89.3), merging into the
 walls' tops; the Overseer's loop diagonals and bay ties pass 15 clear of them at its capture limits and the Scout cage keeps
-every member above the wall tops (tools/seat_check.py --descent: 0 crossings in every state for both drones). Wall 3.0, PETG. Not drawn: the hold-down against the 60 N insert, UHMW tape on the faces.
+every member above the wall tops (tools/seat_check.py --descent: 0 crossings in every state for both drones). Wall 3.0, PCTG (Spark 8 Nov, was PETG). Not drawn: the hold-down against the 60 N insert, UHMW tape on the faces.
 Moving end walls (9 Nov, Spark: the Scout carries as little as possible, the box takes the rest): the nose and tail walls are two
 carriages, cut from the funnel along its corner hips and between the side walls' faces, that slide along x on the side ledges. Setting
 "overseer" = the 184 seat as above; "scout" = each wall 39.2 in, the seat is the Scout receiver v3's own 105.6 x 65.5 outline (x -51.35
@@ -217,6 +217,6 @@ if __name__ == "__main__":
             v = (carriage(sx, st) ^ (frame() + drive())).volume()
             assert v < 1.0, f"the {'nose' if sx > 0 else 'tail'} wall at the {st} setting crosses the frame or drive by {v:.0f} mm3"
     t = stl(frame(), os.path.join(HERE, "part.stl"))
-    print(f"frame {t.volume * 1.27e-3:.0f} g in {len(frame().decompose())} piece(s), walls with their nuts {carriage(1).volume() * 1.27e-3:.1f} + {carriage(-1).volume() * 1.27e-3:.1f} g, strips {strips().volume() * 1.21e-3:.1f} g TPU; walls in for the Scout by {SETTINGS['scout']}")
+    print(f"frame {t.volume * 1.23e-3:.0f} g PCTG in {len(frame().decompose())} piece(s), walls with their nuts {carriage(1).volume() * 1.27e-3:.1f} + {carriage(-1).volume() * 1.27e-3:.1f} g, strips {strips().volume() * 1.21e-3:.1f} g TPU; walls in for the Scout by {SETTINGS['scout']}")
     print(f"funnel v3: x faces to h {H_X:.0f} (capture +-{H_X / TAN:.0f}), y faces to h {H_Y:.0f} (+-{H_Y / TAN:.0f}); extents {t.extents.round(1).tolist()}, "
-          f"min {t.bounds[0].round(1).tolist()} max {t.bounds[1].round(1).tolist()}, {t.volume * 1.27e-3:.0f} g PETG, watertight {t.is_watertight}")
+          f"min {t.bounds[0].round(1).tolist()} max {t.bounds[1].round(1).tolist()}, {t.volume * 1.23e-3:.0f} g PCTG, watertight {t.is_watertight}")
