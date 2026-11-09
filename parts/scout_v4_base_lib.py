@@ -30,7 +30,7 @@ def bodies(unit):
     env = man(S.base())
     half = box(SPLIT_X + 0.5, 300, -100, 100, -100, 100) if nose else box(-300, SPLIT_X - 0.5, -100, 100, -100, 100)
     if nose:                                                                          # the nose bay beyond the deck's end: room over and beside the FC (its 36 square fills the bay's 44),
-        env = env + box(57.0, 104.0, -26.0, 26.0, -2.3, 27.0) + box(57.0, 78.0, -26.0, 26.0, -10.0, 1.0)   # and under it down toward the flow pod (the funnel's line allows -14 at x 78)
+        env = env + box(57.0, 104.0, -30.0, 30.0, -2.3, 27.0) + box(57.0, 78.0, -30.0, 30.0, -10.0, 1.0)   # and under it down toward the flow pod (the funnel's line allows -14 at x 78)
     env = env ^ half
     drawn, cuts = [], []
     bolts = [b for b in BASE_BOLTS if (b[0] > SPLIT_X) == nose]
@@ -64,9 +64,9 @@ def bodies(unit):
         boards.append(("flow MTF-02P", [tuple(c)], [reg], ASM["scout_v4_flow_mtf_02p"]["mass_g"], tuple(c)))
         for pid, nm, sy in (("scout_v4_xr2", "XR2", 1), ("scout_v4_drv8833", "DRV8833", -1)):   # on edge beside the FC: a side land behind each (tape)
             b = bounds(pid); yo = b[1][1] if sy > 0 else b[0][1]
-            drawn.append(box(b[0][0], b[1][0], yo, yo + sy * 2.6, b[0][2], b[1][2]))
+            drawn.append(box(b[0][0], b[1][0], yo + sy * 0.5, yo + sy * 3.7, b[0][2], b[1][2]))   # 3.2 beyond the board's 0.5 clearance
             cuts.append(box(b[0][0] - 0.5, b[1][0] + 0.5, b[0][1] - 0.5, b[1][1] + 0.5, b[0][2] - 0.5, b[1][2] + 3.0))
-            reg = box(b[0][0], b[1][0], yo, yo + sy * 0.6, b[0][2], b[1][2]); c = (b[0] + b[1]) / 2
+            reg = box(b[0][0], b[1][0], yo + sy * 0.5, yo + sy * 1.1, b[0][2], b[1][2]); c = (b[0] + b[1]) / 2
             boards.append((nm, [tuple(c)], [reg], ASM[pid]["mass_g"], tuple(c)))
         socks = socks_of("DN") + socks_of("BN")
     else:
@@ -77,8 +77,8 @@ def bodies(unit):
         pts, regs = [], []
         for dx in (-11.425, 11.425):
             for dy in (-28.925, 28.925):                                             # four M2.5 posts from the tray's floor up to its underside (Radxa STEP: 57.85 x 22.85)
-                drawn.append(cyl(rx + dx, ry + dy, -2.3, rz0, 3.0)); cuts.append(cyl(rx + dx, ry + dy, rz0 - M25_INS[1], rz0 + 1, M25_INS[0]))
-                pts.append((rx + dx, ry + dy, rz0)); regs.append(region_top(rx + dx, ry + dy, rz0, 3.0))
+                drawn.append(cyl(rx + dx, ry + dy, -2.3, rz0, 4.0)); cuts.append(cyl(rx + dx, ry + dy, rz0 - M25_INS[1], rz0 + 1, M25_INS[0]))
+                pts.append((rx + dx, ry + dy, rz0)); regs.append(region_top(rx + dx, ry + dy, rz0, 4.0))
         boards.append(("Radxa Zero 3W", pts, regs, ASM["scout_v4_radxa_zero_3w"]["mass_g"], (rx, ry, (rz0 + rz) / 2)))
         ub = bounds("scout_v4_ubec")                                                   # the UBEC is taped to the deck's underside (the frame's land): keep its room and leads clear
         cuts.append(box(ub[0][0] - 0.5, ub[1][0] + 0.5, ub[0][1] - 0.5, ub[1][1] + 0.5, ub[0][2] - 0.5, DZ0 + 0.1))
@@ -90,7 +90,7 @@ def bodies(unit):
     env = env + U([along(s.pt(-8.0), s.pt(s.t_mouth), _BR + _W + 5.0) for s in socks] +           # room round each socket and back into the unit
                   [along(s.pt(-8.0), np.array([s.c[0] - np.sign(s.c[0]) * 25.0, 0.0, 10.0]), 7.0) for s in socks])
     lb = bounds("scout_v4_flow_mtf_02p")
-    floor = box(-300, 300, -100, 100, -2.3, 200) + (box(54.3 + S.BX, 70.5 + S.BX, -12.0, 12.0, -19.1, -2.2) + box(57.0, 78.0, -26.0, 26.0, -10.0, -2.2) if nose else box(0, 0.1, 0, 0.1, 0, 0.1))
+    floor = box(-300, 300, -100, 100, -2.3, 200) + (box(54.3 + S.BX, 70.5 + S.BX, -12.0, 12.0, -19.1, -2.2) + box(57.0, 78.0, -30.0, 30.0, -10.0, -2.2) if nose else box(0, 0.1, 0, 0.1, 0, 0.1))
     env = env ^ floor ^ half                                                          # nothing below the walls-in funnel's line (-2.3 past the receiver's ends; the flow pod as tools/scout_v4_shape.base())
     cuts += disc_cuts()
     check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))

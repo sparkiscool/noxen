@@ -41,9 +41,9 @@ def bodies():
     w = H + 2.0
     drawn, cuts, env = [], [], []
     case = box(X0 - 0.2, X1 + 0.2, -H - 0.2, H + 0.2, -H - 0.2, H + 0.2); cuts.append(case)
-    pads = [box(X0 + 1.0, X1 - 1.0, s * H, s * w, -10.0, 10.0) for s in (-1, 1)]          # the side pads against the case's sides
+    pads = [box(X0 + 1.0, X1 - 1.0, s * H, s * (H + 2.8), -10.0, 10.0) for s in (-1, 1)]          # the side pads against the case's sides
     lips = [box(X1, X1 + 2.5, sy * (H - 3.0), sy * (H + 0.5), sz * (H - 3.0), sz * (H + 0.5)) for sy in (-1, 1) for sz in (-1, 1)]   # the front corner lips
-    back = [box(X0 - 2.0, X0, -H, H, sz * 6.0, sz * (H - 1.0)) for sz in (-1, 1)]        # the back stop, open in the middle for the plug
+    back = [box(X0 - 2.8, X0, -H, H, sz * 6.0, sz * (H - 1.0)) for sz in (-1, 1)]        # the back stop, open in the middle for the plug
     horn = ycyl(0.0, 0.0, 7.0, w, w + 1.5); idler = ycyl(0.0, 0.0, 4.5, -w - 4.0, -w)
     drawn += pads + lips + back + [horn, idler]
     cuts.append(ycyl(0.0, 0.0, 2.6, w - 6.0, w + 3.0))                                     # the spline's hub

@@ -66,7 +66,7 @@ KEEP = 12.0                                      # every rod 12 from the swept d
 DECK = (-60.0, 60.0, 40.0)                       # the deck's body: x0, x1, |y| (E), arms from its corners to the pods
 ARM_W, POD_R = 18.0, 15.0                        # arm width, motor pod radius (the 2004's base O27 + 1.5)
 # ---- the v3 base and the battery, unchanged ---------------------------------------------------------------------------------
-BX = 0.1                                          # 9 Nov (Spark: "the center of gravity ... perfectly centered"): everything under the deck (receiver, cartridge, pack, base,
+BX = 1.3                                          # 9 Nov (Spark: "the center of gravity ... perfectly centered"): everything under the deck (receiver, cartridge, pack, base,
                                                   # FC, flow, tail electronics) moved along x as one group, to put the Scout's CG on the thrust centre; the funnel moves with the receiver
 SEAT_Z, CX, SEAT_L, SEAT_W, RUN_H, CH = -44.3, 1.5 + BX, 184.0, 66.8, 20.0, 4.0
 # ---- camera, cage --------------------------------------------------------------------------------------------------------------
@@ -500,12 +500,12 @@ def write():
         meshes[f"prop_{k}"], meshes[f"blades_{k}"] = prop(mx, my)
     meshes.update(probe())
     meshes["probe_mast_a"], meshes["probe_mast_b"] = mast()
-    meshes["fc"] = place("fc", lo=(56.0 + BX, 1.0))                                              # the FC in the nose bay (its place on the deck is the turret's)
+    meshes["fc"] = place("fc", lo=(56.0 + BX, 4.0))     # 9 Nov: up 3, so its posts stand on more than the bay's 3.3 floor                                              # the FC in the nose bay (its place on the deck is the turret's)
     meshes["scout_flow_mtf_02p"] = place("scout_flow_mtf_02p", rot=([0, 0, 1], 90), lo=(54.5 + BX, -19.1))   # turned 90 deg, in the pod: outer edge x 70.5
     # 9 Nov (the base units' setups): the UBEC on a tape land under the deck, lengthwise in the yokes' room (under the Radxa it left the tail tray's
     # roof 1.6 thick); the Radxa low in the tail tray on four floor posts; the XR2 and the DRV8833 on edge in the nose bay either side of the FC
-    meshes["ubec"] = place("ubec", rot=([0, 0, 1], 90), lo=(-47.0, DECK_Z0 - 8.0), yc=-3.7)                  # yc: the CG on the thrust centre in y (the head sits 3.8 to -y over its mast)
-    meshes["radxa_zero_3w"] = place("radxa_zero_3w", rot=([0, 1, 0], 90), lo=(-86.0 + BX, 1.0), yc=1.0)
+    meshes["ubec"] = place("ubec", rot=([0, 0, 1], 90), lo=(-75.0, DECK_Z0 - 8.0), yc=-3.7)                  # yc: the CG on the thrust centre in y (the head sits 3.8 to -y over its mast)
+    meshes["radxa_zero_3w"] = place("radxa_zero_3w", rot=([0, 1, 0], 90), lo=(-86.0 + BX, 2.5), yc=1.0)     # 9 Nov: up 1.5, room under it for its posts; its top 0.4 under the UBEC (61 long, under the deck x -75..-14)
     meshes["xr2"] = place("xr2", rot=([0, 0, 1], 90), lo=(60.0 + BX, 1.0), yc=21.0)
     meshes["drv8833"] = box(62.0 + BX, 80.5 + BX, -23.0, -20.0, 1.0, 17.0)                    # KOOBOOK DRV8833 18.5 x 16 (listing), ~3 thick E, on edge
     # the battery mechanism (receiver, cartridge, pack, its feet and pads) is not part of this design: it mounts on receiver_bolts

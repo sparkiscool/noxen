@@ -107,7 +107,7 @@ def region_bot(x, y, z, r=BOSS_R, t=1.5):
 
 # ---- the interfaces the parts share (all drone frame, with BX where the part is under the deck) ---------------------------------
 DZ0, DZ1 = S.DECK_Z0, S.DECK_TOP                               # 18.5, 24.5: the deck's underside and top
-BASE_BOLTS = [(x, y) for x in (12.0, 40.0, -12.0, -50.0) for y in (25.0, -25.0)]   # M3 from the deck's top down into inserts in the base units (12+ from the battery bolts)
+BASE_BOLTS = [(12.0, 25.0), (12.0, -25.0), (40.0, 25.0), (40.0, -25.0), (-12.0, 25.0), (-12.0, -25.0), (-40.0, 18.0), (-40.0, -18.0)]   # (-40, +-18): ahead of the Radxa, clear of the UBEC and the battery bolts   # M3 from the deck's top down into inserts in the base units (12+ from the battery bolts)
 NOSE_BOLTS, TAIL_BOLTS = BASE_BOLTS[:4], BASE_BOLTS[4:]
 SPLIT_X = 0.0 + S.BX                                           # the base splits into a nose unit and a tail unit here (183 mm long: the A1 mini prints 180)
 TURRET_BOLTS = [(S.SPOOL["c"][0] + dx, dy) for dx in (-13.0, 13.0) for dy in (-21.0, 19.0)]   # M3 down through the turret's floor into the deck's inserts, beside the gear and the drum (driver from above)

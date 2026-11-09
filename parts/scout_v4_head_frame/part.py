@@ -46,7 +46,7 @@ def bodies():
     h = S.CAM["side"] / 2; w = h + 2.0; sv = w + 3.0; hw = S.BLADE_W / 2
     drawn, cuts = [], []
     # the clip: round the blades' tip, the lens slot through it
-    clip = box(mx - 6.5, mx + 6.5, -hw - 2.5, hw + 2.5, hz, hz + 7.0); drawn.append(clip)
+    clip = box(mx - 6.5, mx + 6.5, -hw - 2.5, hw + 2.5, hz, hz + 8.0); drawn.append(clip)
     lens = box(mx - 4.6, mx + 4.6, -hw - 0.3, hw + 0.3, hz - 1, hz + 5.5); cuts.append(lens)
     cuts.append(xcyl(0.0, hz + 3.0, 1.1, mx - 20, mx + 20))                              # blade A's M2 across both walls
     cuts.append(box(mx - 20, mx + 20, -1.1, 1.1, hz + 0.0, hz + 6.0)) if False else None
@@ -69,7 +69,7 @@ def bodies():
     idler_reg = ycyl(ax, az, 4.5, ay - w - 1.8, ay - w - 1.5)
     cuts.append(sweep())
     cuts.append(box(mx - 4.6, mx + 4.6, -hw - 0.3, hw + 0.3, -50, hz))                     # the mast below
-    env = box(min(ax - 22.0, mx - 7.0), max(ax + 12.5, mx + 7.0), ay - w - 4.5, ay + sv + 12.5, hz, az + 7.0)
+    env = box(min(ax - 22.0, mx - 7.0), max(ax + 12.5, mx + 7.0), ay - w - 10.0, ay + sv + 12.5, hz, az + 7.0)   # -y: 10 of room for the idler's bracket (a 4.4 slab was a neck)
     return dict(drawn=U(drawn), cuts=U(cuts), env=env, clip_reg=clip_reg, pad_pts=pad_pts, pad_regs=pad_regs, idler=((ax, ay - w - 2.75, az), idler_reg))
 
 
