@@ -4,16 +4,16 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 2,
+  "specks_plain": 1,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   3818.7
+   5076.7
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 1,
+  "acute_edges": 0,
   "ok": true
  },
  "function_check": {
@@ -26,73 +26,73 @@
  "strength": {
   "rows": [
    {
-    "case": "frame TB-P3 axial 84 N (pull-out)",
+    "case": "frame TB-P3 axial 96 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.378,
-    "across": 0.249,
+    "inlayer": 0.304,
+    "across": 0.15,
     "at": [
-     -126.4,
-     -3.5,
-     10.8
+     -123.4,
+     4.5,
+     15.8
     ]
    },
    {
-    "case": "frame TB-P3 side 22.2 N",
+    "case": "frame TB-P3 side 22.8 N",
     "cls": "crash",
-    "inlayer": 0.035,
+    "inlayer": 0.026,
+    "across": 0.009,
+    "at": [
+     -144.4,
+     7.5,
+     14.8
+    ]
+   },
+   {
+    "case": "frame TB-P4 axial 96 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.319,
+    "across": 0.186,
+    "at": [
+     -126.4,
+     3.5,
+     8.8
+    ]
+   },
+   {
+    "case": "frame TB-P4 side 22.8 N",
+    "cls": "crash",
+    "inlayer": 0.03,
     "across": 0.016,
     "at": [
-     -147.4,
-     6.5,
-     16.8
-    ]
-   },
-   {
-    "case": "frame TB-P4 axial 84 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.368,
-    "across": 0.246,
-    "at": [
-     -126.4,
-     2.5,
-     9.8
-    ]
-   },
-   {
-    "case": "frame TB-P4 side 22.2 N",
-    "cls": "crash",
-    "inlayer": 0.034,
-    "across": 0.017,
-    "at": [
-     -148.4,
-     -6.5,
+     -146.4,
+     -7.5,
      15.8
     ]
    },
    {
     "case": "crash 35 g through the longest rod TB-P3 (118 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.363,
-    "across": 0.193,
+    "inlayer": 0.284,
+    "across": 0.154,
     "at": [
-     -126.4,
+     -128.4,
      -3.5,
-     10.8
+     8.8
     ]
    }
   ],
-  "worst": 0.378,
-  "worst_case": "frame TB-P3 axial 84 N (pull-out)",
+  "worst": 0.319,
+  "worst_case": "frame TB-P4 axial 96 N (pull-out)",
   "worst_at": [
    -126.4,
-   -3.5,
-   10.8
+   3.5,
+   8.8
   ]
  },
- "mass_g": 7.72,
+ "mass_g": 9.43,
  "watertight": true,
  "export": {
-  "faces_in": 54362,
+  "faces_in": 56226,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 1,
@@ -100,21 +100,21 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 54362,
+  "faces": 56226,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 276,
-   "folded": 16,
-   "caps_split": 25,
+   "degenerate": 278,
+   "folded": 14,
+   "caps_split": 23,
    "caps_left": 0,
    "watertight": true,
-   "faces": 78794
+   "faces": 83050
   },
-  "volume_mm3": 6272.7,
-  "exact_mm3": 6272.8
+  "volume_mm3": 7668.5,
+  "exact_mm3": 7668.6
  },
  "bodies": {
   "bodies_raw": 1,
@@ -122,24 +122,23 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 6272.8,
+ "volume_mm3": 7668.6,
  "drawn_g": 2.96,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
   "specks_mm3": [
-   0.016,
-   0.016
+   0.031
   ],
   "slivers": [],
   "kept_walls": [],
   "removed_mm3": 0.0,
-  "specks": 2
+  "specks": 1
  },
  "stl": "scout_v4_node_tb.stl",
  "view_stl": "scout_v4_node_tb_view.stl",
- "view_faces": 54362,
+ "view_faces": 56226,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -204,7 +203,7 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.2278729170270426,
+  "volfrac": 0.3085971285244767,
   "nd": 17343,
   "sym_axes": [],
   "n_real": 5,
@@ -230,20 +229,20 @@
   "design": 17291,
   "drawn": 2375,
   "cases": [
-   "frame TB-P3 axial 84 N (pull-out)",
-   "frame TB-P3 side 22.2 N",
-   "frame TB-P4 axial 84 N (pull-out)",
-   "frame TB-P4 side 22.2 N",
+   "frame TB-P3 axial 96 N (pull-out)",
+   "frame TB-P3 side 22.8 N",
+   "frame TB-P4 axial 96 N (pull-out)",
+   "frame TB-P4 side 22.8 N",
    "crash 35 g through the longest rod TB-P3 (118 mm), axial + side"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 23.7,
- "layout_s": 314,
- "peak_gb": 1.28578,
- "gen_cm3": 3.9,
+ "build_s": 24.9,
+ "layout_s": 315,
+ "peak_gb": 1.29184,
+ "gen_cm3": 5.3,
  "h": 1.0,
  "audit": {
   "solid_ok": [],
@@ -299,82 +298,82 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.083,
-   "worst_case": "frame TB-P3 axial 84 N (pull-out)",
+   "worst": 0.094,
+   "worst_case": "frame TB-P3 axial 96 N (pull-out)",
    "worst_at": [
     -126.4,
     2.5,
     15.8
    ],
-   "budget_share": 0.228,
-   "thinned": 0.36,
+   "budget_share": 0.309,
+   "thinned": 0.3,
    "max_worst": 0.3
   }
  },
  "early": {
   "rows": [
    {
-    "case": "frame TB-P3 axial 84 N (pull-out)",
+    "case": "frame TB-P3 axial 96 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.373,
-    "across": 0.206,
+    "inlayer": 0.316,
+    "across": 0.147,
     "at": [
-     -128.4,
+     -127.4,
      -2.5,
-     9.8
+     7.8
     ]
    },
    {
-    "case": "frame TB-P3 side 22.2 N",
+    "case": "frame TB-P3 side 22.8 N",
     "cls": "crash",
-    "inlayer": 0.04,
-    "across": 0.016,
-    "at": [
-     -151.4,
-     7.5,
-     17.8
-    ]
-   },
-   {
-    "case": "frame TB-P4 axial 84 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.452,
-    "across": 0.268,
-    "at": [
-     -126.4,
-     2.5,
-     9.8
-    ]
-   },
-   {
-    "case": "frame TB-P4 side 22.2 N",
-    "cls": "crash",
-    "inlayer": 0.039,
-    "across": 0.024,
+    "inlayer": 0.029,
+    "across": 0.011,
     "at": [
      -150.4,
-     -7.5,
+     8.5,
      14.8
+    ]
+   },
+   {
+    "case": "frame TB-P4 axial 96 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.331,
+    "across": 0.162,
+    "at": [
+     -126.4,
+     3.5,
+     8.8
+    ]
+   },
+   {
+    "case": "frame TB-P4 side 22.8 N",
+    "cls": "crash",
+    "inlayer": 0.029,
+    "across": 0.015,
+    "at": [
+     -146.4,
+     -7.5,
+     16.8
     ]
    },
    {
     "case": "crash 35 g through the longest rod TB-P3 (118 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.362,
-    "across": 0.195,
+    "inlayer": 0.305,
+    "across": 0.143,
     "at": [
-     -128.4,
+     -127.4,
      -2.5,
-     9.8
+     7.8
     ]
    }
   ],
-  "worst": 0.452,
-  "worst_case": "frame TB-P4 axial 84 N (pull-out)",
+  "worst": 0.331,
+  "worst_case": "frame TB-P4 axial 96 N (pull-out)",
   "worst_at": [
    -126.4,
-   2.5,
-   9.8
+   3.5,
+   8.8
   ],
   "beta": 4.0,
   "iteration": 14,
@@ -382,10 +381,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 337,
+ "total_s": 340,
  "part_sha": "e18357e9d060",
- "lib_sha": "f1c94f24e504",
- "setup_sha": "923853c10f0ab207",
+ "lib_sha": "84b289aabca4",
+ "setup_sha": "00a6b6208a3dd480",
  "max_worst": 0.3,
  "strength_ok": false
 }
