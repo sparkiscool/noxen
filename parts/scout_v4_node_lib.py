@@ -48,6 +48,12 @@ L.DRAWN_WALL = 2.6
 # Budgets (9 Nov): the 1.54 x skeleton of spec_for was sized for strength at limit 0.3, but the v4 nodes came in at 0.005-0.18. The
 # light nodes (worst <= 0.042) go back to 1.1 x, the budget that joins every collar without flakes (5 Nov); TB / NB / S0 / S1 (0.16-
 # 0.18) to 1.25 x: an index ~ volume^-1.25 puts 1.54 -> 1.25 at ~0.23, short of the 0.25 target to leave the thinner collar its share.
+# The frame's paired sockets (9 Nov, the frame and base as one body inside the A1 mini's 180: DN/BN and DT/BT 17.2 apart at x +-75.5,
+# DS/BS 28.7 apart) are 12.3 deg apart from NB / TB and 14.2 from S0 / S1 (17 before), so their bores start 34 / 29 mm out. The bed
+# and the funnel fix those sockets; a short Y is the honest node here, its two bores side by side and the engine growing the fork
+# (the 25 mm limit was set on 5 Nov for ties 39-85 mm out, 290k-586k cells; these stay under 36 mm). v4-only.
+L.MAX_START = 36.0
+
 BUDGET_X = {"TB": 1.25, "NB": 1.25, "S0": 1.25, "S1": 1.25}
 
 
