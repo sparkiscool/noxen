@@ -7,7 +7,7 @@ name: meshes
 on:
   push:
     branches: [main]
-    paths: ['print/*.stl']
+    paths: ['print/*.stl', 'parts/*/make.py']      # a make.py part's mesh is committed with its script: published here
   workflow_dispatch:
     inputs:
       parts:
@@ -36,6 +36,7 @@ jobs:
         run: |
           rc=0
           if ls print/*.stl >/dev/null 2>&1; then python3 tools/print_mesh.py print-files || rc=1; fi
+          if [ "${{ github.event_name }}" = "push" ]; then python3 tools/print_mesh.py publish --all || rc=1; fi
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             if [ -n "${{ inputs.parts }}" ]; then list="${{ inputs.parts }}"; else list="--all"; fi
             if [ "$list" = "--all" ]; then python3 tools/print_mesh.py publish --all || rc=1

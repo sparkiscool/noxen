@@ -20,6 +20,7 @@ Nothing here is ever read by Claude; CI runs it.
 import hashlib, json, os, sys, glob, subprocess
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from part_sha import stale as _stale
+import print_mesh
 import numpy as np, trimesh
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -304,7 +305,7 @@ def build(inline=False, offline=False):
                                    preview=f"previews/{src}.png" if os.path.exists(prev) else None,
                                    feedback=open(fb).read() if os.path.exists(fb) else "",
                                    has_script=os.path.exists(os.path.join(ROOT, "parts", src, "part.py")),
-                                   print_url=((r or {}).get("print_stl") or {}).get("url")))   # the full print mesh (tools/print_mesh.py), the page links it
+                                   print_url=print_mesh.print_stl(src).get("url")))   # the full print mesh (tools/print_mesh.py), the page links it
             S["parts"][-1]["_result"] = r
         out["systems"].append(S)
         if inline:
