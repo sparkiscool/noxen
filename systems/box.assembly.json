@@ -4,7 +4,7 @@
 "readme_view": "iso",
 "artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
 "machine": "box",
-"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3): the catch's SEAT_TO_W raised 65, the arm's head extending 65 more at the drone slot, Spark 3 Nov). In: the swap arm v7 at park with 11 bay receivers, every slot of the ring but the drone's (8 Nov) and two packs, a placeholder extended head at the drone, the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the funnel on its nose and tail beams across the side sheets, its end walls sliding in for the Scout and out for the Overseer, the Scout under a folding rain and dust dome, r 263 on the box's rain lid (9 Nov, after noxensys.com's dock; the Overseer lands with it open; the Scout drawn is still v3 with its runners, which go: the walls cut through them until the Scout's base is redrawn), both drones seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3): the catch's SEAT_TO_W raised 65, the arm's head extending 65 more at the drone slot, Spark 3 Nov). In: the swap arm v7 at park with 11 bay receivers, every slot of the ring but the drone's (8 Nov) and two packs, a placeholder extended head at the drone, the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the funnel on its nose and tail beams across the side sheets, its end walls sliding in for the Scout and out for the Overseer, the Scout under a folding rain and dust dome (five carbon hoops on one hinge axis, a folding-fan linkage, two worm motors) on the box's rain lid (9 Nov, after noxensys.com's dock; the Overseer lands with it open; the Scout drawn is still v3 with its runners, which go: the walls cut through them until the Scout's base is redrawn), both drones seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
 "cg_ref": null,
 "timeline": "tools/landing_box.py:timeline",
 "parts": [
@@ -2943,12 +2943,12 @@
 "note": "two Tr8 lead screws with opposite-hand halves under the side walls' overhang, a NEMA 8 per side geared to each, a switch at each wall position; four spring probes in the ledges at (1.5 +- 30, +-29.5) for seat sense and keep-alive; sizes E, Amazon listings to pick"
 },
 {
-"id": "box_dome_gore_00",
-"name": "dome gore 00",
-"role": "bought",
+"id": "box_dome_hoop_1",
+"name": "dome hoop 1 (3 mm carbon, r 272) and its hub plates",
+"role": "structure",
 "group": "dome",
-"color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g00.stl",
+"color": "#3a3f46",
+"mesh": "parts/box_dome/gore_meshes/hoop_1.stl",
 "pose": [
 [
 1.0,
@@ -2975,20 +2975,20 @@
 1.0
 ]
 ],
-"opacity": 0.35,
+"material": "PCTG",
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore + its 3 mm carbon hoop, r 263; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "shut at 45 deg; its plates turn on the hub bolts, picked up / pulled out by hoop 2 through the pin in a 45 deg slot"
 },
 {
-"id": "box_dome_gore_01",
-"name": "dome gore 01",
-"role": "bought",
+"id": "box_dome_hoop_2",
+"name": "dome hoop 2 (3 mm carbon, r 281) and its hub plates",
+"role": "structure",
 "group": "dome",
-"color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g01.stl",
+"color": "#3a3f46",
+"mesh": "parts/box_dome/gore_meshes/hoop_2.stl",
 "pose": [
 [
 1.0,
@@ -3015,20 +3015,20 @@
 1.0
 ]
 ],
-"opacity": 0.35,
+"material": "PCTG",
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore, r 265; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "shut at 90 deg; its plates turn on the hub bolts, picked up / pulled out by hoop 3 through the pin in a 45 deg slot"
 },
 {
-"id": "box_dome_gore_02",
-"name": "dome gore 02",
-"role": "bought",
+"id": "box_dome_hoop_3",
+"name": "dome hoop 3 (3 mm carbon, r 290) and its hub plates",
+"role": "structure",
 "group": "dome",
-"color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g02.stl",
+"color": "#3a3f46",
+"mesh": "parts/box_dome/gore_meshes/hoop_3.stl",
 "pose": [
 [
 1.0,
@@ -3055,20 +3055,20 @@
 1.0
 ]
 ],
-"opacity": 0.35,
+"material": "PCTG",
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore + its 3 mm carbon hoop, r 267; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "shut at 135 deg; its plates turn on the hub bolts, picked up / pulled out by hoop 4 through the pin in a 45 deg slot"
 },
 {
-"id": "box_dome_gore_03",
-"name": "dome gore 03",
-"role": "bought",
+"id": "box_dome_hoop_4",
+"name": "dome hoop 4 (3 mm carbon, r 299) and its hub plates",
+"role": "structure",
 "group": "dome",
-"color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g03.stl",
+"color": "#3a3f46",
+"mesh": "parts/box_dome/gore_meshes/hoop_4.stl",
 "pose": [
 [
 1.0,
@@ -3095,20 +3095,20 @@
 1.0
 ]
 ],
-"opacity": 0.35,
+"material": "PCTG",
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore, r 269; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "shut at 180 deg; its plates turn on the hub bolts, driven by the motors (the free edge)"
 },
 {
-"id": "box_dome_gore_04",
-"name": "dome gore 04",
+"id": "box_dome_fabric_00",
+"name": "dome fabric, panel 0 strip 0",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g04.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_00.stl",
 "pose": [
 [
 1.0,
@@ -3138,17 +3138,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore + its 3 mm carbon hoop, r 271; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 0 and 1, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_05",
-"name": "dome gore 05",
+"id": "box_dome_fabric_01",
+"name": "dome fabric, panel 0 strip 1",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g05.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_01.stl",
 "pose": [
 [
 1.0,
@@ -3178,17 +3178,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore, r 273; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 0 and 1, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_06",
-"name": "dome gore 06",
+"id": "box_dome_fabric_02",
+"name": "dome fabric, panel 0 strip 2",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g06.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_02.stl",
 "pose": [
 [
 1.0,
@@ -3218,17 +3218,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore + its 3 mm carbon hoop, r 275; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 0 and 1, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_07",
-"name": "dome gore 07",
+"id": "box_dome_fabric_03",
+"name": "dome fabric, panel 0 strip 3",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g07.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_03.stl",
 "pose": [
 [
 1.0,
@@ -3258,17 +3258,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore, r 277; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 0 and 1, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_08",
-"name": "dome gore 08",
+"id": "box_dome_fabric_10",
+"name": "dome fabric, panel 1 strip 0",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g08.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_10.stl",
 "pose": [
 [
 1.0,
@@ -3298,17 +3298,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore + its 3 mm carbon hoop, r 279; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 1 and 2, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_09",
-"name": "dome gore 09",
+"id": "box_dome_fabric_11",
+"name": "dome fabric, panel 1 strip 1",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g09.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_11.stl",
 "pose": [
 [
 1.0,
@@ -3338,17 +3338,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore, r 281; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 1 and 2, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_10",
-"name": "dome gore 10",
+"id": "box_dome_fabric_12",
+"name": "dome fabric, panel 1 strip 2",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g10.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_12.stl",
 "pose": [
 [
 1.0,
@@ -3378,17 +3378,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore + its 3 mm carbon hoop, r 283; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 1 and 2, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_11",
-"name": "dome gore 11",
+"id": "box_dome_fabric_13",
+"name": "dome fabric, panel 1 strip 3",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g11.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_13.stl",
 "pose": [
 [
 1.0,
@@ -3418,17 +3418,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore, r 285; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 1 and 2, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_12",
-"name": "dome gore 12",
+"id": "box_dome_fabric_20",
+"name": "dome fabric, panel 2 strip 0",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g12.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_20.stl",
 "pose": [
 [
 1.0,
@@ -3458,17 +3458,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore + its 3 mm carbon hoop, r 287; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 2 and 3, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_13",
-"name": "dome gore 13",
+"id": "box_dome_fabric_21",
+"name": "dome fabric, panel 2 strip 1",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g13.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_21.stl",
 "pose": [
 [
 1.0,
@@ -3498,17 +3498,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore, r 289; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 2 and 3, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_14",
-"name": "dome gore 14",
+"id": "box_dome_fabric_22",
+"name": "dome fabric, panel 2 strip 2",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g14.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_22.stl",
 "pose": [
 [
 1.0,
@@ -3538,17 +3538,17 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore + its 3 mm carbon hoop, r 291; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 2 and 3, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
 },
 {
-"id": "box_dome_gore_15",
-"name": "dome gore 15",
+"id": "box_dome_fabric_23",
+"name": "dome fabric, panel 2 strip 3",
 "role": "bought",
 "group": "dome",
 "color": "#dfe7ee",
-"mesh": "parts/box_dome/gore_meshes/g15.stl",
+"mesh": "parts/box_dome/gore_meshes/fabric_23.stl",
 "pose": [
 [
 1.0,
@@ -3578,9 +3578,287 @@
 "opacity": 0.35,
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "coated ripstop gore + its 3 mm carbon hoop, r 293; turns about the hinge axis (W Y at X 0, Z 155) to fold the dome open on -W X"
+"note": "silnylon between hoops 2 and 3, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
+},
+{
+"id": "box_dome_fabric_30",
+"name": "dome fabric, panel 3 strip 0",
+"role": "bought",
+"group": "dome",
+"color": "#dfe7ee",
+"mesh": "parts/box_dome/gore_meshes/fabric_30.stl",
+"pose": [
+[
+1.0,
+0,
+0,
+0
+],
+[
+0,
+1.0,
+0,
+0
+],
+[
+0,
+0,
+1.0,
+0
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"opacity": 0.35,
+"tag": "C",
+"owner": "box dome",
+"version": "v3 mechanism 9 Nov",
+"source": "parts/box_dome/make.py",
+"note": "silnylon between hoops 3 and 4, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
+},
+{
+"id": "box_dome_fabric_31",
+"name": "dome fabric, panel 3 strip 1",
+"role": "bought",
+"group": "dome",
+"color": "#dfe7ee",
+"mesh": "parts/box_dome/gore_meshes/fabric_31.stl",
+"pose": [
+[
+1.0,
+0,
+0,
+0
+],
+[
+0,
+1.0,
+0,
+0
+],
+[
+0,
+0,
+1.0,
+0
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"opacity": 0.35,
+"tag": "C",
+"owner": "box dome",
+"version": "v3 mechanism 9 Nov",
+"source": "parts/box_dome/make.py",
+"note": "silnylon between hoops 3 and 4, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
+},
+{
+"id": "box_dome_fabric_32",
+"name": "dome fabric, panel 3 strip 2",
+"role": "bought",
+"group": "dome",
+"color": "#dfe7ee",
+"mesh": "parts/box_dome/gore_meshes/fabric_32.stl",
+"pose": [
+[
+1.0,
+0,
+0,
+0
+],
+[
+0,
+1.0,
+0,
+0
+],
+[
+0,
+0,
+1.0,
+0
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"opacity": 0.35,
+"tag": "C",
+"owner": "box dome",
+"version": "v3 mechanism 9 Nov",
+"source": "parts/box_dome/make.py",
+"note": "silnylon between hoops 3 and 4, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
+},
+{
+"id": "box_dome_fabric_33",
+"name": "dome fabric, panel 3 strip 3",
+"role": "bought",
+"group": "dome",
+"color": "#dfe7ee",
+"mesh": "parts/box_dome/gore_meshes/fabric_33.stl",
+"pose": [
+[
+1.0,
+0,
+0,
+0
+],
+[
+0,
+1.0,
+0,
+0
+],
+[
+0,
+0,
+1.0,
+0
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"opacity": 0.35,
+"tag": "C",
+"owner": "box dome",
+"version": "v3 mechanism 9 Nov",
+"source": "parts/box_dome/make.py",
+"note": "silnylon between hoops 3 and 4, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"
+},
+{
+"id": "box_dome_hoop_0",
+"name": "dome hoop 0 (3 mm carbon, r 263, fixed at the base, rear)",
+"role": "structure",
+"group": "dome",
+"color": "#3a3f46",
+"mesh": "parts/box_dome/gore_meshes/hoop_0.stl",
+"pose": [
+[
+1.0,
+0,
+0,
+0
+],
+[
+0,
+1.0,
+0,
+0
+],
+[
+0,
+0,
+1.0,
+0
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"tag": "C",
+"owner": "box dome",
+"version": "v3 mechanism 9 Nov",
+"source": "parts/box_dome/make.py",
+"note": "fixed: its plates are the hub brackets"
+},
+{
+"id": "box_dome_hubs",
+"name": "dome hub brackets and bolts (printed)",
+"role": "structure",
+"group": "dome",
+"color": "#c9d2d9",
+"mesh": "parts/box_dome/gore_meshes/hubs.stl",
+"pose": [
+[
+1.0,
+0,
+0,
+0
+],
+[
+0,
+1.0,
+0,
+0
+],
+[
+0,
+0,
+1.0,
+0
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"tag": "C",
+"owner": "box dome",
+"version": "v3 mechanism 9 Nov",
+"source": "parts/box_dome/make.py",
+"note": "left and right on the hinge axis (W X): a block through the lid's edge onto the ring, plate 0 with its slot, the cheeks, a 6 mm shoulder bolt",
+"material": "PCTG"
+},
+{
+"id": "box_dome_drive",
+"name": "dome drive: 2 worm motors, cams, 4 limit switches",
+"role": "bought",
+"group": "dome",
+"color": "#555555",
+"mesh": "parts/box_dome/gore_meshes/drive.stl",
+"pose": [
+[
+1.0,
+0,
+0,
+0
+],
+[
+0,
+1.0,
+0,
+0
+],
+[
+0,
+0,
+1.0,
+0
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"tag": "C",
+"owner": "box dome",
+"version": "v3 mechanism 9 Nov",
+"source": "parts/box_dome/make.py",
+"note": "JGY-370 12 V 6 rpm double shaft, self-locking, one per hub on plate 4; a cam on the outer shaft between two KW11 switches (open, shut)"
 },
 {
 "id": "box_dome_ring",
@@ -3617,49 +3895,9 @@
 ],
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "r 255..302 at W Z 145..155 on the lid's rim, segments pinned with 3 mm carbon rods; carries the hubs",
-"material": "PCTG"
-},
-{
-"id": "box_dome_hubs",
-"name": "dome hinge hubs",
-"role": "structure",
-"group": "dome",
-"color": "#c9d2d9",
-"mesh": "parts/box_dome/gore_meshes/hubs.stl",
-"pose": [
-[
-1.0,
-0,
-0,
-0
-],
-[
-0,
-1.0,
-0,
-0
-],
-[
-0,
-0,
-1.0,
-0
-],
-[
-0,
-0,
-0,
-1.0
-]
-],
-"tag": "C",
-"owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
-"source": "parts/box_dome/make.py",
-"note": "at W Y 168 -+ 263 on the hinge axis; every hoop ends in them",
+"note": "r 255..297 at W Z 132..142, the lid's edge on its inner lip, segments pinned with 3 mm carbon rods",
 "material": "PCTG"
 },
 {
@@ -3697,52 +3935,13 @@
 ],
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
 "note": "eight, from the sheets' tops out to the ring"
 },
 {
-"id": "box_dome_drive",
-"name": "dome drive (geared motor, placeholder)",
-"role": "bought",
-"group": "dome",
-"color": "#555555",
-"mesh": "parts/box_dome/gore_meshes/drive.stl",
-"pose": [
-[
-1.0,
-0,
-0,
-0
-],
-[
-0,
-1.0,
-0,
-0
-],
-[
-0,
-0,
-1.0,
-0
-],
-[
-0,
-0,
-0,
-1.0
-]
-],
-"tag": "E",
-"owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
-"source": "parts/box_dome/make.py",
-"note": "on the rear hub's axis, turns the free edge's hoop; size E, listing to pick"
-},
-{
 "id": "box_dome_lid",
-"name": "rain lid (3 mm polycarbonate)",
+"name": "rain lid (3 mm UV polycarbonate)",
 "role": "bought",
 "group": "dome",
 "color": "#c9d6e2",
@@ -3775,9 +3974,9 @@
 ],
 "tag": "C",
 "owner": "box dome",
-"version": "v2 drawn 9 Nov (Scout only)",
+"version": "v3 mechanism 9 Nov",
 "source": "parts/box_dome/make.py",
-"note": "at the sheets' top (W Z 142..145) over the box and out to the ring, open within r 160 of the seat (the funnel, the 60 / 120 deg bays and the swap head rise there, under the dome); the funnel's beams stand on it",
+"note": "at the sheets' top (W Z 142..145), flush between them and out to the ring; open within r 160 of the seat (the funnel, the 60 / 120 deg bays, the swap head)",
 "opacity": 0.5
 },
 {
@@ -5319,5 +5518,31 @@
 "source": "the swap arm's bay receiver envelope, at the seat",
 "note": "the Overseer latch set back in its base slot (out since 29 Oct): 184 x 67 x 72 from the arm's bay envelope; the cartridge width is a CHECK"
 }
+],
+"views": {
+"dome hub": {
+"eye": [
+520.0,
+20.0,
+330.0
+],
+"target": [
+285.0,
+168.0,
+175.0
 ]
+},
+"dome": {
+"eye": [
+700.0,
+-650.0,
+700.0
+],
+"target": [
+0.0,
+168.0,
+200.0
+]
+}
+}
 }

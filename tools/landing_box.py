@@ -1,5 +1,5 @@
 """The box page's timeline: both drones landing into the funnel (Spark 3 Nov: animate how both drones will land on this).
-The funnel's end walls slide in 39.2 for the Scout and out for the Overseer, and the Scout's rain dome shuts over it while it is seated (9 Nov). Kinematic, not simulated: each drone comes down off-centre and yawed, meets a 55 deg face with its receiver, and the offset then
+The funnel's end walls slide in 39.2 for the Scout and out for the Overseer, and the Scout's rain dome folds shut over it while it sits and open again (9 Nov). Kinematic, not simulated: each drone comes down off-centre and yawed, meets a 55 deg face with its receiver, and the offset then
 follows the face to the seat (offset = height above the seat / tan 55, the geometry of a block sliding down the face); yaw
 straightens in the last 40 mm. Scout first (0..10 s), then the Overseer (10..24 s). Groups "landing: Scout" and "landing: Overseer"
 in systems/box.assembly.json move as rigid bodies; everything else stays. Transforms are in the box W frame: the drones are posed
@@ -14,8 +14,8 @@ TAN = math.tan(math.radians(55.0))
 PARK_Z, PARK_X = 560.0, -420.0          # where a drone waits when it is not the one landing (above and behind the box, out of the front view)
 
 # per drone: (t_start, t_seat, t_leave, t_end, start height, offset x, offset y, yaw deg)
-PLAN = {"landing: Scout": (0.0, 6.0, 8.0, 10.0, 180.0, 30.0, 22.0, 6.0),
-        "landing: Overseer": (10.0, 18.0, 20.5, 24.0, 260.0, -25.0, 30.0, -5.0)}
+PLAN = {"landing: Scout": (0.0, 5.0, 11.0, 13.0, 180.0, 30.0, 22.0, 6.0),             # 9 Nov: the Scout sits 6 s, for its dome to shut and open
+        "landing: Overseer": (13.0, 20.0, 22.5, 24.0, 260.0, -25.0, 30.0, -5.0)}
 
 
 def seat_pose(t, plan, t_total):
@@ -37,17 +37,19 @@ def seat_pose(t, plan, t_total):
 
 
 WALL_IN = 39.2                           # parts/box_funnel/make.py SETTINGS["scout"]: each end wall moves this far in for the Scout (Spark 9 Nov)
-WALL_MOVES = ((9.0, 10.5, 1.0, 0.0), (22.5, 24.0, 0.0, 1.0))   # (t0, t1, from, to) in the "in" fraction: in for the Scout, out for the Overseer once the Scout is up, in again once the Overseer is up
+WALL_MOVES = ((11.8, 13.0, 1.0, 0.0), (22.6, 24.0, 0.0, 1.0))   # (t0, t1, from, to) in the "in" fraction: in for the Scout, out for the Overseer once the Scout is up, in again once the Overseer is up
 WALLS = {"box_funnel_wall_nose": 1, "box_funnel_wall_tail": -1}
-DOME_MOVES = ((6.0, 6.8, 1.0, 0.0), (7.2, 8.0, 0.0, 1.0))   # (t0, t1, from, to) open fraction: shut over the seated Scout, open for its take-off and landing and all the Overseer's visit (9 Nov: the dome is the Scout's)
+DOME = ((5.3, 7.8, True), (8.4, 10.9, False))   # (t0, t1, shutting): hoop 4 sweeps 0 -> 180 (shut) over the seated Scout, then back (2.5 s each here; 5 s at the motors' 6 rpm)
 
 
-def dome_open(t):
-    u = 1.0
-    for t0, t1, a0, a1 in DOME_MOVES:
-        if t >= t1: u = a1
-        elif t > t0: u = a0 + (a1 - a0) * (t - t0) / (t1 - t0)
-    return u
+def dome_a4(t):
+    """hoop 4's angle (deg) and whether it is shutting, at time t: open (0) except while the Scout sits"""
+    for t0, t1, shutting in DOME:
+        if t0 <= t < t1:
+            u = (t - t0) / (t1 - t0); return (180.0 * u if shutting else 180.0 * (1 - u)), shutting
+        if shutting and t1 <= t < DOME[1][0]:
+            return 180.0, True
+    return 0.0, False
 
 
 def _dome():
@@ -69,8 +71,8 @@ def walls_in(t):
 def timeline(a):
     names = {g: [p["name"] for p in a["parts"] if p.get("group") == g] for g in PLAN}
     walls = {p["name"]: WALLS[p["id"]] for p in a["parts"] if p["id"] in WALLS}
-    gores = {p["name"]: int(p["id"][-2:]) for p in a["parts"] if p["id"].startswith("box_dome_gore_")}
-    dm = _dome() if gores else None
+    dm = _dome() if any(p["id"].startswith("box_dome_") for p in a["parts"]) else None
+    moving = {p["name"]: p["id"] for p in a["parts"] if dm and p["id"] in dm.poses(0.0, False)}
     t_total = 24.0
 
     def poses(t):
@@ -85,8 +87,10 @@ def timeline(a):
         for n, sx in walls.items():
             D = np.eye(4); D[0, 3] = -sx * WALL_IN * walls_in(t)
             out[n] = SEAT_TO_W @ D @ W_TO_SEAT
-        for n, i in gores.items():                                   # the dome's gores turn about its hinge axis (they are drawn shut, in W)
-            out[n] = dm.open_turn(i, dome_open(t))
+        if moving:                                                   # the dome's hoops and fabric (drawn shut, in W) at hoop 4's angle: the folding fan
+            P = dm.poses(*dome_a4(t))
+            for n, pid in moving.items():
+                out[n] = P[pid]
         return out
 
     n = int(t_total * 24)
@@ -95,6 +99,6 @@ def timeline(a):
         series.append((g.split(": ")[1] + " height over the seat", [seat_pose(i * t_total / n, plan, t_total)[0][2] if plan[0] <= i * t_total / n < plan[3] else None
                                                                       for i in range(n)], "mm"))
     series.append(("end walls in", [WALL_IN * walls_in(i * t_total / n) for i in range(n)], "mm"))
-    if gores:
-        series.append(("dome shut", [100.0 * (1.0 - dome_open(i * t_total / n)) for i in range(n)], "%"))
+    if moving:
+        series.append(("dome hoop 4", [dome_a4(i * t_total / n)[0] for i in range(n)], "deg"))
     return poses, t_total, series
