@@ -5,7 +5,7 @@
 "machine": "scout_v4",
 "order": 0,
 "readme_view": "iso",
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -44..83 mm, ~764 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..93 mm, ~697 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -25,17 +25,17 @@
 },
 {
 "id": "scout_v4_base",
-"name": "base v4 room (the v3 nose and tail units' envelope: runners, keel, nose stub)",
+"name": "base v4 room (yokes over the receiver, nose bay, flow pod, tail tray, nose stub)",
 "role": "placeholder",
 "group": "base",
 "color": "#c9c2b5",
 "mesh": "parts/scout_v4_base/part.stl",
-"mass_g": 144.8,
+"mass_g": 62.5,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; a stub out to the cage's nose node NB, a socket on the tail runner's end; mass at 30 % of the envelope (E); printed in PCTG",
+"note": "the receiver-only seat (9 Nov, Spark: \"seat the scout on the receiver alone\"; the funnel's end walls move in for the Scout): no runners or keel. Yokes over the receiver (its top z 9.6 to the deck), the nose bay for the FC, the flow sensor's pod, the tail tray for the Radxa, UBEC and XR2, the stub out to NB; every bottom on the walls-in rule + 2 (zmin_walls_in); mass at 30 % of the envelope (E); printed in PCTG",
 "opacity": 0.55
 },
 {
@@ -212,35 +212,35 @@
 },
 {
 "id": "scout_v4_probe_head",
-"name": "front camera and probe head (Arducam 5MP autofocus on an ES9051 tilt servo, LED, VL53L5CX)",
+"name": "front camera and probe head (Arducam UB0238 5MP autofocus on an SG90 tilt servo, LEDs, VL53L0X, bumper)",
 "role": "bought",
 "group": "camera",
 "color": "#1d5e3a",
 "mesh": "parts/scout_v4_probe_head/part.stl",
-"mass_g": 11.9,
+"mass_g": 18.5,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "parked on the roof node it is the front camera, lens (47, 0, 79), 20 deg up; rolled out on the tape it is the ceiling probe. Camera board 5 E, servo 4.1, ToF 0.5, LEDs 0.3, cradle and clip 2 E"
+"note": "parked on the throat it is the front camera, lens (62, 0, 90.5), 20 deg up, 1080p 30 fps; rolled out on the two blades it is the ceiling probe. Camera board 5 E, SG90 9, VL53L0X 0.7, LEDs 0.3, cradle and clip 2, TPU bumper 1.5"
 },
 {
 "id": "scout_v4_probe_turret",
-"name": "ceiling probe turret (0.3 m tape mast, spool, N20 drive, throat, parking lip)",
+"name": "ceiling probe turret (two-blade 0.3 m mast, spool, gears, clock-spring drum, N20 in the deck, throat)",
 "role": "placeholder",
 "group": "camera",
 "color": "#f2b705",
 "mesh": "parts/scout_v4_probe_turret/part.stl",
-"mass_g": 29.3,
+"mass_g": 36.4,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "spool 4 and housing 5 (PCTG), N20 gear motor with encoder 10.5, DRV8833 1, 10 mm steel blade 0.4 m 3.8, flat cable 2 x 300 mm with the clock spring in the spool hub 2, TPU lip 2, wires 1 (E)"
+"note": "two 10 mm steel blades 0.4 m 7.6, flat cable 2 x 300 mm 2, spool with its 40 T gear 5, clock-spring drum 2, housing and throat 6 (PCTG), N20 300 rpm with encoder 10.5, 15 T pinion 0.3, DRV8833 1, TPU lip 1, wires 1 (E)"
 },
 {
 "id": "scout_v4_fc",
-"name": "FC MicoAir743 AIO (on top of the deck)",
+"name": "FC MicoAir743 AIO (in the nose bay)",
 "role": "bought",
 "group": "electronics",
 "color": "#1f6f3f",
@@ -250,7 +250,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "36 x 36 at the centre on the deck top z 24.5"
+"note": "36 x 36 at x 56..92 under the deck (its place at the deck's centre is the turret's); set its IMU offset in PX4 (EKF2_IMU_POS_X ~ +0.074 m)"
 },
 {
 "id": "scout_v4_ubec",
@@ -264,7 +264,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "tail bay, as v3"
+"note": "the tail tray, flat, bottom z -1.3"
 },
 {
 "id": "scout_v4_xr2",
@@ -278,7 +278,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "tail bay, as v3"
+"note": "the tail tray, flat"
 },
 {
 "id": "scout_v4_radxa_zero_3w",
@@ -292,7 +292,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "tail bay on edge, as v3"
+"note": "the tail tray, flat over the UBEC (was on edge)"
 },
 {
 "id": "scout_v4_flow_mtf_02p",
@@ -306,7 +306,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "the nose runner's window, as v3"
+"note": "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn"
 },
 {
 "id": "scout_v4_pack_4s_1500",
@@ -365,6 +365,34 @@
 "note": "unchanged"
 },
 {
+"id": "scout_v4_receiver_feet",
+"name": "receiver TPU feet (4, at its bottom corners)",
+"role": "structure",
+"group": "battery",
+"color": "#333333",
+"mesh": "parts/scout_v4_receiver_feet/part.stl",
+"mass_g": 1.0,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "8 x 2.5 at |y| 21..23.5, to z -47.5: the Scout's foot on flat ground, clear of the box's ledges and swap head (the box session, 9 Nov); TPU 95A"
+},
+{
+"id": "scout_v4_receiver_contacts",
+"name": "receiver contact pads (4, keep-alive and seat sensing)",
+"role": "structure",
+"group": "battery",
+"color": "#c48a3a",
+"mesh": "parts/scout_v4_receiver_contacts/part.stl",
+"mass_g": 0.5,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "bare O6 pads at (1.5 +- 30, +-29.5) on the receiver's bottom rim, against the box's probes in the ledges"
+},
+{
 "id": "scout_v4_cage_rods",
 "name": "half cage v4, rods (3 mm carbon: the ring, the flat roof, end Vs and side fans)",
 "role": "cage",
@@ -390,7 +418,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "16 cage nodes; the larger spheres are sockets printed into the frame and the base (NB on the nose stub, two on each side lug, the deck's tail end, the tail runner's end)",
+"note": "16 cage nodes; the larger spheres are sockets printed into the frame and the base (NB on the nose stub, two on each side lug, the deck's tail end, the tail tray's end)",
 "opacity": 0.9
 }
 ]
