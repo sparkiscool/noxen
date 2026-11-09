@@ -34,7 +34,7 @@
 ]
 ]
 },
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..121 mm, ~696 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..121 mm, ~702 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -293,7 +293,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "housing and throat 4 (thin walls), DRV8833 1, TPU lip 1, wires 1 (E); drawn see-through to show the mechanism",
+"note": "side plates trimmed to clear the discs, floor, drum cover and a 30 mm throat for the 19 mm blades: 4 (thin walls), DRV8833 1, TPU lip 1, wires 1 (E); drawn see-through",
 "opacity": 0.22
 },
 {
@@ -303,12 +303,12 @@
 "group": "camera",
 "color": "#d08a1e",
 "mesh": "parts/scout_v4_probe_spool/part.stl",
-"mass_g": 4.0,
+"mass_g": 5.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "hub O30, flanges O34, the two blades and the camera cable wound on it; ~1.5 turns for the 150 mm roll-out; the blades' ends are fixed to it, so fully out is a hard stop"
+"note": "hub O30 21 wide, flanges O34, the two 19 mm blades and the camera cable wound on it; ~1.5 turns for the 150 mm roll-out; the blades' ends are fixed to it, so fully out is a hard stop"
 },
 {
 "id": "scout_v4_probe_pinion",
@@ -359,12 +359,12 @@
 "group": "camera",
 "color": "#b8902a",
 "mesh": "parts/scout_v4_probe_feed/part.stl",
-"mass_g": 3.8,
+"mass_g": 8.8,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "two 10 mm steel tape blades (0.2 m each, 0.15 m used, cut from 2 tape measures), curves facing; their mass is all here"
+"note": "two 19 mm (3/4 in) steel tape blades, 0.2 m each with 0.15 m used, cut from two ordinary 3 m tape measures, curves facing (~22 g/m, E); their mass is all here"
 },
 {
 "id": "scout_v4_probe_mast_a",
