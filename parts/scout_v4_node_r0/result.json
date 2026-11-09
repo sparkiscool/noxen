@@ -4,23 +4,23 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 2,
+  "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   2992.6
+   2088.5
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 1,
+  "acute_edges": 0,
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 907.6,
+  "skin_mm3": 615.4,
   "skin_missing_mm3": 0.0,
   "in_cuts_mm3": 0.0,
-  "outside_env_mm3": -0.0,
+  "outside_env_mm3": 0.0,
   "ok": true
  },
  "strength": {
@@ -28,60 +28,60 @@
    {
     "case": "frame RF-R0 axial 33 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.015,
-    "across": 0.011,
+    "inlayer": 0.018,
+    "across": 0.014,
     "at": [
      155.2,
-     90.3,
-     61.4
+     91.3,
+     60.4
     ]
    },
    {
     "case": "frame RF-R0 side 12.2 N",
     "cls": "crash",
-    "inlayer": 0.011,
-    "across": 0.013,
+    "inlayer": 0.016,
+    "across": 0.018,
     "at": [
-     154.2,
-     86.3,
+     155.2,
+     88.3,
      58.4
     ]
    }
   ],
-  "worst": 0.015,
+  "worst": 0.018,
   "worst_case": "frame RF-R0 axial 33 N (pull-out)",
   "worst_at": [
    155.2,
-   90.3,
-   61.4
+   91.3,
+   60.4
   ]
  },
- "mass_g": 6.11,
+ "mass_g": 4.73,
  "watertight": true,
  "export": {
-  "faces_in": 39812,
+  "faces_in": 37150,
   "degenerate": 0,
-  "folded": 2,
-  "caps_split": 2,
+  "folded": 0,
+  "caps_split": 1,
   "caps_left": 0,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 39810,
+  "faces": 37150,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 302,
+   "degenerate": 314,
    "folded": 10,
-   "caps_split": 41,
-   "caps_left": 2,
+   "caps_split": 47,
+   "caps_left": 6,
    "watertight": true,
-   "faces": 58540
+   "faces": 54072
   },
-  "volume_mm3": 4808.7,
-  "exact_mm3": 4808.8
+  "volume_mm3": 3724.0,
+  "exact_mm3": 3724.1
  },
  "bodies": {
   "bodies_raw": 1,
@@ -89,24 +89,20 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 4808.8,
- "drawn_g": 2.85,
+ "volume_mm3": 3724.1,
+ "drawn_g": 2.32,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
-  "specks_mm3": [
-   0.062,
-   0.016
-  ],
+  "specks_mm3": [],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.0,
-  "specks": 2
+  "removed_mm3": 0.0
  },
  "stl": "scout_v4_node_r0.stl",
  "view_stl": "scout_v4_node_r0_view.stl",
- "view_faces": 39810,
+ "view_faces": 37150,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -171,13 +167,13 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.23647112323783537,
-  "nd": 10995,
+  "volfrac": 0.16703296703296702,
+  "nd": 11375,
   "sym_axes": [],
   "n_real": 2,
   "n_ties": 6,
   "backend": "direct",
-  "iterations": 69,
+  "iterations": 76,
   "stopped": "max_stage"
  },
  "grid": {
@@ -194,8 +190,8 @@
    37.8729
   ],
   "cells": 61440,
-  "design": 10995,
-  "drawn": 2208,
+  "design": 11375,
+  "drawn": 1828,
   "cases": [
    "frame RF-R0 axial 33 N (pull-out)",
    "frame RF-R0 side 12.2 N"
@@ -204,34 +200,36 @@
    "default"
   ]
  },
- "build_s": 13.3,
- "layout_s": 120,
- "peak_gb": 0.78536,
- "gen_cm3": 2.6,
+ "build_s": 15.3,
+ "layout_s": 137,
+ "peak_gb": 0.824276,
+ "gen_cm3": 1.9,
  "h": 1.0,
  "audit": {
-  "drawn_share": 0.167,
+  "solid_ok": [],
+  "drawn_share": 0.138,
   "load_room": [],
   "bodies": [
    {
     "id": 1,
-    "cells": 727,
-    "inscribed_mm": 3.5,
+    "cells": 604,
+    "inscribed_mm": 2.5,
     "touches_cut": true,
     "touches_support": true,
     "loaded": false,
-    "room": 0.96,
+    "room": 0.97,
     "room_depth_mm": 35.0,
     "at": [
-     149.0,
+     149.1,
      113.5,
      61.4
     ],
-    "core_mm": 2.5
+    "core_mm": 1.8,
+    "free_cells": 604
    },
    {
     "id": 2,
-    "cells": 1481,
+    "cells": 1224,
     "inscribed_mm": 3.5,
     "touches_cut": true,
     "touches_support": true,
@@ -239,11 +237,12 @@
     "room": 0.94,
     "room_depth_mm": 39.0,
     "at": [
-     152.9,
-     90.1,
+     152.8,
+     90.2,
      57.5
     ],
     "core_mm": 2.5,
+    "free_cells": 1224,
     "share_of_drawn": 0.67
    }
   ],
@@ -258,15 +257,27 @@
   "drawn_walls": [],
   "cases": 2,
   "supports": 1,
-  "fails": []
+  "fails": [],
+  "room_full": {
+   "worst": 0.007,
+   "worst_case": "frame RF-R0 axial 33 N (pull-out)",
+   "worst_at": [
+    155.2,
+    90.3,
+    61.4
+   ],
+   "budget_share": 0.167,
+   "thinned": 0.04,
+   "max_worst": 0.3
+  }
  },
  "early": {
   "rows": [
    {
     "case": "frame RF-R0 axial 33 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.015,
-    "across": 0.013,
+    "inlayer": 0.018,
+    "across": 0.018,
     "at": [
      155.2,
      91.3,
@@ -276,21 +287,21 @@
    {
     "case": "frame RF-R0 side 12.2 N",
     "cls": "crash",
-    "inlayer": 0.013,
-    "across": 0.017,
+    "inlayer": 0.021,
+    "across": 0.027,
     "at": [
      155.2,
-     89.3,
-     59.4
+     88.3,
+     58.4
     ]
    }
   ],
-  "worst": 0.017,
+  "worst": 0.027,
   "worst_case": "frame RF-R0 side 12.2 N",
   "worst_at": [
    155.2,
-   89.3,
-   59.4
+   88.3,
+   58.4
   ],
   "beta": 4.0,
   "iteration": 14,
@@ -298,10 +309,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 133,
+ "total_s": 152,
  "part_sha": "5f43f559feab",
- "lib_sha": "94409b305835",
- "setup_sha": "9bc76da1c978c2a7",
+ "lib_sha": "e19f92b30cb4",
+ "setup_sha": "7c13b954370d68c1",
  "max_worst": 0.3,
  "strength_ok": true
 }
