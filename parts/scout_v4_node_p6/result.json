@@ -28,8 +28,8 @@
    {
     "case": "frame RS1-P6 axial 36 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.017,
+    "inlayer": 0.024,
+    "across": 0.022,
     "at": [
      91.3,
      -155.2,
@@ -39,8 +39,8 @@
    {
     "case": "frame RS1-P6 side 12.8 N",
     "cls": "crash",
-    "inlayer": 0.019,
-    "across": 0.021,
+    "inlayer": 0.03,
+    "across": 0.033,
     "at": [
      88.3,
      -155.2,
@@ -48,18 +48,18 @@
     ]
    }
   ],
-  "worst": 0.022,
-  "worst_case": "frame RS1-P6 axial 36 N (pull-out)",
+  "worst": 0.033,
+  "worst_case": "frame RS1-P6 side 12.8 N",
   "worst_at": [
-   91.3,
+   88.3,
    -155.2,
-   60.4
+   58.4
   ]
  },
  "mass_g": 4.58,
  "watertight": true,
  "export": {
-  "faces_in": 36824,
+  "faces_in": 36836,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -67,7 +67,7 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 36824,
+  "faces": 36836,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -105,7 +105,7 @@
  },
  "stl": "scout_v4_node_p6.stl",
  "view_stl": "scout_v4_node_p6_view.stl",
- "view_faces": 36824,
+ "view_faces": 36836,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -203,9 +203,9 @@
    "default"
   ]
  },
- "build_s": 12.3,
- "layout_s": 146,
- "peak_gb": 0.827944,
+ "build_s": 16.7,
+ "layout_s": 130,
+ "peak_gb": 0.842816,
  "gen_cm3": 1.9,
  "h": 1.0,
  "audit": {
@@ -262,15 +262,15 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.008,
+   "worst": 0.011,
    "worst_case": "frame RS1-P6 axial 36 N (pull-out)",
    "worst_at": [
-    90.3,
-    -155.2,
-    61.4
+    89.3,
+    -153.2,
+    57.4
    ],
    "budget_share": 0.167,
-   "thinned": 0.05,
+   "thinned": 0.07,
    "max_worst": 0.3
   }
  },
@@ -279,19 +279,19 @@
    {
     "case": "frame RS1-P6 axial 36 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.021,
+    "inlayer": 0.031,
+    "across": 0.028,
     "at": [
-     91.3,
-     -155.2,
-     60.4
+     94.3,
+     -150.2,
+     64.4
     ]
    },
    {
     "case": "frame RS1-P6 side 12.8 N",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.032,
+    "inlayer": 0.038,
+    "across": 0.05,
     "at": [
      88.3,
      -155.2,
@@ -299,7 +299,7 @@
     ]
    }
   ],
-  "worst": 0.032,
+  "worst": 0.05,
   "worst_case": "frame RS1-P6 side 12.8 N",
   "worst_at": [
    88.3,
@@ -312,19 +312,19 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 158,
+ "total_s": 147,
  "part_sha": "b0a62aef0bed",
- "lib_sha": "84b289aabca4",
- "setup_sha": "5e831a56a6412ec0",
+ "lib_sha": "909a609777bb",
+ "setup_sha": "d88d061038ba88a9",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_p6.stl",
-  "sha256": "b9baa5c7e6a5322d3399953a6557ade7a9ae7dec56ada55a8c984a0288705142",
-  "bytes": 1841284,
-  "faces": 36824,
-  "view_faces": 36824,
-  "view_sha256": "b9baa5c7e6a5322d3399953a6557ade7a9ae7dec56ada55a8c984a0288705142",
-  "at": "2026-11-09 23:05"
+  "sha256": "a28dc6c7c2e3fe1066264b005e9292bbb34d6e8ead8fa7330aade3e09ff635f7",
+  "bytes": 1841884,
+  "faces": 36836,
+  "view_faces": 36836,
+  "view_sha256": "a28dc6c7c2e3fe1066264b005e9292bbb34d6e8ead8fa7330aade3e09ff635f7",
+  "at": "2026-11-09 23:54"
  }
 }
