@@ -31,7 +31,7 @@
     "inlayer": 0.003,
     "across": 0.002,
     "at": [
-     1.5,
+     -1.5,
      123.0,
      65.5
     ]
@@ -39,7 +39,7 @@
    {
     "case": "frame RM-RS0 side 23.0 N",
     "cls": "crash",
-    "inlayer": 0.007,
+    "inlayer": 0.008,
     "across": 0.003,
     "at": [
      -5.5,
@@ -50,7 +50,7 @@
    {
     "case": "crash 35 g through the longest rod RM-RS0 (130 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.009,
+    "inlayer": 0.011,
     "across": 0.003,
     "at": [
      -4.5,
@@ -59,7 +59,7 @@
     ]
    }
   ],
-  "worst": 0.009,
+  "worst": 0.011,
   "worst_case": "crash 35 g through the longest rod RM-RS0 (130 mm), axial + side",
   "worst_at": [
    -4.5,
@@ -67,10 +67,10 @@
    62.5
   ]
  },
- "mass_g": 3.74,
+ "mass_g": 3.62,
  "watertight": true,
  "export": {
-  "faces_in": 32606,
+  "faces_in": 32608,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -78,7 +78,7 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 32606,
+  "faces": 32608,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -101,7 +101,7 @@
   "bodies": 1
  },
  "volume_mm3": 2946.6,
- "drawn_g": 2.32,
+ "drawn_g": 2.25,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
@@ -117,7 +117,7 @@
  },
  "stl": "scout_v4_node_rs0.stl",
  "view_stl": "scout_v4_node_rs0_view.stl",
- "view_faces": 32606,
+ "view_faces": 32608,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -220,7 +220,7 @@
  },
  "build_s": 11.1,
  "layout_s": 70,
- "peak_gb": 0.653084,
+ "peak_gb": 0.651724,
  "gen_cm3": 1.2,
  "h": 1.0,
  "audit": {
@@ -260,7 +260,7 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.005,
+   "worst": 0.006,
    "worst_case": "crash 35 g through the longest rod RM-RS0 (130 mm), axial + side",
    "worst_at": [
     -5.5,
@@ -268,7 +268,7 @@
     60.5
    ],
    "budget_share": 0.145,
-   "thinned": 0.03,
+   "thinned": 0.04,
    "max_worst": 0.3
   }
  },
@@ -280,7 +280,7 @@
     "inlayer": 0.004,
     "across": 0.002,
     "at": [
-     3.5,
+     -3.5,
      121.0,
      63.5
     ]
@@ -288,7 +288,7 @@
    {
     "case": "frame RM-RS0 side 23.0 N",
     "cls": "crash",
-    "inlayer": 0.011,
+    "inlayer": 0.012,
     "across": 0.004,
     "at": [
      -4.5,
@@ -299,7 +299,7 @@
    {
     "case": "crash 35 g through the longest rod RM-RS0 (130 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.015,
+    "inlayer": 0.016,
     "across": 0.005,
     "at": [
      -4.5,
@@ -308,7 +308,7 @@
     ]
    }
   ],
-  "worst": 0.015,
+  "worst": 0.016,
   "worst_case": "crash 35 g through the longest rod RM-RS0 (130 mm), axial + side",
   "worst_at": [
    -4.5,
@@ -323,8 +323,8 @@
  "baseline": null,
  "total_s": 81,
  "part_sha": "653d130aae3c",
- "lib_sha": "e19f92b30cb4",
- "setup_sha": "21f726e393b482e8",
+ "lib_sha": "99ab5c3c0bf4",
+ "setup_sha": "6261304f3adfb12a",
  "max_worst": 0.3,
  "strength_ok": true
 }
