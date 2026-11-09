@@ -283,7 +283,7 @@
   <p>The camera goes on the Radxa Zero 3W's USB 3 host port (a USB 2 device there) through the USB-C plug board, whose 5.1 kΩ resistors tell the Radxa it is a device; the Radxa itself is powered on its 5 V pins. The servo's signal comes from a hardware PWM pin (3.3 V, which the SG90 accepts), and three GPIO pins drive the DRV8833: channel A the spool motor both ways, channel B the LED bars' minus to ground (their plus is on the shared 5 V). The scan runs on the Radxa and asks PX4 for each yaw step over MAVLink. 5 V budget from the UBEC: Radxa up to ~1 A, camera ~0.3 A, LEDs 0.08 A, motor up to ~0.5 A at stall, servo over 1 A at each start: about 3 A peak, so the UBEC must give 3 A or more, and the software never starts the servo and the motor at the same moment.</p>
 
   <h2>One camera for the whole Scout</h2>
-  <p>Parked, the head rests on the throat with its lens at about (39, 0, 116) mm in the drone's frame. Tilted 15° up, its 61 × 50° frame spans 10° below the horizon to 40° above it, and no rod or prop is in the picture. The servo tilts it up for ceilings.</p>
+  <p>Parked, the head rests on the throat with its lens at about (27, −4, 116) mm in the drone's frame. Tilted 15° up, its 61 × 50° frame spans 10° below the horizon to 40° above it, and no rod or prop is in the picture. The servo tilts it up for ceilings.</p>
   <ul class="plain">
     <li><b>Gained:</b> colour, 12 MP stills with very fine detail, and autofocus from 10 cm, so a fitting right in front of the lens is sharp.</li>
     <li><b>Given up:</b> a wide view (61° across, so 17 frames a scan instead of 13), a global shutter (the scan holds still for each frame), and weight: in its case the camera is 45 g, so the probe is about 91 g, which is why the blades went to 19 mm.</li>
@@ -303,6 +303,22 @@
     <li><b>Fly under a test ceiling.</b> Hang a 2 × 2 tile grid with one tile open over a frame. Hover 30 cm under it, then 20, then 12, logging thrust and altitude. Pass: no pull toward the grid. Then roll the tape out in the hover, run a full scan, and build a COLMAP model from the stills.</li>
     <li><b>Fly a real ceiling,</b> one opening first.</li>
   </ol>
+
+  <h2>Cage and balance with the probe (9 Nov)</h2>
+  <p>Spark: "adjustments to the cage concerning the new addition, light weight and compact while stable", and the centre of gravity of the drone and of the probe "perfectly centred". All numbers from the frame model and the design tool (<span class="num">tools/scout_v4_shape.py</span>).</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Change</th><th>Why</th><th>Effect</th></tr></thead>
+    <tbody>
+      <tr><td>The roof's middle node and the throat's top collar print as one</td><td>The turret already stands under it: the roof's centre is held to the deck for free, and the mast's base is gripped at the deck and at the roof</td><td>Worst crash deflection 2.1 → 1.3 mm, buckling 0.48 → 0.40 of the limit, socket moment 412 → 290 N·mm</td></tr>
+      <tr><td>The two 215 mm ring flats (nose and tail) dropped</td><td>With the centre held they carried almost nothing, except a head-first crash, which buckled them</td><td>−0.43 m of rod, about −5 g</td></tr>
+      <tr><td>The nose node on two 62 mm rods to the nose bay's front face, instead of a solid printed stub</td><td>The stub was there for the old front camera; the camera is on the probe now</td><td>Lighter; buckling 0.47 of the limit nose-first (a 95 mm rod to the deck read 1.1)</td></tr>
+      <tr><td>The probe head shifted 11.5 mm back and 3.8 mm to the left on its mast</td><td>Its CG was 11 mm ahead of the mast, a constant bend on the blades</td><td>Head CG over the mast to 0.05 mm</td></tr>
+      <tr><td>Everything under the deck 3.8 mm forward (receiver, cartridge, pack, base, FC, flow, tail boards), the funnel's datum with it</td><td>The head's move put the drone's CG 1.9 mm behind the thrust centre; moving the probe instead would have put the turret 2.4 mm from the props</td><td>CG on the thrust centre to 0.01 mm; the walls-in funnel check unchanged</td></tr>
+      <tr><td>The UBEC, XR2 and Radxa nudged across the tail tray (+3.5, +10, +1 mm)</td><td>The head's sideways shift</td><td>CG 0.00 mm sideways</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tag">The masses are estimates until the parts are weighed, so the centring is good to a few millimetres in practice: weigh the parts, then do the final trim on a balance with the tail-tray boards. Nodding the camera to straight up moves the CG ~1 mm; rolling the mast out raises it ~12 mm.</p>
+  <p class="pr-note">Head-first crash, now reported on its own: the parked head is the Scout's highest point, so a 35 g crash onto it puts up to ~230 N into the head, the throat and the turret, and up to 1.99 N·m on the BS0–S0 socket against its 2.0 cap. Make the BS0, S0, BT and TB sockets 12 mm deep (about 1.4 × the moment), and give the turret's topology setup the 230 N head-first case.</p>
 
   <h2>Compatibility check (9 Nov)</h2>
   <p>Every bought part against the design and against each other: fit, clashes, electrics and software. The tool now checks every probe part against the cage's nodes and rods each run.</p>

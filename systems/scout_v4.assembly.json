@@ -34,7 +34,7 @@
 ]
 ]
 },
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..134 mm, ~732 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..160 x -160..160 x -48..134 mm, ~732 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -59,7 +59,7 @@
 "group": "base",
 "color": "#c9c2b5",
 "mesh": "parts/scout_v4_base/part.stl",
-"mass_g": 62.5,
+"mass_g": 59.5,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
@@ -251,7 +251,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "nods about the SG90's axis from -20 to +90 deg; parked 15 deg up it is the front camera, lens (39, 0, 116), 61 x 50 deg, autofocus 10 cm to inf, 1080p 30 live, 12 MP stills; rolled out it is the ceiling probe. Camera in its case 45 (listing; the case is its heat spreader, Spark 9 Nov), printed cradle 2, TPU strap 1 (E); case 36 square, depth 20 E: measure"
+"note": "nods about the SG90's axis from -20 to +90 deg; parked 15 deg up it is the front camera, lens (27, 0, 116), 61 x 50 deg, autofocus 10 cm to inf, 1080p 30 live, 12 MP stills; rolled out it is the ceiling probe. Camera in its case 45 (listing; the case is its heat spreader, Spark 9 Nov), printed cradle 2, TPU strap 1 (E); case 36 square, depth 20 E: measure"
 },
 {
 "id": "scout_v4_probe_leds",
@@ -555,12 +555,12 @@
 "group": "cage",
 "color": "#2b2b2b",
 "mesh": "parts/scout_v4_cage_rods/part.stl",
-"mass_g": 41.9,
+"mass_g": 38.5,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "34 rods, 3.81 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)"
+"note": "34 rods, 3.50 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)"
 },
 {
 "id": "scout_v4_cage_nodes",
@@ -569,12 +569,12 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_cage_nodes/part.stl",
-"mass_g": 96.0,
+"mass_g": 102.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "16 cage nodes; the larger spheres are sockets printed into the frame and the base (NB on the nose stub, two on each side lug, the deck's tail end, the tail tray's end)",
+"note": "17 cage nodes; the larger spheres are sockets printed into the frame and the base (NB on the nose stub, two on each side lug, the deck's tail end, the tail tray's end)",
 "opacity": 0.9
 }
 ]
