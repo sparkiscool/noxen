@@ -1,5 +1,5 @@
 """The box page's timeline: both drones landing into the funnel (Spark 3 Nov: animate how both drones will land on this).
-The funnel's end walls slide in 39.2 for the Scout and out for the Overseer, and the rain dome shuts over each seated drone (9 Nov). Kinematic, not simulated: each drone comes down off-centre and yawed, meets a 55 deg face with its receiver, and the offset then
+The funnel's end walls slide in 39.2 for the Scout and out for the Overseer, and the Scout's rain dome shuts over it while it is seated (9 Nov). Kinematic, not simulated: each drone comes down off-centre and yawed, meets a 55 deg face with its receiver, and the offset then
 follows the face to the seat (offset = height above the seat / tan 55, the geometry of a block sliding down the face); yaw
 straightens in the last 40 mm. Scout first (0..10 s), then the Overseer (10..24 s). Groups "landing: Scout" and "landing: Overseer"
 in systems/box.assembly.json move as rigid bodies; everything else stays. Transforms are in the box W frame: the drones are posed
@@ -39,7 +39,7 @@ def seat_pose(t, plan, t_total):
 WALL_IN = 39.2                           # parts/box_funnel/make.py SETTINGS["scout"]: each end wall moves this far in for the Scout (Spark 9 Nov)
 WALL_MOVES = ((9.0, 10.5, 1.0, 0.0), (22.5, 24.0, 0.0, 1.0))   # (t0, t1, from, to) in the "in" fraction: in for the Scout, out for the Overseer once the Scout is up, in again once the Overseer is up
 WALLS = {"box_funnel_wall_nose": 1, "box_funnel_wall_tail": -1}
-DOME_MOVES = ((6.0, 6.8, 1.0, 0.0), (7.2, 8.0, 0.0, 1.0), (18.0, 19.0, 1.0, 0.0), (19.5, 20.5, 0.0, 1.0))   # (t0, t1, from, to) open fraction: shut over each seated drone, open for every take-off and landing (9 Nov)
+DOME_MOVES = ((6.0, 6.8, 1.0, 0.0), (7.2, 8.0, 0.0, 1.0))   # (t0, t1, from, to) open fraction: shut over the seated Scout, open for its take-off and landing and all the Overseer's visit (9 Nov: the dome is the Scout's)
 
 
 def dome_open(t):
