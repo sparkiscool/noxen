@@ -1,13 +1,16 @@
 # Print files out of git (tools/print_mesh.py, 9 Nov): a print/*.stl pushed by a session goes to the `meshes` release as
 # print-<name>.stl and leaves git (listed in print/index.json); a dispatch publishes the print mesh of the parts named (empty:
-# every result whose part.stl is still a full print mesh, e.g. one a run started before 9 Nov committed) and commits their
-# viewing meshes. A part whose upload failed is put back as main has it.
+# every result whose part.stl is still a full print mesh, e.g. one a run started before 9 Nov committed; also after every parts
+# run) and commits their viewing meshes. A part whose upload failed is put back as main has it.
 name: meshes
 
 on:
   push:
     branches: [main]
     paths: ['print/*.stl', 'parts/*/make.py']      # a make.py part's mesh is committed with its script: published here
+  workflow_run:                  # after every parts run: a result a run on an older parts.yml committed with its full mesh is published here
+    workflows: [parts]
+    types: [completed]
   workflow_dispatch:
     inputs:
       parts:
@@ -36,8 +39,7 @@ jobs:
         run: |
           rc=0
           if ls print/*.stl >/dev/null 2>&1; then python3 tools/print_mesh.py print-files || rc=1; fi
-          if [ "${{ github.event_name }}" = "push" ]; then python3 tools/print_mesh.py publish --all || rc=1; fi
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if true; then                      # push, a finished parts run, or a dispatch with no parts: every part not yet published
             if [ -n "${{ inputs.parts }}" ]; then list="${{ inputs.parts }}"; else list="--all"; fi
             if [ "$list" = "--all" ]; then python3 tools/print_mesh.py publish --all || rc=1
             else for p in $list; do python3 tools/print_mesh.py publish $p || { rc=1; git checkout -- parts/$p; }; done; fi
