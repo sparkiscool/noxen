@@ -35,5 +35,28 @@ def _no_funnel():
 
 
 L.funnel_sweep = _no_funnel
+
+# The drawn collar (9 Nov, Spark: "the nodes seem very bulky ... why does the node opening have to be the same thickness"): only the
+# bore's minimum wall is drawn, 2.6 round the 3.2 bore (2.1 at the 0.5 resin annulus, over the audit's 2.0), floor to mouth; the room
+# round it stays the 3.0-wall strut + STRUT_M, so the engine grows the root where the collar's bending needs it. Numbers (worst socket,
+# TB's BT-TB / DT-TB: side 42.5 N, axial 454 N): mouth bearing, the side force on the outer quarter of the bore (2.5 x 3.0), 5.7 MPa;
+# root bending of the bare 2.1 wall alone (O8.2 / O4.2 tube, Z 50 mm3, 13 mm lever) 11 MPa + 454 N on its 39 mm2 12 MPa: under PCTG's
+# ~25 MPa across layers before any generated root, which the engine adds and its strength index checks. The 3.0 wall drew ~43 % of
+# every node's mass for a wall the mouth does not need. v4-only: the v3 Scout and Overseer nodes keep WALL (their setups unchanged).
+L.DRAWN_WALL = 2.6
+
+# Budgets (9 Nov): the 1.54 x skeleton of spec_for was sized for strength at limit 0.3, but the v4 nodes came in at 0.005-0.18. The
+# light nodes (worst <= 0.042) go back to 1.1 x, the budget that joins every collar without flakes (5 Nov); TB / NB / S0 / S1 (0.16-
+# 0.18) to 1.25 x: an index ~ volume^-1.25 puts 1.54 -> 1.25 at ~0.23, short of the 0.25 target to leave the thinner collar its share.
+BUDGET_X = {"TB": 1.25, "NB": 1.25, "S0": 1.25, "S1": 1.25}
+
+
+def spec_for(group):
+    s = L.spec_for(group)
+    key = group if isinstance(group, str) else group[0]
+    s["gen_cm3"] = round(BUDGET_X.get(key, 1.1) * L.skeleton_cm3(group), 1)
+    return s
+
+
 KEYS = L.KEYS
-make, spec_for, build, members, check_members = L.make, L.spec_for, L.build, L.members, L.check_members
+make, build, members, check_members = L.make, L.build, L.members, L.check_members
