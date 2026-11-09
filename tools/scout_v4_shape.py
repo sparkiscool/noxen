@@ -17,11 +17,12 @@ What sets the shape, and only this:
            (zmin_walls_in + 2). So no runners or keel: the base is the yokes over the receiver, a nose bay (the FC), the flow sensor's
            pod, a tail tray (Radxa, UBEC, XR2) and the nose stub; four TPU feet on the receiver's bottom corners are the foot on flat
            ground and four bare pads meet the box's keep-alive probes. Gate: tools/seat_check.py scout_v4 --descent (walls in)
-  camera   ONE camera (9 Nov, Spark: the probe is the front camera too; then "can we use this": the Arducam 120 fps monochrome global
-           shutter USB camera, OV9281, B0FXWWF55X): 1280 x 800 mono at up to 120 fps MJPG over USB 2.0 (UVC: the Radxa Zero 3W's Linux
-           takes it with no driver), global shutter (sharp in motion), 130 deg diagonal M12 lens (110 x 90), fixed focus 30 cm to inf
-           (the M12 can be screwed in for closer), IR sensitive; its board ~38 square (E). On an SG90 tilt servo, parked on the
-           probe's throat, it is the front camera 30 deg up, its frame clear of every rod and disc; rolled out it is the ceiling probe
+  camera   ONE camera (9 Nov, Spark: the probe is the front camera too; then colour, "we need colored camera": the Arducam 1080P
+           Low Light USB camera, IMX291, 100 deg lens, B0200; the 160 deg fisheye B0202 dropped, "we can take our time turning"):
+           1920 x 1080 colour, MJPG 30 fps over USB 2.0 (UVC: the Radxa Zero 3W's Linux takes it with no driver), rolling shutter
+           (the scan holds still for each frame), 100 deg diagonal M12 lens (~92 x 61, E), IR-cut filter, white LEDs; board 38 x 38,
+           holes 28 x 28 (listing), M2 like the DECXIN's posts. On an SG90 tilt servo, parked on the
+           probe's throat, it is the front camera 15 deg up (-15.5..+45.5, as low as the old view; clear from 10 deg), its frame clear of every rod and disc; rolled out it is the ceiling probe
   probe    the mast is two 10 mm steel tape blades with their curves facing (a lens-shaped tube, the spacecraft bi-STEM idea: each
            braces the other's easy fold), 0.3 m out; both blades and the 8-way flat cable between them wind on one spool (axis y,
            O34) under the roof where the FC sat; an N20 300 rpm with encoder lies in a pocket in the deck, under the props' keep-out
@@ -68,9 +69,9 @@ ARM_W, POD_R = 18.0, 15.0                        # arm width, motor pod radius (
 # ---- the v3 base and the battery, unchanged ---------------------------------------------------------------------------------
 SEAT_Z, CX, SEAT_L, SEAT_W, RUN_H, CH = -44.3, 1.5, 184.0, 66.8, 20.0, 4.0
 # ---- camera, cage --------------------------------------------------------------------------------------------------------------
-TILT = math.radians(30.0)                         # the parked default: 30 deg up (the 110 x 90 deg view keeps the nose ring and RF out of frame from 27.4 deg; the servo tilts -20..+90)
-HFOV, VFOV = math.radians(110.0 / 2), math.radians(90.0 / 2)  # Arducam 120 fps mono global shutter USB (OV9281, 130 deg D M12 lens): 110 x 90 deg (listing)
-CAM_BOARD = dict(c=(22.0, 104.0), side=38.0, t=6.0, lens_r=7.0, lens_l=12.0)   # its board (~38 square, E: the B0332's) on the tilt cradle, centre (x, z), facing forward 30 deg up
+TILT = math.radians(15.0)                         # the parked default: 15 deg up (the 61 deg tall view clears the nose ring and RF from 10 deg; the servo tilts -20..+90)
+HFOV, VFOV = math.radians(92.0 / 2), math.radians(61.0 / 2)   # Arducam 1080P Low Light USB (IMX291, 100 deg D M12 lens, B0200): ~92 x 61 deg on 16:9 (E from the diagonal)
+CAM_BOARD = dict(c=(22.0, 104.0), side=38.0, t=6.0, lens_r=7.0, lens_l=14.0)   # its board (38 x 38, holes 28 x 28, listing; M12 holder and lens 14 E) on the tilt cradle, centre (x, z), facing forward TILT up
 LENS = np.array([CAM_BOARD["c"][0] + (CAM_BOARD["t"] / 2 + CAM_BOARD["lens_l"]) * math.cos(TILT), 0.0, CAM_BOARD["c"][1] + (CAM_BOARD["t"] / 2 + CAM_BOARD["lens_l"]) * math.sin(TILT)])
 # the probe's turret (9 Nov, Spark: "do the double blade ... make the design for the mast itself fully"): under the roof, where the FC sat
 SPOOL = dict(c=(0.0, 43.0), r=17.0, y0=-7.0, y1=7.0)              # the spool: axis along y at x 0, z 43; hub O30, two blades + the flat cable wound to ~O33, flanges O34
@@ -248,7 +249,7 @@ def probe():
     head = [box(t["x0"], t["x1"] + 1.0, -6.0, 6.0, hz, hz + 3.0),                   # the clip on the two blades' tip
             box(8.0, 30.0, -12.0, 12.0, hz + 3.0, hz + 15.0),                         # SG90 on its side, shaft along y
             box(10.0, 26.0, -20.0, 20.0, hz + 15.0, bz - 14.0),                       # the cradle up to the board
-            cam,                                                                      # the global-shutter board facing forward, 30 deg up
+            cam,                                                                      # the camera board facing forward, TILT up
             box(bx + 2.0, bx + 6.0, 20.0, 26.0, bz - 4.0, bz + 4.0)]                  # LEDs and the VL53L0X beside the board
     return turret, trimesh.util.concatenate(head)
 
@@ -365,8 +366,8 @@ def entries(meshes):
         add(f"motor_{k}", f"motor {k} (EMAX ECO II 2004)", "bought", "motors", "#8b8f96", 18.0, "listing", f"on its pod at (+-{HUB}, +-{HUB}), base z {DECK_TOP}")
         add(f"prop_{k}", f"prop {k} disc (Gemfan 5125, O{PROP_D}, swept)", "bought", "props", "#9fd3ff", 0.0, "listing", f"prop plane z {Z_PROP:.1f}", opacity=0.18)
         add(f"blades_{k}", f"prop {k} (Gemfan Hurricane SL 5125, 3 blade)", "bought", "props", "#3b6ea8", 2.8, "listing", "a sketch of the three blades")
-    add("probe_head", "front camera and probe head (Arducam 120 fps mono global shutter USB on an SG90 tilt servo, LEDs, VL53L0X)", "bought", "camera", "#1d5e3a", 26.0, "E",
-        f"parked on the throat it is the front camera, lens ({LENS[0]:.0f}, 0, {LENS[2]:.0f}), {math.degrees(TILT):.0f} deg up, 1280 x 800 mono at up to 120 fps, global shutter, 110 x 90 deg; rolled out on the two blades it is the ceiling probe. Camera board and lens 12 E, SG90 9, VL53L0X 0.7, LEDs 0.3, cradle and clip 2.5, TPU rim guard 1.5")
+    add("probe_head", "front camera and probe head (Arducam 1080P Low Light colour USB, IMX291 100 deg, on an SG90 tilt servo, white LEDs, VL53L0X)", "bought", "camera", "#1d5e3a", 28.0, "E",
+        f"parked on the throat it is the front camera, lens ({LENS[0]:.0f}, 0, {LENS[2]:.0f}), {math.degrees(TILT):.0f} deg up, 1920 x 1080 colour at 30 fps, ~92 x 61 deg; rolled out on the two blades it is the ceiling probe. Camera board and lens 14 E, SG90 9, VL53L0X 0.7, LEDs 0.3, cradle and clip 2.5, TPU rim guard 1.5")
     add("probe_turret", "ceiling probe turret (two-blade 0.3 m mast, spool, gears, clock-spring drum, N20 in the deck, throat)", "placeholder", "camera", "#f2b705", 36.4, "E",
         "two 10 mm steel blades 0.4 m 7.6, flat cable 2 x 300 mm 2, spool with its 40 T gear 5, clock-spring drum 2, housing and throat 6 (PCTG), N20 300 rpm with encoder 10.5, 15 T pinion 0.3, DRV8833 1, TPU lip 1, wires 1 (E)")
     add("fc", "FC MicoAir743 AIO (in the nose bay)", "bought", "electronics", "#1f6f3f", 10.0, "P", "36 x 36 at x 56..92 under the deck (its place at the deck's centre is the turret's); set its IMU offset in PX4 (EKF2_IMU_POS_X ~ +0.074 m)")
