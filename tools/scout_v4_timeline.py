@@ -6,15 +6,19 @@ parked, the front camera nods.
     pinion with it, 40 / 15 faster, the other way); the head rises by the length out; the camera cradle and its LED bars nod about
     the SG90's axis; each blade's 1 mm mesh above the throat (tools/scout_v4_shape.py mast()) stretches to the length out.
 """
-import math
+import math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import scout_v4_shape as S                 # the geometry's own numbers, so the page never drifts from the design
 
 DUR = 28.0
-Z0, STUB = 73.0, 1.0                       # throat top (scout_v4_shape.THROAT z1), the blades' drawn length
-OUT = 150.0                                # scout_v4_shape.REACH
-AXIS = np.array([21.5, 0.0, 109.0])        # the tilt axis parked (scout_v4_shape.AXIS)
-TILT0 = 15.0                               # parked tilt, deg up (scout_v4_shape.TILT)
-SPOOL, PINION, R_WOUND, RATIO = (0.0, 43.0), (0.0, 21.0), 16.0, 40.0 / 15.0
+Z0, STUB = S.THROAT["z1"], S.MAST_STUB     # throat top, the blades' drawn length
+OUT = S.REACH
+AXIS = np.array(S.AXIS, float)             # the tilt axis parked
+TILT0 = math.degrees(S.TILT)               # parked tilt, deg up
+SPOOL = S.SPOOL["c"]
+PINION = (SPOOL[0], SPOOL[1] - (S.GEAR["spool_t"] + S.GEAR["pinion_t"]) * S.GEAR["m"] / 2)
+R_WOUND, RATIO = S.SPOOL["hub"] + 1.6, S.GEAR["spool_t"] / S.GEAR["pinion_t"]   # mean wound radius; the pinion turns RATIO times the spool
 
 ease = lambda u: 0.0 if u <= 0 else 1.0 if u >= 1 else u * u * (3 - 2 * u)
 

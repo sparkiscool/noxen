@@ -102,7 +102,7 @@
   <header>
     <div class="eyebrow">Scout v4 · the camera and ceiling probe · work continues here</div>
     <h1>The Scout looks into the ceiling on a <span class="tape">tape&#8209;measure mast</span></h1>
-    <p class="lede">The drone flies up to 12 cm under the ceiling grid. Two steel tape blades, curves facing so they lock into a stiff tube, roll 15 cm up out of the roof and lift a colour camera through an open tile into the ceiling void. The drone yaws to pan, a servo tilts, and every pipe, conduit, fitting and cable run is photographed from close range. Parked, the same head is the Scout's only camera, filming 1080p in colour over the nose and taking 12 MP stills in the ceiling. The probe weighs about 95 g with the camera kept in its metal case, and every part is now chosen and ordered.</p>
+    <p class="lede">The drone flies up to 12 cm under the ceiling grid. Two steel tape blades, curves facing so they lock into a stiff tube, roll 15 cm up out of the roof and lift a colour camera through an open tile into the ceiling void. The drone yaws to pan, a servo tilts, and every pipe, conduit, fitting and cable run is photographed from close range. Parked, the same head is the Scout's only camera, filming 1080p in colour over the nose and taking 12 MP stills in the ceiling. The probe weighs about 91 g with the camera kept in its metal case, and every part is now chosen and ordered.</p>
   </header>
 
   <div class="pr-stage" id="pr-stage">
@@ -126,7 +126,7 @@
   </div>
 
   <dl class="facts">
-    <div><dt>Probe mass</dt><dd class="num">≈ 95 g<small>it is also the front camera</small></dd></div>
+    <div><dt>Probe mass</dt><dd class="num">≈ 91 g<small>it is also the front camera</small></dd></div>
     <div><dt>Parts cost</dt><dd class="num">7 parts<small>ordered 8 Nov; camera, USB-C board, screws and inserts owned</small></dd></div>
     <div><dt>Reach</dt><dd class="num">0.15 m<small>12 cm to the grid; the lens 7.5 cm above it</small></dd></div>
     <div><dt>Video</dt><dd class="num">12 MP<small>colour, autofocus, 1080p live</small></dd></div>
@@ -216,12 +216,12 @@
   </figure>
   <ol class="seq">
     <li><b>Two blades.</b> Two 19 mm (¾") steel tape blades, two 0.2 m strips cut from one ordinary 3 m tape measure (its case and spring are not used; 0.15 m of each rolls out), with their curves facing. 19 mm rather than 10 (Spark: "as safe as possible"): about 3.5 times the bending moment to fold them, for about 5 g more, so the mast holds the camera even in its case. Out of the throat they spring into a lens-shaped tube, and each braces the direction the other folds easily. This is the bi-STEM idea from spacecraft booms. The flat cable runs inside the lens, protected. The reach is as short as still works (Spark: "as safe as possible"): halving it from 0.3 m makes the tip about 8 times stiffer, raises the load that buckles it about 4 times and halves the bending at the throat, and the lens still ends about 7.5 cm above the grid, roughly 6 cm over the tiles' tops.</li>
-    <li><b>One spool.</b> Both blades and the cable wind flat together on one printed spool: hub Ø30 and 21 mm wide, about Ø33 wound, Ø34 flanges, axis across the drone at 43 mm above the deck's datum. About 1.5 turns pay out the 0.15 m.</li>
-    <li><b>Drive.</b> An N20 300 rpm gear motor lies in a pocket in the deck and turns the spool through a printed 15 / 40 tooth pair (module 0.8, centres 22 mm apart). The 0.15 m takes about 0.8 s. It needs no encoder: the blades' ends are fixed to the spool, so fully out is a hard stop, and fully in the head seats on the throat. The Radxa runs the motor to the stall at either end and cuts the power.</li>
-    <li><b>Cable.</b> A thin homemade cable instead of the camera's 1 m USB lead: a JST ZH 1.5 mm 4-pin pre-crimped lead plugs into the camera's B4B-ZR socket, and four thin wires (the data pair twisted) run up between the two blades inside the lens, wind on the spool beside them, and leave at the axle into a drum where they lie in a loose coil. The coil has room for 2.5 turns and the spool makes about 1.5. At the fixed end the wires are soldered to the USB-C plug board already owned, which plugs into the Radxa. About 7 g lighter than the stock lead (E).</li>
-    <li><b>Throat.</b> A 30 mm printed guide beside the roof's middle node. It takes the blades off the spool and curls them into the lens, and it grips the mast's base, where a knock bends it hardest. The middle node becomes a ring around it; the four roof rods end in the ring's sides.</li>
-    <li><b>Head.</b> A clip with an M2 screw through both blades' tips holds a small base plate. On its +y side a bracket holds the SG90 by its 32.8 mm tabs, lying on its side with its shaft across the drone; on its -y side a second bracket holds an M3 screw on the same line as the idler. Between them the tilt cradle hangs on the servo's horn and the screw: a back plate (open for the cable plug), two side walls that grip the camera's case, and a TPU strap over its top. The servo nods the cradle and camera from 20° down to straight up; it clears the base plate by 2.7 mm and the servo and brackets everywhere in that range (checked in <span class="num">tools/scout_v4_shape.py</span>). A 470 µF capacitor on the servo's lead covers its >1 A start, so the Radxa on the same 5 V rail does not brown out. Parked, the head rests on the throat with its lens about 115 mm above the deck's datum, looking forward 15° up.</li>
-    <li><b>Light.</b> Two 25 × 8 mm bars cut from a Clearhill 5 V COB strip (4000 K, CRI 90; 25 mm is its cut length), one on each side of the camera's case, facing the way it looks, nodding with it. Two sides fill the shadows behind pipes; off the lens's axis, lit dust stays out of the picture; the strip's continuous line gives soft highlights on ducts and copper. At 8 W/m each bar is about 0.2 W, about 50 lux at 0.5 m together (E): the scan holds still, so 1/30 s frames are fine. If the stills are dark, cut 50 mm bars instead (two segments each).</li>
+    <li><b>One spool.</b> Both blades and the cable wind flat together on one printed spool: hub Ø20 (a 19 mm tape coils tighter than that in its own case), 23 mm wide, about Ø27 wound, Ø29 flanges, axis across the drone 41 mm above the deck's datum. About 2 turns pay out the 0.15 m.</li>
+    <li><b>Drive.</b> An N20 300 rpm gear motor lies in a pocket in the deck and turns the spool through a printed 15 / 30 tooth pair (module 0.8, centres 18 mm apart), doubling its torque. The 0.15 m takes about 0.8 s. It needs no encoder: the blades' ends are fixed to the spool, so fully out is a hard stop, and fully in the head seats on the throat. The Radxa runs the motor to the stall at either end and cuts the power.</li>
+    <li><b>Cable.</b> A thin homemade cable instead of the camera's 1 m USB lead: a JST ZH 1.5 mm 4-pin pre-crimped lead plugs into the camera's B4B-ZR socket, and four thin wires (the data pair twisted) run up between the two blades inside the lens, wind on the spool beside them, and leave at the axle into a drum where they lie in a loose coil. The coil has room for 3.5 turns and the spool makes about 2. At the fixed end the wires are soldered to the USB-C plug board already owned, which plugs into the Radxa. About 7 g lighter than the stock lead (E).</li>
+    <li><b>Throat.</b> A 32 mm printed guide beside the roof's middle node. It takes the blades off the spool and curls them into the lens, and it grips the mast's base, where a knock bends it hardest. The middle node becomes a ring around it; the four roof rods end in the ring's sides.</li>
+    <li><b>Head.</b> A clip with an M2 screw through both blades' tips holds a small base plate. On its +y side a bracket holds the SG90 by its 32.8 mm tabs, lying on its side with its shaft across the drone and its output face 3 mm off the cradle; on its -y side a second bracket, 1.5 mm off the cradle, holds an M3 screw on the same line as the idler. Both sit tight to the cradle, so the head is about 70 mm across. Between them the tilt cradle hangs on the servo's horn and the screw: a back plate (open for the cable plug), two side walls that grip the camera's case, and a TPU strap over its top. The servo nods the cradle and camera from 20° down to straight up; it clears the base plate by 2.7 mm and the servo and brackets everywhere in that range (checked in <span class="num">tools/scout_v4_shape.py</span>). A 470 µF capacitor on the servo's lead covers its >1 A start, so the Radxa on the same 5 V rail does not brown out. Parked, the head rests on the throat with its lens about 116 mm above the deck's datum, looking forward 15° up.</li>
+    <li><b>Light.</b> Two 25 × 8 mm bars cut from a Clearhill 5 V COB strip (4000 K, CRI 90; 25 mm is its cut length), stuck on the camera case's top and bottom faces at the front, facing the way it looks and nodding with it. The metal case is their heat sink and they need no fins. Above and below the lens they fill the shadows on pipes from two sides; 18 mm off the lens's axis, lit dust stays out of the picture; the strip's continuous line gives soft highlights on ducts and copper. At 8 W/m each bar is about 0.2 W, about 50 lux at 0.5 m together (E): the scan holds still, so 1/30 s frames are fine. If the stills are dark, cut 50 mm bars instead (two segments each).</li>
   </ol>
   <h3>If something hits the mast</h3>
   <ul class="plain">
@@ -247,7 +247,7 @@
       <tr><td>Capacitor</td><td>470 µF, 10 V or more, electrolytic</td><td>On the servo's lead: its start draws over 1 A from the shared 5 V</td><td class="r">1</td><td class="r">~5 E, to add</td></tr>
       <tr><td>Printed</td><td>Spool and gear, pinion, drum, housing and throat, head plate and brackets, cradle in PCTG; lip and strap in TPU</td><td>Your filament; M3 screws for the spool's and the idler's axles</td><td class="r">17 E</td><td class="r">–</td></tr>
     </tbody>
-    <tfoot><tr><td>Total</td><td></td><td></td><td class="r">≈ 95</td><td class="r">2 to add</td></tr></tfoot>
+    <tfoot><tr><td>Total</td><td></td><td></td><td class="r">≈ 91</td><td class="r">2 to add</td></tr></tfoot>
   </table></div>
   <p class="tag">E = estimate: masses without a published figure until weighed, prices not shown on the listings when checked.</p>
 
@@ -283,10 +283,10 @@
   <p>The probe camera goes on the Radxa Zero 3W's second USB-C port in host mode, through the USB-C plug board, since the Radxa is powered from its pads. The servo and the motor driver run from the Radxa's PWM and GPIO pins. The scan runs on the Radxa and asks PX4 for each yaw step over MAVLink. Power comes from the UBEC's 5 V, at about 0.5 A peak with the motor and servo running.</p>
 
   <h2>One camera for the whole Scout</h2>
-  <p>Parked, the head rests on the throat with its lens at about (44, 0, 115) mm in the drone's frame. Tilted 15° up, its 61 × 50° frame spans 10° below the horizon to 40° above it, and no rod or prop is in the picture. The servo tilts it up for ceilings.</p>
+  <p>Parked, the head rests on the throat with its lens at about (39, 0, 116) mm in the drone's frame. Tilted 15° up, its 61 × 50° frame spans 10° below the horizon to 40° above it, and no rod or prop is in the picture. The servo tilts it up for ceilings.</p>
   <ul class="plain">
     <li><b>Gained:</b> colour, 12 MP stills with very fine detail, and autofocus from 10 cm, so a fitting right in front of the lens is sharp.</li>
-    <li><b>Given up:</b> a wide view (61° across, so 17 frames a scan instead of 13), a global shutter (the scan holds still for each frame), and weight: in its case the camera is 45 g, so the probe is about 95 g, which is why the blades went to 19 mm.</li>
+    <li><b>Given up:</b> a wide view (61° across, so 17 frames a scan instead of 13), a global shutter (the scan holds still for each frame), and weight: in its case the camera is 45 g, so the probe is about 91 g, which is why the blades went to 19 mm.</li>
   </ul>
 
   <h2>How we build it</h2>
@@ -332,7 +332,7 @@
     <li><b>Gear mesh.</b> A printed module 0.8 pair needs its centre distance right to 0.1 mm. Print the housing with the two shaft holes in one piece.</li>
     <li><b>The cable in the mast.</b> Four thin wires carry USB 2.0 up the mast and through the coil. Twist the data pair and keep the run short (about 0.6 m); the fallback is the camera's own cable, shortened.</li>
     <li><b>Snagging.</b> The head must not catch a pipe or hanger wire while the drone yaws. The yaw runs slowly and stops when the autofocus reads under 10 cm.</li>
-    <li><b>Hover time.</b> The probe is about 95 g with the camera in its case; dropping the runners and keel saved more than that, so the Scout is about 737 g all-up (E), still under v3's 765 g, with about 2 minutes of hover per opening.</li>
+    <li><b>Hover time.</b> The probe is about 91 g with the camera in its case; dropping the runners and keel saved more than that, so the Scout is about 732 g all-up (E), still under v3's 765 g, with about 2 minutes of hover per opening.</li>
     <li><b>Parking.</b> The parked head is the highest point of the Scout. The TPU guard on the board's rim takes an upside-down landing first.</li>
   </ul>
   <p class="pr-note">The probe touches nothing below the deck, so the funnel seat and the battery swapper do not change.</p>
