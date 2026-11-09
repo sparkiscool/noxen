@@ -4,10 +4,10 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 0,
+  "specks_plain": 1,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   3900.5
+   3900.1
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -20,7 +20,7 @@
   "skin_mm3": 780.3,
   "skin_missing_mm3": 0.0,
   "in_cuts_mm3": 0.0,
-  "outside_env_mm3": 0.0,
+  "outside_env_mm3": -0.0,
   "ok": true
  },
  "strength": {
@@ -28,71 +28,71 @@
    {
     "case": "frame S1-P6 axial 78 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.269,
-    "across": 0.137,
+    "inlayer": 0.347,
+    "across": 0.245,
     "at": [
-     -2.5,
-     -131.4,
-     8.8
+     3.5,
+     -126.4,
+     16.8
     ]
    },
    {
     "case": "frame S1-P6 side 21.8 N",
     "cls": "crash",
-    "inlayer": 0.032,
-    "across": 0.012,
+    "inlayer": 0.045,
+    "across": 0.023,
     "at": [
-     6.5,
-     -146.4,
-     16.8
+     3.5,
+     -127.4,
+     14.8
     ]
    },
    {
     "case": "frame S1-P5 axial 73 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.249,
-    "across": 0.125,
+    "inlayer": 0.354,
+    "across": 0.215,
     "at": [
-     3.5,
-     -131.4,
-     8.8
+     -3.5,
+     -126.4,
+     16.8
     ]
    },
    {
     "case": "frame S1-P5 side 19.9 N",
     "cls": "crash",
-    "inlayer": 0.028,
-    "across": 0.011,
+    "inlayer": 0.043,
+    "across": 0.019,
     "at": [
-     -6.5,
-     -148.4,
-     15.8
+     -3.5,
+     -127.4,
+     14.8
     ]
    },
    {
     "case": "crash 35 g through the longest rod S1-P6 (118 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.284,
-    "across": 0.149,
+    "inlayer": 0.391,
+    "across": 0.224,
     "at": [
-     -2.5,
-     -131.4,
-     8.8
+     3.5,
+     -127.4,
+     14.8
     ]
    }
   ],
-  "worst": 0.284,
+  "worst": 0.391,
   "worst_case": "crash 35 g through the longest rod S1-P6 (118 mm), axial + side",
   "worst_at": [
-   -2.5,
-   -131.4,
-   8.8
+   3.5,
+   -127.4,
+   14.8
   ]
  },
  "mass_g": 7.74,
  "watertight": true,
  "export": {
-  "faces_in": 52246,
+  "faces_in": 52454,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -100,7 +100,7 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 52246,
+  "faces": 52454,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -108,13 +108,13 @@
   "first_pass": {
    "degenerate": 170,
    "folded": 0,
-   "caps_split": 14,
+   "caps_split": 13,
    "caps_left": 0,
    "watertight": true,
-   "faces": 76854
+   "faces": 76590
   },
-  "volume_mm3": 6294.4,
-  "exact_mm3": 6294.5
+  "volume_mm3": 6290.3,
+  "exact_mm3": 6290.4
  },
  "bodies": {
   "bodies_raw": 1,
@@ -122,24 +122,23 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 6294.5,
+ "volume_mm3": 6290.4,
  "drawn_g": 2.97,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
   "specks_mm3": [
-   0.016,
    0.016
   ],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.01,
-  "specks": 2
+  "removed_mm3": 0.0,
+  "specks": 1
  },
  "stl": "scout_v4_node_s1.stl",
  "view_stl": "scout_v4_node_s1_view.stl",
- "view_faces": 52246,
+ "view_faces": 52454,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -240,9 +239,9 @@
    "default"
   ]
  },
- "build_s": 21.8,
- "layout_s": 319,
- "peak_gb": 1.195752,
+ "build_s": 18.6,
+ "layout_s": 288,
+ "peak_gb": 1.198552,
  "gen_cm3": 3.9,
  "h": 1.0,
  "audit": {
@@ -299,15 +298,15 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.074,
+   "worst": 0.099,
    "worst_case": "crash 35 g through the longest rod S1-P6 (118 mm), axial + side",
    "worst_at": [
-    -2.5,
-    -131.4,
-    5.8
+    2.5,
+    -127.4,
+    14.8
    ],
    "budget_share": 0.248,
-   "thinned": 0.3,
+   "thinned": 0.4,
    "max_worst": 0.3
   }
  },
@@ -316,65 +315,65 @@
    {
     "case": "frame S1-P6 axial 78 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.286,
-    "across": 0.16,
+    "inlayer": 0.427,
+    "across": 0.291,
     "at": [
-     -2.5,
-     -131.4,
-     8.8
+     3.5,
+     -127.4,
+     15.8
     ]
    },
    {
     "case": "frame S1-P6 side 21.8 N",
     "cls": "crash",
-    "inlayer": 0.03,
-    "across": 0.018,
+    "inlayer": 0.054,
+    "across": 0.038,
     "at": [
-     8.5,
-     -150.4,
+     3.5,
+     -127.4,
      14.8
     ]
    },
    {
     "case": "frame S1-P5 axial 73 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.265,
-    "across": 0.133,
+    "inlayer": 0.439,
+    "across": 0.27,
     "at": [
-     2.5,
-     -131.4,
-     8.8
+     -3.5,
+     -127.4,
+     15.8
     ]
    },
    {
     "case": "frame S1-P5 side 19.9 N",
     "cls": "crash",
-    "inlayer": 0.03,
-    "across": 0.012,
+    "inlayer": 0.054,
+    "across": 0.029,
     "at": [
-     -7.5,
-     -150.4,
-     13.8
+     -3.5,
+     -127.4,
+     15.8
     ]
    },
    {
     "case": "crash 35 g through the longest rod S1-P6 (118 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.306,
-    "across": 0.216,
+    "inlayer": 0.481,
+    "across": 0.368,
     "at": [
-     4.5,
-     -128.4,
-     14.8
+     3.5,
+     -127.4,
+     15.8
     ]
    }
   ],
-  "worst": 0.306,
+  "worst": 0.481,
   "worst_case": "crash 35 g through the longest rod S1-P6 (118 mm), axial + side",
   "worst_at": [
-   4.5,
-   -128.4,
-   14.8
+   3.5,
+   -127.4,
+   15.8
   ],
   "beta": 4.0,
   "iteration": 14,
@@ -382,19 +381,19 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 341,
+ "total_s": 306,
  "part_sha": "f4125a1ce163",
- "lib_sha": "84b289aabca4",
- "setup_sha": "37933724e48fb0ba",
+ "lib_sha": "909a609777bb",
+ "setup_sha": "29202fbfec2a2e58",
  "max_worst": 0.3,
- "strength_ok": true,
+ "strength_ok": false,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_s1.stl",
-  "sha256": "1a675f2324d4d51dcca2697239ac7f264e25592298e27aee378187adaaa6b2de",
-  "bytes": 2612384,
-  "faces": 52246,
-  "view_faces": 52246,
-  "view_sha256": "1a675f2324d4d51dcca2697239ac7f264e25592298e27aee378187adaaa6b2de",
-  "at": "2026-11-09 23:06"
+  "sha256": "fd9567f27849d61773821d7c5c43ede0cbc22cd48ce618235649f5a93f93ae7f",
+  "bytes": 2622784,
+  "faces": 52454,
+  "view_faces": 52454,
+  "view_sha256": "fd9567f27849d61773821d7c5c43ede0cbc22cd48ce618235649f5a93f93ae7f",
+  "at": "2026-11-09 23:57"
  }
 }
