@@ -282,7 +282,7 @@ def bodies():
 def setup(h):
     drawn, cuts, env, X = bodies()
     S, cs, bolts = X["S"], X["cs"], X["bolts"]
-    p = Part("overseer_head_mount", h, drawn, cuts, env, build="+z", material="PETG", thin_ok=X["posts"])   # the engine's PETG model; printed in PCTG (8 Nov), as the nodes   # the 1.2 mm post walls pass the gate
+    p = Part("overseer_head_mount", h, drawn, cuts, env, build="+z", material="PCTG", thin_ok=X["posts"])   # the engine's PETG model; printed in PCTG (8 Nov), as the nodes   # the 1.2 mm post walls pass the gate
     # supports: every socket (the cage holds the head there); the 3 rods of node 17's neighbours are the cage, node 17 itself is this part
     for nm, s in S.items():
         p.support(nm, s.region())

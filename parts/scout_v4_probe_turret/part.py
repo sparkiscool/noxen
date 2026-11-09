@@ -88,7 +88,7 @@ def bodies():
 
 def setup(h):
     B = bodies()
-    p = Part("scout_v4_probe_turret", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PETG")
+    p = Part("scout_v4_probe_turret", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PCTG")
     p.support("default", U(B["regs"]))
     t = S.THROAT; mx = S.MAST_X
     p.load("head-first crash: 230 N down the throat", B["seat"], (0, 0, -230.0), cls="crash")

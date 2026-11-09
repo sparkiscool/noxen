@@ -102,7 +102,7 @@ def bodies(unit):
 
 def setup(unit, h):
     B = bodies(unit)
-    p = Part(f"scout_v4_base_{unit}", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PETG")
+    p = Part(f"scout_v4_base_{unit}", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PCTG")
     p.support("default", U(B["top_regs"]))
     g, (bx, by, bz) = S.BATTERY_SET[0], S.BATTERY_SET[1]; bcg = np.array([bx + S.BX, by, bz])
     xs = [b[0] for b in REC_BOLTS]; xn, xt = max(xs), min(xs)

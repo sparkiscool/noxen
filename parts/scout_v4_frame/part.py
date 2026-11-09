@@ -88,7 +88,7 @@ def bodies():
 
 def setup(h):
     B = bodies()
-    p = Part("scout_v4_frame", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PETG")
+    p = Part("scout_v4_frame", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PCTG")
     p.support("default", U(B["base_regs"]))
     thrust = DRONE_G * 4.0 * G / 4.0
     for i, (mx, my) in enumerate(S.MOTORS):

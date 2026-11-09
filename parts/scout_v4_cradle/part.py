@@ -66,7 +66,7 @@ def bodies():
 
 def setup(h):
     B = bodies()
-    p = Part("scout_v4_cradle", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PETG")
+    p = Part("scout_v4_cradle", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PCTG")
     p.support("default", B["sup"])
     g = ASM["scout_v4_probe_tilt"]["mass_g"] + ASM["scout_v4_probe_leds"]["mass_g"]                # the camera (45) and the LED bars
     cg = wpt(((X0 + X1) / 2, 0.0, 0.0))

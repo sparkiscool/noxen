@@ -71,7 +71,7 @@ def voxelise(mesh, xs, ys, zs):
 
 
 class Part:
-    def __init__(self, name, h, drawn, cuts, env, build="+z", overhang=False, material="PETG", pad=1, mult=8,
+    def __init__(self, name, h, drawn, cuts, env, build="+z", overhang=False, material="PCTG", pad=1, mult=8,
                  log=print, thin_ok=(), solid_ok=()):
         self.name, self.h, self.build, self.material, self.log = name, float(h), build, material, log
         self.overhang = overhang

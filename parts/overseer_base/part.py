@@ -115,7 +115,7 @@ def bodies():
 
 def setup(h):
     drawn, cuts, env, socks, pads = bodies()
-    p = Part("overseer_base", h, drawn, cuts, env, build="-z", material="PETG")
+    p = Part("overseer_base", h, drawn, cuts, env, build="-z", material="PCTG")
     p.support("default", U([cyl(x, y, Z_PLATE - 2.0, Z_PLATE + 0.5, PAD_R + 0.5) for x, y in SCREWS]))
     boss_pts = [np.array([x, y, Z_MOUNT]) for x, y in BOSSES]
     boss_reg = [cyl(x, y, Z_MOUNT - 0.5, Z_MOUNT + 2.5, BOSS_R + 0.5) for x, y in BOSSES]
