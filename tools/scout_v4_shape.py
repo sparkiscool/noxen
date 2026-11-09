@@ -490,7 +490,7 @@ def entries(meshes):
     add("probe_drum", "the camera's own USB cable, coiled loosely in the drum", "bought", "camera", "#c96f2d", 3.0, "E",
         "~0.6 m of the camera's cable: up between the blades, wound on the spool beside them, then 2.5 turns of room in the drum for the ~1.5 the spool makes; no flat cable or adapters")
     add("probe_feed", "the two blades from the spool up into the throat", "bought", "camera", "#b8902a", 8.8, "E",
-        "two 19 mm (3/4 in) steel tape blades, 0.2 m each with 0.15 m used, cut from two ordinary 3 m tape measures, curves facing (~22 g/m, E); their mass is all here")
+        "two 19 mm (3/4 in) steel tape strips, 0.2 m each with 0.15 m used, cut from one ordinary 3 m tape measure (its case and spring not used; 13 spare strips), curves facing (~22 g/m, E); ends set in printed clamp slots with epoxy (hardened steel: not drilled); their mass is all here")
     for k, col in (("a", "#e8c547"), ("b", "#b8902a")):
         add(f"probe_mast_{k}", f"probe mast, blade {k.upper()} (10 mm steel tape, curves facing)", "placeholder", "camera", col, 0.0, "E",
             f"drawn 1 mm long above the throat; the page's timeline rolls it out to {REACH:.0f} mm and back (tools/scout_v4_timeline.py). Its mass is in the feed's")
