@@ -4,16 +4,16 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 1,
+  "specks_plain": 2,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   6842.6
+   6745.5
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 0,
+  "acute_edges": 2,
   "ok": true
  },
  "function_check": {
@@ -122,32 +122,32 @@
    106.6
   ]
  },
- "mass_g": 15.57,
+ "mass_g": 15.48,
  "watertight": true,
  "export": {
-  "faces_in": 100604,
+  "faces_in": 93814,
   "degenerate": 0,
-  "folded": 0,
-  "caps_split": 0,
-  "caps_left": 0,
+  "folded": 2,
+  "caps_split": 12,
+  "caps_left": 2,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 100604,
+  "faces": 93812,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 186,
-   "folded": 6,
-   "caps_split": 38,
-   "caps_left": 0,
+   "degenerate": 3448,
+   "folded": 304,
+   "caps_split": 560,
+   "caps_left": 82,
    "watertight": true,
-   "faces": 142182
+   "faces": 136542
   },
-  "volume_mm3": 12260.2,
-  "exact_mm3": 12260.3
+  "volume_mm3": 12187.5,
+  "exact_mm3": 12187.2
  },
  "bodies": {
   "bodies_raw": 1,
@@ -155,16 +155,20 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 12260.3,
+ "volume_mm3": 12187.5,
  "drawn_g": 11.14,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
-  "specks_mm3": [],
+  "specks_mm3": [
+   0.031,
+   0.016
+  ],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.0
+  "removed_mm3": 0.0,
+  "specks": 2
  },
  "stl": "overseer_cage_node_20.stl",
  "view_stl": "overseer_cage_node_20_view.stl",
@@ -418,8 +422,13 @@
  "baseline": null,
  "total_s": 2048,
  "part_sha": "38306cc4b114",
- "lib_sha": "f6c514020983",
- "setup_sha": "8dee2682bd699569",
+ "lib_sha": "da00f5663581",
+ "setup_sha": "2c43a4b6cf321954",
  "max_worst": 0.3,
- "strength_ok": true
+ "strength_ok": true,
+ "recut": {
+  "at": "2026-11-09 00:05",
+  "removed_cm3": 0.073,
+  "note": "holes recut from the current setup; strength not re-solved"
+ }
 }

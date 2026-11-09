@@ -1,27 +1,30 @@
-"""Scout cage node setups, one generator for all 19 printed nodes (4 Nov, Spark: "generate the nodes for the cage"; 8 Nov: cage v20, 21 nodes, 19 printed), after the
+"""Scout cage node setups, one generator for every printed node (4 Nov, Spark: "generate the nodes for the cage"; 8 Nov: cage v21, the half cage, 19 nodes, 17 printed in 15 structures), after the
 Overseer's parts/cage_node_lib.py (28 Oct: "nodes dont look like topology, sharp corners, not organic").
 
-Drawn: ONLY the socket walls and floors (a collar of 2.5 round each bore, 3.0 floor behind it) and, on the four skid nodes, a flat
-landing face under the node (the TPU strip's seat). Everything joining them is generated inside a compact envelope (the sockets'
-box + 8 mm, cut to a ball). The rods themselves are cuts through the whole envelope, and so is the shared funnel swept over the whole
-descent (funnel_sweep): a skid or rail node may not grow toward the funnel's walls.
+Drawn: ONLY the socket walls and floors (a collar of 3.0 round each bore, 3.0 floor behind it). Everything joining them is generated
+inside a compact envelope (a strut round each member and a hub ball). The rods themselves are cuts through the whole envelope, and so
+is the shared funnel swept over the whole descent (funnel_sweep): no node may grow toward the funnel's walls. No node lands: the half
+cage (v21) stands on the base units' runners, so the skid nodes' landing faces, landing and ground-hit cases went with them (the
+runners carry the ground hit now, parts/scout_units_lib.catch_cases).
 
 Members of node k come from tools/scout_cage.py: the cage rods (every one 3.0 solid carbon: bore 3.2, 10 deep, 3.0 floor) and the
 ties that end at k. Socket axis = the direction from the node centre to the member's far end; the bore starts NODE_R (7, the
 cage model's sphere) from the centre, or further out where two members meet at a small angle so every bore clears its neighbours
-by WALL (the rod is cut shorter by the same amount; check_members is exact). Every bore as the coupon socket (socket_cuts: resin
-grooves, lead-in, teardrop crown toward the build direction). NB and TB are printed into the nose and tail units, not here.
+by WALL (the rod is cut shorter by the same amount; check_members is exact). Every bore the coupon socket plus the
+injection pattern (parts/socket_inject.py: a 0.5 annulus on 3 lands, a feed ring, a O2 fill port and a O1.5 vent out the side port_dir
+chooses; Spark 5 and 8 Nov). NB and TB are printed into the nose and tail units, not here.
 
 Loads (drone frame, N; frame model F = systems/scout.cage_loads.json node_loads, tools/scout_cage_loads.py): per member its axial
 force as a pull-out along the socket axis and its side force across it as separate cases ("crash"), the longest rod pushed into its
-socket as a combined case, and on a skid node landing 6 g on its face (the drone's 700 g on 2 of the 4 skid ends, E).
+socket as a combined case.
 Supports: the sockets of the two members with the largest frame-model axial force (the stiffest load paths).
 Run: parts/scout_cage_node_<key>/part.py -> setup(h) = make("<key>")."""
 import json, os, sys
 import numpy as np
 from topo import Part
 from topo.part import man
-from parts.cage_node_lib import socket_cuts, collar_shape, along, U, GROOVE_D, port_dir, port_cut, PORT_R, POCKETS
+from parts.cage_node_lib import collar_shape, along, U, GROOVE_D, port_dir, PORT_R
+from parts.socket_inject import injectable_socket_cuts, FEED_H
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -35,12 +38,9 @@ BRIDGE_R = 6.0                                            # the room round a pri
 NODE_R = 5.0                                              # where a bore starts unless a neighbour forces it out (5 Nov: 7 -> 5, the collars 2 mm closer in, every strut 2 mm shorter; the cage model's sphere stays 7)
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
 #   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
-WALL, FLOOR, STRUT_M = 2.5, 2.0, 3.0                        # WALL 2.5 = 2.0 at the 0.5 resin grooves (7 Nov: at 2.0 every collar was 1.5 at its grooves, the gate's thin walls on all 15 structures; the audit's drawn_wall refuses it now); FLOOR 2.0; STRUT_M 3.0 keeps the audit's drawn share under 30 % with the thicker collars
+WALL, FLOOR, STRUT_M = 3.0, 3.0, 4.0                        # 8 Nov (the Overseer's nodes the same): WALL 3.0 = 2.5 beyond the 0.5 injection annulus (7 Nov: at 2.0 every collar was 1.5 at its grooves, the audit's drawn_wall refuses it); FLOOR 3.0, the feed ring cuts 0.5 into it; STRUT_M 4.0 of room round the collar (3.0 with the 3.0 collars put PM0 / RM at 30 / 34 % drawn, the audit's limit)
 ROD_R, ROD_GAP = 1.5, 1.0                                 # a passing rod's radius and the least gap to a collar's surface
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
-SKID = {"K0", "K1", "K2", "K3"}                           # the skid nodes (v20: the four skid ends, no mid nodes): a landing face under each (the TPU strip's seat)
-FOOT_R, FOOT_T = 8.0, 3.0                                  # 3.0: the audit refuses drawn bodies under 2.5 (the Overseer feet are 2.4)
-LAND_G, DRONE_G, LAND_FEET = 6.0, 700.0, 2                 # 6 g on 2 of the 4 skid ends (a rough landing on one skid), the Scout 700 g E (v20)
 CAGE_CENTRE = (0.0, 0.0, 10.0)                            # ports point away from here (out of the cage) where the members allow
 GN = 9.81e-3
 
@@ -153,7 +153,7 @@ def verify_cuts(k, ms, cuts, log=print):
                 raise ValueError(f"node {k}: {m['name']} bore not cut at {s:.1f} mm from the node centre")
         if inside(c + m["u"] * (m["s0"] - FLOOR / 2)):
             raise ValueError(f"node {k}: {m['name']} floor is cut")
-        if "port_d" in m and not inside(c + m["u"] * (m["s0"] + 1.5) + m["port_d"] * (m["bore_r"] + WALL + 0.5)):
+        if "port_d" in m and not inside(c + m["u"] * (m["s0"] + FEED_H / 2) + m["port_d"] * (m["bore_r"] + WALL + 0.5)):
             raise ValueError(f"node {k}: {m['name']} injection port is not open through the collar wall")
     log(f"  members check: {len(ms)} sockets, every member lands in a bore of node {k}")
 
@@ -178,10 +178,10 @@ def funnel_sweep():
 
 def build(group, h, log=print):
     """one printed structure: the node(s) of group (a key, or sc.GROUPS' tuple of keys bridged together), each with its collars, struts and
-    hub, a printed bridge's room between merged nodes, a landing face under a skid node"""
+    hub, a printed bridge's room between merged nodes"""
     import manifold3d as mf
     group = (group,) if isinstance(group, str) else tuple(group)
-    collars, bores, keep, struts, drawn_extra, allm, feet = [], [], [], [], [], [], {}
+    collars, bores, keep, struts, allm = [], [], [], [], []
     for k in group:
         ms = check_members(k, log); c = np.array(P[k], float)
         for m in ms:
@@ -195,11 +195,6 @@ def build(group, h, log=print):
         # nodes, grown in a ball to 56 mm across, were spindly blobs of webs between far-apart collars)
         struts += [along(c, m["u"], 0.0, m["s_end"], m["ro"] + STRUT_M) for m in ms]
         struts.append(mf.Manifold.sphere(NODE_R + WALL + STRUT_M, 48).translate(c.tolist()))
-        if k in SKID:
-            zb = c[2] - NODE_R - WALL
-            drawn_extra.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, zb + FOOT_T, FOOT_R))
-            struts.append(along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb, c[2], FOOT_R + 2 * STRUT_M))   # from the foot's face up: no room under the landing face (load_room); twice the room round the foot (8 Nov: KM0 alone, 2 collars and the foot, was 33 % drawn)
-            feet[k] = zb
     bridge_u = {}
     for a, b in sc.BRIDGES:                                                     # the printed bridge between two merged nodes: its room, the whole span
         if a in group and b in group:
@@ -211,16 +206,16 @@ def build(group, h, log=print):
     ports = []
     for m in allm:
         k, c = m["node"], m["c"]
-        others = [o["u"] for o in allm if o["node"] == k and o is not m] + ([bridge_u[k]] if k in bridge_u else []) + ([np.array([0, 0, -1.0])] if k in SKID else [])
+        others = [o["u"] for o in allm if o["node"] == k and o is not m] + ([bridge_u[k]] if k in bridge_u else [])
         blockers = [(o["c"] + o["u"] * (o["s0"] - FLOOR), o["c"] + o["u"] * o["s_end"], o["ro"]) for o in allm if o is not m]
         prefer = c - np.array(CAGE_CENTRE, float); prefer /= np.linalg.norm(prefer)
-        m["port_d"] = port_dir(m["u"], prefer, others, blockers, origin=c + m["u"] * (m["s0"] + 1.5), clear_r=PORT_R + 0.5, log=log)
-        ports.append(port_cut(c, m["u"], m["s0"], m["port_d"]))
-        bores += socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"], pockets=POCKETS, pocket_dir=m["port_d"])   # the bore, grooves, lead-in, crown and the three resin pockets, the first under the port
-    drawn = U(collars + drawn_extra); cuts = U(bores + keep + ports + [funnel_sweep()])   # the funnel's sweep: no growth toward it
+        m["port_d"] = port_dir(m["u"], prefer, others, blockers, origin=c + m["u"] * (m["s0"] + FEED_H / 2), clear_r=PORT_R + 0.5, log=log)
+        bores += injectable_socket_cuts(c, m["u"], m["s0"], m["depth"], m["bore_r"], port=m["port_d"])   # bore, grooves, lead-in, crown + the injection pattern (parts/socket_inject.py:
+        #   0.5 annulus with 3 lands, feed ring 0.5 into the floor, O2 fill port and O1.5 vent 40 out on the side port_dir chose; the Overseer's nodes the same, 8 Nov)
+    drawn = U(collars); cuts = U(bores + keep + [funnel_sweep()])   # the funnel's sweep: no growth toward it
     for k in group:
         verify_cuts(k, [m for m in allm if m["node"] == k], cuts, log)
-    p = Part(sc.group_id(group), h, drawn, cuts, env, build="+z", material="PETG")
+    p = Part(sc.group_id(group), h, drawn, cuts, env, build="+z", material="PETG")   # the engine's PETG model; printed in PCTG (CLAUDE.md 8 Nov: 90 % of the stiffness, 10-20x the toughness), as the Overseer's nodes
     sup = [m for k in group for m in sorted([x for x in allm if x["node"] == k], key=lambda m: -m["axial"])[:2]]   # the two stiffest members at EACH node (7 Nov: with two for the pair, every pull at the other node ran through the bridge: P2+P3 1.40 in the bridge)
     lining = lambda m, grow=1.0: along(m["c"], m["u"], m["s0"] - FLOOR - 0.5, m["s_end"], m["bore_r"] + grow)
     p.support("default", U([lining(m, 1.4) for m in sup])); held = {(m["node"], m["name"]) for m in sup}
@@ -235,11 +230,6 @@ def build(group, h, log=print):
     if (L["node"], L["name"]) not in held:
         sd = np.cross(L["u"], [0, 0, 1.0] if abs(L["u"][2]) < 0.9 else [1.0, 0, 0]); sd /= np.linalg.norm(sd)
         p.load_multi(f"crash 35 g through the longest rod {L['name']} ({L['len']:.0f} mm), axial + side", [(lining(L), -L["axial"] * L["u"] + L["side"] * sd)], cls="crash")
-    for k, zb in feet.items():
-        c = np.array(P[k], float)
-        face = along(np.array([c[0], c[1], 0.0]), np.array([0, 0, 1.0]), zb + 0.2, zb + FOOT_T - 0.2, FOOT_R - 0.2)   # the foot's own volume, not its face: at h 1.2 a 1 mm face band caught a layer of cells outside the foot (load_room refused BM0+KM0, 7 Nov)
-        fz = LAND_G * DRONE_G * GN / LAND_FEET
-        p.load_multi(f"landing 6 g on the skid face of {k} ({fz:.0f} N up, 2 of 4 skid ends)", [(face, np.array([0, 0, fz]))], cls="flight")
     return p
 
 
@@ -266,12 +256,14 @@ def skeleton_cm3(group):
 
 
 def spec_for(group):
-    """SPEC per structure: the budget is the skeleton and a tenth over (5 Nov: at a flat 2 cm3 the five strut singles came in at 5.2..6.2 g
-    with indices 0.04..0.28 but half-filled rooms, flakes and an unjoined collar; the budget a node needs is what its members weigh
-    at the gate's 6.25 floor, 3..5 cm3 a single, 7..9 a pair); h 1.0 for a single, 1.2 for a pair (a 57 mm pair is 230k cells at 1.0,
-    the tail unit's 163k took 5.6 of the runner's 7 GB)"""
+    """SPEC per structure (8 Nov, the Overseer's node rules): limit 0.3 (printed PETG broke at 0.30 of the engine's strength on the arms,
+    so 0.3 is the real margin) and the budget x1.4 with it: 1.54 x the skeleton (5 Nov: 1.1 x; at a flat 2 cm3 the strut singles came in
+    half-filled with flakes and an unjoined collar; the budget a node needs is what its members weigh at the gate's 6.25 floor). No node
+    of the half cage lands (v20's skid nodes took the ground hit at limit 0.2 and twice the budget). h 1.0 a single, 1.2 a pair (a 57 mm
+    pair was 230k cells at 1.0). Never settings=dict(min_member_mm): it clashes with the run's own argument; the layout lifts the member
+    to 6.25 on its own."""
     group = (group,) if isinstance(group, str) else tuple(group)
-    return dict(h=1.0 if len(group) == 1 else 1.2, gen_cm3=round(1.1 * skeleton_cm3(group), 1), max_worst=0.5)
+    return dict(h=1.0 if len(group) == 1 else 1.2, gen_cm3=round(1.1 * 1.4 * skeleton_cm3(group), 1), max_worst=0.3)
 
 
 SPEC = dict(h=1.0, gen_cm3=2.0, max_worst=0.5)            # the flat spec of the 5 Nov strut run (kept for the record; the parts use spec_for)

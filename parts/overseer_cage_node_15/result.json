@@ -7,13 +7,13 @@
   "specks_plain": 1,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   9822.8
+   9712.9
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 2,
+  "acute_edges": 6,
   "ok": true
  },
  "function_check": {
@@ -122,32 +122,32 @@
    127.8
   ]
  },
- "mass_g": 20.65,
+ "mass_g": 20.56,
  "watertight": true,
  "export": {
-  "faces_in": 135288,
+  "faces_in": 124824,
   "degenerate": 0,
-  "folded": 0,
-  "caps_split": 0,
-  "caps_left": 0,
+  "folded": 4,
+  "caps_split": 6,
+  "caps_left": 2,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 135288,
+  "faces": 124820,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 96,
-   "folded": 2,
-   "caps_split": 18,
-   "caps_left": 0,
+   "degenerate": 3074,
+   "folded": 192,
+   "caps_split": 264,
+   "caps_left": 30,
    "watertight": true,
-   "faces": 188708
+   "faces": 167682
   },
-  "volume_mm3": 16261.7,
-  "exact_mm3": 16261.6
+  "volume_mm3": 16192.9,
+  "exact_mm3": 16192.6
  },
  "bodies": {
   "bodies_raw": 1,
@@ -155,7 +155,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 16261.6,
+ "volume_mm3": 16192.9,
  "drawn_g": 11.97,
  "export_cleanup": {
   "pitch": 0.25,
@@ -453,8 +453,13 @@
  "baseline": null,
  "total_s": 6500,
  "part_sha": "8df327d0dcc0",
- "lib_sha": "f6c514020983",
- "setup_sha": "f619ac7a28ad6033",
+ "lib_sha": "da00f5663581",
+ "setup_sha": "4fd0438d5ae82814",
  "max_worst": 0.3,
- "strength_ok": true
+ "strength_ok": true,
+ "recut": {
+  "at": "2026-11-09 00:09",
+  "removed_cm3": 0.069,
+  "note": "holes recut from the current setup; strength not re-solved"
+ }
 }

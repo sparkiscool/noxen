@@ -4,16 +4,16 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 1,
+  "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   8545.7
+   8462.3
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 2,
+  "acute_edges": 3,
   "ok": true
  },
  "function_check": {
@@ -111,32 +111,32 @@
    111.8
   ]
  },
- "mass_g": 17.55,
+ "mass_g": 17.48,
  "watertight": true,
  "export": {
-  "faces_in": 100396,
+  "faces_in": 93458,
   "degenerate": 0,
-  "folded": 0,
-  "caps_split": 0,
+  "folded": 4,
+  "caps_split": 15,
   "caps_left": 0,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 100396,
+  "faces": 93454,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 72,
-   "folded": 4,
-   "caps_split": 40,
-   "caps_left": 0,
+   "degenerate": 2800,
+   "folded": 222,
+   "caps_split": 414,
+   "caps_left": 76,
    "watertight": true,
-   "faces": 140370
+   "faces": 129622
   },
-  "volume_mm3": 13821.7,
-  "exact_mm3": 13821.7
+  "volume_mm3": 13765.8,
+  "exact_mm3": 13765.6
  },
  "bodies": {
   "bodies_raw": 1,
@@ -144,18 +144,18 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 13821.7,
+ "volume_mm3": 13765.8,
  "drawn_g": 10.01,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
   "specks_mm3": [
-   0.016
+   0.422
   ],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.01,
+  "removed_mm3": 0.0,
   "specks": 1
  },
  "stl": "overseer_cage_node_10.stl",
@@ -430,8 +430,13 @@
  "baseline": null,
  "total_s": 6772,
  "part_sha": "0a3406693c56",
- "lib_sha": "f6c514020983",
- "setup_sha": "6f89e4600e8cddfc",
+ "lib_sha": "da00f5663581",
+ "setup_sha": "fa32daa450e333fd",
  "max_worst": 0.3,
- "strength_ok": true
+ "strength_ok": true,
+ "recut": {
+  "at": "2026-11-09 00:08",
+  "removed_cm3": 0.056,
+  "note": "holes recut from the current setup; strength not re-solved"
+ }
 }

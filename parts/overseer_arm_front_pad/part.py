@@ -1,7 +1,7 @@
 """Overseer front arm, motor PAD, v3 setup (7 Nov, Spark: the printed pads cracked at the motor mount; topology arms with a thick motor
 mount, the same on all four). Arm 1 (+y); arm 4 is the y-mirror. Geometry and cases: parts/overseer_tube_arm_lib.py on
 parts/overseer_arm_lib.py (flight 4 g + 21 N thrust +-0.5 N m on "tubes+spokes", landing 6 g, HANDLING, the cage crash set).
-* Motor mount (arm lib, 7 Nov): pad 10 thick, no head counterbore (the full 10 under each M3 x 14 head), plus a drawn ring boss
+* Motor mount (arm lib, 8 Nov): pad 14 thick (Spark: thicker; 10 on 7 Nov), no head counterbore (the full 14 under each M3 x 18 head), plus a drawn ring boss
   O32 / O20 x 8 under the pad rim here (a solid boss reads as a drawn block at the audit).
 * The old pads stay glued and their rods are cut flush behind them, one socket shorter (Spark 5 Nov): the sockets sit one socket
   length further along the rods (tubes 17 toward the root, spokes 12 further from the arm node), each a channel open outboard

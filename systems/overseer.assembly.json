@@ -2457,11 +2457,11 @@
    "name": "head mount (L2 + both cameras + node 17)",
    "role": "structure",
    "mesh": "parts/overseer_head_mount/part.stl",
-   "material": "PETG",
+   "material": "PCTG",
    "mass_g": 76.2,
    "tag": "E",
    "owner": "overseer",
-   "version": "v6 setup (one piece, node 17 merged)",
+   "version": "v10 setup (8 Nov, Spark option A): sockets one socket further along the cut rods (node 17's 4 tubes, core tie front.2), crossbar 15-16 saddle in place of the head rods (cut off), L2 20 back 60 up, cameras under node 17; PCTG",
    "source": "parts/overseer_head_mount/part.py",
    "id": "overseer_head_mount",
    "group": "printed",
@@ -2477,7 +2477,7 @@
    "mass_g": 230.0,
    "tag": "P",
    "owner": "overseer",
-   "version": "layout v5 / cage v5",
+   "version": "v10 head mount (8 Nov): base (364.0, 0, 111.0), axis 15 deg below +x",
    "source": "tools/bought_meshes.py",
    "id": "unitree_l2",
    "group": "bought",
@@ -2496,7 +2496,7 @@
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "yawed 20 out (29 Oct: one solid window ahead)",
+   "version": "v10 head mount (8 Nov): lens (340, +-30, 10), yawed 20 out, level, behind the cage front",
    "source": "tools/bought_meshes.py",
    "id": "camera_left",
    "group": "bought",
@@ -2515,7 +2515,7 @@
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "yawed 20 out (29 Oct: one solid window ahead)",
+   "version": "v10 head mount (8 Nov): lens (340, +-30, 10), yawed 20 out, level, behind the cage front",
    "source": "tools/bought_meshes.py",
    "id": "camera_right",
    "group": "bought",
@@ -3532,9 +3532,9 @@
    -0.258819
   ],
   "l2_base": [
-   384.012,
+   364.012,
    0.0,
-   51.0
+   111.0
   ],
   "motors_xy": [
    [

@@ -164,7 +164,7 @@ def artifact_page(a, S, meshes, commit, path):
     for p in a["parts"]:
         pid = p.get("id") or p["name"]; q = by_id[pid]
         s.part(p["name"], meshes[pid], group=p.get("group", "part"), color=p.get("color"), opacity=p.get("opacity"),
-               printed=p.get("material") in ("PETG", "TPU") and p.get("role") != "bought", note=note(p, q.get("_result")), segs=segs.get(pid))
+               printed=p.get("material") in ("PETG", "PCTG", "TPU") and p.get("role") != "bought", note=note(p, q.get("_result")), segs=segs.get(pid))
     for nm, m, col, op in overlays(a.get("overlays", {})):
         s.part(nm, m, group="views", color=col, printed=False, opacity=op)
     names = [p["name"] for p in s.parts]
@@ -238,7 +238,12 @@ def build(inline=False, offline=False):
     out = {"systems": [], "repo": os.environ.get("GITHUB_REPOSITORY", "sparkiscool/noxen"), "commit": head(offline)}
     meshes = {}
     owners = {}                                   # parts/<folder> -> the one system that places it
-    for f in sorted(glob.glob(os.path.join(ROOT, "systems", "*.assembly.json"))):
+    def _order(f):                                 # the page lists a system's `order` first (Scout v4: 0, the newest on top), then by file name
+        try:
+            return (json.load(open(f)).get("order", 50), f)
+        except Exception:
+            return (50, f)
+    for f in sorted(glob.glob(os.path.join(ROOT, "systems", "*.assembly.json")), key=_order):
         a = json.load(open(f))
         sysname = os.path.basename(f).split(".")[0]
         S = {"name": a.get("name", sysname), "file": sysname, "title": a.get("title") or a.get("name", sysname),

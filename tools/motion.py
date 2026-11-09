@@ -27,7 +27,7 @@ CHROMIUM_PATH), ffmpeg on PATH, three.js from npm (fetched once into ~/.cache/no
 import base64, json, math, os, shutil, subprocess, sys, tempfile
 import numpy as np, trimesh
 
-RHO = {"PETG": 1.27e-3, "TPU": 1.21e-3}     # g / mm3 (E)
+RHO = {"PETG": 1.27e-3, "PCTG": 1.23e-3, "TPU": 1.21e-3}     # g / mm3 (E)
 THREE_VER = "0.128.0"
 TEMPLATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "motion_template.html")
 PALETTE = ["#8899aa", "#cc6644", "#4477cc", "#44aa66", "#aa8833", "#9955bb", "#dd9977", "#556677", "#33aaaa", "#cc4477"]

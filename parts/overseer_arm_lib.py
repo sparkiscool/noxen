@@ -49,11 +49,11 @@ BOSS_U, BOSS_V, BOSS_T = (57.5, 72.0), (3.0, 22.0), 8.0   # plate boss block per
 #   shank holes, so no joint could keep it in the main body (root and rear arm: plate bosses off at the gate, the engine stuck on
 #   their ties). This block keeps a 10 x 15 x 4 core round the holes that a member lands on full-face.
 RELIEF_R = 3.0                                   # round the neighbour's shank in the nut layer, merges with the pocket (no sliver)
-PAD_D, PAD_T = 36.0, 10.0                        # motor pad (arms section, C): Ø36 reach; 10 thick (7 Nov, Spark: every crack was at the motor mount; was 6 with 3.4 under the heads)
+PAD_D, PAD_T = 36.0, 14.0                        # motor pad (arms section, C): Ø36 reach; 14 thick (8 Nov, Spark: thicker motor pads; 7 Nov 6 -> 10, every crack was at the motor mount)
 LUG_R = 5.5                                      # lug radius round each slot (slot 1.6 + 2.0 wall + 1.9)
 MOTOR_SLOT = (8.0, 9.5)                          # X2216 base pattern: one pair across at 16 (r 8), the other at 19 (r 9.5), 45 deg to the leads (O motor row, spec)
 SLOT_D = 3.2                                     # M3 into the motor's tapped base (2.8 deep: no nut exists on a motor)
-HEAD_D, HEAD_T = 6.2, 0.0                        # no head counterbore (7 Nov): the heads bear on the pad's underside, the full 10 under them; M3 x 14 (10 pad + 4 into the motor, Spark to confirm the base's thread depth)
+HEAD_D, HEAD_T = 6.2, 0.0                        # no head counterbore (7 Nov): the heads bear on the pad's underside, the full 14 under them; M3 x 18 (14 pad + 4 into the motor, Spark to confirm the base's thread depth)
 SWEEP_D = 7.0                                    # driver sweep under each motor bolt, through the whole envelope
 BORE_D = 8.6                                     # shaft / clip bore (arms section, CHECK P)
 ESC_SEAT = (30.0, 16.0, 3.0)                     # pad on the arm top (E)

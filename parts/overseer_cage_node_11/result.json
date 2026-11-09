@@ -4,16 +4,16 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 0,
+  "specks_plain": 2,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   17688.8
+   17604.5
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 1,
+  "acute_edges": 2,
   "ok": true
  },
  "function_check": {
@@ -177,32 +177,32 @@
    9.0
   ]
  },
- "mass_g": 32.52,
+ "mass_g": 32.41,
  "watertight": true,
  "export": {
-  "faces_in": 180166,
+  "faces_in": 167452,
   "degenerate": 0,
-  "folded": 0,
-  "caps_split": 0,
-  "caps_left": 0,
+  "folded": 10,
+  "caps_split": 16,
+  "caps_left": 8,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 180166,
+  "faces": 167442,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 104,
-   "folded": 14,
-   "caps_split": 56,
-   "caps_left": 4,
+   "degenerate": 4330,
+   "folded": 334,
+   "caps_split": 592,
+   "caps_left": 87,
    "watertight": true,
-   "faces": 252428
+   "faces": 226580
   },
-  "volume_mm3": 25606.0,
-  "exact_mm3": 25606.2
+  "volume_mm3": 25523.5,
+  "exact_mm3": 25523.1
  },
  "bodies": {
   "bodies_raw": 1,
@@ -210,16 +210,22 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 25606.2,
+ "volume_mm3": 25523.5,
  "drawn_g": 14.98,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
-  "specks_mm3": [],
+  "specks_mm3": [
+   0.016,
+   0.016,
+   0.016,
+   0.016
+  ],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.0
+  "removed_mm3": 0.02,
+  "specks": 4
  },
  "stl": "overseer_cage_node_11.stl",
  "view_stl": "overseer_cage_node_11_view.stl",
@@ -597,8 +603,13 @@
  "baseline": null,
  "total_s": 8989,
  "part_sha": "bc15ef343b23",
- "lib_sha": "f6c514020983",
- "setup_sha": "f29293a747ba49a0",
+ "lib_sha": "da00f5663581",
+ "setup_sha": "c5bb4f4af8913d2f",
  "max_worst": 0.3,
- "strength_ok": true
+ "strength_ok": true,
+ "recut": {
+  "at": "2026-11-09 00:06",
+  "removed_cm3": 0.082,
+  "note": "holes recut from the current setup; strength not re-solved"
+ }
 }

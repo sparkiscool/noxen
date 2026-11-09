@@ -8,7 +8,7 @@ the lip at the bore radius keeps it in. The ports are cut 40 out, through whatev
 import numpy as np
 from parts.cage_node_lib import along, _prism, crown_dir, socket_cuts
 
-GAP, LAND_W, FEED_H, PORT_R, VENT_R = 0.5, 1.2, 1.5, 1.0, 0.75   # gap 0.5 (7 Nov, was 0.3: one export cell wide, 6 of 13 nodes came out not watertight)
+GAP, LAND_W, FEED_H, PORT_R, VENT_R = 0.5, 1.2, 2.5, 1.25, 0.75   # 8 Nov (Spark: one tip for every socket on both drones): 14 G blunt tip O2.11 -> port O2.5, feed ring 2.5 tall so the port opens fully into it; gap 0.5 (7 Nov, was 0.3: one export cell wide, 6 of 13 nodes came out not watertight)
 
 
 def inject_cuts(c, u, s0, depth, r, port, lip):

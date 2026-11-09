@@ -75,7 +75,7 @@ Manifest: {"name", "parts": [{"name", "mesh": path (STL/OBJ/PLY, relative to the
 From Python a part may carry "trimesh": <Trimesh>."""
 import sys, os, json, argparse, numpy as np, trimesh
 
-DENSITY = {"petg": 1.27, "tpu": 1.21, "carbon": 1.6, "carbon rod": 1.6, "cf": 1.6}   # g/cm^3
+DENSITY = {"petg": 1.27, "pctg": 1.23, "tpu": 1.21, "carbon": 1.6, "carbon rod": 1.6, "cf": 1.6}   # g/cm^3
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TAG_RANK = {"P": 0, "C": 1, "M": 2, "E": 3}                                          # combined tag = worst input
 
@@ -260,7 +260,7 @@ def mass_cg(parts, meshes):
         else:
             if p.get("role") == "bought": raise ValueError(f"bought part {p['name']}: give mass_g")
             mat = str(p.get("material", "PETG")).lower()
-            if mat not in DENSITY: raise ValueError(f"part {p['name']}: unknown material {mat} (PETG, TPU, carbon)")
+            if mat not in DENSITY: raise ValueError(f"part {p['name']}: unknown material {mat} (PETG, PCTG, TPU, carbon)")
             g = abs(m.volume) / 1000 * DENSITY[mat]; t = "E" if p.get("tag") == "E" else ("M" if "mesh" in p or "trimesh" in p else "C")
         if "cg" in p:
             c = (pose_matrix(p.get("pose")) @ np.r_[np.asarray(p["cg"], float), 1])[:3]

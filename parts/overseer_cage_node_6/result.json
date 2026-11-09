@@ -4,16 +4,16 @@
  "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 1,
+  "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   7497.0
+   7452.2
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 0,
+  "acute_edges": 3,
   "ok": true
  },
  "function_check": {
@@ -111,32 +111,32 @@
    117.2
   ]
  },
- "mass_g": 16.26,
+ "mass_g": 16.19,
  "watertight": true,
  "export": {
-  "faces_in": 101636,
+  "faces_in": 94688,
   "degenerate": 0,
   "folded": 0,
-  "caps_split": 0,
+  "caps_split": 3,
   "caps_left": 0,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 101636,
+  "faces": 94688,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 46,
-   "folded": 2,
-   "caps_split": 23,
-   "caps_left": 0,
+   "degenerate": 2704,
+   "folded": 190,
+   "caps_split": 346,
+   "caps_left": 51,
    "watertight": true,
-   "faces": 140966
+   "faces": 131578
   },
-  "volume_mm3": 12799.6,
-  "exact_mm3": 12799.7
+  "volume_mm3": 12752.0,
+  "exact_mm3": 12751.7
  },
  "bodies": {
   "bodies_raw": 1,
@@ -144,19 +144,16 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 12799.7,
+ "volume_mm3": 12752.0,
  "drawn_g": 10.04,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
-  "specks_mm3": [
-   0.016
-  ],
+  "specks_mm3": [],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.0,
-  "specks": 1
+  "removed_mm3": 0.0
  },
  "stl": "overseer_cage_node_6.stl",
  "view_stl": "overseer_cage_node_6_view.stl",
@@ -414,8 +411,13 @@
  "baseline": null,
  "total_s": 12616,
  "part_sha": "1467a5446161",
- "lib_sha": "f6c514020983",
- "setup_sha": "1a633f178b0dfd3b",
+ "lib_sha": "da00f5663581",
+ "setup_sha": "f67cafc2be284406",
  "max_worst": 0.3,
- "strength_ok": true
+ "strength_ok": true,
+ "recut": {
+  "at": "2026-11-09 00:09",
+  "removed_cm3": 0.048,
+  "note": "holes recut from the current setup; strength not re-solved"
+ }
 }
