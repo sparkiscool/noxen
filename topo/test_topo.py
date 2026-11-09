@@ -924,6 +924,41 @@ def t_audit_env_neck():
         check("audit env_neck", False, str(e))
 
 
+def t_audit_solid_ok():
+    """audit: solid_ok (Spark 9 Nov: the arm motor mounts are solid under the motor so they do not crack again). A 14 mm drawn disc
+    on a support pad is refused as a drawn block without solid_ok, passes with Part(..., solid_ok=[disc]) and is listed in the
+    report; a second 14 mm block outside the solid_ok body is still refused; the setup hash changes with solid_ok."""
+    try:
+        import manifold3d as mf, trimesh
+        from topo.audit import audit, SetupError
+        from .part import Part, man
+        from .run import design_hash
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        disc = man(trimesh.creation.cylinder(14.0, 14.0, sections=48)).translate([20, 20, 10])
+        def part(ok, extra=None):
+            base = box(0, 3, 0, 40, 0, 20)
+            drawn = base + disc + (extra or box(100, 101, 100, 101, 100, 101))
+            env = box(0, 40, 0, 40, 0, 20) + box(40, 60, 0, 40, 0, 20)
+            p = Part("solidok", 1.0, drawn, box(200, 201, 200, 201, 200, 201), env, log=lambda s_: None, solid_ok=[disc] if ok else [])
+            p.support("default", box(-1, 1.5, -1, 41, -1, 21)); p.load("down", disc, (0, 0, -10.0))
+            return p
+        def run(p):
+            try:
+                return audit(p, 4.0, log=lambda s_: None), ""
+            except SetupError as e:
+                return None, str(e)
+        r0, e0 = run(part(False)); r1, e1 = run(part(True)); r2, e2 = run(part(True, box(44, 58, 13, 27, 3, 17)))
+        a = r0 is None and "drawn_blocks" in e0
+        b = r1 is not None and len(r1["solid_ok"]) == 1 and r1["solid_ok"][0]["cells"] > 0
+        c = r2 is None and "drawn_blocks" in e2 and "[51" in e2
+        d = design_hash(part(False), 1.0, 1.0, {}) != design_hash(part(True), 1.0, 1.0, {})
+        check("audit solid_ok: a 14 mm drawn disc is refused as a block, passes declared solid_ok (listed), a block beside it still fails, the hash changes",
+              a and b and c and d, f"refused {a} ({e0[:120]!r}), passes {b} ({e1[:200]!r}), other block refused {c}, hash {d}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit solid_ok", False, str(e))
+
+
 def t_audit_load_room():
     """audit: load_room (5 Nov: the Scout nose unit's seat regions reached above the rim into the block's room, two knobs on necks).
     A pad loaded on itself passes; the same pad loaded by a region reaching 5 mm above it into design room is refused."""
@@ -1080,7 +1115,7 @@ def t_coarse_setup_fails():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_design_hash, t_coarse_setup_fails):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails):
         t()
     if not quick:
         t_end_to_end()

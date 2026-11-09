@@ -72,13 +72,17 @@ def voxelise(mesh, xs, ys, zs):
 
 class Part:
     def __init__(self, name, h, drawn, cuts, env, build="+z", overhang=False, material="PETG", pad=1, mult=8,
-                 log=print, thin_ok=()):
+                 log=print, thin_ok=(), solid_ok=()):
         self.name, self.h, self.build, self.material, self.log = name, float(h), build, material, log
         self.overhang = overhang
         # drawn bodies the setup declares deliberately thinner than the 2 mm floor (the camera M2 insert posts, O5.6 round O3.2, 1.2
         # wall: Spark 29 Oct by coupon, the one exception in CLAUDE.md). The gate reports their thin walls under thin_allowed and
         # does not fail the part for them; everything else thin still fails.
         self.thin_ok = list(thin_ok)
+        # drawn bodies the setup declares solid on purpose (Spark 9 Nov: the arm motor mounts, solid under the motor so they do not
+        # crack again). The audit's drawn_blocks and drawn-structure checks skip the drawn material inside them; every other check,
+        # and the gate, is unchanged. Listed in result.json's audit report (solid_ok) and part of the setup hash.
+        self.solid_ok = list(solid_ok)
         self.env0_m = env                                       # the envelope as given (functional-skin rule)
         env = env + drawn
         self.drawn_m, self.cuts_m, self.env_m = drawn, cuts, env

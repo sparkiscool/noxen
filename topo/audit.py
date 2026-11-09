@@ -12,7 +12,9 @@ Checks (hard = raises, soft = logged + in the report):
                        Attachments are small: pads, collars, seats. Over 30 % means a patch.
   drawn_blocks   hard  a drawn body whose inscribed diameter > 3 x min member and which touches no cut and no support:
                        a block drawn into the open, not an attachment (a collar touches a bore, a pad touches a bolt
-                       hole or the support face).
+                       hole or the support face). Also the drawn-structure variant: one body with over 60 % of the drawn
+                       material and a core over 2 x the floor. Both skip drawn material inside the solid_ok bodies
+                       (Part(..., solid_ok=[...]): solid on purpose, Spark 9 Nov, the arm motor mounts); listed as "solid_ok".
   room           hard  for each loaded drawn body: the design cells within 2 x min member of it, as a share of the
                        body's exposed surface cells. Under 35 %: the body is boxed in, nothing can grow onto it.
   room_depth     soft  for each loaded drawn body: the longest straight run of design cells away from it (any axis).
@@ -159,6 +161,16 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
     in_env = part.in_env0.reshape(sh) | sol
     rep, fails = {}, []
     mm = float(min_member_mm)
+    # declared-solid bodies (Part(..., solid_ok=[...])): drawn_blocks and the drawn-structure check skip the drawn cells inside them
+    from .part import tm
+    ok_solid = np.zeros(sh, bool)
+    rep["solid_ok"] = []
+    for m in getattr(part, "solid_ok", ()) or ():
+        cells_ok = part.vox(tm(m)).reshape(sh) & sol
+        ok_solid |= cells_ok
+        bb = np.asarray(m.bounding_box(), float)
+        rep["solid_ok"].append(dict(mm3=round(float(m.volume()), 1), cells=int(cells_ok.sum()),
+                                    at=[round(float((bb[k] + bb[k + 3]) / 2), 1) for k in range(3)]))
     r_mm = max(1, int(round(mm / h)))
 
     # drawn share
@@ -230,7 +242,7 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         inscribed = diameter_mm(cells, h)
         # core thickness: distance to the nearest non-body cell OR cut, so a bore inside a collar counts as surface.
         # A block has cells far from every cut and every edge; an attachment (collar, pad, seat) does not.
-        core_mm = diameter_mm(cells & ~ndi.binary_dilation(cut, S6), h)
+        core_mm = diameter_mm(cells & ~ndi.binary_dilation(cut, S6) & ~ok_solid, h)   # solid_ok cells count as surface
         touch_cut = bool((ndi.binary_dilation(cells, S6) & cut).any())
         touch_sup = bool((cells & sup).any())
         is_loaded = bool((cells & loaded).any())
@@ -261,6 +273,9 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
                            room_depth_mm=round(depth * h, 1),
                            at=[round(float(v), 1) for v in (np.argwhere(cells).mean(0) + 0.5) * h + np.asarray(part.origin)]))
         bodies[-1]["core_mm"] = round(core_mm, 1)
+        bodies[-1]["free_cells"] = int((cells & ~ok_solid).sum())           # drawn cells outside the solid_ok bodies
+        if bodies[-1]["free_cells"] < n:
+            bodies[-1]["solid_ok_cells"] = n - bodies[-1]["free_cells"]
         if core_mm > 2.5 * floor_mm:
             fails.append(f"drawn_blocks: drawn body {b} at {bodies[-1]['at']} has a solid core {core_mm:.0f} mm thick "
                          f"away from every hole and face (limit {2.5 * floor_mm:.0f} mm): a drawn block, not an "
@@ -269,8 +284,8 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
             fails.append(f"room: loaded drawn body {b} at {bodies[-1]['at']} has design room on only {room:.0%} of its "
                          f"surface (need 35 %): boxed in by cuts or the envelope. Open the envelope round it.")
     if bodies:
-        big = max(bodies, key=lambda b: b["cells"])
-        dom = big["cells"] / max(n_sol, 1)
+        big = max(bodies, key=lambda b: b["free_cells"])
+        dom = big["free_cells"] / max(n_sol - int(ok_solid.sum()), 1)
         big["share_of_drawn"] = round(dom, 2)
         if dom > 0.6 and big["core_mm"] > 2.0 * floor_mm and len(bodies) > 1:
             fails.append(f"drawn_blocks: drawn body {big['id']} at {big['at']} holds {dom:.0%} of all drawn material with a "

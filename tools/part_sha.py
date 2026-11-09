@@ -1,5 +1,5 @@
 """What a result was made from. setup_sha(py): the sha of the setup part.py builds (topo/run.py design_hash: voxel masks,
-supports, loads, SPEC, thin_ok), cached in parts/<name>/setup.json against the code (part_sha, lib_sha) and the data it reads
+supports, loads, SPEC, thin_ok, solid_ok), cached in parts/<name>/setup.json against the code (part_sha, lib_sha) and the data it reads
 (data_sha: systems/*.json, inputs/). A result is stale when its setup_sha differs from that
 (30 Oct, Spark: a two-line validation in cage_node_lib changed the lib's file hash and eight node results read as stale with
 nothing solved differently; staleness is by setup, not by file). part_sha / lib_sha (the file hashes) key the cache and judge
@@ -61,7 +61,7 @@ def data_sha(py):
 
 
 def setup_sha(py, log=None, refresh=False):
-    """the sha of the setup part.py builds now (topo/run.py design_hash: masks, supports, loads, SPEC, thin_ok), cached in
+    """the sha of the setup part.py builds now (topo/run.py design_hash: masks, supports, loads, SPEC, thin_ok, solid_ok), cached in
     parts/<name>/setup.json against everything the setup reads: part_sha + lib_sha (the code) + data_sha (systems/*.json and
     inputs/: 30 Oct, Spark lowered four hub ends in overseer.cage.json and nodes 3 and 4 read as current from a cache keyed on
     the code alone), so setup(h) (seconds to a minute) runs only when one of those changed. CI commits the cache with the results

@@ -73,7 +73,7 @@ def _setup_hash(out_dir):
 
 
 def design_hash(part, h, gen, spec, settings=None):
-    """what the run would compute from: the part's voxel masks, supports, every load case, the SPEC and the thin_ok bodies, as a
+    """what the run would compute from: the part's voxel masks, supports, every load case, the SPEC and the thin_ok / solid_ok bodies, as a
     short sha. The same setup on another commit gives the same hash; a changed load, socket, cut or budget gives another; a lib
     edit that moves no geometry gives the same. parts.yml compares the hash of a running part with the one main would give now
     and stops the run when they differ (Spark 29 Oct: an old design never keeps running once a new one supersedes it). It is
@@ -97,6 +97,8 @@ def design_hash(part, h, gen, spec, settings=None):
     hs.update(repr(sorted((spec.get("settings") or {}).items())).encode())
     for m in getattr(part, "thin_ok", []):                                 # declared-thin bodies change the gate's verdict
         hs.update(f"thin_ok {m.volume():.3f} {np.round(np.asarray(m.bounding_box(), float), 3).tolist()}".encode())
+    for m in getattr(part, "solid_ok", []):                                # declared-solid bodies change the audit's verdict
+        hs.update(f"solid_ok {m.volume():.3f} {np.round(np.asarray(m.bounding_box(), float), 3).tolist()}".encode())
     return hs.hexdigest()[:16]
 
 
