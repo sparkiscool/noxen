@@ -203,7 +203,7 @@ def probe():
     t = TURRET
     turret = [box(-t["r"], t["r"], -t["r"], t["r"], t["z0"], t["z1"]),                                   # spool housing (the spool O34 x 14 inside, axis y)
               box(-6.0, 6.0, -8.0, 8.0, t["z1"], t["throat_top"])]                                       # the throat: the blade's curved guide up through the node
-    lip = trimesh.creation.annulus(r_min=t["lip_r"] - 2.0, r_max=t["lip_r"], height=8.0); lip.apply_translation([0, 0, ZR + 4.0])
+    lip = trimesh.creation.annulus(r_min=11.0, r_max=15.0, height=4.0); lip.apply_translation([0, 0, ZR + 6.0])   # the TPU parking lip on the ring node
     head = [box(-3.0, 3.0, -6.0, 6.0, 67.0, 70.0),                                                        # the clip on the blade's tip
             box(-10.0, 13.2, -9.9, 9.9, 70.0, 78.3),                                                      # ES9051 on its side, shaft along y
             box(-17.0, 45.0, -4.5, 4.5, 76.0, 82.0),                                                      # the camera board on its cradle, lens at the front end
@@ -211,13 +211,20 @@ def probe():
     return trimesh.util.concatenate([union(turret), lip]), union(head)
 
 
+HUB_RING = 24.0                                   # the roof's middle node RM is a ring round the probe's throat (9 Nov): its four rods end in its sides at r 24
+
+
 def cage():
-    def cut(i, j, back=3.0):                 # each rod stops 3 inside its nodes' spheres: two in-line rods through a node must not share an end
-        a, b = P(i), P(j); u = (b - a) / np.linalg.norm(b - a)   # ring (the page's mesh cleanup welds them and drops the body, 7 Nov)
-        return a + u * back, b - u * back
+    def cut(i, j):                           # each rod stops 3 inside its nodes' spheres (two in-line rods through a node must not share an end
+        a, b = P(i), P(j); u = (b - a) / np.linalg.norm(b - a)   # ring: the page's mesh cleanup welds them and drops the body, 7 Nov), and at
+        bi = HUB_RING if i == "RM" else 3.0                      # the ring's side at RM
+        bj = HUB_RING if j == "RM" else 3.0
+        return a + u * bi, b - u * bj
     rods = [rod(*cut(i, j)) for i, j in RODS + TIES]
-    nodes = [trimesh.creation.icosphere(subdivisions=1, radius=5.0).apply_translation(P(k)) for k in NODES if k not in PRINTED]
+    nodes = [trimesh.creation.icosphere(subdivisions=1, radius=5.0).apply_translation(P(k)) for k in NODES if k not in PRINTED and k != "RM"]
     nodes += [trimesh.creation.icosphere(subdivisions=1, radius=7.0).apply_translation(P(k)) for k in PRINTED]   # the sockets printed into the frame and the base
+    ring = trimesh.creation.annulus(r_min=HUB_RING - 9.0, r_max=HUB_RING + 3.0, height=8.0); ring.apply_translation(P("RM"))
+    nodes.append(ring)                                                                   # RM: the ring node the turret's throat passes through
     return trimesh.util.concatenate(rods), trimesh.util.concatenate(nodes)
 
 
