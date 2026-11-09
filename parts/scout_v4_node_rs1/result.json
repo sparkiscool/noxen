@@ -28,7 +28,7 @@
    {
     "case": "frame RM-RS1 axial 17 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.004,
+    "inlayer": 0.005,
     "across": 0.002,
     "at": [
      -3.5,
@@ -39,7 +39,7 @@
    {
     "case": "frame RM-RS1 side 23.0 N",
     "cls": "crash",
-    "inlayer": 0.007,
+    "inlayer": 0.008,
     "across": 0.004,
     "at": [
      -4.5,
@@ -50,8 +50,8 @@
    {
     "case": "crash 35 g through the longest rod RM-RS1 (130 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.007,
-    "across": 0.003,
+    "inlayer": 0.008,
+    "across": 0.004,
     "at": [
      8.5,
      -123.0,
@@ -59,7 +59,7 @@
     ]
    }
   ],
-  "worst": 0.007,
+  "worst": 0.008,
   "worst_case": "frame RM-RS1 side 23.0 N",
   "worst_at": [
    -4.5,
@@ -67,7 +67,7 @@
    59.5
   ]
  },
- "mass_g": 3.77,
+ "mass_g": 3.66,
  "watertight": true,
  "export": {
   "faces_in": 34464,
@@ -101,7 +101,7 @@
   "bodies": 1
  },
  "volume_mm3": 2971.6,
- "drawn_g": 2.32,
+ "drawn_g": 2.25,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
@@ -213,8 +213,8 @@
   ]
  },
  "build_s": 13.8,
- "layout_s": 97,
- "peak_gb": 0.654832,
+ "layout_s": 98,
+ "peak_gb": 0.656056,
  "gen_cm3": 1.2,
  "h": 1.0,
  "audit": {
@@ -254,7 +254,7 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.005,
+   "worst": 0.006,
    "worst_case": "crash 35 g through the longest rod RM-RS1 (130 mm), axial + side",
    "worst_at": [
     5.5,
@@ -262,7 +262,7 @@
     60.5
    ],
    "budget_share": 0.149,
-   "thinned": 0.03,
+   "thinned": 0.04,
    "max_worst": 0.3
   }
  },
@@ -271,7 +271,7 @@
    {
     "case": "frame RM-RS1 axial 17 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.006,
+    "inlayer": 0.007,
     "across": 0.002,
     "at": [
      -4.5,
@@ -282,7 +282,7 @@
    {
     "case": "frame RM-RS1 side 23.0 N",
     "cls": "crash",
-    "inlayer": 0.012,
+    "inlayer": 0.014,
     "across": 0.004,
     "at": [
      -4.5,
@@ -293,7 +293,7 @@
    {
     "case": "crash 35 g through the longest rod RM-RS1 (130 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.01,
+    "inlayer": 0.011,
     "across": 0.004,
     "at": [
      3.5,
@@ -302,7 +302,7 @@
     ]
    }
   ],
-  "worst": 0.012,
+  "worst": 0.014,
   "worst_case": "frame RM-RS1 side 23.0 N",
   "worst_at": [
    -4.5,
@@ -315,10 +315,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 111,
+ "total_s": 112,
  "part_sha": "c063f8522531",
- "lib_sha": "e19f92b30cb4",
- "setup_sha": "e79635d285c7df12",
+ "lib_sha": "99ab5c3c0bf4",
+ "setup_sha": "1aff3ec3029a2f99",
  "max_worst": 0.3,
  "strength_ok": true
 }
