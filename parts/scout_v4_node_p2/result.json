@@ -1,0 +1,306 @@
+{
+ "name": "scout_v4_node_p2",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 1,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   2981.9
+  ],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 1,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 908.8,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.0,
+  "outside_env_mm3": -0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "frame RS0-P2 axial 44 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.019,
+    "across": 0.015,
+    "at": [
+     -90.3,
+     155.2,
+     61.4
+    ]
+   },
+   {
+    "case": "frame RS0-P2 side 11.1 N",
+    "cls": "crash",
+    "inlayer": 0.01,
+    "across": 0.012,
+    "at": [
+     -86.3,
+     154.2,
+     58.4
+    ]
+   }
+  ],
+  "worst": 0.019,
+  "worst_case": "frame RS0-P2 axial 44 N (pull-out)",
+  "worst_at": [
+   -90.3,
+   155.2,
+   61.4
+  ]
+ },
+ "mass_g": 6.11,
+ "watertight": true,
+ "export": {
+  "faces_in": 39612,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 39612,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 270,
+   "folded": 18,
+   "caps_split": 47,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 58258
+  },
+  "volume_mm3": 4810.4,
+  "exact_mm3": 4810.6
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 4810.6,
+ "drawn_g": 2.85,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [
+   0.016
+  ],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0,
+  "specks": 1
+ },
+ "stl": "scout_v4_node_p2.stl",
+ "view_stl": "scout_v4_node_p2_view.stl",
+ "view_faces": 39612,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": false,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 6.44256687412536,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.23627771719374774,
+  "nd": 11004,
+  "sym_axes": [],
+  "n_real": 2,
+  "n_ties": 6,
+  "backend": "direct",
+  "iterations": 69,
+  "stopped": "max_stage"
+ },
+ "grid": {
+  "name": "scout_v4_node_p2",
+  "h": 1.0,
+  "shape": [
+   48,
+   32,
+   40
+  ],
+  "origin": [
+   -126.8213,
+   136.6561,
+   37.869
+  ],
+  "cells": 61440,
+  "design": 11004,
+  "drawn": 2211,
+  "cases": [
+   "frame RS0-P2 axial 44 N (pull-out)",
+   "frame RS0-P2 side 11.1 N"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 18.5,
+ "layout_s": 157,
+ "peak_gb": 0.768012,
+ "gen_cm3": 2.6,
+ "h": 1.0,
+ "audit": {
+  "drawn_share": 0.167,
+  "load_room": [],
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 729,
+    "inscribed_mm": 3.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.96,
+    "room_depth_mm": 35.0,
+    "at": [
+     -113.5,
+     149.0,
+     61.4
+    ],
+    "core_mm": 2.5
+   },
+   {
+    "id": 2,
+    "cells": 1482,
+    "inscribed_mm": 3.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.94,
+    "room_depth_mm": 39.0,
+    "at": [
+     -90.1,
+     152.9,
+     57.5
+    ],
+    "core_mm": 2.5,
+    "share_of_drawn": 0.67
+   }
+  ],
+  "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 43.0,
+   "W_mm": 28.0,
+   "H_mm": 30.0,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "drawn_walls": [],
+  "cases": 2,
+  "supports": 1,
+  "fails": []
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "frame RS0-P2 axial 44 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.02,
+    "across": 0.017,
+    "at": [
+     -91.3,
+     155.2,
+     60.4
+    ]
+   },
+   {
+    "case": "frame RS0-P2 side 11.1 N",
+    "cls": "crash",
+    "inlayer": 0.012,
+    "across": 0.015,
+    "at": [
+     -89.3,
+     155.2,
+     59.4
+    ]
+   }
+  ],
+  "worst": 0.02,
+  "worst_case": "frame RS0-P2 axial 44 N (pull-out)",
+  "worst_at": [
+   -91.3,
+   155.2,
+   60.4
+  ],
+  "beta": 4.0,
+  "iteration": 14,
+  "max_worst": 0.3,
+  "k": 3.0
+ },
+ "baseline": null,
+ "total_s": 176,
+ "part_sha": "a6707d5a7c14",
+ "lib_sha": "94409b305835",
+ "setup_sha": "6246f5a8cec20711",
+ "max_worst": 0.3,
+ "strength_ok": true
+}
