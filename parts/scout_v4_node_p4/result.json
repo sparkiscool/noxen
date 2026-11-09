@@ -28,8 +28,8 @@
    {
     "case": "frame P4-P5 axial 45 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.065,
-    "across": 0.043,
+    "inlayer": 0.073,
+    "across": 0.048,
     "at": [
      -157.2,
      -98.3,
@@ -39,8 +39,8 @@
    {
     "case": "frame P4-P5 side 14.3 N",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.012,
+    "inlayer": 0.027,
+    "across": 0.013,
     "at": [
      -157.2,
      -99.3,
@@ -48,7 +48,7 @@
     ]
    }
   ],
-  "worst": 0.065,
+  "worst": 0.073,
   "worst_case": "frame P4-P5 axial 45 N (pull-out)",
   "worst_at": [
    -157.2,
@@ -56,7 +56,7 @@
    57.4
   ]
  },
- "mass_g": 4.74,
+ "mass_g": 4.59,
  "watertight": true,
  "export": {
   "faces_in": 37406,
@@ -90,7 +90,7 @@
   "bodies": 1
  },
  "volume_mm3": 3729.1,
- "drawn_g": 2.32,
+ "drawn_g": 2.24,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
@@ -203,9 +203,9 @@
    "default"
   ]
  },
- "build_s": 15.5,
- "layout_s": 108,
- "peak_gb": 0.819988,
+ "build_s": 16.1,
+ "layout_s": 110,
+ "peak_gb": 0.818824,
  "gen_cm3": 1.9,
  "h": 1.0,
  "audit": {
@@ -262,7 +262,7 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.018,
+   "worst": 0.02,
    "worst_case": "frame P4-P5 axial 45 N (pull-out)",
    "worst_at": [
     -154.2,
@@ -270,7 +270,7 @@
     62.4
    ],
    "budget_share": 0.169,
-   "thinned": 0.11,
+   "thinned": 0.12,
    "max_worst": 0.3
   }
  },
@@ -279,8 +279,8 @@
    {
     "case": "frame P4-P5 axial 45 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.081,
-    "across": 0.055,
+    "inlayer": 0.09,
+    "across": 0.061,
     "at": [
      -156.2,
      -98.3,
@@ -290,8 +290,8 @@
    {
     "case": "frame P4-P5 side 14.3 N",
     "cls": "crash",
-    "inlayer": 0.029,
-    "across": 0.014,
+    "inlayer": 0.032,
+    "across": 0.015,
     "at": [
      -156.2,
      -98.3,
@@ -299,7 +299,7 @@
     ]
    }
   ],
-  "worst": 0.081,
+  "worst": 0.09,
   "worst_case": "frame P4-P5 axial 45 N (pull-out)",
   "worst_at": [
    -156.2,
@@ -312,10 +312,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 124,
+ "total_s": 126,
  "part_sha": "c3bb8cfe0b9c",
- "lib_sha": "e19f92b30cb4",
- "setup_sha": "6e432becbc8256bb",
+ "lib_sha": "99ab5c3c0bf4",
+ "setup_sha": "8cd2f1cd16bc0c2e",
  "max_worst": 0.3,
  "strength_ok": true
 }
