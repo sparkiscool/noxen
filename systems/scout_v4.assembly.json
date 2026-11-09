@@ -298,7 +298,7 @@
 },
 {
 "id": "scout_v4_probe_spool",
-"name": "probe spool, hub O20, with its 30 T gear (module 0.8) on an M3 screw",
+"name": "probe spool, hub O20, with its 40 T gear (module 0.8) on an M3 screw",
 "role": "placeholder",
 "group": "camera",
 "color": "#d08a1e",
@@ -312,7 +312,7 @@
 },
 {
 "id": "scout_v4_probe_pinion",
-"name": "probe pinion, 15 T, on the N20's shaft",
+"name": "probe pinion, 12 T, on the N20's 3 mm D shaft",
 "role": "placeholder",
 "group": "camera",
 "color": "#a85f10",
@@ -322,7 +322,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "centres 18 from the spool's (30 / 15)"
+"note": "centres 20.8 from the spool's (40 / 12); its bore D-shaped, 2.3 wall at the root (PCTG)"
 },
 {
 "id": "scout_v4_probe_motor",
@@ -336,11 +336,11 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "37 long (can 17 x O12, 3 mm D shaft 10); in a pocket in the deck, along y, under the props' keep-out band; it runs out or in to a stall (the blades' anchor out, the head seated in)"
+"note": "37 long (can 17 x O12, 3 mm D shaft 10); under the spool and the drum facing +y, in a pocket through the deck (the base's room must keep it out, z 15.2 up); it runs out or in to a stall (the blades' anchor out, the head seated in); at 5 V ~250 rpm"
 },
 {
 "id": "scout_v4_probe_drum",
-"name": "the camera cable, coiled loosely in the drum",
+"name": "the head's cable, coiled loosely in the drum",
 "role": "bought",
 "group": "camera",
 "color": "#c96f2d",
@@ -350,7 +350,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "a JST ZH 1.5 mm 4-pin lead into the camera's B4B-ZR socket and four thin wires (data pair twisted) to the USB-C breakout: up between the blades, round the spool, 2.5 turns of room in the drum for ~1.5"
+"note": "6 thin conductors (the head carries the camera, the servo and the LED bars): 5 V and GND in 26 AWG (shared; the 470 uF at the servo covers its start), USB D+ / D- twisted, the servo's signal and the LED bars' switched minus in 30 AWG; a JST ZH 1.5 mm 4-pin lead into the camera; up between the blades, round the spool, 3.5 turns of room in the drum for ~2; the USB pair to the USB-C breakout on the Radxa"
 },
 {
 "id": "scout_v4_probe_feed",
