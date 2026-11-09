@@ -8,7 +8,33 @@
 "appendix": "systems/scout_v4.appendix.html",
 "timeline": "tools/scout_v4_timeline.py:timeline",
 "frame_timeline": true,
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..123 mm, ~706 g (E). tools/scout_v4_shape.py",
+"views": {
+"probe": [
+[
+330.0,
+-380.0,
+330.0
+],
+[
+22.0,
+0.0,
+185.0
+]
+],
+"turret": [
+[
+90.0,
+-140.0,
+70.0
+],
+[
+2.0,
+0.0,
+40.0
+]
+]
+},
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..137 mm, ~706 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -214,32 +240,131 @@
 "note": "a sketch of the three blades"
 },
 {
-"id": "scout_v4_probe_head",
-"name": "front camera and probe head (Arducam 1080P Low Light colour USB, IMX291 100 deg, on an SG90 tilt servo, white LEDs, VL53L0X)",
+"id": "scout_v4_probe_tilt",
+"name": "probe camera on its tilt cradle (Arducam 1080P Low Light colour USB, IMX291, 100 deg M12; hood; VL53L0X)",
 "role": "bought",
 "group": "camera",
 "color": "#1d5e3a",
-"mesh": "parts/scout_v4_probe_head/part.stl",
-"mass_g": 28.0,
+"mesh": "parts/scout_v4_probe_tilt/part.stl",
+"mass_g": 18.2,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "parked on the throat it is the front camera, lens (38, 0, 108), 15 deg up, 1920 x 1080 colour at 30 fps, ~92 x 61 deg; rolled out on the two blades it is the ceiling probe. Camera board and lens 14 E, SG90 9, VL53L0X 0.7, LEDs 0.3, cradle and clip 2.5, TPU rim guard 1.5"
+"note": "nods about the SG90's axis from -20 to +90 deg; parked 15 deg up it is the front camera, lens (44, 0, 113), 1920 x 1080 colour at 30 fps, ~92 x 61 deg; rolled out it is the ceiling probe. Camera board and lens 14 E, cradle, arms, coupler and hood 2 E (PCTG), VL53L0X 0.7, TPU rim guard 1.5"
+},
+{
+"id": "scout_v4_probe_leds",
+"name": "probe light: two 5 V COB LED bars, 40 x 7, CRI 90+, beside the lens",
+"role": "bought",
+"group": "camera",
+"color": "#fff1b8",
+"mesh": "parts/scout_v4_probe_leds/part.stl",
+"mass_g": 1.5,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "on printed fins 23..30 mm either side of the lens axis, so the dust in the void is not lit in front of the lens; ~1 W together (E), on the DRV8833's B channel, DC or PWM >= 20 kHz"
+},
+{
+"id": "scout_v4_probe_head",
+"name": "probe head frame: clip on the blades' tip, base plate, the two brackets, SG90 tilt servo",
+"role": "bought",
+"group": "camera",
+"color": "#2f3b45",
+"mesh": "parts/scout_v4_probe_head/part.stl",
+"mass_g": 11.5,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "SG90 9 (its shaft on the tilt axis, facing -y, held by its tabs on the +y bracket), clip, plate and brackets 2.5 (PCTG); the idler pin in the -y bracket's boss"
 },
 {
 "id": "scout_v4_probe_turret",
-"name": "ceiling probe turret (two-blade 0.3 m mast, spool, gears, clock-spring drum, N20 in the deck, throat)",
+"name": "probe turret housing: side plates, floor, drum cover and the throat (PCTG)",
 "role": "placeholder",
 "group": "camera",
 "color": "#f2b705",
 "mesh": "parts/scout_v4_probe_turret/part.stl",
-"mass_g": 36.4,
+"mass_g": 9.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "two 10 mm steel blades 0.4 m 7.6, flat cable 2 x 300 mm 2, spool with its 40 T gear 5, clock-spring drum 2, housing and throat 6 (PCTG), N20 300 rpm with encoder 10.5, 15 T pinion 0.3, DRV8833 1, TPU lip 1, wires 1 (E)"
+"note": "housing and throat 6, DRV8833 1, TPU lip 1, wires 1 (E); drawn see-through to show the mechanism",
+"opacity": 0.22
+},
+{
+"id": "scout_v4_probe_spool",
+"name": "probe spool with its 40 T gear (module 0.8) and the O3 steel pin",
+"role": "placeholder",
+"group": "camera",
+"color": "#d08a1e",
+"mesh": "parts/scout_v4_probe_spool/part.stl",
+"mass_g": 5.0,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "hub O30, flanges O34, the two blades and the cable wound on it; turns ~1.5 times for the 150 mm roll-out"
+},
+{
+"id": "scout_v4_probe_pinion",
+"name": "probe pinion, 15 T, on the N20's shaft",
+"role": "placeholder",
+"group": "camera",
+"color": "#a85f10",
+"mesh": "parts/scout_v4_probe_pinion/part.stl",
+"mass_g": 0.3,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "centres 22 from the spool's"
+},
+{
+"id": "scout_v4_probe_motor",
+"name": "N20 300 rpm gear motor with encoder (spool drive)",
+"role": "bought",
+"group": "camera",
+"color": "#8b8f96",
+"mesh": "parts/scout_v4_probe_motor/part.stl",
+"mass_g": 10.5,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "in a pocket in the deck, along y, under the props' keep-out band"
+},
+{
+"id": "scout_v4_probe_drum",
+"name": "clock spring: the flat cable's spiral in the drum",
+"role": "bought",
+"group": "camera",
+"color": "#c96f2d",
+"mesh": "parts/scout_v4_probe_drum/part.stl",
+"mass_g": 4.0,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "300 mm of 8-way 0.5 mm flat cable, ~4.5 turns of room; its inner end turns with the spool, its outer end is fixed to the housing"
+},
+{
+"id": "scout_v4_probe_feed",
+"name": "the two blades from the spool up into the throat",
+"role": "bought",
+"group": "camera",
+"color": "#b8902a",
+"mesh": "parts/scout_v4_probe_feed/part.stl",
+"mass_g": 3.8,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "two 10 mm steel tape blades (0.2 m each, 0.15 m used, cut from 2 tape measures), curves facing; their mass is all here"
 },
 {
 "id": "scout_v4_probe_mast_a",
@@ -253,7 +378,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "drawn 1 mm long above the throat; the page's timeline rolls it out to 300 mm and back (tools/scout_v4_timeline.py). Its mass is in the turret's"
+"note": "drawn 1 mm long above the throat; the page's timeline rolls it out to 150 mm and back (tools/scout_v4_timeline.py). Its mass is in the feed's"
 },
 {
 "id": "scout_v4_probe_mast_b",
@@ -267,7 +392,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "drawn 1 mm long above the throat; the page's timeline rolls it out to 300 mm and back (tools/scout_v4_timeline.py). Its mass is in the turret's"
+"note": "drawn 1 mm long above the throat; the page's timeline rolls it out to 150 mm and back (tools/scout_v4_timeline.py). Its mass is in the feed's"
 },
 {
 "id": "scout_v4_fc",
