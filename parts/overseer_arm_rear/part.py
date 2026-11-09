@@ -31,7 +31,7 @@ class RearArm(Arm):
 
 
 ARM = RearArm("rear", 135.0, 1, [], [-73.03, 139.5, 25.0])
-SPEC = dict(h=2.0, gen_cm3=46.0, max_worst=0.3)   # v10 (5 Nov): 32 -> 46 for the motor end, limit 0.5 -> 0.3 (v9 broke at 0.30 under thrust: 0.3 is the real margin); h 2.0 (29 Oct: at 1.2 the one-piece grid was 1.0 M cells)
+SPEC = dict(h=2.0, gen_cm3=46.0, max_worst=0.2)   # 9 Nov (Spark: make sure the motor never tears off with its mount again): limit 0.3 -> 0.2 with the solid pad + cone   # v10 (5 Nov): 32 -> 46 for the motor end, limit 0.5 -> 0.3 (v9 broke at 0.30 under thrust: 0.3 is the real margin); h 2.0 (29 Oct: at 1.2 the one-piece grid was 1.0 M cells)
 
 
 def setup(h):
