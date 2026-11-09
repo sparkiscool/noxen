@@ -206,6 +206,8 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
             del Lc
     part = setup(h)
     L = Layout(part, gen_cm3=gen_cm3, settings=s, log=log)
+    from .audit import room_strength
+    rep_audit["room_full"] = room_strength(L, max_worst, log=log, hard=s.audit == "raise")   # the room filled solid must pass (9 Nov)
     if xh_c is not None:
         L.init_from(xh_c, part_c)
     early = {}

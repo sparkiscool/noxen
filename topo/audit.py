@@ -38,6 +38,13 @@ Checks (hard = raises, soft = logged + in the report):
   drawn_wall     hard  a drawn body (after its cuts, thin_ok bodies left out) with a wall under the gate's thin rule (the 0.9 mm
                        opening's residue: under the 2 mm floor) anywhere: the gate fails it wherever the engine leaves it exposed
                        and the export cleanup may not cut drawn material (7 Nov: the Scout node collars at their resin grooves).
+  room_full      hard  (room_strength, on the Layout before the first solve) the as-built strength index with every design cell
+                       filled solid: the strongest part the room can hold. Over max_worst, no layout in it can pass whatever
+                       the budget, so the run is refused. Also reported: the budget's share of the room and full / share, the
+                       index a uniformly thinned room would read (a rough guide: a good layout beats it). 9 Nov: the Scout v4
+                       frame's side lugs (16 x 8 room carrying 134 N 29 mm under the deck) read 2.55 after a 69 min run.
+                       Open the room along the load path (deeper behind the socket, wider at the root), move the support
+                       nearer the load, or shorten the lever.
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -346,4 +353,31 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         raise SetupError("setup audit failed:\n  " + "\n  ".join(fails))
     if not fails:
         log(f"audit: OK  drawn {share:.0%}, {len(bodies)} drawn bodies, room ok")
+    return rep
+
+
+def room_strength(L, max_worst, log=print, hard=True):
+    """room_full (see the module doc): the build's own as-built strength (topo/build.py strength) on the room filled solid.
+    Returns the report dict; raises SetupError over max_worst when hard."""
+    from .build import strength
+    part = L.part
+    full = np.asarray(L.design, bool).ravel() | np.asarray(L.solid, bool).ravel()
+    st = strength(L, mask=full, log=lambda s_: None)
+    share = float(L.volfrac)
+    rep = dict(worst=st["worst"], worst_case=st["worst_case"], worst_at=st["worst_at"], budget_share=round(share, 3),
+               thinned=None if st["worst"] is None else round(st["worst"] / max(share, 1e-6), 2), max_worst=max_worst)
+    if st["worst"] is None:
+        log("audit: room_full: no classed load cases")
+        return rep
+    msg = (f"room_full: the room filled solid reads {st['worst']:.2f} in '{st['worst_case']}' at {st['worst_at']} (max_worst {max_worst}): "
+           f"no layout in this room can pass. Open the room along that load's path (deeper behind the socket or pad, wider at the root), "
+           f"move a support nearer the load, or shorten the lever.")
+    if st["worst"] > max_worst:
+        log("audit: FAIL " + msg)
+        rep["fail"] = msg
+        if hard:
+            raise SetupError("setup audit failed:\n  " + msg)
+    else:
+        log(f"audit: room_full {st['worst']:.3f} filled solid ('{st['worst_case']}'), budget {share:.0%} of the room, "
+            f"uniformly thinned ~{rep['thinned']}")
     return rep

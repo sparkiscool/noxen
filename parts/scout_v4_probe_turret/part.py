@@ -4,7 +4,7 @@ four rod sockets: the roof's cross to RF, RB, RS0, RS1), so the roof's centre is
 Drawn (attachments only): four O10 floor bosses (M3 down into the deck's inserts, the driver from above beside the gear and the drum);
 the spool's two axle bosses (an M3 screw is the axle); the N20's face plate (its 2 x M1.6 on 7.7) and its shaft's tip bearing; the throat's
 walls (a flat slot at the spool's height opening to the blades' lens at its top, where the parked head's clip seats); the drum's wall
-round the cable's coil; RM's four rod collars, their mouths at r 34.
+round the cable's coil; RM's four rod collars, their mouths at r 26..34 (tools/scout_v4_shape.RM_MOUTH); the drum's foot.
 Cuts: the spool, its 40 T gear and the 12 T pinion swept; the N20; the axle; the blades' path and the mast above; the drum's cavity;
 the bolts and their drivers; the props' discs + 12; the deck (z < 24.5) but the motor's pocket. (The DRV8833 is in the nose bay.)
 Support: the four floor bosses. Loads: the head-first crash (230 N down the throat); the parked head (60 g) on the throat's seat in 35 g
@@ -15,7 +15,7 @@ from topo import Part
 from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, hull, U, socks_of, socket_cases, socket_bodies, payload_cases, point_case,
                                       disc_cuts, region_top, region_bot, check_collars, TURRET_BOLTS, DZ1, M3_CLR, BOSS_R)
 
-SPEC = dict(h=1.2, gen_cm3=9.0, max_worst=0.3)   # E: housing and throat ~4 g as drawn, the RM ring node ~6 g, at the nodes' PCTG limit
+SPEC = dict(h=1.2, gen_cm3=12.0, max_worst=0.3)  # 9 Nov: 9 cm3 read 1.01 at RM-RB with its arms out to r 34 and the budget spent; the arms now shorter, 12
 CUP_R, BLADE_T, CABLE_T = 15.0, 0.13, 1.2       # the 19 mm blade's cup radius and thickness (patents: R 12.7..25.4, t 0.11..0.19; E), the 6-wire bundle
 FOLD_NM = 0.3                                    # the mast's fold moment the throat must carry: 1.5 x the 0.2 N m bench target
 
@@ -70,6 +70,8 @@ def bodies():
     cuts.append(box(mx - sl - 0.2, mx + sl + 0.2, -hw, hw, cz - 2.0, t["z0"] + 0.5))                 # the blades from the spool's tangent into the throat
     # the drum round the cable's coil
     drawn.append(yz_ring(cx, cz, dr + 0.3, dr + 2.8, dy0 - 2.6, dy1))                               # 2.5 wall and a 2.6 end (the gate's floor)
+    for sx in (-1, 1):                                                                              # its two legs to the floor either side of the N20's can (9 Nov: the drum
+        drawn.append(box(*sorted((cx + sx * 6.9, cx + sx * 10.5)), dy0 - 2.6, dy1, DZ1, cz) - ycyl(cx, cz, dr + 0.3, dy0 - 3, dy1 + 1))   # sat 0.7 over the can: a neck)
     cuts.append(ycyl(cx, cz, dr + 0.3, dy0, dy1 + 0.5)); cuts.append(box(cx - 2, cx + 2, ym - 8, dy0 + 1, cz - 2, cz + 2))   # its cavity; the cable's way out to the Radxa
     # the spool, its gear and the pinion swept
     cuts.append(ycyl(cx, cz, r + 1.0, S.SPOOL["y0"] - 0.6, S.SPOOL["y1"] + 0.6))
@@ -77,8 +79,9 @@ def bodies():
     cuts += disc_cuts()
     deck = box(-200, 200, -200, 200, -100, DZ1) - box(cx - 8.5, cx + 8.5, g0 - 31.0, yp + 7.0, pz - 8.0, DZ1 + 0.1)
     cuts.append(deck)
-    # RM: the roof's middle node, its four rod collars with their mouths at r 34
-    socks = socks_of("RM", ring_r=S.HUB_RING)
+    # RM: the roof's middle node, its four rod collars, each mouth as near as its neighbours allow (tools/scout_v4_shape.RM_MOUTH: RF's
+    # floor on the throat's wall, so collar and wall are one body; 9 Nov, r 34 left a 2 mm slab between them, a neck)
+    socks = socks_of("RM", ring_r=S.RM_MOUTH)
     d, c = socket_bodies(socks, lambda s: np.array([0.0, 0.0, 1.0]))
     drawn += d; cuts += c
     check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))

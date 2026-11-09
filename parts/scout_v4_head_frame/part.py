@@ -13,7 +13,7 @@ from topo import Part
 from topo.part import man
 from parts.scout_v4_units_lib import S, ASM, box, cyl, U, payload_cases, point_case
 
-SPEC = dict(h=1.0, gen_cm3=3.0, max_worst=0.3)   # E: clip, plate and brackets 2.5 g as estimated, at the nodes' PCTG limit
+SPEC = dict(h=1.0, gen_cm3=8.0, max_worst=0.3)   # 9 Nov: 3 cm3 stopped early at 3.89 (head-first 230 N): the path from the axis's two ends (+-26 in y) runs round the nod's sweep down to the clip; 8
 HOLES = 27.7                                      # SG90 tab holes apart (typical drawing, E; the DORHEA listing gives the tabs' 32.8 span)
 
 

@@ -38,14 +38,15 @@ def ins_cut(x, y, z, r_d, up=True, extra=1.0):
 
 def socks_of(node, ring_r=None):
     """the 3 mm rod sockets of a printed node: one per rod ending there, toward its far node. ring_r: the node is a ring (RM): its
-    sockets sit with their mouths at ring_r from the centre, along each rod"""
+    sockets sit with their mouths at ring_r from the centre, along each rod (a dict: per far node)"""
     out = []
     for a, b in S.RODS:
         if node in (a, b):
             o = b if a == node else a
             c, far = np.array(S.P(node), float), np.array(S.P(o), float)
-            if ring_r is not None:
-                u = unit(far - c); c = c + u * (ring_r - FLOOR - DEPTH)
+            rr = ring_r.get(o) if isinstance(ring_r, dict) else ring_r
+            if rr is not None:
+                u = unit(far - c); c = c + u * (rr - FLOOR - DEPTH)
             out.append(Sock(f"{node} {a}-{b}", c, far))
     return out
 
@@ -107,8 +108,12 @@ def region_bot(x, y, z, r=BOSS_R, t=1.5):
 
 # ---- the interfaces the parts share (all drone frame, with BX where the part is under the deck) ---------------------------------
 DZ0, DZ1 = S.DECK_Z0, S.DECK_TOP                               # 18.5, 24.5: the deck's underside and top
-BASE_BOLTS = [(12.0, 25.0), (12.0, -25.0), (40.0, 25.0), (40.0, -25.0), (-12.0, 25.0), (-12.0, -25.0), (-40.0, 18.0), (-40.0, -18.0)]   # (-40, +-18): ahead of the Radxa, clear of the UBEC and the battery bolts   # M3 from the deck's top down into inserts in the base units (12+ from the battery bolts)
-NOSE_BOLTS, TAIL_BOLTS = BASE_BOLTS[:4], BASE_BOLTS[4:]
+# M3 from the deck's top down into inserts in the base units (12+ from the battery bolts). (-40, +-18): ahead of the Radxa, clear of the
+# UBEC and the battery bolts. 9 Nov (the units' first runs stopped early at 1.67 / 0.92, the cage's nose and tail sockets' 450-490 N
+# funnelling into the nearest pair): a pair at each deck end on the sockets' line, (50, +-12) behind the FC and (-55, +-22) beside the UBEC.
+NOSE_BOLTS = [(12.0, 25.0), (12.0, -25.0), (40.0, 25.0), (40.0, -25.0), (50.0, 12.0), (50.0, -12.0)]
+TAIL_BOLTS = [(-12.0, 25.0), (-12.0, -25.0), (-40.0, 18.0), (-40.0, -18.0), (-55.0, 22.0), (-55.0, -22.0)]
+BASE_BOLTS = NOSE_BOLTS + TAIL_BOLTS
 SPLIT_X = 0.0 + S.BX                                           # the base splits into a nose unit and a tail unit here (183 mm long: the A1 mini prints 180)
 TURRET_BOLTS = [(S.SPOOL["c"][0] + dx, dy) for dx in (-13.0, 13.0) for dy in (-21.0, 19.0)]   # M3 down through the turret's floor into the deck's inserts, beside the gear and the drum (driver from above)
 REC_BOLTS = [(x + S.BX, y) for x, y in S.REC_BOLTS]           # the battery mechanism's 4 M3, up into inserts in the base units' yokes

@@ -1077,10 +1077,40 @@ def t_coarse_setup_fails():
         check("coarse: a setup that raises at 2h skips the coarse stage", False, f"{type(e).__name__}: {e}; log tail {lines[-3:]}")
 
 
+def t_audit_room_full():
+    """room_full (topo/audit.py room_strength): the room filled solid must pass max_worst, else no layout can and the run is refused
+    (9 Nov: the Scout v4 frame's 16 x 8 side lugs read 2.55 after 69 min). The 24 x 10 x 10 bar holds 10 N; at 20 kN it cannot."""
+    try:
+        from .audit import room_strength, SetupError
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn")
+        p = _mini_part()
+        L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+        ok_rep = room_strength(L, 0.5, log=lambda s_: None)
+        import manifold3d as mf
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        q = Part("mini_heavy", 1.0, box(0, 3, 0, 10, 0, 10) + box(20, 24, 2, 8, 2, 8), box(100, 101, 100, 101, 100, 101),
+                 box(0, 24, 0, 10, 0, 10), log=lambda s_: None)
+        q.support("default", box(-1, 1.5, -1, 11, -1, 11))
+        q.load("down 20 kN", box(20, 24, 2, 8, 2, 8), (0, 0, -20000.0), cls="crash")
+        Lq = Layout(q, volfrac=0.3, settings=s, log=lambda s_: None)
+        try:
+            room_strength(Lq, 0.5, log=lambda s_: None); refused = False
+        except SetupError as e:
+            refused = "room_full" in str(e)
+        soft = room_strength(Lq, 0.5, log=lambda s_: None, hard=False)
+        ok = ok_rep["worst"] is not None and ok_rep["worst"] < 0.5 and refused and soft.get("fail") and soft["thinned"] > soft["worst"]
+        check("audit room_full: a room that holds its load passes, one that cannot even filled solid is refused", bool(ok),
+              f"10 N {ok_rep['worst']}, 20 kN {soft['worst']} refused {refused}, thinned {soft['thinned']}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit room_full", False, str(e))
+
+
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_design_hash, t_coarse_setup_fails):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_design_hash, t_coarse_setup_fails, t_audit_room_full):
         t()
     if not quick:
         t_end_to_end()

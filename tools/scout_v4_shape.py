@@ -393,13 +393,15 @@ def mast():
 
 
 HUB_RING = 34.0                                   # the roof's middle node RM is a ring (r 22..34) round the probe's throat (its corners at r 20.2): its four rods end in its sides at r 34
+RM_MOUTH = {"RF": 30.0, "RB": 26.0, "RS0": 29.0, "RS1": 34.0}   # 9 Nov (the turret's run: 1.01 at RM-RB, a neck between RF's collar and the throat): each socket's mouth as near
+                                                  # as its neighbours allow: RF's floor on the throat's wall, RS0 past the 40 T gear, RS1 past the drum's end
 
 
 def cage():
     def cut(i, j):                           # each rod stops 3 inside its nodes' spheres (two in-line rods through a node must not share an end
         a, b = P(i), P(j); u = (b - a) / np.linalg.norm(b - a)   # ring: the page's mesh cleanup welds them and drops the body, 7 Nov), and at
-        bi = HUB_RING if i == "RM" else 3.0                      # the ring's side at RM
-        bj = HUB_RING if j == "RM" else 3.0
+        bi = RM_MOUTH[j] if i == "RM" else 3.0                   # the turret's socket mouths at RM
+        bj = RM_MOUTH[i] if j == "RM" else 3.0
         return a + u * bi, b - u * bj
     rods = [rod(*cut(i, j)) for i, j in RODS + TIES]
     nodes = [trimesh.creation.icosphere(subdivisions=1, radius=5.0).apply_translation(P(k)) for k in NODES if k not in PRINTED and k != "RM"]

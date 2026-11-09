@@ -6,7 +6,7 @@ from the top: its screws come down through its floor), and the side lugs' four r
 Cuts: the props' discs + 12, the motors, the turret over the deck, the N20's pocket and the 40 T gear's slot through the deck, the bolt
 holes and their tool paths (the base bolts' heads and driver from above, the motor screws' from below), the rods beyond the mouths.
 Room: the deck z 18.5..26.5 over |x| 60, |y| 40 (the base units bolt to its flat underside), the arms 24 wide z 12..26.5 out to the pods
-(under the discs' keep-out at 27.7), the lugs down to z -14.
+(under the discs' keep-out at 27.7), the lugs a wedge x +-20 from y 36..64 at the deck down to y 36..44 at z -15.5.
 Support: the eight base-unit pads (the battery set, the base and the electronics hang there).
 Loads: per motor its thrust (the drone at 4 g, a quarter each) and its motor + prop in 35 g crashes; the probe (turret and head) on its
 four bosses in 35 g crashes and flight, and the head-first crash (the parked head is the highest point: up to 230 N down the throat);
@@ -17,8 +17,9 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of
                                       disc_cuts, region_top, region_bot, check_collars, BASE_BOLTS, TURRET_BOLTS, DZ0, DZ1, DRONE_G, G,
                                       M3_INS, M3_CLR, BOSS_R)
 
-SPEC = dict(h=2.0, gen_cm3=34.0, max_worst=0.3)   # E: the frame room's 54 g estimate at 0.45 fill (tools/scout_v4_shape.py), PCTG at the nodes' 0.3 limit
+SPEC = dict(h=2.0, gen_cm3=36.0, max_worst=0.3)   # E: the frame room's 54 g estimate at 0.45 fill (tools/scout_v4_shape.py), PCTG at the nodes' 0.3 limit; 9 Nov +2 for the lugs' wedges
 POD_R, POD_T, ARM_W, ROOM_TOP, ARM_Z0 = 14.0, 4.0, 24.0, 26.5, 12.0
+LUG_X, LUG_Y1 = 20.0, 64.0                          # the lugs' room: x +-20 (was 8), out to y 64 at the deck (was 44)
 PROBE = ("probe_turret", "probe_spool", "probe_pinion", "probe_motor", "probe_drum", "probe_feed", "head_frame", "probe_servo", "cradle", "probe_tilt", "probe_leds", "probe_mast_a", "probe_mast_b")
 
 
@@ -45,8 +46,12 @@ def bodies():
         env.append(man(trimesh.convex.convex_hull(np.array(pts))))
         env.append(cyl(mx, my, ARM_Z0, DZ1, POD_R + 1.5))                            # 1.5 round the pad: the frame spans 179.6 (the A1 mini's 180)
     lx, ly0, ly1, lz = S.LUG
-    for s_ in (1, -1):
-        env.append(box(-lx, lx, *sorted((s_ * ly0, s_ * ly1)), lz, ROOM_TOP))
+    for s_ in (1, -1):                                                                # the side lugs' room: a wedge from the deck's side down to the
+        yz = [(ly0, lz), (ly1, lz), (ly1, lz + 1.2), (LUG_Y1, lz + 1.2 + 1.43 * (LUG_Y1 - ly1)), (LUG_Y1, ROOM_TOP), (ly0, ROOM_TOP)]   # BS socket, out under the
+        pts = np.array([(x, s_ * y, z) for x in (-LUG_X, LUG_X) for y, z in yz])      # discs' keep-out, its outer face up the funnel's 55 deg (9 Nov: the 16 x 8
+        import trimesh
+        from topo.part import man
+        env.append(man(trimesh.convex.convex_hull(pts)))                              # column read 2.55 in bending under BS's 134 N, 29 under the deck)
     drawn, cuts = [], []
     pods, pod_regs = [], []
     for mx, my in S.MOTORS:                                                           # the motor pads: 4 x M2 on 12 x 12 (ECO II 2004, listing), centre O8
