@@ -26,9 +26,9 @@
  "strength": {
   "rows": [
    {
-    "case": "frame RF-R0 axial 33 N (pull-out)",
+    "case": "frame RF-R0 axial 35 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.02,
+    "inlayer": 0.022,
     "across": 0.016,
     "at": [
      155.2,
@@ -37,10 +37,10 @@
     ]
    },
    {
-    "case": "frame RF-R0 side 12.2 N",
+    "case": "frame RF-R0 side 13.1 N",
     "cls": "crash",
-    "inlayer": 0.018,
-    "across": 0.02,
+    "inlayer": 0.02,
+    "across": 0.022,
     "at": [
      155.2,
      88.3,
@@ -48,8 +48,8 @@
     ]
    }
   ],
-  "worst": 0.02,
-  "worst_case": "frame RF-R0 axial 33 N (pull-out)",
+  "worst": 0.022,
+  "worst_case": "frame RF-R0 axial 35 N (pull-out)",
   "worst_at": [
    155.2,
    91.3,
@@ -193,16 +193,16 @@
   "design": 11375,
   "drawn": 1828,
   "cases": [
-   "frame RF-R0 axial 33 N (pull-out)",
-   "frame RF-R0 side 12.2 N"
+   "frame RF-R0 axial 35 N (pull-out)",
+   "frame RF-R0 side 13.1 N"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 20.3,
- "layout_s": 204,
- "peak_gb": 0.825028,
+ "build_s": 21.5,
+ "layout_s": 218,
+ "peak_gb": 0.827012,
  "gen_cm3": 1.9,
  "h": 1.0,
  "audit": {
@@ -259,25 +259,25 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.007,
-   "worst_case": "frame RF-R0 axial 33 N (pull-out)",
+   "worst": 0.008,
+   "worst_case": "frame RF-R0 axial 35 N (pull-out)",
    "worst_at": [
     155.2,
     90.3,
     61.4
    ],
    "budget_share": 0.167,
-   "thinned": 0.04,
+   "thinned": 0.05,
    "max_worst": 0.3
   }
  },
  "early": {
   "rows": [
    {
-    "case": "frame RF-R0 axial 33 N (pull-out)",
+    "case": "frame RF-R0 axial 35 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.02,
-    "across": 0.02,
+    "inlayer": 0.022,
+    "across": 0.021,
     "at": [
      155.2,
      91.3,
@@ -285,10 +285,10 @@
     ]
    },
    {
-    "case": "frame RF-R0 side 12.2 N",
+    "case": "frame RF-R0 side 13.1 N",
     "cls": "crash",
-    "inlayer": 0.023,
-    "across": 0.03,
+    "inlayer": 0.024,
+    "across": 0.033,
     "at": [
      155.2,
      88.3,
@@ -296,8 +296,8 @@
     ]
    }
   ],
-  "worst": 0.03,
-  "worst_case": "frame RF-R0 side 12.2 N",
+  "worst": 0.033,
+  "worst_case": "frame RF-R0 side 13.1 N",
   "worst_at": [
    155.2,
    88.3,
@@ -309,10 +309,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 224,
+ "total_s": 239,
  "part_sha": "5f43f559feab",
- "lib_sha": "99ab5c3c0bf4",
- "setup_sha": "b67880cbfab4187b",
+ "lib_sha": "f1c94f24e504",
+ "setup_sha": "c1d57e93b5c286b4",
  "max_worst": 0.3,
  "strength_ok": true
 }
