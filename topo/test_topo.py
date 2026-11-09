@@ -660,6 +660,43 @@ def t_gate_thin_ok():
         check("gate thin_ok", False, str(e))
 
 
+def t_export_fallback():
+    """export (topo/build.py weld_clean / require_mesh): manifold3d refuses a mesh trimesh calls watertight when a face pair is
+    mis-wound (NotManifold, an EMPTY solid), so the collapse after a closed first pass gave 0 faces and the gate died on None
+    (9 Nov: overseer_head_mount after 7334 s). Now a refused or empty second pass falls back to the first-pass mesh (closed, same
+    volume, the reason reported) and an empty export raises ExportError, never a TypeError."""
+    try:
+        import trimesh
+        import manifold3d as mf
+        from . import build as B
+        from .part import man, tm
+        b = trimesh.creation.box((10, 10, 10)); F = b.faces.copy(); F[0] = F[0][::-1]
+        mis = trimesh.Trimesh(b.vertices, F, process=False)
+        refused = mis.is_watertight and man(mis).num_tri() == 0                # the mechanism: watertight to trimesh, empty to manifold
+        box = _mbox(20, 20, 20, (-240, 0, -80))
+        c = trimesh.creation.cylinder(3.1, 30.0, sections=40)
+        c.apply_transform(trimesh.transformations.rotation_matrix(np.radians(30), [1, 0.3, 0])); cyl = man(c.apply_translation((-240, 0, -80)))
+        again = man(tm(box - cyl)) - cyl                                     # coincident cut: slivers, so the simplify branch runs
+        raw = again.to_mesh64(); v = np.asarray(raw.vert_properties)[:, :3]; f = np.asarray(raw.tri_verts)
+        keep = B.man
+        try:
+            B.man = lambda t_: mf.Manifold()                                 # what a NotManifold mesh gives
+            m, rep = B.weld_clean(v, f)
+        finally:
+            B.man = keep
+        fb = rep.get("simplify_fallback") or {}
+        fell = rep["watertight"] and len(m.faces) > 0 and not rep["simplified"] and fb.get("faces") == 0 and abs(m.volume - again.volume()) < 1.0
+        try:
+            B.require_mesh(trimesh.Trimesh(), dict(faces_in=0)); raised = False
+        except B.ExportError:
+            raised = True
+        check("export: a manifold-refused simplify keeps the closed first pass; an empty export raises ExportError", refused and fell and raised,
+              f"refused {refused}; fallback {fell} {fb} faces {len(m.faces)}; raised {raised}")
+    except Exception as e:
+        traceback.print_exc()
+        check("export fallback", False, str(e))
+
+
 def t_export_mesh():
     """export (topo/build.py weld_mesh / export_mesh): the exact part of a boolean with coincident surfaces (a mesh cut again with
     the holes it already has, as tools/recut.py does) holds sliver triangles thinner than float32; welded at STL precision, the
@@ -1009,7 +1046,7 @@ def t_skin_core():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_design_hash):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_design_hash):
         t()
     if not quick:
         t_end_to_end()
