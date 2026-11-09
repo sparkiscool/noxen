@@ -358,10 +358,10 @@
     ]
    },
    {
-    "case": "head-first crash: 230 N down onto the camera's top",
+    "case": "head-first crash: 250 N down onto the camera's top",
     "cls": "crash",
-    "inlayer": 3.571,
-    "across": 4.888,
+    "inlayer": 3.881,
+    "across": 5.313,
     "at": [
      11.1,
      16.5,
@@ -391,8 +391,8 @@
     ]
    }
   ],
-  "worst": 4.888,
-  "worst_case": "head-first crash: 230 N down onto the camera's top",
+  "worst": 5.313,
+  "worst_case": "head-first crash: 250 N down onto the camera's top",
   "worst_at": [
    11.1,
    16.5,
@@ -758,10 +758,10 @@
     ]
    },
    {
-    "case": "head-first crash: 230 N down onto the camera's top",
+    "case": "head-first crash: 250 N down onto the camera's top",
     "cls": "crash",
-    "inlayer": 3.571,
-    "across": 4.888,
+    "inlayer": 3.881,
+    "across": 5.313,
     "at": [
      11.1,
      16.5,
@@ -791,8 +791,8 @@
     ]
    }
   ],
-  "worst": 4.888,
-  "worst_case": "head-first crash: 230 N down onto the camera's top",
+  "worst": 5.313,
+  "worst_case": "head-first crash: 250 N down onto the camera's top",
   "worst_at": [
    11.1,
    16.5,
@@ -925,7 +925,7 @@
    "SG90 crash 11 (35 g [-0.58, 0.58, -0.58])",
    "SG90 crash 12 (35 g [-0.58, -0.58, 0.58])",
    "SG90 crash 13 (35 g [-0.58, -0.58, -0.58])",
-   "head-first crash: 230 N down onto the camera's top",
+   "head-first crash: 250 N down onto the camera's top",
    "SG90 stall torque +1.8 kg cm on its tabs",
    "SG90 stall torque -1.8 kg cm on its tabs"
   ],
@@ -1023,32 +1023,23 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.14,
-   "worst_case": "head-first crash: 230 N down onto the camera's top",
+   "worst": 0.153,
+   "worst_case": "head-first crash: 250 N down onto the camera's top",
    "worst_at": [
     14.1,
     30.4,
     111.5
    ],
    "budget_share": 0.035,
-   "thinned": 4.03,
+   "thinned": 4.41,
    "max_worst": 0.3
   }
  },
- "total_s": 2641,
+ "total_s": 2660,
  "baseline": null,
- "part_sha": "f9ecfc28e329",
+ "part_sha": "aab70153a0ee",
  "lib_sha": "d4a3e35601a1",
- "setup_sha": "f4e201e142797e5e",
+ "setup_sha": "1a043a7f17cf9849",
  "max_worst": 0.3,
- "strength_ok": false,
- "print_stl": {
-  "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_head_frame.stl",
-  "sha256": "b0426c395a07a4f94e67b7ed8aac44cde84e11a193f0b49a6a3ca6531661e401",
-  "bytes": 8884,
-  "faces": 176,
-  "view_faces": 176,
-  "view_sha256": "025fe02bb87060b5f54cb984045273b241e0ddb7274759a189bfbca28d09b8d6",
-  "at": "2026-11-09 23:05"
- }
+ "strength_ok": false
 }
