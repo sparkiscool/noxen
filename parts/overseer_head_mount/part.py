@@ -143,7 +143,8 @@ class Sock:
     def bores(self):
         if self.channel:                                            # the grooved bore + its half-pipe opening, from the floor plane past the mouth
             return socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r) + [trough(self.pt(self.t_bot), self.d, 0.0, self.depth + 7.0, self.collar_r)]
-        return injectable_socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r)
+        port = np.array([0.0, 0.0, -1.0]) - self.d[2] * self.d; port /= np.linalg.norm(port)   # 9 Nov: down, between the cameras (up, into the hub, left a 1.1 mm wall)
+        return injectable_socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r, port=port)
 
     def clear(self, length=300.0):
         """the member outside its mouth: nothing of the mount may grow into the carbon (r + 1.0)"""
@@ -263,7 +264,7 @@ def bodies():
     cuts.append(ball - back)
     cuts.append(along(B, B + A * 70.0, 39.0, 96))                                   # the L2 body (O75 x 65, + 1)
     dn = np.cos(np.radians(-CABLE_ROLL)) * CABLE + np.sin(np.radians(-CABLE_ROLL)) * Y   # v9: the cable leaves 22.5 deg off down (-y side)
-    cuts.append(fbox(B, A, np.cross(A, dn), -dn, (-60.0, 1.0), (-7.0, 7.0), (-120.0, -32.5)))
+    cuts.append(fbox(B, A, np.cross(A, dn), -dn, (-60.0, 1.0), (-7.0, 7.0), (-55.0, -32.5)))   # 9 Nov: a notch past the flange (was to -120: with the L2 60 up it cut 120 down through the mount's right side and left members ending at its wall)
     # --- envelope: slab behind the base (O80 x 46), camera blocks behind the boards, a seat round every collar (+4), one hull over all
     slab = along(B - A * 46.0, B, 40.0, 48)
     seats = [along(s.p0, s.p1, s.collar_r + 4.0) if isinstance(s, Saddle) else along(s.pt(s.t_floor - 4.0), s.pt(s.t_mouth), s.collar_r + 4.0)
