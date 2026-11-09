@@ -48,7 +48,6 @@ LUG_X, LUG_Y1 = 20.0, 64.0                         # the lugs' room: x +-20, out
 # the motor (EMAX ECO II 2004 3000KV, the table above; dimensions.md open item 19: the KV)
 T_MAX, DYN, Q_PEAK, F_IMB, Q_STRIKE, F_STRIKE = 11.8, 1.5, 130.0, 11.0, 1000.0, 17.0   # N, -, N mm, N, N mm, N
 M2_PATTERN = 6.0                                   # 12 x 12, 4 x M2
-PROBE = ("probe_turret", "probe_spool", "probe_pinion", "probe_motor", "probe_drum", "probe_feed", "head_frame", "probe_servo", "cradle", "probe_tilt", "probe_leds", "probe_mast_a", "probe_mast_b")
 ROOT = S.ROOT
 
 
@@ -57,10 +56,15 @@ def bounds(pid):
 
 
 def probe_mass_cg():
+    """the probe's mass (assembly rows) at its CG from the shape design (tools/scout_v4_shape.probe(), mast()), not from the parts'
+    generated meshes: a probe part's result landing must not change this setup (9 Nov: run 180 was superseded by the cradle's)"""
+    m = dict(S.probe()); m["probe_mast_a"], m["probe_mast_b"] = S.mast()
     g, s = 0.0, np.zeros(3)
-    for k in PROBE:
-        pid = "scout_v4_" + k; mg = ASM[pid]["mass_g"]
-        t = trimesh.load(os.path.join(ROOT, "parts", pid, "part.stl"))
+    for k, t in m.items():
+        pid = "scout_v4_" + k
+        if pid not in ASM:
+            continue
+        mg = ASM[pid]["mass_g"]
         c = t.center_mass if (t.is_watertight and abs(t.volume) > 1e-6) else t.bounds.mean(0)
         g += mg; s += mg * np.asarray(c)
     return g, s / g

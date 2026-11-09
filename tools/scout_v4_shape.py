@@ -456,6 +456,9 @@ def frame_check(core_g):
                     nl[k][nm] = dict(axial=max(v["axial"], o["axial"] if o else 0), side=max(v["side"], o["side"] if o else 0), N=v["N"], case=v["case"], tag="F")
     json.dump(dict(note="Scout v4 frame model (tools/scout_v4_shape.py frame_check): per node and member the worse of the standard cases and the head-first crash", node_loads=nl),
               open(os.path.join(ROOT, "systems", "scout_v4.cage_loads.json"), "w"), indent=1)
+    hn = int(math.ceil(out["head_first"]["head_N"] / 10.0) * 10)                    # the probe's setups read the head-first load from here (9 Nov: it was 230 by hand, the model gives ~250)
+    json.dump(dict(note="Scout v4 frame model: the parked head's contact force in the head-first crash, rounded up to 10 N; read by the probe's turret, head frame and cradle", head_first_N=hn),
+              open(os.path.join(ROOT, "systems", "scout_v4.head_load.json"), "w"), indent=1)
     return out
 
 

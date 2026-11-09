@@ -8,7 +8,7 @@ walls (a flat slot at the spool's height opening to the blades' lens at its top,
 round the cable's coil; RM's four rod collars, their mouths at r 34.
 Cuts: the spool, its 40 T gear and the 12 T pinion swept; the roller's travel, its axle's slots, the springs; the N20; the axle; the blades' path and the mast above; the drum's cavity;
 the bolts and their drivers; the props' discs + 12; the deck (z < 24.5) but the motor's pocket. (The DRV8833 is in the nose bay.)
-Support: the four floor bosses. Loads: the head-first crash (230 N down the throat); the parked head (60 g) on the throat's seat in 35 g
+Support: the four floor bosses. Loads: the head-first crash (systems/scout_v4.head_load.json, ~250 N down the throat); the parked head (60 g) on the throat's seat in 35 g
 crashes; the mast's fold-limited bending at the throat (0.6 N m in x, 1.2 in y: the FE's fold moments); the spool's tape tension at the N20's stall
 (28 N each way on the axle: the 100 rpm N20, 420 N mm); the roller's springs (12 N against the axle); the turret's own spool, blades and cable (15 g) on the axle bosses in crashes; RM's rods."""
 import numpy as np
@@ -16,6 +16,8 @@ from topo import Part
 from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, hull, U, socks_of, socket_cases, socket_bodies, payload_cases, point_case,
                                       disc_cuts, region_top, region_bot, check_collars, TURRET_BOLTS, DZ1, M3_CLR, BOSS_R)
 
+import json as _json, os as _os
+HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
 SPEC = dict(h=1.2, gen_cm3=14.0, max_worst=0.3)  # 9 Nov: 9 cm3 read 1.01 at RM-RB with its arms out to r 34 and the budget spent; 14 with the FE fold loads (1.2 N m in y) and the roller
 CUP_R, BLADE_T, CABLE_T = 15.0, 0.13, 0.6       # the 19 mm blade's cup radius and thickness (patents: R 12.7..25.4, t 0.11..0.19; E), the 6 x 30 AWG PTFE ribbon
 FOLD_NM = (0.6, 1.2)                             # the moment the mast can put on the throat before it folds, +-x and +-y (tools/probe_mast_fe.py: the unbonded lens folds at ~0.50 N m in x, 3.6 in y; x x 1.2, y capped at 2 x x: a bigger y moment is a crash on the head)
@@ -107,7 +109,7 @@ def setup(h):
     p = Part("scout_v4_probe_turret", h, B["drawn"], B["cuts"], B["env"], build="+z", material="PCTG")
     p.support("default", U(B["regs"]))
     t = S.THROAT; mx = S.MAST_X
-    p.load("head-first crash: 230 N down the throat", B["seat"], (0, 0, -230.0), cls="crash")
+    p.load(f"head-first crash: {HEAD_N} N down the throat", B["seat"], (0, 0, -float(HEAD_N)), cls="crash")
     head_g = sum(ASM["scout_v4_" + k]["mass_g"] for k in ("head_frame", "probe_servo", "cradle", "probe_tilt", "probe_leds"))
     payload_cases(p, "the parked head", [(mx, 0, t["z1"])], [B["seat"]], head_g, (S.AXIS[0], S.AXIS[1], S.AXIS[2]), flight=False)
     for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
