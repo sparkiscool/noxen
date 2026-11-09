@@ -117,9 +117,9 @@ def frame():
         ties.append(box(TAIL_BEAM[0], x0 - w + 4.0, ya, yb, TAIL_BEAM[3] - 1.0, z0 - 1.5))
     xs = [tab_x(1), tab_x(-1)]
     for sy in (-1, 1):                                                                              # bearing blocks at the screws' ends, on the side walls' outer faces
-        ya, yb = sorted((sy * 44.0, sy * (SCREW_Y + 6.0)))
-        ties.append(box(xs[0][1] + 14.0, xs[0][1] + 20.0, ya, yb, NOSE_BEAM[3] - 1.0, z0 + SCREW_H + 6.0))     # down to the nose beam
-        ties.append(box(xs[1][0] - 20.0, xs[1][0] - 14.0, ya, yb, TAIL_BEAM[3] - 1.0, z0 + SCREW_H + 6.0))     # down to the tail beam
+        ya, yb = sorted((sy * 44.0, sy * (SCREW_Y + 4.5)))                                          # 9 Nov: to |y| 58.5 and 3 inboard (at |y| 60, x -119.5 an Overseer tube grazed the tail block, 2 mm3, at the +x+y capture limit, h 16)
+        ties.append(box(xs[0][1] + 11.5, xs[0][1] + 17.0, ya, yb, NOSE_BEAM[3] - 1.0, z0 + SCREW_H + 6.0))     # down to the nose beam
+        ties.append(box(xs[1][0] - 17.0, xs[1][0] - 11.5, ya, yb, TAIL_BEAM[3] - 1.0, z0 + SCREW_H + 6.0))     # down to the tail beam
     f = f + mf.Manifold.batch_boolean(ties, mf.OpType.Add)
     cuts = []
     for sx in (1, -1):                                                                              # the tabs' slots through the side walls, over the whole travel
