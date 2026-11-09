@@ -216,6 +216,9 @@ def place(src, rot=None, lo=None, yc=0.0):
 
 REC_BOLTS = [(48.28, 26.55), (48.28, -26.55), (-37.65, 26.55), (-37.65, -26.55)]   # the receiver's 4 bolt bosses (receiver v3, C), drone frame before BX
 REC_TOP = 9.6                                                                       # the receiver's top: the base's yokes sit on it
+BATTERY_SET = (266.5, (-3.47, -0.01, -15.93))                                       # 9 Nov (Spark: "get rid of the battery mechanism, leave 4 bolts for it to mount
+                                                                                    # to"): the receiver 60, cartridge 30, pack 165, XT60 10, feet and pads 1.5 are not drawn;
+                                                                                    # they fly on the 4 bolts, so their mass at their CG (x + BX) stays in the balance and frame model
 
 
 def receiver_bolts():
@@ -486,9 +489,7 @@ def write():
     meshes["ubec"] = place("ubec", lo=(-90.0 + BX, -1.3), yc=3.5)                         # (yc +3.5, the XR2 +10, the Radxa +1: the CG on the thrust centre in y with the head over its mast)                                # the tail tray, flat
     meshes["radxa_zero_3w"] = place("radxa_zero_3w", rot=([0, 1, 0], 90), lo=(-86.0 + BX, 8.5), yc=1.0)   # flat over the UBEC (was on edge)
     meshes["xr2"] = place("xr2", rot=([0, 1, 0], 90), lo=(-70.0 + BX, 0.0), yc=10.0)
-    for src in ("pack_4s_1500", "pack_xt60_plug", "box_ctx_scout_receiver_v3", "box_ctx_scout_cartridge_v6"):
-        meshes[src] = moved(src, dx=BX)
-    meshes["receiver_feet"], meshes["receiver_contacts"] = pads()
+    # the battery mechanism (receiver, cartridge, pack, its feet and pads) is not part of this design: it mounts on receiver_bolts
     meshes["receiver_bolts"] = receiver_bolts()
     meshes["cage_rods"], meshes["cage_nodes"] = cage()
     for nm, m in meshes.items():
@@ -542,14 +543,8 @@ def entries(meshes):
     for src, nm, g, note in (("ubec", "UBEC", 15.0, "the tail tray, flat, bottom z -1.3"), ("xr2", "XR2", 1.0, "the tail tray, flat"), ("radxa_zero_3w", "Radxa Zero 3W", 10.0, "the tail tray, flat over the UBEC (was on edge)"),
                              ("scout_flow_mtf_02p", "flow MTF-02P", 1.5, "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn")):
         add(src, nm, "bought", "electronics", "#2b5d8a", g, "P", note)
-    add("receiver_bolts", "receiver bolts: 4 x M3 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)", "bought", "battery", "#5a5f66", 4.0, "E",
+    add("receiver_bolts", "battery mount: 4 x M3 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)", "bought", "battery", "#5a5f66", 4.0, "E",
         f"at ({REC_BOLTS[0][0] + BX:.1f}, +-26.55) and ({REC_BOLTS[2][0] + BX:.1f}, +-26.55) through the receiver's O3.4 boss holes; M3 x 12 E (the boss's depth: measure); the inserts in O10 bosses of the yokes (wall >= 3), the heads reached from below with the cartridge out")
-    add("pack_4s_1500", "pack 4S 1500 (in the cartridge)", "protected", "battery", "#c0392b", 165.0, "P", "the v3 pack, unchanged: the swapper's")
-    add("pack_xt60_plug", "pack XT60 plug", "bought", "battery", "#e2b007", 10.0, "P", "as v3")
-    add("box_ctx_scout_receiver_v3", "receiver v3 (the Overseer's latch receiver)", "structure", "battery", "#7f8c8d", 60.0, "E", "unchanged, at the v3 place: the funnel seat and the swap arm see the same belly")
-    add("box_ctx_scout_cartridge_v6", "cartridge v6", "structure", "battery", "#95a5a6", 30.0, "E", "unchanged")
-    add("receiver_feet", "receiver TPU feet (4, at its bottom corners)", "structure", "battery", "#333333", 1.0, "E", "8 x 2.5 at |y| 21..23.5, to z -47.5: the Scout's foot on flat ground, clear of the box's ledges and swap head (the box session, 9 Nov); TPU 95A")
-    add("receiver_contacts", "receiver contact pads (4, keep-alive and seat sensing)", "structure", "battery", "#c48a3a", 0.5, "E", "bare O6 pads at (1.5 +- 30, +-29.5) on the receiver's bottom rim, against the box's probes in the ledges")
     L = sum(float(np.linalg.norm(P(i) - P(j))) for i, j in RODS + TIES)
     add("cage_rods", "half cage v4, rods (3 mm carbon: the ring, the flat roof, end Vs and side fans)", "cage", "cage", "#2b2b2b", L * ROD_G_MM, "E",
         f"{len(RODS)} rods, {L / 1000:.2f} m, every one 12 from the swept discs and none over or under a disc: ring at z {ZR:.0f} with flats at {FLAT:.0f} (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)")
@@ -565,7 +560,7 @@ if __name__ == "__main__":
           f"cage {len(NODES) - len(PRINTED)} nodes + {len(PRINTED)} printed, {len(RODS)} rods {L / 1000:.2f} m")
     for k, (v, why) in checks(M).items():
         print(f"  {k:16} {v}  ({why})")
-    core = sum(r["mass_g"] for r in entries(M) if "cage" not in r["id"])
+    core = sum(r["mass_g"] for r in entries(M) if "cage" not in r["id"]) + BATTERY_SET[0]
     fc = frame_check(core)
     print(f"  frame model     first mode {fc['mode_hz']:.0f} Hz, worst {fc['deflection'][0]:.1f} mm ({fc['deflection'][1][:60]}), Euler <= {fc['euler'][0]:.2f} ({fc['euler'][1]}), "
           f"end moment <= {fc['moment'][0]:.0f} N mm ({fc['moment'][1]}; socket cap 2000), pull-out <= {fc['pull']:.0f} N (cap 940)")
@@ -576,16 +571,24 @@ if __name__ == "__main__":
     old = json.load(open(F)) if os.path.exists(F) else {}
     rows = entries(M)
     lo = np.min([m.bounds[0] for m in M.values()], 0); hi = np.max([m.bounds[1] for m in M.values()], 0)
-    mass = sum(r["mass_g"] for r in rows)
+    drawn = sum(r["mass_g"] for r in rows); mass = drawn + BATTERY_SET[0]
+    S_ = np.zeros(3)
+    by_id = {f"scout_v4_{nm.replace('box_ctx_scout_', '').replace('scout_', '')}": m for nm, m in M.items()}
+    for r in rows:
+        m = by_id[r["id"]]
+        c = m.center_mass if (m.is_watertight and abs(m.volume) > 1e-6) else m.bounds.mean(0)
+        S_ += r["mass_g"] * np.asarray(c)
+    bc = np.array(BATTERY_SET[1]) + [BX, 0, 0]; S_ += BATTERY_SET[0] * bc; cg = S_ / mass
     a = dict(name="Scout v4", title="Scout v4", artifact=old.get("artifact"), machine="scout_v4", order=0, readme_view=old.get("readme_view", "iso"),
              appendix=old.get("appendix", "systems/scout_v4.appendix.html"), timeline="tools/scout_v4_timeline.py:timeline", frame_timeline=True,
              views={"probe": [[330.0, -380.0, 330.0], [22.0, 0.0, 185.0]], "turret": [[90.0, -140.0, 70.0], [2.0, 0.0, 40.0]]},
              note=f"Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): "
-                  f"Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. {lo[0]:.0f}..{hi[0]:.0f} x {lo[1]:.0f}..{hi[1]:.0f} x {lo[2]:.0f}..{hi[2]:.0f} mm, "
+                  f"Gemfan 5125 props on a printed frame, a half cage on the new discs; the battery mechanism (receiver, cartridge, pack, {BATTERY_SET[0]:.0f} g) not drawn: it mounts on 4 M3 bolts. {lo[0]:.0f}..{hi[0]:.0f} x {lo[1]:.0f}..{hi[1]:.0f} x {lo[2]:.0f}..{hi[2]:.0f} mm, "
                   f"~{mass:.0f} g (E). tools/scout_v4_shape.py",
              mass_budget_g=None, parts=rows)
     open(F, "w").write(json.dumps(a, indent=0, ensure_ascii=False) + "\n")
-    print(f"  extents         {hi[0] - lo[0]:.0f} x {hi[1] - lo[1]:.0f} x {hi[2] - lo[2]:.0f} mm; all-up ~{mass:.0f} g (E)")
+    print(f"  extents         {hi[0] - lo[0]:.0f} x {hi[1] - lo[1]:.0f} x {hi[2] - lo[2]:.0f} mm; all-up ~{mass:.0f} g (E): drawn {drawn:.0f} + the battery set {BATTERY_SET[0]:.0f} on its 4 bolts")
+    print(f"  balance         CG ({cg[0]:+.2f}, {cg[1]:+.2f}, {cg[2]:.1f}) mm; the thrust centre (0, 0): {math.hypot(cg[0], cg[1]):.2f} off (masses E)")
     for r in sorted(rows, key=lambda r: -r["mass_g"])[:8]:
         print(f"    {r['mass_g']:6.1f} g  {r['name'][:70]}")
     print("  written: systems/scout_v4.assembly.json, parts/scout_v4_*/part.stl")

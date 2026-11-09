@@ -34,7 +34,7 @@
 ]
 ]
 },
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..160 x -160..160 x -48..134 mm, ~734 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, a half cage on the new discs; the battery mechanism (receiver, cartridge, pack, 266 g) not drawn: it mounts on 4 M3 bolts. -160..160 x -160..160 x -19..134 mm, ~734 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -466,7 +466,7 @@
 },
 {
 "id": "scout_v4_receiver_bolts",
-"name": "receiver bolts: 4 x M3 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)",
+"name": "battery mount: 4 x M3 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)",
 "role": "bought",
 "group": "battery",
 "color": "#5a5f66",
@@ -477,90 +477,6 @@
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
 "note": "at (52.0, +-26.55) and (-33.9, +-26.55) through the receiver's O3.4 boss holes; M3 x 12 E (the boss's depth: measure); the inserts in O10 bosses of the yokes (wall >= 3), the heads reached from below with the cartridge out"
-},
-{
-"id": "scout_v4_pack_4s_1500",
-"name": "pack 4S 1500 (in the cartridge)",
-"role": "protected",
-"group": "battery",
-"color": "#c0392b",
-"mesh": "parts/scout_v4_pack_4s_1500/part.stl",
-"mass_g": 165.0,
-"tag": "P",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "the v3 pack, unchanged: the swapper's"
-},
-{
-"id": "scout_v4_pack_xt60_plug",
-"name": "pack XT60 plug",
-"role": "bought",
-"group": "battery",
-"color": "#e2b007",
-"mesh": "parts/scout_v4_pack_xt60_plug/part.stl",
-"mass_g": 10.0,
-"tag": "P",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "as v3"
-},
-{
-"id": "scout_v4_receiver_v3",
-"name": "receiver v3 (the Overseer's latch receiver)",
-"role": "structure",
-"group": "battery",
-"color": "#7f8c8d",
-"mesh": "parts/scout_v4_receiver_v3/part.stl",
-"mass_g": 60.0,
-"tag": "E",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "unchanged, at the v3 place: the funnel seat and the swap arm see the same belly"
-},
-{
-"id": "scout_v4_cartridge_v6",
-"name": "cartridge v6",
-"role": "structure",
-"group": "battery",
-"color": "#95a5a6",
-"mesh": "parts/scout_v4_cartridge_v6/part.stl",
-"mass_g": 30.0,
-"tag": "E",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "unchanged"
-},
-{
-"id": "scout_v4_receiver_feet",
-"name": "receiver TPU feet (4, at its bottom corners)",
-"role": "structure",
-"group": "battery",
-"color": "#333333",
-"mesh": "parts/scout_v4_receiver_feet/part.stl",
-"mass_g": 1.0,
-"tag": "E",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "8 x 2.5 at |y| 21..23.5, to z -47.5: the Scout's foot on flat ground, clear of the box's ledges and swap head (the box session, 9 Nov); TPU 95A"
-},
-{
-"id": "scout_v4_receiver_contacts",
-"name": "receiver contact pads (4, keep-alive and seat sensing)",
-"role": "structure",
-"group": "battery",
-"color": "#c48a3a",
-"mesh": "parts/scout_v4_receiver_contacts/part.stl",
-"mass_g": 0.5,
-"tag": "E",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "bare O6 pads at (1.5 +- 30, +-29.5) on the receiver's bottom rim, against the box's probes in the ledges"
 },
 {
 "id": "scout_v4_cage_rods",

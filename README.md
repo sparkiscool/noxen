@@ -7,7 +7,7 @@ The picture below is the current assembly, redrawn by CI after every result; not
 [![Scout v4, current assembly](https://sparkiscool.github.io/noxen/scout_v4.png)](https://sparkiscool.github.io/noxen/scout_v4.html?view=iso&still)
 
 [Open the Scout v4 viewer](https://sparkiscool.github.io/noxen/scout_v4.html?view=iso&still): 5.1 in Gemfan 5125 props on a frame printed
-in PCTG, seated in the shared landing funnel on its battery receiver alone (the funnel's end walls move in for the Scout), one camera that
+in PCTG, with 4 M3 bolts under the deck for the battery mechanism to mount to (the mechanism itself is designed separately), one camera that
 is also a ceiling probe on a two-blade tape mast, and a half cage of 3 mm rods with a flat roof, frame-checked (`tools/scout_v4_shape.py`).
 Envelopes and bought parts: the nodes and the engine setups come next.
 
