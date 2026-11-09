@@ -7,13 +7,13 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   51551.9
+   59372.8
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 13,
+  "acute_edges": 12,
   "ok": true
  },
  "function_check": {
@@ -298,10 +298,10 @@
    22.2
   ]
  },
- "mass_g": 87.64,
+ "mass_g": 96.95,
  "watertight": true,
  "export": {
-  "faces_in": 388882,
+  "faces_in": 299984,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -309,21 +309,21 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 388882,
+  "faces": 299984,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 18,
-   "folded": 0,
-   "caps_split": 1,
-   "caps_left": 0,
+   "degenerate": 900,
+   "folded": 36,
+   "caps_split": 33,
+   "caps_left": 10,
    "watertight": true,
-   "faces": 677506
+   "faces": 348766
   },
-  "volume_mm3": 71254.6,
-  "exact_mm3": 71255.7
+  "volume_mm3": 78819.1,
+  "exact_mm3": 78821.2
  },
  "bodies": {
   "bodies_raw": 1,
@@ -331,7 +331,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 71255.7,
+ "volume_mm3": 78819.1,
  "drawn_g": 30.93,
  "export_cleanup": {
   "pitch": 0.25,
@@ -883,5 +883,10 @@
  "lib_sha": "182b486d8b8a",
  "setup_sha": "d461b29b5f123031",
  "max_worst": 0.2,
- "strength_ok": true
+ "strength_ok": true,
+ "recut": {
+  "at": "2026-11-09 21:51",
+  "removed_cm3": -7.565,
+  "note": "holes recut from the current setup, solid_ok bodies filled solid; strength not re-solved"
+ }
 }

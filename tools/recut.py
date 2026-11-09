@@ -7,7 +7,7 @@ Run: python tools/recut.py <part> [<part> ...]      (from the repo root; writes 
      python tools/recut.py --regate <part> ...      the gate alone on the existing mesh, result.json updated (a gate rule changed)
 """
 import importlib, json, os, sys, time
-import numpy as np, trimesh
+import numpy as np, trimesh, manifold3d as mf
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "tools"))
@@ -32,6 +32,9 @@ def recut(name, log=print):
     if M0.volume() < 1.0:
         raise RuntimeError(f"{name}: part.stl does not read as a solid (manifold status {M0.status()}); nothing recut")
     v0 = m0.volume
+    fill = list(getattr(part, "solid_ok", []))                                   # 9 Nov (Spark: more material at the motor mount, no rerun):
+    if fill:                                                                      # the setup's solid_ok bodies are filled in, then cut
+        M0 = M0 + mf.Manifold.batch_boolean(fill, mf.OpType.Add)
     P = M0 - part.cuts_m
     del m0, M0                                                                    # the gate at 0.25 mm is the memory peak: nothing else held
     P, cleanup = B.export_cleanup(P, part, log=log)                              # the export cleanup, as a fresh run would do it
@@ -50,7 +53,7 @@ def recut(name, log=print):
     py = os.path.join(d, "part.py")
     res.update(solid_ok=bool(ok and export["watertight"]), solid=solid, export_cleanup=cleanup, export=export, mass_g=round(mass, 2), volume_mm3=round(PT.volume, 1), watertight=bool(export["watertight"]),
                part_sha=part_sha(py), lib_sha=lib_sha(py), setup_sha=design_hash(part, float(res["h"]), float(res.get("gen_cm3") or mod.SPEC["gen_cm3"]), mod.SPEC),
-               recut=dict(at=time.strftime("%Y-%m-%d %H:%M"), removed_cm3=round(removed, 3), note="holes recut from the current setup; strength not re-solved"))
+               recut=dict(at=time.strftime("%Y-%m-%d %H:%M"), removed_cm3=round(removed, 3), note="holes recut from the current setup" + (", solid_ok bodies filled solid" if fill else "") + "; strength not re-solved"))
     json.dump(res, open(rj, "w"), indent=1)
     log(f"{name}: recut, {removed:.2f} cm3 removed, {mass:.1f} g, solid check {'PASS' if ok else 'FAIL'}"
         + ("" if ok else f" {json.dumps({k: v for k, v in solid.items() if k in ('necks', 'drawn_not_in_main', 'thin_walls', 'bodies_plain')})[:400]}"))
