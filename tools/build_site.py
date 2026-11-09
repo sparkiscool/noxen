@@ -32,6 +32,10 @@ def view_mesh(m, pid=""):
     part whose main shell itself is open (a recut export) still decimates, and the volume lost is printed."""
     if len(m.faces) <= 200:
         return m
+    if m.is_watertight and all(b.is_watertight and abs(b.volume) >= 1.0 for b in m.split(only_watertight=False)):
+        # already clean closed shells: skip the cleanup, which merges the faces where two shells touch and then drops both as open
+        # (9 Nov: the 0 and 180 deg bays, receiver and cartridge face to face on the axes, showed as empty slots on the box page)
+        return m.simplify_quadric_decimation(face_count=MAX_FACES) if len(m.faces) > MAX_FACES else m
     m.merge_vertices(); m.update_faces(m.nondegenerate_faces()); m.update_faces(m.unique_faces()); m.remove_unreferenced_vertices()
     bodies = m.split(only_watertight=False)
     keep = [b for b in bodies if b.is_watertight and abs(b.volume) >= 1.0]
