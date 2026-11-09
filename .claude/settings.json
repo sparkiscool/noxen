@@ -2,8 +2,16 @@
   "model": "sonnet",
   "autoCompactWindow": "100k",
   "permissions": {
+    "allow": [
+      "Bash(python *)", "Bash(python3 *)", "Bash(git *)", "Bash(gh api *)",
+      "Read", "Edit", "Write", "Glob", "Grep", "Artifact", "SendUserFile",
+      "mcp__claude-code-remote__send_later", "mcp__claude-code-remote__send_message",
+      "mcp__claude-code-remote__create_session", "mcp__claude-code-remote__get_session",
+      "mcp__claude-code-remote__list_sessions", "mcp__claude-code-remote__archive_session",
+      "mcp__github__actions_run_trigger", "mcp__github__actions_list", "mcp__github__actions_get"
+    ],
     "deny": [
-      "Read(parts/**/*.stl)", "Read(parts/**/*.glb)", "Read(parts/**/*.npz)", "Read(parts/**/*.png)",
+      "Read(parts/**/*.stl)", "Read(parts/**/*.glb)", "Read(parts/**/*.npz)",
       "Read(parts/**/log.txt)", "Read(parts/**/inputs/**)", "Read(site/meshes/**)",
       "Bash(git push --force*)", "Bash(git push -f*)"
     ]
