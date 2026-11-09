@@ -164,7 +164,8 @@ def artifact_page(a, S, meshes, commit, path):
     for p in a["parts"]:
         pid = p.get("id") or p["name"]; q = by_id[pid]
         s.part(p["name"], meshes[pid], group=p.get("group", "part"), color=p.get("color"), opacity=p.get("opacity"),
-               printed=p.get("material") in ("PETG", "PCTG", "TPU") and p.get("role") != "bought", note=note(p, q.get("_result")), segs=segs.get(pid))
+               printed=p.get("material") in ("PETG", "PCTG", "TPU") and p.get("role") != "bought", note=note(p, q.get("_result")), segs=segs.get(pid),
+               print_url=q.get("print_url"))
     for nm, m, col, op in overlays(a.get("overlays", {})):
         s.part(nm, m, group="views", color=col, printed=False, opacity=op)
     names = [p["name"] for p in s.parts]
@@ -302,7 +303,8 @@ def build(inline=False, offline=False):
                                    solid_ok=(r or {}).get("solid_ok"), total_s=(r or {}).get("total_s"),
                                    preview=f"previews/{src}.png" if os.path.exists(prev) else None,
                                    feedback=open(fb).read() if os.path.exists(fb) else "",
-                                   has_script=os.path.exists(os.path.join(ROOT, "parts", src, "part.py"))))
+                                   has_script=os.path.exists(os.path.join(ROOT, "parts", src, "part.py")),
+                                   print_url=((r or {}).get("print_stl") or {}).get("url")))   # the full print mesh (tools/print_mesh.py), the page links it
             S["parts"][-1]["_result"] = r
         out["systems"].append(S)
         if inline:

@@ -5,7 +5,7 @@ from part_sha import stale
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def socket_mismatch(name):
+def socket_mismatch(name, stl=None):
     """a cage node whose mesh does not hold the sockets its setup cuts (3 Nov, Spark: node 16's head rod socket was 3.2 while the
     head mount's is 6.2; nodes 13 and 15 had been stamped current by the file rule after a lib edit, from older setups): the bore
     radius mid-socket, 3 directions round each member, against cage_node_lib.members. Returns the mismatched members."""
@@ -14,9 +14,13 @@ def socket_mismatch(name):
     import numpy as np, trimesh
     sys.path.insert(0, ROOT)
     import parts.cage_node_lib as L
-    n = int(name.rsplit("_", 1)[1]); stl = os.path.join(ROOT, "parts", name, "part.stl")
+    n = int(name.rsplit("_", 1)[1]); stl = stl or os.path.join(ROOT, "parts", name, "part.stl")
     if not os.path.exists(stl):
         return []
+    try:                                                         # the bores to 0.35 mm: the full print mesh, not the viewing one (9 Nov)
+        import print_mesh; stl = print_mesh.local(name) if stl.endswith(os.path.join(name, "part.stl")) else stl
+    except Exception as e:
+        print(f"stale_parts: {name}: print mesh not fetched ({e}), the viewing mesh measured", file=sys.stderr)
     m, bad = trimesh.load(stl), []
     for mm in L.members(n):
         u = mm["u"]; e1 = np.cross(u, [0, 0, 1.0]) if abs(u[2]) < 0.99 else np.cross(u, [1.0, 0, 0]); e1 /= np.linalg.norm(e1); e2 = np.cross(u, e1)
@@ -28,9 +32,10 @@ def socket_mismatch(name):
     return bad
 
 
-out = []
-for py in sorted(glob.glob(os.path.join(ROOT, "parts", "*", "part.py"))):
+if __name__ == "__main__":
+  out = []
+  for py in sorted(glob.glob(os.path.join(ROOT, "parts", "*", "part.py"))):
     d = os.path.dirname(py); rj = os.path.join(d, "result.json")
     if not os.path.exists(rj) or stale(py, json.load(open(rj))) or socket_mismatch(os.path.basename(d)):
         out.append(os.path.basename(d))
-print(" ".join(out))
+  print(" ".join(out))

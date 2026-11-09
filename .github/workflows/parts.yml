@@ -147,6 +147,20 @@ jobs:
         if: always()
         run: |
           if [ ! -f parts/${{ matrix.part }}/result.json ]; then rm -f parts/${{ matrix.part }}/part.stl parts/${{ matrix.part }}/preview.png; fi
+      # the full print mesh (the gate passed or failed on it inside the run) goes to the `meshes` release as <part>.stl, its url and
+      # sha256 into result.json, and part.stl becomes the viewing mesh: git never carries a print mesh (9 Nov, 93 % of git storage).
+      # Both commit paths below see only the viewing mesh. A failed upload leaves no result: nothing of the run is committed.
+      - name: print mesh to the release
+        if: always()
+        shell: bash
+        run: |
+          P=parts/${{ matrix.part }}
+          [ -f $P/result.json ] && [ -f $P/part.stl ] || exit 0
+          python3 tools/print_mesh.py publish ${{ matrix.part }} && exit 0
+          echo "::error::${{ matrix.part }}: the print mesh did not upload; no result committed (rerun the part)"
+          rm -f $P/result.json $P/part.stl $P/preview.png; exit 1
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: results
         if: always()
         uses: actions/upload-artifact@v4

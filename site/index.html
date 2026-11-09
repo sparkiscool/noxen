@@ -92,6 +92,7 @@ function showCard(p) {
   if (p.worst != null) kv.push(['worst index', p.worst + (p.max_worst != null ? ' / ' + p.max_worst + (p.strength_ok === false ? '  FAIL' : '') : '')]);
   if (p.worst_case) kv.push(['worst case', p.worst_case]);
   if (p.total_s) kv.push(['run time', Math.round(p.total_s / 60) + ' min']);
+  if (p.print_url) kv.push(['print file', `<a href="${p.print_url}" target="_blank" rel="noopener">${p.id}.stl</a>`]);
   document.getElementById('c-kv').innerHTML = kv.map(([k, v]) => `<b>${k}</b><span>${v}</span>`).join('');
   document.getElementById('c-fb').value = p.feedback || '';
   document.getElementById('c-fb').disabled = document.getElementById('c-save').disabled = document.getElementById('c-rerun').disabled = !p.has_script;

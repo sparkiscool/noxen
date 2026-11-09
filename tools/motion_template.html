@@ -271,7 +271,7 @@ function pick(ev) {
     hl.position.copy(a.clone().add(b).multiplyScalar(0.5)); hl.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
     o.mesh.add(hl);
     html = '<b>' + s[0] + '</b> <span class="note">(' + p.name + ')</span><br><span class="len">cut ' + s[7].toFixed(1) + ' mm = ' + (s[7] / 25.4).toFixed(2) + ' in</span>' + (s[8] != null ? '<br><span class="red">recut, was ' + s[8].toFixed(1) + ' mm = ' + (s[8] / 25.4).toFixed(2) + ' in</span>' : '');
-  } else html = '<b>' + p.name + '</b> <span class="note">(' + p.group + ')</span>' + (p.note ? '<br>' + p.note.replace(/</g, '&lt;') : '');
+  } else html = '<b>' + p.name + '</b> <span class="note">(' + p.group + ')</span>' + (p.note ? '<br>' + p.note.replace(/</g, '&lt;') : '') + (p.print ? '<br><a href="' + p.print + '" target="_blank" rel="noopener">print file (STL)</a>' : '');
   box.innerHTML = html; box.hidden = false; playing = false; $('play').textContent = 'play';
 }
 // one colour and transparency for every printed part at once (Spark 3 Nov); remembered in this browser only

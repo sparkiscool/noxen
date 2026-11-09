@@ -1,0 +1,66 @@
+# Print files out of git (tools/print_mesh.py, 9 Nov): a print/*.stl pushed by a session goes to the `meshes` release as
+# print-<name>.stl and leaves git (listed in print/index.json); a dispatch publishes the print mesh of the parts named (empty:
+# every result whose part.stl is still a full print mesh, e.g. one a run started before 9 Nov committed) and commits their
+# viewing meshes. A part whose upload failed is put back as main has it.
+name: meshes
+
+on:
+  push:
+    branches: [main]
+    paths: ['print/*.stl']
+  workflow_dispatch:
+    inputs:
+      parts:
+        description: 'part names, space separated (empty = every part whose part.stl is not yet a published viewing mesh)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency: { group: meshes, cancel-in-progress: false }
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip }
+      - run: pip install -r requirements.txt
+      - name: publish
+        shell: bash
+        run: |
+          rc=0
+          if ls print/*.stl >/dev/null 2>&1; then python3 tools/print_mesh.py print-files || rc=1; fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ inputs.parts }}" ]; then list="${{ inputs.parts }}"; else list="--all"; fi
+            if [ "$list" = "--all" ]; then python3 tools/print_mesh.py publish --all || rc=1
+            else for p in $list; do python3 tools/print_mesh.py publish $p || { rc=1; git checkout -- parts/$p; }; done; fi
+            # --all: a part whose upload failed is put back (its part.stl is then not the viewing mesh its result.json names)
+            for p in $(git diff --name-only -- 'parts/*/result.json' 'parts/*/part.stl' | cut -d/ -f2 | sort -u); do
+              python3 -c "import sys; sys.path.insert(0, 'tools'); import print_mesh; sys.exit(0 if print_mesh.published('$p') else 1)" || git checkout -- parts/$p
+            done
+          fi
+          exit $rc
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: commit and push (retry on race)
+        if: always()
+        shell: bash
+        run: |
+          git config user.name nox-ci
+          git config user.email ci@users.noreply.github.com
+          git add -A print parts
+          git diff --cached --quiet && { echo "nothing to commit"; exit 0; }
+          git commit -q -m "meshes: print meshes to the release, viewing meshes in git"
+          for i in 1 2 3 4 5; do
+            git push -q && break
+            git pull -q --rebase origin main || exit 1
+          done
+          gh workflow run site.yml
+        env:
+          GH_TOKEN: ${{ github.token }}
