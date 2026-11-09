@@ -39,6 +39,9 @@ NODE_R = 5.0                                              # where a bore starts 
 MAX_START = 25.0                                          # a bore pushed further out than this by a near-parallel neighbour makes the node a fork (5 Nov: the arm and yoke ties met
 #   at each rail corner 2..13 deg apart, bores from 39..85 mm, nodes of 290k..586k cells; the yoke ties now end at the rail mid nodes)
 WALL, FLOOR, STRUT_M = 3.0, 3.0, 4.0                        # 8 Nov (the Overseer's nodes the same): WALL 3.0 = 2.5 beyond the 0.5 injection annulus (7 Nov: at 2.0 every collar was 1.5 at its grooves, the audit's drawn_wall refuses it); FLOOR 3.0, the feed ring cuts 0.5 into it; STRUT_M 4.0 of room round the collar (3.0 with the 3.0 collars put PM0 / RM at 30 / 34 % drawn, the audit's limit)
+LINING_BACK = FLOOR + 0.5                                 # where a socket's support / load region starts behind the bore floor; FLOOR + 0.5 reaches 0.5 into the room
+#   behind the collar: a rigid disc the generated material is joined to (9 Nov, the v4 Ys: worst 0.27-0.32 at its rim in every one,
+#   unmoved by +36 % budget). 0.0 = the bore only, where the rod bears (the v4 nodes); the v3 nodes keep their setups
 DRAWN_WALL = None                                         # the drawn collar's wall; None = WALL. The room, clearances and ports always use WALL, so a thinner
 #   drawn wall (the v4 nodes, 9 Nov) leaves the engine the same strut to grow the root in where the load needs it
 ROD_R, ROD_GAP = 1.5, 1.0                                # a passing rod's radius and the least gap to a collar's surface
@@ -219,7 +222,7 @@ def build(group, h, log=print):
         verify_cuts(k, [m for m in allm if m["node"] == k], cuts, log)
     p = Part(sc.group_id(group), h, drawn, cuts, env, build="+z", material="PCTG")   # printed in PCTG (CLAUDE.md 8 Nov), topo/material.py E numbers until a coupon
     sup = [m for k in group for m in sorted([x for x in allm if x["node"] == k], key=lambda m: -m["axial"])[:2]]   # the two stiffest members at EACH node (7 Nov: with two for the pair, every pull at the other node ran through the bridge: P2+P3 1.40 in the bridge)
-    lining = lambda m, grow=1.0: along(m["c"], m["u"], m["s0"] - FLOOR - 0.5, m["s_end"], m["bore_r"] + grow)
+    lining = lambda m, grow=1.0: along(m["c"], m["u"], m["s0"] - LINING_BACK, m["s_end"], m["bore_r"] + grow)
     p.support("default", U([lining(m, 1.4) for m in sup])); held = {(m["node"], m["name"]) for m in sup}
     log(f"  supports: {sorted(n for _, n in held)}")
     for m in allm:

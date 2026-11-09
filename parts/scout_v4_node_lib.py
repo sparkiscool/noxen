@@ -44,6 +44,7 @@ L.funnel_sweep = _no_funnel
 # ~25 MPa across layers before any generated root, which the engine adds and its strength index checks. The 3.0 wall drew ~43 % of
 # every node's mass for a wall the mouth does not need. v4-only: the v3 Scout and Overseer nodes keep WALL (their setups unchanged).
 L.DRAWN_WALL = 2.6
+L.LINING_BACK = 0.0                                       # supports and loads on the bore (floor to mouth) only, never behind the floor (scout_node_lib)
 
 # Budgets (9 Nov): the 1.54 x skeleton of spec_for was sized for strength at limit 0.3, but the v4 nodes came in at 0.005-0.18. The
 # light nodes (worst <= 0.042) go back to 1.1 x, the budget that joins every collar without flakes (5 Nov); TB / NB / S0 / S1 (0.16-
