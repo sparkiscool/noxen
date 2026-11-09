@@ -26,10 +26,10 @@
  "strength": {
   "rows": [
    {
-    "case": "frame RS0-P1 axial 41 N (pull-out)",
+    "case": "frame RS0-P1 axial 40 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.019,
+    "inlayer": 0.024,
+    "across": 0.018,
     "at": [
      91.3,
      155.2,
@@ -37,10 +37,10 @@
     ]
    },
    {
-    "case": "frame RS0-P1 side 11.2 N",
+    "case": "frame RS0-P1 side 12.9 N",
     "cls": "crash",
-    "inlayer": 0.016,
-    "across": 0.017,
+    "inlayer": 0.018,
+    "across": 0.02,
     "at": [
      89.3,
      151.2,
@@ -48,8 +48,8 @@
     ]
    }
   ],
-  "worst": 0.025,
-  "worst_case": "frame RS0-P1 axial 41 N (pull-out)",
+  "worst": 0.024,
+  "worst_case": "frame RS0-P1 axial 40 N (pull-out)",
   "worst_at": [
    91.3,
    155.2,
@@ -193,8 +193,8 @@
   "design": 11384,
   "drawn": 1831,
   "cases": [
-   "frame RS0-P1 axial 41 N (pull-out)",
-   "frame RS0-P1 side 11.2 N"
+   "frame RS0-P1 axial 40 N (pull-out)",
+   "frame RS0-P1 side 12.9 N"
   ],
   "supports": [
    "default"
@@ -202,7 +202,7 @@
  },
  "build_s": 20.5,
  "layout_s": 202,
- "peak_gb": 0.822844,
+ "peak_gb": 0.825116,
  "gen_cm3": 1.9,
  "h": 1.0,
  "audit": {
@@ -260,7 +260,7 @@
   "fails": [],
   "room_full": {
    "worst": 0.009,
-   "worst_case": "frame RS0-P1 axial 41 N (pull-out)",
+   "worst_case": "frame RS0-P1 axial 40 N (pull-out)",
    "worst_at": [
     90.3,
     155.2,
@@ -274,10 +274,10 @@
  "early": {
   "rows": [
    {
-    "case": "frame RS0-P1 axial 41 N (pull-out)",
+    "case": "frame RS0-P1 axial 40 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.024,
+    "inlayer": 0.024,
+    "across": 0.023,
     "at": [
      91.3,
      155.2,
@@ -285,10 +285,10 @@
     ]
    },
    {
-    "case": "frame RS0-P1 side 11.2 N",
+    "case": "frame RS0-P1 side 12.9 N",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.021,
+    "inlayer": 0.024,
+    "across": 0.024,
     "at": [
      88.3,
      155.2,
@@ -296,8 +296,8 @@
     ]
    }
   ],
-  "worst": 0.025,
-  "worst_case": "frame RS0-P1 axial 41 N (pull-out)",
+  "worst": 0.024,
+  "worst_case": "frame RS0-P1 axial 40 N (pull-out)",
   "worst_at": [
    91.3,
    155.2,
@@ -311,8 +311,8 @@
  "baseline": null,
  "total_s": 222,
  "part_sha": "753ed9fe179c",
- "lib_sha": "99ab5c3c0bf4",
- "setup_sha": "fbad782f6c5c6d3d",
+ "lib_sha": "f1c94f24e504",
+ "setup_sha": "642a52ef8bd260b8",
  "max_worst": 0.3,
  "strength_ok": true
 }
