@@ -8,7 +8,7 @@ The picture below is the current assembly, redrawn by CI after every result; not
 
 [Open the Scout v4 viewer](https://sparkiscool.github.io/noxen/scout_v4.html?view=iso&still): the shape design (8 Nov) for 5.1 in Gemfan 5125
 props on a frame printed in PCTG (no Bee35 plate), the v3 base, receiver and battery kept so it seats in the same landing funnel for the
-battery swapper (`tools/seat_check.py scout_v4 --descent`: 0 crossings), the camera forward of the front discs, and a half cage of 3 mm
+battery swapper (`tools/seat_check.py scout_v4 --descent`: 0 crossings), one camera, the ceiling probe's autofocus head parked on the roof (it rolls up 0.3 m on a tape mast into a ceiling void), and a half cage of 3 mm
 rods with a flat roof, held to the body by rod triangles between the props, frame-checked (`tools/scout_v4_shape.py`). Envelopes and bought parts only:
 the nodes and the engine setups come next.
 
