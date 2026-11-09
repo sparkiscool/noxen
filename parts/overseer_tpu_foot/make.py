@@ -6,7 +6,7 @@ the hit over the whole O16 face instead of the node's rim."""
 import os, numpy as np, trimesh, manifold3d as mf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-R, H, RR, RD, ROUND = 11.0, 6.0, 8.3, 2.6, 2.0
+R, H, RR, RD, ROUND = 15.0, 6.0, 12.3, 2.6, 2.0          # 8 Nov: O30 x 6 on the O24 node foot (was O22 on O16), recess O24.6 x 2.6
 body = mf.Manifold.cylinder(H - ROUND, R, R, 96).translate([0, 0, ROUND]) + \
     mf.Manifold.cylinder(ROUND, R - ROUND, R, 96) + \
     mf.Manifold.revolve(mf.CrossSection.circle(ROUND, 48).translate([R - ROUND, ROUND]), 96)

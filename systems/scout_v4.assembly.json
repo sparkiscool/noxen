@@ -5,7 +5,7 @@
 "machine": "scout_v4",
 "order": 0,
 "readme_view": "iso",
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -44..66 mm, ~735 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -44..83 mm, ~764 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -25,17 +25,17 @@
 },
 {
 "id": "scout_v4_base",
-"name": "base v4 room (the v3 nose and tail units' envelope: runners, keel, camera and tail booms)",
+"name": "base v4 room (the v3 nose and tail units' envelope: runners, keel, nose stub)",
 "role": "placeholder",
 "group": "base",
 "color": "#c9c2b5",
 "mesh": "parts/scout_v4_base/part.stl",
-"mass_g": 147.2,
+"mass_g": 144.8,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; the camera's mount out to the cage's nose node NB, a socket on the tail runner's end; mass at 30 % of the envelope (E); printed in PCTG",
+"note": "the v3 base kept so the funnel seat and the swapper do not change: runners on the 184 x 66.8 outline at z -44.3 with 55 deg lead-ins, keel |y| 33.4 to the deck, the receiver's room cut; a stub out to the cage's nose node NB, a socket on the tail runner's end; mass at 30 % of the envelope (E); printed in PCTG",
 "opacity": 0.55
 },
 {
@@ -211,18 +211,32 @@
 "note": "a sketch of the three blades"
 },
 {
-"id": "scout_v4_camera",
-"name": "camera (DECXIN 2633V2, 30 deg up)",
+"id": "scout_v4_probe_head",
+"name": "front camera and probe head (Arducam 5MP autofocus on an ES9051 tilt servo, LED, VL53L5CX)",
 "role": "bought",
-"group": "electronics",
-"color": "#222222",
-"mesh": "parts/scout_v4_camera/part.stl",
-"mass_g": 10.0,
-"tag": "P",
+"group": "camera",
+"color": "#1d5e3a",
+"mesh": "parts/scout_v4_probe_head/part.stl",
+"mass_g": 11.9,
+"tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "lens (149, 0, 38), 19 forward of v3: its board clears the front discs' keep-out"
+"note": "parked on the roof node it is the front camera, lens (47, 0, 79), 20 deg up; rolled out on the tape it is the ceiling probe. Camera board 5 E, servo 4.1, ToF 0.5, LEDs 0.3, cradle and clip 2 E"
+},
+{
+"id": "scout_v4_probe_turret",
+"name": "ceiling probe turret (0.3 m tape mast, spool, N20 drive, throat, parking lip)",
+"role": "placeholder",
+"group": "camera",
+"color": "#f2b705",
+"mesh": "parts/scout_v4_probe_turret/part.stl",
+"mass_g": 29.3,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "spool 4 and housing 5 (PCTG), N20 gear motor with encoder 10.5, DRV8833 1, 10 mm steel blade 0.4 m 3.8, flat cable 2 x 300 mm with the clock spring in the spool hub 2, TPU lip 2, wires 1 (E)"
 },
 {
 "id": "scout_v4_fc",
@@ -376,7 +390,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "16 cage nodes; the larger spheres are sockets printed into the frame and the base (NB on the camera's mount, two on each side lug, the deck's tail end, the tail runner's end)",
+"note": "16 cage nodes; the larger spheres are sockets printed into the frame and the base (NB on the nose stub, two on each side lug, the deck's tail end, the tail runner's end)",
 "opacity": 0.9
 }
 ]
