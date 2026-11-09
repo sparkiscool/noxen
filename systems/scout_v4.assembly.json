@@ -34,7 +34,7 @@
 ]
 ]
 },
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..160 x -160..160 x -48..134 mm, ~732 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..160 x -160..160 x -48..134 mm, ~734 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -465,6 +465,20 @@
 "note": "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn"
 },
 {
+"id": "scout_v4_receiver_bolts",
+"name": "receiver bolts: 4 x M3 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)",
+"role": "bought",
+"group": "battery",
+"color": "#5a5f66",
+"mesh": "parts/scout_v4_receiver_bolts/part.stl",
+"mass_g": 4.0,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "at (52.0, +-26.55) and (-33.9, +-26.55) through the receiver's O3.4 boss holes; M3 x 12 E (the boss's depth: measure); the inserts in O10 bosses of the yokes (wall >= 3), the heads reached from below with the cartridge out"
+},
+{
 "id": "scout_v4_pack_4s_1500",
 "name": "pack 4S 1500 (in the cartridge)",
 "role": "protected",
@@ -555,12 +569,12 @@
 "group": "cage",
 "color": "#2b2b2b",
 "mesh": "parts/scout_v4_cage_rods/part.stl",
-"mass_g": 38.5,
+"mass_g": 37.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "34 rods, 3.50 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)"
+"note": "32 rods, 3.37 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)"
 },
 {
 "id": "scout_v4_cage_nodes",

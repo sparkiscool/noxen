@@ -66,7 +66,7 @@ KEEP = 12.0                                      # every rod 12 from the swept d
 DECK = (-60.0, 60.0, 40.0)                       # the deck's body: x0, x1, |y| (E), arms from its corners to the pods
 ARM_W, POD_R = 18.0, 15.0                        # arm width, motor pod radius (the 2004's base O27 + 1.5)
 # ---- the v3 base and the battery, unchanged ---------------------------------------------------------------------------------
-BX = 3.8                                          # 9 Nov (Spark: "the center of gravity ... perfectly centered"): everything under the deck (receiver, cartridge, pack, base,
+BX = 3.7                                          # 9 Nov (Spark: "the center of gravity ... perfectly centered"): everything under the deck (receiver, cartridge, pack, base,
                                                   # FC, flow, tail electronics) moved along x as one group, to put the Scout's CG on the thrust centre; the funnel moves with the receiver
 SEAT_Z, CX, SEAT_L, SEAT_W, RUN_H, CH = -44.3, 1.5 + BX, 184.0, 66.8, 20.0, 4.0
 # ---- camera, cage --------------------------------------------------------------------------------------------------------------
@@ -97,9 +97,9 @@ ZR, ZB, XR = 61.0, 12.0, 130.0                    # ring and flat roof, the bott
 ZR = max(ZR, Z_PROP + Z_SWEEP + 13.0)
 YC = CH_LINE - FLAT                              # 107.7: where a flat meets a chamfer
 NODES = {
-    "R0": (FLAT, YC, ZR), "P1": (YC, FLAT, ZR), "PM0": (0.0, FLAT, ZR), "P2": (-YC, FLAT, ZR), "P3": (-FLAT, YC, ZR),       # the ring (left half, nose -> tail)
-    "P4": (-FLAT, -YC, ZR), "P5": (-YC, -FLAT, ZR), "PM1": (0.0, -FLAT, ZR), "P6": (YC, -FLAT, ZR), "R7": (FLAT, -YC, ZR),   # right half
-    "RF": (XR, 0, ZR), "RM": (PROBE_DX, 0, ZR), "RB": (-XR, 0, ZR),                                                              # the flat roof's spine
+    "R0": (FLAT, YC, ZR), "P1": (YC, FLAT, ZR), "P2": (-YC, FLAT, ZR), "P3": (-FLAT, YC, ZR),                               # the ring's eight corners (left half, nose -> tail)
+    "P4": (-FLAT, -YC, ZR), "P5": (-YC, -FLAT, ZR), "P6": (YC, -FLAT, ZR), "R7": (FLAT, -YC, ZR),                           # right half
+    "RF": (XR, 0, ZR), "RM": (PROBE_DX, 0, ZR), "RB": (-XR, 0, ZR), "RS0": (0.0, XR, ZR), "RS1": (0.0, -XR, ZR),            # the flat roof: a cross from RM to four apexes 25 in from the ring (9 Nov: the same on all four sides)                                                              # the flat roof's spine
     "TB": (-FLAT, 0, ZB), "S0": (0.0, FLAT, ZB), "S1": (0.0, -FLAT, ZB),                                                    # the bottom nodes in the flats' planes
     "NB": (FLAT, 0, ZB),                                                                                                     # the nose node: on a rod triangle to the deck's nose end and the nose bay (9 Nov: was a solid stub of the base, there for the old front camera)
     "DS0": (0.0, 40.0, 22.0), "BS0": (0.0, 40.0, -10.0), "DS1": (0.0, -40.0, 22.0), "BS1": (0.0, -40.0, -10.0),            # sockets on the deck's side lugs (PRINTED)
@@ -109,10 +109,10 @@ NODES = {
 PRINTED = ("DN", "BN", "DS0", "BS0", "DS1", "BS1", "DT", "BT")
 ROOTS = {}
 TIED = ("RM",)                                    # nodes tied to the core through the probe's turret: RM's ring and the throat's top collar print as one (9 Nov: 2.1 -> ~1 mm worst, the roof's centre held)
-RODS = [("R0", "P1"), ("P1", "PM0"), ("PM0", "P2"), ("P2", "P3"), ("P4", "P5"), ("P5", "PM1"), ("PM1", "P6"), ("P6", "R7"),   # the ring, open at the nose and tail flats (9 Nov: with RM tied to the turret the two 215 mm flats only carried a head-first crash, which buckled them; dropped, -0.43 m)
-        ("RF", "R0"), ("RF", "R7"), ("RF", "RM"), ("RM", "RB"), ("RB", "P3"), ("RB", "P4"), ("RM", "PM0"), ("RM", "PM1"),                                 # the flat roof: nose and tail triangles, spine, hoop
+RODS = [("R0", "P1"), ("P2", "P3"), ("P4", "P5"), ("P6", "R7"),   # the ring, open at the nose and tail flats (9 Nov: with RM tied to the turret the two 215 mm flats only carried a head-first crash, which buckled them; dropped, -0.43 m)
+        ("RF", "R0"), ("RF", "R7"), ("RF", "RM"), ("RM", "RB"), ("RB", "P3"), ("RB", "P4"), ("RM", "RS0"), ("RM", "RS1"), ("RS0", "P1"), ("RS0", "P2"), ("RS1", "P5"), ("RS1", "P6"),                                 # the flat roof: nose and tail triangles, spine, hoop
         ("NB", "R0"), ("NB", "R7"), ("TB", "P3"), ("TB", "P4"),                                                                                            # the end Vs (the camera's window stays clear between them)
-        ("S0", "P1"), ("S0", "PM0"), ("S0", "P2"), ("S1", "P6"), ("S1", "PM1"), ("S1", "P5"),                                                              # the side fans
+        ("S0", "P1"), ("S0", "P2"), ("S1", "P6"), ("S1", "P5"),                                                              # the side fans
         ("DS0", "S0"), ("BS0", "S0"), ("DS1", "S1"), ("BS1", "S1"), ("DT", "TB"), ("BT", "TB"), ("DN", "NB"), ("BN", "NB")]                                                            # the triangles that hold the bottom nodes, on x 0 and y 0
 TIES = []
 LUG = (8.0, 36.0, 44.0, -14.0)                   # the deck's side lugs: |x| 8, |y| 36..44 (3.2 outside the receiver), down to z -14 (over the funnel's y walls, -16.3)
@@ -212,6 +212,22 @@ def place(src, rot=None, lo=None, yc=0.0):
     b = m.bounds
     m.apply_translation([lo[0] - b[0][0], yc - (b[0][1] + b[1][1]) / 2, lo[1] - b[0][2]])
     return m
+
+
+REC_BOLTS = [(48.28, 26.55), (48.28, -26.55), (-37.65, 26.55), (-37.65, -26.55)]   # the receiver's 4 bolt bosses (receiver v3, C), drone frame before BX
+REC_TOP = 9.6                                                                       # the receiver's top: the base's yokes sit on it
+
+
+def receiver_bolts():
+    """the battery's receiver held like the Overseer's (9 Nov, Spark: "just like the overseer make the bottom of the battery mounted with
+    4 screws"): 4 M3 up from below through the receiver's O3.4 boss holes into M3 x 5.7 heat-set inserts in the base's yokes (O4 x 6
+    holes in O10 bosses, wall >= 3); the screws' length is set by the receiver's boss (M3 x 12 E: measure), their heads reached from below"""
+    out = []
+    for x, y in REC_BOLTS:
+        out.append(cyl(x + BX, y, REC_TOP - 7.0, REC_TOP + 5.0, 1.5, 16))            # the M3 screw, 12 long, head down inside the receiver's boss
+        out.append(cyl(x + BX, y, REC_TOP - 7.0, REC_TOP - 5.0, 2.75, 16))           #   its head O5.5 x 2 (low-profile button)
+        out.append(cyl(x + BX, y, REC_TOP, REC_TOP + 5.7, 2.0, 16))                  # the M3 x 5.7 heat-set insert in the yoke
+    return trimesh.util.concatenate(out)
 
 
 def pads():
@@ -473,6 +489,7 @@ def write():
     for src in ("pack_4s_1500", "pack_xt60_plug", "box_ctx_scout_receiver_v3", "box_ctx_scout_cartridge_v6"):
         meshes[src] = moved(src, dx=BX)
     meshes["receiver_feet"], meshes["receiver_contacts"] = pads()
+    meshes["receiver_bolts"] = receiver_bolts()
     meshes["cage_rods"], meshes["cage_nodes"] = cage()
     for nm, m in meshes.items():
         d = os.path.join(ROOT, "parts", f"scout_v4_{nm.replace('box_ctx_scout_', '').replace('scout_', '')}"); os.makedirs(d, exist_ok=True)
@@ -525,6 +542,8 @@ def entries(meshes):
     for src, nm, g, note in (("ubec", "UBEC", 15.0, "the tail tray, flat, bottom z -1.3"), ("xr2", "XR2", 1.0, "the tail tray, flat"), ("radxa_zero_3w", "Radxa Zero 3W", 10.0, "the tail tray, flat over the UBEC (was on edge)"),
                              ("scout_flow_mtf_02p", "flow MTF-02P", 1.5, "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn")):
         add(src, nm, "bought", "electronics", "#2b5d8a", g, "P", note)
+    add("receiver_bolts", "receiver bolts: 4 x M3 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)", "bought", "battery", "#5a5f66", 4.0, "E",
+        f"at ({REC_BOLTS[0][0] + BX:.1f}, +-26.55) and ({REC_BOLTS[2][0] + BX:.1f}, +-26.55) through the receiver's O3.4 boss holes; M3 x 12 E (the boss's depth: measure); the inserts in O10 bosses of the yokes (wall >= 3), the heads reached from below with the cartridge out")
     add("pack_4s_1500", "pack 4S 1500 (in the cartridge)", "protected", "battery", "#c0392b", 165.0, "P", "the v3 pack, unchanged: the swapper's")
     add("pack_xt60_plug", "pack XT60 plug", "bought", "battery", "#e2b007", 10.0, "P", "as v3")
     add("box_ctx_scout_receiver_v3", "receiver v3 (the Overseer's latch receiver)", "structure", "battery", "#7f8c8d", 60.0, "E", "unchanged, at the v3 place: the funnel seat and the swap arm see the same belly")
