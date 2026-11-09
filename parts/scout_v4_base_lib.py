@@ -72,13 +72,14 @@ def bodies(unit):
     else:
         rb_ = bounds("scout_v4_radxa_zero_3w"); rx, ry = rb_[:, 0].mean(), rb_[:, 1].mean(); rz = rb_[1][2]
         rz0 = rb_[0][2]
-        cuts.append(box(rb_[0][0] - 0.5, rb_[1][0] + 0.5, rb_[0][1] - 0.5, rb_[1][1] + 0.5, rz0, rz + 3.0))      # the Radxa and room over its parts
+        cuts.append(box(rb_[0][0] - 0.5, rb_[1][0] + 0.5, rb_[0][1] - 0.5, rb_[1][1] + 0.5, rz0, rz + 0.5))      # the Radxa (its parts in the mesh's height)
         cuts.append(box(rb_[0][0] - 0.5, rb_[1][0] + 0.5, rb_[1][1], rb_[1][1] + 30, rz0, rz))                  # its USB-C plugs out the +y edge
         pts, regs = [], []
         for dx in (-11.425, 11.425):
-            for dy in (-28.925, 28.925):                                             # four M2.5 posts from the tray's floor up to its underside (Radxa STEP: 57.85 x 22.85)
-                drawn.append(cyl(rx + dx, ry + dy, -2.3, rz0, 4.0)); cuts.append(cyl(rx + dx, ry + dy, rz0 - M25_INS[1], rz0 + 1, M25_INS[0]))
-                pts.append((rx + dx, ry + dy, rz0)); regs.append(region_top(rx + dx, ry + dy, rz0, 4.0))
+            for dy in (-28.925, 28.925):                                             # four M2.5 posts hanging down onto its top (Radxa STEP: 57.85 x 22.85): at the rear tray's
+                drawn.append(cyl(rx + dx, ry + dy, rz + 0.5, rz + 7.0, 4.0))           # floor (the funnel's -2.3) nothing under it is thicker than a member; over its corners there is room beside the UBEC
+                cuts.append(cyl(rx + dx, ry + dy, rz - 1, rz + 0.5 + M25_INS[1], M25_INS[0])); cuts.append(cyl(rx + dx, ry + dy, -40, rz0, 2.6))   # the insert; the screw up from below and its driver
+                pts.append((rx + dx, ry + dy, rz + 0.5)); regs.append(region_bot(rx + dx, ry + dy, rz + 0.5, 4.0))
         boards.append(("Radxa Zero 3W", pts, regs, ASM["scout_v4_radxa_zero_3w"]["mass_g"], (rx, ry, (rz0 + rz) / 2)))
         ub = bounds("scout_v4_ubec")                                                   # the UBEC is taped to the deck's underside (the frame's land): keep its room and leads clear
         cuts.append(box(ub[0][0] - 0.5, ub[1][0] + 0.5, ub[0][1] - 0.5, ub[1][1] + 0.5, ub[0][2] - 0.5, DZ0 + 0.1))
@@ -91,6 +92,8 @@ def bodies(unit):
                   [along(s.pt(-8.0), np.array([s.c[0] - np.sign(s.c[0]) * 25.0, 0.0, 10.0]), 7.0) for s in socks])
     lb = bounds("scout_v4_flow_mtf_02p")
     floor = box(-300, 300, -100, 100, -2.3, 200) + (box(54.3 + S.BX, 70.5 + S.BX, -12.0, 12.0, -19.1, -2.2) + box(57.0, 78.0, -30.0, 30.0, -10.0, -2.2) if nose else box(0, 0.1, 0, 0.1, 0, 0.1))
+    if not nose:                                                                      # behind the deck's end the tail unit may rise to the props' keep-out (27.7) and route over the Radxa
+        env = env + box(-110.0, -60.0, -34.0, 34.0, DZ0 - 1.0, 27.0)
     env = env ^ floor ^ half                                                          # nothing below the walls-in funnel's line (-2.3 past the receiver's ends; the flow pod as tools/scout_v4_shape.base())
     cuts += disc_cuts()
     check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
