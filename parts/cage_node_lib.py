@@ -39,7 +39,7 @@ CROWN_MIN_SIN = 0.3                                    # a bore within ~17 deg o
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
 LAND_FEET = 3                                         # a flat landing may rest on 3 of the 6 feet (E)
 HIT_N = 1300.0                                        # ground hit on one base node (8 Nov, Spark: the rear base node broke in three in testing): 1.65 kg from 0.6 m, 9.6 J, stopped in ~15 mm of rod flex, peak ~2x the 640 N average
-FOOT_R, FOOT_T = 8.0, 3.0                             # landing face: Ø16 x 3.0 (7 Nov: 2.4 fails the 2.5 drawn_thin audit), bottom under the node sphere's lowest point
+FOOT_R, FOOT_T = 12.0, 3.0                            # landing face: Ø24 x 3.0 (8 Nov, Spark: the 1300 N ground hit on the Ø16 face failed the 0.2 limit on all four base nodes: 0.25..1.09); was Ø16 (7 Nov: 2.4 fails the 2.5 drawn_thin audit), bottom under the node sphere's lowest point
 GN = 9.81e-3
 
 
