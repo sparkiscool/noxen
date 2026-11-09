@@ -156,7 +156,7 @@ def funnel_check(margin=2.0):
     """every rod and tie, on the whole descent of tools/seat_check.py (the capture limits, heights every 3..5), against the funnel
     mesh: the least distance from a rod axis to the funnel surface, less the rod radius; need >= margin. Fast (330 faces)."""
     import seat_check as skc
-    fun = trimesh.load(os.path.join(ROOT, "parts", "box_funnel", "part.stl"))
+    fun = skc.to_tri(skc.load_make("parts/box_funnel/make.py").funnel())     # the frame and both end walls (part.stl is the frame alone since 9 Nov)
     pq = trimesh.proximity.ProximityQuery(fun)
     P = all_nodes(); pts = np.vstack([seg_pts(P[i], P[j], 30) for i, j in RODS + TIES])
     tag = np.repeat([f"{i}-{j}" for i, j in RODS + TIES], 30)
