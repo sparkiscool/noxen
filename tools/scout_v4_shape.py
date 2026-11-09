@@ -230,7 +230,7 @@ def probe():
     """the ceiling probe parked (9 Nov). Turret, under the roof's middle node where the FC sat: the spool (axis y, O34), its 40 T gear,
     the clock-spring drum, the N20 in a pocket in the deck driving the gear through a 15 T pinion, the 30 mm throat the two blades
     leave through (forming their lens) beside the node, and the housing round them. Head, on the blades' tip parked on the throat: the
-    clip, the SG90 on its side, the cradle with the global-shutter camera board (a TPU guard on its rim), the LEDs and the VL53L0X"""
+    clip, the SG90 on its side, the cradle with the camera board (a TPU guard on its rim), the LEDs and the VL53L0X"""
     (cx, cz), r = SPOOL["c"], SPOOL["r"]
     spool = trimesh.creation.cylinder(radius=r, segment=[(cx, SPOOL["y0"], cz), (cx, SPOOL["y1"], cz)], sections=48)
     gear = trimesh.creation.cylinder(radius=GEAR["spool_t"] * GEAR["m"] / 2 + GEAR["m"], segment=[(cx, GEAR["y"][0], cz), (cx, GEAR["y"][1], cz)], sections=48)
@@ -252,6 +252,22 @@ def probe():
             cam,                                                                      # the camera board facing forward, TILT up
             box(bx + 2.0, bx + 6.0, 20.0, 26.0, bz - 4.0, bz + 4.0)]                  # LEDs and the VL53L0X beside the board
     return turret, trimesh.util.concatenate(head)
+
+
+MAST_STUB = 1.0                                   # the mast's mesh: 1 mm of the two blades above the throat; the page's timeline
+                                                  # (tools/scout_v4_timeline.py) stretches it to the length rolled out and lifts the head
+
+
+def mast():
+    """the two blades as they leave the throat, curves facing (a lens 10 wide, each blade bowed 2 out: thickness drawn 0.4 to be seen)"""
+    from shapely.geometry import Polygon
+    xs = np.linspace(-5.0, 5.0, 17); bow = 2.0 * (1 - (xs / 5.0) ** 2)
+    out = []
+    for sg in (1, -1):
+        ring = [(MAST_X + x, sg * y) for x, y in zip(xs, bow)] + [(MAST_X + x, sg * (y - 0.4)) for x, y in zip(xs[::-1], bow[::-1])]
+        m = trimesh.creation.extrude_polygon(Polygon(ring).buffer(0), MAST_STUB); m.apply_translation([0, 0, THROAT["z1"]])
+        out.append(m)
+    return out
 
 
 HUB_RING = 34.0                                   # the roof's middle node RM is a ring (r 22..34) round the probe's throat: its four rods end in its sides at r 34
@@ -332,6 +348,7 @@ def write():
         meshes[f"motor_{k}"] = moved("scout_motor_" + str(k), sx * (HUB - 54.1), sy * (HUB - 54.1), DECK_TOP - 22.0)
         meshes[f"prop_{k}"], meshes[f"blades_{k}"] = prop(mx, my)
     meshes["probe_turret"], meshes["probe_head"] = probe()
+    meshes["probe_mast_a"], meshes["probe_mast_b"] = mast()
     meshes["fc"] = place("fc", lo=(56.0, 1.0))                                              # the FC in the nose bay (its place on the deck is the turret's)
     meshes["scout_flow_mtf_02p"] = place("scout_flow_mtf_02p", rot=([0, 0, 1], 90), lo=(54.5, -19.1))   # turned 90 deg, in the pod: outer edge x 70.5
     meshes["ubec"] = place("ubec", lo=(-90.0, -1.3), yc=-2.5)                                # the tail tray, flat
@@ -370,6 +387,9 @@ def entries(meshes):
         f"parked on the throat it is the front camera, lens ({LENS[0]:.0f}, 0, {LENS[2]:.0f}), {math.degrees(TILT):.0f} deg up, 1920 x 1080 colour at 30 fps, ~92 x 61 deg; rolled out on the two blades it is the ceiling probe. Camera board and lens 14 E, SG90 9, VL53L0X 0.7, LEDs 0.3, cradle and clip 2.5, TPU rim guard 1.5")
     add("probe_turret", "ceiling probe turret (two-blade 0.3 m mast, spool, gears, clock-spring drum, N20 in the deck, throat)", "placeholder", "camera", "#f2b705", 36.4, "E",
         "two 10 mm steel blades 0.4 m 7.6, flat cable 2 x 300 mm 2, spool with its 40 T gear 5, clock-spring drum 2, housing and throat 6 (PCTG), N20 300 rpm with encoder 10.5, 15 T pinion 0.3, DRV8833 1, TPU lip 1, wires 1 (E)")
+    for k, col in (("a", "#e8c547"), ("b", "#b8902a")):
+        add(f"probe_mast_{k}", f"probe mast, blade {k.upper()} (10 mm steel tape, curves facing)", "placeholder", "camera", col, 0.0, "E",
+            "drawn 1 mm long above the throat; the page's timeline rolls it out to 300 mm and back (tools/scout_v4_timeline.py). Its mass is in the turret's")
     add("fc", "FC MicoAir743 AIO (in the nose bay)", "bought", "electronics", "#1f6f3f", 10.0, "P", "36 x 36 at x 56..92 under the deck (its place at the deck's centre is the turret's); set its IMU offset in PX4 (EKF2_IMU_POS_X ~ +0.074 m)")
     for src, nm, g, note in (("ubec", "UBEC", 15.0, "the tail tray, flat, bottom z -1.3"), ("xr2", "XR2", 1.0, "the tail tray, flat"), ("radxa_zero_3w", "Radxa Zero 3W", 10.0, "the tail tray, flat over the UBEC (was on edge)"),
                              ("scout_flow_mtf_02p", "flow MTF-02P", 1.5, "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn")):
@@ -405,7 +425,7 @@ if __name__ == "__main__":
     lo = np.min([m.bounds[0] for m in M.values()], 0); hi = np.max([m.bounds[1] for m in M.values()], 0)
     mass = sum(r["mass_g"] for r in rows)
     a = dict(name="Scout v4", title="Scout v4", artifact=old.get("artifact"), machine="scout_v4", order=0, readme_view=old.get("readme_view", "iso"),
-             appendix=old.get("appendix", "systems/scout_v4.appendix.html"),
+             appendix=old.get("appendix", "systems/scout_v4.appendix.html"), timeline="tools/scout_v4_timeline.py:timeline", frame_timeline=True,
              note=f"Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): "
                   f"Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. {lo[0]:.0f}..{hi[0]:.0f} x {lo[1]:.0f}..{hi[1]:.0f} x {lo[2]:.0f}..{hi[2]:.0f} mm, "
                   f"~{mass:.0f} g (E). tools/scout_v4_shape.py",
