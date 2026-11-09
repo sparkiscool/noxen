@@ -6,7 +6,7 @@
 "order": 0,
 "readme_view": "iso",
 "appendix": "systems/scout_v4.appendix.html",
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..93 mm, ~697 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..123 mm, ~706 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -213,17 +213,17 @@
 },
 {
 "id": "scout_v4_probe_head",
-"name": "front camera and probe head (Arducam UB0238 5MP autofocus on an SG90 tilt servo, LEDs, VL53L0X, bumper)",
+"name": "front camera and probe head (Arducam 1080P Low Light colour USB, IMX291 100 deg, on an SG90 tilt servo, white LEDs, VL53L0X)",
 "role": "bought",
 "group": "camera",
 "color": "#1d5e3a",
 "mesh": "parts/scout_v4_probe_head/part.stl",
-"mass_g": 18.5,
+"mass_g": 28.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "parked on the throat it is the front camera, lens (62, 0, 90.5), 20 deg up, 1080p 30 fps; rolled out on the two blades it is the ceiling probe. Camera board 5 E, SG90 9, VL53L0X 0.7, LEDs 0.3, cradle and clip 2, TPU bumper 1.5"
+"note": "parked on the throat it is the front camera, lens (38, 0, 108), 15 deg up, 1920 x 1080 colour at 30 fps, ~92 x 61 deg; rolled out on the two blades it is the ceiling probe. Camera board and lens 14 E, SG90 9, VL53L0X 0.7, LEDs 0.3, cradle and clip 2.5, TPU rim guard 1.5"
 },
 {
 "id": "scout_v4_probe_turret",
