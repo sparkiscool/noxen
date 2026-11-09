@@ -28,8 +28,8 @@
    {
     "case": "frame P2-P3 axial 45 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.065,
-    "across": 0.043,
+    "inlayer": 0.072,
+    "across": 0.048,
     "at": [
      -157.2,
      98.3,
@@ -39,8 +39,8 @@
    {
     "case": "frame P2-P3 side 14.3 N",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.016,
+    "inlayer": 0.027,
+    "across": 0.018,
     "at": [
      -157.2,
      99.3,
@@ -48,7 +48,7 @@
     ]
    }
   ],
-  "worst": 0.065,
+  "worst": 0.072,
   "worst_case": "frame P2-P3 axial 45 N (pull-out)",
   "worst_at": [
    -157.2,
@@ -56,7 +56,7 @@
    57.4
   ]
  },
- "mass_g": 4.74,
+ "mass_g": 4.59,
  "watertight": true,
  "export": {
   "faces_in": 37350,
@@ -90,7 +90,7 @@
   "bodies": 1
  },
  "volume_mm3": 3729.2,
- "drawn_g": 2.32,
+ "drawn_g": 2.24,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
@@ -204,9 +204,9 @@
    "default"
   ]
  },
- "build_s": 15.0,
- "layout_s": 110,
- "peak_gb": 0.809396,
+ "build_s": 10.6,
+ "layout_s": 84,
+ "peak_gb": 0.8435,
  "gen_cm3": 1.9,
  "h": 1.0,
  "audit": {
@@ -263,7 +263,7 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.018,
+   "worst": 0.02,
    "worst_case": "frame P2-P3 axial 45 N (pull-out)",
    "worst_at": [
     -154.2,
@@ -271,7 +271,7 @@
     62.4
    ],
    "budget_share": 0.169,
-   "thinned": 0.11,
+   "thinned": 0.12,
    "max_worst": 0.3
   }
  },
@@ -280,8 +280,8 @@
    {
     "case": "frame P2-P3 axial 45 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.081,
-    "across": 0.055,
+    "inlayer": 0.09,
+    "across": 0.061,
     "at": [
      -156.2,
      98.3,
@@ -291,8 +291,8 @@
    {
     "case": "frame P2-P3 side 14.3 N",
     "cls": "crash",
-    "inlayer": 0.029,
-    "across": 0.02,
+    "inlayer": 0.032,
+    "across": 0.022,
     "at": [
      -156.2,
      98.3,
@@ -300,7 +300,7 @@
     ]
    }
   ],
-  "worst": 0.081,
+  "worst": 0.09,
   "worst_case": "frame P2-P3 axial 45 N (pull-out)",
   "worst_at": [
    -156.2,
@@ -313,10 +313,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 125,
+ "total_s": 95,
  "part_sha": "621fcc889ce5",
- "lib_sha": "e19f92b30cb4",
- "setup_sha": "a69461b9ee0ac4c1",
+ "lib_sha": "99ab5c3c0bf4",
+ "setup_sha": "663620fc01fcc269",
  "max_worst": 0.3,
  "strength_ok": true
 }
