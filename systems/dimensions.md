@@ -1,5 +1,7 @@
 # Nox: dimensions (current values only)
 
+> Paths written `nox/...`, `docs/...` and most `runs/...` point into the old `nox` repo (moved 28 Oct), not this one. Scout v3 sections are archived with `systems/scout.assembly.json`; Scout v4's numbers live in `tools/scout_v4_shape.py` and `systems/scout_v4.appendix.html`. Printed parts are PCTG since 8 Nov: a PETG below is the old material unless it is a setting.
+
 The only source for Scout and box numbers. mm unless stated. Tags: P part, M mesh, C CAD, E estimate. **CHECK** = unconfirmed. Changes: one line in `nox/log.md`. Rules: `CLAUDE.md`. Box system: `nox/box/box.md`. Sections E, G, H and J hold Scout v2 numbers carried into v3 until v3 replaces them (`archive/scout-v2/` for the v2 design).
 
 **Coordinates.** Drone axes: x forward (nose +), y left +, z up, CG at x 0. Plate top z 22; z 0 is the old pusher prop plane (kept so part numbers stay valid). **Props are on top since 14 Oct 16:41: prop plane z ≈ +41.2 (E: plate top 22 + D12 19.2, listing; Spark 17 Oct 00:52: go with it; row "Motor / prop layout" in C).** Rows below that still describe props at z 0 (prop rule in H, the underside's below-the-props placement) are pusher-era until their chats update them (`nox/current-parts.md` Scout v3 row). Each part doc defines its own part coordinates.
