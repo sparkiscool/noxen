@@ -50,6 +50,7 @@ BOSS_U, BOSS_V, BOSS_T = (57.5, 72.0), (3.0, 22.0), 8.0   # plate boss block per
 #   their ties). This block keeps a 10 x 15 x 4 core round the holes that a member lands on full-face.
 RELIEF_R = 3.0                                   # round the neighbour's shank in the nut layer, merges with the pocket (no sliver)
 PAD_D, PAD_T = 36.0, 14.0                        # motor pad (arms section, C): Ø36 reach; 14 thick (8 Nov, Spark: thicker motor pads; 7 Nov 6 -> 10, every crack was at the motor mount)
+PAD_TOP, RIM_W = 3.0, 3.5                         # 9 Nov: the circular pad's top plate and rim (above)
 LUG_R = 5.5                                      # lug radius round each slot (slot 1.6 + 2.0 wall + 1.9)
 MOTOR_SLOT = (8.0, 9.5)                          # X2216 base pattern: one pair across at 16 (r 8), the other at 19 (r 9.5), 45 deg to the leads (O motor row, spec)
 SLOT_D = 3.2                                     # M3 into the motor's tapped base (2.8 deep: no nut exists on a motor)
@@ -204,7 +205,12 @@ class Arm:
             drawn.append(cyl(pg[0], pg[1], Z_PAD - 0.5, Z_PAD + PEG[3], PEG[2] / 2, 24))
         # --- motor pad
         M = self.M
-        for t in (45, 135, 225, 315):                                   # the pad is 4 lugs (a star), not a disc: a disc is a block to the audit
+        # 9 Nov (Spark: the base completely circular, less likely to shatter): a full O36 top plate PAD_TOP thick, a rim RIM_W wide round
+        # it the full pad depth, and the 4 screw lugs under it; the pockets between them are design room (a solid O36 x 14 disc is a
+        # drawn block to the audit, core 11). The outline is a whole circle: no notch between lugs for a crack to start from.
+        drawn.append(cyl(M[0], M[1], Z_PAD - PAD_TOP, Z_PAD, PAD_D / 2, 96))
+        drawn.append(cyl(M[0], M[1], Z_PAD - PAD_T, Z_PAD, PAD_D / 2, 96) - cyl(M[0], M[1], Z_PAD - PAD_T - 1.0, Z_PAD + 1.0, PAD_D / 2 - RIM_W, 96))
+        for t in (45, 135, 225, 315):
             e = np.cos(np.radians(t)) * self.a + np.sin(np.radians(t)) * self.n
             drawn.append(stadium(M + 4.0 * e, M + (PAD_D / 2 - LUG_R) * e, Z_PAD - PAD_T, Z_PAD, LUG_R))
         cuts.append(cyl(M[0], M[1], Z_BOT - 1.0, Z_PAD + 1.0, BORE_D / 2, 32))

@@ -16,7 +16,7 @@ import numpy as np, manifold3d as mf
 from parts.overseer_tube_arm_lib import TubeArm, build_piece, TUBE_Z, TUBE_DEPTH
 from parts.overseer_arm_lib import Z_PAD, PAD_T, cyl, NODE_R, SOCK_DEPTH
 
-EXT_TUBE, EXT_SPOKE = 17.0, 12.0
+EXT_TUBE, EXT_SPOKE = 34.0, 24.0                                         # 9 Nov (Spark: replaced once already, cut again: two socket lengths back, was 17 / 12)
 TUBE_GAP, SPOKE_GAP, DROP = 7.6, 4.4, 60.0                             # channel widths: wider than the grooved bore (7.2 / 4.2): a half-pipe, no lip (a lip under 2 mm is drawn material the audit refuses)
 RING_T, RING_S = 3.5, 3.0                                                # collar wall beside a channelled tube / spoke socket (the lib's 2.5 leaves 1.8 above a 7.6 channel)
 BOSS_R, BOSS_RI, BOSS_D = 16.0, 10.0, 8.0
@@ -35,8 +35,8 @@ def trough(P, u, slide, s0, s1, w, drop, lip_d, wide):
 class FrontPad(TubeArm):
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
-        self.pad_mouth -= EXT_TUBE                                         # tube sockets 17 closer to the root
-        self.node_r = NODE_R + EXT_SPOKE                                   # spoke sockets 12 further out from the node (arm lib hook)
+        self.pad_mouth -= EXT_TUBE                                         # tube sockets 34 closer to the root (two socket lengths)
+        self.node_r = NODE_R + EXT_SPOKE                                   # spoke sockets 24 further out from the node (arm lib hook)
 
     def drawn_cuts_env(self):
         drawn, cuts, env = super().drawn_cuts_env()
@@ -52,7 +52,7 @@ class FrontPad(TubeArm):
         node = np.asarray(self.node, float)
         for sp in self.spokes:
             slots.append(trough(node, sp["u"], n3, self.node_r, self.node_r + SOCK_DEPTH + 16.0, SPOKE_GAP, DROP, 1.9, 14.0))   # from the floor plane to past the mouth; walls >= 2.0 to d 1.9
-            rings.append(along(node, sp["u"], self.node_r, self.node_r + SOCK_DEPTH + 1.0, 1.6 + RING_S))
+            rings.append(along(node, sp["u"], self.node_r - 3.0, self.node_r + SOCK_DEPTH + 1.0, 1.6 + RING_S))   # 9 Nov: from behind the floor (two back, the 1.1 collar stands alone and its lib wall was 2.0 at the grooves)
         for sp in self.spokes:                                             # room round the pushed-out spoke collars (they leave z 0..45)
             env = env + along(node, sp["u"], self.node_r - 6.0, self.node_r + SOCK_DEPTH + 4.0, 9.0)
         return drawn + boss + mf.Manifold.batch_boolean(rings, mf.OpType.Add), cuts + mf.Manifold.batch_boolean(slots, mf.OpType.Add), env
