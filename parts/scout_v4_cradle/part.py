@@ -8,12 +8,14 @@ the idler's boss with an M3 x 5.7 insert.
 Cuts: the case, the lens's view forward, the plug and its cable out the back, the LED bars on the case's top and bottom and their
 light forward, the horn and the spline, the screws.
 Support: the horn's pad and the idler's boss (the axis). Loads: the camera (45 g) and LED bars on the pads, lips and back stop in 35 g
-crashes and flight; the head-first crash (230 N down onto the case's top)."""
+crashes and flight; the head-first crash (systems/scout_v4.head_load.json, ~250 N down onto the case's top)."""
 import math
 import numpy as np, trimesh
 from topo import Part
 from parts.scout_v4_units_lib import S, ASM, box, cyl, U, payload_cases, point_case
 
+import json as _json, os as _os
+HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
 SPEC = dict(h=0.8, gen_cm3=2.0, max_worst=0.3)   # E: cradle, arms and coupler 1.5 g, at the nodes' PCTG limit
 X0, X1 = S.CAM["case"]                            # the case's back and front, ahead of the axis (depth 20 E)
 H = S.CAM["side"] / 2                             # 18
@@ -71,5 +73,5 @@ def setup(h):
     g = ASM["scout_v4_probe_tilt"]["mass_g"] + ASM["scout_v4_probe_leds"]["mass_g"]                # the camera (45) and the LED bars
     cg = wpt(((X0 + X1) / 2, 0.0, 0.0))
     payload_cases(p, "camera and LED bars", B["pts"], B["regs"], g, cg)
-    point_case(p, "head-first crash: 230 N down onto the case's top", B["pts"], B["regs"], (0, 0, -230.0), wpt(((X0 + X1) / 2, 0.0, H)))
+    point_case(p, f"head-first crash: {HEAD_N} N down onto the case's top", B["pts"], B["regs"], (0, 0, -float(HEAD_N)), wpt(((X0 + X1) / 2, 0.0, H)))
     return p

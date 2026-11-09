@@ -7,13 +7,15 @@ drawing, E); the idler's boss (an M3 screw along the tilt axis into the cradle's
 Cuts: the SG90 and its spline; the cradle, camera and LED bars swept over the nod (-20..+90 deg) with 1 mm to spare; the blades'
 lens and the mast below; the screws and their drivers.
 Support: the clip (the blades hold the head). Loads: the cradle, camera and LEDs (48.5 g) through the idler and the SG90 in 35 g crashes
-and flight; the SG90 (9 g); the head-first crash (230 N down onto the camera's top); the SG90's stall torque (1.8 kg cm) on its tabs."""
+and flight; the SG90 (9 g); the head-first crash (systems/scout_v4.head_load.json, ~250 N down onto the camera's top); the SG90's stall torque (1.8 kg cm) on its tabs."""
 import math
 import numpy as np, trimesh
 from topo import Part
 from topo.part import man
 from parts.scout_v4_units_lib import S, ASM, box, cyl, U, payload_cases, point_case
 
+import json as _json, os as _os
+HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
 SPEC = dict(h=1.0, gen_cm3=3.0, max_worst=0.3)   # E: clip, plate and brackets 2.5 g as estimated, at the nodes' PCTG limit
 HOLES = 27.7                                      # SG90 tab holes apart (typical drawing, E; the DORHEA listing gives the tabs' 32.8 span)
 
@@ -86,7 +88,7 @@ def setup(h):
     pts = [B["idler"][0]] + B["pad_pts"]; regs = [B["idler"][1]] + B["pad_regs"]
     payload_cases(p, "cradle, camera and LEDs", pts, regs, g, cg)
     payload_cases(p, "SG90", B["pad_pts"], B["pad_regs"], 9.0, (S.AXIS[0] - 5.2, S.AXIS[1] + S.CAM["side"] / 2 + 2.0 + 3.0 + 11.4, S.AXIS[2]), flight=False)
-    point_case(p, "head-first crash: 230 N down onto the camera's top", pts, regs, (0, 0, -230.0), (S.AXIS[0] + 10.0, S.AXIS[1], float(tilt.bounds[1][2])))
+    point_case(p, f"head-first crash: {HEAD_N} N down onto the camera's top", pts, regs, (0, 0, -float(HEAD_N)), (S.AXIS[0] + 10.0, S.AXIS[1], float(tilt.bounds[1][2])))
     F = 0.18 / (HOLES / 1000.0)
     for sgn in (1, -1):
         p.load_multi(f"SG90 stall torque {'+' if sgn > 0 else '-'}1.8 kg cm on its tabs", [(B["pad_regs"][0], (0, 0, sgn * F)), (B["pad_regs"][1], (0, 0, -sgn * F))], cls="flight")
