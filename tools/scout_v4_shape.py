@@ -81,9 +81,9 @@ LENS_OFF = 23.0                                                   # the lens win
 # the probe's turret (9 Nov, Spark: "do the double blade ... make the design for the mast itself fully"): under the roof, where the FC sat
 BLADE_W = 19.0                                                    # tape blade width (9 Nov, Spark: "as safe as possible", 3/4 in; was 10): ~3.5x the fold moment (E)
 SPOOL = dict(c=(0.0, 41.0), r=14.5, hub=10.0, y0=-11.7, y1=11.7)  # 9 Nov compact: hub O20 (a 19 mm tape coils at r ~7 in its own case), ~2.2 turns of 2 blades + the cable wound to ~O27, O29 flanges, 23.4 wide; axis y at x 0, z 41
-GEAR = dict(spool_t=30, pinion_t=15, m=0.8, y=(11.7, 14.7))      # printed spur pair, module 0.8, 30 / 15: the spool at 150 rpm (0.8 s for the 150 mm) with twice the N20's torque; centres 18
+GEAR = dict(spool_t=40, pinion_t=12, m=0.8, y=(11.7, 14.7))      # printed spur pair, module 0.8, 40 / 12 on 20.8 centres: the N20 sits under the spool (9 Nov: outboard along +y it ran through the DS0 lug socket); ~1.5 s for the 150 mm, 3.3x its torque
 DRUM = dict(r=11.0, y0=-17.7, y1=-11.7)                         # the drum on the spool's -y side: the camera cable's loose coil, 3.5 turns of room for the spool's ~2.2
-MOTOR = dict(x=6.0, y0=16.7, y1=43.7, z0=18.0, z1=28.0)          # Augiimor N20 6 V 300 rpm, no encoder, along y, its pinion 18 under the spool: in a pocket in the deck
+MOTOR = dict(x=6.0, y0=-17.3, y1=9.7, z0=15.2, z1=25.2)           # Augiimor N20 6 V 300 rpm, no encoder: under the spool and the drum, facing +y, in a pocket through the deck (its underside 3.3 below the deck)
 THROAT = dict(x0=MAST_X - 4.0, x1=MAST_X + 4.0, y=11.0, z0=41.0, z1=73.0)   # the 32 mm guide that forms the blades into a lens and grips the mast's base
 AXIS = np.array([HEAD["ax"], 0.0, THROAT["z1"] + HEAD["az"]])   # the tilt axis parked
 LENS = AXIS + LENS_OFF * np.array([math.cos(TILT), 0.0, math.sin(TILT)])
@@ -319,9 +319,10 @@ def probe():
              gear(GEAR["spool_t"], GEAR["m"], cx, cz, *GEAR["y"]), cyl_y(1.5, cx, cz, DRUM["y0"] - 2.0, GEAR["y"][1] + 3.0, 12)]   # 40 T and its M3 axle
     pz = cz - (GEAR["spool_t"] + GEAR["pinion_t"]) * GEAR["m"] / 2
     pinion = gear(GEAR["pinion_t"], GEAR["m"], cx, pz, *GEAR["y"])
-    g1 = GEAR["y"][1]
-    motor = [box(-6.0, 6.0, g1 + 2.0, g1 + 12.0, pz - 5.0, pz + 5.0),                  # Augiimor N20 6 V 300 rpm: gearbox 12 x 10 x 10 (37 total - can 17 - shaft 10)
-             cyl_y(6.0, cx, pz, g1 + 12.0, g1 + 29.0, 24), cyl_y(1.5, cx, pz, GEAR["y"][0], g1 + 2.0, 12)]   # can O12 x 17, 3 mm D shaft (no encoder: it runs to a stall)
+    g0 = GEAR["y"][0] - 2.0                                                           # the gearbox's face, 2 short of the pinion
+    motor = [box(-6.0, 6.0, g0 - 10.0, g0, pz - 5.0, pz + 5.0),                        # Augiimor N20 6 V 300 rpm: gearbox 12 x 10 x 10 (37 total - can 17 - shaft 10), facing +y
+             cyl_y(6.0, cx, pz, g0 - 27.0, g0 - 10.0, 24),                             # can O12 x 17, under the spool and the drum
+             cyl_y(1.5, cx, pz, g0, g0 + 10.0, 12)]                                    # 3 mm D shaft: through the pinion, its tip in the +y plate's bearing hole
     th = np.linspace(0, 2 * math.pi * 3.5, 400); rr = 4.0 + (DRUM["r"] - 1.5 - 4.0) * th / th[-1]
     spiral = LineString([(cx + a * math.cos(b), cz + a * math.sin(b)) for a, b in zip(rr, th)]).buffer(1.1)
     drum = [_xz(spiral, DRUM["y0"] + 1.0, DRUM["y1"] - 1.0), cyl_y(4.0, cx, cz, DRUM["y0"] + 0.5, DRUM["y1"] + 0.5, 24)]           # the camera's own USB cable in a loose coil (2.5 turns of room, ~1.5 used)
@@ -421,6 +422,13 @@ def checks(meshes):
     for nm, ids in (("probe head", ("probe_head", "probe_tilt", "probe_leds")), ("probe turret", ("probe_turret", "probe_spool", "probe_pinion", "probe_motor", "probe_drum", "probe_feed"))):
         v = np.vstack([np.asarray(meshes[k].vertices) for k in ids])
         out[f"{nm} to discs"] = (round(min(disc_dist(p) for p in v), 1), "need 12")
+    rods_m, nodes_m = cage()
+    clash = []
+    for k in ("probe_turret", "probe_spool", "probe_pinion", "probe_motor", "probe_drum", "probe_feed", "probe_head", "probe_tilt", "probe_leds"):
+        for nm, o in (("nodes", nodes_m), ("rods", rods_m)):
+            if o.contains(meshes[k].vertices).any() or (meshes[k].is_watertight and meshes[k].contains(o.vertices).any()):
+                clash.append(f"{k} x cage {nm}")
+    out["probe vs cage"] = ("clear" if not clash else "CLASH: " + ", ".join(clash), "every probe part against the cage's nodes, sockets and rods (parked)")
     gap, hit = tilt_sweep()
     out["head tilt sweep"] = (f"clear, {gap} over the base plate" if gap > 0 and not hit else f"HITS at {hit} deg, gap {gap}", f"the cradle, camera and LED bars over {HEAD['range'][0]:.0f}..+{HEAD['range'][1]:.0f} deg")
     for nm in ("frame", "base"):
@@ -483,13 +491,13 @@ def entries(meshes):
         "SG90 9 (shaft on the tilt axis, facing -y, its output face 3 off the cradle; held by its 32.8 tabs on the +y bracket), 470 uF capacitor on its lead 1 (its start draws > 1 A), clip, base plate and the two brackets, tight to the cradle, 1.5 (PCTG); an M3 screw is the idler")
     add("probe_turret", "probe turret housing: side plates, floor, drum cover and the throat (PCTG), the DRV8833 on its +y plate", "placeholder", "camera", "#f2b705", 6.0, "E",
         "side plates the size of the spool and the drum, a 32 mm throat: 3 (thin walls), DRV8833 1, TPU lip 1, wires 1 (E); drawn see-through", opacity=0.22)
-    add("probe_spool", "probe spool, hub O20, with its 30 T gear (module 0.8) on an M3 screw", "placeholder", "camera", "#d08a1e", 3.0, "E",
+    add("probe_spool", "probe spool, hub O20, with its 40 T gear (module 0.8) on an M3 screw", "placeholder", "camera", "#d08a1e", 3.0, "E",
         f"hub O20 23.4 wide, flanges O29, the two 19 mm blades and the camera cable wound to ~O27; ~{REACH / (2 * math.pi * 11.6):.1f} turns for the {REACH:.0f} mm roll-out; the blades' ends clamped in it, so fully out is a hard stop")
-    add("probe_pinion", "probe pinion, 15 T, on the N20's shaft", "placeholder", "camera", "#a85f10", 0.3, "E", "centres 18 from the spool's (30 / 15)")
+    add("probe_pinion", "probe pinion, 12 T, on the N20's 3 mm D shaft", "placeholder", "camera", "#a85f10", 0.3, "E", "centres 20.8 from the spool's (40 / 12); its bore D-shaped, 2.3 wall at the root (PCTG)")
     add("probe_motor", "N20 6 V 300 rpm gear motor, no encoder (Augiimor, B0BZDC951L)", "bought", "camera", "#8b8f96", 10.0, "E",
-        "37 long (can 17 x O12, 3 mm D shaft 10); in a pocket in the deck, along y, under the props' keep-out band; it runs out or in to a stall (the blades' anchor out, the head seated in)")
-    add("probe_drum", "the camera cable, coiled loosely in the drum", "bought", "camera", "#c96f2d", 3.0, "E",
-        "a JST ZH 1.5 mm 4-pin lead into the camera's B4B-ZR socket and four thin wires (data pair twisted) to the USB-C breakout: up between the blades, round the spool, 2.5 turns of room in the drum for ~1.5")
+        "37 long (can 17 x O12, 3 mm D shaft 10); under the spool and the drum facing +y, in a pocket through the deck (the base's room must keep it out, z 15.2 up); it runs out or in to a stall (the blades' anchor out, the head seated in); at 5 V ~250 rpm")
+    add("probe_drum", "the head's cable, coiled loosely in the drum", "bought", "camera", "#c96f2d", 3.0, "E",
+        "6 thin conductors (the head carries the camera, the servo and the LED bars): 5 V and GND in 26 AWG (shared; the 470 uF at the servo covers its start), USB D+ / D- twisted, the servo's signal and the LED bars' switched minus in 30 AWG; a JST ZH 1.5 mm 4-pin lead into the camera; up between the blades, round the spool, 3.5 turns of room in the drum for ~2; the USB pair to the USB-C breakout on the Radxa")
     add("probe_feed", "the two blades from the spool up into the throat", "bought", "camera", "#b8902a", 8.8, "E",
         "two 19 mm (3/4 in) steel tape strips, 0.2 m each with 0.15 m used, cut from one ordinary 3 m tape measure (its case and spring not used; 13 spare strips), curves facing (~22 g/m, E); ends set in printed clamp slots with epoxy (hardened steel: not drilled); their mass is all here")
     for k, col in (("a", "#e8c547"), ("b", "#b8902a")):
