@@ -12,7 +12,7 @@ import numpy as np
 DUR = 28.0
 Z0, STUB = 73.0, 1.0                       # throat top (scout_v4_shape.THROAT z1), the blades' drawn length
 OUT = 150.0                                # scout_v4_shape.REACH
-AXIS = np.array([21.5, 0.0, 107.0])        # the tilt axis parked (scout_v4_shape.AXIS)
+AXIS = np.array([21.5, 0.0, 103.0])        # the tilt axis parked (scout_v4_shape.AXIS)
 TILT0 = 15.0                               # parked tilt, deg up (scout_v4_shape.TILT)
 SPOOL, PINION, R_WOUND, RATIO = (0.0, 43.0), (0.0, 21.0), 16.0, 40.0 / 15.0
 

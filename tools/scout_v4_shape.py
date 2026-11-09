@@ -17,12 +17,11 @@ What sets the shape, and only this:
            (zmin_walls_in + 2). So no runners or keel: the base is the yokes over the receiver, a nose bay (the FC), the flow sensor's
            pod, a tail tray (Radxa, UBEC, XR2) and the nose stub; four TPU feet on the receiver's bottom corners are the foot on flat
            ground and four bare pads meet the box's keep-alive probes. Gate: tools/seat_check.py scout_v4 --descent (walls in)
-  camera   ONE camera (9 Nov, Spark: the probe is the front camera too; then colour, "we need colored camera": the Arducam 1080P
-           Low Light USB camera, IMX291, 100 deg lens, B0200; the 160 deg fisheye B0202 dropped, "we can take our time turning"):
-           1920 x 1080 colour, MJPG 30 fps over USB 2.0 (UVC: the Radxa Zero 3W's Linux takes it with no driver), rolling shutter
-           (the scan holds still for each frame), 100 deg diagonal M12 lens (~92 x 61, E), IR-cut filter, white LEDs; board 38 x 38,
-           holes 28 x 28 (listing), M2 like the DECXIN's posts. On an SG90 tilt servo, parked on the
-           probe's throat, it is the front camera 15 deg up (-15.5..+45.5, as low as the old view; clear from 10 deg), its frame clear of every rod and disc; rolled out it is the ceiling probe
+  camera   ONE camera (9 Nov, Spark: the probe is the front camera too, colour; bought: the Arducam 12MP autofocus USB camera,
+           B0FLX58WKZ): 1/2.43" colour, IR-cut, AF 3.95 mm f/1.8 focusing 10 cm to inf (settable over UVC), 75 D / 61 H / 50 V deg,
+           MJPG 4608 x 2592 at 15 fps, 1080p at 30, USB 2.0 UVC (the Radxa Zero 3W's Linux takes it with no driver); 45 g in its
+           metal case, flown without it (the bare board ~32 square and ~12 g: E, measure on arrival). On an SG90 tilt servo, parked
+           on the probe's throat, it is the front camera, its frame clear of every rod and disc; rolled out it is the ceiling probe
   probe    the mast is two 10 mm steel tape blades with their curves facing (a lens-shaped tube, the spacecraft bi-STEM idea: each
            braces the other's easy fold), 0.15 m out (Spark 9 Nov: as short as is safe; was 0.3); both blades and the 8-way flat cable between them wind on one spool (axis y,
            O34) under the roof where the FC sat; an N20 300 rpm with encoder lies in a pocket in the deck, under the props' keep-out
@@ -70,15 +69,15 @@ ARM_W, POD_R = 18.0, 15.0                        # arm width, motor pod radius (
 SEAT_Z, CX, SEAT_L, SEAT_W, RUN_H, CH = -44.3, 1.5, 184.0, 66.8, 20.0, 4.0
 # ---- camera, cage --------------------------------------------------------------------------------------------------------------
 TILT = math.radians(15.0)                         # the parked default: 15 deg up (the 61 deg tall view clears the nose ring and RF from 10 deg; the servo tilts -20..+90)
-HFOV, VFOV = math.radians(92.0 / 2), math.radians(61.0 / 2)   # Arducam 1080P Low Light USB (IMX291, 100 deg D M12 lens, B0200): ~92 x 61 deg on 16:9 (E from the diagonal)
+HFOV, VFOV = math.radians(61.0 / 2), math.radians(50.0 / 2)   # Arducam 12MP autofocus USB (B0FLX58WKZ): 75 D / 61 H / 50 V deg (listing)
 MAST_X = 17.5                                                     # the mast's axis (x, 0): beside the roof's middle node, inside its ring
 REACH = 150.0                                                     # the mast's roll-out (9 Nov, Spark: "shorten the distance where it's as safe as possible"; was 300)
 # the head (9 Nov, Spark: "show how it can nod ... a led light for the camera, build out the actual mechanism"): a clip on the blades' tip,
 # a base plate, an SG90 on its side on the +y bracket driving the tilt cradle through its horn, an idler pin in the -y bracket; the cradle
 # carries the camera board on four M2 posts, the lens hood, the VL53L0X over the board and two 5 V COB LED bars beside the lens
-HEAD = dict(clip=6.0, plate=3.0, ax=MAST_X + 4.0, az=34.0, range=(-20.0, 90.0))   # tilt axis along y at x ax, z = throat top + az (+ the length out)
-CAM = dict(pcb=(3.0, 4.6), side=38.0, holder=(4.6, 12.6, 7.0), lens=(12.6, 23.6, 7.0), hood=(18.0, 25.0, 8.0, 9.5))   # in the cradle's frame: x forward from the axis
-LENS_OFF = 23.6                                                   # the lens front, ahead of the tilt axis (E: M12 holder 8 + barrel 11 on a 1.6 board)
+HEAD = dict(clip=6.0, plate=3.0, ax=MAST_X + 4.0, az=30.0, range=(-20.0, 90.0))   # tilt axis along y at x ax, z = throat top + az (+ the length out)
+CAM = dict(pcb=(3.0, 4.6), side=32.0, holder=(4.6, 10.6, 6.0), lens=(10.6, 12.6, 4.0), hood=(9.0, 14.0, 6.5, 8.0), posts=12.5)   # in the cradle's frame, x forward from the axis (board, AF module and posts E: measure)
+LENS_OFF = 12.6                                                   # the lens front ahead of the tilt axis (E: AF module ~6 + window on a 1.6 board)
 # the probe's turret (9 Nov, Spark: "do the double blade ... make the design for the mast itself fully"): under the roof, where the FC sat
 SPOOL = dict(c=(0.0, 43.0), r=17.0, y0=-7.0, y1=7.0)              # the spool: axis along y at x 0, z 43; hub O30, two blades + the flat cable wound to ~O33, flanges O34
 GEAR = dict(spool_t=40, pinion_t=15, m=0.8, y=(7.0, 10.0))        # printed spur pair, module 0.8: 40 T on the spool's +y flange, 15 T on the motor; centres 22 apart
@@ -270,19 +269,19 @@ def head_parts():
              box(ax - 21.45, ax + 10.75, 39.0, 41.5, az - 5.9, az + 5.9),            #   its mounting tabs (32.2 across)
              cyl_y(2.4, ax, az, 31.5, 33.0, 16)]                                     #   the spline
     c, hood = CAM, CAM["hood"]
-    t = [box(-1.0, 1.0, -22.5, 22.5, -19.0, 19.0),                                   # cradle plate behind the board
-         box(-6.0, 10.0, -22.5, -20.0, -8.0, 10.0), box(-6.0, 10.0, 20.0, 22.5, -8.0, 10.0),   # the two arms
-         cyl_y(5.0, 0.0, 0.0, 22.5, 30.0), cyl_y(7.0, 0.0, 0.0, 30.0, 31.5),       # coupler and the SG90's horn (+y)
-         cyl_y(1.5, 0.0, 0.0, -33.5, -22.5, 12)]                                     # idler pin (-y) into the bracket's boss
-    t += [trimesh.creation.cylinder(radius=2.8, segment=[(1.0, sy * 14.0, sz * 14.0), (c["pcb"][0], sy * 14.0, sz * 14.0)], sections=12)
-          for sy in (-1, 1) for sz in (-1, 1)]                                       # 4 M2 posts O5.6 on 28 x 28
-    t += [box(c["pcb"][0], c["pcb"][1], -19.0, 19.0, -19.0, 19.0),                   # the camera board 38 x 38
+    h = c["side"] / 2; w = h + 3.5                                                    # the arms just outside the board
+    t = [box(-1.0, 1.0, -w, w, -h, h),                                               # cradle plate behind the board
+         box(-6.0, 8.0, -w, -w + 2.5, -8.0, 8.0), box(-6.0, 8.0, w - 2.5, w, -8.0, 8.0),   # the two arms
+         cyl_y(5.0, 0.0, 0.0, w, 30.0), cyl_y(7.0, 0.0, 0.0, 30.0, 31.5),          # coupler and the SG90's horn (+y)
+         cyl_y(1.5, 0.0, 0.0, -33.5, -w, 12)]                                        # idler: an M3 screw (-y) into the bracket's boss
+    t += [trimesh.creation.cylinder(radius=2.8, segment=[(1.0, sy * c["posts"], sz * c["posts"]), (c["pcb"][0], sy * c["posts"], sz * c["posts"])], sections=12)
+          for sy in (-1, 1) for sz in (-1, 1)]                                       # 4 M2 posts O5.6 (pattern E: measure)
+    t += [box(c["pcb"][0], c["pcb"][1], -h, h, -h, h),                               # the camera board, out of its case
           box(c["holder"][0], c["holder"][1], -c["holder"][2], c["holder"][2], -c["holder"][2], c["holder"][2]),   # M12 holder
           trimesh.creation.cylinder(radius=c["lens"][2], segment=[(c["lens"][0], 0, 0), (c["lens"][1], 0, 0)], sections=32),   # M12 lens
           trimesh.creation.annulus(r_min=hood[2], r_max=hood[3], segment=[(hood[0], 0, 0), (hood[1], 0, 0)], sections=32),     # printed hood
-          box(c["pcb"][0], c["pcb"][0] + 1.2, -6.5, 6.5, 19.5, 29.5),                # VL53L0X over the board, looking forward
-          box(6.0, 8.0, -30.5, -22.5, -20.0, 20.0), box(6.0, 8.0, 22.5, 30.5, -20.0, 20.0)]   # the LED bars' printed fins
-    leds = [box(8.0, 9.5, -30.0, -23.0, -20.0, 20.0), box(8.0, 9.5, 23.0, 30.0, -20.0, 20.0)]   # 5 V COB strip, 40 x 7 each, CRI 90+
+          box(6.0, 8.0, -w - 8.0, -w, -h, h), box(6.0, 8.0, w, w + 8.0, -h, h)]       # the LED bars' printed fins
+    leds = [box(8.0, 9.5, -w - 7.5, -w - 0.5, -h, h), box(8.0, 9.5, w + 0.5, w + 7.5, -h, h)]   # 5 V COB strip, 32 x 7 each, CRI 90+
     pose = trimesh.transformations.rotation_matrix(-TILT, [0, 1, 0]); pose[:3, 3] = AXIS
     tilt = trimesh.util.concatenate(t); tilt.apply_transform(pose)
     led = trimesh.util.concatenate(leds); led.apply_transform(pose)
@@ -311,7 +310,7 @@ def tilt_sweep():
 def probe():
     """the ceiling probe (9 Nov). Turret, under the roof's middle node where the FC sat: the spool (axis y) with its 40 T gear, the 15 T
     pinion on the N20 in a pocket in the deck, the clock-spring spiral that carries the flat cable to the fixed side, the 30 mm throat
-    the two blades leave through (forming their lens) and the housing's two side plates. Returns {name: mesh}"""
+    the two blades leave through (forming their lens) and the housing's two side plates; M3 screws are the spool's and the idler's axles. Returns {name: mesh}"""
     from shapely.geometry import Point, LineString, Polygon
     (cx, cz), r = SPOOL["c"], SPOOL["r"]; t = THROAT
     spool = [cyl_y(15.0, cx, cz, -5.8, 5.8, 48), cyl_y(r, cx, cz, -7.0, -5.8, 48), cyl_y(r, cx, cz, 5.8, 7.0, 48),
@@ -319,12 +318,11 @@ def probe():
              gear(GEAR["spool_t"], GEAR["m"], cx, cz, *GEAR["y"]), cyl_y(1.5, cx, cz, -19.0, 13.0, 12)]   # 40 T and the O3 steel pin
     pz = cz - (GEAR["spool_t"] + GEAR["pinion_t"]) * GEAR["m"] / 2
     pinion = gear(GEAR["pinion_t"], GEAR["m"], cx, pz, *GEAR["y"])
-    motor = [box(-6.0, 6.0, 10.0, 19.0, pz - 5.0, pz + 5.0),                           # N20 gearbox 12 x 10 x 9
-             cyl_y(6.0, cx, pz, 19.0, 34.0, 24),                                       # motor can O12 x 15
-             box(-6.5, 6.5, 34.0, 36.0, pz - 6.5, pz + 6.5), cyl_y(1.5, cx, pz, 7.0, 10.0, 12)]   # encoder board, shaft
-    th = np.linspace(0, 2 * math.pi * 4.5, 400); rr = 4.0 + (11.5 - 4.0) * th / th[-1]
-    spiral = LineString([(cx + a * math.cos(b), cz + a * math.sin(b)) for a, b in zip(rr, th)]).buffer(0.3)
-    drum = [_xz(spiral, -16.0, -8.0), cyl_y(4.0, cx, cz, -16.5, -7.5, 24)]           # the clock spring: the flat cable's spiral, its inner end on the spool
+    motor = [box(-6.0, 6.0, 10.0, 19.0, pz - 5.0, pz + 5.0),                           # N20 gearbox 12 x 10 x 9 (no encoder: it runs to a stall at each end)
+             cyl_y(6.0, cx, pz, 19.0, 34.0, 24), cyl_y(1.5, cx, pz, 7.0, 10.0, 12)]   # motor can O12 x 15, shaft
+    th = np.linspace(0, 2 * math.pi * 2.5, 300); rr = 5.0 + (10.5 - 5.0) * th / th[-1]
+    spiral = LineString([(cx + a * math.cos(b), cz + a * math.sin(b)) for a, b in zip(rr, th)]).buffer(1.1)
+    drum = [_xz(spiral, -14.5, -9.5), cyl_y(4.0, cx, cz, -16.5, -7.5, 24)]           # the camera's own USB cable in a loose coil (2.5 turns of room, ~1.5 used)
     feed = [box(MAST_X - 5.0, MAST_X + 5.0, sg * 1.6 - 0.2, sg * 1.6 + 0.2, cz, t["z0"] + 2.0) for sg in (1, -1)]   # the blades from the spool up into the throat
     side = Polygon([(-18.0, 24.5), (21.0, 24.5), (21.0, 56.5), (-18.0, 56.5)]).union(Point(cx, cz).buffer(18.0, 48))
     housing = [_xz(side, 10.8, 12.0), _xz(Polygon([(-18.0, 24.5), (18.0, 24.5), (18.0, 56.5), (-18.0, 56.5)]), -19.0, -17.8),
@@ -468,21 +466,23 @@ def entries(meshes):
         add(f"motor_{k}", f"motor {k} (EMAX ECO II 2004)", "bought", "motors", "#8b8f96", 18.0, "listing", f"on its pod at (+-{HUB}, +-{HUB}), base z {DECK_TOP}")
         add(f"prop_{k}", f"prop {k} disc (Gemfan 5125, O{PROP_D}, swept)", "bought", "props", "#9fd3ff", 0.0, "listing", f"prop plane z {Z_PROP:.1f}", opacity=0.18)
         add(f"blades_{k}", f"prop {k} (Gemfan Hurricane SL 5125, 3 blade)", "bought", "props", "#3b6ea8", 2.8, "listing", "a sketch of the three blades")
-    add("probe_tilt", "probe camera on its tilt cradle (Arducam 1080P Low Light colour USB, IMX291, 100 deg M12; hood; VL53L0X)", "bought", "camera", "#1d5e3a", 18.2, "E",
+    add("probe_tilt", "probe camera on its tilt cradle (Arducam 12MP autofocus USB, out of its case; hood)", "bought", "camera", "#1d5e3a", 14.5, "E",
         f"nods about the SG90's axis from {HEAD['range'][0]:.0f} to +{HEAD['range'][1]:.0f} deg; parked {math.degrees(TILT):.0f} deg up it is the front camera, lens ({LENS[0]:.0f}, 0, {LENS[2]:.0f}), "
-        "1920 x 1080 colour at 30 fps, ~92 x 61 deg; rolled out it is the ceiling probe. Camera board and lens 14 E, cradle, arms, coupler and hood 2 E (PCTG), VL53L0X 0.7, TPU rim guard 1.5")
-    add("probe_leds", "probe light: two 5 V COB LED bars, 40 x 7, CRI 90+, beside the lens", "bought", "camera", "#fff1b8", 1.5, "E",
-        "on printed fins 23..30 mm either side of the lens axis, so the dust in the void is not lit in front of the lens; ~1 W together (E), on the DRV8833's B channel, DC or PWM >= 20 kHz")
+        "61 x 50 deg, autofocus 10 cm to inf, 1080p 30 live, 12 MP stills; rolled out it is the ceiling probe. Bare board and AF module ~12 E (45 g in its case: flown without), "
+        "cradle, arms, coupler and hood 1.5 (PCTG), TPU rim guard 1 (E)")
+    add("probe_leds", "probe light: two 5 V COB LED bars, 32 x 7, CRI 90+, beside the lens", "bought", "camera", "#fff1b8", 1.2, "E",
+        "on printed fins either side of the lens, so the dust in the void is not lit in front of it; ~1 W together (E), on the DRV8833's B channel, DC or PWM >= 20 kHz")
     add("probe_head", "probe head frame: clip on the blades' tip, base plate, the two brackets, SG90 tilt servo", "bought", "camera", "#2f3b45", 11.5, "E",
-        "SG90 9 (its shaft on the tilt axis, facing -y, held by its tabs on the +y bracket), clip, plate and brackets 2.5 (PCTG); the idler pin in the -y bracket's boss")
-    add("probe_turret", "probe turret housing: side plates, floor, drum cover and the throat (PCTG)", "placeholder", "camera", "#f2b705", 9.0, "E",
-        "housing and throat 6, DRV8833 1, TPU lip 1, wires 1 (E); drawn see-through to show the mechanism", opacity=0.22)
-    add("probe_spool", "probe spool with its 40 T gear (module 0.8) and the O3 steel pin", "placeholder", "camera", "#d08a1e", 5.0, "E",
-        f"hub O30, flanges O34, the two blades and the cable wound on it; turns ~{REACH / 16.0 / (2 * math.pi):.1f} times for the {REACH:.0f} mm roll-out")
+        "SG90 9 (its shaft on the tilt axis, facing -y, held by its tabs on the +y bracket), clip, plate and brackets 2.5 (PCTG); an M3 screw is the idler in the -y bracket's boss")
+    add("probe_turret", "probe turret housing: side plates, floor, drum cover and the throat (PCTG)", "placeholder", "camera", "#f2b705", 7.0, "E",
+        "housing and throat 4 (thin walls), DRV8833 1, TPU lip 1, wires 1 (E); drawn see-through to show the mechanism", opacity=0.22)
+    add("probe_spool", "probe spool with its 40 T gear (module 0.8) on an M3 screw", "placeholder", "camera", "#d08a1e", 4.0, "E",
+        f"hub O30, flanges O34, the two blades and the camera cable wound on it; ~{REACH / 16.0 / (2 * math.pi):.1f} turns for the {REACH:.0f} mm roll-out; the blades' ends are fixed to it, so fully out is a hard stop")
     add("probe_pinion", "probe pinion, 15 T, on the N20's shaft", "placeholder", "camera", "#a85f10", 0.3, "E", "centres 22 from the spool's")
-    add("probe_motor", "N20 300 rpm gear motor with encoder (spool drive)", "bought", "camera", "#8b8f96", 10.5, "E", "in a pocket in the deck, along y, under the props' keep-out band")
-    add("probe_drum", "clock spring: the flat cable's spiral in the drum", "bought", "camera", "#c96f2d", 4.0, "E",
-        "300 mm of 8-way 0.5 mm flat cable, ~4.5 turns of room; its inner end turns with the spool, its outer end is fixed to the housing")
+    add("probe_motor", "N20 6 V 300 rpm gear motor, no encoder (spool drive)", "bought", "camera", "#8b8f96", 9.5, "E",
+        "in a pocket in the deck, along y, under the props' keep-out band; it runs out or in to a stall (the blades' anchor out, the head seated on the throat in), so no encoder")
+    add("probe_drum", "the camera's own USB cable, coiled loosely in the drum", "bought", "camera", "#c96f2d", 3.0, "E",
+        "~0.6 m of the camera's cable: up between the blades, wound on the spool beside them, then 2.5 turns of room in the drum for the ~1.5 the spool makes; no flat cable or adapters")
     add("probe_feed", "the two blades from the spool up into the throat", "bought", "camera", "#b8902a", 3.8, "E",
         "two 10 mm steel tape blades (0.2 m each, 0.15 m used, cut from 2 tape measures), curves facing; their mass is all here")
     for k, col in (("a", "#e8c547"), ("b", "#b8902a")):

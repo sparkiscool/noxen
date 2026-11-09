@@ -34,7 +34,7 @@
 ]
 ]
 },
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..137 mm, ~706 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..121 mm, ~696 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -241,31 +241,31 @@
 },
 {
 "id": "scout_v4_probe_tilt",
-"name": "probe camera on its tilt cradle (Arducam 1080P Low Light colour USB, IMX291, 100 deg M12; hood; VL53L0X)",
+"name": "probe camera on its tilt cradle (Arducam 12MP autofocus USB, out of its case; hood)",
 "role": "bought",
 "group": "camera",
 "color": "#1d5e3a",
 "mesh": "parts/scout_v4_probe_tilt/part.stl",
-"mass_g": 18.2,
+"mass_g": 14.5,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "nods about the SG90's axis from -20 to +90 deg; parked 15 deg up it is the front camera, lens (44, 0, 113), 1920 x 1080 colour at 30 fps, ~92 x 61 deg; rolled out it is the ceiling probe. Camera board and lens 14 E, cradle, arms, coupler and hood 2 E (PCTG), VL53L0X 0.7, TPU rim guard 1.5"
+"note": "nods about the SG90's axis from -20 to +90 deg; parked 15 deg up it is the front camera, lens (34, 0, 106), 61 x 50 deg, autofocus 10 cm to inf, 1080p 30 live, 12 MP stills; rolled out it is the ceiling probe. Bare board and AF module ~12 E (45 g in its case: flown without), cradle, arms, coupler and hood 1.5 (PCTG), TPU rim guard 1 (E)"
 },
 {
 "id": "scout_v4_probe_leds",
-"name": "probe light: two 5 V COB LED bars, 40 x 7, CRI 90+, beside the lens",
+"name": "probe light: two 5 V COB LED bars, 32 x 7, CRI 90+, beside the lens",
 "role": "bought",
 "group": "camera",
 "color": "#fff1b8",
 "mesh": "parts/scout_v4_probe_leds/part.stl",
-"mass_g": 1.5,
+"mass_g": 1.2,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "on printed fins 23..30 mm either side of the lens axis, so the dust in the void is not lit in front of the lens; ~1 W together (E), on the DRV8833's B channel, DC or PWM >= 20 kHz"
+"note": "on printed fins either side of the lens, so the dust in the void is not lit in front of it; ~1 W together (E), on the DRV8833's B channel, DC or PWM >= 20 kHz"
 },
 {
 "id": "scout_v4_probe_head",
@@ -279,7 +279,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "SG90 9 (its shaft on the tilt axis, facing -y, held by its tabs on the +y bracket), clip, plate and brackets 2.5 (PCTG); the idler pin in the -y bracket's boss"
+"note": "SG90 9 (its shaft on the tilt axis, facing -y, held by its tabs on the +y bracket), clip, plate and brackets 2.5 (PCTG); an M3 screw is the idler in the -y bracket's boss"
 },
 {
 "id": "scout_v4_probe_turret",
@@ -288,27 +288,27 @@
 "group": "camera",
 "color": "#f2b705",
 "mesh": "parts/scout_v4_probe_turret/part.stl",
-"mass_g": 9.0,
+"mass_g": 7.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "housing and throat 6, DRV8833 1, TPU lip 1, wires 1 (E); drawn see-through to show the mechanism",
+"note": "housing and throat 4 (thin walls), DRV8833 1, TPU lip 1, wires 1 (E); drawn see-through to show the mechanism",
 "opacity": 0.22
 },
 {
 "id": "scout_v4_probe_spool",
-"name": "probe spool with its 40 T gear (module 0.8) and the O3 steel pin",
+"name": "probe spool with its 40 T gear (module 0.8) on an M3 screw",
 "role": "placeholder",
 "group": "camera",
 "color": "#d08a1e",
 "mesh": "parts/scout_v4_probe_spool/part.stl",
-"mass_g": 5.0,
+"mass_g": 4.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "hub O30, flanges O34, the two blades and the cable wound on it; turns ~1.5 times for the 150 mm roll-out"
+"note": "hub O30, flanges O34, the two blades and the camera cable wound on it; ~1.5 turns for the 150 mm roll-out; the blades' ends are fixed to it, so fully out is a hard stop"
 },
 {
 "id": "scout_v4_probe_pinion",
@@ -326,31 +326,31 @@
 },
 {
 "id": "scout_v4_probe_motor",
-"name": "N20 300 rpm gear motor with encoder (spool drive)",
+"name": "N20 6 V 300 rpm gear motor, no encoder (spool drive)",
 "role": "bought",
 "group": "camera",
 "color": "#8b8f96",
 "mesh": "parts/scout_v4_probe_motor/part.stl",
-"mass_g": 10.5,
+"mass_g": 9.5,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "in a pocket in the deck, along y, under the props' keep-out band"
+"note": "in a pocket in the deck, along y, under the props' keep-out band; it runs out or in to a stall (the blades' anchor out, the head seated on the throat in), so no encoder"
 },
 {
 "id": "scout_v4_probe_drum",
-"name": "clock spring: the flat cable's spiral in the drum",
+"name": "the camera's own USB cable, coiled loosely in the drum",
 "role": "bought",
 "group": "camera",
 "color": "#c96f2d",
 "mesh": "parts/scout_v4_probe_drum/part.stl",
-"mass_g": 4.0,
+"mass_g": 3.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "300 mm of 8-way 0.5 mm flat cable, ~4.5 turns of room; its inner end turns with the spool, its outer end is fixed to the housing"
+"note": "~0.6 m of the camera's cable: up between the blades, wound on the spool beside them, then 2.5 turns of room in the drum for the ~1.5 the spool makes; no flat cable or adapters"
 },
 {
 "id": "scout_v4_probe_feed",
