@@ -57,10 +57,19 @@ jobs:
           git add -A print parts
           git diff --cached --quiet && { echo "nothing to commit"; exit 0; }
           git commit -q -m "meshes: print meshes to the release, viewing meshes in git"
-          for i in 1 2 3 4 5; do
-            git push -q && break
-            git pull -q --rebase origin main || exit 1
+          # a part whose result landed on main while this job worked (9 Nov: scout_v4_cradle, whose binary part.stl then failed the
+          # rebase) keeps main's files: its newer result is published by the next dispatch (or by its own run on the new parts.yml)
+          for i in 1 2 3 4 5 6 7 8; do
+            git push -q && { gh workflow run site.yml; exit 0; }
+            git fetch -q origin main
+            for d in $(git diff --name-only HEAD~1 origin/main -- parts print | cut -d/ -f1-2 | sort -u); do
+              echo "$d changed on main meanwhile: main's kept"
+              git checkout origin/main -- "$d" 2>/dev/null || git rm -rq --ignore-unmatch "$d"
+            done
+            git diff --cached --quiet HEAD~1 && { echo "nothing left to commit"; exit 0; }
+            git commit -q --amend --no-edit
+            git rebase -q origin/main || { git rebase --abort; exit 1; }
           done
-          gh workflow run site.yml
+          exit 1
         env:
           GH_TOKEN: ${{ github.token }}
