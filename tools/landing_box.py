@@ -1,5 +1,5 @@
 """The box page's timeline: both drones landing into the funnel (Spark 3 Nov: animate how both drones will land on this).
-Kinematic, not simulated: each drone comes down off-centre and yawed, meets a 55 deg face with its receiver, and the offset then
+The funnel's end walls slide in 39.2 for the Scout and out for the Overseer (9 Nov). Kinematic, not simulated: each drone comes down off-centre and yawed, meets a 55 deg face with its receiver, and the offset then
 follows the face to the seat (offset = height above the seat / tan 55, the geometry of a block sliding down the face); yaw
 straightens in the last 40 mm. Scout first (0..10 s), then the Overseer (10..24 s). Groups "landing: Scout" and "landing: Overseer"
 in systems/box.assembly.json move as rigid bodies; everything else stays. Transforms are in the box W frame: the drones are posed
@@ -36,8 +36,23 @@ def seat_pose(t, plan, t_total):
     return np.array([ox * k, oy * k, h]), yaw * min(1.0, h / 40.0)
 
 
+WALL_IN = 39.2                           # parts/box_funnel/make.py SETTINGS["scout"]: each end wall moves this far in for the Scout (Spark 9 Nov)
+WALL_MOVES = ((9.0, 10.5, 1.0, 0.0), (22.5, 24.0, 0.0, 1.0))   # (t0, t1, from, to) in the "in" fraction: in for the Scout, out for the Overseer once the Scout is up, in again once the Overseer is up
+WALLS = {"box_funnel_wall_nose": 1, "box_funnel_wall_tail": -1}
+
+
+def walls_in(t):
+    """how far in the end walls are (0 = the Overseer's 184 seat, 1 = the Scout's receiver) at time t"""
+    u = 1.0
+    for t0, t1, a0, a1 in WALL_MOVES:
+        if t >= t1: u = a1
+        elif t > t0: u = a0 + (a1 - a0) * (t - t0) / (t1 - t0)
+    return u
+
+
 def timeline(a):
     names = {g: [p["name"] for p in a["parts"] if p.get("group") == g] for g in PLAN}
+    walls = {p["name"]: WALLS[p["id"]] for p in a["parts"] if p["id"] in WALLS}
     t_total = 24.0
 
     def poses(t):
@@ -49,6 +64,9 @@ def timeline(a):
             M = SEAT_TO_W @ D @ W_TO_SEAT
             for n in names[g]:
                 out[n] = M
+        for n, sx in walls.items():
+            D = np.eye(4); D[0, 3] = -sx * WALL_IN * walls_in(t)
+            out[n] = SEAT_TO_W @ D @ W_TO_SEAT
         return out
 
     n = int(t_total * 24)
@@ -56,4 +74,5 @@ def timeline(a):
     for g, plan in PLAN.items():
         series.append((g.split(": ")[1] + " height over the seat", [seat_pose(i * t_total / n, plan, t_total)[0][2] if plan[0] <= i * t_total / n < plan[3] else None
                                                                       for i in range(n)], "mm"))
+    series.append(("end walls in", [WALL_IN * walls_in(i * t_total / n) for i in range(n)], "mm"))
     return poses, t_total, series

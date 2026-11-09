@@ -2,7 +2,7 @@
 drone's parts (systems/<drone>.assembly.json, posed seated as tools/seat_envelope.py does) are intersected with the funnel and deck
 solids as exact booleans (manifold3d; the funnel and deck come from their make.py, in the seat frame). A part that is not a
 manifold (the cage pattern's concatenated tubes) falls back to dense surface sampling against the funnel. Prints every crossing
-with the overlap volume, its bounding box in the seat frame and an approximate depth. python tools/seat_check.py scout|overseer|both [--descent] [--walls scout]
+with the overlap volume, its bounding box in the seat frame and an approximate depth. python tools/seat_check.py scout|overseer|both [--descent] [--walls overseer|scout]  (default: the Scouts walls in, the Overseer walls out)
 """
 import importlib.util, os, sys
 import numpy as np, trimesh, manifold3d as mf
@@ -60,8 +60,13 @@ def descent_states(drone):
     return out
 
 
-def check(drone, verbose=True, offset=(0.0, 0.0, 0.0), walls="overseer"):
-    S = solids(walls)
+def walls_for(drone):
+    """the funnel's end-wall setting each drone lands with (Spark 9 Nov: the Scout seats on its receiver alone, walls in)"""
+    return "scout" if drone.startswith("scout") else "overseer"
+
+
+def check(drone, verbose=True, offset=(0.0, 0.0, 0.0), walls=None):
+    S = solids(walls or walls_for(drone))
     hits = []
     T = np.eye(4); T[:3, 3] = offset
     for nm, m in se.parts_of(drone):
@@ -91,7 +96,7 @@ def check(drone, verbose=True, offset=(0.0, 0.0, 0.0), walls="overseer"):
 
 if __name__ == "__main__":
     which = sys.argv[1] if len(sys.argv) > 1 else "both"
-    walls = sys.argv[sys.argv.index("--walls") + 1] if "--walls" in sys.argv else "overseer"     # --walls scout: the end walls moved in
+    walls = sys.argv[sys.argv.index("--walls") + 1] if "--walls" in sys.argv else None           # default: each drone's own setting (walls_for); --walls overseer|scout forces one
     for d in (["scout", "overseer"] if which == "both" else [which]):
         check(d, walls=walls)
         if "--descent" in sys.argv:

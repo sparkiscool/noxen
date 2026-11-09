@@ -18,8 +18,11 @@ carriages, cut from the funnel along its corner hips and between the side walls'
 "overseer" = the 184 seat as above; "scout" = each wall 39.2 in, the seat is the Scout receiver v3's own 105.6 x 65.5 outline (x -51.35
 ..54.25), so the Scout needs no runners. The frame (side walls, ledges, skirt, beams, buttress, legs) stays. funnel(setting) is the
 frame plus both carriages at that setting; part.stl is the frame, the carriages are parts/box_funnel_wall_nose and _tail at the
-Overseer setting. Not drawn: the drive (a lead screw per carriage, position switches; the box lands a drone only with its setting
-confirmed, and falls back to the Overseer setting, where a Scout seats loose in x and nothing collides).
+Overseer setting. Drive (drawn as placeholders): one Tr8 lead screw per side under the side walls' overhang, opposite-hand halves so
+one turn moves both walls; each wall reaches the two screws by tabs through slots low in the side walls; a NEMA 8 per side geared to
+the screw's middle; a switch at each wall's two positions. The box lands a drone only with its setting confirmed, and falls back to the
+Overseer setting, where a Scout seats loose in x and nothing collides. Both drones land on TPU strips flush in the side ledges, and
+seat sense and keep-alive come through four spring probes in the ledges at (1.5 +- 30, +-29.5): each drone carries a bare pad at each.
 Run: python parts/box_funnel/make.py
 """
 import os, numpy as np, trimesh, manifold3d as mf
@@ -92,6 +95,12 @@ def carriage_home(sx):
     return body() ^ wedge ^ trough
 
 
+TAB_H = (4.0, 8.0)                                # each wall reaches its nuts by two tabs, h 4..8 over the seat, through a slot in each side wall (h 3.5..8.5)
+SCREW_Y, SCREW_H, SCREW_R = 54.0, 6.0, 4.0        # one Tr8 lead screw per side, under the side walls' overhang, opposite-hand halves: one turn moves both walls in or out
+NUT_Y = (49.0, 59.0)                              # the nut blocks, outside the side walls' outer faces
+MOTOR = (-15.0, 15.0, 62.0, 82.0, 6.0, 26.0)      # x, |y|, h: a NEMA 8 per side beside the screw's middle, geared to it; under the Overseer base's side rails (h 31) and over the 60 / 120 deg bays
+STRIP_Y, STRIP_D = (25.5, 33.0), 1.5              # TPU strips flush in the side ledges, for the landing impact (both drones land on them)
+PROBES = [(1.5 + dx, sy * 29.5) for dx in (-30.0, 30.0) for sy in (-1, 1)]   # keep-alive and seat-sense spring probes in the ledges: both drones carry a bare pad at each
 BRACKET_Y = (26.0, 46.0)                          # the frame's ties from the ledges out to the beams, |y| 26..46 (the swap head rises at the tail end within |y| 20), under the seat plane
 
 
@@ -106,18 +115,90 @@ def frame():
         ya, yb = sorted((sy * BRACKET_Y[0], sy * BRACKET_Y[1]))
         ties.append(box(x1 + w - 4.0, NOSE_BEAM[1], ya, yb, NOSE_BEAM[3] - 1.0, z0 - 1.5))
         ties.append(box(TAIL_BEAM[0], x0 - w + 4.0, ya, yb, TAIL_BEAM[3] - 1.0, z0 - 1.5))
+    xs = [tab_x(1), tab_x(-1)]
+    for sy in (-1, 1):                                                                              # bearing blocks at the screws' ends, on the side walls' outer faces
+        ya, yb = sorted((sy * 44.0, sy * (SCREW_Y + 6.0)))
+        ties.append(box(xs[0][1] + 14.0, xs[0][1] + 20.0, ya, yb, NOSE_BEAM[3] - 1.0, z0 + SCREW_H + 6.0))     # down to the nose beam
+        ties.append(box(xs[1][0] - 20.0, xs[1][0] - 14.0, ya, yb, TAIL_BEAM[3] - 1.0, z0 + SCREW_H + 6.0))     # down to the tail beam
     f = f + mf.Manifold.batch_boolean(ties, mf.OpType.Add)
+    cuts = []
+    for sx in (1, -1):                                                                              # the tabs' slots through the side walls, over the whole travel
+        xa, xb = tab_x(sx); lo, hi = (xa - SETTINGS["scout"] - 1.0, xb + 1.0) if sx > 0 else (xa - 1.0, xb + SETTINGS["scout"] + 1.0)
+        for sy in (-1, 1):
+            ya, yb = sorted((sy * 33.0, sy * (NUT_Y[0] - 0.5)))
+            cuts.append(box(lo, hi, ya, yb, z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5))
+    for sy in (-1, 1):                                                                              # the strips' pockets
+        ya, yb = sorted((sy * STRIP_Y[0], sy * STRIP_Y[1])); cuts.append(box(SEAT[0] + 1.0, SEAT[1] - 1.0, ya, yb, z0 - STRIP_D, z0 + 0.01))
+    cuts += [mf.Manifold.cylinder(30.0, 1.7, 1.7, 16).translate([x, y, z0 - 20.0]) for x, y in PROBES]
+    f = f - mf.Manifold.batch_boolean(cuts, mf.OpType.Add)
     keep = [m for m in f.decompose() if m.volume() > 1.0]
     return mf.Manifold.batch_boolean(keep, mf.OpType.Add)
 
 
+def tab_x(sx):
+    """the x span the wall's tabs cover at the Overseer setting: the wall's face at h 4 to its back at h 8 (the tab leans with the wall)"""
+    xe = SEAT[1] if sx > 0 else SEAT[0]; w = WALL / np.sin(np.radians(FACE_DEG))
+    a, b = xe + sx * (TAB_H[0] / TAN + 0.3), xe + sx * (TAB_H[1] / TAN + w - 0.3)
+    return min(a, b), max(a, b)
+
+
+def nuts(sx):
+    """the wall's two tabs, leaning with the wall, out through the side walls, and its two nut blocks bored for the screws (they move
+    with the wall)"""
+    z0 = SEAT_Z; xe = SEAT[1] if sx > 0 else SEAT[0]; w = WALL / np.sin(np.radians(FACE_DEG)); out = []
+    xa, xb = tab_x(sx); xm = (xa + xb) / 2
+    for sy in (-1, 1):
+        y0_, y1_ = sorted((sy * 34.0, sy * (NUT_Y[0] + 1.0)))
+        pts = []
+        for h in TAB_H:
+            f, b = xe + sx * (h / TAN + 0.3), xe + sx * (h / TAN + w - 0.3)
+            for x in (f, b):
+                for y in (y0_, y1_):
+                    pts.append((x, y, z0 + h))
+        out.append(hull(pts))
+        ya, yb = sorted((sy * NUT_Y[0], sy * NUT_Y[1]))
+        out.append(box(xm - 6.0, xm + 6.0, ya, yb, z0 + SCREW_H - 5.5, z0 + SCREW_H + 5.5))
+    bore = [mf.Manifold.cylinder(40.0, SCREW_R + 0.2, SCREW_R + 0.2, 24).rotate([0, 90, 0]).translate([xm - 20.0, sy * SCREW_Y, z0 + SCREW_H]) for sy in (-1, 1)]
+    return mf.Manifold.batch_boolean(out, mf.OpType.Add) - mf.Manifold.batch_boolean(bore, mf.OpType.Add)
+
+
 def carriage(sx, setting="overseer"):
-    return carriage_home(sx).translate([-sx * SETTINGS[setting], 0.0, 0.0])
+    """the wall with its tabs and nut blocks, at a setting"""
+    return (carriage_home(sx) + nuts(sx)).translate([-sx * SETTINGS[setting], 0.0, 0.0])
+
+
+def drive():
+    """the fixed, bought side of the drive, as solids the drones must clear: both screws, both motors with their gears, the four
+    position switches (each wall in / out), the probes' bodies under the ledges"""
+    z0 = SEAT_Z; out = []
+    xs = [tab_x(1), tab_x(-1)]; x_lo = xs[1][0] - 14.0; x_hi = xs[0][1] + 14.0
+    for sy in (-1, 1):
+        out.append(mf.Manifold.cylinder(x_hi - x_lo, SCREW_R, SCREW_R, 24).rotate([0, 90, 0]).translate([x_lo, sy * SCREW_Y, z0 + SCREW_H]))
+        ya, yb = sorted((sy * MOTOR[2], sy * MOTOR[3])); out.append(box(MOTOR[0], MOTOR[1], ya, yb, z0 + MOTOR[4], z0 + MOTOR[5]))
+        ya, yb = sorted((sy * (SCREW_Y - 4.0), sy * MOTOR[3])); out.append(box(-6.0, 6.0, ya, yb, z0 + SCREW_H - 4.0, z0 + MOTOR[5] - 2.0))   # the gear pair
+    for sx in (1, -1):                                                                                     # switches at each nut's two ends, on the +y screw
+        xa, xb = tab_x(sx)
+        for dx in (0.0, -sx * SETTINGS["scout"]):
+            xm = (xa + xb) / 2; xc = xm + sx * 10.0 + dx if dx == 0.0 else xm - sx * 10.0 + dx       # just beyond the nut block (xm +- 6) at each end of its travel
+            out.append(box(xc - 3.0, xc + 3.0, SCREW_Y + 5.0, SCREW_Y + 15.0, z0 + SCREW_H - 6.0, z0 + SCREW_H + 6.0))
+    for x, y in PROBES:
+        out.append(mf.Manifold.cylinder(14.0, 1.5, 1.5, 16).translate([x, y, z0 - 14.0]))
+    return mf.Manifold.batch_boolean(out, mf.OpType.Add)
+
+
+def strips():
+    """the two TPU strips, flush in the ledges, with the probes' holes"""
+    z0 = SEAT_Z; out = []
+    for sy in (-1, 1):
+        ya, yb = sorted((sy * STRIP_Y[0], sy * STRIP_Y[1])); out.append(box(SEAT[0] + 1.0, SEAT[1] - 1.0, ya, yb, z0 - STRIP_D, z0))
+    holes = [mf.Manifold.cylinder(20.0, 1.7, 1.7, 16).translate([x, y, z0 - 10.0]) for x, y in PROBES]
+    return mf.Manifold.batch_boolean(out, mf.OpType.Add) - mf.Manifold.batch_boolean(holes, mf.OpType.Add)
 
 
 def funnel(setting="overseer"):
-    """the frame and both end walls at a setting ("overseer" = the 184 seat, "scout" = the walls 39.2 in)"""
-    return frame() + carriage(1, setting) + carriage(-1, setting)
+    """everything the drones must clear, at a setting ("overseer" = the 184 seat, "scout" = the walls 39.2 in): the frame, both
+    walls with their nuts, the strips, the drive"""
+    return frame() + carriage(1, setting) + carriage(-1, setting) + strips() + drive()
 
 
 def stl(m, path):
@@ -127,9 +208,15 @@ def stl(m, path):
 
 if __name__ == "__main__":
     PARTS = os.path.dirname(HERE)
-    stl(carriage_home(1), os.path.join(PARTS, "box_funnel_wall_nose", "part.stl"))
-    stl(carriage_home(-1), os.path.join(PARTS, "box_funnel_wall_tail", "part.stl"))
+    stl(carriage(1), os.path.join(PARTS, "box_funnel_wall_nose", "part.stl"))
+    stl(carriage(-1), os.path.join(PARTS, "box_funnel_wall_tail", "part.stl"))
+    stl(strips(), os.path.join(PARTS, "box_funnel_strips", "part.stl"))
+    stl(drive(), os.path.join(PARTS, "box_funnel_drive", "part.stl"))
+    for st in SETTINGS:                                                                             # the walls never touch the frame or the drive
+        for sx in (1, -1):
+            v = (carriage(sx, st) ^ (frame() + drive())).volume()
+            assert v < 1.0, f"the {'nose' if sx > 0 else 'tail'} wall at the {st} setting crosses the frame or drive by {v:.0f} mm3"
     t = stl(frame(), os.path.join(HERE, "part.stl"))
-    print(f"frame {t.volume * 1.27e-3:.0f} g in {len(frame().decompose())} piece(s), walls {carriage_home(1).volume() * 1.27e-3:.1f} + {carriage_home(-1).volume() * 1.27e-3:.1f} g; walls in for the Scout by {SETTINGS['scout']}")
+    print(f"frame {t.volume * 1.27e-3:.0f} g in {len(frame().decompose())} piece(s), walls with their nuts {carriage(1).volume() * 1.27e-3:.1f} + {carriage(-1).volume() * 1.27e-3:.1f} g, strips {strips().volume() * 1.21e-3:.1f} g TPU; walls in for the Scout by {SETTINGS['scout']}")
     print(f"funnel v3: x faces to h {H_X:.0f} (capture +-{H_X / TAN:.0f}), y faces to h {H_Y:.0f} (+-{H_Y / TAN:.0f}); extents {t.extents.round(1).tolist()}, "
           f"min {t.bounds[0].round(1).tolist()} max {t.bounds[1].round(1).tolist()}, {t.volume * 1.27e-3:.0f} g PETG, watertight {t.is_watertight}")

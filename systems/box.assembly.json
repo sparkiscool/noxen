@@ -4,7 +4,7 @@
 "readme_view": "iso",
 "artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
 "machine": "box",
-"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3): the catch's SEAT_TO_W raised 65, the arm's head extending 65 more at the drone slot, Spark 3 Nov). In: the swap arm v7 at park with 11 bay receivers, every slot of the ring but the drone's (8 Nov) and two packs, a placeholder extended head at the drone, the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the funnel on its nose and tail beams across the side sheets, both drones seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3): the catch's SEAT_TO_W raised 65, the arm's head extending 65 more at the drone slot, Spark 3 Nov). In: the swap arm v7 at park with 11 bay receivers, every slot of the ring but the drone's (8 Nov) and two packs, a placeholder extended head at the drone, the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the funnel on its nose and tail beams across the side sheets, its end walls sliding in for the Scout and out for the Overseer (9 Nov; the Scout drawn is still v3 with its runners, which go: the walls cut through them until the Scout's base is redrawn), both drones seated in it. Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). Imported by tools/import_box.py from sparkiscool/nox.",
 "cg_ref": null,
 "timeline": "tools/landing_box.py:timeline",
 "parts": [
@@ -2745,7 +2745,7 @@
 },
 {
 "id": "box_funnel",
-"name": "funnel v3 (seats the 184 x 67 receiver outline, 55 deg; x faces to h 40, y faces to h 28)",
+"name": "funnel v4 frame (side walls, ledges, beams; the end walls slide)",
 "role": "structure",
 "group": "funnel",
 "color": "#e07020",
@@ -2777,11 +2777,170 @@
 ]
 ],
 "material": "PETG",
+"tag": "C",
+"owner": "box catch",
+"version": "v4 drawn 9 Nov",
+"source": "parts/box_funnel/make.py",
+"note": "v4 9 Nov: the fixed frame (side walls, ledges, skirt, beams, buttress, four brackets under the seat); the nose and tail walls slide (box_funnel_wall_*): 184 x 66.8 seat for the Overseer, the Scout receiver's own 105.6 x 65.5 with the walls 39.2 in (Spark 9 Nov: the Scout seats on its receiver alone)"
+},
+{
+"id": "box_funnel_wall_nose",
+"name": "funnel nose wall (slides 39.2 in for the Scout)",
+"role": "structure",
+"group": "funnel",
+"color": "#e07020",
+"mesh": "parts/box_funnel_wall_nose/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+220.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "C",
+"owner": "box catch",
+"version": "v1 drawn 9 Nov",
+"source": "parts/box_funnel/make.py",
+"note": "the 55 deg nose face with two tabs out through slots in the side walls to nuts on the lead screws; at the Overseer setting as drawn"
+},
+{
+"id": "box_funnel_wall_tail",
+"name": "funnel tail wall (slides 39.2 in for the Scout)",
+"role": "structure",
+"group": "funnel",
+"color": "#e07020",
+"mesh": "parts/box_funnel_wall_tail/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+220.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": "PETG",
+"tag": "C",
+"owner": "box catch",
+"version": "v1 drawn 9 Nov",
+"source": "parts/box_funnel/make.py",
+"note": "the 55 deg tail face with two tabs out through slots in the side walls to nuts on the lead screws; at the Overseer setting as drawn"
+},
+{
+"id": "box_funnel_strips",
+"name": "funnel ledge strips (TPU, landing impact)",
+"role": "structure",
+"group": "funnel",
+"color": "#3a3a3a",
+"mesh": "parts/box_funnel_strips/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+220.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
+"material": "TPU",
+"tag": "C",
+"owner": "box catch",
+"version": "v1 drawn 9 Nov",
+"source": "parts/box_funnel/make.py",
+"note": "flush in the side ledges, |y| 25.5..33; both drones land on them; holes for the four probes"
+},
+{
+"id": "box_funnel_drive",
+"name": "funnel wall drive (lead screws, motors, switches, probes)",
+"role": "bought",
+"group": "funnel",
+"color": "#555555",
+"mesh": "parts/box_funnel_drive/part.stl",
+"pose": [
+[
+0,
+-1.0,
+0,
+0
+],
+[
+1.0,
+0,
+0,
+167.1
+],
+[
+0,
+0,
+1.0,
+220.3
+],
+[
+0,
+0,
+0,
+1.0
+]
+],
 "tag": "E",
 "owner": "box catch",
-"version": "v1 drawn 3 Nov",
+"version": "placeholder 9 Nov",
 "source": "parts/box_funnel/make.py",
-"note": "seats the Overseer receiver outline, which the Scout matches with its belly skirt, so both land at one height; the y faces stop at h 28 under the Overseer base's side rails and the x faces at h 40 under its flow clip (capture +-20 / +-28); legs to the deck; hold-down not drawn"
+"note": "two Tr8 lead screws with opposite-hand halves under the side walls' overhang, a NEMA 8 per side geared to each, a switch at each wall position; four spring probes in the ledges at (1.5 +- 30, +-29.5) for seat sense and keep-alive; sizes E, Amazon listings to pick"
 },
 {
 "id": "box_scout_frame_plate_bee35_carbon",

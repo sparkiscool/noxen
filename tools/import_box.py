@@ -43,12 +43,12 @@ def copy_mesh(src, pid):
 def box_check(parts):
     """every box part with a mesh against the deck and the funnel (W frame): the Overseer's descent check covers the drones, this covers the box"""
     sys.path.insert(0, os.path.join(ROOT, "tools")); import seat_check as sc
-    S = sc.solids(); T = np.array(SEAT_TO_W)
+    S = [(f"{nm} ({st} walls)", mm, tt) for st in ("overseer", "scout") for nm, mm, tt in sc.solids(st)]; T = np.array(SEAT_TO_W)   # the box parts against the funnel at both wall settings
     sol = [(nm, m.transform(T[:3, :])) for nm, m, _ in S]                                   # seat frame -> W
     sol_t = [(nm, sc.to_tri(mm)) for nm, mm in sol]
     hits = []
     for p in parts:
-        if not p.get("mesh") or p.get("group", "").startswith("landing") or p["id"] in ("box_funnel", "box_deck"):
+        if not p.get("mesh") or p.get("group", "").startswith("landing") or p["id"].startswith(("box_funnel", "box_deck")):
             continue
         m = trimesh.load(os.path.join(ROOT, p["mesh"]), force="mesh"); m.apply_transform(np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4))
         for (nm, mm), (_, st) in zip(sol, sol_t):
@@ -73,7 +73,7 @@ def landing_check(parts):
     W2S = np.linalg.inv(np.array(SEAT_TO_W))
     box = []
     for p in parts:
-        if not p.get("mesh") or p.get("group", "").startswith("landing") or p["id"] in ("box_funnel", "box_deck"):
+        if not p.get("mesh") or p.get("group", "").startswith("landing") or p["id"].startswith(("box_funnel", "box_deck")):   # the funnel's own parts: seat_check, with each drone's wall setting
             continue
         m = trimesh.load(os.path.join(ROOT, p["mesh"]), force="mesh")
         m.apply_transform(W2S @ (np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4)))
@@ -144,9 +144,11 @@ def main(nox):
     parts.append(dict(id="box_arm_grip_at_drone", name="arm: grip at the drone cartridge (placeholder)", role="structure", group="swap arm", color="#d08a3a",
                       box=[-15.5, 15.5, 149.0, 214.0, 167.0, 186.0], material="PETG", tag="E", owner="box swap arm", version="concept 3 Nov",
                       source="tools/import_box.py", note="the grabber at the cartridge tabs, W Z 176..183, inside the funnel's hole"))
-    parts.append(dict(id="box_funnel", name="funnel v3 (seats the 184 x 67 receiver outline, 55 deg; x faces to h 40, y faces to h 28)", role="structure", group="funnel", color="#e07020", mesh="parts/box_funnel/part.stl",
-                      pose=SEAT_TO_W, material="PETG", tag="E", owner="box catch", version="v1 drawn 3 Nov", source="parts/box_funnel/make.py",
-                      note="seats the Overseer receiver outline, which the Scout matches with its belly skirt, so both land at one height; the y faces stop at h 28 under the Overseer base's side rails and the x faces at h 40 under its flow clip (capture +-20 / +-28); legs to the deck; hold-down not drawn"))
+    parts.append(dict(id="box_funnel", name="funnel v4 frame (side walls, ledges, beams; the end walls slide)", role="structure", group="funnel", color="#e07020", mesh="parts/box_funnel/part.stl",
+                      pose=SEAT_TO_W, material="PETG", tag="C", owner="box catch", version="v4 drawn 9 Nov", source="parts/box_funnel/make.py",
+                      note="v4 9 Nov: the fixed frame (side walls, ledges, skirt, beams, buttress, four brackets under the seat); the nose and tail walls slide (box_funnel_wall_*): 184 x 66.8 seat for the Overseer, the Scout receiver's own 105.6 x 65.5 with the walls 39.2 in (Spark 9 Nov: the Scout seats on its receiver alone)"))
+    for q in [{"id": "box_funnel_wall_nose", "name": "funnel nose wall (slides 39.2 in for the Scout)", "role": "structure", "group": "funnel", "color": "#e07020", "mesh": "parts/box_funnel_wall_nose/part.stl", "material": "PETG", "tag": "C", "owner": "box catch", "version": "v1 drawn 9 Nov", "source": "parts/box_funnel/make.py", "note": "the 55 deg nose face with two tabs out through slots in the side walls to nuts on the lead screws; at the Overseer setting as drawn"}, {"id": "box_funnel_wall_tail", "name": "funnel tail wall (slides 39.2 in for the Scout)", "role": "structure", "group": "funnel", "color": "#e07020", "mesh": "parts/box_funnel_wall_tail/part.stl", "material": "PETG", "tag": "C", "owner": "box catch", "version": "v1 drawn 9 Nov", "source": "parts/box_funnel/make.py", "note": "the 55 deg tail face with two tabs out through slots in the side walls to nuts on the lead screws; at the Overseer setting as drawn"}, {"id": "box_funnel_strips", "name": "funnel ledge strips (TPU, landing impact)", "role": "structure", "group": "funnel", "color": "#3a3a3a", "mesh": "parts/box_funnel_strips/part.stl", "material": "TPU", "tag": "C", "owner": "box catch", "version": "v1 drawn 9 Nov", "source": "parts/box_funnel/make.py", "note": "flush in the side ledges, |y| 25.5..33; both drones land on them; holes for the four probes"}, {"id": "box_funnel_drive", "name": "funnel wall drive (lead screws, motors, switches, probes)", "role": "bought", "group": "funnel", "color": "#555555", "mesh": "parts/box_funnel_drive/part.stl", "tag": "E", "owner": "box catch", "version": "placeholder 9 Nov", "source": "parts/box_funnel/make.py", "note": "two Tr8 lead screws with opposite-hand halves under the side walls' overhang, a NEMA 8 per side geared to each, a switch at each wall position; four spring probes in the ledges at (1.5 +- 30, +-29.5) for seat sense and keep-alive; sizes E, Amazon listings to pick"}]:
+        parts.append(dict(q, pose=SEAT_TO_W))                    # the sliding end walls, the ledge strips and the wall drive (parts/box_funnel/make.py writes them)
     # the two drones for the landing timeline (tools/landing_box.py): rigid copies of their current pages, posed seated
     scout = json.load(open(os.path.join(ROOT, "systems", "scout.assembly.json")))
     for p in scout["parts"]:
