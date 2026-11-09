@@ -8,7 +8,33 @@
 "appendix": "systems/scout_v4.appendix.html",
 "timeline": "tools/scout_v4_timeline.py:timeline",
 "frame_timeline": true,
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..123 mm, ~706 g (E). tools/scout_v4_shape.py",
+"views": {
+"probe": [
+[
+330.0,
+-380.0,
+330.0
+],
+[
+22.0,
+0.0,
+185.0
+]
+],
+"turret": [
+[
+90.0,
+-140.0,
+70.0
+],
+[
+2.0,
+0.0,
+40.0
+]
+]
+},
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, a half cage on the new discs; the battery mechanism (receiver, cartridge, pack, 266 g) not drawn: it mounts on 4 M3 bolts. -160..160 x -160..160 x -19..134 mm, ~734 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
@@ -33,7 +59,7 @@
 "group": "base",
 "color": "#c9c2b5",
 "mesh": "parts/scout_v4_base/part.stl",
-"mass_g": 62.5,
+"mass_g": 59.5,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
@@ -214,32 +240,131 @@
 "note": "a sketch of the three blades"
 },
 {
-"id": "scout_v4_probe_head",
-"name": "front camera and probe head (Arducam 1080P Low Light colour USB, IMX291 100 deg, on an SG90 tilt servo, white LEDs, VL53L0X)",
+"id": "scout_v4_probe_tilt",
+"name": "probe camera in its metal case on the tilt cradle (Arducam 12MP autofocus USB, B0FLX58WKZ; bracket off)",
 "role": "bought",
 "group": "camera",
 "color": "#1d5e3a",
-"mesh": "parts/scout_v4_probe_head/part.stl",
-"mass_g": 28.0,
+"mesh": "parts/scout_v4_probe_tilt/part.stl",
+"mass_g": 47.5,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "parked on the throat it is the front camera, lens (38, 0, 108), 15 deg up, 1920 x 1080 colour at 30 fps, ~92 x 61 deg; rolled out on the two blades it is the ceiling probe. Camera board and lens 14 E, SG90 9, VL53L0X 0.7, LEDs 0.3, cradle and clip 2.5, TPU rim guard 1.5"
+"note": "nods about the SG90's axis from -20 to +90 deg; parked 15 deg up it is the front camera, lens (27, 0, 116), 61 x 50 deg, autofocus 10 cm to inf, 1080p 30 live, 12 MP stills; rolled out it is the ceiling probe. Camera in its case 45 (listing; the case is its heat spreader, Spark 9 Nov), printed cradle 2, TPU strap 1 (E); case 36 square, depth 20 E: measure"
+},
+{
+"id": "scout_v4_probe_leds",
+"name": "probe light: two 25 x 8 mm bars of Clearhill 5 V COB strip, 4000 K, CRI 90 (B0F1YPP6QS)",
+"role": "bought",
+"group": "camera",
+"color": "#fff1b8",
+"mesh": "parts/scout_v4_probe_leds/part.stl",
+"mass_g": 0.5,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "stuck on the camera case's top and bottom fronts (the metal case is their heat sink; no fins), 25 mm is the strip's cut length; ~0.2 W a bar at 8 W/m; on the DRV8833's B channel, DC or PWM >= 20 kHz"
+},
+{
+"id": "scout_v4_probe_head",
+"name": "probe head frame: clip on the blades' tip, base plate, the two brackets, SG90 tilt servo (DORHEA, B0DFKPVRC2)",
+"role": "bought",
+"group": "camera",
+"color": "#2f3b45",
+"mesh": "parts/scout_v4_probe_head/part.stl",
+"mass_g": 11.5,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "SG90 9 (shaft on the tilt axis, facing -y, its output face 3 off the cradle; held by its 32.8 tabs on the +y bracket), 470 uF capacitor on its lead 1 (its start draws > 1 A), clip, base plate and the two brackets, tight to the cradle, 1.5 (PCTG); an M3 screw is the idler"
 },
 {
 "id": "scout_v4_probe_turret",
-"name": "ceiling probe turret (two-blade 0.3 m mast, spool, gears, clock-spring drum, N20 in the deck, throat)",
+"name": "probe turret housing: side plates, floor, drum cover and the throat (PCTG), the DRV8833 on its +y plate",
 "role": "placeholder",
 "group": "camera",
 "color": "#f2b705",
 "mesh": "parts/scout_v4_probe_turret/part.stl",
-"mass_g": 36.4,
+"mass_g": 6.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "two 10 mm steel blades 0.4 m 7.6, flat cable 2 x 300 mm 2, spool with its 40 T gear 5, clock-spring drum 2, housing and throat 6 (PCTG), N20 300 rpm with encoder 10.5, 15 T pinion 0.3, DRV8833 1, TPU lip 1, wires 1 (E)"
+"note": "side plates the size of the spool and the drum, a 32 mm throat: 3 (thin walls), DRV8833 1, TPU lip 1, wires 1 (E); drawn see-through",
+"opacity": 0.22
+},
+{
+"id": "scout_v4_probe_spool",
+"name": "probe spool, hub O20, with its 40 T gear (module 0.8) on an M3 screw",
+"role": "placeholder",
+"group": "camera",
+"color": "#d08a1e",
+"mesh": "parts/scout_v4_probe_spool/part.stl",
+"mass_g": 3.0,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "hub O20 23.4 wide, flanges O29, the two 19 mm blades and the camera cable wound to ~O27; ~2.1 turns for the 150 mm roll-out; the blades' ends clamped in it, so fully out is a hard stop"
+},
+{
+"id": "scout_v4_probe_pinion",
+"name": "probe pinion, 12 T, on the N20's 3 mm D shaft",
+"role": "placeholder",
+"group": "camera",
+"color": "#a85f10",
+"mesh": "parts/scout_v4_probe_pinion/part.stl",
+"mass_g": 0.3,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "centres 20.8 from the spool's (40 / 12); its bore D-shaped, 2.3 wall at the root (PCTG)"
+},
+{
+"id": "scout_v4_probe_motor",
+"name": "N20 6 V 300 rpm gear motor, no encoder (Augiimor, B0BZDC951L)",
+"role": "bought",
+"group": "camera",
+"color": "#8b8f96",
+"mesh": "parts/scout_v4_probe_motor/part.stl",
+"mass_g": 10.0,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "37 long (can 17 x O12, 3 mm D shaft 10); under the spool and the drum facing +y, in a pocket through the deck (the base's room must keep it out, z 15.2 up); it runs out or in to a stall (the blades' anchor out, the head seated in); at 5 V ~250 rpm"
+},
+{
+"id": "scout_v4_probe_drum",
+"name": "the head's cable, coiled loosely in the drum",
+"role": "bought",
+"group": "camera",
+"color": "#c96f2d",
+"mesh": "parts/scout_v4_probe_drum/part.stl",
+"mass_g": 3.0,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "6 thin conductors (the head carries the camera, the servo and the LED bars): 5 V and GND in 26 AWG (shared; the 470 uF at the servo covers its start), USB D+ / D- twisted, the servo's signal and the LED bars' switched minus in 30 AWG; a JST ZH 1.5 mm 4-pin lead into the camera; up between the blades, round the spool, 3.5 turns of room in the drum for ~2; the USB pair to the USB-C breakout on the Radxa"
+},
+{
+"id": "scout_v4_probe_feed",
+"name": "the two blades from the spool up into the throat",
+"role": "bought",
+"group": "camera",
+"color": "#b8902a",
+"mesh": "parts/scout_v4_probe_feed/part.stl",
+"mass_g": 8.8,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "two 19 mm (3/4 in) steel tape strips, 0.2 m each with 0.15 m used, cut from one ordinary 3 m tape measure (its case and spring not used; 13 spare strips), curves facing (~22 g/m, E); ends set in printed clamp slots with epoxy (hardened steel: not drilled); their mass is all here"
 },
 {
 "id": "scout_v4_probe_mast_a",
@@ -253,7 +378,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "drawn 1 mm long above the throat; the page's timeline rolls it out to 300 mm and back (tools/scout_v4_timeline.py). Its mass is in the turret's"
+"note": "drawn 1 mm long above the throat; the page's timeline rolls it out to 150 mm and back (tools/scout_v4_timeline.py). Its mass is in the feed's"
 },
 {
 "id": "scout_v4_probe_mast_b",
@@ -267,7 +392,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "drawn 1 mm long above the throat; the page's timeline rolls it out to 300 mm and back (tools/scout_v4_timeline.py). Its mass is in the turret's"
+"note": "drawn 1 mm long above the throat; the page's timeline rolls it out to 150 mm and back (tools/scout_v4_timeline.py). Its mass is in the feed's"
 },
 {
 "id": "scout_v4_fc",
@@ -340,88 +465,18 @@
 "note": "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn"
 },
 {
-"id": "scout_v4_pack_4s_1500",
-"name": "pack 4S 1500 (in the cartridge)",
-"role": "protected",
-"group": "battery",
-"color": "#c0392b",
-"mesh": "parts/scout_v4_pack_4s_1500/part.stl",
-"mass_g": 165.0,
-"tag": "P",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "the v3 pack, unchanged: the swapper's"
-},
-{
-"id": "scout_v4_pack_xt60_plug",
-"name": "pack XT60 plug",
+"id": "scout_v4_receiver_bolts",
+"name": "battery mount: 4 x M3 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)",
 "role": "bought",
 "group": "battery",
-"color": "#e2b007",
-"mesh": "parts/scout_v4_pack_xt60_plug/part.stl",
-"mass_g": 10.0,
-"tag": "P",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "as v3"
-},
-{
-"id": "scout_v4_receiver_v3",
-"name": "receiver v3 (the Overseer's latch receiver)",
-"role": "structure",
-"group": "battery",
-"color": "#7f8c8d",
-"mesh": "parts/scout_v4_receiver_v3/part.stl",
-"mass_g": 60.0,
+"color": "#5a5f66",
+"mesh": "parts/scout_v4_receiver_bolts/part.stl",
+"mass_g": 4.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "unchanged, at the v3 place: the funnel seat and the swap arm see the same belly"
-},
-{
-"id": "scout_v4_cartridge_v6",
-"name": "cartridge v6",
-"role": "structure",
-"group": "battery",
-"color": "#95a5a6",
-"mesh": "parts/scout_v4_cartridge_v6/part.stl",
-"mass_g": 30.0,
-"tag": "E",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "unchanged"
-},
-{
-"id": "scout_v4_receiver_feet",
-"name": "receiver TPU feet (4, at its bottom corners)",
-"role": "structure",
-"group": "battery",
-"color": "#333333",
-"mesh": "parts/scout_v4_receiver_feet/part.stl",
-"mass_g": 1.0,
-"tag": "E",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "8 x 2.5 at |y| 21..23.5, to z -47.5: the Scout's foot on flat ground, clear of the box's ledges and swap head (the box session, 9 Nov); TPU 95A"
-},
-{
-"id": "scout_v4_receiver_contacts",
-"name": "receiver contact pads (4, keep-alive and seat sensing)",
-"role": "structure",
-"group": "battery",
-"color": "#c48a3a",
-"mesh": "parts/scout_v4_receiver_contacts/part.stl",
-"mass_g": 0.5,
-"tag": "E",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "bare O6 pads at (1.5 +- 30, +-29.5) on the receiver's bottom rim, against the box's probes in the ledges"
+"note": "at (52.0, +-26.55) and (-33.9, +-26.55) through the receiver's O3.4 boss holes; M3 x 12 E (the boss's depth: measure); the inserts in O10 bosses of the yokes (wall >= 3), the heads reached from below with the cartridge out"
 },
 {
 "id": "scout_v4_cage_rods",
@@ -430,12 +485,12 @@
 "group": "cage",
 "color": "#2b2b2b",
 "mesh": "parts/scout_v4_cage_rods/part.stl",
-"mass_g": 41.9,
+"mass_g": 37.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "34 rods, 3.81 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)"
+"note": "32 rods, 3.37 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)"
 },
 {
 "id": "scout_v4_cage_nodes",
@@ -444,12 +499,12 @@
 "group": "cage",
 "color": "#eef2f5",
 "mesh": "parts/scout_v4_cage_nodes/part.stl",
-"mass_g": 96.0,
+"mass_g": 102.0,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "16 cage nodes; the larger spheres are sockets printed into the frame and the base (NB on the nose stub, two on each side lug, the deck's tail end, the tail tray's end)",
+"note": "17 cage nodes; the larger spheres are sockets printed into the frame and the base (NB on the nose stub, two on each side lug, the deck's tail end, the tail tray's end)",
 "opacity": 0.9
 }
 ]

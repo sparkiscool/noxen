@@ -7,7 +7,7 @@ v10:
 * Installs over core tie left.2 (right.2 on arm 3): that link crosses the arm 58 deg off its axis at z ~14, 67 from the motor,
   and v9 grew a closed tunnel round it. Its tunnel (r 3.5 + 0.5) is now swept straight down out of the envelope, so the arm is
   lowered onto the bottom plate over the rod with the top plate off (the assembly order) and the rod stays in.
-* The motor end: a drawn skirt 8 deep under the pad's rim (r 12.5..18, between the 4 motor-screw driver sweeps, which still cut
+* The motor end (v10; 9 Nov the skirt was removed, Spark: the 14 thick pad does the job): a drawn skirt 8 deep under the pad's rim (r 12.5..18, between the 4 motor-screw driver sweeps, which still cut
   through it) gussets the 6 mm pad into the arm, and the material rises 32 -> 46 cm3; the strength limit is 0.3 (v9 broke at 0.30). v9's worst was 0.30 at the pad in flight;
   it broke under thrust alone (Spark), so the layers, not the load, are the cause (below).
 * Printed on its side (build +x): v9 broke under thrust alone at 0.30 printed flat, so the joint under the pad fails across the
@@ -18,7 +18,6 @@ from parts.overseer_arm_lib import Arm, build, CAGE, Z_PAD, PAD_D, PAD_T, cyl, a
 
 INSTALL_OVER = "core tie left.2"                 # the link the arm is lowered over (arm 3, the mirror: right.2)
 SLOT_R, SLOT_DROP = 4.0, 80.0
-SKIRT_R0, SKIRT_D = 12.5, 8.0
 
 
 class RearArm(Arm):
@@ -28,10 +27,7 @@ class RearArm(Arm):
         u = (q - p) / np.linalg.norm(q - p); L = float(np.linalg.norm(q - p))
         tube = along(p, u, 0.0, L, SLOT_R)
         slot = mf.Manifold.batch_hull([tube, tube.translate([0.0, 0.0, -SLOT_DROP])])       # the rod's tunnel swept down: open below
-        M = self.M
-        skirt = cyl(M[0], M[1], Z_PAD - PAD_T - SKIRT_D, Z_PAD - PAD_T + 0.01, PAD_D / 2, 64) - \
-            cyl(M[0], M[1], Z_PAD - PAD_T - SKIRT_D - 1.0, Z_PAD - PAD_T + 1.0, SKIRT_R0, 64)
-        return drawn + skirt, cuts + slot, env
+        return drawn, cuts + slot, env                  # 9 Nov (Spark: "they do nothing remove them"): the 8 deep skirt under the pad rim is gone (pad 14 thick)
 
 
 ARM = RearArm("rear", 135.0, 1, [], [-73.03, 139.5, 25.0])

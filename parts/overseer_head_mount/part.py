@@ -30,7 +30,7 @@ from parts.socket_inject import injectable_socket_cuts
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage.json")))
-SPEC = dict(h=2.0, gen_cm3=84.0, max_worst=0.3, settings=dict(near_sym=True))      # v10 (8 Nov): the node rules (limit 0.3, budget x 1.4: 60 -> 84)      # v8 (30 Oct 11 pm): L2 keys removed (Spark); v9 (1 Nov): L2 bolts a diamond, fully mirrored   # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB
+SPEC = dict(h=2.0, gen_cm3=100.0, max_worst=0.3, settings=dict(near_sym=True))     # v10 (8 Nov): the node rules (limit 0.3, budget x 1.4: 60 -> 84); 9 Nov: 84 gave 0.305 (core tie tension 425 N) -> 100      # v8 (30 Oct 11 pm): L2 keys removed (Spark); v9 (1 Nov): L2 bolts a diamond, fully mirrored   # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB
 #   runner); refine once the shape is accepted. near_sym (29 Oct, Spark: the camera arms came out different left and right): the part
 #   mirrors about y but for the L2's key slot, so the design is held symmetric away from it
 
@@ -107,13 +107,15 @@ def local(s, y, p):
 
 
 # ---- members that end at the mount -------------------------------------------------------------------------------------
-def trough(P, u, s0, s1):
-    """a channelled socket's opening (parts/overseer_arm_front_pad/part.py): the narrow slot GAP_W from the axis out to LIP_D, where
-    the collar beside it is still over 2 mm, then full clearance WIDE out to DROP, toward SLIDE projected off the rod axis"""
+def trough(P, u, s0, s1, collar_r):
+    """a channelled socket's opening (the front pad v3 pattern): the slot GAP_W wide from the axis out along SLIDE projected off the
+    rod axis, the whole DROP (the rod's path as the mount slides on); full clearance WIDE only from LIP_D to just past the collar,
+    where the collar beside the slot would otherwise feather under 2 mm (9 Nov: run 2's WIDE band ran the whole 70 out of the part
+    and left two members stopped short at its wall, stubs ending in air)"""
     u = np.asarray(u, float); d = SLIDE - np.dot(SLIDE, u) * u; d /= np.linalg.norm(d); n = np.cross(u, d)
     T = np.c_[u, n, d, np.asarray(P, float)]
-    return mf.Manifold.cube([s1 - s0, GAP_W, LIP_D + 0.01]).translate([s0, -GAP_W / 2, 0.0]).transform(T) + \
-        mf.Manifold.cube([s1 - s0, WIDE, DROP]).translate([s0, -WIDE / 2, LIP_D]).transform(T)
+    return mf.Manifold.cube([s1 - s0, GAP_W, DROP]).translate([s0, -GAP_W / 2, 0.0]).transform(T) + \
+        mf.Manifold.cube([s1 - s0, WIDE, collar_r + 1.5 - LIP_D]).translate([s0, -WIDE / 2, LIP_D]).transform(T)
 
 
 class Sock:
@@ -140,7 +142,7 @@ class Sock:
 
     def bores(self):
         if self.channel:                                            # the grooved bore + its half-pipe opening, from the floor plane past the mouth
-            return socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r) + [trough(self.pt(self.t_bot), self.d, 0.0, self.depth + 7.0)]
+            return socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r) + [trough(self.pt(self.t_bot), self.d, 0.0, self.depth + 7.0, self.collar_r)]
         return injectable_socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r)
 
     def clear(self, length=300.0):
@@ -169,7 +171,7 @@ class Saddle:
 
     def bores(self):
         L = float(np.linalg.norm(self.p1 - self.p0))
-        return [along(self.p0 - self.d * 1.0, self.p1 + self.d * 1.0, self.bore_r), trough(self.p0, self.d, -1.0, L + 1.0)]
+        return [along(self.p0 - self.d * 1.0, self.p1 + self.d * 1.0, self.bore_r), trough(self.p0, self.d, -1.0, L + 1.0, self.collar_r)]
 
     def clear(self):
         r = self.bore_r - 0.1 + 0.9

@@ -199,8 +199,9 @@ def artifact_page(a, S, meshes, commit, path):
                         ("top", (60, 0, 1300), (60, 0, 0)), ("under", (300, -300, -900), (0, 0, -50))):
         at_k = c + k * (np.array(at, float) - np.array([60, 0, 20]))
         s.view(nm, tuple(np.round(at_k + k * (np.array(eye, float) - np.array(at, float)), 1)), tuple(np.round(at_k, 1)))
-    for nm, v in (a.get("views") or {}).items():                                    # the assembly's own close-ups: {"name": {"eye": [..], "target": [..]}}
-        s.view(nm, tuple(v["eye"]), tuple(v.get("target", (0, 0, 0))))
+    for nm, v in (a.get("views") or {}).items():                                    # an assembly's own close-ups: {"name": [eye, target]} or {"name": {"eye": [..], "target": [..]}}
+        eye, at = (v["eye"], v.get("target", (0, 0, 0))) if isinstance(v, dict) else v
+        s.view(nm, tuple(eye), tuple(at))
     s.write(path)
     if a.get("appendix"):                          # an HTML fragment shown under the viewer (the Scout v4's ceiling probe, 9 Nov): its styles scoped, its ids its own
         page = open(path).read(); frag = open(os.path.join(ROOT, a["appendix"])).read()

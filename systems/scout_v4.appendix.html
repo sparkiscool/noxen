@@ -102,7 +102,7 @@
   <header>
     <div class="eyebrow">Scout v4 · the camera and ceiling probe · work continues here</div>
     <h1>The Scout looks into the ceiling on a <span class="tape">tape&#8209;measure mast</span></h1>
-    <p class="lede">The drone flies up to 12 cm under the ceiling grid. Two steel tape blades, curves facing so they lock into a stiff tube, roll 30 cm up out of the roof and lift a colour camera through an open tile into the ceiling void. The drone yaws to pan, a servo tilts, and every pipe, conduit, fitting and cable run is photographed from close range. Parked, the same head is the Scout's only camera, filming 1920 × 1080 in colour at 30 fps over the nose. The probe weighs about 65 g and its parts cost about $106.</p>
+    <p class="lede">The drone flies up to 12 cm under the ceiling grid. Two steel tape blades, curves facing so they lock into a stiff tube, roll 15 cm up out of the roof and lift a colour camera through an open tile into the ceiling void. The drone yaws to pan, a servo tilts, and every pipe, conduit, fitting and cable run is photographed from close range. Parked, the same head is the Scout's only camera, filming 1080p in colour over the nose and taking 12 MP stills in the ceiling. The probe weighs about 91 g with the camera kept in its metal case, and every part is now chosen and ordered.</p>
   </header>
 
   <div class="pr-stage" id="pr-stage">
@@ -126,10 +126,10 @@
   </div>
 
   <dl class="facts">
-    <div><dt>Probe mass</dt><dd class="num">≈ 65 g<small>it is also the front camera</small></dd></div>
-    <div><dt>Parts cost</dt><dd class="num">≈ $106<small>you have the inserts and screws</small></dd></div>
-    <div><dt>Reach</dt><dd class="num">0.3 m<small>12 cm to the grid, 19 cm into the void</small></dd></div>
-    <div><dt>Video</dt><dd class="num">1080p<small>colour, 30 fps, 100° lens</small></dd></div>
+    <div><dt>Probe mass</dt><dd class="num">≈ 91 g<small>it is also the front camera</small></dd></div>
+    <div><dt>Parts cost</dt><dd class="num">7 parts<small>ordered 8 Nov; camera, USB-C board, screws and inserts owned</small></dd></div>
+    <div><dt>Reach</dt><dd class="num">0.15 m<small>12 cm to the grid; the lens 7.5 cm above it</small></dd></div>
+    <div><dt>Video</dt><dd class="num">12 MP<small>colour, autofocus, 1080p live</small></dd></div>
   </dl>
 
   <h2>How ceiling voids are inspected today</h2>
@@ -162,20 +162,20 @@
   </div>
 
   <h2>What the camera records</h2>
-  <p>The camera is the <a href="https://www.amazon.com/s?k=Arducam+1080P+Low+Light+IMX291+100+degree+USB+camera+B0200" target="_blank" rel="noopener">Arducam 1080P Low Light USB camera</a> with the 100° lens (Sony IMX291, board B0200, about $48; <a href="https://www.arducam.com/arducam-1080p-low-light-wdr-usb-camera-module-for-computer-2mp-1-2-8-cmos-imx291-100-degree-wide-angle-mini-uvc-spy-webcam-board-with-microphone-3-3ft-1m-cable-for-windows-linux-mac-os.html" target="_blank" rel="noopener">maker's page</a>), Spark's pick for colour. It is a standard USB video camera, so the Radxa Zero 3W's Linux takes it with no driver, on the Radxa's spare USB-C port. Not the 160° fisheye version of the same board: Spark, "we can take our time turning".</p>
+  <p>The camera is the one Spark bought: the <a href="https://www.amazon.com/dp/B0FLX58WKZ" target="_blank" rel="noopener">Arducam 12MP autofocus USB camera</a> (B0FLX58WKZ). It is a standard USB video camera, so the Radxa Zero 3W's Linux takes it with no driver. It flies in its metal case, which is its heat spreader (Spark: "keep the case on"), with the case's bracket taken off: about 45 g. The probe runs about a minute in every ten, so the case is plenty.</p>
   <div class="tbl"><table>
     <thead><tr><th>What</th><th>Spec</th><th>What it means here</th></tr></thead>
     <tbody>
-      <tr><td>Video</td><td class="num">1920 × 1080 at 30 fps, MJPEG or H.264 (YUY2 only at 640 × 480)</td><td>The camera compresses its own video, so the Radxa saves or streams it with its CPU almost idle.</td></tr>
-      <tr><td>Image</td><td>Colour, 2 MP, Sony IMX291 low-light sensor, IR-cut filter</td><td>Red sprinkler pipe, blue water line, yellow gas, cable colours: all read true under the white LEDs, and the sensor copes with a dark void.</td></tr>
-      <tr><td>Shutter</td><td>Rolling</td><td>Sharp when the head is still, so the scan holds about 0.2 s at each frame. A fast turn smears the front view.</td></tr>
-      <tr><td>Focus</td><td>Fixed M12 lens, set by screwing it in or out</td><td>Set once for 0.3 to 1 m, the void's distances.</td></tr>
-      <tr><td>View</td><td class="num">≈ 92° × 61° (100° diagonal)</td><td>6 shots 60° apart make a full turn with overlap for the 3D model. Straight lens: pipes stay straight.</td></tr>
-      <tr><td>Detail</td><td class="num">0.54 mm/px at 0.5 m, 1.1 at 1 m</td><td>A 20 mm coupling is about 37 px at 0.5 m and 19 px at 1 m: fittings, joints and printed labels show. The same detail holds out to the frame's edges.</td></tr>
-      <tr><td>Board</td><td class="num">38 × 38, M2 holes on 28 × 28</td><td>The same posts as the Overseer's DECXIN mount, already proven by coupon.</td></tr>
+      <tr><td>Stills and video</td><td class="num">4608 × 2592 at 15 fps, 1080p at 30, MJPEG</td><td>12 MP stills at each scan stop; 1080p for the live front view.</td></tr>
+      <tr><td>Image</td><td>Colour, 1/2.43" sensor, IR-cut filter</td><td>Pipe and cable colours read true under the white LED bars.</td></tr>
+      <tr><td>Focus</td><td>Autofocus, 10 cm to infinity, settable over USB</td><td>Sharp on a fitting right in front of the lens; the focus distance also tells the software how near things are.</td></tr>
+      <tr><td>View</td><td class="num">61° × 50° (75° diagonal)</td><td>Narrower than a wide lens: 8 shots 45° apart make a full turn.</td></tr>
+      <tr><td>Detail</td><td class="num">0.13 mm/px at 0.5 m, 0.26 at 1 m</td><td>A 20 mm coupling is about 156 px at 0.5 m: labels and fitting markings are readable.</td></tr>
+      <tr><td>Shutter</td><td>Rolling</td><td>The scan holds still about 0.2 s for each frame.</td></tr>
+      <tr><td>Case</td><td class="num">36 × 36 mm (44 with the bracket, which comes off), board inside 32 × 32 × 1.6; depth not listed</td><td>Held in a printed cradle by its sides and a TPU strap, so no screw holes are needed; the depth is measured when it arrives.</td></tr>
     </tbody>
   </table></div>
-  <p class="tag">View angles are worked out from the 100° diagonal on the 16:9 sensor (estimate). Specs from the maker's listing.</p>
+  <p class="tag">Specs from the Amazon listing. "E" in the tables below means an estimate until measured.</p>
 
   <h2>The mast, part by part</h2>
   <p>The turret sits under the roof's middle node, where the flight controller used to be. The controller moves to a bay under the nose. Everything that has to stand in the props' height band is within 24 mm of the centre, the only place a part stays 12 mm from all four props. The gear motor lies in a pocket in the deck, below that band.</p>
@@ -207,7 +207,7 @@
     <rect x="236" y="40" width="70" height="10" class="fl"/><rect x="218" y="22" width="96" height="16" class="fl"/>
     <circle cx="384" cy="26" r="5" class="rd"/><path d="M314 30 H380" class="ln"/>
     <text x="330" y="16" class="tx">head: camera on a tilt servo</text>
-    <path d="M252.5 40 V8" class="ln"/><path d="M247 14 L252.5 4 L258 14" class="ln"/><text x="262" y="66" class="tm">0.3 m up</text>
+    <path d="M252.5 40 V8" class="ln"/><path d="M247 14 L252.5 4 L258 14" class="ln"/><text x="262" y="66" class="tm">0.15 m up</text>
     <circle cx="200" cy="211" r="2" class="rd"/><text x="22" y="372" class="tm">side section at y 0 · 3 px per mm · the clock-spring drum sits behind the spool</text>
     <g transform="translate(470 260)"><text x="-12" y="-46" class="tm">blade lens</text>
       <path d="M-30 0 Q0 -22 30 0" class="tp" style="fill:none;stroke-width:2"/><path d="M-30 0 Q0 22 30 0" class="tp" style="fill:none;stroke-width:2"/>
@@ -215,39 +215,39 @@
   </svg></div>
   </figure>
   <ol class="seq">
-    <li><b>Two blades.</b> Two 10 mm steel tape blades, 0.4 m each with 0.3 m used, with their curves facing. Out of the throat they spring into a lens-shaped tube, and each braces the direction the other folds easily. This is the bi-STEM idea from spacecraft booms. The flat cable runs inside the lens, protected.</li>
-    <li><b>One spool.</b> Both blades and the cable wind flat together on one printed spool: hub Ø30, about Ø33 wound, Ø34 flanges, axis across the drone at 43 mm above the deck's datum. About 4 turns pay out 0.4 m.</li>
-    <li><b>Drive.</b> An N20 300 rpm gear motor with encoder lies in a pocket in the deck and turns the spool through a printed 15 / 40 tooth pair (module 0.8, centres 22 mm apart). 0.3 m takes about 1.6 s. The encoder gives the length in millimetres.</li>
-    <li><b>Clock spring.</b> The spool turns, so the cable can't leave from its axle. Beside the spool, a 300 mm flat-cable spiral in a drum tightens and loosens like a watch spring. It has room for about 6 turns and the mast uses about 4.</li>
-    <li><b>Throat.</b> A 30 mm printed guide beside the roof's middle node. It takes the blades off the spool and curls them into the lens, and it grips the mast's base, where a knock bends it hardest. The middle node becomes a ring around it; the four roof rods end in the ring's sides.</li>
-    <li><b>Head.</b> A clip on the blades' tip, an SG90 servo on its side to tilt from 20° down to straight up, and a cradle holding the camera's 38 mm square board on four M2 posts, with a TPU guard on its rim. White LEDs (colour needs white light) and a VL53L0X distance sensor sit beside it. Parked, it rests on the throat with its lens about 112 mm above the deck's datum, looking forward 30° up.</li>
+    <li><b>Two blades.</b> Two 19 mm (¾") steel tape blades, two 0.2 m strips cut from one ordinary 3 m tape measure (its case and spring are not used; 0.15 m of each rolls out), with their curves facing. 19 mm rather than 10 (Spark: "as safe as possible"): about 3.5 times the bending moment to fold them, for about 5 g more, so the mast holds the camera even in its case. Out of the throat they spring into a lens-shaped tube, and each braces the direction the other folds easily. This is the bi-STEM idea from spacecraft booms. The flat cable runs inside the lens, protected. The reach is as short as still works (Spark: "as safe as possible"): halving it from 0.3 m makes the tip about 8 times stiffer, raises the load that buckles it about 4 times and halves the bending at the throat, and the lens still ends about 7.5 cm above the grid, roughly 6 cm over the tiles' tops.</li>
+    <li><b>One spool.</b> Both blades and the cable wind flat together on one printed spool: hub Ø20 (a 19 mm tape coils tighter than that in its own case), 23 mm wide, about Ø27 wound, Ø29 flanges, axis across the drone 41 mm above the deck's datum. About 2 turns pay out the 0.15 m.</li>
+    <li><b>Drive.</b> The N20 300 rpm gear motor lies under the spool and the drum, facing across the drone, in a pocket through the deck (outboard along the drone's side it ran through the side triangle's lug socket, which the compatibility check caught). It turns the spool through a printed 12 / 40 tooth pair (module 0.8, centres 20.8 mm apart), 3.3 times its torque; its 3 mm D shaft runs through the pinion into a bearing hole in the housing's side plate. The 0.15 m takes about 1.5 s. It needs no encoder: the blades' ends are fixed to the spool, so fully out is a hard stop, and fully in the head seats on the throat. The Radxa runs the motor to the stall at either end and cuts the power.</li>
+    <li><b>Cable.</b> The head carries the camera, the servo and the LED bars, so six thin wires run up the mast: 5 V and ground in 26 AWG (shared by all three), the USB data pair (D+ and D−, twisted), the servo's signal, and the LED bars' switched minus, in 30 AWG. A JST ZH 1.5 mm 4-pin lead plugs into the camera's socket. The wires go up between the two blades inside the lens, wind on the spool beside them, and leave at the axle into a drum where they lie in a loose coil (room for 3.5 turns; the spool makes about 2). At the fixed end the USB pair goes to the USB-C plug board on the Radxa, the rest to the 5 V rail, the Radxa's PWM pin and the DRV8833.</li>
+    <li><b>Throat.</b> A 32 mm printed guide beside the roof's middle node. It takes the blades off the spool and curls them into the lens, and it grips the mast's base, where a knock bends it hardest. The middle node becomes a ring around it; the four roof rods end in the ring's sides.</li>
+    <li><b>Head.</b> A clip with an M2 screw through both blades' tips holds a small base plate. On its +y side a bracket holds the SG90 by its 32.8 mm tabs, lying on its side with its shaft across the drone and its output face 3 mm off the cradle; on its -y side a second bracket, 1.5 mm off the cradle, holds an M3 screw on the same line as the idler. Both sit tight to the cradle, so the head is about 70 mm across. Between them the tilt cradle hangs on the servo's horn and the screw: a back plate (open for the cable plug), two side walls that grip the camera's case, and a TPU strap over its top. The servo nods the cradle and camera from 20° down to straight up; it clears the base plate by 2.7 mm and the servo and brackets everywhere in that range (checked in <span class="num">tools/scout_v4_shape.py</span>). A 470 µF capacitor on the servo's lead covers its >1 A start, so the Radxa on the same 5 V rail does not brown out. Parked, the head rests on the throat with its lens about 116 mm above the deck's datum, looking forward 15° up.</li>
+    <li><b>Light.</b> Two 25 × 8 mm bars cut from a Clearhill 5 V COB strip (4000 K, CRI 90; 25 mm is its cut length), stuck on the camera case's top and bottom faces at the front, facing the way it looks and nodding with it. The metal case is their heat sink and they need no fins. Above and below the lens they fill the shadows on pipes from two sides; 18 mm off the lens's axis, lit dust stays out of the picture; the strip's continuous line gives soft highlights on ducts and copper. At 8 W/m each bar is about 0.2 W, about 50 lux at 0.5 m together (E): the scan holds still, so 1/30 s frames are fine. If the stills are dark, cut 50 mm bars instead (two segments each).</li>
   </ol>
   <h3>If something hits the mast</h3>
   <ul class="plain">
-    <li>The two-blade tube is far harder to fold than one blade, and the 30 mm throat holds its base.</li>
+    <li>The two-blade tube is far harder to fold than one blade, the blades are 19 mm wide (about 3.5 times the fold moment of 10 mm ones), and the 30 mm throat holds its base.</li>
     <li>The TPU guard on the camera board's rim makes a knock glance off before it loads the blades.</li>
-    <li>The distance sensor stops the yaw before the head is within 60 mm of anything.</li>
+    <li>The yaw runs slowly, and the software stops it when the autofocus says something is within about 10 cm.</li>
     <li>If the view suddenly jumps, the software rolls the mast in, and the throat straightens the blades on the way down.</li>
     <li>The blades are turned so that a fold falls along the roof's centre rods, not into an open roof panel over a prop.</li>
   </ul>
 
   <h2>The cheapest parts</h2>
-  <p>You already have the heat-set inserts and screws. The camera is the largest cost and the Scout's only camera.</p>
+  <p>Final parts, as ordered on 8 Nov. The camera, the USB-C plug board, the heat-set inserts and the screws were already owned. Two cheap parts are still to add: the JST ZH lead for the thin cable and the 470 µF capacitor. Not needed: a distance sensor (the autofocus does it), flat cable and adapters (the thin cable), and steel pins (M3 screws).</p>
   <div class="tbl"><table>
     <thead><tr><th>Part</th><th>Choice</th><th>Why this one</th><th class="r">Mass g</th><th class="r">Cost $</th></tr></thead>
     <tbody>
-      <tr><td>Camera</td><td><a href="https://www.amazon.com/s?k=Arducam+1080P+Low+Light+IMX291+100+degree+USB+camera+B0200" target="_blank" rel="noopener">Arducam 1080P Low Light USB, IMX291, 100° (B0200)</a></td><td>Spark's pick: colour, 1080p, low light, a straight 100° lens, works on the Radxa as a plain USB camera</td><td class="r">14 E</td><td class="r">48 E</td></tr>
-      <tr><td>Drive</td><td><a href="https://www.amazon.com/ACROBOTIC-Gearmotor-Encoder-Raspberry-Speedometer/dp/B07LG18HBL" target="_blank" rel="noopener">N20 gear motor with encoder</a>, choose 300 rpm</td><td>Counts the length; holds the mast without power</td><td class="r">10.5 E</td><td class="r">12 E</td></tr>
-      <tr><td>Blades</td><td>2 × <a href="https://www.amazon.com/clp/B07HQ7F1C6" target="_blank" rel="noopener">10 mm steel tape measure</a></td><td>0.4 m from each; skip if you have 10 mm tapes</td><td class="r">7.6</td><td class="r">16 E</td></tr>
-      <tr><td>Cable</td><td><a href="https://amazon.com/20-300mm-Printer-16pin-0-5mm-40mm/dp/B0DZ6QLBXT" target="_blank" rel="noopener">0.5 mm flat cable set</a>, 8-way, 300 mm, same-side</td><td>One piece up the mast, one in the clock spring</td><td class="r">2 E</td><td class="r">8 E</td></tr>
-      <tr><td>Cable ends</td><td><a href="https://www.amazon.com/MTCELL-Converter-2-54mm-Couple-Adapter/dp/B0CLVPPGRN" target="_blank" rel="noopener">0.5 mm, 8-pin flat-cable adapter boards</a></td><td>Join the flat cable to normal wires; check the socket is 0.5 mm</td><td class="r">1 E</td><td class="r">8 E</td></tr>
-      <tr><td>Light</td><td><a href="https://www.amazon.com/Generic-200pcs-Diodes-12-15lm-Lighting/dp/B0D548TL6D" target="_blank" rel="noopener">5050 white LED chips</a>, 2–4, with a 33 Ω resistor each</td><td>Run from the motor driver's second channel, so no extra switch</td><td class="r">0.3</td><td class="r">6 E</td></tr>
-      <tr><td>Driver</td><td><a href="https://www.amazon.com/NOYITO-DRV8833-2-Channel-Ultra-small-Voltage/dp/B07FZY8GX2" target="_blank" rel="noopener">DRV8833 board</a>, pack of 2</td><td>Channel A the motor, channel B the LEDs</td><td class="r">1 E</td><td class="r">4 E</td></tr>
-      <tr><td>Distance</td><td><a href="https://www.amazon.com/ALAMSCN-Breakout-VL53L0XV2-Distance-Measurement/dp/B08V8SKKZ4" target="_blank" rel="noopener">VL53L0X</a>, from a 4-pack</td><td>Stops the yaw before a touch; up to ~2 m</td><td class="r">0.7 E</td><td class="r">3 E</td></tr>
-      <tr><td>Tilt</td><td><a href="https://www.amazon.com/Hosyond-Helicopter-Airplane-Control-Arduino/dp/B09GFN98X9" target="_blank" rel="noopener">SG90</a>, from a 10-pack</td><td>$2 each; the EMAX ES9051 saves 5 g for $8 more</td><td class="r">9</td><td class="r">2 E</td></tr>
-      <tr><td>Printed</td><td>Spool and gear, pinion, drum, housing and throat, cradle and clip in PCTG; lip and bumper in TPU</td><td>Your filament, a 3 mm steel pin for the spool's free side</td><td class="r">19 E</td><td class="r">–</td></tr>
+      <tr><td>Camera</td><td><a href="https://www.amazon.com/dp/B0FLX58WKZ" target="_blank" rel="noopener">Arducam 12MP autofocus USB</a></td><td>Owned. Flown in its case (the heat spreader), bracket off</td><td class="r">45</td><td class="r">owned</td></tr>
+      <tr><td>Drive</td><td><a href="https://www.amazon.com/dp/B0BZDC951L" target="_blank" rel="noopener">Augiimor N20, 6 V, 300 rpm</a>, no encoder, 2-pack</td><td>Runs to a stall at each end; 37 mm long, 3 mm D shaft</td><td class="r">10 E</td><td class="r">ordered</td></tr>
+      <tr><td>Blades</td><td><a href="https://www.amazon.com/dp/B00ZMHXV4I" target="_blank" rel="noopener">Topzone 16 ft tape measure</a>, 19 mm blade</td><td>Two 0.2 m strips cut from it; only the strips fly</td><td class="r">8.8 E</td><td class="r">ordered</td></tr>
+      <tr><td>Cable</td><td>JST ZH 1.5 mm 4-pin lead; 2 × 26 AWG and 4 × 30 AWG silicone wire</td><td>Six conductors up the mast: power pair, USB pair, servo signal, LED switch</td><td class="r">3 E</td><td class="r">~7 E, to add</td></tr>
+      <tr><td>Light</td><td><a href="https://www.amazon.com/dp/B0F1YPP6QS" target="_blank" rel="noopener">Clearhill 5 V COB strip, 4000 K, CRI 90</a></td><td>Two 25 mm bars (its cut length)</td><td class="r">0.5 E</td><td class="r">ordered</td></tr>
+      <tr><td>Driver</td><td><a href="https://www.amazon.com/dp/B07S7Z8CFL" target="_blank" rel="noopener">KOOBOOK DRV8833</a>, 2-pack</td><td>Channel A the motor, channel B the LEDs; taped to the turret's side plate</td><td class="r">1</td><td class="r">ordered</td></tr>
+      <tr><td>Tilt</td><td><a href="https://www.amazon.com/dp/B0DFKPVRC2" target="_blank" rel="noopener">DORHEA SG90</a>, 2-pack</td><td>Nods the camera; 32.8 mm tab span</td><td class="r">9</td><td class="r">ordered</td></tr>
+      <tr><td>Capacitor</td><td>470 µF, 10 V or more, electrolytic</td><td>On the servo's lead: its start draws over 1 A from the shared 5 V</td><td class="r">1</td><td class="r">~5 E, to add</td></tr>
+      <tr><td>Printed</td><td>Spool and gear, pinion, drum, housing and throat, head plate and brackets, cradle in PCTG; lip and strap in TPU</td><td>Your filament; M3 screws for the spool's and the idler's axles</td><td class="r">17 E</td><td class="r">–</td></tr>
     </tbody>
-    <tfoot><tr><td>Total</td><td></td><td></td><td class="r">≈ 65</td><td class="r">≈ 106</td></tr></tfoot>
+    <tfoot><tr><td>Total</td><td></td><td></td><td class="r">≈ 91</td><td class="r">2 to add</td></tr></tfoot>
   </table></div>
   <p class="tag">E = estimate: masses without a published figure until weighed, prices not shown on the listings when checked.</p>
 
@@ -257,9 +257,8 @@
       <ol class="seq">
         <li>Fly under the open tile, centred by the flow sensor; the probe's distance sensor sees the opening as far and the tiles as near.</li>
         <li>Hold the roof 120 mm below the grid.</li>
-        <li>Roll the tape out 200 mm, until the head is 90 mm above the grid, LEDs on.</li>
-        <li>At 5° and 50° up, yaw a full turn in 60° steps, holding still about 0.2 s for a frame at each, plus one straight up: 13 frames.</li>
-        <li>Roll out the full 300 mm, to 190 mm above the grid, and repeat: 26 frames in about a minute of hover. The video runs the whole time as well.</li>
+        <li>Roll the tape out its 150 mm, until the lens is about 75 mm above the grid, LEDs on.</li>
+        <li>Nod down to 5° and yaw a full turn in 45° steps, holding still about 0.2 s for a 12 MP frame at each; nod up to 45° and turn again; then one frame straight up: 17 frames in about 40 s of hover. The video runs the whole time as well.</li>
         <li>Roll the mast back until the head rests on the throat, and fly to the next opening.</li>
       </ol>
     </div>
@@ -268,50 +267,92 @@
       <div class="tbl"><table style="min-width:0">
         <thead><tr><th>Distance</th><th class="r">mm per pixel</th><th class="r">20 mm coupling</th></tr></thead>
         <tbody>
-          <tr><td>0.3 m</td><td class="r">0.32</td><td class="r">62 px</td></tr>
-          <tr><td>0.5 m</td><td class="r">0.54</td><td class="r">37 px</td></tr>
-          <tr><td>1.0 m</td><td class="r">1.1</td><td class="r">19 px</td></tr>
-          <tr><td>2.0 m</td><td class="r">2.2</td><td class="r">9 px</td></tr>
+          <tr><td>0.3 m</td><td class="r">0.08</td><td class="r">260 px</td></tr>
+          <tr><td>0.5 m</td><td class="r">0.13</td><td class="r">156 px</td></tr>
+          <tr><td>1.0 m</td><td class="r">0.26</td><td class="r">78 px</td></tr>
+          <tr><td>2.0 m</td><td class="r">0.51</td><td class="r">39 px</td></tr>
         </tbody>
       </table></div>
-      <p class="tag">1920 px across a 92° view. Beyond about 1 m a fitting is better seen from closer or from the next opening.</p>
+      <p class="tag">4608 px across a 61° view (12 MP stills). Even at 2 m a fitting is well resolved; the limit is the light, which falls off past about 1 m.</p>
       <h3>From stills to a map</h3>
-      <p>Each still is saved with its yaw, tilt, tape length and 8 × 8 distances. Free photogrammetry software such as <a href="https://colmap.github.io/" target="_blank" rel="noopener">COLMAP</a> or Meshroom turns a set into a 3D model of the void, with the distances setting its scale. The stills are still worth having without the model: every fitting is in at least two of them.</p>
+      <p>Each still is saved with its yaw, tilt and the autofocus's focus distance. Free photogrammetry software such as <a href="https://colmap.github.io/" target="_blank" rel="noopener">COLMAP</a> or Meshroom turns a set into a 3D model of the void, with the focus distances setting its scale. The stills are still worth having without the model: every fitting is in at least two of them.</p>
     </div>
   </div>
 
   <h3>Wiring and control</h3>
-  <p>The probe camera goes on the Radxa Zero 3W's second USB-C port in host mode, since the Radxa is powered from its pads. The distance sensor, servo and motor driver run from the Radxa's I²C and PWM pins. The scan runs on the Radxa and asks PX4 for each yaw step over MAVLink. Power comes from the UBEC's 5 V, at about 0.5 A peak with the motor and servo running.</p>
+  <p>The camera goes on the Radxa Zero 3W's USB 3 host port (a USB 2 device there) through the USB-C plug board, whose 5.1 kΩ resistors tell the Radxa it is a device; the Radxa itself is powered on its 5 V pins. The servo's signal comes from a hardware PWM pin (3.3 V, which the SG90 accepts), and three GPIO pins drive the DRV8833: channel A the spool motor both ways, channel B the LED bars' minus to ground (their plus is on the shared 5 V). The scan runs on the Radxa and asks PX4 for each yaw step over MAVLink. 5 V budget from the UBEC: Radxa up to ~1 A, camera ~0.3 A, LEDs 0.08 A, motor up to ~0.5 A at stall, servo over 1 A at each start: about 3 A peak, so the UBEC must give 3 A or more, and the software never starts the servo and the motor at the same moment.</p>
 
   <h2>One camera for the whole Scout</h2>
-  <p>Parked, the head rests on the throat with its lens at about (38, 0, 108) mm in the drone's frame. Tilted 15° up, its 92 × 61° frame spans 15.5° below the horizon to 45.5° above it, as low as before, and no rod or prop is in the picture: the roof's nose apex is 27° below the horizon. The frame stays clear down to 10° of tilt. The servo tilts it up for ceilings.</p>
+  <p>Parked, the head rests on the throat with its lens at about (27, −4, 116) mm in the drone's frame. Tilted 15° up, its 61 × 50° frame spans 10° below the horizon to 40° above it, and no rod or prop is in the picture. The servo tilts it up for ceilings.</p>
   <ul class="plain">
-    <li><b>Gained:</b> colour, twice the detail of the 1 MP board (0.54 mm/px at 0.5 m, against 1.1), a low-light sensor with an IR-cut filter so colours are true, and the camera's own H.264 for the live view.</li>
-    <li><b>Given up:</b> the global shutter (the scan holds still for each frame, and a fast turn smears the front view), 120 fps (now 30), the very wide 130° view (now 100°, still 13 frames per height), and infrared lighting. About 2 g and $15 more.</li>
+    <li><b>Gained:</b> colour, 12 MP stills with very fine detail, and autofocus from 10 cm, so a fitting right in front of the lens is sharp.</li>
+    <li><b>Given up:</b> a wide view (61° across, so 17 frames a scan instead of 13), a global shutter (the scan holds still for each frame), and weight: in its case the camera is 45 g, so the probe is about 91 g, which is why the blades went to 19 mm.</li>
   </ul>
 
   <h2>How we build it</h2>
   <p>Each step ends with a test that has to pass before the next step. The mast and the cable are the two unknowns, so they are proven on the bench before anything flies.</p>
   <ol class="seq">
-    <li><b>Order the parts</b> in the cheapest-parts table, about $106, plus a spare tape and a spare cable set.</li>
+    <li><b>Order the parts.</b> Done on 8 Nov, except the JST ZH lead and the 470 µF capacitor; the one 4.9 m tape gives 22 spare strips.</li>
     <li><b>Draw the mechanism parts in the repo.</b> The spool with its gear, the pinion, the drum, the housing and throat, the cradle and the clip are fits and slots, not loaded structure, so each is a drawn part with its own <span class="num">make.py</span>, like the Overseer's TPU foot. Print them in PCTG, and the lip and bumper in TPU 95A.</li>
-    <li><b>Build the mast on the bench.</b> Cut 0.4 m from each tape, drill a 2 mm hole at each end, clamp both blades to the spool hub curves facing, and fit the gears and the N20. Pass: 500 roll-outs with no jam, the lens fully formed above the throat, and a 20 g dummy head at 0.3 m settling within a second after a tap. Then push the head sideways with a spring scale until it folds, and do the same with one blade, so the gain is a measured number.</li>
-    <li><b>Prove the cable.</b> Lay the flat cable between the blades and fold the drum's spiral. Plug the camera into the Radxa through it and stream 1080p for 10 minutes while the mast cycles 100 times. Pass: no USB drop-out. If it fails, switch to a thin coiled USB cable beside the blade.</li>
-    <li><b>Assemble the head.</b> Fit the servo, camera board, LEDs and distance sensor on the cradle. Set the lens focus for 0.3 to 1 m. Pass: a sharp frame at 0.3, 0.5 and 1 m, and a usable frame in a dark box with the LEDs on.</li>
-    <li><b>Write the probe service on the Radxa.</b> Home by retracting until the head seats on the lip (the encoder stalls), extend to a length in millimetres, stop the yaw when the distance sensor reads under 60 mm, and save each still with its yaw, tilt, length and 8 × 8 distances. When parked, stream the front view.</li>
+    <li><b>Build the mast on the bench.</b> Cut two 0.2 m strips from the tape with tin snips, round the corners and file the burrs (the blade is hardened: do not drill it), set one end of each in the spool hub's printed clamp slot with a drop of epoxy, curves facing, and fit the gears and the N20. Pass: 500 roll-outs with no jam, the lens fully formed above the throat, and a 60 g dummy head (the camera in its case) at 0.15 m settling within a second after a tap. Then push the head sideways with a luggage scale until the mast folds. Pass: at least 0.2 N·m at the throat, about 1.3 N at the head, three times the worst load from the drone's tilting and jerking with the case on.</li>
+    <li><b>Prove the cable.</b> Make the thin cable (JST ZH lead, four thin wires, the data pair twisted, soldered to the USB-C board), run it between the blades, round the spool and into the drum's coil, and plug the camera into the Radxa through it. Stream 1080p for 10 minutes while the mast cycles 100 times. Pass: no USB drop-out and no chafe. If it drops out, use the camera's own 1 m cable shortened instead.</li>
+    <li><b>Assemble the head.</b> Take the bracket off the camera's case, measure the case's depth and where the cable socket sits, and fit the cradle's walls and strap to it; then fit the servo with its capacitor and the LED bars. Pass: autofocus sharp at 0.1, 0.5 and 1 m, and a usable frame in a dark box with the LEDs on.</li>
+    <li><b>Write the probe service on the Radxa.</b> Retract until the motor stalls with the head seated, extend until it stalls at the blades' anchor (time-limited, about 1 s each way), stop the yaw when the autofocus reads under 10 cm, and save each still with its yaw, tilt and focus distance. When parked, stream the front view.</li>
     <li><b>Write the scan.</b> The Radxa asks PX4 over MAVLink for each 60° yaw step and waits for it to settle before each still. Run it in PX4's simulator first, then on the bench with the props off.</li>
     <li><b>Fit it to v4.</b> The roof's middle node is designed with the turret's mount when the cage nodes are designed. Bolt the turret on, wire it to the Radxa and the UBEC, weigh the Scout and check the centre of gravity.</li>
     <li><b>Fly under a test ceiling.</b> Hang a 2 × 2 tile grid with one tile open over a frame. Hover 30 cm under it, then 20, then 12, logging thrust and altitude. Pass: no pull toward the grid. Then roll the tape out in the hover, run a full scan, and build a COLMAP model from the stills.</li>
     <li><b>Fly a real ceiling,</b> one opening first.</li>
   </ol>
 
+  <h2>Cage and balance with the probe (9 Nov)</h2>
+  <p>Spark: "adjustments to the cage concerning the new addition, light weight and compact while stable", and the centre of gravity of the drone and of the probe "perfectly centred". All numbers from the frame model and the design tool (<span class="num">tools/scout_v4_shape.py</span>).</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Change</th><th>Why</th><th>Effect</th></tr></thead>
+    <tbody>
+      <tr><td>The roof's middle node and the throat's top collar print as one</td><td>The turret already stands under it: the roof's centre is held to the deck for free, and the mast's base is gripped at the deck and at the roof</td><td>Worst crash deflection 2.1 → 1.3 mm, buckling 0.48 → 0.40 of the limit, socket moment 412 → 290 N·mm</td></tr>
+      <tr><td>The two 215 mm ring flats (nose and tail) dropped</td><td>With the centre held they carried almost nothing, except a head-first crash, which buckled them</td><td>−0.43 m of rod, about −5 g</td></tr>
+      <tr><td>The same on the two sides: the side flats dropped, the roof's cross ends in four apexes 25 mm in from the ring, each side's bottom node on a V to its two corners</td><td>Spark: "why is the cage not symmetrical, why don't we move all sides in"; all four sides are now one pattern</td><td>32 rods, 3.37 m (was 34, 3.50); 1.2 mm worst; a head-first crash 12.7 mm (was 14.5)</td></tr>
+      <tr><td>The nose node on two 62 mm rods to the nose bay's front face, instead of a solid printed stub</td><td>The stub was there for the old front camera; the camera is on the probe now</td><td>Lighter; buckling 0.47 of the limit nose-first (a 95 mm rod to the deck read 1.1)</td></tr>
+      <tr><td>The probe head shifted 11.5 mm back and 3.8 mm to the left on its mast</td><td>Its CG was 11 mm ahead of the mast, a constant bend on the blades</td><td>Head CG over the mast to 0.05 mm</td></tr>
+      <tr><td>Everything under the deck 3.7 mm forward (receiver, cartridge, pack, base, FC, flow, tail boards), the funnel's datum with it</td><td>The head's move put the drone's CG 1.9 mm behind the thrust centre; moving the probe instead would have put the turret 2.4 mm from the props</td><td>CG on the thrust centre to 0.01 mm; the walls-in funnel check unchanged</td></tr>
+      <tr><td>The UBEC, XR2 and Radxa nudged across the tail tray (+3.5, +10, +1 mm)</td><td>The head's sideways shift</td><td>CG 0.00 mm sideways</td></tr>
+      <tr><td>The battery mechanism taken out of this design; 4 M3 bolts left for it to mount to, as on the Overseer</td><td>Spark: "get rid of the battery mechanism, leave 4 bolts for it to mount to". M3 × 5.7 heat-set inserts in the base's yokes at (52.0, ±26.55) and (−33.9, ±26.55), the bolts up from below. The receiver, cartridge, pack and their feet and pads (≈ 266 g) are not drawn</td><td>Their mass still flies, so it stays in the balance and the frame model at its CG; the mechanism's crash and 600 N ground-hit loads reach the yokes through the four inserts (the base's topology cases). Bolt length set by the mechanism's boss (M3 × 12 E: measure)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tag">The masses are estimates until the parts are weighed, so the centring is good to a few millimetres in practice: weigh the parts, then do the final trim on a balance with the tail-tray boards. Nodding the camera to straight up moves the CG ~1 mm; rolling the mast out raises it ~12 mm.</p>
+  <p class="pr-note">Head-first crash, now reported on its own: the parked head is the Scout's highest point, so a 35 g crash onto it puts up to ~230 N into the head, the throat and the turret, and up to 2.0 N·m on the BT–TB socket, at its 2.0 cap. Make the BS0, S0, BT and TB sockets 12 mm deep (about 1.4 × the moment), and give the turret's topology setup the 230 N head-first case.</p>
+
+  <h2>Compatibility check (9 Nov)</h2>
+  <p>Every bought part against the design and against each other: fit, clashes, electrics and software. The tool now checks every probe part against the cage's nodes and rods each run.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Part</th><th>Against</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>N20 motor</td><td>The side triangle's lug socket (0, 40, 22) and its rods</td><td><b>Clashed, fixed:</b> the motor moved under the spool facing inward, 12 / 40 gears. Probe vs cage and every other part: clear.</td></tr>
+      <tr><td>N20 motor</td><td>Deck and base</td><td>Sits in a pocket through the deck, 3.3 mm into the base's room: the base's topology setup must keep it out.</td></tr>
+      <tr><td>N20 motor</td><td>DRV8833, 5 V, the printed pinion</td><td>OK: runs at ~250 rpm on 5 V; its stall (not listed, ~0.5 A E) is under the driver's 1.5 A. The 12 T pinion on a 3 mm D shaft has 2.3 mm of wall: print it at 100 % infill.</td></tr>
+      <tr><td>Camera in its case</td><td>Cradle, servo, LED bars</td><td>OK: the 36 mm case fits between the cradle's walls; 45 g at ~12 mm from the axis is ~0.05 kg·cm against the SG90's ~1.8; the 25 × 8 mm bars fit its top and bottom fronts. Case depth and socket position: measure.</td></tr>
+      <tr><td>Camera</td><td>Radxa (USB, driver, power)</td><td>OK: UVC over USB 2 on the USB 3 host port, no driver; ~0.3 A at 5 V.</td></tr>
+      <tr><td>Camera autofocus</td><td>Stopping the yaw near obstacles</td><td><b>Uncertain:</b> USB cameras report the lens position, not a distance; the mapping needs a calibration, and some do not report it during continuous focus. If it does not work, add the VL53L0X back (0.7 g).</td></tr>
+      <tr><td>SG90</td><td>Radxa PWM, 5 V rail</td><td>OK with the 470 µF capacitor at the head; its 3.3 V signal is accepted. Body size and shaft position: measure.</td></tr>
+      <tr><td>Head wiring</td><td>Mast, coil</td><td><b>Was 4 wires, needs 6:</b> the servo and the LED bars ride on the head too. Fixed in the design; the drop on the shared 5 V wire is why it is 26 AWG.</td></tr>
+      <tr><td>LED strip</td><td>DRV8833, case</td><td>OK: 0.08 A for both bars, switched on the low side; the metal case is their heat sink.</td></tr>
+      <tr><td>DRV8833</td><td>Radxa logic, 5 V</td><td>OK: 3.3 V inputs, 5 V motor supply; no holes, taped to the housing. Check its sleep pin is tied high on the board.</td></tr>
+      <tr><td>USB-C plug board</td><td>Radxa</td><td>OK electrically. Its 15.4 mm plug needs room beside the Radxa in the tail tray: check when the base is designed.</td></tr>
+      <tr><td>UBEC</td><td>~3 A peak</td><td><b>Unknown rating:</b> must be 3 A or more.</td></tr>
+      <tr><td>Tape blades</td><td>Spool hub Ø20, throat, clips</td><td>OK by width (19 mm). Thickness and curve depth set the throat's slot and lens: measure. Scuff the paint where the ends are epoxied.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="pr-note">Open until the bench test: the two blades forming the lens from one spool, the coil staying tight (a TPU pressure pad), the blades' ~2 mm length mismatch (one held in a slot at the head), the throat's friction against the N20, and USB through the thin wires.</p>
+
   <h2>Options I weighed and dropped</h2>
   <div class="tbl"><table>
     <thead><tr><th>Option</th><th>Why not</th></tr></thead>
     <tbody>
       <tr><td>One tape blade</td><td>Stiff only while it holds its curve; a sideways knock can fold it over, and a fold halfway up could drop the head into a prop.</td></tr>
+      <tr><td>Encoder, flat cable and adapter boards, distance sensor, steel pins</td><td>Cut for cost and weight (Spark: "more cost efficient and more light weight"). Stalls at both ends replace the encoder; the camera's own cable replaces the flat cable; the autofocus distance replaces the sensor; M3 screws replace the pins.</td></tr>
       <tr><td>Arducam OV9281 120 fps mono global shutter (B0FXWWF55X)</td><td>No colour: pipes and cables read by shape only (Spark: "we need colored camera").</td></tr>
-      <tr><td>The same IMX291 board with the 160° fisheye (B0202)</td><td>Fewer frames per turn, but at 30 cm the detail falls from 0.38 mm/px in the centre to about 1.5 at the frame's edges, and straight pipes curve. Spark: "we can take our time turning".</td></tr>
+      <tr><td>Arducam 1080P Low Light IMX291, 100° (B0200)</td><td>Best in low light and a wide straight lens, but 2 MP; Spark bought the 12 MP autofocus board instead.</td></tr>
+      <tr><td>The IMX291 board with the 160° fisheye (B0202)</td><td>Fewer frames per turn, but at 30 cm the detail falls from 0.38 mm/px in the centre to about 1.5 at the frame's edges, and straight pipes curve. Spark: "we can take our time turning".</td></tr>
       <tr><td>Arducam OV9782 colour global shutter</td><td>About $60, 1 MP, and it ships with a 70° lens. The pick if the front view must stay sharp while the drone keeps turning.</td></tr>
       <tr><td>DECXIN 2633V2 (the Overseer's camera)</td><td>No maker data, its resolution never confirmed. It stays on the Overseer, where its global shutter colours the lidar map in flight.</td></tr>
       <tr><td>Arducam B0441 (the 62 × 9 board first proposed)</td><td>Its datasheet gives 1080p at only 5 fps.</td></tr>
@@ -329,9 +370,9 @@
     <li><b>Ceiling effect at 12 cm.</b> The props are about one diameter below the grid. Test the hover there first. If PX4 starts climbing into the ceiling, hold a few centimetres lower and roll the tape out further.</li>
     <li><b>Folding.</b> The two-blade tube should take several times the push of one blade. That is a judgement until the bench test measures it.</li>
     <li><b>Gear mesh.</b> A printed module 0.8 pair needs its centre distance right to 0.1 mm. Print the housing with the two shaft holes in one piece.</li>
-    <li><b>USB over flat cable.</b> USB 2.0 over 0.6 m of unshielded flat cable should work, but it is unshielded. Test the camera through the rolled ribbon; the fallback is a thin coiled USB cable beside the tape.</li>
-    <li><b>Snagging.</b> The head must not catch a pipe or hanger wire while the drone yaws. The distance sensor stops the yaw under 60 mm, and the yaw runs slowly.</li>
-    <li><b>Hover time.</b> The probe is about 65 g, but dropping the runners and keel saves more, so the Scout is about 706 g all-up (E), with about 2 minutes of hover per opening.</li>
+    <li><b>The cable in the mast.</b> Four thin wires carry USB 2.0 up the mast and through the coil. Twist the data pair and keep the run short (about 0.6 m); the fallback is the camera's own cable, shortened.</li>
+    <li><b>Snagging.</b> The head must not catch a pipe or hanger wire while the drone yaws. The yaw runs slowly and stops when the autofocus reads under 10 cm.</li>
+    <li><b>Hover time.</b> The probe is about 91 g with the camera in its case; dropping the runners and keel saved more than that, so the Scout is about 732 g all-up (E), still under v3's 765 g, with about 2 minutes of hover per opening.</li>
     <li><b>Parking.</b> The parked head is the highest point of the Scout. The TPU guard on the board's rim takes an upside-down landing first.</li>
   </ul>
   <p class="pr-note">The probe touches nothing below the deck, so the funnel seat and the battery swapper do not change.</p>
@@ -496,9 +537,9 @@
   const gear = new THREE.Mesh(new THREE.CylinderGeometry(0.0168, 0.0168, 0.003, 40), housM); gear.rotation.x = Math.PI / 2; gear.position.copy(V(0, 8.5, 43)); drone.add(gear);
   drone.add(box(-6, 6, 10, 46, 15, 27, mat(0x8b9097, { metalness: 0.5 })));
   drone.add(box(14, 21, -7, 7, 43, 73, housM));
-  // the two blades, curves facing: each a curved strip 10 mm wide, bulging outward, so together they form a lens-shaped tube (drawn 3x thick to read at this scale)
+  // the two blades, curves facing: each a curved strip 19 mm wide, bulging outward, so together they form a lens-shaped tube (drawn 3x thick to read at this scale)
   function bladeShape(sign) {
-    const R = 0.008, half = 0.005, th = 0.0006, base = Math.sqrt(R * R - half * half), pts = [];
+    const R = 0.016, half = 0.0095, th = 0.0006, base = Math.sqrt(R * R - half * half), pts = [];
     for (let k = 0; k <= 12; k++) { const t = -half + 2 * half * k / 12; pts.push([sign * (Math.sqrt(R * R - t * t) - base + 0.0004), t]); }
     const sh = new THREE.Shape(); sh.moveTo(pts[0][0], pts[0][1]); pts.forEach(p => sh.lineTo(p[0], p[1]));
     for (let k = pts.length - 1; k >= 0; k--) sh.lineTo(pts[k][0] + sign * th, pts[k][1]);
@@ -515,15 +556,15 @@
   const ledM = new THREE.MeshBasicMaterial({ color: 0xfff6d8 }); const led = new THREE.Mesh(new THREE.BoxGeometry(0.002, 0.008, 0.008), ledM); led.position.set(0.044, 0.008, 0); tilt.add(led);
   const spot = new THREE.SpotLight(0xfff3d6, 0, 2.0, Math.PI / 4.2, 0.6, 2.0); spot.position.set(0.046, 0.008, 0); tilt.add(spot);
   const spotT = new THREE.Object3D(); spotT.position.set(1, 0.008, 0); tilt.add(spotT); spot.target = spotT;
-  // the view cone (92 x 61 deg)
-  const hf = Math.tan(46 * Math.PI / 180), vf = Math.tan(30.5 * Math.PI / 180), D = 0.30;
+  // the view cone (61 x 50 deg)
+  const hf = Math.tan(30.5 * Math.PI / 180), vf = Math.tan(25 * Math.PI / 180), D = 0.30;
   const fg = new THREE.BufferGeometry();
   const P0 = [0.048, 0, 0], c = [[D, D * vf, D * hf], [D, D * vf, -D * hf], [D, -D * vf, -D * hf], [D, -D * vf, D * hf]].map(p => [p[0] + 0.048, p[1], p[2]]);
   const tri = []; for (let k = 0; k < 4; k++) { const a = c[k], b = c[(k + 1) % 4]; tri.push(...P0, ...a, ...b); }
   fg.setAttribute('position', new THREE.Float32BufferAttribute(tri, 3)); fg.computeVertexNormals();
   const cone = new THREE.Mesh(fg, new THREE.MeshBasicMaterial({ color: tapeYellow, transparent: true, opacity: 0.13, side: THREE.DoubleSide, depthWrite: false })); tilt.add(cone);
   const coneEdges = new THREE.LineSegments(new THREE.EdgesGeometry(fg), new THREE.LineBasicMaterial({ color: tapeYellow, transparent: true, opacity: 0.55 })); tilt.add(coneEdges);
-  const probeCam = new THREE.PerspectiveCamera(61, 16 / 9, 0.005, 6); probeCam.position.set(0.049, 0, 0); probeCam.rotation.y = -Math.PI / 2; tilt.add(probeCam);
+  const probeCam = new THREE.PerspectiveCamera(50, 16 / 9, 0.005, 6); probeCam.position.set(0.049, 0, 0); probeCam.rotation.y = -Math.PI / 2; tilt.add(probeCam);
 
   // ---- main camera
   const camera = new THREE.PerspectiveCamera(38, 2, 0.02, 30);
@@ -534,14 +575,14 @@
   else camera.lookAt(TARGET);
 
   // ---- the sequence (s): approach, hold, extend, scan, retract, depart
-  const LOOP = 30, TAPE_MAX = 0.30, PARK = 0.0;
+  const LOOP = 30, TAPE_MAX = 0.15, PARK = 0.0;
   const ease = x => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
   function state(t) {
     let x = 0, ext = 0, yaw = 0, tiltDeg = 0, step = 0, lit = false;
     if (t < 4) { x = -1.7 * (1 - ease(t / 4)); step = 0; }
     else if (t < 6) { step = 1; }
-    else if (t < 11) { ext = 0.20 * ease((t - 6) / 5); step = 2; lit = t > 8; tiltDeg = 5 * ease((t - 9) / 2); }
-    else if (t < 23) { const u = (t - 11) / 12; ext = 0.20 + 0.10 * ease((u - 0.47) / 0.06); step = 3; lit = true; yaw = 2 * Math.PI * 2 * u; tiltDeg = u < 0.5 ? 5 : 50; if (u > 0.47 && u < 0.53) tiltDeg = 5 + 45 * ease((u - 0.47) / 0.06); }
+    else if (t < 11) { ext = TAPE_MAX * ease((t - 6) / 5); step = 2; lit = t > 8; tiltDeg = 5 * ease((t - 9) / 2); }
+    else if (t < 23) { const u = (t - 11) / 12; ext = TAPE_MAX; step = 3; lit = true; yaw = 2 * Math.PI * 2 * u; tiltDeg = u < 0.5 ? 5 : 50; if (u > 0.47 && u < 0.53) tiltDeg = 5 + 45 * ease((u - 0.47) / 0.06); }
     else if (t < 27) { ext = TAPE_MAX * (1 - ease((t - 23) / 4)); step = 4; tiltDeg = 50 * (1 - ease((t - 23) / 2)); lit = t < 24; }
     else { x = 1.7 * ease((t - 27) / 3); step = 5; }
     return { x, ext, yaw, tiltDeg, step, lit };
@@ -559,7 +600,7 @@
     tilt.rotation.z = s.tiltDeg * Math.PI / 180;
     spool.rotation.z = -s.ext / 0.011;
     spot.intensity = s.lit ? 0.9 : 0; ledM.color.set(s.lit ? 0xfff6d8 : 0x777777);
-    cone.visible = coneEdges.visible = s.ext > 0.15;
+    cone.visible = coneEdges.visible = s.ext > 0.08;
     props.forEach(g => { g.userData.bl.rotation.y += g.userData.dir * 0.9; });
     if (s.step !== lastStep) { stepsEl.forEach((li, k) => li.classList.toggle('on', k === s.step)); lastStep = s.step; }
     return s;
@@ -589,7 +630,7 @@
     const [w, h] = size();
     renderer.setScissorTest(false); renderer.setViewport(0, 0, w, h); renderer.render(scene, camera);
     const iw = Math.round(Math.min(w * 0.34, 300)), ih = Math.round(iw * 9 / 16), m = 10;
-    const showInset = s.ext > 0.15;
+    const showInset = s.ext > 0.08;
     insetLabel.hidden = !showInset;
     if (showInset) {
       cone.visible = coneEdges.visible = false;
