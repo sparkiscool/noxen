@@ -6,6 +6,8 @@
 "order": 0,
 "readme_view": "iso",
 "appendix": "systems/scout_v4.appendix.html",
+"timeline": "tools/scout_v4_timeline.py:timeline",
+"frame_timeline": true,
 "note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, the v3 base and battery unchanged, a half cage on the new discs. -160..162 x -160..160 x -48..123 mm, ~706 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
@@ -238,6 +240,34 @@
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
 "note": "two 10 mm steel blades 0.4 m 7.6, flat cable 2 x 300 mm 2, spool with its 40 T gear 5, clock-spring drum 2, housing and throat 6 (PCTG), N20 300 rpm with encoder 10.5, 15 T pinion 0.3, DRV8833 1, TPU lip 1, wires 1 (E)"
+},
+{
+"id": "scout_v4_probe_mast_a",
+"name": "probe mast, blade A (10 mm steel tape, curves facing)",
+"role": "placeholder",
+"group": "camera",
+"color": "#e8c547",
+"mesh": "parts/scout_v4_probe_mast_a/part.stl",
+"mass_g": 0.0,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "drawn 1 mm long above the throat; the page's timeline rolls it out to 300 mm and back (tools/scout_v4_timeline.py). Its mass is in the turret's"
+},
+{
+"id": "scout_v4_probe_mast_b",
+"name": "probe mast, blade B (10 mm steel tape, curves facing)",
+"role": "placeholder",
+"group": "camera",
+"color": "#b8902a",
+"mesh": "parts/scout_v4_probe_mast_b/part.stl",
+"mass_g": 0.0,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "drawn 1 mm long above the throat; the page's timeline rolls it out to 300 mm and back (tools/scout_v4_timeline.py). Its mass is in the turret's"
 },
 {
 "id": "scout_v4_fc",
