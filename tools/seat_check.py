@@ -2,7 +2,7 @@
 drone's parts (systems/<drone>.assembly.json, posed seated as tools/seat_envelope.py does) are intersected with the funnel and deck
 solids as exact booleans (manifold3d; the funnel and deck come from their make.py, in the seat frame). A part that is not a
 manifold (the cage pattern's concatenated tubes) falls back to dense surface sampling against the funnel. Prints every crossing
-with the overlap volume, its bounding box in the seat frame and an approximate depth. python tools/seat_check.py scout|overseer|both
+with the overlap volume, its bounding box in the seat frame and an approximate depth. python tools/seat_check.py scout|overseer|both [--descent] [--walls scout]
 """
 import importlib.util, os, sys
 import numpy as np, trimesh, manifold3d as mf
@@ -37,9 +37,10 @@ def to_tri(mm):
     m = mm.to_mesh(); return trimesh.Trimesh(np.asarray(m.vert_properties)[:, :3], np.asarray(m.tri_verts), process=False)
 
 
-def solids():
-    """the funnel (seat frame) and the enclosure top (W Z 145, the sheets' top edge as a 3 mm band, seat frame): there is no deck (3 Nov)"""
-    fun = load_make("parts/box_funnel/make.py").funnel()
+def solids(walls="overseer"):
+    """the funnel (seat frame) with its end walls at a setting (parts/box_funnel/make.py SETTINGS: "overseer" the 184 seat, "scout"
+    the walls 39.2 in, 9 Nov) and the enclosure top (W Z 145, the sheets' top edge as a 3 mm band, seat frame): there is no deck (3 Nov)"""
+    fun = load_make("parts/box_funnel/make.py").funnel(walls)
     top = mf.Manifold.cube([418.0, 409.0, 3.0]).translate([-209.0, -69.0, 142.0]) - mf.Manifold.cube([412.0, 403.0, 5.0]).translate([-206.0, -66.0, 141.0])
     top = top.transform(np.linalg.inv(SEAT_TO_W)[:3, :])
     return [("funnel", fun, to_tri(fun)), ("enclosure top", top, to_tri(top))]
@@ -59,8 +60,8 @@ def descent_states(drone):
     return out
 
 
-def check(drone, verbose=True, offset=(0.0, 0.0, 0.0)):
-    S = solids()
+def check(drone, verbose=True, offset=(0.0, 0.0, 0.0), walls="overseer"):
+    S = solids(walls)
     hits = []
     T = np.eye(4); T[:3, 3] = offset
     for nm, m in se.parts_of(drone):
@@ -90,12 +91,13 @@ def check(drone, verbose=True, offset=(0.0, 0.0, 0.0)):
 
 if __name__ == "__main__":
     which = sys.argv[1] if len(sys.argv) > 1 else "both"
+    walls = sys.argv[sys.argv.index("--walls") + 1] if "--walls" in sys.argv else "overseer"     # --walls scout: the end walls moved in
     for d in (["scout", "overseer"] if which == "both" else [which]):
-        check(d)
+        check(d, walls=walls)
         if "--descent" in sys.argv:
             bad = 0
             for lab, ox, oy, h in descent_states(d)[1:]:
-                hs = check(d, verbose=False, offset=(ox, oy, h))
+                hs = check(d, verbose=False, offset=(ox, oy, h), walls=walls)
                 if hs:
                     bad += 1; print(f"  descent {lab:14}: " + "; ".join(f"{nm[:28]} x {s} {v:.0f} mm3 at {bb}" for nm, s, v, dd, bb in hs))
             print(f"  descent: {bad} of {len(descent_states(d)) - 1} states with a crossing")

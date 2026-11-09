@@ -13,6 +13,13 @@ clip 17 aft, the faces could all rise to h 50 and capture +-35 (the alternative,
 Legs: four 12 square under the x walls' ends (x -115 / +118, y +-40) down to the deck (W Z 66 = seat z -89.3), merging into the
 walls' tops; the Overseer's loop diagonals and bay ties pass 15 clear of them at its capture limits and the Scout cage keeps
 every member above the wall tops (tools/seat_check.py --descent: 0 crossings in every state for both drones). Wall 3.0, PETG. Not drawn: the hold-down against the 60 N insert, UHMW tape on the faces.
+Moving end walls (9 Nov, Spark: the Scout carries as little as possible, the box takes the rest): the nose and tail walls are two
+carriages, cut from the funnel along its corner hips and between the side walls' faces, that slide along x on the side ledges. Setting
+"overseer" = the 184 seat as above; "scout" = each wall 39.2 in, the seat is the Scout receiver v3's own 105.6 x 65.5 outline (x -51.35
+..54.25), so the Scout needs no runners. The frame (side walls, ledges, skirt, beams, buttress, legs) stays. funnel(setting) is the
+frame plus both carriages at that setting; part.stl is the frame, the carriages are parts/box_funnel_wall_nose and _tail at the
+Overseer setting. Not drawn: the drive (a lead screw per carriage, position switches; the box lands a drone only with its setting
+confirmed, and falls back to the Overseer setting, where a Scout seats loose in x and nothing collides).
 Run: python parts/box_funnel/make.py
 """
 import os, numpy as np, trimesh, manifold3d as mf
@@ -34,6 +41,7 @@ END_CUT_X, END_CUT_Y, END_CUT_H = 100.0, 50.0, 24.0   # the y walls' ends (|x| >
 CORNER_Y = 45.0                                   # the x walls' top corners (h 28..40) stop at |y| 45 (at 48 an Overseer tube grazed the tail corner 1 mm3 at the diagonal capture limit, h 40) at its capture limits; the receiver still bears on them over |y| <= 48
 LEG_Y = 40.0                                       # the nose legs stand on the nose beam under the nose wall's end (|y| 40)      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
+SETTINGS = {"overseer": 0.0, "scout": 39.2}           # how far each end wall moves in from the 184 seat: the Scout receiver v3 is 105.6 long (x -51.35..54.25, centre 1.45)
 
 
 def man(tri):
@@ -47,7 +55,7 @@ def box(x0, x1, y0, y1, z0, z1):
     return mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
 
 
-def funnel():
+def body():
     x0, x1, y0, y1 = SEAT; z0 = SEAT_Z
     gx, gy = H_X / TAN, H_Y / TAN                                                      # 28.0 and 19.6
     w = WALL / np.sin(np.radians(FACE_DEG))
@@ -72,9 +80,56 @@ def funnel():
     return body - inner - hole
 
 
+def carriage_home(sx):
+    """the nose (sx +1) or tail (sx -1) wall as drawn in body(), at the Overseer setting: the shell beyond the corner hips
+    (|x - xend| >= |y| - 33.4), between the side walls' inner faces, from the seat up"""
+    x0, x1, y0, y1 = SEAT; z0 = SEAT_Z + 0.01; xe = x1 if sx > 0 else x0; zt = SEAT_Z + H_X + 2.0; X = 120.0   # 0.01 over the seat plane: no coplanar slivers
+    wedge = hull([(xe - sx * 33.4, 0.0, z0), (xe - sx * 33.4, 0.0, zt), (xe + sx * X, X + 33.4, z0), (xe + sx * X, -X - 33.4, z0),
+                  (xe + sx * X, X + 33.4, zt), (xe + sx * X, -X - 33.4, zt)])
+    g = (zt - z0) / TAN
+    trough = hull([(xe - sx * 40, y0, z0), (xe - sx * 40, y1, z0), (xe + sx * X, y0, z0), (xe + sx * X, y1, z0),
+                   (xe - sx * 40, y0 - g, zt), (xe - sx * 40, y1 + g, zt), (xe + sx * X, y0 - g, zt), (xe + sx * X, y1 + g, zt)])
+    return body() ^ wedge ^ trough
+
+
+BRACKET_Y = (26.0, 46.0)                          # the frame's ties from the ledges out to the beams, |y| 26..46 (the swap head rises at the tail end within |y| 20), under the seat plane
+
+
+def frame():
+    """the funnel without its end walls: the side walls, ledges and skirt tied to the nose and tail beams by four brackets under the
+    seat plane (the walls slide over them); the nose legs, which only held the nose wall, go"""
+    x0, x1 = SEAT[0], SEAT[1]; z0 = SEAT_Z; w = WALL / np.sin(np.radians(FACE_DEG))
+    f = body() - carriage_home(1) - carriage_home(-1)
+    f = f - box(NOSE_BEAM[0] - 1.0, NOSE_BEAM[1] + 2.0, -LEG_Y - LEG, LEG_Y + LEG, NOSE_BEAM[3], z0 + H_X + 1)        # the nose legs' remains
+    ties = []
+    for sy in (-1, 1):
+        ya, yb = sorted((sy * BRACKET_Y[0], sy * BRACKET_Y[1]))
+        ties.append(box(x1 + w - 4.0, NOSE_BEAM[1], ya, yb, NOSE_BEAM[3] - 1.0, z0 - 1.5))
+        ties.append(box(TAIL_BEAM[0], x0 - w + 4.0, ya, yb, TAIL_BEAM[3] - 1.0, z0 - 1.5))
+    f = f + mf.Manifold.batch_boolean(ties, mf.OpType.Add)
+    keep = [m for m in f.decompose() if m.volume() > 1.0]
+    return mf.Manifold.batch_boolean(keep, mf.OpType.Add)
+
+
+def carriage(sx, setting="overseer"):
+    return carriage_home(sx).translate([-sx * SETTINGS[setting], 0.0, 0.0])
+
+
+def funnel(setting="overseer"):
+    """the frame and both end walls at a setting ("overseer" = the 184 seat, "scout" = the walls 39.2 in)"""
+    return frame() + carriage(1, setting) + carriage(-1, setting)
+
+
+def stl(m, path):
+    mm = m.to_mesh(); t = trimesh.Trimesh(np.asarray(mm.vert_properties)[:, :3], np.asarray(mm.tri_verts), process=False)
+    os.makedirs(os.path.dirname(path), exist_ok=True); t.export(path); return t
+
+
 if __name__ == "__main__":
-    m = funnel().to_mesh()
-    t = trimesh.Trimesh(np.asarray(m.vert_properties)[:, :3], np.asarray(m.tri_verts), process=False)
-    t.export(os.path.join(HERE, "part.stl"))
+    PARTS = os.path.dirname(HERE)
+    stl(carriage_home(1), os.path.join(PARTS, "box_funnel_wall_nose", "part.stl"))
+    stl(carriage_home(-1), os.path.join(PARTS, "box_funnel_wall_tail", "part.stl"))
+    t = stl(frame(), os.path.join(HERE, "part.stl"))
+    print(f"frame {t.volume * 1.27e-3:.0f} g in {len(frame().decompose())} piece(s), walls {carriage_home(1).volume() * 1.27e-3:.1f} + {carriage_home(-1).volume() * 1.27e-3:.1f} g; walls in for the Scout by {SETTINGS['scout']}")
     print(f"funnel v3: x faces to h {H_X:.0f} (capture +-{H_X / TAN:.0f}), y faces to h {H_Y:.0f} (+-{H_Y / TAN:.0f}); extents {t.extents.round(1).tolist()}, "
           f"min {t.bounds[0].round(1).tolist()} max {t.bounds[1].round(1).tolist()}, {t.volume * 1.27e-3:.0f} g PETG, watertight {t.is_watertight}")
