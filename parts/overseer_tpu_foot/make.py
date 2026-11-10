@@ -502,7 +502,7 @@ if __name__ == "__main__":
             info.update(vol_mm3=round(b.volume()), height=round(tb.extents[2], 1), print_height=round(tp.extents[2], 1), watertight=bool(tb.is_watertight), genus=b.genus())
             print(json.dumps(info))
     p = to_tri(mf.Manifold.batch_boolean(plate, mf.OpType.Add))      # the page's view: the six 68D boots on their nodes, drone frame, decimated (print/ has the meshes)
-    p.simplify_quadric_decimation(face_count=60000).export(os.path.join(HERE, "part.stl"))
+    p.simplify_quadric_decimation(face_count=180000).export(os.path.join(HERE, "part.stl"))   # 10 Nov: 60k for six boots wiped the cells out on the page
     # the curves: v2's 50 x 40 x 20 box puck and v3's 34 x 34 x 30 block at sigma_y 15 and +-40 %
     curves = []
     c = am.honeycomb_curve(1190.0, 15.0, HEX_T, 9.0, 50.0, 20.0, 40.0)                            # v2: the 40 tall box, side 9.0
