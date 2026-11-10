@@ -110,7 +110,11 @@ def bodies():
         yz = [(ly0, lz), (ly1, lz), (ly1, lz + 1.2), (LUG_Y1, lz + 1.2 + 1.43 * (LUG_Y1 - ly1)), (LUG_Y1, DZ1), (ly0, DZ1)]   # BS socket, out under the
         env.append(hull_pts([(x, s_ * y, z) for x in (-LUG_X, LUG_X) for y, z in yz]))   # discs' keep-out, its outer face up the funnel's 55 deg
     drawn, cuts = [], []
-    cuts.append(box(rx0 - 0.1, rx1, -33.3, 33.3, -60.0, S.REC_TOP))                  # the battery mechanism (the receiver's box) under the yokes
+    cuts.append(box(rx0 - 0.1, rx1, -33.3, 33.3, -60.0, -2.6))                       # the battery mechanism (the receiver's box) under the yokes; above
+    rr = 5.0                                                                          # z -2.6 its vertical corners round r 5 (10 Nov, run 188: 0.785 at the box's
+    cuts.append(hull_pts([(x, y, z) for x in (rx0 - 0.1 + rr, rx1 - rr) for y in (-33.3 + rr, 33.3 - rr) for z in (-2.7, S.REC_TOP)]))   # tail corner; the
+    cuts += [cyl(x, y, -2.7, S.REC_TOP, rr) for x in (rx0 - 0.1 + rr, rx1 - rr) for y in (-33.3 + rr, 33.3 - rr)]   # receiver v3 mesh is empty there, checked)
+    cuts += [box(rx0 - 0.1 + rr, rx1 - rr, -33.3, 33.3, -2.7, S.REC_TOP), box(rx0 - 0.1, rx1, -33.3 + rr, 33.3 - rr, -2.7, S.REC_TOP)]
     # ---- the motor pods: the pad in the deck's layers, 4 x M2 up from below (the heads under the pad), the bell over it
     pods, pod_regs = [], []
     for mx, my in S.MOTORS:
@@ -180,6 +184,7 @@ def bodies():
     cuts.append(box(lb[0][0] - 0.3, lb[0][0] + 4, -3, 3, lb[1][2] - 3, S.REC_TOP + 2.0))                          # its cable up the receiver's nose face
     reg = box(lb[0][0], lb[1][0], lb[0][1], lb[1][1], lb[1][2], lb[1][2] + 0.6)
     boards.append(("flow MTF-02P", [tuple(lb.mean(0))], [reg], ASM["scout_v4_flow_mtf_02p"]["mass_g"], tuple(lb.mean(0))))
+    flow_reg = box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2] + 2.0, lb[1][2] + 2.6)   # the land's top face
     # ---- the 8 rod sockets (crowns down: the print's up)
     side = [s for k in ("DS0", "BS0", "DS1", "BS1") for s in socks_of(k, cls=SockDown)]
     ends = [s for k in ("DN", "BN", "DT", "BT") for s in socks_of(k, cls=SockDown)]
@@ -193,7 +198,7 @@ def bodies():
     env += [along(s.pt(-8.0), np.array([s.c[0] - np.sign(s.c[0]) * 25.0, 0.0, 10.0]), 7.0) for s in ends]
     env = U(env) ^ box(-S.BED, S.BED, -S.BED, S.BED, -60.0, DZ1) ^ funnel_room()     # the A1 mini's 180; nothing below the walls-in funnel's line
     check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
-    return dict(drawn=U(drawn) ^ box(-S.BED - 5, S.BED + 5, -S.BED - 5, S.BED + 5, -60.0, DZ1), cuts=U(cuts), env=env,   # the bed: DN / DT's deeper collars rise to 24.8 at their back (10 Nov)
+    return dict(drawn=U(drawn) ^ box(-S.BED - 5, S.BED + 5, -S.BED - 5, S.BED + 5, -60.0, DZ1), cuts=U(cuts), env=env, flow_reg=flow_reg,   # the bed: DN / DT's deeper collars rise to 24.8 at their back (10 Nov)
                 pod_regs=pod_regs, rec_regs=rec_regs, tur_regs=tur_regs, socks=socks, boards=boards)
 
 
@@ -247,4 +252,6 @@ def setup(h):
     f = rigid_split(tpts, np.array([0, 0, -261.0]), np.array([S.AXIS[0], 0.0, 130.0]))
     p.load_multi("head-first crash: 261 N down the throat", [(B["tur_regs"][i], f[i]) for i in range(4)], cls="crash")
     socket_cases(p, B["socks"])
+    for lab, F in (("up", (0, 0, 10.0)), ("side", (0, 10.0, 0))):                     # 10 Nov (run 188: the land on 1.8 mm necks): the frame's lowest, most
+        p.load(f"handling: 10 N {lab} on the flow sensor's pod (a hand)", B["flow_reg"], F, cls="misuse")   # exposed printed feature, picked by hand
     return p
