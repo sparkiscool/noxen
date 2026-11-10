@@ -40,7 +40,7 @@ def gear_2d(z, x=0.0, m=M, backlash=BACKLASH, res=160):
     space = unary_union(cuts)
     spaces = unary_union([affinity.rotate(space, 360.0 * k / z, origin=(0, 0)) for k in range(z)])
     g = Point(0, 0).buffer(ra, 256).difference(spaces)
-    return g.buffer(0.02).buffer(-0.02)                                           # drop the cutter's facets' slivers
+    return g.buffer(0.02).buffer(-0.02).simplify(0.008)                          # drop the cutter's facets' slivers; 8 um of tolerance (the printer's step is 0.1)
 
 
 def extrude(poly, z0, z1):
