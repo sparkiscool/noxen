@@ -18,7 +18,7 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, hull, U, socks_of
 
 import json as _json, os as _os
 HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
-SPEC = dict(h=1.2, gen_cm3=14.0, max_worst=0.3)  # 9 Nov: 9 cm3 read 1.01 at RM-RB with its arms out to r 34 and the budget spent; 14 with the FE fold loads (1.2 N m in y) and the roller
+SPEC = dict(h=1.2, gen_cm3=20.0, max_worst=0.3)  # 10 Nov run 3: 14 cm3 read 0.50 at the +y roller guide (the 1.2 N m fold in y and the head-first crash share its one strut down to the floor bolts): 20. 9 Nov: 9 cm3 read 1.01 at RM-RB with its arms out to r 34 and the budget spent; 14 with the FE fold loads (1.2 N m in y) and the roller
 CUP_R, BLADE_T, CABLE_T = 15.0, 0.13, 0.6       # the 19 mm blade's cup radius and thickness (patents: R 12.7..25.4, t 0.11..0.19; E), the 6 x 30 AWG PTFE ribbon
 FOLD_NM = (0.6, 1.2)                             # the moment the mast can put on the throat before it folds, +-x and +-y (tools/probe_mast_fe.py: the unbonded lens folds at ~0.50 N m in x, 3.6 in y; x x 1.2, y capped at 2 x x: a bigger y moment is a crash on the head)
 
