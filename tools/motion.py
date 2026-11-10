@@ -82,10 +82,11 @@ class Scene:
         self.parts, self.frames, self.duration, self.series_ = [], None, 0.0, []
         self.views = {}
 
-    def part(self, name, mesh, group="part", color=None, printed=True, faces=30000, note="", opacity=None, segs=None):
+    def part(self, name, mesh, group="part", color=None, printed=True, faces=30000, note="", opacity=None, segs=None, print_url=None):
         """mesh: trimesh in world coords at the identity pose. Same mesh object under several names is embedded once.
-        segs: [(member, p0, p1, cut_mm[, old_mm])] for a mesh of many rods, so a click on the page names the rod and its cut length."""
-        self.parts.append(dict(name=name, mesh=mesh, group=group, color=color, printed=printed, faces=faces, note=note, opacity=opacity,
+        segs: [(member, p0, p1, cut_mm[, old_mm])] for a mesh of many rods, so a click on the page names the rod and its cut length.
+        print_url: the part's full print mesh (tools/print_mesh.py), linked when the part is clicked."""
+        self.parts.append(dict(name=name, mesh=mesh, group=group, color=color, printed=printed, faces=faces, note=note, opacity=opacity, print_url=print_url,
                                segs=[[n, *map(lambda v: round(float(v), 2), (*a, *b)), round(float(L), 1), *w] for n, a, b, L, *w in (segs or [])]))
         return self
 
@@ -124,7 +125,8 @@ class Scene:
                 vol = abs(float(p["mesh"].volume)) if p["mesh"].is_volume else None
                 meshes[key]["mass"] = round(vol * RHO.get(self.material, 1.27e-3), 1) if (vol and p["printed"]) else None
             parts.append(dict(name=p["name"], mesh=key, group=p["group"], color=p["color"] or PALETTE[k % len(PALETTE)],
-                              printed=bool(p["printed"]), note=p["note"], opacity=p.get("opacity"), segs=p.get("segs") or None))
+                              printed=bool(p["printed"]), note=p["note"], opacity=p.get("opacity"), segs=p.get("segs") or None,
+                              print=p.get("print_url")))
         names = [p["name"] for p in self.parts]
         F = np.zeros((len(self.frames), len(names), 16), np.float32)
         for i, fr in enumerate(self.frames):

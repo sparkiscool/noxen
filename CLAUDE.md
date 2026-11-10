@@ -6,7 +6,7 @@ optimisation; the page at the repo's GitHub Pages URL always shows the current a
 ## Commands
 ```
 python -m topo.run parts/<name> --h 2.0 --maxit 10 --no-coarse   # 2-minute smoke to see the setup load (never a full run here)
-python tools/solid_check.py parts/<name>/part.stl                 # the only gate (CI runs it)
+python tools/solid_check.py $(python tools/print_mesh.py fetch <name>)   # the only gate (CI runs it), on the print mesh: part.stl is a viewing mesh
 python tools/dim.py <section>                                     # one section of systems/dimensions.md, never the whole file
 python tools/sweep.py [--apply]                                   # the Monday sweep (scheduled task, fresh session): the only housekeeping
 ```

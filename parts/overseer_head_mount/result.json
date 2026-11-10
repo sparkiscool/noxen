@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   90492.7
+   90228.5
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -16,10 +16,10 @@
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 54.73,
+    "core_mm3": 55.05,
     "at": [
-     321.3,
-     38.1,
+     330.8,
+     -11.8,
      -4.0
     ],
     "span": [
@@ -27,15 +27,15 @@
      1.6,
      1.5
     ],
-    "mm3": 95.5
+    "mm3": 95.8
    },
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 54.73,
+    "core_mm3": 55.05,
     "at": [
-     321.3,
-     38.1,
+     330.8,
+     -11.8,
      24.0
     ],
     "span": [
@@ -43,15 +43,47 @@
      1.6,
      1.5
     ],
-    "mm3": 95.5
+    "mm3": 95.8
    },
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 54.58,
+    "core_mm3": 54.97,
     "at": [
      330.8,
      11.8,
+     -4.0
+    ],
+    "span": [
+     1.6,
+     1.6,
+     1.5
+    ],
+    "mm3": 95.7
+   },
+   {
+    "kind": "wall",
+    "thick_mm": 1.5,
+    "core_mm3": 54.97,
+    "at": [
+     330.8,
+     11.8,
+     24.0
+    ],
+    "span": [
+     1.6,
+     1.6,
+     1.5
+    ],
+    "mm3": 95.7
+   },
+   {
+    "kind": "wall",
+    "thick_mm": 1.5,
+    "core_mm3": 54.83,
+    "at": [
+     321.3,
+     -38.1,
      -4.0
     ],
     "span": [
@@ -64,10 +96,10 @@
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 54.58,
+    "core_mm3": 54.83,
     "at": [
-     330.8,
-     11.8,
+     321.3,
+     -38.1,
      24.0
     ],
     "span": [
@@ -80,10 +112,10 @@
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 54.52,
+    "core_mm3": 54.55,
     "at": [
-     330.8,
-     -11.8,
+     321.3,
+     38.1,
      -4.0
     ],
     "span": [
@@ -96,10 +128,10 @@
    {
     "kind": "wall",
     "thick_mm": 1.5,
-    "core_mm3": 54.52,
+    "core_mm3": 54.55,
     "at": [
-     330.8,
-     -11.8,
+     321.3,
+     38.1,
      24.0
     ],
     "span": [
@@ -108,38 +140,6 @@
      1.5
     ],
     "mm3": 94.9
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 54.41,
-    "at": [
-     321.3,
-     -38.1,
-     -4.0
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 94.8
-   },
-   {
-    "kind": "wall",
-    "thick_mm": 1.5,
-    "core_mm3": 54.41,
-    "at": [
-     321.3,
-     -38.1,
-     24.0
-    ],
-    "span": [
-     1.6,
-     1.6,
-     1.5
-    ],
-    "mm3": 94.8
    }
   ],
   "acute_edges": 5,
@@ -157,8 +157,8 @@
    {
     "case": "crash 0 (35 g)",
     "cls": "crash",
-    "inlayer": 0.014,
-    "across": 0.023,
+    "inlayer": 0.016,
+    "across": 0.03,
     "at": [
      348.8,
      -5.0,
@@ -168,19 +168,19 @@
    {
     "case": "crash 1 (35 g) nose hit",
     "cls": "crash",
-    "inlayer": 0.014,
-    "across": 0.019,
+    "inlayer": 0.016,
+    "across": 0.021,
     "at": [
-     332.8,
-     3.0,
-     41.8
+     352.8,
+     -13.0,
+     119.8
     ]
    },
    {
     "case": "crash 2 (35 g)",
     "cls": "crash",
-    "inlayer": 0.027,
-    "across": 0.039,
+    "inlayer": 0.03,
+    "across": 0.043,
     "at": [
      354.8,
      25.0,
@@ -190,8 +190,8 @@
    {
     "case": "crash 3 (35 g)",
     "cls": "crash",
-    "inlayer": 0.027,
-    "across": 0.036,
+    "inlayer": 0.03,
+    "across": 0.04,
     "at": [
      354.8,
      -25.0,
@@ -201,30 +201,30 @@
    {
     "case": "crash 4 (35 g)",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.032,
+    "inlayer": 0.027,
+    "across": 0.038,
     "at": [
-     360.8,
+     348.8,
      -5.0,
-     137.8
+     87.8
     ]
    },
    {
     "case": "crash 5 (35 g)",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.025,
+    "inlayer": 0.027,
+    "across": 0.027,
     "at": [
      360.8,
-     -5.0,
+     5.0,
      137.8
     ]
    },
    {
     "case": "crash 6 (35 g)",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.033,
+    "inlayer": 0.024,
+    "across": 0.043,
     "at": [
      348.8,
      -5.0,
@@ -234,8 +234,8 @@
    {
     "case": "crash 7 (35 g)",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.025,
+    "inlayer": 0.025,
+    "across": 0.028,
     "at": [
      350.8,
      7.0,
@@ -245,19 +245,19 @@
    {
     "case": "crash 8 (35 g)",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.029,
+    "inlayer": 0.024,
+    "across": 0.036,
     "at": [
-     344.8,
-     5.0,
-     89.8
+     348.8,
+     -5.0,
+     87.8
     ]
    },
    {
     "case": "crash 9 (35 g)",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.026,
+    "inlayer": 0.026,
+    "across": 0.029,
     "at": [
      350.8,
      -7.0,
@@ -267,8 +267,8 @@
    {
     "case": "crash 10 (35 g)",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.031,
+    "inlayer": 0.026,
+    "across": 0.035,
     "at": [
      354.8,
      25.0,
@@ -278,8 +278,8 @@
    {
     "case": "crash 11 (35 g)",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.031,
+    "inlayer": 0.024,
+    "across": 0.035,
     "at": [
      354.8,
      25.0,
@@ -289,8 +289,8 @@
    {
     "case": "crash 12 (35 g)",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.031,
+    "inlayer": 0.025,
+    "across": 0.035,
     "at": [
      356.8,
      -27.0,
@@ -300,8 +300,8 @@
    {
     "case": "crash 13 (35 g)",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.032,
+    "inlayer": 0.024,
+    "across": 0.036,
     "at": [
      352.8,
      -19.0,
@@ -311,19 +311,19 @@
    {
     "case": "flight 4 g",
     "cls": "flight",
-    "inlayer": 0.01,
-    "across": 0.013,
+    "inlayer": 0.011,
+    "across": 0.016,
     "at": [
-     360.8,
+     348.8,
      -5.0,
-     137.8
+     87.8
     ]
    },
    {
     "case": "flight 2 g x",
     "cls": "flight",
     "inlayer": 0.004,
-    "across": 0.008,
+    "across": 0.01,
     "at": [
      348.8,
      -5.0,
@@ -333,8 +333,8 @@
    {
     "case": "flight 2 g y",
     "cls": "flight",
-    "inlayer": 0.006,
-    "across": 0.008,
+    "inlayer": 0.007,
+    "across": 0.009,
     "at": [
      354.8,
      25.0,
@@ -344,30 +344,30 @@
    {
     "case": "landing 6 g",
     "cls": "flight",
-    "inlayer": 0.015,
-    "across": 0.02,
+    "inlayer": 0.017,
+    "across": 0.024,
     "at": [
-     360.8,
+     348.8,
      -5.0,
-     137.8
+     87.8
     ]
    },
    {
     "case": "tube 15-17 tension 181 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.017,
-    "across": 0.019,
+    "inlayer": 0.02,
+    "across": 0.023,
     "at": [
-     364.8,
-     19.0,
-     47.8
+     360.8,
+     9.0,
+     45.8
     ]
    },
    {
     "case": "tube 15-17 compression 181 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.017,
-    "across": 0.018,
+    "inlayer": 0.021,
+    "across": 0.021,
     "at": [
      356.8,
      29.0,
@@ -377,19 +377,19 @@
    {
     "case": "tube 16-17 tension 181 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.019,
+    "inlayer": 0.024,
+    "across": 0.026,
     "at": [
-     354.8,
-     -13.0,
-     65.8
+     360.8,
+     -9.0,
+     45.8
     ]
    },
    {
     "case": "tube 16-17 compression 181 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.018,
+    "inlayer": 0.026,
+    "across": 0.021,
     "at": [
      354.8,
      -13.0,
@@ -399,19 +399,19 @@
    {
     "case": "tube 17-18 tension 229 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.029,
-    "across": 0.031,
+    "inlayer": 0.033,
+    "across": 0.035,
     "at": [
-     354.8,
-     29.0,
-     47.8
+     362.8,
+     9.0,
+     49.8
     ]
    },
    {
     "case": "tube 17-18 compression 229 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.029,
-    "across": 0.031,
+    "inlayer": 0.033,
+    "across": 0.035,
     "at": [
      358.8,
      35.0,
@@ -421,19 +421,19 @@
    {
     "case": "tube 17-19 tension 187 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.025,
+    "inlayer": 0.027,
+    "across": 0.03,
     "at": [
-     354.8,
-     -29.0,
-     47.8
+     362.8,
+     -9.0,
+     49.8
     ]
    },
    {
     "case": "tube 17-19 compression 187 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.025,
+    "inlayer": 0.027,
+    "across": 0.029,
     "at": [
      358.8,
      -35.0,
@@ -443,66 +443,60 @@
    {
     "case": "core tie front.2 tension 425 N + side 0 N",
     "cls": "crash",
-    "inlayer": 0.046,
-    "across": 0.043,
+    "inlayer": 0.051,
+    "across": 0.051,
     "at": [
-     346.8,
-     -5.0,
-     51.8
+     338.8,
+     3.0,
+     53.8
     ]
    },
    {
     "case": "core tie front.2 compression 425 N + side 0 N",
     "cls": "crash",
-    "inlayer": 0.046,
-    "across": 0.03,
+    "inlayer": 0.051,
+    "across": 0.035,
     "at": [
-     346.8,
-     -5.0,
-     51.8
+     350.8,
+     7.0,
+     49.8
     ]
    }
   ],
-  "worst": 0.046,
+  "worst": 0.051,
   "worst_case": "core tie front.2 tension 425 N + side 0 N",
   "worst_at": [
-   346.8,
-   -5.0,
-   51.8
+   338.8,
+   3.0,
+   53.8
   ]
  },
- "mass_g": 147.76,
+ "mass_g": 143.1,
  "watertight": true,
  "export": {
-  "faces_in": 500064,
+  "faces_in": 509294,
   "degenerate": 0,
   "folded": 0,
-  "caps_split": 1,
+  "caps_split": 0,
   "caps_left": 0,
-  "dropped_shells": [
-   {
-    "faces": 42,
-    "mm3": 0.002,
-    "closed": true
-   }
-  ],
-  "n_dropped_shells": 1,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 500022,
+  "faces": 509294,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 674,
-   "folded": 634,
-   "caps_split": 300,
-   "caps_left": 26,
+   "degenerate": 656,
+   "folded": 625,
+   "caps_split": 321,
+   "caps_left": 18,
    "watertight": true,
-   "faces": 718112
+   "faces": 728684
   },
-  "volume_mm3": 116339.9,
-  "exact_mm3": 116342.8
+  "volume_mm3": 116339.8,
+  "exact_mm3": 116343.2
  },
  "bodies": {
   "bodies_raw": 83,
@@ -592,10 +586,10 @@
    0.0,
    0.0
   ],
-  "bodies": 66
+  "bodies": 72
  },
- "volume_mm3": 116342.8,
- "drawn_g": 21.49,
+ "volume_mm3": 116343.2,
+ "drawn_g": 20.82,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
@@ -603,10 +597,12 @@
   "specks_mm3": [
    0.047,
    0.047,
+   0.047,
    0.031,
    0.031,
-   0.016,
-   0.016,
+   0.031,
+   0.031,
+   0.031,
    0.016,
    0.016,
    0.016,
@@ -622,8 +618,8 @@
      -4.0
     ],
     "thick_mm": 1.5,
-    "core_mm3": 54.42,
-    "mm3": 94.8
+    "core_mm3": 54.86,
+    "mm3": 95.2
    },
    {
     "at": [
@@ -632,48 +628,28 @@
      24.0
     ],
     "thick_mm": 1.5,
-    "core_mm3": 54.42,
+    "core_mm3": 54.86,
+    "mm3": 95.2
+   },
+   {
+    "at": [
+     321.3,
+     38.1,
+     -4.0
+    ],
+    "thick_mm": 1.5,
+    "core_mm3": 54.53,
     "mm3": 94.8
    },
    {
     "at": [
      321.3,
      38.1,
-     -4.0
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 54.72,
-    "mm3": 95.5
-   },
-   {
-    "at": [
-     321.3,
-     38.1,
      24.0
     ],
     "thick_mm": 1.5,
-    "core_mm3": 54.72,
-    "mm3": 95.5
-   },
-   {
-    "at": [
-     330.8,
-     11.8,
-     -4.0
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 54.56,
-    "mm3": 95.2
-   },
-   {
-    "at": [
-     330.8,
-     11.8,
-     24.0
-    ],
-    "thick_mm": 1.5,
-    "core_mm3": 54.56,
-    "mm3": 95.2
+    "core_mm3": 54.53,
+    "mm3": 94.8
    },
    {
     "at": [
@@ -682,8 +658,8 @@
      -4.0
     ],
     "thick_mm": 1.5,
-    "core_mm3": 54.52,
-    "mm3": 94.9
+    "core_mm3": 55.12,
+    "mm3": 95.9
    },
    {
     "at": [
@@ -692,12 +668,32 @@
      24.0
     ],
     "thick_mm": 1.5,
-    "core_mm3": 54.52,
-    "mm3": 94.9
+    "core_mm3": 55.12,
+    "mm3": 95.9
+   },
+   {
+    "at": [
+     330.8,
+     11.8,
+     -4.0
+    ],
+    "thick_mm": 1.5,
+    "core_mm3": 54.98,
+    "mm3": 95.7
+   },
+   {
+    "at": [
+     330.8,
+     11.8,
+     24.0
+    ],
+    "thick_mm": 1.5,
+    "core_mm3": 54.98,
+    "mm3": 95.7
    }
   ],
-  "removed_mm3": 0.21,
-  "specks": 11
+  "removed_mm3": 0.31,
+  "specks": 13
  },
  "stl": "overseer_head_mount.stl",
  "view_stl": "overseer_head_mount_view.stl",
@@ -774,7 +770,7 @@
   "n_real": 28,
   "n_ties": 162,
   "backend": "direct",
-  "iterations": 70,
+  "iterations": 69,
   "stopped": "grey"
  },
  "grid": {
@@ -838,12 +834,13 @@
    "held but core tie front.2"
   ]
  },
- "build_s": 733.5,
- "layout_s": 9025,
- "peak_gb": 10.213484,
+ "build_s": 402.7,
+ "layout_s": 7432,
+ "peak_gb": 10.151992,
  "gen_cm3": 100.0,
  "h": 2.0,
  "audit": {
+  "solid_ok": [],
   "drawn_share": 0.028,
   "load_room": [],
   "bodies": [
@@ -861,7 +858,8 @@
      -37.0,
      -4.1
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 29
    },
    {
     "id": 2,
@@ -877,7 +875,8 @@
      -37.0,
      23.9
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 29
    },
    {
     "id": 3,
@@ -893,7 +892,8 @@
      37.0,
      -4.1
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 29
    },
    {
     "id": 4,
@@ -909,7 +909,8 @@
      37.0,
      23.9
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 29
    },
    {
     "id": 5,
@@ -925,7 +926,8 @@
      -10.9,
      -4.1
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 28
    },
    {
     "id": 6,
@@ -941,7 +943,8 @@
      -10.9,
      23.9
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 28
    },
    {
     "id": 7,
@@ -957,7 +960,8 @@
      10.9,
      -4.1
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 28
    },
    {
     "id": 8,
@@ -973,7 +977,8 @@
      10.9,
      23.9
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 28
    },
    {
     "id": 9,
@@ -989,7 +994,8 @@
      0.0,
      46.1
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 92
    },
    {
     "id": 10,
@@ -1005,7 +1011,8 @@
      0.0,
      87.5
     ],
-    "core_mm": 3.7
+    "core_mm": 3.7,
+    "free_cells": 182
    },
    {
     "id": 11,
@@ -1022,6 +1029,7 @@
      47.7
     ],
     "core_mm": 2.0,
+    "free_cells": 346,
     "share_of_drawn": 0.17
    },
    {
@@ -1038,7 +1046,8 @@
      21.4,
      47.7
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 346
    },
    {
     "id": 13,
@@ -1054,7 +1063,8 @@
      -1.0,
      129.0
     ],
-    "core_mm": 2.0
+    "core_mm": 2.0,
+    "free_cells": 325
    },
    {
     "id": 14,
@@ -1070,7 +1080,8 @@
      -25.7,
      112.1
     ],
-    "core_mm": 3.7
+    "core_mm": 3.7,
+    "free_cells": 177
    },
    {
     "id": 15,
@@ -1086,7 +1097,8 @@
      25.7,
      112.1
     ],
-    "core_mm": 3.7
+    "core_mm": 3.7,
+    "free_cells": 177
    },
    {
     "id": 16,
@@ -1102,7 +1114,8 @@
      0.0,
      136.6
     ],
-    "core_mm": 3.7
+    "core_mm": 3.7,
+    "free_cells": 184
    }
   ],
   "envelope_waste": 0.001,
@@ -1116,26 +1129,38 @@
   "drawn_walls": [],
   "cases": 28,
   "supports": 12,
-  "fails": []
+  "fails": [],
+  "room_full": {
+   "worst": 0.035,
+   "worst_case": "tube 17-18 tension 229 N + side 4 N",
+   "worst_at": [
+    358.8,
+    33.0,
+    35.8
+   ],
+   "budget_share": 0.178,
+   "thinned": 0.2,
+   "max_worst": 0.3
+  }
  },
  "early": {
   "rows": [
    {
     "case": "crash 0 (35 g)",
     "cls": "crash",
-    "inlayer": 0.016,
-    "across": 0.027,
+    "inlayer": 0.02,
+    "across": 0.028,
     "at": [
-     346.8,
-     -5.0,
-     89.8
+     356.8,
+     -11.0,
+     31.8
     ]
    },
    {
     "case": "crash 1 (35 g) nose hit",
     "cls": "crash",
-    "inlayer": 0.016,
-    "across": 0.023,
+    "inlayer": 0.02,
+    "across": 0.03,
     "at": [
      332.8,
      -3.0,
@@ -1145,8 +1170,8 @@
    {
     "case": "crash 2 (35 g)",
     "cls": "crash",
-    "inlayer": 0.028,
-    "across": 0.031,
+    "inlayer": 0.031,
+    "across": 0.035,
     "at": [
      354.8,
      23.0,
@@ -1156,8 +1181,8 @@
    {
     "case": "crash 3 (35 g)",
     "cls": "crash",
-    "inlayer": 0.028,
-    "across": 0.033,
+    "inlayer": 0.031,
+    "across": 0.037,
     "at": [
      356.8,
      -27.0,
@@ -1167,19 +1192,19 @@
    {
     "case": "crash 4 (35 g)",
     "cls": "crash",
-    "inlayer": 0.029,
-    "across": 0.033,
+    "inlayer": 0.033,
+    "across": 0.035,
     "at": [
-     346.8,
-     -5.0,
-     89.8
+     362.8,
+     5.0,
+     137.8
     ]
    },
    {
     "case": "crash 5 (35 g)",
     "cls": "crash",
-    "inlayer": 0.029,
-    "across": 0.025,
+    "inlayer": 0.033,
+    "across": 0.028,
     "at": [
      362.8,
      5.0,
@@ -1189,19 +1214,19 @@
    {
     "case": "crash 6 (35 g)",
     "cls": "crash",
-    "inlayer": 0.022,
+    "inlayer": 0.024,
     "across": 0.039,
     "at": [
-     346.8,
+     348.8,
      -5.0,
-     89.8
+     87.8
     ]
    },
    {
     "case": "crash 7 (35 g)",
     "cls": "crash",
-    "inlayer": 0.023,
-    "across": 0.031,
+    "inlayer": 0.026,
+    "across": 0.036,
     "at": [
      356.8,
      11.0,
@@ -1211,19 +1236,19 @@
    {
     "case": "crash 8 (35 g)",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.03,
+    "inlayer": 0.024,
+    "across": 0.032,
     "at": [
-     346.8,
-     -5.0,
+     344.8,
+     5.0,
      89.8
     ]
    },
    {
     "case": "crash 9 (35 g)",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.032,
+    "inlayer": 0.026,
+    "across": 0.036,
     "at": [
      356.8,
      -11.0,
@@ -1233,8 +1258,8 @@
    {
     "case": "crash 10 (35 g)",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.029,
+    "inlayer": 0.026,
+    "across": 0.038,
     "at": [
      332.8,
      3.0,
@@ -1244,8 +1269,8 @@
    {
     "case": "crash 11 (35 g)",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.027,
+    "inlayer": 0.024,
+    "across": 0.03,
     "at": [
      352.8,
      23.0,
@@ -1255,8 +1280,8 @@
    {
     "case": "crash 12 (35 g)",
     "cls": "crash",
-    "inlayer": 0.023,
-    "across": 0.029,
+    "inlayer": 0.026,
+    "across": 0.038,
     "at": [
      332.8,
      -3.0,
@@ -1266,8 +1291,8 @@
    {
     "case": "crash 13 (35 g)",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.031,
+    "inlayer": 0.024,
+    "across": 0.035,
     "at": [
      352.8,
      -17.0,
@@ -1277,12 +1302,12 @@
    {
     "case": "flight 4 g",
     "cls": "flight",
-    "inlayer": 0.012,
+    "inlayer": 0.014,
     "across": 0.014,
     "at": [
-     346.8,
-     -5.0,
-     89.8
+     362.8,
+     5.0,
+     137.8
     ]
    },
    {
@@ -1291,16 +1316,16 @@
     "inlayer": 0.004,
     "across": 0.009,
     "at": [
-     346.8,
+     348.8,
      -5.0,
-     89.8
+     87.8
     ]
    },
    {
     "case": "flight 2 g y",
     "cls": "flight",
-    "inlayer": 0.006,
-    "across": 0.007,
+    "inlayer": 0.007,
+    "across": 0.008,
     "at": [
      356.8,
      27.0,
@@ -1310,52 +1335,52 @@
    {
     "case": "landing 6 g",
     "cls": "flight",
-    "inlayer": 0.018,
-    "across": 0.02,
+    "inlayer": 0.02,
+    "across": 0.022,
     "at": [
-     346.8,
-     -5.0,
-     89.8
+     362.8,
+     5.0,
+     137.8
     ]
    },
    {
     "case": "tube 15-17 tension 181 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.019,
-    "across": 0.023,
+    "inlayer": 0.022,
+    "across": 0.025,
     "at": [
      362.8,
      15.0,
-     47.8
+     49.8
     ]
    },
    {
     "case": "tube 15-17 compression 181 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.02,
-    "across": 0.02,
+    "inlayer": 0.023,
+    "across": 0.023,
     "at": [
-     354.8,
-     29.0,
-     47.8
+     362.8,
+     -3.0,
+     55.8
     ]
    },
    {
     "case": "tube 16-17 tension 181 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.023,
-    "across": 0.024,
+    "inlayer": 0.026,
+    "across": 0.029,
     "at": [
-     362.8,
+     360.8,
      -15.0,
-     47.8
+     43.8
     ]
    },
    {
     "case": "tube 16-17 compression 181 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.026,
-    "across": 0.019,
+    "inlayer": 0.029,
+    "across": 0.022,
     "at": [
      354.8,
      -15.0,
@@ -1365,76 +1390,76 @@
    {
     "case": "tube 17-18 tension 229 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.032,
-    "across": 0.041,
+    "inlayer": 0.039,
+    "across": 0.06,
     "at": [
      360.8,
-     13.0,
-     41.8
+     15.0,
+     43.8
     ]
    },
    {
     "case": "tube 17-18 compression 229 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.033,
-    "across": 0.037,
+    "inlayer": 0.041,
+    "across": 0.043,
     "at": [
-     356.8,
-     29.0,
-     47.8
+     360.8,
+     15.0,
+     43.8
     ]
    },
    {
     "case": "tube 17-19 tension 187 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.027,
-    "across": 0.035,
+    "inlayer": 0.033,
+    "across": 0.052,
     "at": [
      360.8,
-     -13.0,
-     41.8
+     -15.0,
+     43.8
     ]
    },
    {
     "case": "tube 17-19 compression 187 N + side 4 N",
     "cls": "crash",
-    "inlayer": 0.026,
-    "across": 0.029,
+    "inlayer": 0.031,
+    "across": 0.033,
     "at": [
-     356.8,
-     -29.0,
-     47.8
+     360.8,
+     -15.0,
+     43.8
     ]
    },
    {
     "case": "core tie front.2 tension 425 N + side 0 N",
     "cls": "crash",
-    "inlayer": 0.048,
-    "across": 0.041,
+    "inlayer": 0.051,
+    "across": 0.046,
     "at": [
-     350.8,
-     -7.0,
+     348.8,
+     -5.0,
      47.8
     ]
    },
    {
     "case": "core tie front.2 compression 425 N + side 0 N",
     "cls": "crash",
-    "inlayer": 0.048,
-    "across": 0.041,
+    "inlayer": 0.051,
+    "across": 0.046,
     "at": [
-     350.8,
-     -7.0,
+     348.8,
+     -5.0,
      47.8
     ]
    }
   ],
-  "worst": 0.048,
-  "worst_case": "core tie front.2 tension 425 N + side 0 N",
+  "worst": 0.06,
+  "worst_case": "tube 17-18 tension 229 N + side 4 N",
   "worst_at": [
-   350.8,
-   -7.0,
-   47.8
+   360.8,
+   15.0,
+   43.8
   ],
   "beta": 4.0,
   "iteration": 35,
@@ -1442,10 +1467,19 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 9759,
- "part_sha": "69c376069cee",
- "lib_sha": "9f0ebfa9644c",
- "setup_sha": "4e38d72fa75cca06",
+ "total_s": 7835,
+ "part_sha": "cff3383f5c8e",
+ "lib_sha": "3bca3914ee6f",
+ "setup_sha": "32ddcda90715db11",
  "max_worst": 0.3,
- "strength_ok": true
+ "strength_ok": true,
+ "print_stl": {
+  "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/overseer_head_mount.stl",
+  "sha256": "be11bf4c2819bd041ef334cab5f9f4de3d7663777e6e1f81b819f8ad747d9b7b",
+  "bytes": 25464784,
+  "faces": 509294,
+  "view_faces": 60000,
+  "view_sha256": "20c1d662e91c571301eb5c668f9dfb661b8421104b0e1787d8ef1da8a514e6a0",
+  "at": "2026-11-09 23:04"
+ }
 }

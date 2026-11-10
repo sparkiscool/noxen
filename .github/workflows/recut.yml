@@ -1,5 +1,5 @@
 # Recut finished parts on a runner (tools/recut.py: the current setup's cuts, the export cleanup and the solid gate on the
-# existing part.stl, no re-solve) and commit the result. The gate voxelises the part at 0.25 mm: a 500k-face part (the head
+# existing print mesh, no re-solve) and commit the result. The gate voxelises the part at 0.25 mm: a 500k-face part (the head
 # mount) needs more memory than a laptop or a session box has (29 Oct: the head mount recut died twice locally, rc 137).
 name: recut
 
@@ -25,7 +25,17 @@ jobs:
         with: { python-version: '3.12', cache: pip }
       - run: pip install -r requirements.txt
       - name: recut
-        run: python tools/recut.py ${{ inputs.parts }}
+        run: python tools/recut.py ${{ inputs.parts }}     # reads each part's full print mesh from the release (tools/print_mesh.py local)
+      # the recut full mesh to the release, the viewing mesh into part.stl; a part whose upload failed is put back as main has it
+      - name: print meshes to the release
+        if: always()
+        shell: bash
+        run: |
+          for p in ${{ inputs.parts }}; do
+            python3 tools/print_mesh.py publish $p || { echo "::error::$p: print mesh not uploaded, its recut not committed"; git checkout -- parts/$p; }
+          done
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: commit and push (retry on race)
         if: always()
         shell: bash

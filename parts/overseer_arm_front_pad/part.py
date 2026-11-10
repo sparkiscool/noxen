@@ -53,13 +53,15 @@ class FrontPad(TubeArm):
         for sp in self.spokes:
             slots.append(trough(node, sp["u"], n3, self.node_r, self.node_r + SOCK_DEPTH + 16.0, SPOKE_GAP, DROP, 1.9, 14.0))   # from the floor plane to past the mouth; walls >= 2.0 to d 1.9
             rings.append(along(node, sp["u"], self.node_r - 3.0, self.node_r + SOCK_DEPTH + 1.0, 1.6 + RING_S))   # 9 Nov: from behind the floor (two back, the 1.1 collar stands alone and its lib wall was 2.0 at the grooves)
-        for sp in self.spokes:                                             # room round the pushed-out spoke collars (they leave z 0..45)
-            env = env + along(node, sp["u"], self.node_r - 6.0, self.node_r + SOCK_DEPTH + 4.0, 9.0)
+        for sp in self.spokes:                                             # room round the pushed-out spoke collars (they leave z 0..45): a cone from the
+            col = along(node, sp["u"], self.node_r - 6.0, self.node_r + SOCK_DEPTH + 4.0, 10.5)          # arm node (r 18) out to the collar (r 10.5)
+            root = along(node, sp["u"], -2.0, 2.0, 18.0)                   # 10 Nov: the r 9 tube alone read 1.40 filled solid (room_full, cage crash, spoke 1.1 -238 N)
+            env = env + mf.Manifold.batch_hull([col, root])
         return drawn + boss + mf.Manifold.batch_boolean(rings, mf.OpType.Add), cuts + mf.Manifold.batch_boolean(slots, mf.OpType.Add), env
 
 
 ARM = FrontPad("front", 45.0, 0, ["spoke 1.1", "spoke 1.3"], [178.94, 146.7, 8.0], "pad")
-SPEC = dict(h=1.5, gen_cm3=36.0, max_worst=0.2)     # 9 Nov (Spark: the motor must not tear off again): limit 0.3 -> 0.2, budget 28 -> 36 with the solid pad + cone   # 9 Nov: two sockets back the spoke collars reach 24 further out: 18 stopped at 1.03 (cage crash, spoke 1.1 -238 N) -> 28   # v3 (7 Nov): 18 (v2 passed at 18 with a skirt, 36 g, 0.27), limit 0.3 (printed PETG broke at 0.30 of the engine's strength)
+SPEC = dict(h=1.5, gen_cm3=40.0, max_worst=0.2)     # 10 Nov: the spoke room a cone (room_full 1.40 -> 0.10, 22 % of it at 36): 36 -> 40   # 9 Nov (Spark: the motor must not tear off again): limit 0.3 -> 0.2, budget 28 -> 36 with the solid pad + cone   # 9 Nov: two sockets back the spoke collars reach 24 further out: 18 stopped at 1.03 (cage crash, spoke 1.1 -238 N) -> 28   # v3 (7 Nov): 18 (v2 passed at 18 with a skirt, 36 g, 0.27), limit 0.3 (printed PETG broke at 0.30 of the engine's strength)
 
 
 def setup(h):

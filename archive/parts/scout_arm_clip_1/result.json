@@ -1,0 +1,344 @@
+{
+ "name": "scout_arm_clip_1",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   1997.7
+  ],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 0,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 515.4,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.0,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "A3-S1 tension 39 N + side 37 N",
+    "cls": "crash",
+    "inlayer": 0.048,
+    "across": 0.048,
+    "at": [
+     62.9,
+     -58.1,
+     15.6
+    ]
+   },
+   {
+    "case": "A3-S1 compression 39 N + side 37 N",
+    "cls": "crash",
+    "inlayer": 0.028,
+    "across": 0.026,
+    "at": [
+     58.1,
+     -53.3,
+     11.6
+    ]
+   }
+  ],
+  "worst": 0.048,
+  "worst_case": "A3-S1 tension 39 N + side 37 N",
+  "worst_at": [
+   62.9,
+   -58.1,
+   15.6
+  ]
+ },
+ "mass_g": 4.52,
+ "watertight": true,
+ "export": {
+  "faces_in": 46150,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 46150,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 152,
+   "folded": 0,
+   "caps_split": 4,
+   "caps_left": 2,
+   "watertight": true,
+   "faces": 65982
+  },
+  "volume_mm3": 3560.7,
+  "exact_mm3": 3560.9
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 3560.9,
+ "drawn_g": 1.88,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
+ "stl": "scout_arm_clip_1.stl",
+ "view_stl": "scout_arm_clip_1_view.stl",
+ "view_faces": 46150,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 5.33,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": false,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 5.494221030254107,
+  "R_cells": 6.867776287817634,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.31140858704730084,
+  "nd": 13171,
+  "sym_axes": [],
+  "n_real": 2,
+  "n_ties": 18,
+  "backend": "direct",
+  "iterations": 81,
+  "stopped": "max_stage"
+ },
+ "grid": {
+  "name": "scout_arm_clip_1",
+  "h": 0.8,
+  "shape": [
+   48,
+   56,
+   24
+  ],
+  "origin": [
+   37.6845,
+   -80.9421,
+   2.4
+  ],
+  "cells": 64512,
+  "design": 13171,
+  "drawn": 2822,
+  "cases": [
+   "A3-S1 tension 39 N + side 37 N",
+   "A3-S1 compression 39 N + side 37 N"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 19.3,
+ "layout_s": 236,
+ "peak_gb": 0.931524,
+ "gen_cm3": 2.1,
+ "h": 0.8,
+ "audit": {
+  "drawn_share": 0.176,
+  "load_room": [],
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 370,
+    "inscribed_mm": 2.4,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.86,
+    "room_depth_mm": 24.0,
+    "at": [
+     45.6,
+     -54.1,
+     14.4
+    ],
+    "core_mm": 0.8
+   },
+   {
+    "id": 2,
+    "cells": 1764,
+    "inscribed_mm": 3.1,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.78,
+    "room_depth_mm": 28.0,
+    "at": [
+     56.7,
+     -65.5,
+     12.7
+    ],
+    "core_mm": 2.4,
+    "share_of_drawn": 0.63
+   },
+   {
+    "id": 3,
+    "cells": 350,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.86,
+    "room_depth_mm": 24.0,
+    "at": [
+     54.1,
+     -45.6,
+     14.4
+    ],
+    "core_mm": 0.8
+   },
+   {
+    "id": 4,
+    "cells": 338,
+    "inscribed_mm": 1.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.73,
+    "room_depth_mm": 23.2,
+    "at": [
+     62.6,
+     -54.1,
+     14.3
+    ],
+    "core_mm": 0.8
+   }
+  ],
+  "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 36.8,
+   "W_mm": 33.6,
+   "H_mm": 17.6,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "drawn_walls": [],
+  "cases": 2,
+  "supports": 1,
+  "fails": []
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "A3-S1 tension 39 N + side 37 N",
+    "cls": "crash",
+    "inlayer": 0.033,
+    "across": 0.042,
+    "at": [
+     64.5,
+     -55.7,
+     15.6
+    ]
+   },
+   {
+    "case": "A3-S1 compression 39 N + side 37 N",
+    "cls": "crash",
+    "inlayer": 0.021,
+    "across": 0.025,
+    "at": [
+     51.7,
+     -63.7,
+     15.6
+    ]
+   }
+  ],
+  "worst": 0.042,
+  "worst_case": "A3-S1 tension 39 N + side 37 N",
+  "worst_at": [
+   64.5,
+   -55.7,
+   15.6
+  ],
+  "beta": 4.0,
+  "iteration": 14,
+  "max_worst": 0.3,
+  "k": 3.0
+ },
+ "baseline": null,
+ "total_s": 255,
+ "part_sha": "9fcd28f26a44",
+ "lib_sha": "b4e8dd5e1a55",
+ "setup_sha": "ef609646d86f2134",
+ "max_worst": 0.3,
+ "strength_ok": true,
+ "print_stl": {
+  "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_arm_clip_1.stl",
+  "sha256": "c6c79cae57861210acbc3a60fd686d46a747bc6bd79d73d182edf826c47a7167",
+  "bytes": 2307584,
+  "faces": 46150,
+  "view_faces": 46150,
+  "view_sha256": "c6c79cae57861210acbc3a60fd686d46a747bc6bd79d73d182edf826c47a7167",
+  "at": "2026-11-09 23:04"
+ }
+}

@@ -43,7 +43,12 @@ L.funnel_sweep = _no_funnel
 # root bending of the bare 2.1 wall alone (O8.2 / O4.2 tube, Z 50 mm3, 13 mm lever) 11 MPa + 454 N on its 39 mm2 12 MPa: under PCTG's
 # ~25 MPa across layers before any generated root, which the engine adds and its strength index checks. The 3.0 wall drew ~43 % of
 # every node's mass for a wall the mouth does not need. v4-only: the v3 Scout and Overseer nodes keep WALL (their setups unchanged).
-L.DRAWN_WALL = 2.6
+FORK_S0 = 20.0                                           # a bore pushed out past this by a near-parallel neighbour is one of a Y's two fork sockets
+L.DRAWN_WALL = lambda m: L.WALL if m["s0"] > FORK_S0 else 2.6
+# 9 Nov, run 4: at NB / TB / S0 / S1 (the Ys) the two fork sockets are the node's supports and its whole root: every other rod's load
+# reaches them as bending down a 29-34 mm fork onto two side-by-side collars, and the worst (0.35-0.43) sat in the 2.6 drawn wall at
+# their floors. Those two collars keep the 3.0 wall (section modulus x ~1.3); every other socket, a collar off a hub, stays 2.6.
+# The support / load regions stay the lib's (from 0.5 behind the floor): bore-only regions read 0.43 at TB against 0.32 (run 3).
 
 # Budgets (9 Nov): the 1.54 x skeleton of spec_for was sized for strength at limit 0.3, but the v4 nodes came in at 0.005-0.18. The
 # light nodes (worst <= 0.042) go back to 1.1 x, the budget that joins every collar without flakes (5 Nov); TB / NB / S0 / S1 (0.16-
@@ -54,7 +59,10 @@ L.DRAWN_WALL = 2.6
 # (the 25 mm limit was set on 5 Nov for ties 39-85 mm out, 290k-586k cells; these stay under 36 mm). v4-only.
 L.MAX_START = 36.0
 
-BUDGET_X = {"TB": 1.25, "NB": 1.25, "S0": 1.25, "S1": 1.25}
+# 9 Nov, run 2 (the frame's sockets moved: NB / TB / S0 / S1 are Ys held at the fork's two sockets 29-34 mm out, the load path from the
+# cage rods' sockets runs through the hub and the fork): at 1.25 x NB 0.357 / TB 0.378 (fail), S0 0.266 / S1 0.283. Index ~ V^-1.25:
+# NB / TB 1.25 -> 1.7, S0 / S1 1.25 -> 1.35, each toward 0.25.
+BUDGET_X = {"TB": 1.7, "NB": 1.7, "S0": 1.35, "S1": 1.35}
 
 
 def spec_for(group):

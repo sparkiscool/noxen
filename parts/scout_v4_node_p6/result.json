@@ -26,10 +26,10 @@
  "strength": {
   "rows": [
    {
-    "case": "frame RS1-P6 axial 40 N (pull-out)",
+    "case": "frame RS1-P6 axial 36 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.018,
+    "inlayer": 0.022,
+    "across": 0.017,
     "at": [
      91.3,
      -155.2,
@@ -37,7 +37,7 @@
     ]
    },
    {
-    "case": "frame RS1-P6 side 12.9 N",
+    "case": "frame RS1-P6 side 12.8 N",
     "cls": "crash",
     "inlayer": 0.019,
     "across": 0.021,
@@ -48,8 +48,8 @@
     ]
    }
   ],
-  "worst": 0.024,
-  "worst_case": "frame RS1-P6 axial 40 N (pull-out)",
+  "worst": 0.022,
+  "worst_case": "frame RS1-P6 axial 36 N (pull-out)",
   "worst_at": [
    91.3,
    -155.2,
@@ -196,16 +196,16 @@
   "design": 11384,
   "drawn": 1831,
   "cases": [
-   "frame RS1-P6 axial 40 N (pull-out)",
-   "frame RS1-P6 side 12.9 N"
+   "frame RS1-P6 axial 36 N (pull-out)",
+   "frame RS1-P6 side 12.8 N"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 20.9,
- "layout_s": 225,
- "peak_gb": 0.828076,
+ "build_s": 21.1,
+ "layout_s": 219,
+ "peak_gb": 0.83074,
  "gen_cm3": 1.9,
  "h": 1.0,
  "audit": {
@@ -262,8 +262,8 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.009,
-   "worst_case": "frame RS1-P6 axial 40 N (pull-out)",
+   "worst": 0.008,
+   "worst_case": "frame RS1-P6 axial 36 N (pull-out)",
    "worst_at": [
     90.3,
     -155.2,
@@ -277,10 +277,10 @@
  "early": {
   "rows": [
    {
-    "case": "frame RS1-P6 axial 40 N (pull-out)",
+    "case": "frame RS1-P6 axial 36 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.023,
+    "inlayer": 0.022,
+    "across": 0.021,
     "at": [
      91.3,
      -155.2,
@@ -288,7 +288,7 @@
     ]
    },
    {
-    "case": "frame RS1-P6 side 12.9 N",
+    "case": "frame RS1-P6 side 12.8 N",
     "cls": "crash",
     "inlayer": 0.024,
     "across": 0.032,
@@ -300,7 +300,7 @@
    }
   ],
   "worst": 0.032,
-  "worst_case": "frame RS1-P6 side 12.9 N",
+  "worst_case": "frame RS1-P6 side 12.8 N",
   "worst_at": [
    88.3,
    -155.2,
@@ -312,10 +312,19 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 246,
+ "total_s": 240,
  "part_sha": "b0a62aef0bed",
- "lib_sha": "f1c94f24e504",
- "setup_sha": "3f25326e13161766",
+ "lib_sha": "772dbb2b54e8",
+ "setup_sha": "5e831a56a6412ec0",
  "max_worst": 0.3,
- "strength_ok": true
+ "strength_ok": true,
+ "print_stl": {
+  "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_p6.stl",
+  "sha256": "4d34fe2007ed91811cc2d37ff32154acc277f7658a5edb4bb9e1d68769edc8a0",
+  "bytes": 1841284,
+  "faces": 36824,
+  "view_faces": 36824,
+  "view_sha256": "4d34fe2007ed91811cc2d37ff32154acc277f7658a5edb4bb9e1d68769edc8a0",
+  "at": "2026-11-10 01:01"
+ }
 }

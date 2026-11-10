@@ -3,6 +3,8 @@ is built, its cuts (bores, resin grooves, lead-ins, teardrop crowns, bolt holes,
 parts/<part>/part.stl, the export cleanup and the solid gate (with the setup's thin_ok bodies) run on the result, and result.json is updated (solid, mass, hashes, a recut note).
 Strength is not re-solved: a cut only removes material round a hole, so the recorded index is a lower bound; the gate's
 thin-wall check is what guards the walls round the new grooves and crowns.
+The input is the full print mesh (tools/print_mesh.py local: the release asset); the output part.stl is the new full mesh, which
+the workflow (recut.yml) uploads with tools/print_mesh.py publish before it commits the viewing mesh.
 Run: python tools/recut.py <part> [<part> ...]      (from the repo root; writes part.stl, preview.png, result.json)
      python tools/recut.py --regate <part> ...      the gate alone on the existing mesh, result.json updated (a gate rule changed)
 """
@@ -16,6 +18,7 @@ from topo import build as B                                                     
 from part_sha import part_sha, lib_sha                                          # noqa: E402
 from topo.run import design_hash                                                # noqa: E402
 from topo.material import MATERIALS                                             # noqa: E402
+import print_mesh                                                               # noqa: E402
 
 
 def recut(name, log=print):
@@ -23,7 +26,7 @@ def recut(name, log=print):
     res = json.load(open(rj))
     mod = importlib.import_module(f"parts.{name}.part")
     part = mod.setup(float(res["h"]))
-    m0 = trimesh.load(stl, force="mesh")
+    m0 = trimesh.load(print_mesh.local(name), force="mesh")                     # the full print mesh (the release), never the viewing mesh
     # a big exported STL (the head mount, 500k faces) carries a few duplicate vertices and degenerate faces that make manifold3d
     # read it as NotManifold (empty, volume 0: 29 Oct, the recut then crashed in export_cleanup); merge and drop them first
     m0.merge_vertices(); m0.update_faces(m0.nondegenerate_faces()); m0.update_faces(m0.unique_faces()); m0.remove_unreferenced_vertices()
@@ -67,7 +70,7 @@ def regate(name, log=print):
     res = json.load(open(rj))
     mod = importlib.import_module(f"parts.{name}.part")
     part = mod.setup(float(res["h"]))
-    PT = trimesh.load(stl, force="mesh")
+    PT = trimesh.load(print_mesh.local(name), force="mesh")
     ok, solid = B.solid_check(PT, [tm(part.drawn_m - part.cuts_m)], thin_ok=[tm(m - part.cuts_m) for m in getattr(part, "thin_ok", [])])
     res.update(solid_ok=bool(ok and res.get("watertight", True)), solid=solid,
                regate=dict(at=time.strftime("%Y-%m-%d %H:%M"), note="gate rerun on the existing mesh with the current gate; nothing cut or re-solved"))
