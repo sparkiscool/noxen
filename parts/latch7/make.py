@@ -555,6 +555,7 @@ def main(pack="scout"):
     res["pack"] = pack
     res["hold"] = m6.hold_report(B)
     res["hold_strong"] = [m6.hold(B, Fb, m6.MU["pad_tpu"], n) for Fb in (20.0, 25.0) for n in (1.0, 2.0, 3.0)]
+    res["hold"]["all_gravity_directions"] += [dict(h, pads="TPU-faced pads") for h in res["hold_strong"]]      # the motion's readouts use the 25 N row
     res["audit"] = audit(B)
     res["funnel"] = funnel_fit(B)
     if pack == "scout":

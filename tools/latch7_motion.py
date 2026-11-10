@@ -26,7 +26,7 @@ CAM = sorted((-d, max(x or 0.0 for x in rr)) for d, rr in RES["insert_rows"])
 STROKE = V["BLADE_OPEN"] - (V["TAB_OUT"] - R0)      # blade stroke, open to tight on the wedge (5.6)
 TOUCH = V["BLADE_OPEN"] - V["TAB_OUT"]              # the blade face reaches the tab after 1.0
 TAN = math.tan(math.radians(V["ALPHA_deg"]))
-FB = 15.0                                            # the readouts' squeeze: the heads v7 blade springs
+FB = 25.0                                            # the readouts' squeeze: the heads v7 blade springs
 PH = [("out", 0.8), ("push in alone", 4.0), ("latched", 0.6), ("pull load", 1.0), ("load off", 0.6), ("grabber up", 1.6),
       ("squeeze", 1.6), ("pull out, held", 3.0), ("tip nose down 90", 2.0), ("tip nose up 90", 3.0), ("level", 1.5),
       ("roll 90", 2.0), ("roll -90", 3.0), ("level", 1.5), ("push in, held", 3.0), ("release", 1.2), ("grabber away", 1.4), ("latched", 1.0)]
@@ -123,11 +123,11 @@ def timeline(a):
     series = [("cartridge below the seat", [s["d"] + s["drop"] for s in st], "mm"),
               ("bolt travel (lead-in cam or blades; 3.3 unlatches, 4.9 = tab on the rib)", [s["rho"] for s in st], "mm"),
               ("steel pin engagement past the receiver's locating face", [max(0.0, OVERLAP - s["rho"]) for s in st], "mm"),
-              ("spring force, both springs", [2 * KS * (FREE - (L0 - 2 * s["rho"])) for s in st], "N"),
+              ("spring force, all four springs", [4 * KS * (FREE - (L0 - 2 * s["rho"])) for s in st], "N"),
               ("nub above its wedge foot (0 = tight, drawing the cartridge onto the pads)", [max(0.0, (STROKE - s["u"]) * TAN) if s["bz"] - (-s["d"]) > -1 or s["held"] else 0.0 for s in st], "mm"),
-              ("heel pad load at 15 N blades (preload - what gravity takes off)", [h[2] for h in H], "N"),
-              ("grip hold: pads stay down, margin at 1 g (15 N blades)", [h[0] for h in H], "x"),
-              ("grip hold: no slip, margin at 1 g (15 N blades, TPU pads)", [h[1] for h in H], "x"),
+              ("heel pad load at 25 N blades (preload - what gravity takes off)", [h[2] for h in H], "N"),
+              ("grip hold: pads stay down, margin at 1 g (25 N blades)", [h[0] for h in H], "x"),
+              ("grip hold: no slip, margin at 1 g (25 N blades, TPU pads)", [h[1] for h in H], "x"),
               ("tip about x / roll about the pack axis", [s["pitch"] if abs(s["pitch"]) > 1e-9 else s["roll"] for s in st], "deg"),
               ("guide poles in their bores", [max(0.0, ENG["guide_poles"] - s["d"]) for s in st], "mm"),
               ("XT60 contacts engaged", [max(0.0, ENG["xt60"] - s["d"]) for s in st], "mm")]
