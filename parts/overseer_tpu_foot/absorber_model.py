@@ -32,17 +32,25 @@ def column_curve(E, t, w, L, bow, n=30, dmax_frac=0.7, steps=35):
     F = np.gradient(Us, dd)
     return np.array([(dd[i], F[i], out[i][2], out[i][3]) for i in range(len(dd))])
 
-def honeycomb_curve(E_s, sig_y, t, l, W, D, H, steps=200):
+def honeycomb_curve(E_s, sig_y, t, l, W, D, H, steps=200, hw=None):
     """in-plane regular hex honeycomb (side l, wall t) crushed along the cell vertices (Gibson-Ashby X2): elastic E* = 2.3 E_s (t/l)^3
     (regular hex, ~ the same both ways), plastic plateau sigma_pl = sig_y (t/l)^2 / (2 cos^2 30) with 10 % hardening over the
-    stroke, densification from eps_D = 1 - 1.4 rho (rho = 2/sqrt3 t/l) as a steep ramp. Loaded face W x D, height H (the stroke axis)."""
+    stroke, densification from eps_D = 1 - 1.4 rho (rho = 2/sqrt3 t/l) as a steep ramp. Loaded face W x D, height H (the stroke axis).
+    hw: the face outline's half-width over the height, hw(y) for y in [-H/2, H/2] (v3's rounded rectangle; None: the W box). The
+    narrow slices (the rounded ends) fold first, so the force at a crushed fraction f = e / eps_D carries the f-quantile of the
+    slice widths, ascending: a slightly rising plateau that starts under the box's and ends on it (E)."""
     rho = 2 / np.sqrt(3) * t / l; A = W * D
     Es = 2.3 * E_s * (t / l) ** 3; s_pl = sig_y * (t / l) ** 2 / 1.5; eD = 1 - 1.4 * rho
     x = np.linspace(0, H * 0.9, steps); e = x / H
     s_el = Es * e; s_pt = s_pl * (1 + 0.1 * e / eD)
     s = np.minimum(s_el, s_pt)
     dens = np.where(e > eD, s_pl * ((e - eD) / (1 - eD)) ** 2 * 12, 0.0)          # the densification ramp (E)
-    return np.c_[x, A * (s + dens), np.full_like(x, rho), np.full_like(x, eD * H)]
+    if hw is None:
+        w = np.full_like(x, W)
+    else:
+        ws = np.sort(2 * hw(np.linspace(-H / 2, H / 2, 801)))
+        w = np.interp(np.clip(e / eD, 0, 1), np.linspace(0, 1, len(ws)), ws)
+    return np.c_[x, D * w * (s + dens), np.full_like(x, rho), np.full_like(x, eD * H)]
 
 
 def drop(F_of_x, x_max, E_drop=9700.0, k_cage=87.0, k_end=600.0):
@@ -87,11 +95,13 @@ def main_table(E95):
     for k in (20.0, 30.0, 45.0):
         print("    k", k, drop(lambda q: k * q, 30.0))
     print("== E. 68D in-plane honeycomb crush puck (the design for the TPU for AMS spool): 50 x 20 face, 40 tall, wall 2.0, side 9.0 (3 x 3 cells); sig_y 15 MPa, E 1190")
-    for sy in (9.0, 15.0, 21.0):
-        c = honeycomb_curve(1190.0, sy, 2.0, 9.0, 50.0, 20.0, 40.0)
-        x, F = c[:, 0], c[:, 1]; pk, st, cg = drop(lambda q: np.interp(q, x, F), x[-1])
-        print(f"   sig_y {sy}: rho {c[0,2]:.2f}, plateau {F[(x > 2) & (x < c[0,3])].mean():.0f} N, densifies at {c[0,3]:.1f} mm; drop: peak {pk:.0f} N, puck {st:.1f} mm, cage {cg:.1f} mm; "
-              f"normal landing 0.16 J: {np.interp(160.0, np.concatenate([[0], np.cumsum(0.5 * (F[1:] + F[:-1]) * np.diff(x))]), x):.2f} mm")
+    hw_round = lambda y: 25.0 - 8.0 + np.sqrt(np.maximum(0.0, 64.0 - np.maximum(0.0, np.abs(y) - 12.0) ** 2))   # v3: the face a rounded rectangle, R 8
+    for name, hw in (("v2 box", None), ("v3 rounded R 8", hw_round)):
+        for sy in (9.0, 15.0, 21.0):
+            c = honeycomb_curve(1190.0, sy, 2.0, 9.0, 50.0, 20.0, 40.0, hw=hw)
+            x, F = c[:, 0], c[:, 1]; pk, st, cg = drop(lambda q: np.interp(q, x, F), x[-1])
+            print(f"   {name} sig_y {sy}: rho {c[0,2]:.2f}, plateau {F[(x > 2) & (x < c[0,3])].mean():.0f} N, densifies at {c[0,3]:.1f} mm; drop: peak {pk:.0f} N, puck {st:.1f} mm, cage {cg:.1f} mm; "
+                  f"normal landing 0.16 J: {np.interp(160.0, np.concatenate([[0], np.cumsum(0.5 * (F[1:] + F[:-1]) * np.diff(x))]), x):.2f} mm")
     print("== E2. 68D crumple skirt: Abramowicz-Jones axisymmetric mean crush, sigma0 15 MPa, t 0.86 (2 walls), D 42")
     s0, t, D = 15.0, 0.86, 42.0; M0 = s0 * t * t / 4; Pm = M0 * (20.79 * (D / t) ** 0.5 + 11.9)
     print(f"    Pm {Pm:.0f} N; first-fold peak ~1.4 Pm with a taper trigger {1.4*Pm:.0f}; stroke 70 % of 28 = 19.6 mm ->", drop(lambda q: np.where(q < 2, Pm * 1.4 * q / 2, Pm * (1 + 0.4 * np.exp(-(q - 2) / 2))), 19.6))

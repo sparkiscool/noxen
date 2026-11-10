@@ -111,6 +111,16 @@ L.collar_shape = collar_shape
 # an open sheet in the print mesh). The room now ends 1.0 short of the mouth (the last mm is the drawn collar alone) and the keep-out
 # starts 0.5 past it (the lead-in cone, cut to 1.0 past the mouth, covers the gap).
 L.STRUT_BACK, L.KEEP_OFF = 1.0, 0.5
+# Round 3 (10 Nov, the design session on the page: R0, P1, P3, P5): on every node with a pair of side-by-side sockets each mouth had
+# ragged stepped notches, and on every node a drawn ring stood proud of the barrel at the mouth. Cause: each socket's strut room
+# (r 8.6) reached past its neighbour's mouth plane, over that mouth, where the neighbour's keep-out and lead-in carved what grew
+# there; and the room ended 1.0 short of the mouth, so the collar's last mm stood bare. Now every socket has a mouth cut, the room's
+# radius + 0.5, from its mouth plane out along the rod (other collars spared by 0.5): no room survives beyond any mouth plane, and the
+# room runs 2.0 past the mouth into the cut, so the mouth is one exact cut face, the barrel meeting the collar on it (no room face on
+# the plane: round 2's sliver sheets). The collar ends on the plane (drawn 0.5 into the cut, the Ys' shorter fork collar kept a stub
+# beside its neighbour, inside the 0.5 its cut spares).
+L.STRUT_BACK, L.COLLAR_PAST = -2.0, 0.0
+L.MOUTH_R = L.BORE_R + L.WALL + L.STRUT_M + 0.5
 
 # The Ys' forks (9 Nov): their bores side by side need only the audit's wall between the grooves (2.1). A hub's pair of near-parallel
 # bores (P1's RS0-P1 / S0-P1 13 mm out) at 2.1 put each groove 0.05 off its neighbour's 2.55 collar face: near-coincident faces,
