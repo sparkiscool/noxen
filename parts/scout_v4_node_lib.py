@@ -111,6 +111,16 @@ L.collar_shape = collar_shape
 # an open sheet in the print mesh). The room now ends 1.0 short of the mouth (the last mm is the drawn collar alone) and the keep-out
 # starts 0.5 past it (the lead-in cone, cut to 1.0 past the mouth, covers the gap).
 L.STRUT_BACK, L.KEEP_OFF = 1.0, 0.5
+# Round 3 (10 Nov, the design session on the page: R0, P1, P3, P5): on every node with a pair of side-by-side sockets each mouth had
+# ragged stepped notches, and on every node a drawn ring stood proud of the barrel at the mouth. Cause: each socket's strut room
+# (r 8.6) reached past its neighbour's mouth plane, over that mouth, where the neighbour's keep-out and lead-in carved what grew
+# there; and the room ended 1.0 short of the mouth, so the collar's last mm stood bare. Now every socket has a mouth cut, the room's
+# radius + 0.5, from its mouth plane out along the rod (other collars spared by 0.5): no room survives beyond any mouth plane, and the
+# room runs 2.0 past the mouth into the cut, so the mouth is one exact cut face, the barrel meeting the collar on it (no room face on
+# the plane: round 2's sliver sheets). The collar ends on the plane (drawn 0.5 into the cut, the Ys' shorter fork collar kept a stub
+# beside its neighbour, inside the 0.5 its cut spares).
+L.STRUT_BACK, L.COLLAR_PAST = -2.0, 0.0
+L.MOUTH_R = L.BORE_R + L.WALL + L.STRUT_M + 0.5
 
 # The Ys' forks (9 Nov): their bores side by side need only the audit's wall between the grooves (2.1). A hub's pair of near-parallel
 # bores (P1's RS0-P1 / S0-P1 13 mm out) at 2.1 put each groove 0.05 off its neighbour's 2.55 collar face: near-coincident faces,
@@ -147,10 +157,11 @@ L.SOCKET_START = _socket_starts()
 # 0.005-0.014 at 1.2): their collars now overlap at the hub and carry most of the load drawn. BUDGET_CM3 sets their generated volume
 # outright toward ~0.25 (index ~ volume^-1.25), above what joins the collars' roots. The Ys (S0 / S1 0.20 / 0.23, NB 0.20, TB 0.23)
 # keep the volume they passed at.
-# P / R: two collars 13.9 out are a second drawn body; two 6.25 members from the hub collar to their floors are ~0.7 cm3, so 0.9
-# (1.0 at P3 / P4, 0.054 before). RF / RB / RS: their three collars from 5.0 are one drawn body already, 0.4.
-BUDGET_CM3 = {"P3": 1.0, "P4": 1.0, "P1": 0.9, "P2": 0.9, "P5": 0.9, "P6": 0.9, "R0": 0.9, "R7": 0.9,
-              "RF": 0.4, "RB": 0.4, "RS0": 0.4, "RS1": 0.4, "S0": 3.6, "S1": 3.6, "NB": 4.9, "TB": 5.5}
+# Run 200 (round 2, 10 Nov): all 16 pass. P / R at 0.9: 0.018-0.027, P3 / P4 at 1.0: 0.091, RF / RB / RS at 0.4: 0.030-0.043, S0 / S1
+# at 3.6: 0.209 / 0.210, NB at 4.9: 0.220, TB at 5.5: 0.210. Round 3: the Ys toward 0.25 (index ~ V^-1.25: x0.87), P3 / P4 0.7
+# (~0.14), P / R 0.6 (two 6.25 members from the hub collar to the paired collars' floors are ~0.6 cm3), RF / RB / RS 0.3.
+BUDGET_CM3 = {"P3": 0.7, "P4": 0.7, "P1": 0.6, "P2": 0.6, "P5": 0.6, "P6": 0.6, "R0": 0.6, "R7": 0.6,
+              "RF": 0.3, "RB": 0.3, "RS0": 0.3, "RS1": 0.3, "S0": 3.1, "S1": 3.1, "NB": 4.3, "TB": 4.8}
 
 
 def spec_for(group):

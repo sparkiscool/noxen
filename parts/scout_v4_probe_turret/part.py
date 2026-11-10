@@ -18,7 +18,7 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, hull, U, socks_of
 
 import json as _json, os as _os
 HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
-SPEC = dict(h=1.2, gen_cm3=14.0, max_worst=0.3)  # 9 Nov: 9 cm3 read 1.01 at RM-RB with its arms out to r 34 and the budget spent; 14 with the FE fold loads (1.2 N m in y) and the roller
+SPEC = dict(h=1.2, gen_cm3=23.0, max_worst=0.3)  # 10 Nov run 4: 20 read 0.34 (head-first at the -y side, 37.7 g) and skins under the spool; 23. Run 3: 14 cm3 read 0.50 at the +y roller guide (the 1.2 N m fold in y and the head-first crash share its one strut down to the floor bolts): 20. 9 Nov: 9 cm3 read 1.01 at RM-RB with its arms out to r 34 and the budget spent; 14 with the FE fold loads (1.2 N m in y) and the roller
 CUP_R, BLADE_T, CABLE_T = 15.0, 0.13, 0.6       # the 19 mm blade's cup radius and thickness (patents: R 12.7..25.4, t 0.11..0.19; E), the 6 x 30 AWG PTFE ribbon
 FOLD_NM = (0.6, 1.2)                             # the moment the mast can put on the throat before it folds, +-x and +-y (tools/probe_mast_fe.py: the unbonded lens folds at ~0.50 N m in x, 3.6 in y; x x 1.2, y capped at 2 x x: a bigger y moment is a crash on the head)
 
@@ -48,6 +48,8 @@ def bodies():
     # room: a drum-shaped housing round the spool from the deck to the roof's ring, the ring node, and the motor's pocket
     env.append(cyl(cx, 0, DZ1, 67.0, 36.0))
     env.append(box(cx - 8.0, cx + 8.0, g0 - 30.0, yp + 6.0, pz - 7.0, DZ1 + 1))
+    lh_, hw_ = lens_half(), S.BLADE_W / 2 + 0.5
+    env.append(box(mx - lh_ - 6.0, mx + lh_ + 6.0, -hw_ - 6.0, hw_ + 6.0, 55.0, t["z1"]))   # 10 Nov: room up the throat to its seat (the drum ended at 67, the throat's top 6 stood on drawn 2 mm walls: 0.53 in the 1.2 N m fold)
     # floor bosses
     regs = []
     for x, y in TURRET_BOLTS:
@@ -84,11 +86,12 @@ def bodies():
     for sy in (1, -1):                                                              # each guide 9 thick round the spring's O4.5 pocket: walls >= 2.25
         yc = sy * (rw + 4.0)
         guides.append(radial(17.9, r_full + 13.5, 4.5, yc - 4.5, yc + 4.5))
-        cuts.append(radial(r_empty - 0.6, r_full + 0.6, 1.65, yc - 6.0, yc + 6.0))                # the axle's slot (M3 x 35: its ends at |y| 15.5)
+        cuts.append(radial(10.0, r_full + 0.6, 1.65, yc - 6.0, yc + 6.0))                         # the axle's slot (M3 x 40), open through the guide's inner end (10 Nov: a 0.7 web was left before it)
         cuts.append(radial(r_full - 0.5, r_full + 11.0, 2.25, yc - 2.25, yc + 2.25))               # the spring's pocket on the slot's line (O4, 11 long at the full coil)
         seats.append(radial(r_full + 11.0, r_full + 11.6, 2.0, yc - 2.0, yc + 2.0))
     drawn += guides
     cuts.append(radial(r_empty - S.ROLLER["r"] - 0.8, r_full + 0.8, S.ROLLER["r"] + 0.8, -rw - 0.3, rw + 0.3))   # the roller's tube and its travel
+    cuts.append(box(cx - 13.0, cx + 13.0, S.SPOOL["y0"] - 0.6, S.SPOOL["y1"] + 0.6, DZ1, cz - 10.0))   # 10 Nov run 4: under the spool, between its sweep (down to z 24.1) and the N20's gearbox (up to 25.5), room left only skins 1.1-1.5 thick (the solid check): void
     # the spool, its gear and the pinion swept
     cuts.append(ycyl(cx, cz, r + 1.0, S.SPOOL["y0"] - 0.6, S.SPOOL["y1"] + 0.6))
     cuts.append(ycyl(cx, cz, ra + 0.8, gy0 - 0.5, gy1 + 0.5)); cuts.append(ycyl(cx, pz, rp + 0.8, gy0 - 0.5, gy1 + 0.5))
