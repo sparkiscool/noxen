@@ -41,10 +41,14 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of
                                       check_collars, rigid_split, SockDown, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
                                       M25_INS, BOSS_R, DIRS14, FLIGHT)
 
-SPEC = dict(h=2.0, gen_cm3=60.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
-POD_R, POD_T, POD_ROOM, ARM_W = 14.0, 6.0, 15.0, 26.0
+SPEC = dict(h=2.0, gen_cm3=120.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
+# 10 Nov, run 186 (60 cm3, 18 % of the room): FAIL 1.515 (BN-NB 528 N), 117 g; the result read what the room filled solid thinned
+# uniformly to the budget predicted (0.261 / 0.177 = 1.48): this many separate load paths leave the layout little to gain over
+# uniform. Budget 60 -> 120 and the nose block |y| 26 -> 34 as the tail tray (the BN socket's room: 100 alone thinned to ~1.0), arms' room 26 -> 32 wide (motor 1's root 1.25 in-layer), the lugs' room x +-20 -> +-28
+# (BS1-S1 1.28 across the layers: the lug bends as a column), the FC posts' clear ring r 6.5 -> 7.5 (one post off the main body).
+POD_R, POD_T, POD_ROOM, ARM_W = 14.0, 6.0, 15.0, 32.0
 ARM_Z0, POD_Z0 = 2.0, 8.0                            # the arms' room bottom at the root and at the pod (9 Nov smoke: room_full 0.33 at the rear arm's root, 12.5 deep)
-LUG_X, LUG_Y1 = 20.0, 64.0                         # the lugs' room: x +-20, out to y 64 at the deck (9 Nov)
+LUG_X, LUG_Y1 = 28.0, 64.0                         # the lugs' room: x +-20, out to y 64 at the deck (9 Nov)
 # the motor (EMAX ECO II 2004 3000KV, the table above; dimensions.md open item 19: the KV)
 T_MAX, DYN, Q_PEAK, F_IMB, Q_STRIKE, F_STRIKE = 11.8, 1.5, 130.0, 11.0, 1000.0, 17.0   # N, -, N mm, N, N mm, N
 M2_PATTERN = 6.0                                   # 12 x 12, 4 x M2
@@ -89,7 +93,7 @@ def bodies():
     rx0, rx1 = -51.3 + S.BX, 54.3 + S.BX                                             # the receiver v3 (C), not drawn: it bolts up under the yokes
     env = [box(x0, x1, -yb, yb, S.REC_TOP, DZ1),                                      # the deck and the yokes over the receiver, one room
            box(-S.BED, rx0, -34.0, 34.0, -2.3, DZ1),                                  # the tail tray (DT / BT, the UBEC)
-           box(rx1, S.BED, -26.0, 26.0, -2.3, DZ1), box(rx1, 78.0, -26.0, 26.0, -10.0, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod
+           box(rx1, S.BED, -34.0, 34.0, -2.3, DZ1), box(rx1, 78.0, -34.0, 34.0, -10.0, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod
            box(rx1, 71.8, -12.0, 12.0, -19.1, -2.0)]                                 # the flow sensor's pod (its bottom on the walls-in rule + 2)
     for mx, my in S.MOTORS:
         a = np.array([np.sign(mx) * 30.0, np.sign(my) * 30.0, 0]); b = np.array([mx, my, 0])
@@ -142,7 +146,7 @@ def bodies():
     drawn += posts
     cuts.append(box(fb[0][0] - 0.5, fb[1][0] + 0.5, fb[0][1] - 0.5, fb[1][1] + 0.5, fb[0][2] - 0.5, ftop))   # the board, under it and its grommets
     cuts.append(box(fb[0][0] - 0.5, fb[1][0] + 0.5, fb[0][1] - 0.5, fb[1][1] + 0.5, ftop, fb[1][2] + 0.5)      # its top components, but not within 6.5 of
-                - U([cyl(x, y, ftop - 1, DZ1 + 1, 6.5) for x, y, _ in pts]))                                        # a hole (E: the grommets' zone): each post's room runs out past the board's edge
+                - U([cyl(x, y, ftop - 1, DZ1 + 1, 7.5) for x, y, _ in pts]))                                        # a hole (E: the grommets' zone): each post's room runs out past the board's edge
     boards.append(("FC MicoAir743", pts, regs, ASM["scout_v4_fc"]["mass_g"], tuple(fb.mean(0))))
     rb = bounds("scout_v4_radxa_zero_3w"); rx, ry = rb[:, 0].mean(), rb[:, 1].mean(); rtop = rb[0][2] + 3.2   # its PCB's top (1.55 under it, 1.6 board)
     posts, pts, regs = [], [], []
