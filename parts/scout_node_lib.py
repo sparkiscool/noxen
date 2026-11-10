@@ -45,6 +45,8 @@ LINING_BACK = FLOOR + 0.5                                 # where a socket's sup
 BETWEEN_WALL = None                                       # the wall left between two near-parallel bores' grooves where they start; None = WALL
 DRAWN_WALL = None                                         # the drawn collar's wall (a number, or a function of the member); None = WALL. The room, clearances and ports always use WALL, so a thinner
 #   drawn wall (the v4 nodes, 9 Nov) leaves the engine the same strut to grow the root in where the load needs it
+STRUT_BACK, KEEP_OFF = 0.0, 0.0                           # the strut's room ends STRUT_BACK short of the collar's mouth, the keep-out round the rod starts KEEP_OFF past it
+#   (0, 0: both on the mouth plane, with the collar's end face; the v4 nodes move them off it, 10 Nov)
 ROD_R, ROD_GAP = 1.5, 1.0                                # a passing rod's radius and the least gap to a collar's surface
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 CAGE_CENTRE = (0.0, 0.0, 10.0)                            # ports point away from here (out of the cage) where the members allow
@@ -193,13 +195,13 @@ def build(group, h, log=print):
         for m in ms:
             ro = m["bore_r"] + WALL; s_end = m["s0"] + m["depth"]
             collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL if DRAWN_WALL is None else (DRAWN_WALL(m) if callable(DRAWN_WALL) else DRAWN_WALL)))
-            keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))
+            keep.append(along(c, m["u"], s_end + KEEP_OFF, s_end + 60.0, m["bore_r"] + 0.6))
             m["ro"], m["s_end"], m["node"], m["c"] = ro, s_end, k, c
             allm.append(m)
         # the envelope: a strut round each member from the node's centre to its collar's mouth (STRUT_M of room round the collar) and a
         # hub ball at the centre, so the engine only decides how much of each strut to keep: a node, not a web (5 Nov, Spark: run 1's
         # nodes, grown in a ball to 56 mm across, were spindly blobs of webs between far-apart collars)
-        struts += [along(c, m["u"], 0.0, m["s_end"], m["ro"] + STRUT_M) for m in ms]
+        struts += [along(c, m["u"], 0.0, m["s_end"] - STRUT_BACK, m["ro"] + STRUT_M) for m in ms]
         struts.append(mf.Manifold.sphere(NODE_R + WALL + STRUT_M, 48).translate(c.tolist()))
     bridge_u = {}
     for a, b in sc.BRIDGES:                                                     # the printed bridge between two merged nodes: its room, the whole span
