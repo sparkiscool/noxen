@@ -42,6 +42,7 @@ WALL, FLOOR, STRUT_M = 3.0, 3.0, 4.0                        # 8 Nov (the Oversee
 LINING_BACK = FLOOR + 0.5                                 # where a socket's support / load region starts behind the bore floor; FLOOR + 0.5 reaches 0.5 into the room
 #   behind the collar: a rigid disc the generated material is joined to (9 Nov, the v4 Ys: worst 0.27-0.32 at its rim in every one,
 #   unmoved by +36 % budget). 0.0 = the bore only, where the rod bears (the v4 nodes); the v3 nodes keep their setups
+BETWEEN_WALL = None                                       # the wall left between two near-parallel bores' grooves where they start; None = WALL
 DRAWN_WALL = None                                         # the drawn collar's wall (a number, or a function of the member); None = WALL. The room, clearances and ports always use WALL, so a thinner
 #   drawn wall (the v4 nodes, 9 Nov) leaves the engine the same strut to grow the root in where the load needs it
 ROD_R, ROD_GAP = 1.5, 1.0                                # a passing rod's radius and the least gap to a collar's surface
@@ -90,7 +91,7 @@ def _socket_starts():
                 t = float(np.arccos(np.clip(m["u"] @ o["u"], -1.0, 1.0)))
                 if t < 1e-6:
                     continue
-                s0 = max(s0, (m["bore_r"] + o["bore_r"] + 2 * GROOVE_D + WALL) / (2.0 * np.sin(t / 2.0)))
+                s0 = max(s0, (m["bore_r"] + o["bore_r"] + 2 * GROOVE_D + (WALL if BETWEEN_WALL is None else BETWEEN_WALL)) / (2.0 * np.sin(t / 2.0)))
             st[(k, m["name"])] = float(np.ceil(s0 * 10.0) / 10.0)
     return st
 
@@ -126,7 +127,7 @@ def check_members(k, log=print):
     for i, a in enumerate(ms):
         for b in ms[i + 1:]:
             t = np.arccos(np.clip(a["u"] @ b["u"], -1, 1)); r = max(a["s0"], b["s0"])
-            if 2 * r * np.sin(t / 2) < a["bore_r"] + b["bore_r"] + 2 * GROOVE_D + WALL - 1e-6:
+            if 2 * r * np.sin(t / 2) < a["bore_r"] + b["bore_r"] + 2 * GROOVE_D + (WALL if BETWEEN_WALL is None else BETWEEN_WALL) - 1e-6:
                 bad.append(f"{a['name']} / {b['name']}: {np.degrees(t):.0f} deg apart, bores overlap at {r:.1f} mm")
     for m in ms:                                              # a rod that passes this node must clear every collar (5 Nov: K0-R0 through P0-P1's mouth)
         a0, a1 = c + m["u"] * (m["s0"] - FLOOR), c + m["u"] * (m["s0"] + m["depth"])
