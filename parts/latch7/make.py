@@ -453,6 +453,9 @@ def appendix(res):
 
 if __name__ == "__main__":
     if "--appendix" in sys.argv:
-        open(os.path.join(ROOT, "systems", "latch7.appendix.html"), "w").write(appendix(json.load(open(os.path.join(HERE, "result.json")))))
+        old = open(os.path.join(ROOT, "systems", "latch6.appendix.html")).read()      # v6's page section, kept under v7's, folded
+        keep = ('<details style="max-width:1040px;margin:0 auto;padding:0 16px 40px;font:14px/1.5 var(--sans);color:var(--fg)"><summary>Latch v6\'s own numbers '
+                '(superseded: its pull-out loads left out the XT60\'s lever, see the first table above)</summary>' + old + '</details>\n')
+        open(os.path.join(ROOT, "systems", "latch7.appendix.html"), "w").write(appendix(json.load(open(os.path.join(HERE, "result.json")))) + keep)
     else:
         main()
