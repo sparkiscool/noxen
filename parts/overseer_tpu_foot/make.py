@@ -346,7 +346,7 @@ def cells(zg, z0):
     return cut, cs, face
 
 
-def boot(n, grade="68d"):
+def boot(n, grade="68d", page=False):
     g = GRADES[grade]
     t, m, z0, z_eq, S_eq, cavity, cav_cs, zs = lobe(n, g["intf"], g["lip"])
     zp = z0 - PLATE                                                   # the plate's underside
@@ -381,7 +381,8 @@ def boot(n, grade="68d"):
         sole += mf.Manifold.revolve(mf.CrossSection.circle(SOLE_ROUND, 32).translate([SOLE_R - SOLE_ROUND, SOLE_ROUND]), N_SEG).translate([0, 0, zg])
         under = mf.Manifold.batch_boolean([cup, stop, sole] + ribs, mf.OpType.Add)
         body = under
-    body = body - cavity                                              # overlaps the node by intf and, above the equator, by the lip
+    if not page:                                                      # the page's view keeps the cavity full: the node on the page fills it, and its 70k stair faces decimated tore the cells (10 Nov)
+        body = body - cavity                                          # overlaps the node by intf and, above the equator, by the lip
     sym = len(MIRRORS[n]) > 1
     rod_cut = mf.Manifold.batch_boolean(rods(n) + ([r.mirror([0, 1, 0]) for r in rods(n)] if sym else []), mf.OpType.Add)
     clash = under ^ rod_cut
@@ -488,11 +489,15 @@ if __name__ == "__main__":
                 cut, cell_cs, face = cells(shift + info["z_face"] - (CRUSH_H + PLATE - SKIN), shift + info["z_face"])
                 info["cells_node_overlap_mm3"] = round((cut ^ nm).volume(), 2)                    # the node must not reach the cells
                 info["cell_zone_rel_density"] = round(1 - cell_cs.area() / (CRUSH_W * (CRUSH_H - 2 * SKIN)), 3)
+                bp = boot(n, grade, page=True)[0]
                 for k in MIRRORS[n]:                                  # the page's view (10 Nov, Spark: put the boots on): on the drone, at each node
-                    bk = b.translate([0, 0, -shift])                   # node frame
+                    bk = bp.translate([0, 0, -shift])                  # node frame
                     if k != n:
                         bk = bk.mirror([0, 1, 0])                      # the mirrored node of the pair
                     plate.append(bk.translate([float(v) for v in NODES[k]]))
+                    os.makedirs(os.path.join(HERE, "page"), exist_ok=True)   # one mesh per boot: six in one entry got ~3k faces each on the page (boxy, Spark 10 Nov "looks weird"); 10k each keeps the page under 16 MB
+                    pb = to_tri(plate[-1]); print("page boot", k, len(pb.faces))
+                    pb.simplify_quadric_decimation(face_count=10000).export(os.path.join(HERE, "page", f"node{k}.stl"))
             else:
                 tp = tb.copy()
             tp.apply_translation([0, 0, -float(tp.bounds[0][2])])
