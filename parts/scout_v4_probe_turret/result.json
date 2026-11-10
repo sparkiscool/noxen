@@ -1,100 +1,112 @@
 {
  "name": "scout_v4_probe_turret",
  "engine": "nox/topo",
- "solid_ok": true,
+ "solid_ok": false,
  "solid": {
   "bodies_plain": 1,
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   21728.7
+   21082.5
   ],
-  "necks": [],
+  "necks": [
+   {
+    "neck_under_mm": 3.0,
+    "blob_thick_mm": 8.0,
+    "joint_mm2": 158.4,
+    "blob_mm3": 697.8,
+    "at": [
+     22.0,
+     2.7,
+     34.0
+    ]
+   }
+  ],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 6,
-  "ok": true
+  "acute_edges": 4,
+  "ok": false
  },
  "function_check": {
-  "skin_mm3": 4537.8,
+  "skin_mm3": 3705.5,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": 0.0,
-  "outside_env_mm3": -0.0,
+  "in_cuts_mm3": -0.0,
+  "outside_env_mm3": 0.0,
   "ok": true
  },
  "strength": {
   "rows": [
    {
-    "case": "head-first crash: 260 N down the throat",
+    "case": "head-first crash: 270 N down the throat",
     "cls": "crash",
-    "inlayer": 0.305,
-    "across": 0.338,
+    "inlayer": 0.318,
+    "across": 0.326,
     "at": [
+     18.6,
      11.4,
-     -17.4,
-     44.4
+     27.6
     ]
    },
    {
     "case": "the parked head crash 0 (35 g [1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.04,
-    "across": 0.086,
+    "inlayer": 0.034,
+    "across": 0.066,
     "at": [
-     9.0,
-     -23.4,
-     30.0
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "the parked head crash 1 (35 g [-1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.04,
-    "across": 0.066,
+    "inlayer": 0.034,
+    "across": 0.06,
     "at": [
+     -12.6,
      -15.0,
-     -17.4,
-     31.2
+     39.6
     ]
    },
    {
     "case": "the parked head crash 2 (35 g [0.0, 1.0, 0.0])",
     "cls": "crash",
     "inlayer": 0.04,
-    "across": 0.06,
+    "across": 0.082,
     "at": [
-     9.0,
-     16.2,
-     56.4
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "the parked head crash 3 (35 g [0.0, -1.0, 0.0])",
     "cls": "crash",
     "inlayer": 0.04,
-    "across": 0.074,
+    "across": 0.058,
     "at": [
      -9.0,
-     -23.4,
+     -24.6,
      30.0
     ]
    },
    {
     "case": "the parked head crash 4 (35 g [0.0, 0.0, 1.0])",
     "cls": "crash",
-    "inlayer": 0.031,
-    "across": 0.033,
+    "inlayer": 0.029,
+    "across": 0.03,
     "at": [
+     18.6,
      11.4,
-     -17.4,
-     44.4
+     27.6
     ]
    },
    {
     "case": "the parked head crash 5 (35 g [0.0, 0.0, -1.0])",
     "cls": "crash",
-    "inlayer": 0.031,
+    "inlayer": 0.029,
     "across": 0.068,
     "at": [
      19.8,
@@ -105,19 +117,19 @@
    {
     "case": "the parked head crash 6 (35 g [0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.036,
-    "across": 0.034,
+    "inlayer": 0.027,
+    "across": 0.046,
     "at": [
-     -9.0,
-     -23.4,
-     30.0
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "the parked head crash 7 (35 g [0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.059,
-    "across": 0.112,
+    "inlayer": 0.058,
+    "across": 0.124,
     "at": [
      19.8,
      10.2,
@@ -127,52 +139,52 @@
    {
     "case": "the parked head crash 8 (35 g [0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.034,
-    "across": 0.054,
+    "inlayer": 0.033,
+    "across": 0.043,
     "at": [
      9.0,
-     -23.4,
+     17.4,
      30.0
     ]
    },
    {
     "case": "the parked head crash 9 (35 g [0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.054,
-    "across": 0.11,
+    "inlayer": 0.029,
+    "across": 0.063,
     "at": [
-     9.0,
-     -23.4,
-     30.0
+     22.2,
+     3.0,
+     34.8
     ]
    },
    {
     "case": "the parked head crash 10 (35 g [-0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.054,
-    "across": 0.055,
+    "inlayer": 0.029,
+    "across": 0.054,
     "at": [
-     11.4,
-     -17.4,
-     44.4
+     -9.0,
+     22.2,
+     31.2
     ]
    },
    {
     "case": "the parked head crash 11 (35 g [-0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.034,
-    "across": 0.057,
+    "inlayer": 0.033,
+    "across": 0.065,
     "at": [
-     9.0,
-     16.2,
-     56.4
+     -9.0,
+     22.2,
+     31.2
     ]
    },
    {
     "case": "the parked head crash 12 (35 g [-0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.059,
-    "across": 0.066,
+    "inlayer": 0.058,
+    "across": 0.061,
     "at": [
      -9.0,
      -23.4,
@@ -182,8 +194,8 @@
    {
     "case": "the parked head crash 13 (35 g [-0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.036,
-    "across": 0.075,
+    "inlayer": 0.027,
+    "across": 0.057,
     "at": [
      -9.0,
      -23.4,
@@ -193,33 +205,33 @@
    {
     "case": "the mast's fold moment 0.6 N m at the throat ((1, 0))",
     "cls": "misuse",
-    "inlayer": 0.062,
-    "across": 0.104,
+    "inlayer": 0.06,
+    "across": 0.097,
     "at": [
-     9.0,
-     7.8,
-     69.6
+     -12.6,
+     -15.0,
+     39.6
     ]
    },
    {
     "case": "the mast's fold moment 0.6 N m at the throat ((-1, 0))",
     "cls": "misuse",
-    "inlayer": 0.062,
-    "across": 0.131,
+    "inlayer": 0.06,
+    "across": 0.12,
     "at": [
-     9.0,
-     -23.4,
-     30.0
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "the mast's fold moment 1.2 N m at the throat ((0, 1))",
     "cls": "misuse",
     "inlayer": 0.126,
-    "across": 0.227,
+    "across": 0.176,
     "at": [
      -9.0,
-     -23.4,
+     -24.6,
      30.0
     ]
    },
@@ -227,62 +239,62 @@
     "case": "the mast's fold moment 1.2 N m at the throat ((0, -1))",
     "cls": "misuse",
     "inlayer": 0.126,
-    "across": 0.211,
+    "across": 0.276,
     "at": [
-     9.0,
-     16.2,
-     56.4
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "tape tension at the N20's stall, paying out (28 N)",
     "cls": "flight",
-    "inlayer": 0.034,
-    "across": 0.028,
+    "inlayer": 0.023,
+    "across": 0.022,
     "at": [
-     9.0,
-     -23.4,
-     30.0
+     7.8,
+     16.2,
+     27.6
     ]
    },
    {
     "case": "tape tension at the N20's stall, pulling in (28 N)",
     "cls": "flight",
-    "inlayer": 0.034,
-    "across": 0.072,
+    "inlayer": 0.023,
+    "across": 0.049,
     "at": [
-     9.0,
-     -23.4,
-     30.0
+     -9.0,
+     18.6,
+     28.8
     ]
    },
    {
     "case": "the roller's springs on the full coil (12 N)",
     "cls": "flight",
-    "inlayer": 0.153,
-    "across": 0.186,
+    "inlayer": 0.14,
+    "across": 0.174,
     "at": [
      25.8,
-     -9.0,
+     9.0,
      28.8
     ]
    },
    {
     "case": "spool, blades and cable crash 0 (35 g [1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.015,
-    "across": 0.032,
+    "inlayer": 0.011,
+    "across": 0.022,
     "at": [
      9.0,
-     -23.4,
-     30.0
+     18.6,
+     28.8
     ]
    },
    {
     "case": "spool, blades and cable crash 1 (35 g [-1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.015,
-    "across": 0.024,
+    "inlayer": 0.011,
+    "across": 0.023,
     "at": [
      -9.0,
      18.6,
@@ -293,117 +305,117 @@
     "case": "spool, blades and cable crash 2 (35 g [0.0, 1.0, 0.0])",
     "cls": "crash",
     "inlayer": 0.016,
-    "across": 0.022,
+    "across": 0.024,
     "at": [
-     -10.2,
-     23.4,
-     27.6
+     18.6,
+     4.2,
+     46.8
     ]
    },
    {
     "case": "spool, blades and cable crash 3 (35 g [0.0, -1.0, 0.0])",
     "cls": "crash",
     "inlayer": 0.016,
-    "across": 0.033,
+    "across": 0.026,
     "at": [
      -9.0,
-     -23.4,
+     -24.6,
      30.0
     ]
    },
    {
     "case": "spool, blades and cable crash 4 (35 g [0.0, 0.0, 1.0])",
     "cls": "crash",
-    "inlayer": 0.009,
-    "across": 0.007,
+    "inlayer": 0.005,
+    "across": 0.005,
     "at": [
-     9.0,
-     -23.4,
-     30.0
+     18.6,
+     11.4,
+     27.6
     ]
    },
    {
     "case": "spool, blades and cable crash 5 (35 g [0.0, 0.0, -1.0])",
     "cls": "crash",
-    "inlayer": 0.009,
-    "across": 0.019,
+    "inlayer": 0.005,
+    "across": 0.012,
     "at": [
-     9.0,
-     -23.4,
-     30.0
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "spool, blades and cable crash 6 (35 g [0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.018,
-    "across": 0.016,
+    "inlayer": 0.013,
+    "across": 0.019,
     "at": [
-     -9.0,
-     -23.4,
-     30.0
+     13.8,
+     -13.8,
+     31.2
     ]
    },
    {
     "case": "spool, blades and cable crash 7 (35 g [0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.015,
-    "across": 0.026,
+    "inlayer": 0.013,
+    "across": 0.027,
     "at": [
      9.0,
      22.2,
-     32.4
+     31.2
     ]
    },
    {
     "case": "spool, blades and cable crash 8 (35 g [0.58, -0.58, 0.58])",
     "cls": "crash",
     "inlayer": 0.014,
-    "across": 0.022,
+    "across": 0.019,
     "at": [
      9.0,
-     -23.4,
+     17.4,
      30.0
     ]
    },
    {
     "case": "spool, blades and cable crash 9 (35 g [0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.044,
+    "inlayer": 0.014,
+    "across": 0.028,
     "at": [
      9.0,
-     -23.4,
+     17.4,
      30.0
     ]
    },
    {
     "case": "spool, blades and cable crash 10 (35 g [-0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.018,
+    "inlayer": 0.014,
+    "across": 0.022,
     "at": [
-     9.0,
-     -23.4,
-     28.8
+     -9.0,
+     22.2,
+     31.2
     ]
    },
    {
     "case": "spool, blades and cable crash 11 (35 g [-0.58, 0.58, -0.58])",
     "cls": "crash",
     "inlayer": 0.014,
-    "across": 0.023,
+    "across": 0.03,
     "at": [
-     -10.2,
-     23.4,
-     27.6
+     -9.0,
+     22.2,
+     31.2
     ]
    },
    {
     "case": "spool, blades and cable crash 12 (35 g [-0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.015,
-    "across": 0.024,
+    "inlayer": 0.013,
+    "across": 0.021,
     "at": [
      -9.0,
      -23.4,
@@ -413,8 +425,8 @@
    {
     "case": "spool, blades and cable crash 13 (35 g [-0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.018,
-    "across": 0.038,
+    "inlayer": 0.013,
+    "across": 0.028,
     "at": [
      -9.0,
      -23.4,
@@ -424,52 +436,52 @@
    {
     "case": "RF-RM tension 22 N + side 14 N",
     "cls": "crash",
-    "inlayer": 0.054,
-    "across": 0.058,
+    "inlayer": 0.055,
+    "across": 0.067,
     "at": [
-     9.0,
-     16.2,
-     56.4
+     -9.0,
+     22.2,
+     31.2
     ]
    },
    {
     "case": "RF-RM compression 22 N + side 14 N",
     "cls": "crash",
     "inlayer": 0.052,
-    "across": 0.052,
+    "across": 0.058,
     "at": [
-     21.0,
-     -7.8,
-     60.0
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "RM-RB tension 58 N + side 14 N",
     "cls": "crash",
-    "inlayer": 0.079,
-    "across": 0.168,
+    "inlayer": 0.046,
+    "across": 0.092,
     "at": [
-     9.0,
-     -23.4,
-     30.0
+     13.8,
+     -16.2,
+     31.2
     ]
    },
    {
     "case": "RM-RB compression 58 N + side 14 N",
     "cls": "crash",
-    "inlayer": 0.055,
-    "across": 0.118,
+    "inlayer": 0.068,
+    "across": 0.114,
     "at": [
-     -15.0,
-     -17.4,
-     31.2
+     -9.0,
+     17.4,
+     30.0
     ]
    },
    {
     "case": "RM-RS0 tension 18 N + side 22 N",
     "cls": "crash",
-    "inlayer": 0.034,
-    "across": 0.073,
+    "inlayer": 0.037,
+    "across": 0.079,
     "at": [
      -9.0,
      17.4,
@@ -479,50 +491,50 @@
    {
     "case": "RM-RS0 compression 18 N + side 22 N",
     "cls": "crash",
-    "inlayer": 0.045,
-    "across": 0.065,
+    "inlayer": 0.043,
+    "across": 0.084,
     "at": [
      -9.0,
-     21.0,
+     22.2,
      31.2
     ]
    },
    {
     "case": "RM-RS1 tension 18 N + side 22 N",
     "cls": "crash",
-    "inlayer": 0.041,
-    "across": 0.058,
+    "inlayer": 0.043,
+    "across": 0.069,
     "at": [
-     7.8,
-     -18.6,
-     34.8
+     13.8,
+     -13.8,
+     31.2
     ]
    },
    {
     "case": "RM-RS1 compression 18 N + side 22 N",
     "cls": "crash",
-    "inlayer": 0.043,
-    "across": 0.092,
+    "inlayer": 0.026,
+    "across": 0.047,
     "at": [
-     9.0,
+     10.2,
      -23.4,
-     30.0
+     28.8
     ]
    }
   ],
-  "worst": 0.338,
-  "worst_case": "head-first crash: 260 N down the throat",
+  "worst": 0.326,
+  "worst_case": "head-first crash: 270 N down the throat",
   "worst_at": [
+   18.6,
    11.4,
-   -17.4,
-   44.4
+   27.6
   ],
   "ok": true
  },
- "mass_g": 42.23,
+ "mass_g": 40.89,
  "watertight": true,
  "export": {
-  "faces_in": 264830,
+  "faces_in": 265768,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -532,23 +544,23 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 264830,
+  "faces": 265768,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 110,
+   "degenerate": 108,
    "folded": 2,
    "caps_split": 4,
    "caps_left": 2,
    "watertight": true,
-   "faces": 387926,
+   "faces": 380272,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 34334.6,
-  "exact_mm3": 34334.9
+  "volume_mm3": 33243.6,
+  "exact_mm3": 33244.4
  },
  "bodies": {
   "bodies_raw": 2,
@@ -558,8 +570,8 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 34334.9,
- "drawn_g": 13.62,
+ "volume_mm3": 33244.4,
+ "drawn_g": 12.44,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
@@ -636,13 +648,13 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.2845614018602306,
-  "nd": 47298,
+  "volfrac": 0.2782092408771733,
+  "nd": 48457,
   "sym_axes": [],
   "n_real": 44,
-  "n_ties": 90,
+  "n_ties": 108,
   "backend": "direct",
-  "iterations": 106,
+  "iterations": 118,
   "stopped": "max_stage"
  },
  "grid": {
@@ -659,10 +671,10 @@
    10.25
   ],
   "cells": 229376,
-  "design": 47149,
-  "drawn": 6553,
+  "design": 48286,
+  "drawn": 5914,
   "cases": [
-   "head-first crash: 260 N down the throat",
+   "head-first crash: 270 N down the throat",
    "the parked head crash 0 (35 g [1.0, 0.0, 0.0])",
    "the parked head crash 1 (35 g [-1.0, 0.0, 0.0])",
    "the parked head crash 2 (35 g [0.0, 1.0, 0.0])",
@@ -711,14 +723,14 @@
    "default"
   ]
  },
- "build_s": 107.1,
- "layout_s": 2254,
- "peak_gb": 7.038312,
+ "build_s": 141.4,
+ "layout_s": 3866,
+ "peak_gb": 7.547468,
  "gen_cm3": 23.0,
  "h": 1.2,
  "audit": {
   "solid_ok": [],
-  "drawn_share": 0.122,
+  "drawn_share": 0.109,
   "load_room": [],
   "bodies": [
    {
@@ -740,20 +752,20 @@
    },
    {
     "id": 2,
-    "cells": 1957,
-    "inscribed_mm": 4.2,
+    "cells": 141,
+    "inscribed_mm": 3.6,
     "touches_cut": true,
     "touches_support": true,
-    "loaded": true,
-    "room": 0.41,
+    "loaded": false,
+    "room": 0.56,
     "room_depth_mm": 52.8,
     "at": [
-     2.7,
-     -16.2,
-     37.4
+     -13.1,
+     -21.0,
+     26.4
     ],
-    "core_mm": 3.6,
-    "free_cells": 1957
+    "core_mm": 1.2,
+    "free_cells": 141
    },
    {
     "id": 3,
@@ -774,12 +786,29 @@
    },
    {
     "id": 4,
+    "cells": 762,
+    "inscribed_mm": 2.2,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": false,
+    "room": 0.43,
+    "room_depth_mm": 0.0,
+    "at": [
+     0.0,
+     -16.0,
+     40.8
+    ],
+    "core_mm": 2.2,
+    "free_cells": 762
+   },
+   {
+    "id": 5,
     "cells": 412,
     "inscribed_mm": 2.2,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
-    "room": 0.76,
+    "room": 0.79,
     "room_depth_mm": 68.4,
     "at": [
      0.0,
@@ -790,13 +819,13 @@
     "free_cells": 412
    },
    {
-    "id": 5,
+    "id": 6,
     "cells": 138,
     "inscribed_mm": 3.6,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
-    "room": 0.46,
+    "room": 0.51,
     "room_depth_mm": 27.6,
     "at": [
      0.0,
@@ -807,13 +836,13 @@
     "free_cells": 138
    },
    {
-    "id": 6,
+    "id": 7,
     "cells": 104,
     "inscribed_mm": 1.2,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
-    "room": 0.5,
+    "room": 0.51,
     "room_depth_mm": 27.6,
     "at": [
      0.0,
@@ -824,7 +853,7 @@
     "free_cells": 104
    },
    {
-    "id": 7,
+    "id": 8,
     "cells": 456,
     "inscribed_mm": 2.2,
     "touches_cut": true,
@@ -841,7 +870,7 @@
     "free_cells": 456
    },
    {
-    "id": 8,
+    "id": 9,
     "cells": 66,
     "inscribed_mm": 1.2,
     "touches_cut": true,
@@ -858,13 +887,30 @@
     "free_cells": 66
    },
    {
-    "id": 9,
+    "id": 10,
+    "cells": 415,
+    "inscribed_mm": 3.6,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.47,
+    "room_depth_mm": 46.8,
+    "at": [
+     18.8,
+     -16.0,
+     27.6
+    ],
+    "core_mm": 1.2,
+    "free_cells": 415
+   },
+   {
+    "id": 11,
     "cells": 1982,
     "inscribed_mm": 4.2,
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
-    "room": 0.55,
+    "room": 0.56,
     "room_depth_mm": 52.8,
     "at": [
      17.9,
@@ -873,7 +919,7 @@
     ],
     "core_mm": 2.2,
     "free_cells": 1982,
-    "share_of_drawn": 0.3
+    "share_of_drawn": 0.34
    }
   ],
   "envelope_waste": 0.0,
@@ -889,49 +935,49 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.161,
-   "worst_case": "head-first crash: 260 N down the throat",
+   "worst": 0.139,
+   "worst_case": "head-first crash: 270 N down the throat",
    "worst_at": [
     18.6,
     11.4,
     27.6
    ],
-   "budget_share": 0.285,
-   "thinned": 0.57,
+   "budget_share": 0.278,
+   "thinned": 0.5,
    "max_worst": 0.3
   }
  },
  "early": {
   "rows": [
    {
-    "case": "head-first crash: 260 N down the throat",
+    "case": "head-first crash: 270 N down the throat",
     "cls": "crash",
-    "inlayer": 0.309,
-    "across": 0.349,
+    "inlayer": 0.246,
+    "across": 0.236,
     "at": [
+     18.6,
      11.4,
-     -17.4,
-     45.6
+     27.6
     ]
    },
    {
     "case": "the parked head crash 0 (35 g [1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.046,
-    "across": 0.106,
+    "inlayer": 0.035,
+    "across": 0.079,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     13.8,
+     -17.4,
+     31.2
     ]
    },
    {
     "case": "the parked head crash 1 (35 g [-1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.046,
-    "across": 0.074,
+    "inlayer": 0.035,
+    "across": 0.064,
     "at": [
-     -15.0,
+     -16.2,
      -17.4,
      28.8
     ]
@@ -939,63 +985,63 @@
    {
     "case": "the parked head crash 2 (35 g [0.0, 1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.042,
+    "inlayer": 0.039,
     "across": 0.063,
     "at": [
-     9.0,
-     16.2,
-     55.2
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "the parked head crash 3 (35 g [0.0, -1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.042,
-    "across": 0.097,
+    "inlayer": 0.039,
+    "across": 0.042,
     "at": [
-     -9.0,
-     -21.0,
-     28.8
+     17.4,
+     11.4,
+     50.4
     ]
    },
    {
     "case": "the parked head crash 4 (35 g [0.0, 0.0, 1.0])",
     "cls": "crash",
-    "inlayer": 0.031,
-    "across": 0.034,
+    "inlayer": 0.023,
+    "across": 0.022,
     "at": [
+     18.6,
      11.4,
-     -17.4,
-     45.6
+     27.6
     ]
    },
    {
     "case": "the parked head crash 5 (35 g [0.0, 0.0, -1.0])",
     "cls": "crash",
-    "inlayer": 0.031,
-    "across": 0.064,
+    "inlayer": 0.023,
+    "across": 0.045,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "the parked head crash 6 (35 g [0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.042,
+    "inlayer": 0.022,
     "across": 0.034,
     "at": [
-     -9.0,
-     -21.0,
-     28.8
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "the parked head crash 7 (35 g [0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.06,
-    "across": 0.095,
+    "inlayer": 0.048,
+    "across": 0.086,
     "at": [
      19.8,
      10.2,
@@ -1005,41 +1051,41 @@
    {
     "case": "the parked head crash 8 (35 g [0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.036,
-    "across": 0.067,
+    "inlayer": 0.035,
+    "across": 0.037,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     17.4,
+     11.4,
+     50.4
     ]
    },
    {
     "case": "the parked head crash 9 (35 g [0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.06,
-    "across": 0.14,
+    "inlayer": 0.035,
+    "across": 0.078,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     13.8,
+     -17.4,
+     31.2
     ]
    },
    {
     "case": "the parked head crash 10 (35 g [-0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.06,
-    "across": 0.058,
+    "inlayer": 0.035,
+    "across": 0.045,
     "at": [
-     9.0,
-     -22.2,
+     -10.2,
+     21.0,
      28.8
     ]
    },
    {
     "case": "the parked head crash 11 (35 g [-0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.036,
-    "across": 0.059,
+    "inlayer": 0.035,
+    "across": 0.058,
     "at": [
      9.0,
      16.2,
@@ -1049,30 +1095,8 @@
    {
     "case": "the parked head crash 12 (35 g [-0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.06,
-    "across": 0.081,
-    "at": [
-     -9.0,
-     -21.0,
-     28.8
-    ]
-   },
-   {
-    "case": "the parked head crash 13 (35 g [-0.58, -0.58, -0.58])",
-    "cls": "crash",
-    "inlayer": 0.042,
-    "across": 0.098,
-    "at": [
-     -9.0,
-     -21.0,
-     28.8
-    ]
-   },
-   {
-    "case": "the mast's fold moment 0.6 N m at the throat ((1, 0))",
-    "cls": "misuse",
-    "inlayer": 0.07,
-    "across": 0.114,
+    "inlayer": 0.048,
+    "across": 0.058,
     "at": [
      -15.0,
      -17.4,
@@ -1080,32 +1104,54 @@
     ]
    },
    {
+    "case": "the parked head crash 13 (35 g [-0.58, -0.58, -0.58])",
+    "cls": "crash",
+    "inlayer": 0.022,
+    "across": 0.048,
+    "at": [
+     -15.0,
+     -17.4,
+     28.8
+    ]
+   },
+   {
+    "case": "the mast's fold moment 0.6 N m at the throat ((1, 0))",
+    "cls": "misuse",
+    "inlayer": 0.057,
+    "across": 0.101,
+    "at": [
+     -16.2,
+     -17.4,
+     28.8
+    ]
+   },
+   {
     "case": "the mast's fold moment 0.6 N m at the throat ((-1, 0))",
     "cls": "misuse",
-    "inlayer": 0.07,
-    "across": 0.162,
+    "inlayer": 0.057,
+    "across": 0.126,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     13.8,
+     -17.4,
+     31.2
     ]
    },
    {
     "case": "the mast's fold moment 1.2 N m at the throat ((0, 1))",
     "cls": "misuse",
-    "inlayer": 0.132,
-    "across": 0.303,
+    "inlayer": 0.134,
+    "across": 0.136,
     "at": [
-     -9.0,
-     -21.0,
-     28.8
+     9.0,
+     16.2,
+     55.2
     ]
    },
    {
     "case": "the mast's fold moment 1.2 N m at the throat ((0, -1))",
     "cls": "misuse",
-    "inlayer": 0.132,
-    "across": 0.219,
+    "inlayer": 0.134,
+    "across": 0.22,
     "at": [
      9.0,
      16.2,
@@ -1115,62 +1161,62 @@
    {
     "case": "tape tension at the N20's stall, paying out (28 N)",
     "cls": "flight",
-    "inlayer": 0.05,
-    "across": 0.041,
+    "inlayer": 0.023,
+    "across": 0.021,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     7.8,
+     16.2,
+     27.6
     ]
    },
    {
     "case": "tape tension at the N20's stall, pulling in (28 N)",
     "cls": "flight",
-    "inlayer": 0.05,
-    "across": 0.115,
+    "inlayer": 0.023,
+    "across": 0.049,
     "at": [
      9.0,
-     -22.2,
+     18.6,
      28.8
     ]
    },
    {
     "case": "the roller's springs on the full coil (12 N)",
     "cls": "flight",
-    "inlayer": 0.227,
-    "across": 0.217,
+    "inlayer": 0.163,
+    "across": 0.172,
     "at": [
      25.8,
-     -10.2,
-     27.6
+     9.0,
+     28.8
     ]
    },
    {
     "case": "spool, blades and cable crash 0 (35 g [1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.017,
-    "across": 0.039,
+    "inlayer": 0.011,
+    "across": 0.024,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     13.8,
+     -17.4,
+     31.2
     ]
    },
    {
     "case": "spool, blades and cable crash 1 (35 g [-1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.017,
-    "across": 0.027,
+    "inlayer": 0.011,
+    "across": 0.023,
     "at": [
-     -9.0,
-     -21.0,
+     -10.2,
+     21.0,
      28.8
     ]
    },
    {
     "case": "spool, blades and cable crash 2 (35 g [0.0, 1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.017,
+    "inlayer": 0.014,
     "across": 0.022,
     "at": [
      -10.2,
@@ -1181,88 +1227,88 @@
    {
     "case": "spool, blades and cable crash 3 (35 g [0.0, -1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.017,
-    "across": 0.039,
+    "inlayer": 0.014,
+    "across": 0.02,
     "at": [
-     -9.0,
-     -21.0,
-     28.8
+     9.0,
+     16.2,
+     27.6
     ]
    },
    {
     "case": "spool, blades and cable crash 4 (35 g [0.0, 0.0, 1.0])",
     "cls": "crash",
-    "inlayer": 0.012,
-    "across": 0.009,
+    "inlayer": 0.005,
+    "across": 0.004,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     13.8,
+     -17.4,
+     31.2
     ]
    },
    {
     "case": "spool, blades and cable crash 5 (35 g [0.0, 0.0, -1.0])",
     "cls": "crash",
-    "inlayer": 0.012,
-    "across": 0.027,
+    "inlayer": 0.005,
+    "across": 0.011,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     13.8,
+     -17.4,
+     31.2
     ]
    },
    {
     "case": "spool, blades and cable crash 6 (35 g [0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.017,
+    "inlayer": 0.011,
+    "across": 0.016,
     "at": [
-     -9.0,
-     -21.0,
+     10.2,
+     22.2,
      28.8
     ]
    },
    {
     "case": "spool, blades and cable crash 7 (35 g [0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.016,
-    "across": 0.028,
+    "inlayer": 0.013,
+    "across": 0.024,
     "at": [
-     7.8,
-     -18.6,
-     34.8
+     10.2,
+     22.2,
+     28.8
     ]
    },
    {
     "case": "spool, blades and cable crash 8 (35 g [0.58, -0.58, 0.58])",
     "cls": "crash",
     "inlayer": 0.014,
-    "across": 0.027,
+    "across": 0.016,
     "at": [
      9.0,
-     -22.2,
+     17.4,
      28.8
     ]
    },
    {
     "case": "spool, blades and cable crash 9 (35 g [0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.058,
+    "inlayer": 0.012,
+    "across": 0.025,
     "at": [
      9.0,
-     -22.2,
+     17.4,
      28.8
     ]
    },
    {
     "case": "spool, blades and cable crash 10 (35 g [-0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.019,
+    "inlayer": 0.012,
+    "across": 0.02,
     "at": [
-     9.0,
-     -22.2,
+     -10.2,
+     22.2,
      28.8
     ]
    },
@@ -1270,40 +1316,40 @@
     "case": "spool, blades and cable crash 11 (35 g [-0.58, 0.58, -0.58])",
     "cls": "crash",
     "inlayer": 0.014,
-    "across": 0.024,
+    "across": 0.027,
     "at": [
      -10.2,
-     21.0,
+     22.2,
      28.8
     ]
    },
    {
     "case": "spool, blades and cable crash 12 (35 g [-0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.016,
-    "across": 0.026,
+    "inlayer": 0.013,
+    "across": 0.016,
     "at": [
-     -9.0,
-     -21.0,
+     -16.2,
+     -17.4,
      28.8
     ]
    },
    {
     "case": "spool, blades and cable crash 13 (35 g [-0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.021,
-    "across": 0.05,
+    "inlayer": 0.011,
+    "across": 0.022,
     "at": [
      -9.0,
-     -21.0,
+     17.4,
      28.8
     ]
    },
    {
     "case": "RF-RM tension 22 N + side 14 N",
     "cls": "crash",
-    "inlayer": 0.071,
-    "across": 0.062,
+    "inlayer": 0.074,
+    "across": 0.064,
     "at": [
      21.0,
      5.4,
@@ -1314,7 +1360,7 @@
     "case": "RF-RM compression 22 N + side 14 N",
     "cls": "crash",
     "inlayer": 0.071,
-    "across": 0.056,
+    "across": 0.043,
     "at": [
      21.0,
      -5.4,
@@ -1324,21 +1370,21 @@
    {
     "case": "RM-RB tension 58 N + side 14 N",
     "cls": "crash",
-    "inlayer": 0.086,
-    "across": 0.198,
+    "inlayer": 0.056,
+    "across": 0.124,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     13.8,
+     -17.4,
+     31.2
     ]
    },
    {
     "case": "RM-RB compression 58 N + side 14 N",
     "cls": "crash",
-    "inlayer": 0.068,
-    "across": 0.131,
+    "inlayer": 0.055,
+    "across": 0.113,
     "at": [
-     -15.0,
+     -16.2,
      -17.4,
      28.8
     ]
@@ -1346,10 +1392,10 @@
    {
     "case": "RM-RS0 tension 18 N + side 22 N",
     "cls": "crash",
-    "inlayer": 0.03,
-    "across": 0.065,
+    "inlayer": 0.027,
+    "across": 0.053,
     "at": [
-     -15.0,
+     -16.2,
      -17.4,
      28.8
     ]
@@ -1357,8 +1403,8 @@
    {
     "case": "RM-RS0 compression 18 N + side 22 N",
     "cls": "crash",
-    "inlayer": 0.041,
-    "across": 0.064,
+    "inlayer": 0.039,
+    "across": 0.071,
     "at": [
      -10.2,
      21.0,
@@ -1368,53 +1414,53 @@
    {
     "case": "RM-RS1 tension 18 N + side 22 N",
     "cls": "crash",
-    "inlayer": 0.046,
-    "across": 0.067,
+    "inlayer": 0.035,
+    "across": 0.052,
     "at": [
-     7.8,
-     -18.6,
-     34.8
+     19.8,
+     10.2,
+     31.2
     ]
    },
    {
     "case": "RM-RS1 compression 18 N + side 22 N",
     "cls": "crash",
-    "inlayer": 0.045,
-    "across": 0.104,
+    "inlayer": 0.027,
+    "across": 0.049,
     "at": [
-     9.0,
-     -22.2,
-     28.8
+     13.8,
+     -17.4,
+     31.2
     ]
    }
   ],
-  "worst": 0.349,
-  "worst_case": "head-first crash: 260 N down the throat",
+  "worst": 0.246,
+  "worst_case": "head-first crash: 270 N down the throat",
   "worst_at": [
+   18.6,
    11.4,
-   -17.4,
-   45.6
+   27.6
   ],
   "ok": true,
   "beta": 4.0,
-  "iteration": 23,
+  "iteration": 24,
   "max_worst": 0.3,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 2361,
- "part_sha": "19ce8400bb06",
+ "total_s": 4007,
+ "part_sha": "8250a9290dc9",
  "lib_sha": "2d160c20579e",
- "setup_sha": "f46a84664704ce3b",
+ "setup_sha": "d3e3b751015f416a",
  "max_worst": 0.3,
  "strength_ok": false,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_probe_turret.stl",
-  "sha256": "74408da9e91d9498079597039d17060c3e4949a593e72da7a02a7b9569c79504",
-  "bytes": 13241584,
-  "faces": 264830,
+  "sha256": "37184bc08d5d9751e4e2fce0d7593d2f0e413bbb6b6e4befacbadc7e7b7e738a",
+  "bytes": 13288484,
+  "faces": 265768,
   "view_faces": 60000,
-  "view_sha256": "de0bca37b25237af26b2c23287aa48ca292870c45c05e3b0d8b9eee0f6126247",
-  "at": "2026-11-10 12:56"
+  "view_sha256": "d5c26fd8156963d810cf3738efb8a233f3657c47b9b20265e93590e9cb6dd278",
+  "at": "2026-11-10 15:49"
  }
 }
