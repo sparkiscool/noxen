@@ -1,0 +1,363 @@
+{
+ "name": "latch v5",
+ "title": "Battery Latch v5 (Scout)",
+ "readme_view": "section",
+ "artifact": "https://claude.ai/artifact/Pqu6aZFdW9g7jtRyBFdraw",
+ "machine": "box",
+ "order": 90,
+ "views": {
+  "section": {
+   "eye": [
+    0,
+    125,
+    14
+   ],
+   "target": [
+    0,
+    0,
+    16
+   ]
+  },
+  "bolt close": {
+   "eye": [
+    36,
+    62,
+    2
+   ],
+   "target": [
+    19,
+    0,
+    7
+   ]
+  },
+  "from below": {
+   "eye": [
+    40,
+    85,
+    -75
+   ],
+   "target": [
+    0,
+    -5,
+    2
+   ]
+  },
+  "lead end": {
+   "eye": [
+    120,
+    -60,
+    70
+   ],
+   "target": [
+    8,
+    -36,
+    34
+   ]
+  }
+ },
+ "note": "The press-two-tabs latch, v5, on the Scout's cartridge and receiver: one push latches it, one squeeze unlatches it. The receiver and cartridge are cut at the tab line and cut away; the sliders, steel pins, spring, guide poles, XT60 and blades are whole. New over v4: a 3 x 16 steel pin in each bolt's bearing corner, 3.0 overlap on a flat ledge with a 20 deg seat ramp (a pull drives the pins outward, so it locks harder the harder you pull), two 3 x 20 steel guide poles beside the XT60 (they engage 11.7 below the seat, the XT60 at 6.0), rest-stop lugs on the tabs, 3.8 travel. Built by parts/latch5/make.py on the vendored latch v4 CAD.",
+ "cg_ref": null,
+ "timeline": "tools/latch5_motion.py:timeline",
+ "parts": [
+  {
+   "id": "latch5_view_receiver",
+   "name": "receiver",
+   "role": "structure",
+   "group": "receiver (on the drone), cut away",
+   "color": "#9fb4cc",
+   "opacity": null,
+   "mesh": "parts/latch5/view/receiver.stl",
+   "pose": null,
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_receiver_strips",
+   "name": "receiver strips",
+   "role": "TPU",
+   "group": "receiver (on the drone), cut away",
+   "color": "#3a3a3a",
+   "opacity": null,
+   "mesh": "parts/latch5/view/receiver_strips.stl",
+   "pose": null,
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_receiver_skid_nose",
+   "name": "receiver skid nose",
+   "role": "TPU",
+   "group": "receiver (on the drone), cut away",
+   "color": "#3a3a3a",
+   "opacity": null,
+   "mesh": "parts/latch5/view/receiver_skid_nose.stl",
+   "pose": null,
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_carrier",
+   "name": "carrier",
+   "role": "structure",
+   "group": "receiver (on the drone), cut away",
+   "color": "#7f93ab",
+   "opacity": null,
+   "mesh": "parts/latch5/view/carrier.stl",
+   "pose": null,
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_carrier_cap",
+   "name": "carrier cap",
+   "role": "structure",
+   "group": "receiver (on the drone), cut away",
+   "color": "#7f93ab",
+   "opacity": null,
+   "mesh": "parts/latch5/view/carrier_cap.stl",
+   "pose": null,
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_xt60_male",
+   "name": "xt60 male",
+   "role": "bought",
+   "group": "receiver (on the drone), cut away",
+   "color": "#e8b923",
+   "opacity": null,
+   "mesh": "parts/latch5/view/xt60_male.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_guide_pole_p",
+   "name": "guide pole p",
+   "role": "bought",
+   "group": "guide poles (steel)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch5/view/guide_pole_p.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": 1.09,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_guide_pole_n",
+   "name": "guide pole n",
+   "role": "bought",
+   "group": "guide poles (steel)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch5/view/guide_pole_n.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": 1.09,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_cartridge",
+   "name": "cartridge",
+   "role": "structure",
+   "group": "cartridge (on the pack), cut away",
+   "color": "#4f9d8f",
+   "opacity": null,
+   "mesh": "parts/latch5/view/cartridge.stl",
+   "pose": null,
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_cartridge_strip_px",
+   "name": "cartridge strip px",
+   "role": "TPU",
+   "group": "cartridge (on the pack), cut away",
+   "color": "#3a3a3a",
+   "opacity": null,
+   "mesh": "parts/latch5/view/cartridge_strip_px.stl",
+   "pose": null,
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_cartridge_strip_nx",
+   "name": "cartridge strip nx",
+   "role": "TPU",
+   "group": "cartridge (on the pack), cut away",
+   "color": "#3a3a3a",
+   "opacity": null,
+   "mesh": "parts/latch5/view/cartridge_strip_nx.stl",
+   "pose": null,
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_pack",
+   "name": "pack",
+   "role": "bought",
+   "group": "cartridge (on the pack), cut away",
+   "color": "#555b66",
+   "opacity": 0.35,
+   "mesh": "parts/latch5/view/pack.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_xt60_female",
+   "name": "xt60 female",
+   "role": "bought",
+   "group": "cartridge (on the pack), cut away",
+   "color": "#e8b923",
+   "opacity": null,
+   "mesh": "parts/latch5/view/xt60_female.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_slider_p",
+   "name": "slider p",
+   "role": "structure",
+   "group": "latch (moving)",
+   "color": "#ff8a1f",
+   "opacity": null,
+   "mesh": "parts/latch5/view/slider_p.stl",
+   "pose": null,
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": 0.0,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_slider_n",
+   "name": "slider n",
+   "role": "structure",
+   "group": "latch (moving)",
+   "color": "#ff8a1f",
+   "opacity": null,
+   "mesh": "parts/latch5/view/slider_n.stl",
+   "pose": null,
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": 0.0,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_bolt_pin_p",
+   "name": "bolt pin p",
+   "role": "bought",
+   "group": "latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch5/view/bolt_pin_p.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.88,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_bolt_pin_n",
+   "name": "bolt pin n",
+   "role": "bought",
+   "group": "latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch5/view/bolt_pin_n.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.88,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_spring",
+   "name": "spring",
+   "role": "bought",
+   "group": "latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch5/view/spring.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_blade_p",
+   "name": "blade p",
+   "role": "structure",
+   "group": "grabber blades (box arm head, unchanged)",
+   "color": "#d64545",
+   "opacity": null,
+   "mesh": "parts/latch5/view/blade_p.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  },
+  {
+   "id": "latch5_view_blade_n",
+   "name": "blade n",
+   "role": "structure",
+   "group": "grabber blades (box arm head, unchanged)",
+   "color": "#d64545",
+   "opacity": null,
+   "mesh": "parts/latch5/view/blade_n.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v5 (10 Nov)",
+   "source": "parts/latch5/make.py"
+  }
+ ]
+}

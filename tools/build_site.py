@@ -164,7 +164,7 @@ def artifact_page(a, S, meshes, commit, path):
     if a.get("mass_budget_g"):
         sub += f" of {a['mass_budget_g']} g budget"
     sub += f"; built from {os.environ.get('GITHUB_REPOSITORY', 'sparkiscool/noxen')} @ {commit}"
-    s = Scene(S["title"], sub)
+    s = Scene(S["title"], sub, material="PCTG")        # every printed part is PCTG (Spark 8 Nov); the TPU feet are a few grams
     by_id = {p["id"]: p for p in S["parts"]}; segs = rod_segments()
     for p in a["parts"]:
         pid = p.get("id") or p["name"]; q = by_id[pid]
