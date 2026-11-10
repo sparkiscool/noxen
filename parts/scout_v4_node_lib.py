@@ -147,10 +147,11 @@ L.SOCKET_START = _socket_starts()
 # 0.005-0.014 at 1.2): their collars now overlap at the hub and carry most of the load drawn. BUDGET_CM3 sets their generated volume
 # outright toward ~0.25 (index ~ volume^-1.25), above what joins the collars' roots. The Ys (S0 / S1 0.20 / 0.23, NB 0.20, TB 0.23)
 # keep the volume they passed at.
-# P / R: two collars 13.9 out are a second drawn body; two 6.25 members from the hub collar to their floors are ~0.7 cm3, so 0.9
-# (1.0 at P3 / P4, 0.054 before). RF / RB / RS: their three collars from 5.0 are one drawn body already, 0.4.
-BUDGET_CM3 = {"P3": 1.0, "P4": 1.0, "P1": 0.9, "P2": 0.9, "P5": 0.9, "P6": 0.9, "R0": 0.9, "R7": 0.9,
-              "RF": 0.4, "RB": 0.4, "RS0": 0.4, "RS1": 0.4, "S0": 3.6, "S1": 3.6, "NB": 4.9, "TB": 5.5}
+# Run 200 (round 2, 10 Nov): all 16 pass. P / R at 0.9: 0.018-0.027, P3 / P4 at 1.0: 0.091, RF / RB / RS at 0.4: 0.030-0.043, S0 / S1
+# at 3.6: 0.209 / 0.210, NB at 4.9: 0.220, TB at 5.5: 0.210. Round 3: the Ys toward 0.25 (index ~ V^-1.25: x0.87), P3 / P4 0.7
+# (~0.14), P / R 0.6 (two 6.25 members from the hub collar to the paired collars' floors are ~0.6 cm3), RF / RB / RS 0.3.
+BUDGET_CM3 = {"P3": 0.7, "P4": 0.7, "P1": 0.6, "P2": 0.6, "P5": 0.6, "P6": 0.6, "R0": 0.6, "R7": 0.6,
+              "RF": 0.3, "RB": 0.3, "RS0": 0.3, "RS1": 0.3, "S0": 3.1, "S1": 3.1, "NB": 4.3, "TB": 4.8}
 
 
 def spec_for(group):

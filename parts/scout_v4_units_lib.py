@@ -111,15 +111,42 @@ TURRET_BOLTS = [(S.SPOOL["c"][0] + dx, dy) for dx in (-13.0, 13.0) for dy in (-2
 REC_BOLTS = [(x + S.BX, y) for x, y in S.REC_BOLTS]           # the battery mechanism's 4 M3, up into inserts in the frame's yokes (9 Nov: one body)
 
 
+def socket_depth(axial, side):
+    """the bore depth a socket's frame-model load needs (parts/scout_v4_node_lib.socket_depth, the NODES stream's rule of 10 Nov:
+    G/flex 650 bond 56.5 N per mm past the 2.0 lip, mouth bearing 4 V / (D d) at 5.3 MPa, 7.0 the injection pattern's least)"""
+    d = max(7.0, 2.0 + abs(axial) / (12.0 * np.pi * 3.0 / 2.0), 4.0 * abs(side) / (2 * BORE_R * (0.3 * 23.0 * 0.85 / 1.1)))
+    return float(np.ceil(d * 2.0) / 2.0)
+
+
 class SockDown(Sock):
     """a socket printed with the build axis down (-z: the one-body frame prints deck-top down, 9 Nov): its collar's and bore's teardrop
-    crown point to -z, the print's up"""
+    crown point to -z, the print's up. Its depth from its own load (socket_depth, 10 Nov); the mouth never moves out past the standard
+    socket's (the frame's end sockets are at the A1 mini's edge): a deeper bore takes its extra behind the standard floor (the rod
+    that much longer), a shallower one keeps the floor and its mouth comes in"""
     BUILD = (0.0, 0.0, -1.0)
+
+    def __init__(self, name, c, far):
+        super().__init__(name, c, far)
+        node, mem = name.split()
+        ld = NL4[node][mem]
+        self.depth = socket_depth(ld["axial"], ld["side"])
+        self.t_floor = FLOOR - max(0.0, self.depth - DEPTH)
+        self.t_mouth = self.t_floor + self.depth
 
     def collar(self):
         from parts.cage_node_lib import collar_shape
-        return collar_shape(self.c, self.d, 0.0, self.t_mouth, BORE_R, WALL, build=self.BUILD)
+        return collar_shape(self.c, self.d, min(0.0, self.t_floor - FLOOR), self.t_mouth, BORE_R, WALL, build=self.BUILD)
 
     def bores(self):
         from parts.socket_inject import injectable_socket_cuts
-        return injectable_socket_cuts(self.pt(FLOOR), self.d, 0.0, DEPTH, BORE_R, build=self.BUILD, port=getattr(self, "port_d", None))
+        return injectable_socket_cuts(self.pt(self.t_floor), self.d, 0.0, self.depth, BORE_R, build=self.BUILD, port=getattr(self, "port_d", None))
+
+    def region(self, extra=0.4):
+        return along(self.pt(self.t_floor), self.pt(self.t_mouth - 1.0), BORE_R + WALL + extra)
+
+    def port(self, prefer, others=()):
+        from parts.cage_node_lib import port_dir
+        from parts.socket_inject import FEED_H, PORT_R, VENT_R
+        self.port_d = port_dir(self.d, prefer, [o.d for o in others if o is not self])
+        f, v = self.pt(self.t_floor + FEED_H / 2), self.pt(self.t_mouth - 2.0 - VENT_R)
+        return U([along(f, f + self.port_d * 150.0, PORT_R), along(v, v + self.port_d * 150.0, VENT_R)])

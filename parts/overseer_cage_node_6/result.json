@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   7477.6
+   8222.9
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -28,34 +28,34 @@
    {
     "case": "frame tube 6-7 axial 160 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.208,
-    "across": 0.151,
+    "inlayer": 0.194,
+    "across": 0.168,
     "at": [
-     153.9,
-     327.3,
-     115.2
+     155.9,
+     328.3,
+     108.2
     ]
    },
    {
     "case": "frame tube 6-7 side 2.0 N",
     "cls": "crash",
-    "inlayer": 0.003,
-    "across": 0.002,
+    "inlayer": 0.002,
+    "across": 0.001,
     "at": [
      154.9,
      317.3,
-     116.2
+     117.2
     ]
    },
    {
     "case": "frame tube 6-15 axial 148 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.137,
-    "across": 0.077,
+    "inlayer": 0.109,
+    "across": 0.088,
     "at": [
-     159.9,
+     160.9,
      325.3,
-     115.2
+     116.2
     ]
    },
    {
@@ -64,20 +64,20 @@
     "inlayer": 0.002,
     "across": 0.001,
     "at": [
-     157.9,
-     326.3,
-     105.2
+     155.9,
+     328.3,
+     108.2
     ]
    },
    {
     "case": "frame tube 6-18 axial 248 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.319,
-    "across": 0.192,
+    "inlayer": 0.257,
+    "across": 0.149,
     "at": [
-     157.9,
-     323.3,
-     117.2
+     156.9,
+     324.3,
+     118.2
     ]
    },
    {
@@ -86,35 +86,35 @@
     "inlayer": 0.002,
     "across": 0.001,
     "at": [
-     157.9,
-     326.3,
+     156.9,
+     327.3,
      105.2
     ]
    },
    {
     "case": "crash 35 g through the longest tube tube 6-7 (325 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.207,
-    "across": 0.135,
+    "inlayer": 0.192,
+    "across": 0.117,
     "at": [
-     153.9,
-     327.3,
-     115.2
+     155.9,
+     328.3,
+     108.2
     ]
    }
   ],
-  "worst": 0.319,
+  "worst": 0.257,
   "worst_case": "frame tube 6-18 axial 248 N (pull-out)",
   "worst_at": [
-   157.9,
-   323.3,
-   117.2
+   156.9,
+   324.3,
+   118.2
   ]
  },
- "mass_g": 15.71,
+ "mass_g": 16.69,
  "watertight": true,
  "export": {
-  "faces_in": 101376,
+  "faces_in": 102002,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -122,7 +122,7 @@
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 101376,
+  "faces": 102002,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -133,10 +133,10 @@
    "caps_split": 24,
    "caps_left": 0,
    "watertight": true,
-   "faces": 141130
+   "faces": 142756
   },
-  "volume_mm3": 12768.2,
-  "exact_mm3": 12768.3
+  "volume_mm3": 13566.2,
+  "exact_mm3": 13566.4
  },
  "bodies": {
   "bodies_raw": 1,
@@ -144,7 +144,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 12768.3,
+ "volume_mm3": 13566.4,
  "drawn_g": 9.68,
  "export_cleanup": {
   "pitch": 0.25,
@@ -152,16 +152,17 @@
   "core_limit_mm3": 10.0,
   "specks_mm3": [
    0.031,
+   0.016,
    0.016
   ],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.02,
-  "specks": 2
+  "removed_mm3": 0.03,
+  "specks": 3
  },
  "stl": "overseer_cage_node_6.stl",
  "view_stl": "overseer_cage_node_6_view.stl",
- "view_faces": 101376,
+ "view_faces": 102002,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -226,13 +227,13 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.03535178216859441,
+  "volfrac": 0.04090587206153932,
   "nd": 144038,
   "sym_axes": [],
   "n_real": 7,
   "n_ties": 18,
   "backend": "direct",
-  "iterations": 61,
+  "iterations": 60,
   "stopped": "grey"
  },
  "grid": {
@@ -264,10 +265,10 @@
    "default"
   ]
  },
- "build_s": 61.1,
- "layout_s": 13600,
- "peak_gb": 11.072208,
- "gen_cm3": 4.9,
+ "build_s": 59.0,
+ "layout_s": 13086,
+ "peak_gb": 11.005656,
+ "gen_cm3": 5.7,
  "h": 1.0,
  "audit": {
   "solid_ok": [],
@@ -330,8 +331,8 @@
     322.3,
     101.2
    ],
-   "budget_share": 0.035,
-   "thinned": 1.24,
+   "budget_share": 0.041,
+   "thinned": 1.08,
    "max_worst": 0.3
   }
  },
@@ -340,11 +341,11 @@
    {
     "case": "frame tube 6-7 axial 160 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.28,
-    "across": 0.211,
+    "inlayer": 0.23,
+    "across": 0.17,
     "at": [
      156.9,
-     326.3,
+     327.3,
      106.2
     ]
    },
@@ -354,42 +355,42 @@
     "inlayer": 0.003,
     "across": 0.002,
     "at": [
-     154.9,
-     317.3,
-     116.2
+     156.9,
+     327.3,
+     106.2
     ]
    },
    {
     "case": "frame tube 6-15 axial 148 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.186,
-    "across": 0.107,
+    "inlayer": 0.13,
+    "across": 0.088,
     "at": [
-     158.9,
+     160.9,
      324.3,
-     115.2
+     116.2
     ]
    },
    {
     "case": "frame tube 6-15 side 0.8 N",
     "cls": "crash",
-    "inlayer": 0.003,
+    "inlayer": 0.002,
     "across": 0.002,
     "at": [
-     157.9,
-     326.3,
-     109.2
+     156.9,
+     327.3,
+     106.2
     ]
    },
    {
     "case": "frame tube 6-18 axial 248 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.403,
-    "across": 0.221,
+    "inlayer": 0.304,
+    "across": 0.163,
     "at": [
-     158.9,
-     324.3,
-     115.2
+     156.9,
+     323.3,
+     118.2
     ]
    },
    {
@@ -399,48 +400,48 @@
     "across": 0.001,
     "at": [
      156.9,
-     326.3,
+     327.3,
      106.2
     ]
    },
    {
     "case": "crash 35 g through the longest tube tube 6-7 (325 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.277,
-    "across": 0.175,
+    "inlayer": 0.227,
+    "across": 0.141,
     "at": [
      156.9,
-     326.3,
+     327.3,
      106.2
     ]
    }
   ],
-  "worst": 0.403,
+  "worst": 0.304,
   "worst_case": "frame tube 6-18 axial 248 N (pull-out)",
   "worst_at": [
-   158.9,
-   324.3,
-   115.2
+   156.9,
+   323.3,
+   118.2
   ],
   "beta": 4.0,
-  "iteration": 21,
+  "iteration": 20,
   "max_worst": 0.3,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 13661,
- "part_sha": "1467a5446161",
+ "total_s": 13145,
+ "part_sha": "4cab3a6274c8",
  "lib_sha": "3bca3914ee6f",
- "setup_sha": "0d710af69364342d",
+ "setup_sha": "6baecdacec7ff04e",
  "max_worst": 0.3,
- "strength_ok": false,
+ "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/overseer_cage_node_6.stl",
-  "sha256": "adc986619b871e7989b072b29d362caafe4f92894539442b8fddab00ade4f3d8",
-  "bytes": 5068884,
-  "faces": 101376,
+  "sha256": "fe3c8cb6823d8f6d1572554e53ce64577c6756a411d2b0cfac738c380703925d",
+  "bytes": 5100184,
+  "faces": 102002,
   "view_faces": 60000,
-  "view_sha256": "8d321fafd774925978144d5d751353d369e15fd843106759a5f9a228da3d05a2",
-  "at": "2026-11-10 00:43"
+  "view_sha256": "7ed0b1a751c8f5a0e747ef8b8e036d88a1a84fe4e81ecbdbdad6aaf314a3a02c",
+  "at": "2026-11-10 04:34"
  }
 }

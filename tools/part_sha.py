@@ -106,3 +106,11 @@ if __name__ == "__main__":
                 print(f"{os.path.basename(os.path.dirname(py))}: no setup sha ({str(e)[:120]})")
     else:
         print(part_sha(sys.argv[1]), lib_sha(sys.argv[1]), setup_sha(sys.argv[1]))
+
+
+def recut_of(old, new):
+    """True when the tree's result `old` is a recut (tools/recut.py) of the run result `new` itself: same design and the same
+    engine run (part_sha and total_s, which a recut keeps). A run's batch commit must not put `new` back over its own recut
+    (10 Nov: the 00:41 and 04:36 batch commits undid the rear arm's and the front pad's solid-pad fills); a rerun of the
+    same setup has its own total_s and still lands."""
+    return bool(old.get("recut")) and old.get("part_sha") == new.get("part_sha") and old.get("total_s") == new.get("total_s")

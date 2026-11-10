@@ -7,19 +7,19 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   8417.5
+   11780.8
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 3,
+  "acute_edges": 2,
   "ok": true
  },
  "function_check": {
   "skin_mm3": 1004.8,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
   "outside_env_mm3": 0.0,
   "ok": true
  },
@@ -28,19 +28,19 @@
    {
     "case": "cradle, camera and LEDs crash 0 (35 g [1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.087,
-    "across": 0.153,
+    "inlayer": 0.082,
+    "across": 0.112,
     "at": [
-     17.6,
-     16.5,
-     96.5
+     18.6,
+     -23.5,
+     95.5
     ]
    },
    {
     "case": "cradle, camera and LEDs crash 1 (35 g [-1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.087,
-    "across": 0.162,
+    "inlayer": 0.082,
+    "across": 0.161,
     "at": [
      -12.4,
      29.4,
@@ -50,7 +50,7 @@
    {
     "case": "cradle, camera and LEDs crash 2 (35 g [0.0, 1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.123,
+    "inlayer": 0.089,
     "across": 0.211,
     "at": [
      -11.4,
@@ -61,8 +61,8 @@
    {
     "case": "cradle, camera and LEDs crash 3 (35 g [0.0, -1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.123,
-    "across": 0.188,
+    "inlayer": 0.089,
+    "across": 0.098,
     "at": [
      10.6,
      14.5,
@@ -72,30 +72,30 @@
    {
     "case": "cradle, camera and LEDs crash 4 (35 g [0.0, 0.0, 1.0])",
     "cls": "crash",
-    "inlayer": 0.05,
-    "across": 0.067,
+    "inlayer": 0.028,
+    "across": 0.036,
     "at": [
-     7.6,
-     14.5,
-     96.5
+     -12.4,
+     28.4,
+     110.5
     ]
    },
    {
     "case": "cradle, camera and LEDs crash 5 (35 g [0.0, 0.0, -1.0])",
     "cls": "crash",
-    "inlayer": 0.05,
-    "across": 0.098,
+    "inlayer": 0.028,
+    "across": 0.057,
     "at": [
      15.6,
-     21.5,
+     22.5,
      100.5
     ]
    },
    {
     "case": "cradle, camera and LEDs crash 6 (35 g [0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.101,
-    "across": 0.165,
+    "inlayer": 0.07,
+    "across": 0.114,
     "at": [
      18.6,
      -23.5,
@@ -105,40 +105,40 @@
    {
     "case": "cradle, camera and LEDs crash 7 (35 g [0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.097,
-    "across": 0.135,
+    "inlayer": 0.059,
+    "across": 0.112,
     "at": [
-     14.6,
-     22.5,
-     100.5
+     -9.4,
+     30.4,
+     111.5
     ]
    },
    {
     "case": "cradle, camera and LEDs crash 8 (35 g [0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.11,
-    "across": 0.16,
+    "inlayer": 0.084,
+    "across": 0.096,
     "at": [
-     15.6,
-     14.5,
-     95.5
+     -9.4,
+     28.4,
+     110.5
     ]
    },
    {
     "case": "cradle, camera and LEDs crash 9 (35 g [0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.102,
-    "across": 0.189,
+    "inlayer": 0.093,
+    "across": 0.1,
     "at": [
-     17.6,
-     16.5,
-     96.5
+     16.6,
+     15.5,
+     95.5
     ]
    },
    {
     "case": "cradle, camera and LEDs crash 10 (35 g [-0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.102,
+    "inlayer": 0.093,
     "across": 0.206,
     "at": [
      -11.4,
@@ -149,7 +149,7 @@
    {
     "case": "cradle, camera and LEDs crash 11 (35 g [-0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.11,
+    "inlayer": 0.084,
     "across": 0.199,
     "at": [
      -11.4,
@@ -160,51 +160,51 @@
    {
     "case": "cradle, camera and LEDs crash 12 (35 g [-0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.097,
-    "across": 0.145,
+    "inlayer": 0.059,
+    "across": 0.076,
     "at": [
-     10.6,
-     14.5,
-     97.5
+     -12.4,
+     28.4,
+     110.5
     ]
    },
    {
     "case": "cradle, camera and LEDs crash 13 (35 g [-0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.101,
-    "across": 0.128,
+    "inlayer": 0.07,
+    "across": 0.081,
     "at": [
-     10.6,
-     -12.5,
-     87.5
+     7.6,
+     -22.5,
+     93.5
     ]
    },
    {
     "case": "cradle, camera and LEDs flight 4 g",
     "cls": "flight",
-    "inlayer": 0.021,
-    "across": 0.028,
+    "inlayer": 0.012,
+    "across": 0.015,
     "at": [
-     7.6,
-     14.5,
-     96.5
+     -12.4,
+     28.4,
+     110.5
     ]
    },
    {
     "case": "cradle, camera and LEDs flight 2 g x",
     "cls": "flight",
-    "inlayer": 0.021,
-    "across": 0.035,
+    "inlayer": 0.015,
+    "across": 0.024,
     "at": [
-     19.6,
+     18.6,
      -23.5,
-     94.5
+     95.5
     ]
    },
    {
     "case": "cradle, camera and LEDs flight 2 g y",
     "cls": "flight",
-    "inlayer": 0.023,
+    "inlayer": 0.019,
     "across": 0.044,
     "at": [
      -11.4,
@@ -215,40 +215,40 @@
    {
     "case": "cradle, camera and LEDs landing 6 g",
     "cls": "flight",
-    "inlayer": 0.031,
-    "across": 0.041,
+    "inlayer": 0.017,
+    "across": 0.023,
     "at": [
-     7.6,
-     14.5,
-     96.5
+     -12.4,
+     28.4,
+     110.5
     ]
    },
    {
     "case": "SG90 crash 0 (35 g [1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.039,
-    "across": 0.065,
+    "inlayer": 0.026,
+    "across": 0.052,
     "at": [
-     17.6,
-     16.5,
-     96.5
+     -9.4,
+     30.4,
+     111.5
     ]
    },
    {
     "case": "SG90 crash 1 (35 g [-1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.039,
-    "across": 0.062,
+    "inlayer": 0.026,
+    "across": 0.052,
     "at": [
-     8.6,
-     11.5,
-     89.5
+     -12.4,
+     29.4,
+     110.5
     ]
    },
    {
     "case": "SG90 crash 2 (35 g [0.0, 1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.046,
+    "inlayer": 0.029,
     "across": 0.07,
     "at": [
      -11.4,
@@ -259,40 +259,40 @@
    {
     "case": "SG90 crash 3 (35 g [0.0, -1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.046,
-    "across": 0.071,
+    "inlayer": 0.029,
+    "across": 0.034,
     "at": [
-     10.6,
-     14.5,
-     97.5
+     -10.4,
+     27.4,
+     110.5
     ]
    },
    {
     "case": "SG90 crash 4 (35 g [0.0, 0.0, 1.0])",
     "cls": "crash",
-    "inlayer": 0.029,
-    "across": 0.042,
+    "inlayer": 0.017,
+    "across": 0.018,
     "at": [
-     15.6,
-     14.5,
+     16.6,
+     15.5,
      95.5
     ]
    },
    {
     "case": "SG90 crash 5 (35 g [0.0, 0.0, -1.0])",
     "cls": "crash",
-    "inlayer": 0.029,
-    "across": 0.045,
+    "inlayer": 0.017,
+    "across": 0.025,
     "at": [
-     10.6,
-     15.5,
-     89.5
+     8.6,
+     14.5,
+     86.5
     ]
    },
    {
     "case": "SG90 crash 6 (35 g [0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.031,
+    "inlayer": 0.029,
     "across": 0.071,
     "at": [
      -9.4,
@@ -303,7 +303,7 @@
    {
     "case": "SG90 crash 7 (35 g [0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.04,
+    "inlayer": 0.025,
     "across": 0.063,
     "at": [
      -9.4,
@@ -314,11 +314,11 @@
    {
     "case": "SG90 crash 8 (35 g [0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.053,
-    "across": 0.077,
+    "inlayer": 0.027,
+    "across": 0.04,
     "at": [
-     15.6,
-     14.5,
+     16.6,
+     15.5,
      95.5
     ]
    },
@@ -326,11 +326,11 @@
     "case": "SG90 crash 9 (35 g [0.58, -0.58, -0.58])",
     "cls": "crash",
     "inlayer": 0.022,
-    "across": 0.03,
+    "across": 0.028,
     "at": [
-     17.6,
-     15.5,
-     95.5
+     -9.4,
+     28.4,
+     110.5
     ]
    },
    {
@@ -347,41 +347,41 @@
    {
     "case": "SG90 crash 11 (35 g [-0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.053,
-    "across": 0.07,
+    "inlayer": 0.027,
+    "across": 0.058,
     "at": [
-     10.6,
-     15.5,
-     89.5
+     -11.4,
+     30.4,
+     111.5
     ]
    },
    {
     "case": "SG90 crash 12 (35 g [-0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.04,
-    "across": 0.061,
+    "inlayer": 0.025,
+    "across": 0.026,
     "at": [
-     10.6,
-     14.5,
-     97.5
+     -12.4,
+     27.4,
+     110.5
     ]
    },
    {
     "case": "SG90 crash 13 (35 g [-0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.031,
-    "across": 0.058,
+    "inlayer": 0.029,
+    "across": 0.043,
     "at": [
-     8.6,
-     11.5,
-     90.5
+     -12.4,
+     28.4,
+     110.5
     ]
    },
    {
-    "case": "head-first crash: 250 N on the crash stop (the cradle landed)",
+    "case": "head-first crash: 260 N on the crash stop (the cradle landed)",
     "cls": "crash",
-    "inlayer": 0.142,
-    "across": 0.147,
+    "inlayer": 0.118,
+    "across": 0.122,
     "at": [
      20.6,
      -13.5,
@@ -391,50 +391,50 @@
    {
     "case": "head-first crash: the pivots until the SG90 slips (18 N)",
     "cls": "crash",
-    "inlayer": 0.05,
-    "across": 0.075,
+    "inlayer": 0.027,
+    "across": 0.041,
     "at": [
-     8.6,
-     11.5,
-     90.5
+     -12.4,
+     28.4,
+     110.5
     ]
    },
    {
     "case": "SG90 stall torque +1.8 kg cm on its tabs",
     "cls": "flight",
-    "inlayer": 0.202,
-    "across": 0.312,
+    "inlayer": 0.121,
+    "across": 0.228,
     "at": [
-     7.6,
-     16.5,
-     94.5
+     -12.4,
+     28.4,
+     110.5
     ]
    },
    {
     "case": "SG90 stall torque -1.8 kg cm on its tabs",
     "cls": "flight",
-    "inlayer": 0.202,
-    "across": 0.405,
+    "inlayer": 0.121,
+    "across": 0.18,
     "at": [
-     17.6,
+     16.6,
      16.5,
      96.5
     ]
    }
   ],
-  "worst": 0.405,
-  "worst_case": "SG90 stall torque -1.8 kg cm on its tabs",
+  "worst": 0.228,
+  "worst_case": "SG90 stall torque +1.8 kg cm on its tabs",
   "worst_at": [
-   17.6,
-   16.5,
-   96.5
+   -12.4,
+   28.4,
+   110.5
   ],
   "ok": true
  },
- "mass_g": 16.86,
+ "mass_g": 22.17,
  "watertight": true,
  "export": {
-  "faces_in": 89324,
+  "faces_in": 109966,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -444,23 +444,23 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 89324,
+  "faces": 109966,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 8,
+   "degenerate": 4,
    "folded": 0,
    "caps_split": 0,
    "caps_left": 0,
    "watertight": true,
-   "faces": 126398,
+   "faces": 158588,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 13707.7,
-  "exact_mm3": 13708.5
+  "volume_mm3": 18022.9,
+  "exact_mm3": 18023.9
  },
  "bodies": {
   "bodies_raw": 1,
@@ -468,7 +468,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 13708.5,
+ "volume_mm3": 18023.9,
  "drawn_g": 4.11,
  "export_cleanup": {
   "pitch": 0.25,
@@ -481,7 +481,7 @@
  },
  "stl": "scout_v4_head_frame.stl",
  "view_stl": "scout_v4_head_frame_view.stl",
- "view_faces": 89324,
+ "view_faces": 109966,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -546,7 +546,7 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.11978199676588609,
+  "volfrac": 0.16769479547224053,
   "nd": 83485,
   "sym_axes": [],
   "n_real": 36,
@@ -604,7 +604,7 @@
    "SG90 crash 11 (35 g [-0.58, 0.58, -0.58])",
    "SG90 crash 12 (35 g [-0.58, -0.58, 0.58])",
    "SG90 crash 13 (35 g [-0.58, -0.58, -0.58])",
-   "head-first crash: 250 N on the crash stop (the cradle landed)",
+   "head-first crash: 260 N on the crash stop (the cradle landed)",
    "head-first crash: the pivots until the SG90 slips (18 N)",
    "SG90 stall torque +1.8 kg cm on its tabs",
    "SG90 stall torque -1.8 kg cm on its tabs"
@@ -613,10 +613,10 @@
    "default"
   ]
  },
- "build_s": 40.0,
- "layout_s": 3878,
- "peak_gb": 6.798452,
- "gen_cm3": 10.0,
+ "build_s": 43.3,
+ "layout_s": 3897,
+ "peak_gb": 6.799504,
+ "gen_cm3": 14.0,
  "h": 1.0,
  "audit": {
   "solid_ok": [],
@@ -713,8 +713,8 @@
     28.4,
     110.5
    ],
-   "budget_share": 0.12,
-   "thinned": 1.09,
+   "budget_share": 0.168,
+   "thinned": 0.78,
    "max_worst": 0.3
   }
  },
@@ -723,18 +723,18 @@
    {
     "case": "cradle, camera and LEDs crash 0 (35 g [1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.073,
-    "across": 0.115,
+    "inlayer": 0.074,
+    "across": 0.092,
     "at": [
-     18.6,
-     -23.5,
-     96.5
+     -8.4,
+     28.4,
+     110.5
     ]
    },
    {
     "case": "cradle, camera and LEDs crash 1 (35 g [-1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.073,
+    "inlayer": 0.074,
     "across": 0.133,
     "at": [
      -12.4,
@@ -745,7 +745,7 @@
    {
     "case": "cradle, camera and LEDs crash 2 (35 g [0.0, 1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.087,
+    "inlayer": 0.088,
     "across": 0.139,
     "at": [
      -11.4,
@@ -756,7 +756,7 @@
    {
     "case": "cradle, camera and LEDs crash 3 (35 g [0.0, -1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.087,
+    "inlayer": 0.088,
     "across": 0.126,
     "at": [
      -10.4,
@@ -767,7 +767,7 @@
    {
     "case": "cradle, camera and LEDs crash 4 (35 g [0.0, 0.0, 1.0])",
     "cls": "crash",
-    "inlayer": 0.035,
+    "inlayer": 0.027,
     "across": 0.041,
     "at": [
      -12.4,
@@ -778,34 +778,34 @@
    {
     "case": "cradle, camera and LEDs crash 5 (35 g [0.0, 0.0, -1.0])",
     "cls": "crash",
-    "inlayer": 0.035,
-    "across": 0.045,
+    "inlayer": 0.027,
+    "across": 0.035,
     "at": [
-     12.6,
-     -14.5,
-     85.5
+     10.6,
+     -16.5,
+     86.5
     ]
    },
    {
     "case": "cradle, camera and LEDs crash 6 (35 g [0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.084,
-    "across": 0.13,
+    "inlayer": 0.06,
+    "across": 0.087,
     "at": [
      18.6,
-     -22.5,
-     95.5
+     -21.5,
+     94.5
     ]
    },
    {
     "case": "cradle, camera and LEDs crash 7 (35 g [0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.062,
-    "across": 0.099,
+    "inlayer": 0.05,
+    "across": 0.079,
     "at": [
-     18.6,
-     -23.5,
-     96.5
+     16.6,
+     -24.5,
+     99.5
     ]
    },
    {
@@ -822,7 +822,7 @@
    {
     "case": "cradle, camera and LEDs crash 9 (35 g [0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.09,
+    "inlayer": 0.091,
     "across": 0.108,
     "at": [
      -9.4,
@@ -833,7 +833,7 @@
    {
     "case": "cradle, camera and LEDs crash 10 (35 g [-0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.09,
+    "inlayer": 0.091,
     "across": 0.161,
     "at": [
      -12.4,
@@ -855,7 +855,7 @@
    {
     "case": "cradle, camera and LEDs crash 12 (35 g [-0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.062,
+    "inlayer": 0.05,
     "across": 0.09,
     "at": [
      -12.4,
@@ -866,18 +866,18 @@
    {
     "case": "cradle, camera and LEDs crash 13 (35 g [-0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.084,
-    "across": 0.096,
+    "inlayer": 0.06,
+    "across": 0.072,
     "at": [
      10.6,
-     -18.5,
-     89.5
+     -16.5,
+     86.5
     ]
    },
    {
     "case": "cradle, camera and LEDs flight 4 g",
     "cls": "flight",
-    "inlayer": 0.015,
+    "inlayer": 0.011,
     "across": 0.017,
     "at": [
      -12.4,
@@ -888,12 +888,12 @@
    {
     "case": "cradle, camera and LEDs flight 2 g x",
     "cls": "flight",
-    "inlayer": 0.017,
-    "across": 0.027,
+    "inlayer": 0.013,
+    "across": 0.019,
     "at": [
-     18.6,
-     -23.5,
-     96.5
+     -9.4,
+     28.4,
+     110.5
     ]
    },
    {
@@ -910,7 +910,7 @@
    {
     "case": "cradle, camera and LEDs landing 6 g",
     "cls": "flight",
-    "inlayer": 0.022,
+    "inlayer": 0.017,
     "across": 0.026,
     "at": [
      -12.4,
@@ -922,11 +922,11 @@
     "case": "SG90 crash 0 (35 g [1.0, 0.0, 0.0])",
     "cls": "crash",
     "inlayer": 0.028,
-    "across": 0.034,
+    "across": 0.033,
     "at": [
-     18.6,
-     15.5,
-     95.5
+     -8.4,
+     29.4,
+     110.5
     ]
    },
    {
@@ -965,23 +965,23 @@
    {
     "case": "SG90 crash 4 (35 g [0.0, 0.0, 1.0])",
     "cls": "crash",
-    "inlayer": 0.015,
-    "across": 0.023,
+    "inlayer": 0.009,
+    "across": 0.009,
     "at": [
-     17.6,
-     14.5,
-     95.5
+     -12.4,
+     28.4,
+     110.5
     ]
    },
    {
     "case": "SG90 crash 5 (35 g [0.0, 0.0, -1.0])",
     "cls": "crash",
-    "inlayer": 0.015,
-    "across": 0.024,
+    "inlayer": 0.009,
+    "across": 0.018,
     "at": [
-     9.6,
-     18.5,
-     90.5
+     -12.4,
+     28.4,
+     110.5
     ]
    },
    {
@@ -998,7 +998,7 @@
    {
     "case": "SG90 crash 7 (35 g [0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.022,
+    "inlayer": 0.021,
     "across": 0.033,
     "at": [
      -9.4,
@@ -1009,12 +1009,12 @@
    {
     "case": "SG90 crash 8 (35 g [0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.028,
-    "across": 0.043,
+    "inlayer": 0.025,
+    "across": 0.03,
     "at": [
-     17.6,
-     14.5,
-     95.5
+     -9.4,
+     27.4,
+     110.5
     ]
    },
    {
@@ -1042,7 +1042,7 @@
    {
     "case": "SG90 crash 11 (35 g [-0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.028,
+    "inlayer": 0.025,
     "across": 0.046,
     "at": [
      -12.4,
@@ -1053,7 +1053,7 @@
    {
     "case": "SG90 crash 12 (35 g [-0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.022,
+    "inlayer": 0.021,
     "across": 0.037,
     "at": [
      -12.4,
@@ -1073,10 +1073,10 @@
     ]
    },
    {
-    "case": "head-first crash: 250 N on the crash stop (the cradle landed)",
+    "case": "head-first crash: 260 N on the crash stop (the cradle landed)",
     "cls": "crash",
-    "inlayer": 0.144,
-    "across": 0.158,
+    "inlayer": 0.134,
+    "across": 0.136,
     "at": [
      20.6,
      -12.5,
@@ -1086,7 +1086,7 @@
    {
     "case": "head-first crash: the pivots until the SG90 slips (18 N)",
     "cls": "crash",
-    "inlayer": 0.034,
+    "inlayer": 0.025,
     "across": 0.046,
     "at": [
      -12.4,
@@ -1097,8 +1097,8 @@
    {
     "case": "SG90 stall torque +1.8 kg cm on its tabs",
     "cls": "flight",
-    "inlayer": 0.137,
-    "across": 0.257,
+    "inlayer": 0.138,
+    "across": 0.258,
     "at": [
      -12.4,
      28.4,
@@ -1108,16 +1108,16 @@
    {
     "case": "SG90 stall torque -1.8 kg cm on its tabs",
     "cls": "flight",
-    "inlayer": 0.137,
-    "across": 0.204,
+    "inlayer": 0.138,
+    "across": 0.105,
     "at": [
-     18.6,
-     15.5,
-     95.5
+     -12.4,
+     28.4,
+     110.5
     ]
    }
   ],
-  "worst": 0.257,
+  "worst": 0.258,
   "worst_case": "SG90 stall torque +1.8 kg cm on its tabs",
   "worst_at": [
    -12.4,
@@ -1131,19 +1131,19 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 3918,
- "part_sha": "7483ec3e0e97",
+ "total_s": 3940,
+ "part_sha": "7280b54024d8",
  "lib_sha": "d4a3e35601a1",
- "setup_sha": "5b2f769fbb0279d6",
+ "setup_sha": "763e50184a82acc8",
  "max_worst": 0.3,
- "strength_ok": false,
+ "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_head_frame.stl",
-  "sha256": "b6a434ff0e971573f16a252eba6b894a1992b77c4ce075727c46c7700017b109",
-  "bytes": 4466284,
-  "faces": 89324,
+  "sha256": "b792ad7814d6ebcf579c257e53af72b743b0d7c89543ef86ec42d585eb5aeb9e",
+  "bytes": 5498384,
+  "faces": 109966,
   "view_faces": 60000,
-  "view_sha256": "17e4b6489cd4e8424a9c09699bf5a2d5520a7c7652e381533ab3332ae3fd4138",
-  "at": "2026-11-10 02:23"
+  "view_sha256": "5e8883e2907c6304c84f098e5b9cad7ba71f41972c30a08833c30fb3a8af3279",
+  "at": "2026-11-10 05:24"
  }
 }

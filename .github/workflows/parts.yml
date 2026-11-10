@@ -191,10 +191,12 @@ jobs:
             git fetch -q origin main && git checkout -q -f -B main origin/main
             [ -f parts/$p/part.py ] || { echo "$p: no part.py on main any more, result not placed"; break; }
             python3 - "$p" <<'PY' || break
-          import json, os, sys; sys.path.insert(0, "tools"); from part_sha import stale
+          import json, os, sys; sys.path.insert(0, "tools"); from part_sha import stale, recut_of
           p = sys.argv[1]; py = f"parts/{p}/part.py"; old = f"parts/{p}/result.json"
           if os.path.exists(old) and stale(py, json.load(open("_mine/result.json"))) and not stale(py, json.load(open(old))):
               print(f"{p}: the run's result is older than the one on main, kept main's"); sys.exit(1)
+          if os.path.exists(old) and recut_of(json.load(open(old)), json.load(open("_mine/result.json"))):
+              print(f"{p}: main holds a recut of this run's result, kept main's"); sys.exit(1)
           PY
             cp _mine/* parts/$p/
             python3 tools/predict.py --update          # this run's timing in the same commit (one commit per result, not two)
@@ -245,7 +247,7 @@ jobs:
           # stale against the tree never replaces one that is current
           python3 - <<'PY'
           import glob, json, os, shutil, sys
-          sys.path.insert(0, "tools"); from part_sha import stale
+          sys.path.insert(0, "tools"); from part_sha import stale, recut_of
           for d in sorted(glob.glob("_results/result-*")):
               p = os.path.basename(d)[len("result-"):]; dst = os.path.join("parts", p); py = os.path.join(dst, "part.py")
               new = os.path.join(d, "result.json"); old = os.path.join(dst, "result.json")
@@ -254,6 +256,8 @@ jobs:
               if os.path.exists(new) and os.path.exists(old):
                   if stale(py, json.load(open(new))) and not stale(py, json.load(open(old))):
                       print(f"{p}: the run's result is older than the one in the tree, kept the tree's"); continue
+                  if recut_of(json.load(open(old)), json.load(open(new))):
+                      print(f"{p}: the tree holds a recut of this run's result, kept the tree's"); continue
               os.makedirs(dst, exist_ok=True)
               for f in ("result.json", "part.stl", "preview.png"):
                   if os.path.exists(os.path.join(d, f)): shutil.copyfile(os.path.join(d, f), os.path.join(dst, f))
