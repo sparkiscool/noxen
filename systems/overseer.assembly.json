@@ -3262,6 +3262,37 @@
    "source": "parts/overseer_tpu_foot/make.py",
    "color": "#e07a1f",
    "part": "overseer_tpu_foot"
+  },
+  {
+   "id": "overseer_battery_tray",
+   "name": "battery tray (zip ties, on the base's 4 M3)",
+   "role": "structure",
+   "mesh": "parts/overseer_battery_tray/part.stl",
+   "material": "PCTG",
+   "mass_g": 63.3,
+   "tag": "C",
+   "owner": "overseer",
+   "source": "parts/overseer_battery_tray/make.py",
+   "version": "v1 (10 Nov, Spark: as far forward as it can go, bolts on, zip ties, drawn only): pack front on x 60, the flow sensor's view sets the limit",
+   "color": "#4a90d9"
+  },
+  {
+   "id": "overseer_pack",
+   "name": "battery: Zeee 4S 5200 (138 x 47 x 48 E, 475 g E)",
+   "role": "bought",
+   "box": [
+    -78.0,
+    60.0,
+    -23.5,
+    23.5,
+    -62.1,
+    -14.1
+   ],
+   "material": "bought",
+   "mass_g": 475.0,
+   "tag": "E",
+   "owner": "overseer",
+   "color": "#333333"
   }
  ],
  "mass_budget_g": 2200,
