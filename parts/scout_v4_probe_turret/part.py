@@ -48,6 +48,8 @@ def bodies():
     # room: a drum-shaped housing round the spool from the deck to the roof's ring, the ring node, and the motor's pocket
     env.append(cyl(cx, 0, DZ1, 67.0, 36.0))
     env.append(box(cx - 8.0, cx + 8.0, g0 - 30.0, yp + 6.0, pz - 7.0, DZ1 + 1))
+    lh_, hw_ = lens_half(), S.BLADE_W / 2 + 0.5
+    env.append(box(mx - lh_ - 6.0, mx + lh_ + 6.0, -hw_ - 6.0, hw_ + 6.0, 55.0, t["z1"]))   # 10 Nov: room up the throat to its seat (the drum ended at 67, the throat's top 6 stood on drawn 2 mm walls: 0.53 in the 1.2 N m fold)
     # floor bosses
     regs = []
     for x, y in TURRET_BOLTS:
@@ -84,7 +86,7 @@ def bodies():
     for sy in (1, -1):                                                              # each guide 9 thick round the spring's O4.5 pocket: walls >= 2.25
         yc = sy * (rw + 4.0)
         guides.append(radial(17.9, r_full + 13.5, 4.5, yc - 4.5, yc + 4.5))
-        cuts.append(radial(r_empty - 0.6, r_full + 0.6, 1.65, yc - 6.0, yc + 6.0))                # the axle's slot (M3 x 35: its ends at |y| 15.5)
+        cuts.append(radial(10.0, r_full + 0.6, 1.65, yc - 6.0, yc + 6.0))                         # the axle's slot (M3 x 40), open through the guide's inner end (10 Nov: a 0.7 web was left before it)
         cuts.append(radial(r_full - 0.5, r_full + 11.0, 2.25, yc - 2.25, yc + 2.25))               # the spring's pocket on the slot's line (O4, 11 long at the full coil)
         seats.append(radial(r_full + 11.0, r_full + 11.6, 2.0, yc - 2.0, yc + 2.0))
     drawn += guides

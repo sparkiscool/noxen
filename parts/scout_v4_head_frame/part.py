@@ -19,7 +19,7 @@ from parts.scout_v4_units_lib import S, ASM, box, cyl, U, payload_cases, point_c
 
 import json as _json, os as _os
 HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
-SPEC = dict(h=1.0, gen_cm3=10.0, max_worst=0.3)  # 10 Nov: 3 cm3 stopped early at 5.3 (250 N through the pivots; now the crash stop takes it), room_full 0.13 with ~3.6 uniformly thinned at 4 %: 10 for the SG90 stall and 35 g cases
+SPEC = dict(h=1.0, gen_cm3=14.0, max_worst=0.3)  # 10 Nov run 2: 10 cm3 read 0.41 in the SG90 stall (its pads 17 out from the clip in y); 14. Run 1: 3 cm3 stopped early at 5.3 (250 N through the pivots; now the crash stop takes it), room_full 0.13 with ~3.6 uniformly thinned at 4 %: 10 for the SG90 stall and 35 g cases
 HOLES = 27.7                                      # SG90 tab holes apart (typical drawing, E; the DORHEA listing gives the tabs' 32.8 span)
 
 
