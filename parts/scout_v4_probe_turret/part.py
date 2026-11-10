@@ -5,7 +5,7 @@ Drawn (attachments only): four O10 floor bosses (M3 down into the deck's inserts
 the spool's two axle bosses (an M3 screw is the axle); the pressure roller's two guides (its M3 axle's ends in radial slots, a 4 x 0.5 x 15
 spring behind each: tools/probe_mast_sim.py, a pushed coil blossoms unless locked); the N20's face plate (its 2 x M1.6 on 7.7) and its shaft's tip bearing; the throat's
 walls (a flat slot at the spool's height opening to the blades' lens at its top, where the parked head's clip seats); the drum's wall
-round the cable's coil; RM's four rod collars, their mouths at r 34.
+round the cable's coil; RM's four rod collars, their mouths at r 26..34 (tools/scout_v4_shape.RM_MOUTH).
 Cuts: the spool, its 40 T gear and the 12 T pinion swept; the roller's travel, its axle's slots, the springs; the N20; the axle; the blades' path and the mast above; the drum's cavity;
 the bolts and their drivers; the props' discs + 12; the deck (z < 24.5) but the motor's pocket. (The DRV8833 is in the nose bay.)
 Support: the four floor bosses. Loads: the head-first crash (systems/scout_v4.head_load.json, ~250 N down the throat); the parked head (60 g) on the throat's seat in 35 g
@@ -96,7 +96,7 @@ def bodies():
     deck = box(-200, 200, -200, 200, -100, DZ1) - box(cx - 8.5, cx + 8.5, g0 - 31.0, yp + 7.0, pz - 8.0, DZ1 + 0.1)
     cuts.append(deck)
     # RM: the roof's middle node, its four rod collars with their mouths at r 34
-    socks = socks_of("RM", ring_r=S.HUB_RING)
+    socks = [k for o, r in S.RM_MOUTH.items() for k in socks_of("RM", ring_r=r) if o in k.name.split(" ")[1].split("-")]   # each mouth at its own r (tools/scout_v4_shape.RM_MOUTH)
     d, c = socket_bodies(socks, lambda s: np.array([0.0, 0.0, 1.0]))
     drawn += d; cuts += c
     check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
