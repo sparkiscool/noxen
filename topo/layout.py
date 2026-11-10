@@ -102,6 +102,7 @@ class Settings:
     early_k: float = 3.0                # ... stop the run when the index there is over early_k x SPEC max_worst (SPEC settings override)
     mg_tol: float = 1e-5
     time_limit_s: float = 5.5 * 3600
+    mem_limit_gb: float = 14.0         # memory gate (topo/audit.py memory_fit): the GitHub runner has 16 GB and kills a run over it silently
     checkpoint_every: int = 10
 
 
@@ -380,6 +381,9 @@ class Layout:
         self.fe_solver = Solver(shape, h, self.C, self.supports, active=active,
                                 backend=os.environ.get("NOX_TOPO_BACKEND", s.backend), log=log, mg_tol=s.mg_tol)
         self.KE = self.fe_solver.KE
+        # ---- memory gate before the first solve (10 Nov: the frame died at 2 h on the 16 GB runner with no log)
+        from .audit import memory_fit
+        self.mem = memory_fit(self, s.mem_limit_gb, log=log, hard=s.audit != "off")
         # ---- reference compliances (full solid)
         full = np.where(void, 0.0, 1.0)
         c_ref, _ = self._compliance(full, need_grad=False)
@@ -733,38 +737,71 @@ class Layout:
     # ---------------------------------------------------------------------------------------- compliance
     def _compliance(self, rho_e, need_grad=True, rho_g=None):
         """compliance of every case. Gate ties run on rho_g (the gate realization) when it is given, the rest on
-        rho_e (a held thin body stays whole there, so the real cases and the ordinary ties keep it attached)."""
+        rho_e (a held thin body stays whole there, so the real cases and the ordinary ties keep it attached).
+        The cases stream through the solver in blocks (fem.Solver.solve_blocks) and each block's displacements are
+        reduced to what the gradient needs, the element energies u_e^T KE u_e (and u_e . fe for body forces), at once:
+        (ncase, nel) instead of (ndof, ncase), and no full load or displacement matrix (10 Nov, scout_v4_frame: 396
+        cases x 0.7 M dofs held 13.6 GB and the 16 GB runner killed the run). Returns comp, and with need_grad
+        (energies, E) for _grad_rho_e."""
         s = self.s
         E = (s.emin + (1.0 - s.emin) * rho_e ** s.penal) * self.stiff
         g = self.fe_solver.grid
         cases = self.cases
-        F = np.zeros((self.part.ndof, len(cases)))
-        for q, c in enumerate(cases):
-            F[:, q] = c.Fe
-            if c.fe is not None:
-                r = (rho_e[:, None] * c.fe[None, :])[None]
-                F[:, q] += g.to_flat(g.scatter(r))[:, 0]
+        nc = len(cases)
+        comp = np.zeros(nc)
+        en = np.zeros((nc, self.nel)) if need_grad else None
+        fo = {}
+
+        def make_F(cols):
+            F = np.zeros((self.part.ndof, len(cols)))
+            for j, q in enumerate(cols):
+                c = cases[q]
+                c.add_Fe(F[:, j])
+                if c.fe is not None:
+                    r = (rho_e[:, None] * c.fe[None, :])[None]
+                    F[:, j] += g.to_flat(g.scatter(r))[:, 0]
+            return F
+
+        def consume(cols, F, U):
+            comp[cols] = (F * U).sum(0)
+            if not need_grad:
+                return
+            CH = 4
+            for a in range(0, len(cols), CH):
+                sl = cols[a:a + CH]
+                fe = [cases[q].fe for q in sl]
+                e_, f_ = self.fe_solver.element_energy(U[:, a:a + len(sl)], fe=fe)
+                for j, q in enumerate(sl):
+                    en[q] = e_[j]
+                    if fe[j] is not None:
+                        fo[q] = f_[j]
+
         gate = np.array([c.support == "_gate" for c in cases])
         tie = np.array([c.tie for c in cases]) & self.has_inserts
         if (rho_g is None or not gate.any()) and not tie.any():
-            U = self.fe_solver.solve(E, F, [c.support for c in cases], keys=[c.name for c in cases])
+            runs = ((np.ones(nc, bool), E),)
         else:
             # gate ties on the gate realization; with inserts, every tie case without them: the printed part must hold
             # its drawn bodies together by itself (an insert is bonded in after printing)
-            U = np.zeros_like(F)
             rg = rho_e if (rho_g is None or not gate.any()) else rho_g
             Eg = (s.emin + (1.0 - s.emin) * rg ** s.penal) * self.stiff_tie
             Et = (s.emin + (1.0 - s.emin) * rho_e ** s.penal) * self.stiff_tie
-            for m, EE in ((~gate & ~tie, E), (~gate & tie, Et), (gate, Eg)):
-                idx = np.where(m)[0]
-                if len(idx) == 0:
-                    continue
-                U[:, idx] = self.fe_solver.solve(EE, F[:, idx], [cases[q].support for q in idx],
-                                                 keys=[cases[q].name for q in idx])
-        comp = (F * U).sum(0)
+            runs = ((~gate & ~tie, E), (~gate & tie, Et), (gate, Eg))
+        for m, EE in runs:
+            idx = [int(q) for q in np.where(m)[0]]
+            if not idx:
+                continue
+
+            def mk(cols, idx=idx):
+                return make_F([idx[c] for c in cols])
+
+            def co(cols, F, U, idx=idx):
+                consume([idx[c] for c in cols], F, U)
+            self.fe_solver.solve_blocks(EE, len(idx), mk, co, [cases[q].support for q in idx],
+                                        keys=[cases[q].name for q in idx])
         if not need_grad:
             return comp, None
-        return comp, (U, E)
+        return comp, (_Energies(en, fo), E)
 
     def _objective(self, comp):
         s = self.s
@@ -777,30 +814,25 @@ class Layout:
         return J, dJdc, r
 
     def _grad_rho_e(self, rho_e, U, dJdc, rho_g=None):
-        """dJ / d rho_e (nel,), accumulated case by case; with rho_g, (dJ / d rho_e, dJ / d rho_g) where the gate
-        ties contribute to the second."""
+        """dJ / d rho_e (nel,), accumulated case by case from the element energies _compliance kept (U: its _Energies);
+        with rho_g, (dJ / d rho_e, dJ / d rho_g) where the gate ties contribute to the second."""
         s = self.s
         g = np.zeros(self.nel)
         gg = np.zeros(self.nel) if rho_g is not None else None
         dE = s.penal * np.maximum(rho_e, 1e-12) ** (s.penal - 1.0) * (1.0 - s.emin) * self.stiff
         dEt = dE if not self.has_inserts else dE / self.stiff * self.stiff_tie
         dEg = None if rho_g is None else s.penal * np.maximum(rho_g, 1e-12) ** (s.penal - 1.0) * (1.0 - s.emin) * self.stiff_tie
-        CH = 4
-        for a in range(0, len(self.cases), CH):
-            sl = list(range(a, min(a + CH, len(self.cases))))
-            fe = [self.cases[q].fe for q in sl]
-            en, fo = self.fe_solver.element_energy(U[:, sl], fe=fe)
-            for j, q in enumerate(sl):
-                if dJdc[q] == 0.0:
-                    continue
-                on_g = gg is not None and self.cases[q].support == "_gate"
-                d = -(dEg if on_g else (dEt if self.cases[q].tie else dE)) * en[j]
-                if fe[j] is not None:
-                    d = d + 2.0 * fo[j]
-                if on_g:
-                    gg += dJdc[q] * d
-                else:
-                    g += dJdc[q] * d
+        for q in range(len(self.cases)):
+            if dJdc[q] == 0.0:
+                continue
+            on_g = gg is not None and self.cases[q].support == "_gate"
+            d = -(dEg if on_g else (dEt if self.cases[q].tie else dE)) * U.en[q]
+            if q in U.fo:
+                d = d + 2.0 * U.fo[q]
+            if on_g:
+                gg += dJdc[q] * d
+            else:
+                g += dJdc[q] * d
         return g if gg is None else (g, gg)
 
     # --------------------------------------------------------------------------------- geometric constraints
@@ -934,6 +966,9 @@ class Layout:
                 self.scale = 10.0 / J
             g_rho = self._grad_rho_e(f["rho_e"], U, dJdc, rho_g=f["rho_g"])
             del U
+            if len(self.hist) == 0:
+                from .audit import memory_measured
+                memory_measured(self, s.mem_limit_gb, log=log, hard=s.audit != "off")
             df0 = self.scale * self.grad_eroded(f, g_rho)
             vd = float(f["rho_d"][self.design].mean())
             vn = float(f["rho_n"][self.design].mean())
@@ -1066,14 +1101,44 @@ class Layout:
                     iterations=len(self.hist), stopped=getattr(self, "stopped", None))
 
 
-@dataclass
+class _Energies:
+    """per-case element energies from _compliance: en (ncase, nel) u_e^T KE u_e, fo {case: (nel,) u_e . fe} for body forces."""
+
+    def __init__(self, en, fo):
+        self.en, self.fo = en, fo
+
+
+def _sparse_load(F):
+    F = np.asarray(F, float)
+    nz = np.flatnonzero(F)
+    return (len(F), nz, F[nz])
+
+
 class _Case:
-    name: str
-    F: np.ndarray        # nominal nodal loads
-    Fe: np.ndarray       # loads for the eroded analysis (moved to anchored nodes)
-    support: str
-    fe: np.ndarray       # (24,) body force per full element, or None
-    w: float
-    tie: bool
-    cls: str
-    nodes: np.ndarray
+    """one solved case. The nodal loads are kept sparse (a tie loads one body's nodes, a real case its region): ~400 dense
+    0.7 M-dof vectors were 2.5 GB on scout_v4_frame. F / Fe read back dense; add_Fe adds the eroded loads into a column."""
+    __slots__ = ("name", "_F", "_Fe", "support", "fe", "w", "tie", "cls", "nodes")
+
+    def __init__(self, name, F, Fe, support, fe, w, tie, cls, nodes):
+        self.name, self.support, self.fe, self.w, self.tie, self.cls, self.nodes = name, support, fe, w, tie, cls, nodes
+        self._F = _sparse_load(F)
+        self._Fe = self._F if Fe is F else _sparse_load(Fe)
+
+    @staticmethod
+    def _dense(sv):
+        n, nz, v = sv
+        out = np.zeros(n)
+        out[nz] = v
+        return out
+
+    @property
+    def F(self):           # nominal nodal loads
+        return self._dense(self._F)
+
+    @property
+    def Fe(self):          # loads for the eroded analysis (moved to anchored nodes)
+        return self._dense(self._Fe)
+
+    def add_Fe(self, col):
+        n, nz, v = self._Fe
+        col[nz] += v

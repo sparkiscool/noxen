@@ -1202,10 +1202,63 @@ def t_audit_room_full():
         check("audit room_full", False, str(e))
 
 
+def t_memory_gate():
+    """memory (topo/audit.py memory_fit / memory_measured, fem.Solver.solve_blocks; 10 Nov: scout_v4_frame's 396 cases held
+    13.6 GB and the 16 GB runner killed the run at 2 h with no log). (1) The streamed solve, 1 case a block, gives the
+    compliances and the gradient of one solve of every case at once (direct and multigrid). (2) A setup over the limit is
+    refused before the first solve, and optimise writes result.json with status mem_refused and the reason."""
+    import os, json, tempfile
+    from .audit import memory_fit, MemoryRefused
+    from .run import optimise
+    try:
+        p = _mini_part()
+        errs = []
+        for be in ("direct", "mg"):
+            s = Settings(min_member_mm=3.2, backend=be, reach_check="off", auto_sym=False, finish="drawn")
+            L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+            x = np.random.default_rng(3).uniform(0.2, 0.8, L.nd)
+            f = L.fields(x, 4.0)
+            rho = f["rho_e"]
+            E = (s.emin + (1.0 - s.emin) * rho ** s.penal) * L.stiff
+            F = np.stack([c.Fe for c in L.cases], 1)
+            L.fe_solver.warm.clear()
+            U = L.fe_solver.solve(E, F, [c.support for c in L.cases], keys=[c.name for c in L.cases])
+            c_all = (F * U).sum(0)
+            en = L.fe_solver.element_energy(U)
+            J, dJdc, r = L._objective(c_all)
+            dE = s.penal * np.maximum(rho, 1e-12) ** (s.penal - 1.0) * (1.0 - s.emin) * L.stiff
+            g_all = sum(-dJdc[q] * dE * en[q] for q in range(len(L.cases)))
+            L.fe_solver.warm.clear()
+            L.fe_solver.block_size = lambda: 1
+            comp, (S, _) = L._compliance(rho)
+            g = L._grad_rho_e(rho, S, dJdc)
+            errs.append(max(float(np.abs(comp - c_all).max() / np.abs(c_all).max()), float(np.abs(g - g_all).max() / np.abs(g_all).max())))
+        ok1 = errs[0] < 1e-9 and errs[1] < 1e-6
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn")
+        L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+        fits = "fail" not in memory_fit(L, 14.0, log=lambda s_: None)
+        try:
+            memory_fit(L, 1e-3, log=lambda s_: None); refused = False
+        except MemoryRefused as e:
+            refused = "memory" in str(e) and e.info["estimate_gb"] > 1e-3
+        out = tempfile.mkdtemp(prefix="topo_mem_")
+        so = Settings(min_member_mm=3.0, max_stage=2, min_stage=1, audit="warn", time_limit_s=120, mem_limit_gb=1e-3)
+        lines = []
+        res = optimise(lambda h: _mini_part(h=h), 1.0, 0.6, out, "mini_mem", settings=so, coarse=False, maxit=1, log=lines.append)
+        rj = json.load(open(os.path.join(out, "result.json")))
+        written = rj["status"] == "mem_refused" and "GB" in (rj["strength"]["fail"] or "") and res["status"] == "mem_refused"
+        check("memory: streamed solve = one solve of every case; over the limit refused before the solve, reason in result.json",
+              ok1 and fits and refused and written,
+              f"streamed vs all (direct, mg) rel err {errs[0]:.1e} {errs[1]:.1e}, fits 14 GB {fits}, refused {refused}, result.json {written}")
+    except Exception as e:
+        traceback.print_exc()
+        check("memory gate", False, f"{type(e).__name__}: {e}")
+
+
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate):
         t()
     if not quick:
         t_end_to_end()
