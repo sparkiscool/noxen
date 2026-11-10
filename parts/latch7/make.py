@@ -3,11 +3,11 @@ spring and plug force centred, nothing tilting onto a wall; the parts we really 
 
 Latch v6 (parts/latch6/make.py, on v5 and the vendored v4 CAD) audited and changed where it failed. audit() holds the numbers.
   1. The XT60 is 42.9 mm (Scout) / 77.8 mm (Overseer) from the tab line the grabber pulls on. v6 sized the grip for the plug's
-     57 N; with that lever the two nubs carry 173 N (Scout) and v6's nub, foot, blade and rib all go over 1.0. v7: nubs 13 wide,
+     57 N; with that lever the two nubs carry 173 N (Scout) and v6's nub, foot and blade all go over 1.0. v7: nubs 13 wide,
      feet 18 wide, blades 4.7 x 16, and on the Overseer the heel pads at the cartridge's ends (one pair under the XT60).
   2. v6's wedge left +-0.14 mm of height tolerance before a bolt was not fully drawn. v7: 15 deg wedge: +-0.21 mm, the most
      the tab's thickness gives with 1.5 mm of nub still on the foot (window + contact = tab - 0.3).
-  3. The blade pushed the tab 6.6 mm below the springs' line and, 1 mm off along the pack, on one tab leg only. v7: one crowned
+  3. The blade pushed the tab 6.1 mm below the springs' line on two 1.6 mm strips; 1 mm off along the pack the push is 3.4 off centre. v7: one crowned
      pad on the tab at the bar's height, 2.1 under the springs, on the slider's centre line whatever the head's offset.
   4. A 30 mm spring 2.7 across buckles; v6's open slots let it bow onto the pack. v7: a 2 x 8 steel pin inside each spring.
   5. v6's rest-stop lugs left the blade +-1.0 along the pack; the arm is +-1.8. v7: +-2.1 everywhere (lugs, arch, recess).
@@ -129,6 +129,18 @@ def heel(g):
     return deck, pads
 
 
+m6.VIEW = m6.VIEW + [(f"spring_pin_{k}", m6.G_L, "#e3e7ec", None, False, "bought", None) for k in "ab"]
+_view_sources = m6.view_sources
+
+
+def view_sources(B):
+    src = _view_sources(B); g = B["g"]
+    for k, sz in (("a", -1), ("b", 1)):               # the guide pin inside each spring
+        src[f"spring_pin_{k}"] = cyl("x", bl.SPR_YC, g["Z_T"] + sz * m6.SPR_DZ, GUIDE_PIN[0] / 2, -GUIDE_PIN[1] / 2, GUIDE_PIN[1] / 2, 20)
+    return src
+
+
+m6.view_sources = view_sources
 m6.slider, m6.cartridge, m6.heel = slider, cartridge, heel
 bl.slider, bl.cartridge = slider, cartridge
 v5.slider = slider
@@ -241,7 +253,7 @@ def error_budget(g, be):
              takes="+-%.2f mm" % tolerance(g)["height_tolerance_mm"], v6="+-0.14 mm", ok=True,
              note="each blade is sprung on its own, so an offset across does not change either bolt's draw"),
         dict(step="3 pull out: XT60 unmates", error="the plug is %.0f mm from the pull" % (g["Z_X"] - g["Z_T"]),
-             takes="far heel pads + nubs sized for it", v6="not counted: nub, foot, blade, rib over 1.0", ok=True, note="see strength"),
+             takes="far heel pads + nubs sized for it", v6="not counted: nub, foot, blade over 1.0", ok=True, note="see strength"),
         dict(step="4 carry", error="any direction of gravity", takes="see hold", v6="as v6", ok=True, note="across is friction + the blade springs"),
         dict(step="5 insert: receiver lead-ins", error="across 0.55 deg worst of the 1.20 deg the lead-ins take; along +-1.8 of 3.0; tilt 1.28 of 2.37 deg; roll 0.74 of 1.06 deg",
              takes="54 / 40 / 46 / 30 % left", v6="same (v5 receiver)", ok=True, note="roll is the tightest: it needs the per-bay gravity offset in the axle's step target"),
@@ -275,8 +287,8 @@ def audit(B):
         lever=st["lever"], strength=st["at_the_real_pull"], v6_at_the_real_pull=v6_at_real_load(),
         tolerance=tolerance(g), blade_entry=be, error_budget=error_budget(g, be),
         slider=dict(v7_centred=slider_balance(g, PUSH_Y, 0.0), v7_head_1p8_off=slider_balance(g, PUSH_Y, 2.0),
-                    v6_centred=slider_balance(g, 3.0, 0.0), v6_head_1mm_off=slider_balance(g, 3.0, 5.7),
-                    note="v6: flat blade face on two tab legs 1.6 wide; 1 mm off along the pack it bears on one leg, 5.7 off centre"),
+                    v6_centred=slider_balance(g, 3.5, 0.0), v6_head_1mm_off=slider_balance(g, 3.5, 3.4),
+                    note="v6: flat blade face on two tab legs 1.6 wide and a 0.4 strip over the arch (centroid y 3.5); 1 mm off along the pack the contact is 2.6 / 0.6 wide on the legs: 3.4 off centre; past 1.0 the blade meets a rest-stop lug"),
         spring_column=spring_column(),
         wedge_hold={f"{Fb:g} N": dict(left_N=round(Fb - Fs, 1), mu_needed=round(max(0.0, math.tan(m6.ALPHA - math.atan2(Fb - Fs, per))), 2)) for Fb in (15.0, 20.0)},
         parts=parts_check(g))
@@ -386,7 +398,7 @@ def appendix(res):
 {td("pull-out load on the grip (the XT60 is off to one end)", f"sized for 29.6 N per nub; the real load is {v6r['both_nubs_N'] / 2:.0f} N. Index: nub {v6r['nub']}, foot {v6r['foot']}, blade {v6r['blade']} (over 1.0 fails)", f"{lv['pull']['per_nub_N']} N per nub. Index: nub {st['nub_pull']['index']}, foot {st['foot_pull']['index']}, blade {st['blade_pull']['index']}, rib {rib[kp]['index']}")}
 {td("height tolerance between the head and the cartridge before a bolt is not fully drawn", f"+-{tol['v6_height_tolerance_mm']} mm", f"+-{tol['height_tolerance_mm']} mm (15 deg wedge; at least {tol['shortest_nub_on_foot_mm']} mm of nub on the foot)")}
 {td("blade room along the pack (the arm is +-1.8 mm there)", "+-1.0 mm (the rest-stop lugs)", f"+-{res['grabber_interface']['z_capture_mm']} mm; swept clean to {a['blade_entry']['clean_along_mm_at_0p9_across']} mm")}
-{td("where the blade pushes the slider", f"{sl['v6_centred']['push_below_springs_mm']} mm under the springs, on two 1.6 mm strips; 1 mm off along the pack it pushes one strip, 5.7 off centre: {sl['v6_head_1mm_off']['blade_N_to_unlatch']} N to unlatch", f"one crowned pad on the centre line, {sl['v7_centred']['push_below_springs_mm']} mm under the springs: {sl['v7_centred']['blade_N_to_unlatch']} N, {sl['v7_head_1p8_off']['blade_N_to_unlatch']} N with the head 1.8 off")}
+{td("where the blade pushes the slider", f"{sl['v6_centred']['push_below_springs_mm']} mm under the springs, on two 1.6 mm strips: {sl['v6_centred']['blade_N_to_unlatch']} N to unlatch; 1 mm off along the pack the push is {sl['v6_head_1mm_off']['push_off_centre_mm']} mm off centre: {sl['v6_head_1mm_off']['blade_N_to_unlatch']} N", f"one crowned pad on the centre line, {sl['v7_centred']['push_below_springs_mm']} mm under the springs: {sl['v7_centred']['blade_N_to_unlatch']} N, {sl['v7_head_1p8_off']['blade_N_to_unlatch']} N with the head 1.8 off")}
 {td("slider tipped up against the pack's underside during the squeeze", f"{sl['v6_centred']['on_the_pack_underside_N']} N", f"{sl['v7_centred']['on_the_pack_underside_N']} N")}
 {td("spring column", f"30 long, 2.7 across (ratio {sc['free_over_mean_dia']}; unguided springs buckle above about {sc['buckles_unguided_above']}), in open slots under the pack", "the same spring with a 2 x 8 steel pin inside it: it cannot bow onto the pack or the rib")}
 </table></div>

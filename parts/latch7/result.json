@@ -904,7 +904,7 @@
     "step": "3 pull out: XT60 unmates",
     "error": "the plug is 43 mm from the pull",
     "takes": "far heel pads + nubs sized for it",
-    "v6": "not counted: nub, foot, blade, rib over 1.0",
+    "v6": "not counted: nub, foot, blade over 1.0",
     "ok": true,
     "note": "see strength"
    },
@@ -957,20 +957,20 @@
     "blade_N_to_unlatch": 6.1
    },
    "v6_centred": {
-    "push_below_springs_mm": 6.6,
+    "push_below_springs_mm": 6.1,
     "push_off_centre_mm": 0.0,
-    "on_the_pack_underside_N": 3.08,
+    "on_the_pack_underside_N": 2.85,
     "side_load_in_the_channel_N": 0.0,
-    "blade_N_to_unlatch": 7.7
+    "blade_N_to_unlatch": 7.4
    },
    "v6_head_1mm_off": {
-    "push_below_springs_mm": 6.6,
-    "push_off_centre_mm": 5.7,
-    "on_the_pack_underside_N": 3.08,
-    "side_load_in_the_channel_N": 2.53,
-    "blade_N_to_unlatch": 16.8
+    "push_below_springs_mm": 6.1,
+    "push_off_centre_mm": 3.4,
+    "on_the_pack_underside_N": 2.85,
+    "side_load_in_the_channel_N": 1.51,
+    "blade_N_to_unlatch": 10.6
    },
-   "note": "v6: flat blade face on two tab legs 1.6 wide; 1 mm off along the pack it bears on one leg, 5.7 off centre"
+   "note": "v6: flat blade face on two tab legs 1.6 wide and a 0.4 strip over the arch (centroid y 3.5); 1 mm off along the pack the contact is 2.6 / 0.6 wide on the legs: 3.4 off centre; past 1.0 the blade meets a rest-stop lug"
   },
   "spring_column": {
    "free_over_mean_dia": 11.1,
@@ -2080,6 +2080,36 @@
    "material": "TPU",
    "tag": "C",
    "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_pin_a",
+   "name": "spring pin a",
+   "role": "bought",
+   "group": "latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_pin_a.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_pin_b",
+   "name": "spring pin b",
+   "role": "bought",
+   "group": "latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_pin_b.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   }
