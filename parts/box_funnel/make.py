@@ -116,6 +116,7 @@ def frame():
     seat plane (the walls slide over them); the nose legs, which only held the nose wall, go"""
     x0, x1 = SEAT[0], SEAT[1]; z0 = SEAT_Z; w = WALL / np.sin(np.radians(FACE_DEG))
     f = body() - carriage_home(1) - carriage_home(-1)
+    f = f - box(x0 - 40.0, x0 - 15.0, -46.0, 46.0, z0 + H_Y + 0.05, z0 + H_X + 2.0)                                      # a zero-volume fin the tail wall's cut leaves over the buttress (10 Nov, after the seat moved 1.98)
     f = f - box(NOSE_BEAM[0] - 3.5, NOSE_BEAM[1] + 2.0, -LEG_Y - LEG, LEG_Y + LEG, NOSE_BEAM[3], z0 + H_X + 1)        # the nose legs' remains
     ties = []
     for sy in (-1, 1):
