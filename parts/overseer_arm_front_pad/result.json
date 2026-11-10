@@ -1,19 +1,19 @@
 {
  "name": "overseer_arm_front_pad",
  "engine": "nox/topo",
- "solid_ok": false,
+ "solid_ok": true,
  "solid": {
   "bodies_plain": 1,
-  "specks_plain": 0,
+  "specks_plain": 3,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   46166.5
+   54293.4
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 10,
+  "acute_edges": 9,
   "ok": true
  },
  "function_check": {
@@ -210,52 +210,33 @@
    10.4
   ]
  },
- "mass_g": 76.44,
- "watertight": false,
+ "mass_g": 86.3,
+ "watertight": true,
  "export": {
-  "faces_in": 547406,
-  "degenerate": 296,
-  "folded": 18,
-  "caps_split": 28,
-  "caps_left": 8,
+  "faces_in": 277922,
+  "degenerate": 0,
+  "folded": 32,
+  "caps_split": 26,
+  "pinch_vertices": 12,
+  "caps_left": 3,
   "dropped_shells": [
    {
-    "faces": 546916,
-    "mm3": 62149.237,
-    "closed": false
+    "faces": 90,
+    "mm3": 0.005,
+    "closed": true
    },
    {
-    "faces": 76,
+    "faces": 42,
     "mm3": 0.001,
     "closed": true
    },
    {
-    "faces": 62,
-    "mm3": 0.001,
-    "closed": true
-   },
-   {
-    "faces": 10,
+    "faces": 20,
     "mm3": 0.0,
     "closed": true
    },
    {
-    "faces": 10,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 6,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 4,
-    "mm3": 0.0,
-    "closed": true
-   },
-   {
-    "faces": 4,
+    "faces": 18,
     "mm3": 0.0,
     "closed": true
    },
@@ -265,23 +246,42 @@
     "closed": true
    }
   ],
-  "n_dropped_shells": 9,
-  "bodies": 0,
-  "faces": 547092,
+  "n_dropped_shells": 5,
+  "bodies": 1,
+  "open_kept": [],
+  "faces": 277716,
   "boundary_edges": 0,
-  "nonmanifold_edges": 7,
-  "watertight": false,
-  "simplified": false,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
   "first_pass": {
-   "degenerate": 296,
-   "folded": 18,
-   "caps_split": 28,
-   "caps_left": 8,
-   "watertight": false,
-   "faces": 547092
+   "degenerate": 2952,
+   "folded": 254,
+   "caps_split": 414,
+   "caps_left": 126,
+   "watertight": true,
+   "faces": 499936,
+   "n_dropped_shells": 14,
+   "dropped_shells": [
+    {
+     "faces": 148,
+     "mm3": 0.001,
+     "closed": true
+    },
+    {
+     "faces": 102,
+     "mm3": 0.001,
+     "closed": true
+    },
+    {
+     "faces": 72,
+     "mm3": 0.0,
+     "closed": true
+    }
+   ]
   },
-  "volume_mm3": 62149.2,
-  "exact_mm3": 62149.2
+  "volume_mm3": 70161.9,
+  "exact_mm3": 70167.0
  },
  "bodies": {
   "bodies_raw": 3,
@@ -292,37 +292,21 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 62149.2,
+ "volume_mm3": 70161.9,
  "drawn_g": 26.39,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
   "specks_mm3": [
-   0.062,
-   0.062,
-   0.062,
-   0.047,
-   0.031,
-   0.031,
-   0.016,
-   0.016,
-   0.016,
-   0.016,
-   0.016,
-   0.016,
-   0.016,
-   0.016,
-   0.016,
-   0.016,
    0.016,
    0.016,
    0.016
   ],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.2,
-  "specks": 19
+  "removed_mm3": 0.0,
+  "specks": 3
  },
  "stl": "overseer_arm_front_pad.stl",
  "view_stl": "overseer_arm_front_pad_view.stl",
@@ -772,11 +756,16 @@
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/overseer_arm_front_pad.stl",
-  "sha256": "223ef119bb949c9f2d2b588e2dfeb1b95c07744310cddbfa82d2b756b707ecad",
-  "bytes": 27354684,
-  "faces": 547092,
+  "sha256": "64a388161ca4fbf40163daadcafe48896b5d6ba8a648132966d43adc124a1474",
+  "bytes": 13885884,
+  "faces": 277716,
   "view_faces": 60000,
-  "view_sha256": "74df0b95ee60201b3326267032d97f6f7602892cd67978f145117eb042a60b30",
-  "at": "2026-11-10 01:56"
+  "view_sha256": "ef240474b624458d8c3ed8ecbe4d1a96f01ac75b87d7e93858eeec8a205a2979",
+  "at": "2026-11-10 02:45"
+ },
+ "recut": {
+  "at": "2026-11-10 02:45",
+  "removed_cm3": -8.013,
+  "note": "holes recut from the current setup, solid_ok bodies filled solid; strength not re-solved"
  }
 }
