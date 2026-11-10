@@ -7,7 +7,8 @@ iso-surface IS the blueprint boundary, and near a drawn body the filter has alre
 smoothed. Then, exactly: (generated + drawn) intersect envelope minus cuts. Mounting features stay exact. Then the export cleanup
 (export_cleanup): voxel specks under 1 mm3 and surface slivers under the 2.0 wall floor with under 10 mm3 of core are
 taken off the exact part, drawn bodies and every member over 2.0 untouched; result.json lists what went (export_cleanup).
-Then export_mesh: the exact part welded at STL (float32) precision, collapsed faces and open shells dropped, checked watertight.
+Then export_mesh: the exact part welded at STL (float32) precision (pinches left unwelded), collapsed faces and open specks dropped,
+checked watertight and against the exact volume; a failed export is a FAIL result.json with its reason.
 
 Checks: nox/solid_check.py (the hard gate, unchanged), function check (drawn complete, nothing in cuts or keep-outs),
 as-built strength (voxel FE of the built part, every real load case, layer-aware failure indices), mass.
@@ -356,49 +357,92 @@ def _split_caps(V, F, height=None, rounds=12):
     return F, n_split, int((~m.nondegenerate_faces(height=height)).sum())
 
 
-def weld_mesh(v, f, min_mm3=1.0, weld_mm=1e-4):
+PINCH_NUDGE_MM = 1e-3   # an unwelded pinch vertex moves this far into its own surface (weld_mesh): 1 um, 10 x the weld
+
+
+def _nm_vertices(F):
+    """the vertices of the edges more than two faces share (non-manifold)"""
+    e = np.sort(np.vstack([F[:, [0, 1]], F[:, [1, 2]], F[:, [2, 0]]]), axis=1)
+    u, c = np.unique(e, axis=0, return_counts=True)
+    return np.unique(u[c > 2])
+
+
+def weld_mesh(v, f, min_mm3=1.0, weld_mm=1e-4, big_mm3=None):
     """a closed trimesh from raw vertices / faces at STL precision: the vertices are quantised to float32 (what an STL holds) and
     welded within weld_mm (nothing printable is that small; float32 resolves 1.5e-5 at 250 mm), so the connectivity is one every
     reader rebuilds from positions; the faces that collapse (repeated indices; pairs folded onto each other, the two sides of a
     sliver thinner than that) are dropped; the zero-area caps left are split away (_split_caps); shells that are not closed or
-    under min_mm3 are dropped. Returns (mesh, report)."""
+    under min_mm3 are dropped.
+    A pinch (two surfaces of the part touching within weld_mm: a member grazing another, a fillet on a cut edge) welds into a
+    non-manifold edge, and trimesh calls the whole shell not watertight: the weld then dropped the part's main body (10 Nov:
+    scout_v4_frame, 95 cm3 of 95, the export kept 55 mm3 of specks and called itself watertight). The vertex clusters of such an
+    edge are left unwelded (the raw mesh from manifold is closed, so its own connectivity holds there) and each of their vertices
+    moves PINCH_NUDGE_MM into its own surface, so a reader welding the STL by position cannot join them again. An open shell over
+    big_mm3 (default 10 x min_mm3) is never dropped: it stays, and the mesh is not watertight (a failed export, said so).
+    Returns (mesh, report)."""
     import trimesh
-    v = np.asarray(v, np.float64).astype(np.float32).astype(np.float64)
-    m = trimesh.Trimesh(v, np.asarray(f, np.int64), process=False)
-    m.merge_vertices(digits_vertex=int(round(-np.log10(weld_mm))))
-    V = np.asarray(m.vertices).astype(np.float32).astype(np.float64)     # back on the float32 grid after the rounding merge
-    F = np.asarray(m.faces)
-    rep = dict(faces_in=int(len(f)), degenerate=0, folded=0, caps_split=0)
-    for _ in range(4):
-        ok = (F[:, 0] != F[:, 1]) & (F[:, 1] != F[:, 2]) & (F[:, 0] != F[:, 2])
-        rep["degenerate"] += int((~ok).sum())
-        F = F[ok]
-        key = np.sort(F, axis=1)
-        _, inv, cnt = np.unique(key, axis=0, return_inverse=True, return_counts=True)
-        fold = cnt[inv] > 1                                   # the same three vertices twice: a collapsed sliver, both sides go
-        rep["folded"] += int(fold.sum())
-        F = F[~fold]
-        F, ns, left = _split_caps(V, F)
-        rep["caps_split"] += ns
-        if not (ns or fold.any() or (~ok).any()):
+    big_mm3 = 10.0 * min_mm3 if big_mm3 is None else big_mm3
+    v32 = np.asarray(v, np.float64).astype(np.float32).astype(np.float64)
+    f = np.asarray(f, np.int64)
+    _, first, cl = np.unique(np.round(v32 / weld_mm).astype(np.int64), axis=0, return_index=True, return_inverse=True)
+    cl = cl.ravel(); ncl = len(first)
+    sep = np.zeros(ncl, bool)                                  # clusters left unwelded (pinches)
+    for attempt in range(4):
+        own = sep[cl]
+        ids = np.where(own, ncl + np.arange(len(v32)), cl)     # an unwelded raw vertex keeps an id of its own
+        V = np.zeros((ncl + len(v32), 3)); V[:ncl] = v32[first]
+        if own.any():
+            # each unwelded vertex moves PINCH_NUDGE_MM toward the centroid of its raw one-ring (into its own sheet, away from the other)
+            ri = np.where(own)[0]
+            fm = own[f].any(1); ff = f[fm]
+            acc = np.zeros((len(v32), 3)); n = np.zeros(len(v32))
+            for k in range(3):
+                for j in (1, 2):
+                    np.add.at(acc, ff[:, k], v32[ff[:, (k + j) % 3]]); np.add.at(n, ff[:, k], 1)
+            d = acc[ri] / np.maximum(n[ri], 1)[:, None] - v32[ri]
+            L = np.linalg.norm(d, axis=1)
+            step = np.minimum(PINCH_NUDGE_MM, 0.25 * L) / np.maximum(L, 1e-30)
+            V[ncl + ri] = (v32[ri] + d * step[:, None]).astype(np.float32).astype(np.float64)
+        F = ids[f]
+        rep = dict(faces_in=int(len(f)), degenerate=0, folded=0, caps_split=0, pinch_vertices=int(own.sum()))
+        for _ in range(4):
+            ok = (F[:, 0] != F[:, 1]) & (F[:, 1] != F[:, 2]) & (F[:, 0] != F[:, 2])
+            rep["degenerate"] += int((~ok).sum())
+            F = F[ok]
+            key = np.sort(F, axis=1)
+            _, inv, cnt = np.unique(key, axis=0, return_inverse=True, return_counts=True)
+            fold = cnt[inv.ravel()] > 1                       # the same three vertices twice: a collapsed sliver, both sides go
+            rep["folded"] += int(fold.sum())
+            F = F[~fold]
+            F, ns, left = _split_caps(V, F)
+            rep["caps_split"] += ns
+            if not (ns or fold.any() or (~ok).any()):
+                break
+        nm = _nm_vertices(F)
+        nm = nm[nm < ncl]
+        if not len(nm):
             break
+        sep[nm] = True                                         # unweld these clusters and weld again
     rep["caps_left"] = int(left)
     m = trimesh.Trimesh(V, F, process=False)
     m.remove_unreferenced_vertices()
     shells = m.split(only_watertight=False)
-    keep, dropped = [], []
+    keep, dropped, open_kept = [], [], []
     for sh in shells:
-        if sh.is_watertight and abs(sh.volume) >= min_mm3:
+        vol = abs(float(sh.volume))
+        if sh.is_watertight and vol >= min_mm3:
             keep.append(sh)
+        elif not sh.is_watertight and vol >= big_mm3:
+            keep.append(sh); open_kept.append(dict(faces=int(len(sh.faces)), mm3=round(vol, 1)))   # never drop a body
         else:
-            dropped.append(dict(faces=int(len(sh.faces)), mm3=round(float(abs(sh.volume)), 3), closed=bool(sh.is_watertight)))
+            dropped.append(dict(faces=int(len(sh.faces)), mm3=round(vol, 3), closed=bool(sh.is_watertight)))
     m = trimesh.util.concatenate(keep) if keep else m
     trimesh.repair.fix_normals(m)
     e = m.edges_sorted
     _, cnt = np.unique(e, axis=0, return_counts=True)
     rep.update(dropped_shells=sorted(dropped, key=lambda d: -d["faces"])[:20], n_dropped_shells=len(dropped), bodies=len(keep),
-               faces=int(len(m.faces)), boundary_edges=int((cnt == 1).sum()), nonmanifold_edges=int((cnt > 2).sum()),
-               watertight=bool(m.is_watertight and len(keep) >= 1))
+               open_kept=open_kept, faces=int(len(m.faces)), boundary_edges=int((cnt == 1).sum()), nonmanifold_edges=int((cnt > 2).sum()),
+               watertight=bool(m.is_watertight and len(keep) >= 1 and not open_kept))
     return m, rep
 
 
@@ -410,7 +454,8 @@ def weld_clean(v, f, min_mm3=1.0):
     m, rep = weld_mesh(v, f, min_mm3=min_mm3)
     rep["simplified"] = False
     if rep["degenerate"] or rep["folded"] or rep["caps_split"] or rep["caps_left"] or not rep["watertight"]:
-        first = {k: rep[k] for k in ("degenerate", "folded", "caps_split", "caps_left", "watertight", "faces")}
+        first = {k: rep[k] for k in ("degenerate", "folded", "caps_split", "caps_left", "watertight", "faces", "n_dropped_shells")}
+        first["dropped_shells"] = rep["dropped_shells"][:3]                  # what the first weld dropped stays visible in the log
         if rep["watertight"]:
             # trimesh's watertight counts edges, not their winding; manifold3d refuses a mesh with a mis-wound pair (NotManifold) and
             # hands back an EMPTY solid, so the collapse and second weld gave 0 faces from a closed 735,898-face first pass (9 Nov:
@@ -441,6 +486,9 @@ def export_report(rep, tag="build: export"):
             f"{rep['caps_split']} caps split ({rep['caps_left']} left), {rep['n_dropped_shells']} shell(s) dropped {rep['dropped_shells'][:4]}, "
             f"{rep['bodies']} body(ies), {'first pass ' + str(rep['first_pass']) + ', simplified ' + str(SIMPLIFY_MM) + ' mm, ' if rep.get('simplified') else ''}"
             f"{'simplify refused ' + str(rep['simplify_fallback']) + ', first pass kept, ' if rep.get('simplify_fallback') else ''}"
+            f"{str(rep['pinch_vertices']) + ' pinch vertices unwelded, ' if rep.get('pinch_vertices') else ''}"
+            f"{'open shell(s) kept ' + str(rep['open_kept'][:4]) + ', ' if rep.get('open_kept') else ''}"
+            f"{'LOST ' + str(rep['lost_mm3']) + ' of ' + str(rep.get('exact_mm3')) + ' mm3, ' if rep.get('lost_mm3') else ''}"
             f"{'watertight' if rep['watertight'] else 'NOT WATERTIGHT: ' + str(rep['boundary_edges']) + ' open, ' + str(rep['nonmanifold_edges']) + ' non-manifold edges'}")
 
 
@@ -455,9 +503,18 @@ def export_mesh(P, log=print, min_mm3=1.0):
     mg = P.to_mesh64()
     m, rep = weld_clean(np.asarray(mg.vert_properties)[:, :3], np.asarray(mg.tri_verts), min_mm3=min_mm3)
     rep["volume_mm3"] = round(float(m.volume), 1); rep["exact_mm3"] = round(float(P.volume()), 1)
+    # the export holds the body the build made, or it is a failed export (10 Nov: a closed 55 mm3 export of a 95 cm3 part passed
+    # as watertight): over EXPORT_LOSS of the exact volume (and 5 mm3: dropped specks) gone is reported and fails the part
+    lost = abs(rep["exact_mm3"]) - abs(rep["volume_mm3"])
+    if lost > EXPORT_LOSS * abs(rep["exact_mm3"]) + 5.0:
+        rep["lost_mm3"] = round(lost, 1)
+        rep["watertight"] = False
     msg = export_report(rep)
     log(msg if rep["watertight"] else "ERROR " + msg)
     return m, rep
+
+
+EXPORT_LOSS = 1e-3      # share of the exact volume the export may lose (specks under min_mm3) before it is a failed export
 
 
 class ExportError(RuntimeError):
@@ -470,6 +527,9 @@ def require_mesh(PT, export, P=None):
         raise ExportError(f"build: export produced an EMPTY mesh ({export.get('faces_in', 0):,} faces in, exact part "
                           f"{0.0 if P is None else round(P.volume(), 1)} mm3; first pass {export.get('first_pass')}, "
                           f"fallback {export.get('simplify_fallback')}): not checked, no STL written")
+    if export.get("lost_mm3"):
+        raise ExportError(f"build: export LOST {export['lost_mm3']} of the part's {export.get('exact_mm3')} mm3 (welded {export.get('volume_mm3')} "
+                          f"mm3; open shells kept {export.get('open_kept')}, dropped {export.get('dropped_shells', [])[:4]}): not checked, no STL written")
 
 
 # -------------------------------------------------------------------------------------------------------- checks
@@ -652,7 +712,19 @@ def build_and_check(layout, out_dir, name, clip_margin=0.5, pitch=None, log=prin
     P, bod = assemble(layout, gm, log=log)
     P, cleanup = export_cleanup(P, part, log=log)
     PT, export = export_mesh(P, log=log)
-    require_mesh(PT, export, P)
+    try:
+        require_mesh(PT, export, P)
+    except ExportError as e:
+        # a failed export is a FAIL result with its reason, never a run that ends with no result.json (10 Nov)
+        log(f"ERROR {e}")
+        res = dict(name=name, engine="nox/topo", status="export_fail", fail=str(e), solid_ok=False, watertight=False,
+                   strength=dict(rows=[], worst=None, worst_case=None, worst_at=None, ok=False, fail=str(e)), mass_g=None,
+                   export=export, bodies=bod, export_cleanup=cleanup, volume_mm3=round(P.volume(), 1), layout=layout.meta(),
+                   grid=part.summary(), build_s=round(time.time() - t0, 1), **(extra or {}))
+        with open(os.path.join(out_dir, "result.json"), "w") as fh:
+            json.dump(res, fh, indent=1, default=_json_default)
+        log("RESULT " + json.dumps(dict(name=name, solid_ok=False, status="export_fail"), default=_json_default))
+        return res, None
     drawn_fin = tm(part.drawn_m - part.cuts_m)
     ok_solid, solid = solid_check(PT, [drawn_fin], thin_ok=[tm(m - part.cuts_m) for m in getattr(part, "thin_ok", [])])
     log(f"solid check: {'PASS' if ok_solid else 'FAIL'} {json.dumps(solid)[:600]}")

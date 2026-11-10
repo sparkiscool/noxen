@@ -741,6 +741,42 @@ def t_export_mesh():
         check("export mesh", False, str(e))
 
 
+def t_export_pinch():
+    """export (topo/build.py weld_mesh / export_mesh / require_mesh): two surfaces of a part touching within the weld (a pinch) welded
+    into a non-manifold edge, trimesh called the shell not watertight and the weld dropped it whole (10 Nov: scout_v4_frame lost its
+    95 cm3 main body, the 55 mm3 of specks left passed as a watertight export, strength crashed). Now the pinch clusters stay unwelded
+    and are pulled 1 um apart: both bodies kept, watertight, same volume, still closed after an STL reload. And an export that loses
+    the body anyway is a failed export: lost_mm3, not watertight, require_mesh raises ExportError (build_and_check: a FAIL result)."""
+    try:
+        import trimesh, tempfile, os
+        from . import build as B
+        from .part import tm
+        a = _mbox(10, 10, 10, (5, 5, 5)); b = _mbox(10, 10, 10, (15 + 5e-5, 15 + 5e-5, 5))    # edge to edge, 5e-5 mm apart
+        P = a + b
+        m, rep = B.export_mesh(P, log=lambda s_: None)
+        with tempfile.TemporaryDirectory() as d:
+            fn = os.path.join(d, "x.stl"); m.export(fn); r = trimesh.load(fn, force="mesh")
+            reload_ok = r.is_watertight and abs(r.volume - 2000.0) < 0.5
+        kept = rep["watertight"] and rep["bodies"] == 2 and rep.get("pinch_vertices", 0) > 0 and abs(m.volume - 2000.0) < 0.5 and not rep.get("lost_mm3")
+        keep = B.weld_clean
+        try:
+            B.weld_clean = lambda v, f, min_mm3=1.0: B.weld_mesh(*[np.asarray(x) for x in (tm(_mbox(1, 1, 1, (0, 0, 0))).vertices, tm(_mbox(1, 1, 1, (0, 0, 0))).faces)])
+            m2, rep2 = B.export_mesh(P, log=lambda s_: None)
+        finally:
+            B.weld_clean = keep
+        try:
+            B.require_mesh(m2, rep2, P); raised = False
+        except B.ExportError as e:
+            raised = "LOST" in str(e)
+        guard = rep2.get("lost_mm3", 0) > 1900 and not rep2["watertight"] and raised
+        check("export: a pinch keeps both bodies watertight through a reload; an export that loses the body fails with its reason",
+              bool(kept and reload_ok and guard), f"pinch {rep.get('pinch_vertices')}, bodies {rep['bodies']}, {m.volume:.3f} mm3, "
+              f"watertight {rep['watertight']}, reload {reload_ok}; guard lost {rep2.get('lost_mm3')} raised {raised}")
+    except Exception as e:
+        traceback.print_exc()
+        check("export pinch", False, str(e))
+
+
 def t_setup_sha():
     """staleness by setup (tools/part_sha.py): a result carrying the setup_sha of the setup part.py builds now is current even when
     part.py's or a lib's file hash changed (30 Oct: a two-line validation in cage_node_lib flagged eight node results stale and they
@@ -1169,7 +1205,7 @@ def t_audit_room_full():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full):
         t()
     if not quick:
         t_end_to_end()
