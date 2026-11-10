@@ -76,11 +76,43 @@ m6.BOUGHT = [dict(b, check="on a kitchen scale: 1.0..1.4 N at 19.8 long; fully c
     dict(part="heel pad facing (grabber head)", spec="TPU 95A, 2.0 thick, 3 x 7, four per head", listing="printed from the TPU 95A on hand", url="", check="")]
 
 
+# ------------------------------------------------------------------ the stronger module (10 Nov, Spark: "I don't think the latches or the fingers
+# are strong enough to hold the larger battery but both need to be the same so make both stronger"). The Scout has no width to give,
+# both packs have length: everything grows along the pack. Bolt bar 42 wide on two 3 x 20 pins end to end (was 22 on one); blade 34
+# wide with two hooks 25 apart (was 16 with one), so the pack cannot rock on the grabber; four springs (was two) for the heavier
+# bolt; the rib's feet run wall to wall and its ends are gusseted; 25 N per blade asked of the head (was 15).
+bl.BOLT_HZ = 21.0
+v5.PIN_L = m6.PIN_L = 40.0             # two 3 x 20 dowels end to end in one blind bore
+bl.TAB_HZ, bl.REC_Z = 22.2, 22.6
+m6.BLADE_HZ = 17.0
+NUB_ZC = 12.5; m6.NUB_HZ = 4.5         # two hooks per blade, 9 wide, at z_T +- 12.5
+WIN = (NUB_ZC - m6.NUB_HZ - 2.1, NUB_ZC + m6.NUB_HZ + 2.1)      # their windows through the tab plate (+-2.1 along the pack)
+LEG_Z0 = m6.BLADE_HZ + 2.2             # rest-stop lugs from here out
+LUG_X0 = m6.FOOT_X1 + bl.TRAVEL + 0.3  # the lugs' low part starts here: clear of the feet at full travel
+m6.FOOT_HZ = bl.REC_Z                  # feet wall to wall
+SPRINGS_Z = (-12.0, -5.0, 5.0, 12.0)
+GUS, GUS_Y0 = 4.0, 8.5                 # rib end gussets: 4 x 4 in plan, y 8.5..11.5 (the slider's inner corners are cut to pass)
+bl.MAG_X, bl.MAG_Z = 12.0, 20.7        # magnet in a lug
+F_BLADE = 25.0
+for _b in m6.BOUGHT:
+    if _b["part"].startswith("latch spring"): _b["per_cartridge"] = 4; _b["spec"] += "; four per cartridge"
+    if _b["part"].startswith("dowel pin"): _b["per_cartridge"] = 4; _b["spec"] += "; four per cartridge (two in each bolt), two per receiver"
+_ss0 = m6.spring_state
+
+
+def _spring_state(retract):            # v6's model counts two springs wherever it doubles this: scaled so that gives all four
+    d = dict(_ss0(retract)); d["N"] = round(d["N"] * len(SPRINGS_Z) / 2, 3); return d
+
+
+m6.spring_state = _spring_state
+
+
 def pads_of(g):
-    """heel pads: (x0, x1) on the rim band, and the two z ranges. Scout: the ends of its flat bottom (the collar clip takes
-    the rest); Overseer: the cartridge's ends, the lead pair under the XT60."""
-    x0 = max(15.2, g["X_IN"] - 1.8); zt = g["Z_T"]
-    if g["pack"] == "scout": return (x0, x0 + 3.0), [(zt + 18.4, zt + 25.4), (zt - 25.4, zt - 18.4)]
+    """heel pads: (x0, x1) and the two z ranges. Scout: under the latch zone's cross walls, at the ends of its flat bottom (the
+    collar clip takes the rest); Overseer: on the rim bands at the cartridge's ends, the lead pair under the XT60."""
+    zt = g["Z_T"]
+    if g["pack"] == "scout": return (12.0, 18.5), [(zt + bl.REC_Z + 0.3, zt + 25.6), (zt - 25.6, zt - bl.REC_Z - 0.3)]
+    x0 = max(15.2, g["X_IN"] - 1.8)
     return (x0, x0 + 3.0), [(g["L_C"] - 9.0, g["L_C"] - 2.0), (2.0, 9.0)]
 
 
@@ -90,29 +122,63 @@ def set_pack(g):
     m6.PAD_Z = (min(abs(pz[0][0] - zt), abs(pz[1][1] - zt)), min(abs(pz[0][1] - zt), abs(pz[1][0] - zt)))
 
 
-# ------------------------------------------------------------------ slider v9
+def blade(g, face, side=1, dy=0.0, back=0.0):
+    """one blade with its two hook nubs, inner face at |x| = face."""
+    zt = g["Z_T"]
+    shank = box(face, face + m6.BLADE_T, -20.0, m6.BLADE_Y1, zt - m6.BLADE_HZ, zt + m6.BLADE_HZ)
+    xb0 = bl.TAB_OUT - m6.R0
+    under = lambda x: m6.foot_top(x - face + xb0) + back
+    nubs = [hullp([[x, y, zt + zc + z] for z in (-m6.NUB_HZ, m6.NUB_HZ)
+                   for (x, y) in ((face - m6.NUB_L, under(face - m6.NUB_L)), (face + 0.01, under(face + 0.01)), (face + 0.01, m6.NUB_Y1), (face - m6.NUB_L, m6.NUB_Y1))])
+            for zc in (-NUB_ZC, NUB_ZC)]
+    b = U(shank, *nubs).translate([0, dy, 0])
+    return b if side > 0 else b.mirror([1, 0, 0])
+
+
+m6.blade = blade
+
+
 def slider(g, retract=0.0, side=1):
     zt, tip = g["Z_T"], g["X_TIP"]; Y0, Y1 = bl.BOLT_Y0, bl.BOLT_Y1; HZ = bl.TAB_HZ
     plate = box(bl.TAB_IN, PLATE_OUT, TAB_Y0, Y1, zt - HZ, zt + HZ)
     bar = box(bl.TAB_IN, tip, Y0, Y1, zt - bl.BOLT_HZ, zt + bl.BOLT_HZ)
-    legs = [box(bl.TAB_IN, bl.TAB_OUT, 0.0, TAB_Y0 + 0.01, *sorted((zt + sz * LEG_Z0, zt + sz * HZ))) for sz in (-1, 1)]
-    lugs = [box(PLATE_OUT - 0.01, bl.REC_X, 0.0, LUG_Y1, *sorted((zt + sz * LEG_Z0, zt + sz * HZ))) for sz in (-1, 1)]   # rest stops, on the plate
+    lugs = []
+    for sz in (-1, 1):                                               # rest stops: on the plate above the feet, down to the bottom beyond them
+        z0, z1 = sorted((zt + sz * LEG_Z0, zt + sz * HZ))
+        lugs += [box(PLATE_OUT - 0.01, bl.REC_X, TAB_Y0, LUG_Y1, z0, z1), box(LUG_X0, bl.REC_X, 0.0, TAB_Y0 + 0.01, z0, z1)]
     pad = hullp([[PLATE_OUT - 0.01, y, zt + z] for y in PAD_Y for z in (-PAD_HZ, PAD_HZ)] +
                 [[bl.TAB_OUT, y, zt + z] for y in (PUSH_Y - 0.4, PUSH_Y + 0.4) for z in (-2.0, 2.0)])
-    s = U(plate, bar, pad, *legs, *lugs)
+    s = U(plate, bar, pad, *lugs)
     s = s - prism_xy([(tip - bl.TIP_CH, Y1 + 0.01), (tip + 0.01, Y1 + 0.01), (tip + 0.01, Y1 - bl.TIP_CH)], zt - bl.BOLT_HZ - 1, zt + bl.BOLT_HZ + 1)
     xp, yp = v5.pin_axis(g)
     s = s - cyl("z", xp, yp, m6.PIN_R, zt - bl.BOLT_HZ - 0.01, zt - bl.BOLT_HZ + m6.PIN_L + 0.5, 32)
-    s = s - box(bl.TAB_OUT, bl.REC_X + 0.1, Y0 - 0.01, RELIEF_Y, zt - bl.BOLT_HZ - 0.1, zt + bl.BOLT_HZ + 0.1)      # room for the blade top
-    s = s - box(bl.TAB_IN - 0.01, bl.TAB_OUT + 0.01, TAB_Y0 - 0.01, m6.ARCH_Y, zt - m6.ARCH_HZ, zt + m6.ARCH_HZ)    # the nub's window
-    s = s - prism_xy([(PLATE_OUT - 1.0, TAB_Y0 - 0.01), (PLATE_OUT + 0.01, TAB_Y0 - 0.01), (PLATE_OUT + 0.01, TAB_Y0 + 1.0)], zt - LEG_Z0, zt + LEG_Z0)
+    s = s - box(bl.TAB_OUT, bl.REC_X + 0.1, Y0 - 0.01, RELIEF_Y, zt - LEG_Z0 + 0.05, zt + LEG_Z0 - 0.05)             # room for the blade top
     for sz in (-1, 1):
-        zc = zt + sz * m6.SPR_DZ
+        s = s - box(bl.TAB_IN - 0.01, bl.TAB_OUT + 0.01, TAB_Y0 - 0.01, m6.ARCH_Y, *sorted((zt + sz * WIN[0], zt + sz * WIN[1])))   # a hook's window
+        zc, zw = zt + sz * (bl.REC_Z - GUS - 0.6), zt + sz * (HZ + 0.1)                                              # the inner top corner, for the rib's gusset
+        s = s - hullp([[x, y, z] for y in (GUS_Y0 - 0.3, Y1 + 1) for (x, z) in ((bl.TAB_IN - 0.01, zc), (bl.TAB_IN - 0.01, zw), (bl.TAB_IN + GUS + 0.6, zw))])
+    s = s - prism_xy([(PLATE_OUT - 1.0, TAB_Y0 - 0.01), (PLATE_OUT + 0.01, TAB_Y0 - 0.01), (PLATE_OUT + 0.01, TAB_Y0 + 1.0)], zt - LEG_Z0, zt + LEG_Z0)
+    for dz in SPRINGS_Z:
+        zc = zt + dz
         s = s - cyl("x", bl.SPR_YC, zc, bl.SPR_R, bl.TAB_IN - 0.01, bl.TAB_IN + bl.SPR_DEPTH, 32) \
               - box(bl.TAB_IN - 0.01, bl.TAB_IN + bl.SPR_DEPTH, bl.SPR_YC, Y1 + 1, zc - bl.SPR_R, zc + bl.SPR_R)
     s = s - cyl("y", bl.MAG_X, zt + bl.MAG_Z, bl.MAG_D / 2, -0.01, bl.MAG_DEPTH, 24)
     s = s.translate([-retract, 0, 0])
     return s if side > 0 else rot_y180(s, zt)
+
+
+_rib6 = m6.centre_rib
+
+
+def centre_rib(g):
+    """v6's rib (two spring notches, the feet, the cross walls) with the outer pair's notches and a gusset at each end."""
+    zt = g["Z_T"]; r = _rib6(g)
+    for dz in SPRINGS_Z:
+        if abs(abs(dz) - m6.SPR_DZ) > 0.1:
+            r = r - box(-bl.RIB_HX - 1, bl.RIB_HX + 1, bl.SPR_YC - bl.SPR_R - 0.1, bl.RIB_Y1 + 1, zt + dz - m6.RIB_NOTCH, zt + dz + m6.RIB_NOTCH)
+    gus = [hullp([[sx * x, y, zt + sg * z] for y in (GUS_Y0, bl.RIB_Y1) for (x, z) in ((bl.RIB_HX - 0.1, bl.REC_Z + 0.01), (bl.RIB_HX + GUS, bl.REC_Z + 0.01), (bl.RIB_HX - 0.1, bl.REC_Z - GUS))])
+           for sx in (-1, 1) for sg in (-1, 1)]
+    return r + U(*gus)
 
 
 def cartridge(g, clip=None):
@@ -128,25 +194,38 @@ def cartridge(g, clip=None):
 def heel(g):
     (x0, x1), zz = pads_of(g); zt = g["Z_T"]
     z0, z1 = min(a for a, b in zz), max(b for a, b in zz)
-    deck = box(-x1, x1, -6.0, -m6.PAD_T, z0, z1) - box(-bl.REC_X - 1.0, bl.REC_X + 1.0, -7.0, 0.0, zt - bl.REC_Z - 1.0, zt + bl.REC_Z + 1.0)
+    deck = box(-x1, x1, -6.0, -m6.PAD_T, z0, z1) - box(-bl.REC_X - 1.0, bl.REC_X + 1.0, -7.0, 0.0, zt - m6.BLADE_HZ - 2.6, zt + m6.BLADE_HZ + 2.6)
     pads = [box(*sorted((sx * x0, sx * x1)), -m6.PAD_T, 0.0, a, b) for sx in (1, -1) for a, b in zz]
     return deck, pads
 
 
-m6.VIEW = m6.VIEW + [(f"spring_pin_{k}", m6.G_L, "#e3e7ec", None, False, "bought", None) for k in "ab"]
+m6.VIEW = m6.VIEW + [(f"spring_{k}", m6.G_L, "#c9783f", None, False, "bought", None) for k in "cd"] + [(f"spring_pin_{k}", m6.G_L, "#e3e7ec", None, False, "bought", None) for k in "abcd"]
 _view_sources = m6.view_sources
 
 
 def view_sources(B):
     src = _view_sources(B); g = B["g"]
-    for k, sz in (("a", -1), ("b", 1)):               # the guide pin inside each spring
-        src[f"spring_pin_{k}"] = cyl("x", bl.SPR_YC, g["Z_T"] + sz * m6.SPR_DZ, GUIDE_PIN[0] / 2, -GUIDE_PIN[1] / 2, GUIDE_PIN[1] / 2, 20)
+    for k, dz in zip("abcd", SPRINGS_Z):              # the guide pin inside each spring
+        src[f"spring_pin_{k}"] = cyl("x", bl.SPR_YC, g["Z_T"] + dz, GUIDE_PIN[0] / 2, -GUIDE_PIN[1] / 2, GUIDE_PIN[1] / 2, 20)
     return src
 
 
+_view_meshes = m6.view_meshes
+
+
+def view_meshes(B):
+    out = _view_meshes(B); g = B["g"]; M = m6.page_matrix(g["Z_T"])
+    keep = m6.SPR_DZ
+    for k, dz in zip("abcd", SPRINGS_Z):              # all four springs (v6 draws two)
+        m6.SPR_DZ = abs(dz); sp, L = m6.spring_mesh(g, 1 if dz > 0 else -1); sp.apply_transform(M); out[f"spring_{k}"] = sp
+    m6.SPR_DZ = keep
+    return out
+
+
+m6.view_meshes = view_meshes
 m6.view_sources = view_sources
-m6.slider, m6.cartridge, m6.heel = slider, cartridge, heel
-bl.slider, bl.cartridge = slider, cartridge
+m6.slider, m6.cartridge, m6.heel, m6.centre_rib = slider, cartridge, heel, centre_rib
+bl.slider, bl.cartridge, bl.centre_rib = slider, cartridge, centre_rib
 v5.slider = slider
 
 
@@ -200,19 +279,53 @@ def lever(g, zf=None, zl=None, P=None):
                             plug_inside_the_pads=bool(e <= zl)))
 
 
+PREV = dict(scout=dict(nub=0.64, foot=0.50, blade=0.59, rib=0.67, spring=2.23, hold3g=(2.7, 3.13)),      # the module before this pass (commit dacc1cd..9ea38ff),
+            overseer=dict(nub=0.45, foot=0.35, blade=0.42, rib=0.47, spring=1.74, hold3g=(0.81, 0.65)))  # hold at 15 N per blade, 3 g
+
+
 def strength(B):
-    g = B["g"]; lv = lever(g)
-    bd = m6.bending(B, F_BLADE, lv["pull"]["both_nubs_N"])
-    rib = {n: c for n, c in bd["rib"].items() if n.startswith(("XT60", "swap", "pull +"))}
-    both = rib.pop("pull + across together")          # the arm's full side force during the hardest pull: a jam, misuse class
-    worst = max(both["end_mid_MPa"], both["notch_MPa"], both["post_MPa"])
-    rib["full pull + full across at once (a jam: misuse class)"] = dict(MPa=worst, index=round(worst / m6.ALLOW["misuse"], 3), functional_class_index=both["index"])
-    ins = m6.bending(B, F_BLADE, max(lv["insert"]["both_nubs_N"], 1.0))["rib"]["pull + across together"]
-    rib["insert + full across (the lead-ins centring it)"] = dict(MPa=ins["end_mid_MPa"], index=ins["index"])
-    keep = {k: v for k, v in bd.items() if k not in ("tab", "rib", "worst_index")}
-    keep["rib"] = rib
-    keep["worst_index"] = max([keep[k]["index"] for k in ("blade_pull", "nub_pull", "foot_pull")] + [c["index"] for c in rib.values()])
-    return dict(lever=lv, at_the_real_pull=keep)
+    """hand models (E) of the stronger module at the real pull: four hooks (two per blade), feet wall to wall, the rib a T
+    section with gusseted ends, loaded by two hook pairs 10.1 from its ends; and the bolts on their two pins in a 35 g crash."""
+    g = B["g"]; lv = lever(g); P = lv["pull"]["both_nubs_N"]; A = m6.ALLOW; ta = math.tan(m6.ALPHA)
+    xb0 = bl.TAB_OUT - m6.R0; idx = lambda mpa, cls="functional": round(mpa / A[cls], 3)
+    wn = 2 * m6.NUB_HZ; tn = m6.NUB_Y1 - m6.foot_top(xb0); ln = xb0 - (xb0 - m6.NUB_L + m6.FOOT_X1) / 2
+    s_n = (P / 4) * ln / (wn * tn ** 2 / 6)
+    hf = m6.foot_top(bl.RIB_HX); lf = (xb0 - m6.NUB_L + m6.FOOT_X1) / 2 - bl.RIB_HX; wf = wn + 2 * (m6.FOOT_X1 - bl.RIB_HX)
+    s_f = (P / 4) * lf / (wf * hf ** 2 / 6)
+    wb = 2 * m6.BLADE_HZ; s_b = (P / 2) * (ln + m6.BLADE_T / 2) / (wb * m6.BLADE_T ** 2 / 6)
+    # rib: web 2 RIB_HX x RIB_Y1, a foot flange each side at the bottom, a gusset each side at the top of its ends
+    t, h = 2 * bl.RIB_HX, bl.RIB_Y1; fw = 2 * (m6.FOOT_X1 - bl.RIB_HX); fh = (m6.FOOT_Y + hf) / 2; gh = bl.RIB_Y1 - GUS_Y0
+    def sec(gus, top=h):                   # area, centroid, I about x, for a web cut down to `top` (a spring notch)
+        parts = [(t * top, top / 2, t * top ** 3 / 12), (fw * fh, fh / 2, fw * fh ** 3 / 12)] + ([(2 * GUS * gh, h - gh / 2, 2 * GUS * gh ** 3 / 12)] if gus else [])
+        Ar = sum(a for a, c, i in parts); yc = sum(a * c for a, c, i in parts) / Ar
+        return yc, sum(i + a * (c - yc) ** 2 for a, c, i in parts), top
+    L = 2 * bl.REC_Z; a_ = bl.REC_Z - NUB_ZC
+    def rib_y(Fy):
+        Me = (Fy / 2) * a_ * (L - a_) / L; Mm = (Fy / 2) * a_ - Me
+        yc, I, top = sec(True); s_end = Me * (top - yc) / I               # the ends: top in tension, gussets in
+        yc, I, top = sec(False, bl.SPR_YC - bl.SPR_R - 0.1); s_mid = Mm * yc / I   # between the hooks, at a notch: bottom in tension
+        return max(s_end, s_mid)
+    def rib_x(Fx):
+        Iy = h * t ** 3 / 12 + fh * ((t + fw) ** 3 - t ** 3) / 12 + gh * ((t + 2 * GUS) ** 3 - t ** 3) / 12
+        return (Fx * L / 8) * (t / 2 + GUS) / Iy
+    ins = lv["insert"]["both_nubs_N"]
+    rib = {"XT60 pull 57 N + 1 g": dict(MPa=round(rib_y(P), 2), index=idx(rib_y(P))),
+           "swap across 43.5 N": dict(MPa=round(rib_x(ARM["across_N"]), 2), index=idx(rib_x(ARM["across_N"]))),
+           "insert + full across (the lead-ins centring it)": dict(MPa=round(rib_y(ins) + rib_x(ARM["across_N"]), 2), index=idx(rib_y(ins) + rib_x(ARM["across_N"]))),
+           "full pull + full across at once (a jam: misuse class)": dict(MPa=round(rib_y(P) + rib_x(ARM["across_N"]), 2), index=idx(rib_y(P) + rib_x(ARM["across_N"]), "misuse"))}
+    # the bolts: a 35 g crash on the swap mass, half on each bolt; the pins' line on the receiver's PCTG ramp (Hertz)
+    Fc = g["SWAP_M"] / 1000 * 35 * 9.81 / 2; Es = m6.PCTG.E / (1 - 0.38 ** 2)
+    hz = lambda F, Lp: math.sqrt((F / Lp) * Es / (math.pi * m6.PIN_R))
+    W1 = g["SWAP_M"] / 1000 * 9.81 / 2
+    bolt = dict(crash_N_per_bolt=round(Fc, 0), pin_line_mm=m6.PIN_L, contact_MPa=dict(crash_35g=round(hz(Fc, m6.PIN_L), 0), flight_3g=round(hz(3 * W1, m6.PIN_L), 0),
+                                                                                          one_pin_20mm_crash=round(hz(Fc, 20.0), 0)),
+                pctg_strength_MPa=round(m6.PCTG.Xt, 0), bar_shear_MPa=round(Fc / (2 * bl.BOLT_HZ * bl.BOLT_T), 2),
+                over_the_pin_bore_MPa=round(Fc / (m6.PIN_L * (bl.BOLT_T - 2 * m6.PIN_R + m6.PIN_DOWN)), 2),
+                index=round(max(Fc / (2 * bl.BOLT_HZ * bl.BOLT_T), Fc / (m6.PIN_L * (bl.BOLT_T - 2 * m6.PIN_R + m6.PIN_DOWN))) / (0.58 * A["misuse"]), 3))
+    out = dict(blade_pull=dict(N=round(P / 2, 1), MPa=round(s_b, 2), index=idx(s_b)), nub_pull=dict(N=round(P / 4, 1), MPa=round(s_n, 2), index=idx(s_n), root_mm=round(tn, 2)),
+               foot_pull=dict(N=round(P / 4, 1), MPa=round(s_f, 2), index=idx(s_f)), rib=rib, bolt=bolt)
+    out["worst_index"] = max([out[k]["index"] for k in ("blade_pull", "nub_pull", "foot_pull")] + [c["index"] for c in rib.values()] + [bolt["index"]])
+    return dict(lever=lv, at_the_real_pull=out)
 
 
 def v6_at_real_load(pack="scout"):
@@ -298,7 +411,7 @@ def error_budget(g, be):
 def parts_check(g):
     Fs = 2 * m6.spring_state(bl.TRAVEL)["N"]
     out = {}
-    for Fb in (15.0, 20.0):
+    for Fb in (20.0, 25.0):
         kgcm = CAM_KGCM_AT_19p5N * (Fb + 5.4) / 19.5
         out[f"{Fb:g} N blades"] = dict(open_N=round(Fb + 5.4, 1), cam_kgcm=round(kgcm, 2), **{k: "x%.1f" % (v / kgcm) for k, v in SERVO.items()},
                                        left_for_the_wedge_N=round(Fb - Fs, 1))
@@ -321,7 +434,7 @@ def audit(B):
                     v6_centred=slider_balance(g, 3.5, 0.0), v6_head_1mm_off=slider_balance(g, 3.5, 3.4),
                     note="v6: flat blade face on two tab legs 1.6 wide and a 0.4 strip over the arch (centroid y 3.5); 1 mm off along the pack the contact is 2.6 / 0.6 wide on the legs: 3.4 off centre; past 1.0 the blade meets a rest-stop lug"),
         spring_column=spring_column(),
-        wedge_hold={f"{Fb:g} N": dict(left_N=round(Fb - Fs, 1), mu_needed=round(max(0.0, math.tan(m6.ALPHA - math.atan2(Fb - Fs, per))), 2)) for Fb in (15.0, 20.0)},
+        wedge_hold={f"{Fb:g} N": dict(left_N=round(Fb - Fs, 1), mu_needed=round(max(0.0, math.tan(m6.ALPHA - math.atan2(Fb - Fs, per))), 2)) for Fb in (20.0, 25.0)},
         parts=parts_check(g))
     return a
 
@@ -441,6 +554,7 @@ def main(pack="scout"):
     res, rows = m6.checks(B)
     res["pack"] = pack
     res["hold"] = m6.hold_report(B)
+    res["hold_strong"] = [m6.hold(B, Fb, m6.MU["pad_tpu"], n) for Fb in (20.0, 25.0) for n in (1.0, 2.0, 3.0)]
     res["audit"] = audit(B)
     res["funnel"] = funnel_fit(B)
     if pack == "scout":
@@ -467,8 +581,8 @@ def main(pack="scout"):
     res["page_parts"] = pp
     if pack == "scout":
         ov = build("overseer")
-        res["overseer"] = dict(swap_g=round(ov["g"]["SWAP_M"], 1), **strength(ov),
-                               hold=[m6.hold(ov, Fb, m6.MU["pad_tpu"], n) for Fb in (15.0, 20.0) for n in (1.0, 2.0, 3.0)])
+        res["overseer"] = dict(swap_g=round(ov["g"]["SWAP_M"], 1), spring_over_inertia=m6.spring_report(ov)["preload_over_inertia"], **strength(ov),
+                               hold=[m6.hold(ov, Fb, m6.MU["pad_tpu"], n) for Fb in (20.0, 25.0) for n in (1.0, 2.0, 3.0)])
         build(pack)
     json.dump(res, open(os.path.join(out_dir, "result.json"), "w"), indent=1)
     write_assembly(res, pack)
@@ -484,10 +598,10 @@ def appendix(res):
     kp, kj, ki = "XT60 pull 57 N + 1 g", "full pull + full across at once (a jam: misuse class)", "insert + full across (the lead-ins centring it)"
     budget = "".join(td(e["step"], e["error"], e["takes"], e["v6"], e["note"]) for e in a["error_budget"])
     hold = "".join(td(f"{h['Fb']:g} N", f"{h['n_g']:g} g", h["pad_preload_N"], f"x{h['margin_pads_stay_down']}", f"x{h['margin_no_slip']}", h["slip_x_mm"], h["pack_top_mm"])
-                   for h in res["hold"]["all_gravity_directions"] if h["pads"].startswith("TPU") and h.get("releases") and h["Fb"] >= 10)
+                   for h in res["hold_strong"] if h.get("releases"))
     ohold = "".join(td(f"{h['Fb']:g} N", f"{h['n_g']:g} g", h["pad_preload_N"], f"x{h['margin_pads_stay_down']}", f"x{h['margin_no_slip']}", h["slip_x_mm"]) for h in ov["hold"] if h.get("releases"))
     bought = "".join(td(b["part"], b["spec"], f'<a href="{b["url"]}">{b["listing"]}</a>' if b["url"] else b["listing"], b["check"]) for b in m6.BOUGHT)
-    pr = a["parts"]; p15, p20 = pr["15 N blades"], pr["20 N blades"]; stp = pr["head stepper (NEMA 17 17HS19, 2 A, r 8 pinion)"]
+    pr = a["parts"]; p15, p20 = pr["20 N blades"], pr["25 N blades"]; stp = pr["head stepper (NEMA 17 17HS19, 2 A, r 8 pinion)"]
     V = res["v6"]
     return f"""<!-- latch v7: the audit behind the motion (written by parts/latch7/make.py; appended by tools/build_site.py). Scoped to #latch7. -->
 <style>
@@ -503,6 +617,7 @@ def appendix(res):
 #latch7 .open {{ border-left: 3px solid var(--bad); padding-left: 10px; }}
 </style>
 <section id="latch7"><div class="wrap">
+<!--STRONG-->
 <h2>What the run-through found in v6, and what v7 changes</h2>
 <div class="t"><table><tr><th>test</th><th>v6</th><th>v7</th></tr>
 {td("pull-out load on the grip (the XT60 is off to one end)", f"sized for 29.6 N per nub; the real load is {v6r['both_nubs_N'] / 2:.0f} N. Index: nub {v6r['nub']}, foot {v6r['foot']}, blade {v6r['blade']} (over 1.0 fails)", f"{lv['pull']['per_nub_N']} N per nub. Index: nub {st['nub_pull']['index']}, foot {st['foot_pull']['index']}, blade {st['blade_pull']['index']}, rib {rib[kp]['index']}")}
@@ -525,25 +640,25 @@ def appendix(res):
 {td("index: rib, pull / insert + full side force / full pull + full side force (a jam)", f"{rib[kp]['index']} / {rib[ki]['index']} / {rib[kj]['index']}", f"{orib[kp]['index']} / {orib[ki]['index']} / {orib[kj]['index']}")}
 </table></div>
 <p>Index 1.0 is the allowable for PCTG ({m6.ALLOW['functional']:.1f} MPa in use, {m6.ALLOW['misuse']:.1f} MPa in a jam). Hand models (E). The blade and nub are the grabber head's parts: 4.7 x 16 blade, nub 13 wide and 3.7 thick at its root, in PCTG.</p>
-<p>Springs: two in parallel, {sp['preload_pair_N']} N at rest on each slider, x{sp['preload_over_inertia']} the 35 g inertia of a slider with its pin ({sp['slider_pin_magnet_g']} g); x{sp['one_spring_left_over_inertia']} with one spring lost. {sp['squeezed_pair_N']} N squeezed, wire at {100 * sp['at_rib_limit']['of_uts']:.0f} % of tensile at the limit, {sp['solid_margin_mm']} mm above solid (E: the listing gives no coil count).</p>
+<p>Springs: four in parallel, {sp['preload_pair_N']} N at rest on each slider, x{sp['preload_over_inertia']} the 35 g inertia of a slider with its two pins ({sp['slider_pin_magnet_g']} g); x{sp['one_spring_left_over_inertia']} with two of the four lost. {sp['squeezed_pair_N']} N squeezed, wire at {100 * sp['at_rib_limit']['of_uts']:.0f} % of tensile at the limit, {sp['solid_margin_mm']} mm above solid (E: the listing gives no coil count).</p>
 <h2>3. Holding the pack on the grabber</h2>
 <div class="t"><table><tr><th>Scout, per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th><th>pack top moves, mm</th></tr>{hold}</table></div>
 <div class="t"><table><tr><th>Overseer ({ov['swap_g']} g), per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th></tr>{ohold}</table></div>
-<p>The wedge needs friction of {a['wedge_hold']['15 N']['mu_needed']} at 15 N per blade, {a['wedge_hold']['20 N']['mu_needed']} at 20 N, to keep the hardest pull from opening a blade (PCTG on PCTG is about 0.3, E). Across the pack the hold is friction and the two blade springs, as in v6.</p>
+<p>The wedge needs friction of {a['wedge_hold']['20 N']['mu_needed']} at 20 N per blade, {a['wedge_hold']['25 N']['mu_needed']} at 25 N, to keep the hardest pull from opening a blade (PCTG on PCTG is about 0.3, E). Across the pack the hold is friction and the two blade springs, as in v6.</p>
 <!--FIT-->
 <h2>4. The parts on hand</h2>
 <p>Printed parts: PCTG, the project's rule since 8 Nov (about 10 to 20 times PETG's impact toughness at 90 % of its stiffness; the PETG nodes and arms broke in testing). Heel pads and strips: TPU 95A. One dowel size, 3 x 20, does the bolt pins and the guide poles; the spring guide pins are printed.</p>
 <div class="t"><table><tr><th>part</th><th>needs</th><th>has</th></tr>
-{td("gripper servo, cam opening both blades", f"{p15['cam_kgcm']} kg cm at 15 N blades, {p20['cam_kgcm']} at 20 N (scaled from the heads v7 concept, E)", f"DS3218 20 kg cm: {p15['DS3218 (on hand)']} / {p20['DS3218 (on hand)']}; MG995 9.2 kg cm: {p15['MG995 (ordered)']} / {p20['MG995 (ordered)']}")}
+{td("gripper servo, cam opening both blades", f"{p15['cam_kgcm']} kg cm at 20 N blades, {p20['cam_kgcm']} at 25 N (scaled from the heads v7 concept, E)", f"DS3218 20 kg cm: {p15['DS3218 (on hand)']} / {p20['DS3218 (on hand)']}; MG995 9.2 kg cm: {p15['MG995 (ordered)']} / {p20['MG995 (ordered)']}")}
 {td("head stepper, NEMA 17 at 2 A on the r 8 pinion", f"insert {stp['insert_N']:.0f} N, pull {stp['pull_N']:.1f} N", f"stall {stp['stall_N']:.0f} N: {stp['margin']} / {stp['pull_margin']}")}
-{td("blade springs (head)", f"{tol['springs_on_a_squeezed_blade_N']} N of latch spring to beat, then the wedge", "15 N in the heads v7 concept; 20 N recommended for the Overseer")}
+{td("blade springs (head)", f"{tol['springs_on_a_squeezed_blade_N']} N of latch spring to beat, then the wedge", "15 N in the heads v7 concept; this latch asks for 25 N (four latch springs to beat, and the hold)")}
 {td("XT60", "57 N to pull apart", pr["XT60"])}
 </table></div>
 <div class="t"><table><tr><th>bought part</th><th>spec</th><th>Amazon listing</th><th>check</th></tr>{bought}</table></div>
 <h2>What the grabber head has to match</h2>
 <div class="t"><table><tr><th>item</th><th>v7</th></tr>
 {td("blade in the recess", f"{V['BLADE'][0]} thick x {2 * V['BLADE'][1]:g} wide, top {V['BLADE'][2]} above the pads; inner faces +-{V['BLADE_OPEN']} open, +-{V['TAB_OUT'] - V['R0']:.1f} tight (stroke {tol['blade_stroke_mm']['nominal']}, {tol['blade_stroke_mm']['longest']} with every tolerance)")}
-{td("nub", f"{V['NUB'][0]} long x {2 * V['NUB'][1]:g} wide, top {V['NUB'][2]}, underside 15 deg")}
+{td("nub", f"two on each blade, {2 * NUB_ZC:g} apart: {V['NUB'][0]} long x {2 * V['NUB'][1]:g} wide, top {V['NUB'][2]}, underside 15 deg")}
 {td("heel pads", f"x {V['PAD_X'][0]}..{V['PAD_X'][1]}, {V['PAD_Z'][0]:.1f}..{V['PAD_Z'][1]:.1f} mm either side of the tab line (Scout); the Overseer's at its cartridge ends")}
 {td("hall sensors", f"x +-{V['MAG'][0]}, {V['MAG'][1]} mm along the pack from the tab line (one each side, opposite ends), 1.0 under the flat bottom")}
 </table></div>
@@ -563,6 +678,32 @@ def appendix(res):
 """
 
 
+
+
+def strong_section(rs, ro):
+    td = lambda *c: "<tr>" + "".join(f"<td>{x}</td>" for x in c) + "</tr>"
+    ss, so = rs["audit"]["strength"], ro["audit"]["strength"]; ps, po = PREV["scout"], PREV["overseer"]
+    ix = lambda st: f"{st['nub_pull']['index']} / {st['foot_pull']['index']} / {st['blade_pull']['index']} / {st['rib']['XT60 pull 57 N + 1 g']['index']}"
+    h3 = lambda r, Fb: next(f"x{h['margin_pads_stay_down']} / x{h['margin_no_slip']}" for h in r["hold_strong"] if h["Fb"] == Fb and h["n_g"] == 3.0)
+    bo = so["bolt"]["contact_MPa"]
+    return f"""<h2>Made stronger for the larger pack (the same parts on both)</h2>
+<p>The Scout has no width to give, both packs have length, so the latch and the fingers grew along the pack.</p>
+<div class="t"><table><tr><th></th><th>before</th><th>now</th></tr>
+{td("bolt", "bar 22 mm wide on one 3 x 20 steel pin", "bar 42 mm wide on two 3 x 20 pins end to end")}
+{td("pin on the receiver's ramp in a 35 g crash, Overseer (PCTG strength " + str(so['bolt']['pctg_strength_MPa']) + " MPa)", f"{bo['one_pin_20mm_crash']:.0f} MPa", f"{bo['crash_35g']:.0f} MPa ({bo['flight_3g']:.0f} MPa at 3 g in flight)")}
+{td("finger", "blade 16 mm wide, one hook 13 wide", "blade 34 mm wide, two hooks 9 wide, 25 mm apart")}
+{td("rib that the hooks pull on", "4 x 11.5, feet 18 long", "the feet run wall to wall and its ends are gusseted")}
+{td("springs per cartridge / over the 35 g inertia of a bolt: Scout, Overseer", f"2 / x{ps['spring']}, x{po['spring']}", f"4 / x{rs['spring']['preload_over_inertia']}, x{ro['spring']['preload_over_inertia']}")}
+{td("index nub / foot / blade / rib at the XT60 pull-out: Scout", f"{ps['nub']} / {ps['foot']} / {ps['blade']} / {ps['rib']}", ix(ss))}
+{td("the same: Overseer", f"{po['nub']} / {po['foot']} / {po['blade']} / {po['rib']}", ix(so))}
+{td("worst index anywhere: Scout, Overseer", "0.72, 0.60", f"{ss['worst_index']}, {so['worst_index']}")}
+{td("blade force asked of the head", "15 N", "25 N (four latch springs to beat; DS3218 " + rs['audit']['parts']['25 N blades']['DS3218 (on hand)'] + ", MG995 " + rs['audit']['parts']['25 N blades']['MG995 (ordered)'] + ")")}
+{td("hold at 3 g, pads stay down / no slip: Scout, Overseer", f"x{ps['hold3g'][0]} / x{ps['hold3g'][1]}, x{po['hold3g'][0]} / x{po['hold3g'][1]} (at 15 N)", f"{h3(rs, 25.0)}, {h3(ro, 25.0)} (at 25 N)")}
+{td("bought parts per cartridge", "2 springs, 2 dowels, 2 magnets", "4 springs, 4 dowels, 2 magnets (the same spring and dowel)")}
+{td("slider with its pins / cartridge, Scout", "3.4 g / 39.5 g", f"{rs['spring']['slider_pin_magnet_g']} g / {rs['mass_g']['latch7_cartridge']} g")}
+</table></div>
+<p>Below x1 on "pads stay down" the pack does not come off: the hooks hold it positively and lock on their wedges; it only stops being pressed tight. Hand models (E); the receiver's wider bolt pockets have not been through FE.</p>
+"""
 
 def fit_section(rs, ro):
     td = lambda *c: "<tr>" + "".join(f"<td>{x}</td>" for x in c) + "</tr>"
@@ -634,6 +775,7 @@ def write_both():
                      "tipped": {"eye": [280, 280, -150], "target": [0, 0, -135]}},
            "note": "The press-two-tabs latch, v7, on both packs, side by side: the Scout's on the left, the Overseer's on the right. One latch module: the same slider, "
                    "springs, 3 x 20 dowels, magnets and grabber blades; only the cartridge and the receiver are sized to the pack. Each is cut at its tab line. "
+                   "Made stronger on 10 Nov: bolts 42 wide on two steel pins each, blades 34 wide with two hooks each, four springs. "
                    f"Scout {rs['swap_g']} g with its cartridge, Overseer {ro['swap_g']} g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; "
                    f"the Scout receiver stands on four landing feet. Worst strength index {rs['audit']['strength']['worst_index']} (Scout), {ro['audit']['strength']['worst_index']} (Overseer). Numbers under the viewer.",
            "cg_ref": None, "timeline": "tools/latch7_both_motion.py:timeline", "appendix": "systems/latch7.appendix.html", "parts": parts}
@@ -657,7 +799,7 @@ if __name__ == "__main__":
         old = open(os.path.join(ROOT, "systems", "latch6.appendix.html")).read()      # v6's page section, kept under v7's, folded
         keep = ('<details style="max-width:1040px;margin:0 auto;padding:0 16px 40px;font:14px/1.5 var(--sans);color:var(--fg)"><summary>Latch v6\'s own numbers '
                 '(superseded: its pull-out loads left out the XT60\'s lever, see the first table above)</summary>' + old + '</details>\n')
-        open(os.path.join(ROOT, "systems", "latch7.appendix.html"), "w").write(appendix(rs).replace("<!--FIT-->", fit_section(rs, ro)) + keep)
+        open(os.path.join(ROOT, "systems", "latch7.appendix.html"), "w").write(appendix(rs).replace("<!--FIT-->", fit_section(rs, ro)).replace("<!--STRONG-->", strong_section(rs, ro)) + keep)
         open(os.path.join(ROOT, "systems", "latch7_overseer.appendix.html"), "w").write(appendix_overseer(ro, rs))
     else:
         main(pk)

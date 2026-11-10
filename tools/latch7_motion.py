@@ -91,7 +91,7 @@ def poses_at(t):
     Bm = tr(0, 0, s["bz"]) @ rot("x", s["pitch"]) @ rot("y", s["roll"]) if s["held"] else tr(0, 0, s["bz"])
     return {"cartridge": C, "cartridge strip px": C, "cartridge strip nx": C, "pack": C, "xt60 female": C,
             "slider p": C @ tr(-s["rho"], 0, 0), "slider n": C @ tr(s["rho"], 0, 0),
-            "bolt pin p": C @ tr(-s["rho"], 0, 0), "bolt pin n": C @ tr(s["rho"], 0, 0), "spring a": C @ sp, "spring b": C @ sp, "spring pin a": C, "spring pin b": C,
+            "bolt pin p": C @ tr(-s["rho"], 0, 0), "bolt pin n": C @ tr(s["rho"], 0, 0), "spring a": C @ sp, "spring b": C @ sp, "spring c": C @ sp, "spring d": C @ sp, "spring pin a": C, "spring pin b": C, "spring pin c": C, "spring pin d": C,
             "blade p": Bm @ tr(-s["u"], 0, 0), "blade n": Bm @ tr(s["u"], 0, 0), "heel deck": Bm, "heel pads": Bm}
 
 

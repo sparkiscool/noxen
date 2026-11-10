@@ -12,13 +12,31 @@
 #latch7 .open { border-left: 3px solid var(--bad); padding-left: 10px; }
 </style>
 <section id="latch7"><div class="wrap">
+<h2>Made stronger for the larger pack (the same parts on both)</h2>
+<p>The Scout has no width to give, both packs have length, so the latch and the fingers grew along the pack.</p>
+<div class="t"><table><tr><th></th><th>before</th><th>now</th></tr>
+<tr><td>bolt</td><td>bar 22 mm wide on one 3 x 20 steel pin</td><td>bar 42 mm wide on two 3 x 20 pins end to end</td></tr>
+<tr><td>pin on the receiver's ramp in a 35 g crash, Overseer (PCTG strength 46.0 MPa)</td><td>64 MPa</td><td>45 MPa (13 MPa at 3 g in flight)</td></tr>
+<tr><td>finger</td><td>blade 16 mm wide, one hook 13 wide</td><td>blade 34 mm wide, two hooks 9 wide, 25 mm apart</td></tr>
+<tr><td>rib that the hooks pull on</td><td>4 x 11.5, feet 18 long</td><td>the feet run wall to wall and its ends are gusseted</td></tr>
+<tr><td>springs per cartridge / over the 35 g inertia of a bolt: Scout, Overseer</td><td>2 / x2.23, x1.74</td><td>4 / x2.59, x1.97</td></tr>
+<tr><td>index nub / foot / blade / rib at the XT60 pull-out: Scout</td><td>0.64 / 0.5 / 0.59 / 0.67</td><td>0.436 / 0.274 / 0.294 / 0.27</td></tr>
+<tr><td>the same: Overseer</td><td>0.45 / 0.35 / 0.42 / 0.47</td><td>0.326 / 0.204 / 0.22 / 0.201</td></tr>
+<tr><td>worst index anywhere: Scout, Overseer</td><td>0.72, 0.60</td><td>0.436, 0.326</td></tr>
+<tr><td>blade force asked of the head</td><td>15 N</td><td>25 N (four latch springs to beat; DS3218 x6.5, MG995 x3.0)</td></tr>
+<tr><td>hold at 3 g, pads stay down / no slip: Scout, Overseer</td><td>x2.7 / x3.13, x0.81 / x0.65 (at 15 N)</td><td>x3.93 / x4.67, x1.43 / x1.14 (at 25 N)</td></tr>
+<tr><td>bought parts per cartridge</td><td>2 springs, 2 dowels, 2 magnets</td><td>4 springs, 4 dowels, 2 magnets (the same spring and dowel)</td></tr>
+<tr><td>slider with its pins / cartridge, Scout</td><td>3.4 g / 39.5 g</td><td>5.83 g / 39.51 g</td></tr>
+</table></div>
+<p>Below x1 on "pads stay down" the pack does not come off: the hooks hold it positively and lock on their wedges; it only stops being pressed tight. Hand models (E); the receiver's wider bolt pockets have not been through FE.</p>
+
 <h2>What the run-through found in v6, and what v7 changes</h2>
 <div class="t"><table><tr><th>test</th><th>v6</th><th>v7</th></tr>
-<tr><td>pull-out load on the grip (the XT60 is off to one end)</td><td>sized for 29.6 N per nub; the real load is 86 N. Index: nub 1.65, foot 1.52, blade 1.36 (over 1.0 fails)</td><td>85.3 N per nub. Index: nub 0.643, foot 0.499, blade 0.592, rib 0.668</td></tr>
+<tr><td>pull-out load on the grip (the XT60 is off to one end)</td><td>sized for 29.6 N per nub; the real load is 86 N. Index: nub 1.65, foot 1.52, blade 1.36 (over 1.0 fails)</td><td>80.0 N per nub. Index: nub 0.436, foot 0.274, blade 0.294, rib 0.27</td></tr>
 <tr><td>height tolerance between the head and the cartridge before a bolt is not fully drawn</td><td>+-0.14 mm</td><td>+-0.21 mm (15 deg wedge; at least 1.5 mm of nub on the foot)</td></tr>
-<tr><td>blade room along the pack (the arm is +-1.8 mm there)</td><td>+-1.0 mm (the rest-stop lugs)</td><td>+-2.1 mm; swept clean to 2.0 mm</td></tr>
-<tr><td>where the blade pushes the slider</td><td>6.1 mm under the springs, on two 1.6 mm strips: 7.4 N to unlatch; 1 mm off along the pack the push is 3.4 mm off centre: 10.6 N</td><td>one crowned pad on the centre line, 2.1 mm under the springs: 5.3 N, 6.1 N with the head 1.8 off</td></tr>
-<tr><td>slider tipped up against the pack's underside during the squeeze</td><td>2.85 N</td><td>0.98 N</td></tr>
+<tr><td>blade room along the pack (the arm is +-1.8 mm there)</td><td>+-1.0 mm (the rest-stop lugs)</td><td>+-4.1 mm; swept clean to 2.0 mm</td></tr>
+<tr><td>where the blade pushes the slider</td><td>6.1 mm under the springs, on two 1.6 mm strips: 14.7 N to unlatch; 1 mm off along the pack the push is 3.4 mm off centre: 21.2 N</td><td>one crowned pad on the centre line, 2.1 mm under the springs: 10.7 N, 12.3 N with the head 1.8 off</td></tr>
+<tr><td>slider tipped up against the pack's underside during the squeeze</td><td>5.69 N</td><td>1.96 N</td></tr>
 <tr><td>spring column</td><td>30 long, 2.7 across (ratio 11.1; unguided springs buckle above about 5.3), in open slots under the pack</td><td>the same spring with a printed 2 x 8 pin inside it: it cannot bow onto the pack or the rib</td></tr>
 </table></div>
 <h2>1. Error at every step of the swap</h2>
@@ -26,50 +44,50 @@
 <p>Across, the arm's worst case at the drone slot is about 2.1 mm and the blades enter clean to 0.9 mm; past that the 1.0 mm chamfers on the recess mouth and the tab plate cam a blade in. That is the thinnest margin in the cycle. It is the head's to fix: let it float 1 mm either way across, or tighten the axle's index.</p>
 <h2>2. Forces: where they act and what they load</h2>
 <div class="t"><table><tr><th></th><th>Scout</th><th>Overseer</th></tr>
-<tr><td>XT60 from the tab line</td><td>42.8 mm</td><td>77.8 mm</td></tr>
-<tr><td>far heel pads from the tab line</td><td>21.9 mm (the end of its flat bottom)</td><td>80.5 mm (the cartridge's end)</td></tr>
-<tr><td>pull-out, 57 N at the plug: far pads / both nubs</td><td>111.4 / 170.5 N (x2.88 what v6 assumed)</td><td>55.1 / 119.6 N (x1.86)</td></tr>
-<tr><td>insert, 57 N at the plug: nubs / lead pads</td><td>54.4 / 119.9 N (the plug is past the pads)</td><td>0.0 / 65.5 N (the lead pads are under the plug)</td></tr>
-<tr><td>index: nub / foot / blade</td><td>0.643 / 0.499 / 0.592</td><td>0.451 / 0.35 / 0.415</td></tr>
-<tr><td>index: rib, pull / insert + full side force / full pull + full side force (a jam)</td><td>0.668 / 0.703 / 0.723</td><td>0.468 / 0.494 / 0.599</td></tr>
+<tr><td>XT60 from the tab line</td><td>42.9 mm</td><td>77.7 mm</td></tr>
+<tr><td>far heel pads from the tab line</td><td>24.2 mm (the end of its flat bottom)</td><td>80.6 mm (the cartridge's end)</td></tr>
+<tr><td>pull-out, 57 N at the plug: far pads / both nubs</td><td>100.9 / 160.1 N (x2.71 what v6 assumed)</td><td>55.0 / 119.5 N (x1.85)</td></tr>
+<tr><td>insert, 57 N at the plug: nubs / lead pads</td><td>43.9 / 109.4 N (the plug is past the pads)</td><td>0.0 / 65.5 N (the lead pads are under the plug)</td></tr>
+<tr><td>index: nub / foot / blade</td><td>0.436 / 0.274 / 0.294</td><td>0.326 / 0.204 / 0.22</td></tr>
+<tr><td>index: rib, pull / insert + full side force / full pull + full side force (a jam)</td><td>0.27 / 0.276 / 0.295</td><td>0.201 / 0.202 / 0.252</td></tr>
 </table></div>
 <p>Index 1.0 is the allowable for PCTG (9.8 MPa in use, 15.6 MPa in a jam). Hand models (E). The blade and nub are the grabber head's parts: 4.7 x 16 blade, nub 13 wide and 3.7 thick at its root, in PCTG.</p>
-<p>Springs: two in parallel, 2.59 N at rest on each slider, x2.23 the 35 g inertia of a slider with its pin (3.37 g); x1.12 with one spring lost. 4.66 N squeezed, wire at 38 % of tensile at the limit, 1.0 mm above solid (E: the listing gives no coil count).</p>
+<p>Springs: four in parallel, 5.17 N at rest on each slider, x2.59 the 35 g inertia of a slider with its two pins (5.83 g); x1.29 with two of the four lost. 9.33 N squeezed, wire at 38 % of tensile at the limit, 1.0 mm above solid (E: the listing gives no coil count).</p>
 <h2>3. Holding the pack on the grabber</h2>
-<div class="t"><table><tr><th>Scout, per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th><th>pack top moves, mm</th></tr><tr><td>10 N</td><td>1 g</td><td>17.23</td><td>x4.17</td><td>x4.83</td><td>0.0</td><td>0.021</td></tr><tr><td>10 N</td><td>2 g</td><td>17.23</td><td>x2.09</td><td>x2.42</td><td>0.0</td><td>0.042</td></tr><tr><td>10 N</td><td>3 g</td><td>17.23</td><td>x1.31</td><td>x1.51</td><td>0.0</td><td>0.064</td></tr><tr><td>15 N</td><td>1 g</td><td>33.42</td><td>x8.09</td><td>x9.37</td><td>0.0</td><td>0.021</td></tr><tr><td>15 N</td><td>2 g</td><td>33.42</td><td>x4.05</td><td>x4.68</td><td>0.0</td><td>0.042</td></tr><tr><td>15 N</td><td>3 g</td><td>33.42</td><td>x2.7</td><td>x3.12</td><td>0.0</td><td>0.064</td></tr></table></div>
-<div class="t"><table><tr><th>Overseer (759.0 g), per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th></tr><tr><td>15 N</td><td>1 g</td><td>33.42</td><td>x3.23</td><td>x2.54</td><td>0.0</td></tr><tr><td>15 N</td><td>2 g</td><td>33.42</td><td>x1.41</td><td>x1.14</td><td>0.0</td></tr><tr><td>15 N</td><td>3 g</td><td>33.42</td><td>x0.81</td><td>x0.65</td><td>3.0</td></tr><tr><td>20 N</td><td>1 g</td><td>49.62</td><td>x4.8</td><td>x3.76</td><td>0.0</td></tr><tr><td>20 N</td><td>2 g</td><td>49.62</td><td>x2.29</td><td>x1.85</td><td>0.0</td></tr><tr><td>20 N</td><td>3 g</td><td>49.62</td><td>x1.39</td><td>x1.12</td><td>0.0</td></tr></table></div>
-<p>The wedge needs friction of 0.14 at 15 N per blade, 0.08 at 20 N, to keep the hardest pull from opening a blade (PCTG on PCTG is about 0.3, E). Across the pack the hold is friction and the two blade springs, as in v6.</p>
+<div class="t"><table><tr><th>Scout, per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th><th>pack top moves, mm</th></tr><tr><td>20 N</td><td>1 g</td><td>34.51</td><td>x8.02</td><td>x9.54</td><td>0.0</td><td>0.031</td></tr><tr><td>20 N</td><td>2 g</td><td>34.51</td><td>x4.01</td><td>x4.77</td><td>0.0</td><td>0.061</td></tr><tr><td>20 N</td><td>3 g</td><td>34.51</td><td>x2.67</td><td>x3.18</td><td>0.0</td><td>0.092</td></tr><tr><td>25 N</td><td>1 g</td><td>50.7</td><td>x11.78</td><td>x14.01</td><td>0.0</td><td>0.031</td></tr><tr><td>25 N</td><td>2 g</td><td>50.7</td><td>x5.89</td><td>x7.01</td><td>0.0</td><td>0.061</td></tr><tr><td>25 N</td><td>3 g</td><td>50.7</td><td>x3.93</td><td>x4.67</td><td>0.0</td><td>0.092</td></tr></table></div>
+<div class="t"><table><tr><th>Overseer (765.3 g), per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th></tr><tr><td>20 N</td><td>1 g</td><td>34.51</td><td>x3.33</td><td>x2.6</td><td>0.0</td></tr><tr><td>20 N</td><td>2 g</td><td>34.51</td><td>x1.46</td><td>x1.17</td><td>0.0</td></tr><tr><td>20 N</td><td>3 g</td><td>34.51</td><td>x0.84</td><td>x0.67</td><td>2.78</td></tr><tr><td>25 N</td><td>1 g</td><td>50.7</td><td>x4.89</td><td>x3.81</td><td>0.0</td></tr><tr><td>25 N</td><td>2 g</td><td>50.7</td><td>x2.34</td><td>x1.88</td><td>0.0</td></tr><tr><td>25 N</td><td>3 g</td><td>50.7</td><td>x1.43</td><td>x1.14</td><td>0.0</td></tr></table></div>
+<p>The wedge needs friction of 0.13 at 20 N per blade, 0.07 at 25 N, to keep the hardest pull from opening a blade (PCTG on PCTG is about 0.3, E). Across the pack the hold is friction and the two blade springs, as in v6.</p>
 <h2>Fit in the landing funnel (both packs)</h2>
 <div class="t"><table><tr><th></th><th>Scout set</th><th>Overseer set</th></tr>
 <tr><td>end walls</td><td>in 39.2 mm</td><td>out (the 184 seat)</td></tr>
-<tr><td>comes to rest, from its drawn height</td><td>0.0 mm, on its four feet on the side ledges (118 mm&sup2;)</td><td>0.0 mm, on the side ledges (995 mm&sup2;)</td></tr>
-<tr><td>free play once seated: to the nose / to the tail / across, mm</td><td>0.63 / 0.63 / 0.7</td><td>0.4 / 0.35 / 0.61</td></tr>
-<tr><td>cartridge through the hole: nose / tail / each side, mm</td><td>36.52 / 44.48 / 5.3</td><td>1.5 / 1.5 / 1.0</td></tr>
+<tr><td>comes to rest, from its drawn height</td><td>0.0 mm, on its four feet on the side ledges (118 mm&sup2;)</td><td>0.0 mm, on the side ledges (1043 mm&sup2;)</td></tr>
+<tr><td>free play once seated: to the nose / to the tail / across, mm</td><td>0.63 / 0.63 / 0.7</td><td>0.4 / 0.35 / 0.59</td></tr>
+<tr><td>cartridge through the hole: nose / tail / each side, mm</td><td>36.39 / 44.61 / 5.3</td><td>1.5 / 1.5 / 1.0</td></tr>
 <tr><td>overlap seated / worst of 65 landing states / cartridge going down 160 mm / grabber heel and blades, mm&sup3;</td><td>0.0 / 0.0 / 0.0 / 0.0</td><td>0.0 / 0.0 / 0.0 / 0.0</td></tr>
-<tr><td>tab line along the arm's axis (seat x)</td><td>0.0 mm</td><td>0.0 mm</td></tr>
+<tr><td>tab line along the arm's axis (seat x)</td><td>0.0 mm</td><td>0.09 mm</td></tr>
 <tr><td>verdict</td><td>clear</td><td>clear</td></tr>
 </table></div>
 <p>The funnel was drawn round estimated outlines. Against the real latch sets its hole (170 x 50) was too small for the Overseer cartridge (174 x 55) and its seat (66.8 wide) too narrow for the Overseer receiver (68.0). Now: hole 177 x 57, seat 68.8 wide. The whole Scout v4 and Overseer still clear it: 0 crossings seated and in all 65 landing states each (tools/seat_check.py).</p>
-<p>The Scout's receiver is a 51 mm wide keel with ends clipped at 45 degrees: it hung in the hole and nothing held it along its length (over 6 mm of play each way). It now has four landing feet, one on a leg down from each corner boss: pads 4.8 x 6.0 mm on the funnel's side ledges, their outer ends 0.3 mm from the end walls' feet, the same 68 mm across as the Overseer's. 4.4 g in all, part of the receiver print. At 16.0 N a foot (the XT60 pull-out on four feet, or a 3 g landing on two) a leg's root is at index 0.25. They clear the Scout v4's own parts, its TPU skids, the cartridge's path and the grabber. Both tab lines sit at the same place along the arm's axis (0.0 mm apart).</p>
+<p>The Scout's receiver is a 51 mm wide keel with ends clipped at 45 degrees: it hung in the hole and nothing held it along its length (over 6 mm of play each way). It now has four landing feet, one on a leg down from each corner boss: pads 4.8 x 6.0 mm on the funnel's side ledges, their outer ends 0.3 mm from the end walls' feet, the same 68 mm across as the Overseer's. 4.4 g in all, part of the receiver print. At 16.0 N a foot (the XT60 pull-out on four feet, or a 3 g landing on two) a leg's root is at index 0.25. They clear the Scout v4's own parts, its TPU skids, the cartridge's path and the grabber. Both tab lines sit at the same place along the arm's axis (0.1 mm apart).</p>
 
 <h2>4. The parts on hand</h2>
 <p>Printed parts: PCTG, the project's rule since 8 Nov (about 10 to 20 times PETG's impact toughness at 90 % of its stiffness; the PETG nodes and arms broke in testing). Heel pads and strips: TPU 95A. One dowel size, 3 x 20, does the bolt pins and the guide poles; the spring guide pins are printed.</p>
 <div class="t"><table><tr><th>part</th><th>needs</th><th>has</th></tr>
-<tr><td>gripper servo, cam opening both blades</td><td>2.07 kg cm at 15 N blades, 2.58 at 20 N (scaled from the heads v7 concept, E)</td><td>DS3218 20 kg cm: x9.7 / x7.8; MG995 9.2 kg cm: x4.4 / x3.6</td></tr>
+<tr><td>gripper servo, cam opening both blades</td><td>2.58 kg cm at 20 N blades, 3.09 at 25 N (scaled from the heads v7 concept, E)</td><td>DS3218 20 kg cm: x7.8 / x6.5; MG995 9.2 kg cm: x3.6 / x3.0</td></tr>
 <tr><td>head stepper, NEMA 17 at 2 A on the r 8 pinion</td><td>insert 60 N, pull 59.1 N</td><td>stall 74 N: x1.23 / x1.25</td></tr>
-<tr><td>blade springs (head)</td><td>4.66 N of latch spring to beat, then the wedge</td><td>15 N in the heads v7 concept; 20 N recommended for the Overseer</td></tr>
+<tr><td>blade springs (head)</td><td>9.33 N of latch spring to beat, then the wedge</td><td>15 N in the heads v7 concept; this latch asks for 25 N (four latch springs to beat, and the hold)</td></tr>
 <tr><td>XT60</td><td>57 N to pull apart</td><td>57 N to unmate is the project's own reading (the head research note); the spec sheet says 18 to 44 N</td></tr>
 </table></div>
-<div class="t"><table><tr><th>bought part</th><th>spec</th><th>Amazon listing</th><th>check</th></tr><tr><td>latch spring</td><td>compression, 304 stainless, wire 0.3, OD 3.0, free 30</td><td><a href="https://www.amazon.com/PATIKIL-Compression-Stainless-Mechanical-Assortment/dp/B0DKCRCBV2">PATIKIL 0.3 x 3 x 30, 10 pcs</a></td><td>on a kitchen scale: 1.0..1.4 N at 19.8 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)</td></tr><tr><td>dowel pin (bolt pins and guide poles)</td><td>3 x 20, stainless, DIN 7</td><td><a href="https://www.amazon.com/Pieces-M3x20mm-Metric-Dowel-Stainless/dp/B09X5ZC9B6">M3 x 20 dowel pins A2-70 DIN 7</a></td><td>one size for both jobs; 50 pcs: https://www.amazon.com/Dowel-Pin-Std-M3x20mm-PK50/dp/B007IA6NTC</td></tr><tr><td>tab magnet</td><td>o 2 x 2 N52, axial</td><td><a href="https://us.amazon.com/Cylinder-Magnets-2x2mm-Very-Small/dp/B08YPBKNTS">tElement 2 x 2 N52 cylinder magnets, 500 pcs</a></td><td></td></tr><tr><td>XT60 pair</td><td>Amass XT60W, male + female (Spark 10 Nov)</td><td><a href="https://www.amazon.com/dp/B0DZ288QD2">ELFCULB 10 pairs Amass XT60W</a></td><td>the listing says over 100 cycles and 35 A; the receiver's carrier is drawn for the XT60E1-M panel mount: measure this plug's body before printing a carrier</td></tr><tr><td>spring guide pin</td><td>o 2.0 x 8, printed PCTG</td><td>printed</td><td></td></tr><tr><td>heel pad facing (grabber head)</td><td>TPU 95A, 2.0 thick, 3 x 7, four per head</td><td>printed from the TPU 95A on hand</td><td></td></tr></table></div>
+<div class="t"><table><tr><th>bought part</th><th>spec</th><th>Amazon listing</th><th>check</th></tr><tr><td>latch spring</td><td>compression, 304 stainless, wire 0.3, OD 3.0, free 30; four per cartridge</td><td><a href="https://www.amazon.com/PATIKIL-Compression-Stainless-Mechanical-Assortment/dp/B0DKCRCBV2">PATIKIL 0.3 x 3 x 30, 10 pcs</a></td><td>on a kitchen scale: 1.0..1.4 N at 19.8 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)</td></tr><tr><td>dowel pin (bolt pins and guide poles)</td><td>3 x 20, stainless, DIN 7; four per cartridge (two in each bolt), two per receiver</td><td><a href="https://www.amazon.com/Pieces-M3x20mm-Metric-Dowel-Stainless/dp/B09X5ZC9B6">M3 x 20 dowel pins A2-70 DIN 7</a></td><td>one size for both jobs; 50 pcs: https://www.amazon.com/Dowel-Pin-Std-M3x20mm-PK50/dp/B007IA6NTC</td></tr><tr><td>tab magnet</td><td>o 2 x 2 N52, axial</td><td><a href="https://us.amazon.com/Cylinder-Magnets-2x2mm-Very-Small/dp/B08YPBKNTS">tElement 2 x 2 N52 cylinder magnets, 500 pcs</a></td><td></td></tr><tr><td>XT60 pair</td><td>Amass XT60W, male + female (Spark 10 Nov)</td><td><a href="https://www.amazon.com/dp/B0DZ288QD2">ELFCULB 10 pairs Amass XT60W</a></td><td>the listing says over 100 cycles and 35 A; the receiver's carrier is drawn for the XT60E1-M panel mount: measure this plug's body before printing a carrier</td></tr><tr><td>spring guide pin</td><td>o 2.0 x 8, printed PCTG</td><td>printed</td><td></td></tr><tr><td>heel pad facing (grabber head)</td><td>TPU 95A, 2.0 thick, 3 x 7, four per head</td><td>printed from the TPU 95A on hand</td><td></td></tr></table></div>
 <h2>What the grabber head has to match</h2>
 <div class="t"><table><tr><th>item</th><th>v7</th></tr>
-<tr><td>blade in the recess</td><td>4.7 thick x 16 wide, top 8.0 above the pads; inner faces +-11.3 open, +-6.2 tight (stroke 5.1, 6.9 with every tolerance)</td></tr>
-<tr><td>nub</td><td>3.3 long x 13 wide, top 6.0, underside 15 deg</td></tr>
-<tr><td>heel pads</td><td>x 15.2..18.2, 18.4..25.4 mm either side of the tab line (Scout); the Overseer's at its cartridge ends</td></tr>
-<tr><td>hall sensors</td><td>x +-8.6, 11.65 mm along the pack from the tab line (one each side, opposite ends), 1.0 under the flat bottom</td></tr>
+<tr><td>blade in the recess</td><td>4.7 thick x 34 wide, top 8.0 above the pads; inner faces +-11.3 open, +-6.2 tight (stroke 5.1, 6.9 with every tolerance)</td></tr>
+<tr><td>nub</td><td>two on each blade, 25 apart: 3.3 long x 9 wide, top 6.0, underside 15 deg</td></tr>
+<tr><td>heel pads</td><td>x 12.0..18.5, 22.9..25.6 mm either side of the tab line (Scout); the Overseer's at its cartridge ends</td></tr>
+<tr><td>hall sensors</td><td>x +-12.0, 20.7 mm along the pack from the tab line (one each side, opposite ends), 1.0 under the flat bottom</td></tr>
 </table></div>
 <h2 class="open">Open</h2>
-<p>1. The Scout's plug is 42.8 mm from the pull and its flat bottom ends 21.9 mm the other way, so the grip carries x2.88 the plug's force. v7 is sized for it. The cause stays: only moving the tab line toward the plug or a lower-force connector removes it.</p>
+<p>1. The Scout's plug is 42.9 mm from the pull and its flat bottom ends 24.2 mm the other way, so the grip carries x2.71 the plug's force. v7 is sized for it. The cause stays: only moving the tab line toward the plug or a lower-force connector removes it.</p>
 <p>2. The spring's rate and closed length are not on the listing: weigh one (1.0 to 1.4 N at 21 mm) and close one fully (9.0 mm or less).</p>
 <p>3. Friction, the XT60's 57 N and the blade springs' 15 N are estimates or single readings.</p>
 <h2>Checks</h2>
