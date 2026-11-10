@@ -42,6 +42,8 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of
                                       M25_INS, BOSS_R, DIRS14, FLIGHT)
 
 SPEC = dict(h=2.0, gen_cm3=120.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
+# 10 Nov (the NODES stream's socket-depth rule, units_lib.socket_depth): DN / DT 13.5 and BN / BT 11.5 deep (their 645 / 528 N), taken
+# behind the standard floor (the mouths stay inside the 180; those 4 rods 3.5 / 1.5 longer), DS / BS 7.0 (their mouths 3 nearer).
 # 10 Nov, run 186 (60 cm3, 18 % of the room): FAIL 1.515 (BN-NB 528 N), 117 g; the result read what the room filled solid thinned
 # uniformly to the budget predicted (0.261 / 0.177 = 1.48): this many separate load paths leave the layout little to gain over
 # uniform. Budget 60 -> 120 and the nose block |y| 26 -> 34 as the tail tray (the BN socket's room: 100 alone thinned to ~1.0), arms' room 26 -> 32 wide (motor 1's root 1.25 in-layer), the lugs' room x +-20 -> +-28
@@ -191,7 +193,8 @@ def bodies():
     env += [along(s.pt(-8.0), np.array([s.c[0] - np.sign(s.c[0]) * 25.0, 0.0, 10.0]), 7.0) for s in ends]
     env = U(env) ^ box(-S.BED, S.BED, -S.BED, S.BED, -60.0, DZ1) ^ funnel_room()     # the A1 mini's 180; nothing below the walls-in funnel's line
     check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
-    return dict(drawn=U(drawn), cuts=U(cuts), env=env, pod_regs=pod_regs, rec_regs=rec_regs, tur_regs=tur_regs, socks=socks, boards=boards)
+    return dict(drawn=U(drawn) ^ box(-S.BED - 5, S.BED + 5, -S.BED - 5, S.BED + 5, -60.0, DZ1), cuts=U(cuts), env=env,   # the bed: DN / DT's deeper collars rise to 24.8 at their back (10 Nov)
+                pod_regs=pod_regs, rec_regs=rec_regs, tur_regs=tur_regs, socks=socks, boards=boards)
 
 
 def whole_drone(p, masses, name, a, cls, accel=None):
