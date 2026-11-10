@@ -610,11 +610,43 @@ def appendix_overseer(ro, rs):
 </div></section>
 """
 
+
+BOTH_X = {"scout": -45.0, "overseer": 45.0}       # page x of each set on the one page (tools/latch7_both_motion.py OFF)
+
+
+def write_both():
+    """one page with both packs' latch sets side by side (Spark 10 Nov: both packs in one artifact), at the latch's artifact;
+    the two single-pack assemblies are archived (their results and motions are this page's sources)."""
+    parts = []; res = {}
+    for pk in ("scout", "overseer"):
+        nm = OUT[pk][0]; res[pk] = json.load(open(os.path.join(ROOT, "parts", nm, "result.json")))
+        T = np.eye(4); T[0, 3] = BOTH_X[pk]
+        for p in res[pk]["page_parts"]:
+            parts.append(dict(p, id=p["id"] + "_both", name=f"{pk}: {p['name']}", group=f"{pk.capitalize()}: {p['group']}", pose=T.tolist()))
+        f = os.path.join(ROOT, "systems", f"{nm}.assembly.json"); a = json.load(open(f)); a["artifact"] = None; a["archived"] = True
+        json.dump(a, open(f, "w"), indent=1)
+    rs, ro = res["scout"], res["overseer"]
+    asm = {"name": "latch v7 both", "title": "Battery Latch v7 (Scout and Overseer)", "readme_view": "both, section", "artifact": ARTIFACT, "machine": "box", "order": 90,
+           "views": {"both, section": {"eye": [0, 215, 12], "target": [0, 0, 4]}, "both, from below": {"eye": [95, 170, -150], "target": [0, -4, -6]},
+                     "scout close": {"eye": [BOTH_X["scout"], 95, 8], "target": [BOTH_X["scout"], 0, 8]},
+                     "overseer close": {"eye": [BOTH_X["overseer"], 120, 8], "target": [BOTH_X["overseer"], 0, 8]},
+                     "wedge, scout": {"eye": [BOTH_X["scout"] + 8, 34, 5], "target": [BOTH_X["scout"] + 6, 0, 5]},
+                     "held, tipped": {"eye": [280, 280, -150], "target": [0, 0, -135]}},
+           "note": "The press-two-tabs latch, v7, on both packs, side by side: the Scout's on the left, the Overseer's on the right. One latch module: the same slider, "
+                   "springs, 3 x 20 dowels, magnets and grabber blades; only the cartridge and the receiver are sized to the pack. Each is cut at its tab line. "
+                   f"Scout {rs['swap_g']} g with its cartridge, Overseer {ro['swap_g']} g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; "
+                   f"the Scout receiver stands on four landing feet. Worst strength index {rs['audit']['strength']['worst_index']} (Scout), {ro['audit']['strength']['worst_index']} (Overseer). Numbers under the viewer.",
+           "cg_ref": None, "timeline": "tools/latch7_both_motion.py:timeline", "appendix": "systems/latch7.appendix.html", "parts": parts}
+    json.dump(asm, open(os.path.join(ROOT, "systems", "latch7_both.assembly.json"), "w"), indent=1)
+    print("latch7_both:", len(parts), "parts")
+
 if __name__ == "__main__":
     pk = "overseer" if "--overseer" in sys.argv else "scout"
     if "--fit" in sys.argv:
         for q in ("scout", "overseer"):
             print(q, json.dumps(funnel_fit(build(q)), indent=1))
+    elif "--both" in sys.argv:
+        write_both()
     elif "--refit" in sys.argv:                            # the funnel changed, the latch did not: redo the fit and the page text only
         for q in ("scout", "overseer"):
             f = os.path.join(ROOT, "parts", OUT[q][0], "result.json"); res = json.load(open(f))

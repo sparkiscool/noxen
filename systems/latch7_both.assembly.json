@@ -1,0 +1,1968 @@
+{
+ "name": "latch v7 both",
+ "title": "Battery Latch v7 (Scout and Overseer)",
+ "readme_view": "both, section",
+ "artifact": "https://claude.ai/artifact/Pqu6aZFdW9g7jtRyBFdraw",
+ "machine": "box",
+ "order": 90,
+ "views": {
+  "both, section": {
+   "eye": [
+    0,
+    215,
+    12
+   ],
+   "target": [
+    0,
+    0,
+    4
+   ]
+  },
+  "both, from below": {
+   "eye": [
+    95,
+    170,
+    -150
+   ],
+   "target": [
+    0,
+    -4,
+    -6
+   ]
+  },
+  "scout close": {
+   "eye": [
+    -45.0,
+    95,
+    8
+   ],
+   "target": [
+    -45.0,
+    0,
+    8
+   ]
+  },
+  "overseer close": {
+   "eye": [
+    45.0,
+    120,
+    8
+   ],
+   "target": [
+    45.0,
+    0,
+    8
+   ]
+  },
+  "wedge, scout": {
+   "eye": [
+    -37.0,
+    34,
+    5
+   ],
+   "target": [
+    -39.0,
+    0,
+    5
+   ]
+  },
+  "held, tipped": {
+   "eye": [
+    280,
+    280,
+    -150
+   ],
+   "target": [
+    0,
+    0,
+    -135
+   ]
+  }
+ },
+ "note": "The press-two-tabs latch, v7, on both packs, side by side: the Scout's on the left, the Overseer's on the right. One latch module: the same slider, springs, 3 x 20 dowels, magnets and grabber blades; only the cartridge and the receiver are sized to the pack. Each is cut at its tab line. Scout 218.2 g with its cartridge, Overseer 759.0 g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; the Scout receiver stands on four landing feet. Worst strength index 0.723 (Scout), 0.599 (Overseer). Numbers under the viewer.",
+ "cg_ref": null,
+ "timeline": "tools/latch7_both_motion.py:timeline",
+ "appendix": "systems/latch7.appendix.html",
+ "parts": [
+  {
+   "id": "latch7_view_receiver_both",
+   "name": "scout: receiver",
+   "role": "structure",
+   "group": "Scout: receiver (on the drone), cut away",
+   "color": "#9fb4cc",
+   "opacity": null,
+   "mesh": "parts/latch7/view/receiver.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_receiver_strips_both",
+   "name": "scout: receiver strips",
+   "role": "TPU",
+   "group": "Scout: receiver (on the drone), cut away",
+   "color": "#3a3a3a",
+   "opacity": null,
+   "mesh": "parts/latch7/view/receiver_strips.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_receiver_skid_nose_both",
+   "name": "scout: receiver skid nose",
+   "role": "TPU",
+   "group": "Scout: receiver (on the drone), cut away",
+   "color": "#3a3a3a",
+   "opacity": null,
+   "mesh": "parts/latch7/view/receiver_skid_nose.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_carrier_both",
+   "name": "scout: carrier",
+   "role": "structure",
+   "group": "Scout: receiver (on the drone), cut away",
+   "color": "#7f93ab",
+   "opacity": null,
+   "mesh": "parts/latch7/view/carrier.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_carrier_cap_both",
+   "name": "scout: carrier cap",
+   "role": "structure",
+   "group": "Scout: receiver (on the drone), cut away",
+   "color": "#7f93ab",
+   "opacity": null,
+   "mesh": "parts/latch7/view/carrier_cap.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_xt60_male_both",
+   "name": "scout: xt60 male",
+   "role": "bought",
+   "group": "Scout: receiver (on the drone), cut away",
+   "color": "#e8b923",
+   "opacity": null,
+   "mesh": "parts/latch7/view/xt60_male.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_guide_pole_p_both",
+   "name": "scout: guide pole p",
+   "role": "bought",
+   "group": "Scout: guide poles (steel)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/guide_pole_p.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 1.09,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_guide_pole_n_both",
+   "name": "scout: guide pole n",
+   "role": "bought",
+   "group": "Scout: guide poles (steel)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/guide_pole_n.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 1.09,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_cartridge_both",
+   "name": "scout: cartridge",
+   "role": "structure",
+   "group": "Scout: cartridge (on the pack), cut away",
+   "color": "#4f9d8f",
+   "opacity": null,
+   "mesh": "parts/latch7/view/cartridge.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_cartridge_strip_px_both",
+   "name": "scout: cartridge strip px",
+   "role": "TPU",
+   "group": "Scout: cartridge (on the pack), cut away",
+   "color": "#3a3a3a",
+   "opacity": null,
+   "mesh": "parts/latch7/view/cartridge_strip_px.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_cartridge_strip_nx_both",
+   "name": "scout: cartridge strip nx",
+   "role": "TPU",
+   "group": "Scout: cartridge (on the pack), cut away",
+   "color": "#3a3a3a",
+   "opacity": null,
+   "mesh": "parts/latch7/view/cartridge_strip_nx.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_pack_both",
+   "name": "scout: pack",
+   "role": "bought",
+   "group": "Scout: cartridge (on the pack), cut away",
+   "color": "#555b66",
+   "opacity": 0.35,
+   "mesh": "parts/latch7/view/pack.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_xt60_female_both",
+   "name": "scout: xt60 female",
+   "role": "bought",
+   "group": "Scout: cartridge (on the pack), cut away",
+   "color": "#e8b923",
+   "opacity": null,
+   "mesh": "parts/latch7/view/xt60_female.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_slider_p_both",
+   "name": "scout: slider p",
+   "role": "structure",
+   "group": "Scout: latch (moving)",
+   "color": "#ff8a1f",
+   "opacity": null,
+   "mesh": "parts/latch7/view/slider_p.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_slider_n_both",
+   "name": "scout: slider n",
+   "role": "structure",
+   "group": "Scout: latch (moving)",
+   "color": "#ff8a1f",
+   "opacity": null,
+   "mesh": "parts/latch7/view/slider_n.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": 2.21,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_bolt_pin_p_both",
+   "name": "scout: bolt pin p",
+   "role": "bought",
+   "group": "Scout: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/bolt_pin_p.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 1.1,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_bolt_pin_n_both",
+   "name": "scout: bolt pin n",
+   "role": "bought",
+   "group": "Scout: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/bolt_pin_n.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 1.1,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_a_both",
+   "name": "scout: spring a",
+   "role": "bought",
+   "group": "Scout: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_a.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_b_both",
+   "name": "scout: spring b",
+   "role": "bought",
+   "group": "Scout: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_b.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_blade_p_both",
+   "name": "scout: blade p",
+   "role": "structure",
+   "group": "Scout: grabber interface (blade tips, nubs, heel pads)",
+   "color": "#d64545",
+   "opacity": null,
+   "mesh": "parts/latch7/view/blade_p.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_blade_n_both",
+   "name": "scout: blade n",
+   "role": "structure",
+   "group": "Scout: grabber interface (blade tips, nubs, heel pads)",
+   "color": "#d64545",
+   "opacity": null,
+   "mesh": "parts/latch7/view/blade_n.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_heel_deck_both",
+   "name": "scout: heel deck",
+   "role": "structure",
+   "group": "Scout: grabber interface (blade tips, nubs, heel pads)",
+   "color": "#a83a3a",
+   "opacity": null,
+   "mesh": "parts/latch7/view/heel_deck.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_heel_pads_both",
+   "name": "scout: heel pads",
+   "role": "TPU",
+   "group": "Scout: grabber interface (blade tips, nubs, heel pads)",
+   "color": "#2b2b2b",
+   "opacity": null,
+   "mesh": "parts/latch7/view/heel_pads.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_pin_a_both",
+   "name": "scout: spring pin a",
+   "role": "bought",
+   "group": "Scout: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_pin_a.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_pin_b_both",
+   "name": "scout: spring pin b",
+   "role": "bought",
+   "group": "Scout: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_pin_b.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_receiver_both",
+   "name": "overseer: receiver",
+   "role": "structure",
+   "group": "Overseer: receiver (on the drone), cut away",
+   "color": "#9fb4cc",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/receiver.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_receiver_strips_both",
+   "name": "overseer: receiver strips",
+   "role": "TPU",
+   "group": "Overseer: receiver (on the drone), cut away",
+   "color": "#3a3a3a",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/receiver_strips.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_carrier_both",
+   "name": "overseer: carrier",
+   "role": "structure",
+   "group": "Overseer: receiver (on the drone), cut away",
+   "color": "#7f93ab",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/carrier.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_carrier_cap_both",
+   "name": "overseer: carrier cap",
+   "role": "structure",
+   "group": "Overseer: receiver (on the drone), cut away",
+   "color": "#7f93ab",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/carrier_cap.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_xt60_male_both",
+   "name": "overseer: xt60 male",
+   "role": "bought",
+   "group": "Overseer: receiver (on the drone), cut away",
+   "color": "#e8b923",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/xt60_male.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_guide_pole_p_both",
+   "name": "overseer: guide pole p",
+   "role": "bought",
+   "group": "Overseer: guide poles (steel)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/guide_pole_p.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 1.09,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_guide_pole_n_both",
+   "name": "overseer: guide pole n",
+   "role": "bought",
+   "group": "Overseer: guide poles (steel)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/guide_pole_n.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 1.09,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_cartridge_both",
+   "name": "overseer: cartridge",
+   "role": "structure",
+   "group": "Overseer: cartridge (on the pack), cut away",
+   "color": "#4f9d8f",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/cartridge.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_pack_both",
+   "name": "overseer: pack",
+   "role": "bought",
+   "group": "Overseer: cartridge (on the pack), cut away",
+   "color": "#555b66",
+   "opacity": 0.35,
+   "mesh": "parts/latch7_overseer/view/pack.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_xt60_female_both",
+   "name": "overseer: xt60 female",
+   "role": "bought",
+   "group": "Overseer: cartridge (on the pack), cut away",
+   "color": "#e8b923",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/xt60_female.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_slider_p_both",
+   "name": "overseer: slider p",
+   "role": "structure",
+   "group": "Overseer: latch (moving)",
+   "color": "#ff8a1f",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/slider_p.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_slider_n_both",
+   "name": "overseer: slider n",
+   "role": "structure",
+   "group": "Overseer: latch (moving)",
+   "color": "#ff8a1f",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/slider_n.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": 3.16,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_bolt_pin_p_both",
+   "name": "overseer: bolt pin p",
+   "role": "bought",
+   "group": "Overseer: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/bolt_pin_p.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 1.1,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_bolt_pin_n_both",
+   "name": "overseer: bolt pin n",
+   "role": "bought",
+   "group": "Overseer: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/bolt_pin_n.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 1.1,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_a_both",
+   "name": "overseer: spring a",
+   "role": "bought",
+   "group": "Overseer: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_a.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_b_both",
+   "name": "overseer: spring b",
+   "role": "bought",
+   "group": "Overseer: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_b.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_blade_p_both",
+   "name": "overseer: blade p",
+   "role": "structure",
+   "group": "Overseer: grabber interface (blade tips, nubs, heel pads)",
+   "color": "#d64545",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/blade_p.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_blade_n_both",
+   "name": "overseer: blade n",
+   "role": "structure",
+   "group": "Overseer: grabber interface (blade tips, nubs, heel pads)",
+   "color": "#d64545",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/blade_n.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_heel_deck_both",
+   "name": "overseer: heel deck",
+   "role": "structure",
+   "group": "Overseer: grabber interface (blade tips, nubs, heel pads)",
+   "color": "#a83a3a",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/heel_deck.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_heel_pads_both",
+   "name": "overseer: heel pads",
+   "role": "TPU",
+   "group": "Overseer: grabber interface (blade tips, nubs, heel pads)",
+   "color": "#2b2b2b",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/heel_pads.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "TPU",
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_pin_a_both",
+   "name": "overseer: spring pin a",
+   "role": "bought",
+   "group": "Overseer: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_pin_a.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_pin_b_both",
+   "name": "overseer: spring pin b",
+   "role": "bought",
+   "group": "Overseer: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_pin_b.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  }
+ ]
+}
