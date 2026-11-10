@@ -116,7 +116,10 @@ def bodies():
 def setup(h):
     drawn, cuts, env, socks, pads = bodies()
     p = Part("overseer_base", h, drawn, cuts, env, build="-z", material="PCTG")
-    p.support("default", U([cyl(x, y, Z_PLATE - 2.0, Z_PLATE + 0.5, PAD_R + 0.5) for x, y in SCREWS]))
+    # the clamp's two faces (10 Nov): the plate on the pad top and the M3 head (O5.5) on the pad bottom round its hole; with the top
+    # alone the 80 cm3 run read 0.96 on the head clearance's rim (-54, 35, -8.9), the pad loaded as a ledge round the head cut
+    head = [cyl(x, y, Z_MOUNT - 0.5, Z_MOUNT + 2.0, 2.75) - cyl(x, y, Z_MOUNT - 1.0, Z_MOUNT + 2.5, PAD_HOLE_R) for x, y in SCREWS]
+    p.support("default", U([cyl(x, y, Z_PLATE - 2.0, Z_PLATE + 0.5, PAD_R + 0.5) for x, y in SCREWS] + head))
     boss_pts = [np.array([x, y, Z_MOUNT]) for x, y in BOSSES]
     boss_reg = [cyl(x, y, Z_MOUNT - 0.5, Z_MOUNT + 2.5, BOSS_R + 0.5) for x, y in BOSSES]
 
