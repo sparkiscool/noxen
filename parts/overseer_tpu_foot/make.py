@@ -118,7 +118,7 @@ DROP TEST (5 minutes, calibrates the E numbers):
      cracks at the folds or the plate, no chalk on the cone tip (chalk the sole's centre first: cone on sole = bottomed).
 
     python parts/overseer_tpu_foot/make.py      writes print/overseer_tpu_foot_node{2,3,4,5}.stl (the 68D boots, on their print
-                                                face), the _95a column boots, part.stl (the four boots, the page's view) and preview.png
+                                                face), the _95a column boots, part.stl (the six boots on their nodes in the drone frame, the page's view) and preview.png
                                                 (the boot on node 5 rendered, the section through it, force vs stroke v2 -> v3)
 Needs the commits above in the clone (a shallow clone: git fetch --shallow-since=2026-10-29 origin main).
 """
@@ -488,7 +488,11 @@ if __name__ == "__main__":
                 cut, cell_cs, face = cells(shift + info["z_face"] - (CRUSH_H + PLATE - SKIN), shift + info["z_face"])
                 info["cells_node_overlap_mm3"] = round((cut ^ nm).volume(), 2)                    # the node must not reach the cells
                 info["cell_zone_rel_density"] = round(1 - cell_cs.area() / (CRUSH_W * (CRUSH_H - 2 * SKIN)), 3)
-                plate.append(b.translate([(i % 2) * 42.0 - 21.0, (i // 2) * 42.0 - 21.0, 0]))
+                for k in MIRRORS[n]:                                  # the page's view (10 Nov, Spark: put the boots on): on the drone, at each node
+                    bk = b.translate([0, 0, -shift])                   # node frame
+                    if k != n:
+                        bk = bk.mirror([0, 1, 0])                      # the mirrored node of the pair
+                    plate.append(bk.translate([float(v) for v in NODES[k]]))
             else:
                 tp = tb.copy()
             tp.apply_translation([0, 0, -float(tp.bounds[0][2])])
@@ -497,7 +501,7 @@ if __name__ == "__main__":
                 keep[grade] = (b, info, shift)
             info.update(vol_mm3=round(b.volume()), height=round(tb.extents[2], 1), print_height=round(tp.extents[2], 1), watertight=bool(tb.is_watertight), genus=b.genus())
             print(json.dumps(info))
-    p = to_tri(mf.Manifold.batch_boolean(plate, mf.OpType.Add))      # the page's view: the four 68D boots, decimated (print/ has the meshes)
+    p = to_tri(mf.Manifold.batch_boolean(plate, mf.OpType.Add))      # the page's view: the six 68D boots on their nodes, drone frame, decimated (print/ has the meshes)
     p.simplify_quadric_decimation(face_count=60000).export(os.path.join(HERE, "part.stl"))
     # the curves: v2's 50 x 40 x 20 box puck and v3's 34 x 34 x 30 block at sigma_y 15 and +-40 %
     curves = []
