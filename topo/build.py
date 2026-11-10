@@ -526,8 +526,15 @@ def strength(layout, part_mesh=None, log=print, mask=None):
     if fl.any():
         log(f"strength: {int(fl.sum())} cells of the built part are joined to no support at h {part.h} (a feature under the cell size): left out")
         A &= ~fl
-    E = np.where(ins, getattr(part, "stiff", np.ones(part.nel)), np.where(A, 1.0, 1e-9))
     real = [c for c in layout.cases if not c.tie]
+    if not (A & ~ins).any():
+        # nothing built is joined to a support (10 Nov: scout_v4_frame, the export lost its 95 cm3 main shell, the 55 mm3 left
+        # floated and argmax of an empty set ended the run with no result): a FAIL with its reason, never a crash
+        why = (f"no built cell is joined to a support ({int(fl.sum())} floating cells, "
+               f"{int(np.asarray(mask, bool).sum()) if mask is not None else 'mesh'} built): the part carries no load")
+        log(f"strength: FAIL: {why}")
+        return dict(rows=[], worst=None, worst_case=None, worst_at=None, ok=False, fail=why)
+    E = np.where(ins, getattr(part, "stiff", np.ones(part.nel)), np.where(A, 1.0, 1e-9))
     sol = Solver(part.shape, part.h, layout.C, part.supports, active=(A | layout.solid) & ~fl, backend="auto",
                  log=lambda s_: None)
     g = sol.grid
@@ -559,6 +566,8 @@ def strength(layout, part_mesh=None, log=print, mask=None):
         if c.cls is None:
             continue
         Axy, Az, As = allowables(layout.mat, c.cls)
+        if not len(idx):                                                   # every built cell touches a load or a support
+            rows.append(dict(case=c.name, cls=c.cls, inlayer=None, across=None, at=None)); continue
         ue = U[:, q][edof[idx]]
         sgm = ue @ CB.T
         vm = np.sqrt(np.maximum(np.einsum("ei,ij,ej->e", sgm, M, sgm), 0.0))
@@ -569,11 +578,14 @@ def strength(layout, part_mesh=None, log=print, mask=None):
         j1, j2 = int(np.argmax(f1)), int(np.argmax(f2))
         rows.append(dict(case=c.name, cls=c.cls, inlayer=round(float(f1[j1]), 3), across=round(float(f2[j2]), 3),
                          at=cen[idx[j1 if f1[j1] >= f2[j2] else j2]].round(1).tolist()))
-    worst = max(rows, key=lambda r: max(r["inlayer"], r["across"])) if rows else None
+    rated = [r for r in rows if r["inlayer"] is not None]
+    worst = max(rated, key=lambda r: max(r["inlayer"], r["across"])) if rated else None
+    fail = None if worst is not None or not rows else "no built cell away from the loads and supports to rate"
     log(f"strength: worst index {max(worst['inlayer'], worst['across']):.2f} in '{worst['case']}' at {worst['at']}"
-        if worst else "strength: no classed load cases")
+        if worst else f"strength: FAIL: {fail}" if fail else "strength: no classed load cases")
     return dict(rows=rows, worst=None if worst is None else max(worst["inlayer"], worst["across"]),
-                worst_case=None if worst is None else worst["case"], worst_at=None if worst is None else worst["at"])
+                worst_case=None if worst is None else worst["case"], worst_at=None if worst is None else worst["at"],
+                ok=fail is None, **({"fail": fail} if fail else {}))
 
 
 # ------------------------------------------------------------------------------------------------------ outputs

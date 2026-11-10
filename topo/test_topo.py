@@ -820,6 +820,30 @@ def t_early_check():
         check("early check", False, str(e))
 
 
+def t_strength_floating():
+    """strength (topo/build.py): when no built cell is joined to a support (10 Nov: scout_v4_frame, the export had lost the 95 cm3
+    main shell, the 55 mm3 left floated and np.argmax of an empty set ended the run with no result.json) it returns a FAIL with its
+    reason (ok False, fail, worst None), never raises; a joined bar still gets its index."""
+    try:
+        from .build import strength
+        p = _mini_part()
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn")
+        L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+        cen = p.cell_centres()
+        speck = (np.abs(cen[:, 0] - 11) < 2) & (np.abs(cen[:, 1] - 5) < 2) & (np.abs(cen[:, 2] - 5) < 2)    # a lone blob mid-room
+        msgs = []
+        st = strength(L, mask=speck, log=msgs.append)
+        bar = ((np.abs(cen[:, 1] - 5) < 3) & (np.abs(cen[:, 2] - 5) < 3)) | L.solid
+        sb = strength(L, mask=bar, log=lambda s_: None)
+        ok = (st["ok"] is False and st["worst"] is None and "support" in st["fail"] and any("FAIL" in m for m in msgs)
+              and sb["ok"] and sb["worst"] is not None and sb["worst"] > 0)
+        check("strength: a build joined to no support is a FAIL with its reason, not a crash; a joined bar is rated", bool(ok),
+              f"floating {st}; bar worst {sb['worst']}")
+    except Exception as e:
+        traceback.print_exc()
+        check("strength floating", False, str(e))
+
+
 def t_floating_load():
     """a drawn pad no support reaches (a void slab between it and the design: the h 2.5 head mount's 1.2 mm camera posts, whose
     cell chains break) is left out of the model and its load moves to the nearest material the supports reach, with a log line,
@@ -1145,7 +1169,7 @@ def t_audit_room_full():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full):
         t()
     if not quick:
         t_end_to_end()
