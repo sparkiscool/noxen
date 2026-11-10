@@ -43,7 +43,7 @@
     "across": 0.002,
     "at": [
      120.0,
-     -5.5,
+     5.5,
      62.5
     ]
    },
@@ -65,7 +65,8 @@
    119.0,
    4.5,
    62.5
-  ]
+  ],
+  "ok": true
  },
  "mass_g": 3.62,
  "watertight": true,
@@ -74,10 +75,12 @@
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
+  "pinch_vertices": 0,
   "caps_left": 0,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
+  "open_kept": [],
   "faces": 32518,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
@@ -89,7 +92,9 @@
    "caps_split": 14,
    "caps_left": 0,
    "watertight": true,
-   "faces": 44400
+   "faces": 44400,
+   "n_dropped_shells": 0,
+   "dropped_shells": []
   },
   "volume_mm3": 2946.1,
   "exact_mm3": 2946.1
@@ -218,9 +223,9 @@
    "default"
   ]
  },
- "build_s": 14.1,
- "layout_s": 81,
- "peak_gb": 0.662044,
+ "build_s": 11.8,
+ "layout_s": 52,
+ "peak_gb": 0.670192,
  "gen_cm3": 1.2,
  "h": 1.0,
  "audit": {
@@ -315,25 +320,26 @@
    4.5,
    62.5
   ],
+  "ok": true,
   "beta": 4.0,
   "iteration": 17,
   "max_worst": 0.3,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 95,
+ "total_s": 64,
  "part_sha": "26f6d0a0b3ef",
- "lib_sha": "772dbb2b54e8",
+ "lib_sha": "0f240a104ec5",
  "setup_sha": "ffcae6f7873a10b5",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_rf.stl",
-  "sha256": "e60e2f4fc5d100dbac54d3544e6343864c01f4d4ed709fe4064a7d24109ffe60",
+  "sha256": "6131f5062285dcaaa0cff2b5e9c556ef5beda49bb0a18cb3a4858fd6cd74dd7c",
   "bytes": 1625984,
   "faces": 32518,
   "view_faces": 32518,
-  "view_sha256": "e60e2f4fc5d100dbac54d3544e6343864c01f4d4ed709fe4064a7d24109ffe60",
-  "at": "2026-11-10 00:58"
+  "view_sha256": "6131f5062285dcaaa0cff2b5e9c556ef5beda49bb0a18cb3a4858fd6cd74dd7c",
+  "at": "2026-11-10 02:06"
  }
 }

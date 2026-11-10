@@ -58,11 +58,16 @@ L.DRAWN_WALL = lambda m: L.WALL if m["s0"] > FORK_S0 else 2.6
 # and the funnel fix those sockets; a short Y is the honest node here, its two bores side by side and the engine growing the fork
 # (the 25 mm limit was set on 5 Nov for ties 39-85 mm out, 290k-586k cells; these stay under 36 mm). v4-only.
 L.MAX_START = 36.0
+# 10 Nov, run 5: TB 0.320 (96 N pull-out) just outside its fork collar's floor, NB 0.278 at 77 N: the moment down the fork. The two fork
+# collars are one drawn body, so their bores need only the audit's wall between the grooves (2.1, as the hub collars), not a whole
+# WALL: the fork 33.5 -> 29.4 at NB / TB, 29.2 -> 25.6 at S0 / S1, the lever 12 % shorter.
+L.BETWEEN_WALL = 2.1
+L.SOCKET_START = L._socket_starts()                       # recomputed with it (the import above computed them with WALL)
 
 # 9 Nov, run 2 (the frame's sockets moved: NB / TB / S0 / S1 are Ys held at the fork's two sockets 29-34 mm out, the load path from the
 # cage rods' sockets runs through the hub and the fork): at 1.25 x NB 0.357 / TB 0.378 (fail), S0 0.266 / S1 0.283. Index ~ V^-1.25:
 # NB / TB 1.25 -> 1.7, S0 / S1 1.25 -> 1.35, each toward 0.25.
-BUDGET_X = {"TB": 1.7, "NB": 1.7, "S0": 1.35, "S1": 1.35}
+BUDGET_X = {"TB": 1.9, "NB": 1.7, "S0": 1.35, "S1": 1.35}
 
 
 def spec_for(group):

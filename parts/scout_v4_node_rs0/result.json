@@ -42,7 +42,7 @@
     "inlayer": 0.008,
     "across": 0.003,
     "at": [
-     5.5,
+     -5.5,
      120.0,
      62.5
     ]
@@ -65,20 +65,23 @@
    -4.5,
    119.0,
    62.5
-  ]
+  ],
+  "ok": true
  },
  "mass_g": 3.62,
  "watertight": true,
  "export": {
-  "faces_in": 32636,
+  "faces_in": 32638,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
+  "pinch_vertices": 0,
   "caps_left": 0,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 32636,
+  "open_kept": [],
+  "faces": 32638,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -89,7 +92,9 @@
    "caps_split": 12,
    "caps_left": 0,
    "watertight": true,
-   "faces": 44390
+   "faces": 44390,
+   "n_dropped_shells": 0,
+   "dropped_shells": []
   },
   "volume_mm3": 2946.8,
   "exact_mm3": 2946.8
@@ -117,7 +122,7 @@
  },
  "stl": "scout_v4_node_rs0.stl",
  "view_stl": "scout_v4_node_rs0_view.stl",
- "view_faces": 32636,
+ "view_faces": 32638,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -218,9 +223,9 @@
    "default"
   ]
  },
- "build_s": 14.0,
- "layout_s": 80,
- "peak_gb": 0.6484,
+ "build_s": 8.4,
+ "layout_s": 56,
+ "peak_gb": 0.655452,
  "gen_cm3": 1.2,
  "h": 1.0,
  "audit": {
@@ -315,25 +320,26 @@
    120.0,
    62.5
   ],
+  "ok": true,
   "beta": 4.0,
   "iteration": 17,
   "max_worst": 0.3,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 94,
+ "total_s": 65,
  "part_sha": "653d130aae3c",
- "lib_sha": "772dbb2b54e8",
+ "lib_sha": "0f240a104ec5",
  "setup_sha": "98e1979449b9f8fb",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_rs0.stl",
-  "sha256": "a701a5ea5ba6caa7d5383b7b3f2df58907afbc24bcab2c1228a6e09f152f6799",
-  "bytes": 1631884,
-  "faces": 32636,
-  "view_faces": 32636,
-  "view_sha256": "a701a5ea5ba6caa7d5383b7b3f2df58907afbc24bcab2c1228a6e09f152f6799",
-  "at": "2026-11-10 00:59"
+  "sha256": "bbb46c94d42da8d07a3ccec07435b1cbc084ce593077f638f410bef6e8080dc8",
+  "bytes": 1631984,
+  "faces": 32638,
+  "view_faces": 32638,
+  "view_sha256": "bbb46c94d42da8d07a3ccec07435b1cbc084ce593077f638f410bef6e8080dc8",
+  "at": "2026-11-10 02:04"
  }
 }
