@@ -387,7 +387,7 @@ def save(B):
 ARTIFACT = "https://claude.ai/artifact/Pqu6aZFdW9g7jtRyBFdraw"
 
 
-ARTIFACT_OV = "TBD"
+ARTIFACT_OV = "https://claude.ai/artifact/2pPEEK9g13nZJLSdbmSdKr"
 
 
 def write_assembly(res, pack="scout"):
