@@ -47,6 +47,8 @@ DRAWN_WALL = None                                         # the drawn collar's w
 #   drawn wall (the v4 nodes, 9 Nov) leaves the engine the same strut to grow the root in where the load needs it
 STRUT_BACK, KEEP_OFF = 0.0, 0.0                           # the strut's room ends STRUT_BACK short of the collar's mouth, the keep-out round the rod starts KEEP_OFF past it
 #   (0, 0: both on the mouth plane, with the collar's end face; the v4 nodes move them off it, 10 Nov)
+MOUTH_R, COLLAR_PAST = None, 0.0                          # MOUTH_R: a cut of this radius from each mouth plane out along the rod (other collars spared), so every
+#   mouth is one exact cut face through collar and barrel alike; the collar is drawn COLLAR_PAST into it. None = off (the v3 nodes)
 ROD_R, ROD_GAP = 1.5, 1.0                                # a passing rod's radius and the least gap to a collar's surface
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 CAGE_CENTRE = (0.0, 0.0, 10.0)                            # ports point away from here (out of the cage) where the members allow
@@ -194,7 +196,8 @@ def build(group, h, log=print):
         ms = check_members(k, log); c = np.array(P[k], float)
         for m in ms:
             ro = m["bore_r"] + WALL; s_end = m["s0"] + m["depth"]
-            collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL if DRAWN_WALL is None else (DRAWN_WALL(m) if callable(DRAWN_WALL) else DRAWN_WALL)))
+            m["wall_d"] = WALL if DRAWN_WALL is None else (DRAWN_WALL(m) if callable(DRAWN_WALL) else DRAWN_WALL)
+            collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end + (COLLAR_PAST if MOUTH_R else 0.0), m["bore_r"], m["wall_d"]))
             keep.append(along(c, m["u"], s_end + KEEP_OFF, s_end + 60.0, m["bore_r"] + 0.6))
             m["ro"], m["s_end"], m["node"], m["c"] = ro, s_end, k, c
             allm.append(m)
@@ -209,6 +212,12 @@ def build(group, h, log=print):
             ca, cb = np.array(P[a], float), np.array(P[b], float); d = cb - ca; L = float(np.linalg.norm(d))
             struts.append(along(ca, d / L, 0.0, L, BRIDGE_R)); bridge_u[a] = d / L; bridge_u[b] = -d / L
     env = U(struts)
+    if MOUTH_R:                                                                 # the mouth cuts, each clear of every other collar by 0.5
+        for m in allm:
+            spare = [collar_shape(o["c"], o["u"], o["s0"] - FLOOR - 0.5, o["s_end"] + COLLAR_PAST + 0.5, o["bore_r"], o["wall_d"] + 0.5)
+                     for o in allm if o is not m]
+            slab = along(m["c"], m["u"], m["s_end"], m["s_end"] + 60.0, MOUTH_R, 64)
+            keep.append(slab - U(spare) if spare else slab)
     # resin injection ports (Spark 5 Nov): one O2 channel per socket from the bore 1.5 above its floor out through the collar wall and the
     # strut, as near outward from the cage as the members allow (none within 40 deg), its channel clear of the other collars
     ports = []
