@@ -76,7 +76,7 @@ def bodies():
     cuts.append(box(mx - lh - 6.0, mx + lh + 6.0, -hw - 3.0, hw + 3.0, t["z1"], 400))               # the mast and the head above
     cuts.append(box(mx - sl - 0.2, mx + sl + 0.2, -hw, hw, cz - 2.0, t["z0"] + 0.5))                 # the blades from the spool's tangent into the throat
     # the drum round the cable's coil
-    drawn.append(yz_ring(cx, cz, dr + 0.3, dr + 4.3, dy0 - 2.6, dy1))                               # 4.0 wall (10 Nov run 5: the head-first crash peaked in the 2.5 ring, 0.33) and a 2.6 end
+    drawn.append(yz_ring(cx, cz, dr + 0.3, dr + 2.8, dy0 - 2.6, dy1))                               # 2.5 wall and a 2.6 end (10 Nov run 6: 4.0 on r 11 still peaked in it; the drum is r 9 now, the room round it generated)
     cuts.append(ycyl(cx, cz, dr + 0.3, dy0, dy1 + 0.5)); cuts.append(box(cx - 2, cx + 2, ym - 8, dy0 + 1, cz - 2, cz + 2))   # its cavity; the cable's way out to the Radxa
     # the coil's pressure roller: its axle's ends in radial slots (30 deg before the exit), a spring behind each down the slot's line
     a = np.radians(S.ROLLER["ang"]); u = np.array([np.cos(a), np.sin(a)]); v = np.array([-u[1], u[0]]); rw = S.ROLLER["w"] / 2
@@ -88,7 +88,7 @@ def bodies():
     for sy in (1, -1):                                                              # each guide 9 thick round the spring's O4.5 pocket: walls >= 2.25
         yc = sy * (rw + 4.0)
         guides.append(radial(17.9, r_full + 13.5, 4.5, yc - 4.5, yc + 4.5))
-        cuts.append(radial(10.0, r_full + 0.6, 1.65, yc - 6.0, yc + 6.0))                         # the axle's slot (M3 x 40), open through the guide's inner end (10 Nov: a 0.7 web was left before it)
+        cuts.append(radial(17.0, r_full + 0.6, 1.65, yc - 6.0, yc + 6.0))                         # the axle's slot (M3 x 40), open through the guide's inner end (10 Nov: a 0.7 web was left before it)
         cuts.append(radial(r_full - 0.5, r_full + 11.0, 2.25, yc - 2.25, yc + 2.25))               # the spring's pocket on the slot's line (O4, 11 long at the full coil)
         seats.append(radial(r_full + 11.0, r_full + 11.6, 2.0, yc - 2.0, yc + 2.0))
     drawn += guides
