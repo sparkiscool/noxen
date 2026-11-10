@@ -390,7 +390,7 @@ def main(argv=None):
                   f"over {res['strength']['k']} x max_worst {mw}: stopped at {res['total_s']} s")
             return 1
         if not r["strength_ok"]:
-            print(f"STRENGTH FAIL: worst index {res['strength']['worst']} > max_worst {mw}")
+            print(f"STRENGTH FAIL: {res['strength'].get('fail') or 'worst index ' + str(res['strength']['worst']) + ' > max_worst ' + str(mw)}")
             return 1
     print(json.dumps(dict(name=res["name"], solid_ok=res["solid_ok"], mass_g=res["mass_g"],
                           worst=res["strength"]["worst"], total_s=res["total_s"]), indent=1))
