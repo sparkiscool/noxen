@@ -30,7 +30,8 @@ import os, numpy as np, trimesh, manifold3d as mf
 HERE = os.path.dirname(os.path.abspath(__file__))
 SEAT_Z, FACE_DEG, WALL = -44.3, 55.0, 3.0            # seat frame; the seat's z 0 is W Z 215.3 (3 Nov: +60, the head extends 60 more at the drone slot)
 H_X, H_Y = 40.0, 28.0                             # the x (nose / tail) faces and the y faces end here, above the seat
-CX = 1.5                                          # the receiver centre x (the catch centre) in the seat frame
+CX = -0.48                                        # the Overseer receiver's centre x in the seat frame (10 Nov, Spark: was 1.5; 1.98 toward the tail so its tab line
+                                                  # sits at seat x 0, on the Scout's and on the arm's grip line; parts/latch7/make.py funnel_fit tab_line_at_seat_x)
 SEAT = (CX - 92.0, CX + 92.0, -34.4, 34.4)        # the Overseer receiver's bottom (latch v7 CAD: 183.6 x 68.0, C) + 0.2 / 0.4 a side (10 Nov; was +-33.4 from an estimate)
 HOLE = (CX - 87.0, CX + 90.0, -28.5, 28.5)        # the Overseer cartridge (latch v7 CAD: x -84.0..90.0, +-27.5 at its rails) + 1.5 / 1.0 (10 Nov; was 170 x 50: it did not pass)
 # The Scout's receiver is a +-25.5 keel, narrower than the hole: it hangs in the hole and the Scout lands on the low ends of its four
@@ -47,7 +48,7 @@ END_CUT_X, END_CUT_Y, END_CUT_H = 100.0, 50.0, 24.0   # the y walls' ends (|x| >
 CORNER_Y = 45.0                                   # the x walls' top corners (h 28..40) stop at |y| 45 (at 48 an Overseer tube grazed the tail corner 1 mm3 at the diagonal capture limit, h 40) at its capture limits; the receiver still bears on them over |y| <= 48
 LEG_Y = 40.0                                       # the nose legs stand on the nose beam under the nose wall's end (|y| 40)      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
-SETTINGS = {"overseer": 0.0, "scout": 39.2}           # how far each end wall moves in from the 184 seat: the Scout's cartridge (x -43..53) still passes between the walls' feet.
+SETTINGS = {"overseer": 0.0, "scout": 37.2}           # how far each end wall moves in from the 184 seat (37.2 since the seat moved 1.98 to the tail: the nose wall's foot stays at x 54.3, 1.3 clear of the Scout cartridge's x 53)
 # OPEN (10 Nov, parts/latch7/make.py funnel_fit): at this setting the real Scout latch set is not held along x (about 11 mm of play each way: its ends are
 # clipped at 45 deg and never reach the walls); closing the walls to 49.6 would hold it but blocks its cartridge and crosses the Scout v4 frame and flow sensor.
 TRAVEL = max(SETTINGS.values())
@@ -115,7 +116,7 @@ def frame():
     seat plane (the walls slide over them); the nose legs, which only held the nose wall, go"""
     x0, x1 = SEAT[0], SEAT[1]; z0 = SEAT_Z; w = WALL / np.sin(np.radians(FACE_DEG))
     f = body() - carriage_home(1) - carriage_home(-1)
-    f = f - box(NOSE_BEAM[0] - 1.0, NOSE_BEAM[1] + 2.0, -LEG_Y - LEG, LEG_Y + LEG, NOSE_BEAM[3], z0 + H_X + 1)        # the nose legs' remains
+    f = f - box(NOSE_BEAM[0] - 3.5, NOSE_BEAM[1] + 2.0, -LEG_Y - LEG, LEG_Y + LEG, NOSE_BEAM[3], z0 + H_X + 1)        # the nose legs' remains
     ties = []
     for sy in (-1, 1):
         ya, yb = sorted((sy * BRACKET_Y[0], sy * BRACKET_Y[1]))

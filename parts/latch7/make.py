@@ -582,6 +582,11 @@ if __name__ == "__main__":
     if "--fit" in sys.argv:
         for q in ("scout", "overseer"):
             print(q, json.dumps(funnel_fit(build(q)), indent=1))
+    elif "--refit" in sys.argv:                            # the funnel changed, the latch did not: redo the fit and the page text only
+        for q in ("scout", "overseer"):
+            f = os.path.join(ROOT, "parts", OUT[q][0], "result.json"); res = json.load(open(f))
+            res["funnel"] = funnel_fit(build(q)); json.dump(res, open(f, "w"), indent=1); write_assembly(res, q)
+            print(q, {k: res["funnel"][k] for k in ("rests_at_mm", "tab_line_at_seat_x", "free_play_mm", "hole_gap_mm", "seated_mm3", "landing_mm3", "swap_path_mm3", "ok")})
     elif "--appendix" in sys.argv:
         rs = json.load(open(os.path.join(ROOT, "parts", "latch7", "result.json"))); ro = json.load(open(os.path.join(ROOT, "parts", "latch7_overseer", "result.json")))
         old = open(os.path.join(ROOT, "systems", "latch6.appendix.html")).read()      # v6's page section, kept under v7's, folded

@@ -12,7 +12,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 from build_site import pose_matrix, placeholder
 SEAT_Z, RX = -44.3, 1.5
-T_OV = np.array([[1, 0, 0, 31.5], [0, 1, 0, 0], [0, 0, 1, 32.4], [0, 0, 0, 1.0]])   # its cartridge bottom z -76.9 (cage v5) onto the Scout's -44.5
+T_OV = np.array([[1, 0, 0, 29.52], [0, 1, 0, 0], [0, 0, 1, 32.4], [0, 0, 0, 1.0]])   # its cartridge bottom z -76.9 (cage v5) onto the Scout's -44.5
 SKIP = ("receiver", "cartridge", "slider", "latch", "pack", "battery holder", "wires", "cables", "props (swept)", "ghost", "view")
 
 
