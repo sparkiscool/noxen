@@ -42,7 +42,7 @@ WALL, FLOOR, STRUT_M = 3.0, 3.0, 4.0                        # 8 Nov (the Oversee
 LINING_BACK = FLOOR + 0.5                                 # where a socket's support / load region starts behind the bore floor; FLOOR + 0.5 reaches 0.5 into the room
 #   behind the collar: a rigid disc the generated material is joined to (9 Nov, the v4 Ys: worst 0.27-0.32 at its rim in every one,
 #   unmoved by +36 % budget). 0.0 = the bore only, where the rod bears (the v4 nodes); the v3 nodes keep their setups
-DRAWN_WALL = None                                         # the drawn collar's wall; None = WALL. The room, clearances and ports always use WALL, so a thinner
+DRAWN_WALL = None                                         # the drawn collar's wall (a number, or a function of the member); None = WALL. The room, clearances and ports always use WALL, so a thinner
 #   drawn wall (the v4 nodes, 9 Nov) leaves the engine the same strut to grow the root in where the load needs it
 ROD_R, ROD_GAP = 1.5, 1.0                                # a passing rod's radius and the least gap to a collar's surface
 BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
@@ -191,7 +191,7 @@ def build(group, h, log=print):
         ms = check_members(k, log); c = np.array(P[k], float)
         for m in ms:
             ro = m["bore_r"] + WALL; s_end = m["s0"] + m["depth"]
-            collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL if DRAWN_WALL is None else DRAWN_WALL))
+            collars.append(collar_shape(c, m["u"], m["s0"] - FLOOR, s_end, m["bore_r"], WALL if DRAWN_WALL is None else (DRAWN_WALL(m) if callable(DRAWN_WALL) else DRAWN_WALL)))
             keep.append(along(c, m["u"], s_end, s_end + 60.0, m["bore_r"] + 0.6))
             m["ro"], m["s_end"], m["node"], m["c"] = ro, s_end, k, c
             allm.append(m)
