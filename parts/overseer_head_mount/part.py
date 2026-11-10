@@ -114,7 +114,7 @@ def local(s, y, p):
 
 
 # ---- members that end at the mount -------------------------------------------------------------------------------------
-def trough(P, u, s0, s1, collar_r):
+def trough(P, u, s0, s1, collar_r, wide=WIDE):
     """a channelled socket's opening (the front pad v3 pattern): the slot GAP_W wide from the axis out along SLIDE projected off the
     rod axis, the whole DROP (the rod's path as the mount slides on); full clearance WIDE only from LIP_D to just past the collar,
     where the collar beside the slot would otherwise feather under 2 mm (9 Nov: run 2's WIDE band ran the whole 70 out of the part
@@ -122,7 +122,7 @@ def trough(P, u, s0, s1, collar_r):
     u = np.asarray(u, float); d = SLIDE - np.dot(SLIDE, u) * u; d /= np.linalg.norm(d); n = np.cross(u, d)
     T = np.c_[u, n, d, np.asarray(P, float)]
     return mf.Manifold.cube([s1 - s0, GAP_W, DROP]).translate([s0, -GAP_W / 2, 0.0]).transform(T) + \
-        mf.Manifold.cube([s1 - s0, WIDE, collar_r + 1.5 - LIP_D]).translate([s0, -WIDE / 2, LIP_D]).transform(T)
+        mf.Manifold.cube([s1 - s0, wide, collar_r + 1.5 - LIP_D]).translate([s0, -wide / 2, LIP_D]).transform(T)
 
 
 class Sock:
@@ -138,6 +138,7 @@ class Sock:
         self.t_bot = t_cut; self.t_mouth = t_cut + self.depth
         self.t_floor = self.t_bot - FLOOR                           # collar starts one floor behind the bore bottom
         self.mouth = self.pt(self.t_mouth)
+        self.wide = WIDE                                            # the clearance band's width beside the channel
 
     def pt(self, t):
         return self.end + self.d * t
@@ -149,7 +150,7 @@ class Sock:
 
     def bores(self):
         if self.channel:                                            # the grooved bore + its half-pipe opening, from the floor plane past the mouth
-            return socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r) + [trough(self.pt(self.t_bot), self.d, 0.0, self.depth + 7.0, self.collar_r)]
+            return socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r) + [trough(self.pt(self.t_bot), self.d, 0.0, self.depth + 7.0, self.collar_r, self.wide)]
         port = np.array([0.0, 0.0, -1.0]) - self.d[2] * self.d; port /= np.linalg.norm(port)   # 9 Nov: down, between the cameras (up, into the hub, left a 1.1 mm wall)
         return injectable_socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r, port=port)
 
@@ -173,6 +174,8 @@ def sockets():
     mid = 0.5 * (NODES[15] + NODES[16])                                                  # 9 Nov: the cut crossbar, one channelled socket per end
     for nm, o in (("crossbar 15-16 +y", NODES[15]), ("crossbar 15-16 -y", NODES[16])):
         S[nm] = Sock(nm, mid, o, "tube", BAR_END - 0.5, channel=True)                  # bore bottom 0.5 inside the rod end (saw kerf)
+        S[nm].wide = 2 * S[nm].collar_r                             # 10 Nov: the 18 band carved +-9 round the bar behind its r 6.6 collar and left two
+                                                                    #   12 mm members ending in air under it (349, +-35, 115); the collar's own width
     return S
 
 
