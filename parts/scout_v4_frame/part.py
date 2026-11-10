@@ -94,7 +94,10 @@ def bodies():
     env = [box(x0, x1, -yb, yb, S.REC_TOP, DZ1),                                      # the deck and the yokes over the receiver, one room
            box(-S.BED, rx0, -34.0, 34.0, -2.3, DZ1),                                  # the tail tray (DT / BT, the UBEC)
            box(rx1, S.BED, -34.0, 34.0, -2.3, DZ1), box(rx1, 78.0, -34.0, 34.0, -10.0, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod
-           box(rx1, 71.8, -12.0, 12.0, -19.1, -2.0)]                                 # the flow sensor's pod (its bottom on the walls-in rule + 2)
+           box(rx1, 71.8, -12.0, 12.0, -19.1, -2.0),                                 # the flow sensor's pod (its bottom on the walls-in rule + 2)
+           box(rx0 - 0.5, rx1 + 0.5, 33.8, 40.0, -2.3, S.REC_TOP), box(rx0 - 0.5, rx1 + 0.5, -40.0, -33.8, -2.3, S.REC_TOP)]   # 10 Nov: beside the receiver, so the end
+    # sockets' loads climb to the battery bolts (z 9.6) on shallow in-layer diagonals; run 187 stopped early at 1.064 ACROSS the layers
+    # (BT-TB 527 N at (-51, -33, 3.7)): with room only over the receiver and behind it, the path had to rise as a wall at its tail end
     for mx, my in S.MOTORS:
         a = np.array([np.sign(mx) * 30.0, np.sign(my) * 30.0, 0]); b = np.array([mx, my, 0])
         u = unit(b - a); n = np.array([-u[1], u[0], 0])
