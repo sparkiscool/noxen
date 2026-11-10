@@ -8,16 +8,20 @@ ONE printed PCTG piece carrying the Unitree L2 and both cameras on the cage's fr
   3.0 (13..23). The head rods +1 / -1 are cut off flush at nodes 15 / 16 and dropped: their sockets one back would make the mount
   ~192 wide, over the 180 plate; the top crossbar 15-16 (uncut) runs 14 behind the L2's base plane and takes their place in a
   50 long saddle (y -25..25).
+* v11 (9 Nov, Spark: go): the top crossbar 15-16 is cut in the middle (each half 5 3/4 in out of its node collar, ends at |y| 31.1)
+  and the saddle is gone: the mount has one channelled socket on each cut end, bridging the gap, so nodes 15-16 stay tied through it
+  (the bar's frame force, 239 N, loads each socket against the others). That lets the L2 sit 40 back and 40 up from v9: base
+  (344.0, 0, 91.0), axis unchanged; the crossbar line passes on its base plane 39 above the axis.
 * Slide-on from the front: the tubes and the crossbar sit in half-pipe channels open toward -x (the front pad's pattern: 7.6 wide,
   3.5 collar walls, full clearance from 2.6 out), so the mount is pushed straight back onto the 4 cut tube ends and the bar and
   glued; the core tie (along -x) goes axially into a closed injectable socket. A frontal hit pushes the mount onto the rods (the
   closed side of every channel).
-* L2: 20 back and 60 up from v9 (base (364.0, 0, 111.0), axis 15 deg below +x as before): the furthest back it can sit outside
+* (v10, superseded by v11 above) L2: 20 back and 60 up from v9 (base (364.0, 0, 111.0), axis 15 deg below +x as before): the furthest back it can sit outside
   the cage, i.e. in front of node 17's 4 tubes (30..80 back it hits them; 105 back inside the cage costs 16 % of its field to the
   rods). Nothing of the drone in its field (8 Nov study: props 0 %, rods 0 %), 60 clear of the props, 11 of the rods.
 * Cameras: under node 17, behind the cage's front face (x 354), lenses (340, +-30, 10), yawed 20 out, level: 0.0 / 0.1 % of their
   view blocked, nothing of the drone and not in the L2 field, ~17 above the landing nodes 18 / 19.
-Drawn = attachments only: 4 L2 bolt pads, 2 x 4 camera standoffs, the socket collars and the saddle. Everything between them is
+Drawn = attachments only: 4 L2 bolt pads, 2 x 4 camera standoffs, the socket collars. Everything between them is
 generated. The L2 field (half ball R 220 ahead of its base plane) and both camera frustums are cuts. Frame: x fwd, y left, z up,
 mm, z 0 = bottom plate top; geometry from systems/overseer.cage.json (C: l2_base and cams moved there 8 Nov), forces from its
 node_loads (F)."""
@@ -64,7 +68,10 @@ ROD_BORE_R, ROD_DEPTH = 1.6, 10.0   # 3.0 rod: bore 3.2, 10 deep
 WALL, FLOOR = 3.0, 3.0              # 3.0 (8 Nov node rules: the injection annulus), floor 3.0
 RING_T, GAP_W, LIP_D, WIDE, DROP = 3.5, 7.6, 2.6, 18.0, 70.0   # channelled sockets (the front pad v3 pattern): collar wall, half-pipe width, narrow depth, clearance, sweep
 SLIDE = np.array([-1.0, 0.0, 0.0])  # the mount goes on moving straight back (-x)
-SADDLE = (-25.0, 25.0)              # the crossbar 15-16 saddle, y range
+BAR_COLLAR = 30.8 + TUBE_DEPTH      # crossbar 15-16: the node 15 / 16 socket mouths, 45.8 from the node centres (cage_node_lib SOCKET_START 30.8 + 15)
+BAR_CUT_IN = 5.75                   # 9 Nov (Spark): the crossbar is cut in the middle; each half cut 5 3/4 in out of its node collar, so the
+                                    #   rod ends sit at |y| 31.1, the collars 1.6 clear of the L2 body (r 39) on the base plane
+BAR_END = float(np.linalg.norm(np.array(CAGE["nodes"][15], float)[1])) - BAR_COLLAR - 25.4 * BAR_CUT_IN   # |y| of the cut ends
 TUBE_MOUTH, ROD_MOUTH = FLOOR + TUBE_DEPTH, FLOOR + ROD_DEPTH   # mouth distance from the node centre: bore bottom 3.0 from the centre (E)
 L2_MASS = 230.0                                                  # P
 CAM_MASS = 25.0                                                  # E: board 15 + a heatsink on its back 10 (Spark 29 Oct)
@@ -143,7 +150,8 @@ class Sock:
     def bores(self):
         if self.channel:                                            # the grooved bore + its half-pipe opening, from the floor plane past the mouth
             return socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r) + [trough(self.pt(self.t_bot), self.d, 0.0, self.depth + 7.0, self.collar_r)]
-        return injectable_socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r)
+        port = np.array([0.0, 0.0, -1.0]) - self.d[2] * self.d; port /= np.linalg.norm(port)   # 9 Nov: down, between the cameras (up, into the hub, left a 1.1 mm wall)
+        return injectable_socket_cuts(self.pt(self.t_bot), self.d, 0.0, self.depth, self.bore_r, port=port)
 
     def clear(self, length=300.0):
         """the member outside its mouth: nothing of the mount may grow into the carbon (r + 1.0)"""
@@ -154,33 +162,6 @@ class Sock:
         return along(self.pt(self.t_bot), self.pt(self.t_mouth - 1.0), self.collar_r + extra)
 
 
-class Saddle:
-    """the uncut crossbar 15-16 in a channelled collar over y SADDLE (8 Nov: replaces the head rods)"""
-    def __init__(self):
-        self.name, self.kind = "crossbar 15-16 saddle", "tube"
-        self.a, self.b = NODES[16], NODES[15]                       # -y to +y
-        self.d = unit(self.a - self.b) * -1.0
-        self.p0 = self.at(SADDLE[0]); self.p1 = self.at(SADDLE[1])
-        self.bore_r, self.collar_r = TUBE_BORE_R, TUBE_BORE_R + RING_T
-
-    def at(self, y):
-        t = (y - self.a[1]) / (self.b[1] - self.a[1]); return self.a + t * (self.b - self.a)
-
-    def collar(self):
-        return along(self.p0, self.p1, self.collar_r)
-
-    def bores(self):
-        L = float(np.linalg.norm(self.p1 - self.p0))
-        return [along(self.p0 - self.d * 1.0, self.p1 + self.d * 1.0, self.bore_r), trough(self.p0, self.d, -1.0, L + 1.0, self.collar_r)]
-
-    def clear(self):
-        r = self.bore_r - 0.1 + 0.9
-        return U([along(self.at(SADDLE[1] + 0.5), self.b, r), along(self.at(SADDLE[0] - 0.5), self.a, r)])
-
-    def region(self, extra=0.4):
-        return along(self.at(SADDLE[0] + 1.0), self.at(SADDLE[1] - 1.0), self.collar_r + extra)
-
-
 def sockets():
     S = {}
     for (a, b) in CAGE["rods"]:
@@ -189,7 +170,9 @@ def sockets():
             nm = f"tube {min(a, b)}-{max(a, b)}"
             S[nm] = Sock(nm, N17, NODES[o], "tube", FLOOR + TUBE_DEPTH, channel=True)       # v9 mouth 18 from the node
     S["core tie front.2"] = Sock("core tie front.2", N17, CAGE["links"]["core tie front.2"][0], "rod", FLOOR + ROD_DEPTH, channel=False)   # v9 mouth 13
-    S["crossbar 15-16 saddle"] = Saddle()
+    mid = 0.5 * (NODES[15] + NODES[16])                                                  # 9 Nov: the cut crossbar, one channelled socket per end
+    for nm, o in (("crossbar 15-16 +y", NODES[15]), ("crossbar 15-16 -y", NODES[16])):
+        S[nm] = Sock(nm, mid, o, "tube", BAR_END - 0.5, channel=True)                  # bore bottom 0.5 inside the rod end (saw kerf)
     return S
 
 
@@ -263,11 +246,10 @@ def bodies():
     cuts.append(ball - back)
     cuts.append(along(B, B + A * 70.0, 39.0, 96))                                   # the L2 body (O75 x 65, + 1)
     dn = np.cos(np.radians(-CABLE_ROLL)) * CABLE + np.sin(np.radians(-CABLE_ROLL)) * Y   # v9: the cable leaves 22.5 deg off down (-y side)
-    cuts.append(fbox(B, A, np.cross(A, dn), -dn, (-60.0, 1.0), (-7.0, 7.0), (-120.0, -32.5)))
+    cuts.append(fbox(B, A, np.cross(A, dn), -dn, (-60.0, 1.0), (-7.0, 7.0), (-55.0, -32.5)))   # 9 Nov: a notch past the flange (was to -120: with the L2 60 up it cut 120 down through the mount's right side and left members ending at its wall)
     # --- envelope: slab behind the base (O80 x 46), camera blocks behind the boards, a seat round every collar (+4), one hull over all
     slab = along(B - A * 46.0, B, 40.0, 48)
-    seats = [along(s.p0, s.p1, s.collar_r + 4.0) if isinstance(s, Saddle) else along(s.pt(s.t_floor - 4.0), s.pt(s.t_mouth), s.collar_r + 4.0)
-             for s in S.values()]
+    seats = [along(s.pt(s.t_floor - 4.0), s.pt(s.t_mouth), s.collar_r + 4.0) for s in S.values()]
     pts = []
     for m in [slab] + envs_cam + seats:
         pts.append(np.asarray(m.to_mesh().vert_properties)[:, :3])
@@ -281,7 +263,7 @@ def bodies():
 def setup(h):
     drawn, cuts, env, X = bodies()
     S, cs, bolts = X["S"], X["cs"], X["bolts"]
-    p = Part("overseer_head_mount", h, drawn, cuts, env, build="+z", material="PETG", thin_ok=X["posts"])   # the engine's PETG model; printed in PCTG (8 Nov), as the nodes   # the 1.2 mm post walls pass the gate
+    p = Part("overseer_head_mount", h, drawn, cuts, env, build="+z", material="PCTG", thin_ok=X["posts"])   # the engine's PETG model; printed in PCTG (8 Nov), as the nodes   # the 1.2 mm post walls pass the gate
     # supports: every socket (the cage holds the head there); the 3 rods of node 17's neighbours are the cage, node 17 itself is this part
     for nm, s in S.items():
         p.support(nm, s.region())
@@ -320,7 +302,9 @@ def setup(h):
 
     # node 17's member forces at its sockets (frame model, F): each member loaded alone, the others held (tension = pulls the mount
     # toward the member's far end, compression pushes in), plus the side force across the member in the horizontal plane
-    nl = CAGE["node_loads"]["17"]
+    nl = dict(CAGE["node_loads"]["17"])
+    bar = CAGE["node_loads"]["15"]["tube 15-16"]                  # 9 Nov: the cut crossbar's tie now runs through the mount, end to end
+    nl.update({"crossbar 15-16 +y": bar, "crossbar 15-16 -y": bar})
     others_of = lambda nm: [n for n in S if n != nm]
     for nm, ld in nl.items():
         if nm not in S:

@@ -660,6 +660,43 @@ def t_gate_thin_ok():
         check("gate thin_ok", False, str(e))
 
 
+def t_export_fallback():
+    """export (topo/build.py weld_clean / require_mesh): manifold3d refuses a mesh trimesh calls watertight when a face pair is
+    mis-wound (NotManifold, an EMPTY solid), so the collapse after a closed first pass gave 0 faces and the gate died on None
+    (9 Nov: overseer_head_mount after 7334 s). Now a refused or empty second pass falls back to the first-pass mesh (closed, same
+    volume, the reason reported) and an empty export raises ExportError, never a TypeError."""
+    try:
+        import trimesh
+        import manifold3d as mf
+        from . import build as B
+        from .part import man, tm
+        b = trimesh.creation.box((10, 10, 10)); F = b.faces.copy(); F[0] = F[0][::-1]
+        mis = trimesh.Trimesh(b.vertices, F, process=False)
+        refused = mis.is_watertight and man(mis).num_tri() == 0                # the mechanism: watertight to trimesh, empty to manifold
+        box = _mbox(20, 20, 20, (-240, 0, -80))
+        c = trimesh.creation.cylinder(3.1, 30.0, sections=40)
+        c.apply_transform(trimesh.transformations.rotation_matrix(np.radians(30), [1, 0.3, 0])); cyl = man(c.apply_translation((-240, 0, -80)))
+        again = man(tm(box - cyl)) - cyl                                     # coincident cut: slivers, so the simplify branch runs
+        raw = again.to_mesh64(); v = np.asarray(raw.vert_properties)[:, :3]; f = np.asarray(raw.tri_verts)
+        keep = B.man
+        try:
+            B.man = lambda t_: mf.Manifold()                                 # what a NotManifold mesh gives
+            m, rep = B.weld_clean(v, f)
+        finally:
+            B.man = keep
+        fb = rep.get("simplify_fallback") or {}
+        fell = rep["watertight"] and len(m.faces) > 0 and not rep["simplified"] and fb.get("faces") == 0 and abs(m.volume - again.volume()) < 1.0
+        try:
+            B.require_mesh(trimesh.Trimesh(), dict(faces_in=0)); raised = False
+        except B.ExportError:
+            raised = True
+        check("export: a manifold-refused simplify keeps the closed first pass; an empty export raises ExportError", refused and fell and raised,
+              f"refused {refused}; fallback {fell} {fb} faces {len(m.faces)}; raised {raised}")
+    except Exception as e:
+        traceback.print_exc()
+        check("export fallback", False, str(e))
+
+
 def t_export_mesh():
     """export (topo/build.py weld_mesh / export_mesh): the exact part of a boolean with coincident surfaces (a mesh cut again with
     the holes it already has, as tools/recut.py does) holds sliver triangles thinner than float32; welded at STL precision, the
@@ -887,6 +924,41 @@ def t_audit_env_neck():
         check("audit env_neck", False, str(e))
 
 
+def t_audit_solid_ok():
+    """audit: solid_ok (Spark 9 Nov: the arm motor mounts are solid under the motor so they do not crack again). A 14 mm drawn disc
+    on a support pad is refused as a drawn block without solid_ok, passes with Part(..., solid_ok=[disc]) and is listed in the
+    report; a second 14 mm block outside the solid_ok body is still refused; the setup hash changes with solid_ok."""
+    try:
+        import manifold3d as mf, trimesh
+        from topo.audit import audit, SetupError
+        from .part import Part, man
+        from .run import design_hash
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        disc = man(trimesh.creation.cylinder(14.0, 14.0, sections=48)).translate([20, 20, 10])
+        def part(ok, extra=None):
+            base = box(0, 3, 0, 40, 0, 20)
+            drawn = base + disc + (extra or box(100, 101, 100, 101, 100, 101))
+            env = box(0, 40, 0, 40, 0, 20) + box(40, 60, 0, 40, 0, 20)
+            p = Part("solidok", 1.0, drawn, box(200, 201, 200, 201, 200, 201), env, log=lambda s_: None, solid_ok=[disc] if ok else [])
+            p.support("default", box(-1, 1.5, -1, 41, -1, 21)); p.load("down", disc, (0, 0, -10.0))
+            return p
+        def run(p):
+            try:
+                return audit(p, 4.0, log=lambda s_: None), ""
+            except SetupError as e:
+                return None, str(e)
+        r0, e0 = run(part(False)); r1, e1 = run(part(True)); r2, e2 = run(part(True, box(44, 58, 13, 27, 3, 17)))
+        a = r0 is None and "drawn_blocks" in e0
+        b = r1 is not None and len(r1["solid_ok"]) == 1 and r1["solid_ok"][0]["cells"] > 0
+        c = r2 is None and "drawn_blocks" in e2 and "[51" in e2
+        d = design_hash(part(False), 1.0, 1.0, {}) != design_hash(part(True), 1.0, 1.0, {})
+        check("audit solid_ok: a 14 mm drawn disc is refused as a block, passes declared solid_ok (listed), a block beside it still fails, the hash changes",
+              a and b and c and d, f"refused {a} ({e0[:120]!r}), passes {b} ({e1[:200]!r}), other block refused {c}, hash {d}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit solid_ok", False, str(e))
+
+
 def t_audit_load_room():
     """audit: load_room (5 Nov: the Scout nose unit's seat regions reached above the rim into the block's room, two knobs on necks).
     A pad loaded on itself passes; the same pad loaded by a region reaching 5 mm above it into design room is refused."""
@@ -1006,10 +1078,74 @@ def t_skin_core():
         check("thick drawn skins erode", False, str(e))
 
 
+def t_coarse_setup_fails():
+    """a setup that cannot be built at 2h skips the coarse stage instead of killing the run (9 Nov, scout_v4_base_nose: a thin
+    side land's load region was empty at h 3.0, Part.load_multi raised outside the coarse stage's try, the run died at 2 min)."""
+    import os
+    import tempfile
+    import manifold3d as mf
+    from .part import Part
+    from .run import optimise
+    box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+
+    def setup(h):   # a 0.4 mm load slab: the 3 x 3 x 3 samples catch it at h 1.0, fall either side of it at h 2.0
+        p = Part("thin_load", h, box(0, 3, 0, 10, 0, 10) + box(20, 24, 2, 8, 2, 8), box(100, 101, 100, 101, 100, 101),
+                 box(0, 24, 0, 10, 0, 10), log=lambda s_: None)
+        p.support("default", box(-1, 1.5 * h, -1, 11, -1, 11))
+        p.load("down", box(21.8, 22.2, 3, 7, 3, 7), (0, 0, -10.0))
+        return p
+    lines = []
+    try:
+        try:
+            setup(2.0)
+            raised = False
+        except ValueError:
+            raised = True
+        out = tempfile.mkdtemp(prefix="topo_coarse_skip_")
+        s = Settings(min_member_mm=3.0, max_stage=2, min_stage=1, audit="warn", time_limit_s=120)
+        optimise(setup, 1.0, 0.6, out, "thin_load", settings=s, coarse=True, maxit=1, log=lines.append)
+        skipped = any("coarse stage skipped" in l and "empty region" in l for l in lines)
+        check("coarse: a setup that raises at 2h skips the coarse stage, the fine run goes on", raised and skipped,
+              f"2h setup raised {raised}, skip logged {skipped}")
+    except Exception as e:
+        traceback.print_exc()
+        check("coarse: a setup that raises at 2h skips the coarse stage", False, f"{type(e).__name__}: {e}; log tail {lines[-3:]}")
+
+
+def t_audit_room_full():
+    """room_full (topo/audit.py room_strength): the room filled solid must pass max_worst, else no layout can and the run is refused
+    (9 Nov: the Scout v4 frame's 16 x 8 side lugs read 2.55 after 69 min). The 24 x 10 x 10 bar holds 10 N; at 20 kN it cannot."""
+    try:
+        from .audit import room_strength, SetupError
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn")
+        p = _mini_part()
+        L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+        ok_rep = room_strength(L, 0.5, log=lambda s_: None)
+        import manifold3d as mf
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        q = Part("mini_heavy", 1.0, box(0, 3, 0, 10, 0, 10) + box(20, 24, 2, 8, 2, 8), box(100, 101, 100, 101, 100, 101),
+                 box(0, 24, 0, 10, 0, 10), log=lambda s_: None)
+        q.support("default", box(-1, 1.5, -1, 11, -1, 11))
+        q.load("down 20 kN", box(20, 24, 2, 8, 2, 8), (0, 0, -20000.0), cls="crash")
+        Lq = Layout(q, volfrac=0.3, settings=s, log=lambda s_: None)
+        try:
+            room_strength(Lq, 0.5, log=lambda s_: None); refused = False
+        except SetupError as e:
+            refused = "room_full" in str(e)
+        soft = room_strength(Lq, 0.5, log=lambda s_: None, hard=False)
+        ok = ok_rep["worst"] is not None and ok_rep["worst"] < 0.5 and refused and soft.get("fail") and soft["thinned"] > soft["worst"]
+        check("audit room_full: a room that holds its load passes, one that cannot even filled solid is refused", bool(ok),
+              f"10 N {ok_rep['worst']}, 20 kN {soft['worst']} refused {refused}, thinned {soft['thinned']}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit room_full", False, str(e))
+
+
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_design_hash):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_setup_sha, t_early_check, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full):
         t()
     if not quick:
         t_end_to_end()

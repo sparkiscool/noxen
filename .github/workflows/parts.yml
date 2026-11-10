@@ -147,6 +147,20 @@ jobs:
         if: always()
         run: |
           if [ ! -f parts/${{ matrix.part }}/result.json ]; then rm -f parts/${{ matrix.part }}/part.stl parts/${{ matrix.part }}/preview.png; fi
+      # the full print mesh (the gate passed or failed on it inside the run) goes to the `meshes` release as <part>.stl, its url and
+      # sha256 into result.json, and part.stl becomes the viewing mesh: git never carries a print mesh (9 Nov, 93 % of git storage).
+      # Both commit paths below see only the viewing mesh. A failed upload leaves no result: nothing of the run is committed.
+      - name: print mesh to the release
+        if: always()
+        shell: bash
+        run: |
+          P=parts/${{ matrix.part }}
+          [ -f $P/result.json ] && [ -f $P/part.stl ] || exit 0
+          python3 tools/print_mesh.py publish ${{ matrix.part }} && exit 0
+          echo "::error::${{ matrix.part }}: the print mesh did not upload; no result committed (rerun the part)"
+          rm -f $P/result.json $P/part.stl $P/preview.png; exit 1
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: results
         if: always()
         uses: actions/upload-artifact@v4
@@ -168,7 +182,9 @@ jobs:
         run: |
           p=${{ matrix.part }}
           [ -f parts/$p/result.json ] || exit 0
-          mkdir -p _mine && cp parts/$p/result.json parts/$p/part.stl parts/$p/preview.png _mine/
+          # a refused or failed run can write result.json with no mesh (9 Nov: the front pad's cp of a missing part.stl failed this
+          # step and its FAIL result was lost with the commit job): copy what exists
+          mkdir -p _mine && for f in result.json part.stl preview.png; do if [ -f parts/$p/$f ]; then cp parts/$p/$f _mine/; fi; done
           git config user.name nox-ci
           git config user.email ci@users.noreply.github.com
           for i in 1 2 3 4 5; do
@@ -180,13 +196,14 @@ jobs:
           if os.path.exists(old) and stale(py, json.load(open("_mine/result.json"))) and not stale(py, json.load(open(old))):
               print(f"{p}: the run's result is older than the one on main, kept main's"); sys.exit(1)
           PY
-            cp _mine/result.json _mine/part.stl _mine/preview.png parts/$p/
-            git add parts/$p
+            cp _mine/* parts/$p/
+            python3 tools/predict.py --update          # this run's timing in the same commit (one commit per result, not two)
+            git add parts/$p systems/runtimes.json
             git diff --cached --quiet && { echo "$p: already on main"; break; }
             git commit -q -m "results: [$p]" && git push -q origin main && { gh workflow run site.yml; break; }
             echo "push raced ($i), retrying"; sleep 5
           done
-          cp _mine/result.json _mine/part.stl _mine/preview.png parts/$p/ 2>/dev/null; rm -rf _mine
+          cp _mine/* parts/$p/ 2>/dev/null; rm -rf _mine
         env:
           GH_TOKEN: ${{ github.token }}
 
@@ -211,6 +228,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { ref: main }
+      # the stale check and the setup.json refresh build setups (topo, numpy): without the engine installed every cache miss
+      # crashed this job (9 Nov, run 42655485891) and --refresh failed quietly for every part
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip }
+      - run: pip install -r requirements.txt
       - uses: actions/download-artifact@v4
         with:
           path: _results
@@ -238,7 +260,8 @@ jobs:
           PY
           rm -rf _results
           python3 tools/predict.py --update
-          python3 tools/part_sha.py --refresh          # the setup.json caches recomputed (staleness by setup, tools/part_sha.py), committed with the results
+          # the setup.json caches of this run's parts (staleness by setup, tools/part_sha.py); the page builder recomputes any other miss
+          python3 tools/part_sha.py --refresh $(echo '${{ needs.find.outputs.parts }}' | jq -r '.[]')
       - name: commit and push (retry on race)
         shell: bash
         run: |

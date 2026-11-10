@@ -1,0 +1,5 @@
+
+## Spark 9 Nov
+- "weird disconnected members, i thought we were over this issue": no member may end in air. Check every result with a skeleton-tip check before reporting (tips away from every drawn attachment).
+- Option A of the 8 Nov study: L2 as far back as allowed outside the cage, cameras behind the cage front with maximum vision, sockets one socket back on the cut rods, head rods cut off (crossbar saddle).
+- 9 Nov (Spark: go): cut the cage crossbar 15-16 in the middle so the L2 moves further back. L2 base 40 back and 40 up from v9's (384.0, 0, 51) = (344.0, 0, 91.0), axis unchanged (15 deg below +x). Study with the bar removed (head rods already cut): rods 52 clear, props 47 clear, 1 % of the L2 field blocked; at 60 back 9 %, 80 back 13 %. The saddle goes; the mount gets one socket on each cut end of the crossbar (it bridges the gap, so nodes 15-16 stay tied through it). Spark needs the crossbar cut positions in inches. Re-check the cameras (lens (340, +-30, 10)) against the new L2 field and the rods.

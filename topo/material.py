@@ -2,7 +2,7 @@
 
 Units: mm, N, MPa, g/cm3. The layer normal is one grid axis (the build direction). Across-layer (Z) modulus and
 strength are reduced from the in-layer values. The numbers are the ones the old engine used (Bambu TDS, Zt = 0.5 Xt
-for PLA / PETG until coupons say otherwise) so strength indices stay comparable between the engines.
+for PLA / PETG / PCTG until coupons say otherwise) so strength indices stay comparable between the engines.
 """
 from dataclasses import dataclass
 import numpy as np
@@ -23,6 +23,9 @@ class Material:
 MATERIALS = {
     "PLA": Material("PLA", E=2580.0, Ez=0.8 * 2580.0, nu=0.35, Xt=36.0, Zt=18.0, S=18.0, density=1.24),
     "PETG": Material("PETG", E=2780.0, Ez=0.8 * 2780.0, nu=0.38, Xt=51.0, Zt=25.5, S=25.5, density=1.27),
+    # PCTG (Spark 8 Nov: every printed part): E numbers until a coupon. E 90 % of PETG (Spark's figure), Xt 46 (generic PCTG
+    # filament data sheets 40-50), Zt = S = 0.5 Xt as for PLA / PETG, density 1.23
+    "PCTG": Material("PCTG", E=2500.0, Ez=0.8 * 2500.0, nu=0.38, Xt=46.0, Zt=23.0, S=23.0, density=1.23),
     "TPU95A": Material("TPU95A", E=9.8, Ez=0.8 * 9.8, nu=0.45, Xt=27.3, Zt=21.8, S=21.8, density=1.22),
 }
 

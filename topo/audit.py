@@ -12,7 +12,9 @@ Checks (hard = raises, soft = logged + in the report):
                        Attachments are small: pads, collars, seats. Over 30 % means a patch.
   drawn_blocks   hard  a drawn body whose inscribed diameter > 3 x min member and which touches no cut and no support:
                        a block drawn into the open, not an attachment (a collar touches a bore, a pad touches a bolt
-                       hole or the support face).
+                       hole or the support face). Also the drawn-structure variant: one body with over 60 % of the drawn
+                       material and a core over 2 x the floor. Both skip drawn material inside the solid_ok bodies
+                       (Part(..., solid_ok=[...]): solid on purpose, Spark 9 Nov, the arm motor mounts); listed as "solid_ok".
   room           hard  for each loaded drawn body: the design cells within 2 x min member of it, as a share of the
                        body's exposed surface cells. Under 35 %: the body is boxed in, nothing can grow onto it.
   room_depth     soft  for each loaded drawn body: the longest straight run of design cells away from it (any axis).
@@ -38,6 +40,13 @@ Checks (hard = raises, soft = logged + in the report):
   drawn_wall     hard  a drawn body (after its cuts, thin_ok bodies left out) with a wall under the gate's thin rule (the 0.9 mm
                        opening's residue: under the 2 mm floor) anywhere: the gate fails it wherever the engine leaves it exposed
                        and the export cleanup may not cut drawn material (7 Nov: the Scout node collars at their resin grooves).
+  room_full      hard  (room_strength, on the Layout before the first solve) the as-built strength index with every design cell
+                       filled solid: the strongest part the room can hold. Over max_worst, no layout in it can pass whatever
+                       the budget, so the run is refused. Also reported: the budget's share of the room and full / share, the
+                       index a uniformly thinned room would read (a rough guide: a good layout beats it). 9 Nov: the Scout v4
+                       frame's side lugs (16 x 8 room carrying 134 N 29 mm under the deck) read 2.55 after a 69 min run.
+                       Open the room along the load path (deeper behind the socket, wider at the root), move the support
+                       nearer the load, or shorten the lever.
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -159,6 +168,16 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
     in_env = part.in_env0.reshape(sh) | sol
     rep, fails = {}, []
     mm = float(min_member_mm)
+    # declared-solid bodies (Part(..., solid_ok=[...])): drawn_blocks and the drawn-structure check skip the drawn cells inside them
+    from .part import tm
+    ok_solid = np.zeros(sh, bool)
+    rep["solid_ok"] = []
+    for m in getattr(part, "solid_ok", ()) or ():
+        cells_ok = part.vox(tm(m)).reshape(sh) & sol
+        ok_solid |= cells_ok
+        bb = np.asarray(m.bounding_box(), float)
+        rep["solid_ok"].append(dict(mm3=round(float(m.volume()), 1), cells=int(cells_ok.sum()),
+                                    at=[round(float((bb[k] + bb[k + 3]) / 2), 1) for k in range(3)]))
     r_mm = max(1, int(round(mm / h)))
 
     # drawn share
@@ -230,7 +249,7 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         inscribed = diameter_mm(cells, h)
         # core thickness: distance to the nearest non-body cell OR cut, so a bore inside a collar counts as surface.
         # A block has cells far from every cut and every edge; an attachment (collar, pad, seat) does not.
-        core_mm = diameter_mm(cells & ~ndi.binary_dilation(cut, S6), h)
+        core_mm = diameter_mm(cells & ~ndi.binary_dilation(cut, S6) & ~ok_solid, h)   # solid_ok cells count as surface
         touch_cut = bool((ndi.binary_dilation(cells, S6) & cut).any())
         touch_sup = bool((cells & sup).any())
         is_loaded = bool((cells & loaded).any())
@@ -261,6 +280,9 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
                            room_depth_mm=round(depth * h, 1),
                            at=[round(float(v), 1) for v in (np.argwhere(cells).mean(0) + 0.5) * h + np.asarray(part.origin)]))
         bodies[-1]["core_mm"] = round(core_mm, 1)
+        bodies[-1]["free_cells"] = int((cells & ~ok_solid).sum())           # drawn cells outside the solid_ok bodies
+        if bodies[-1]["free_cells"] < n:
+            bodies[-1]["solid_ok_cells"] = n - bodies[-1]["free_cells"]
         if core_mm > 2.5 * floor_mm:
             fails.append(f"drawn_blocks: drawn body {b} at {bodies[-1]['at']} has a solid core {core_mm:.0f} mm thick "
                          f"away from every hole and face (limit {2.5 * floor_mm:.0f} mm): a drawn block, not an "
@@ -269,8 +291,8 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
             fails.append(f"room: loaded drawn body {b} at {bodies[-1]['at']} has design room on only {room:.0%} of its "
                          f"surface (need 35 %): boxed in by cuts or the envelope. Open the envelope round it.")
     if bodies:
-        big = max(bodies, key=lambda b: b["cells"])
-        dom = big["cells"] / max(n_sol, 1)
+        big = max(bodies, key=lambda b: b["free_cells"])
+        dom = big["free_cells"] / max(n_sol - int(ok_solid.sum()), 1)
         big["share_of_drawn"] = round(dom, 2)
         if dom > 0.6 and big["core_mm"] > 2.0 * floor_mm and len(bodies) > 1:
             fails.append(f"drawn_blocks: drawn body {big['id']} at {big['at']} holds {dom:.0%} of all drawn material with a "
@@ -346,4 +368,31 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         raise SetupError("setup audit failed:\n  " + "\n  ".join(fails))
     if not fails:
         log(f"audit: OK  drawn {share:.0%}, {len(bodies)} drawn bodies, room ok")
+    return rep
+
+
+def room_strength(L, max_worst, log=print, hard=True):
+    """room_full (see the module doc): the build's own as-built strength (topo/build.py strength) on the room filled solid.
+    Returns the report dict; raises SetupError over max_worst when hard."""
+    from .build import strength
+    part = L.part
+    full = np.asarray(L.design, bool).ravel() | np.asarray(L.solid, bool).ravel()
+    st = strength(L, mask=full, log=lambda s_: None)
+    share = float(L.volfrac)
+    rep = dict(worst=st["worst"], worst_case=st["worst_case"], worst_at=st["worst_at"], budget_share=round(share, 3),
+               thinned=None if st["worst"] is None else round(st["worst"] / max(share, 1e-6), 2), max_worst=max_worst)
+    if st["worst"] is None:
+        log("audit: room_full: no classed load cases")
+        return rep
+    msg = (f"room_full: the room filled solid reads {st['worst']:.2f} in '{st['worst_case']}' at {st['worst_at']} (max_worst {max_worst}): "
+           f"no layout in this room can pass. Open the room along that load's path (deeper behind the socket or pad, wider at the root), "
+           f"move a support nearer the load, or shorten the lever.")
+    if st["worst"] > max_worst:
+        log("audit: FAIL " + msg)
+        rep["fail"] = msg
+        if hard:
+            raise SetupError("setup audit failed:\n  " + msg)
+    else:
+        log(f"audit: room_full {st['worst']:.3f} filled solid ('{st['worst_case']}'), budget {share:.0%} of the room, "
+            f"uniformly thinned ~{rep['thinned']}")
     return rep

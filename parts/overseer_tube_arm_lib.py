@@ -111,7 +111,8 @@ def motor_cases(arm):
 
 def build_piece(arm, h, log=print):
     drawn, cuts, env = arm.drawn_cuts_env()
-    p = Part(f"overseer_arm_{arm.name}_{arm.piece}", h, drawn, cuts, env, build="+z", material="PETG", log=log)
+    p = Part(f"overseer_arm_{arm.name}_{arm.piece}", h, drawn, cuts, env, build="+z", material="PCTG", log=log,
+             solid_ok=[arm.pad_solid] if getattr(arm, "pad_solid", None) is not None else [])   # the solid motor pad (9 Nov)
     c_m = np.array([arm.M[0], arm.M[1], Z_MOTOR_CG])
     hand_a = np.array([0, 0, 2.0]); F_hand = M_MOTOR * G * hand_a
     tubes = U(arm.tube_linings)

@@ -321,7 +321,7 @@ def arm_clip_setup(k, h):
     env = U([box(mx - 14, mx + 14, my - 14, my + 14, CLIP_Z0, PLATE_Z), along(s.pt(-8.0), s.pt(s.t_mouth), BORE_R + WALL + 4.0),
              hull([(mx, my, CLIP_Z0), (mx, my, PLATE_Z), s.pt(-8.0) + [0, 0, -6], s.pt(-8.0) + [0, 0, 2], s.pt(s.t_mouth) + [0, 0, -6], s.pt(s.t_mouth) + [0, 0, 2]])])
     from topo import Part
-    p = Part(f"scout_arm_clip_{k}", h, U(drawn), U(cuts), env, build="+z", material="PETG")
+    p = Part(f"scout_arm_clip_{k}", h, U(drawn), U(cuts), env, build="+z", material="PCTG")
     p.support("default", U([cyl(x, y, PLATE_Z - 1.5, PLATE_Z + 0.3, M2_PAD_R) for x, y in holes]))
     socket_cases(p, [s], "default")
     return p

@@ -73,7 +73,7 @@ def _setup_hash(out_dir):
 
 
 def design_hash(part, h, gen, spec, settings=None):
-    """what the run would compute from: the part's voxel masks, supports, every load case, the SPEC and the thin_ok bodies, as a
+    """what the run would compute from: the part's voxel masks, supports, every load case, the SPEC and the thin_ok / solid_ok bodies, as a
     short sha. The same setup on another commit gives the same hash; a changed load, socket, cut or budget gives another; a lib
     edit that moves no geometry gives the same. parts.yml compares the hash of a running part with the one main would give now
     and stops the run when they differ (Spark 29 Oct: an old design never keeps running once a new one supersedes it). It is
@@ -97,6 +97,8 @@ def design_hash(part, h, gen, spec, settings=None):
     hs.update(repr(sorted((spec.get("settings") or {}).items())).encode())
     for m in getattr(part, "thin_ok", []):                                 # declared-thin bodies change the gate's verdict
         hs.update(f"thin_ok {m.volume():.3f} {np.round(np.asarray(m.bounding_box(), float), 3).tolist()}".encode())
+    for m in getattr(part, "solid_ok", []):                                # declared-solid bodies change the audit's verdict
+        hs.update(f"solid_ok {m.volume():.3f} {np.round(np.asarray(m.bounding_box(), float), 3).tolist()}".encode())
     return hs.hexdigest()[:16]
 
 
@@ -186,9 +188,11 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
     _own_checkpoints(out_dir, log)
     xh_c = part_c = None
     if coarse and not os.path.exists(ck):
-        part_c = setup(2.0 * h)
         sc = replace(s, reach_check="off", geometric=False, max_stage=25)
         try:
+            # the setup itself can fail at 2h too (9 Nov, scout_v4_base_nose: a 3.2 mm side land's load region is empty at h 3.0,
+            # Part.load_multi raised and the run died at 2 min): same skip
+            part_c = setup(2.0 * h)
             Lc = Layout(part_c, gen_cm3=gen_cm3, settings=sc, log=log)
         except ValueError as e:
             # the 2h grid cannot resolve a small feature the fine grid can (29 Oct, node 21: the O5.6 camera posts' load faces fell
@@ -204,6 +208,8 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
             del Lc
     part = setup(h)
     L = Layout(part, gen_cm3=gen_cm3, settings=s, log=log)
+    from .audit import room_strength
+    rep_audit["room_full"] = room_strength(L, max_worst, log=log, hard=s.audit == "raise")   # the room filled solid must pass (9 Nov)
     if xh_c is not None:
         L.init_from(xh_c, part_c)
     early = {}

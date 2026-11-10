@@ -412,10 +412,26 @@ def weld_clean(v, f, min_mm3=1.0):
     if rep["degenerate"] or rep["folded"] or rep["caps_split"] or rep["caps_left"] or not rep["watertight"]:
         first = {k: rep[k] for k in ("degenerate", "folded", "caps_split", "caps_left", "watertight", "faces")}
         if rep["watertight"]:
-            P2 = man(m).simplify(SIMPLIFY_MM)
-            mg = P2.to_mesh64()
-            m, rep = weld_mesh(np.asarray(mg.vert_properties)[:, :3], np.asarray(mg.tri_verts), min_mm3=min_mm3)
-            rep["simplified"] = True
+            # trimesh's watertight counts edges, not their winding; manifold3d refuses a mesh with a mis-wound pair (NotManifold) and
+            # hands back an EMPTY solid, so the collapse and second weld gave 0 faces from a closed 735,898-face first pass (9 Nov:
+            # overseer_head_mount, 7334 s of solve lost at the export). The second pass is taken only when it is closed, not empty
+            # and holds the first pass's volume; otherwise the first-pass mesh is the export and the reason is reported.
+            M = man(m)
+            status = str(M.status()).split(".")[-1]
+            m2, rep2 = None, None
+            if M.num_tri():
+                mg = M.simplify(SIMPLIFY_MM).to_mesh64()
+                m2, rep2 = weld_mesh(np.asarray(mg.vert_properties)[:, :3], np.asarray(mg.tri_verts), min_mm3=min_mm3)
+            v1 = abs(float(m.volume))
+            if rep2 is not None and rep2["watertight"] and rep2["faces"] and abs(abs(float(m2.volume)) - v1) <= 1e-3 * v1 + 1.0:
+                m, rep = m2, rep2
+                rep["simplified"] = True
+            else:
+                rep["simplified"] = False
+                rep["simplify_fallback"] = dict(manifold_status=status, winding_consistent=bool(m.is_winding_consistent),
+                                                faces=0 if rep2 is None else rep2["faces"],
+                                                watertight=False if rep2 is None else rep2["watertight"],
+                                                mm3=None if m2 is None else round(abs(float(m2.volume)), 1), first_mm3=round(v1, 1))
         rep["first_pass"] = first
     return m, rep
 
@@ -424,6 +440,7 @@ def export_report(rep, tag="build: export"):
     return (f"{tag}: {rep['faces_in']:,} -> {rep['faces']:,} faces, {rep['degenerate']} degenerate + {rep['folded']} folded faces dropped, "
             f"{rep['caps_split']} caps split ({rep['caps_left']} left), {rep['n_dropped_shells']} shell(s) dropped {rep['dropped_shells'][:4]}, "
             f"{rep['bodies']} body(ies), {'first pass ' + str(rep['first_pass']) + ', simplified ' + str(SIMPLIFY_MM) + ' mm, ' if rep.get('simplified') else ''}"
+            f"{'simplify refused ' + str(rep['simplify_fallback']) + ', first pass kept, ' if rep.get('simplify_fallback') else ''}"
             f"{'watertight' if rep['watertight'] else 'NOT WATERTIGHT: ' + str(rep['boundary_edges']) + ' open, ' + str(rep['nonmanifold_edges']) + ' non-manifold edges'}")
 
 
@@ -441,6 +458,18 @@ def export_mesh(P, log=print, min_mm3=1.0):
     msg = export_report(rep)
     log(msg if rep["watertight"] else "ERROR " + msg)
     return m, rep
+
+
+class ExportError(RuntimeError):
+    pass
+
+
+def require_mesh(PT, export, P=None):
+    """an empty export is a failed build, said as such (9 Nov: an empty mesh reached the gate, which died on mesh.bounds None)"""
+    if PT is None or len(PT.faces) == 0:
+        raise ExportError(f"build: export produced an EMPTY mesh ({export.get('faces_in', 0):,} faces in, exact part "
+                          f"{0.0 if P is None else round(P.volume(), 1)} mm3; first pass {export.get('first_pass')}, "
+                          f"fallback {export.get('simplify_fallback')}): not checked, no STL written")
 
 
 # -------------------------------------------------------------------------------------------------------- checks
@@ -611,6 +640,7 @@ def build_and_check(layout, out_dir, name, clip_margin=0.5, pitch=None, log=prin
     P, bod = assemble(layout, gm, log=log)
     P, cleanup = export_cleanup(P, part, log=log)
     PT, export = export_mesh(P, log=log)
+    require_mesh(PT, export, P)
     drawn_fin = tm(part.drawn_m - part.cuts_m)
     ok_solid, solid = solid_check(PT, [drawn_fin], thin_ok=[tm(m - part.cuts_m) for m in getattr(part, "thin_ok", [])])
     log(f"solid check: {'PASS' if ok_solid else 'FAIL'} {json.dumps(solid)[:600]}")

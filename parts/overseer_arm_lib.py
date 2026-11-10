@@ -50,6 +50,7 @@ BOSS_U, BOSS_V, BOSS_T = (57.5, 72.0), (3.0, 22.0), 8.0   # plate boss block per
 #   their ties). This block keeps a 10 x 15 x 4 core round the holes that a member lands on full-face.
 RELIEF_R = 3.0                                   # round the neighbour's shank in the nut layer, merges with the pocket (no sliver)
 PAD_D, PAD_T = 36.0, 14.0                        # motor pad (arms section, C): Ø36 reach; 14 thick (8 Nov, Spark: thicker motor pads; 7 Nov 6 -> 10, every crack was at the motor mount)
+PAD_CONE_D, PAD_CONE_R = 8.0, 14.0               # 9 Nov: the solid cone under the solid pad: 8 deep, O36 -> O28
 LUG_R = 5.5                                      # lug radius round each slot (slot 1.6 + 2.0 wall + 1.9)
 MOTOR_SLOT = (8.0, 9.5)                          # X2216 base pattern: one pair across at 16 (r 8), the other at 19 (r 9.5), 45 deg to the leads (O motor row, spec)
 SLOT_D = 3.2                                     # M3 into the motor's tapped base (2.8 deep: no nut exists on a motor)
@@ -204,9 +205,14 @@ class Arm:
             drawn.append(cyl(pg[0], pg[1], Z_PAD - 0.5, Z_PAD + PEG[3], PEG[2] / 2, 24))
         # --- motor pad
         M = self.M
-        for t in (45, 135, 225, 315):                                   # the pad is 4 lugs (a star), not a disc: a disc is a block to the audit
-            e = np.cos(np.radians(t)) * self.a + np.sin(np.radians(t)) * self.n
-            drawn.append(stadium(M + 4.0 * e, M + (PAD_D / 2 - LUG_R) * e, Z_PAD - PAD_T, Z_PAD, LUG_R))
+        # 9 Nov (Spark: "the entire motor mount even under the circular plate ... a lot of material there so it doesn't crack and break
+        # again"; the motor tore off with its mount): the pad is SOLID, O36 x PAD_T, on a solid cone PAD_CONE_D deep that narrows to
+        # PAD_CONE_R and ties it down into the arm. Declared solid_ok (topo audit: a drawn solid on purpose, like the camera posts'
+        # thin_ok); only the bore, the 4 slots and the 4 driver sweeps are cut. The generator joins the cone to the arm.
+        pad = cyl(M[0], M[1], Z_PAD - PAD_T, Z_PAD, PAD_D / 2, 96) + \
+            mf.Manifold.cylinder(PAD_CONE_D + 0.01, PAD_CONE_R, PAD_D / 2, 96).translate([float(M[0]), float(M[1]), Z_PAD - PAD_T - PAD_CONE_D])
+        drawn.append(pad)
+        self.pad_solid = pad
         cuts.append(cyl(M[0], M[1], Z_BOT - 1.0, Z_PAD + 1.0, BORE_D / 2, 32))
         for t in (45, 135, 225, 315):
             # slots r 8..9.5: both the 16 and the 19 pair of the X2216 land in them and the opposing slot ends centre the motor
@@ -276,7 +282,8 @@ class Arm:
 
 def build(arm, h, log=print):
     drawn, cuts, env = arm.drawn_cuts_env()
-    p = Part(f"overseer_arm_{arm.name}", h, drawn, cuts, env, build="+z", material="PETG", log=log)
+    p = Part(f"overseer_arm_{arm.name}", h, drawn, cuts, env, build="+z", material="PCTG", log=log,
+             solid_ok=[arm.pad_solid])          # the solid motor pad + cone (9 Nov, Spark)
 
     # ---- supports: plate contact lips (top and bottom faces of the 4 stadiums), and + the 3 spoke sockets
     lips = []

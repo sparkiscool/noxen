@@ -2,7 +2,8 @@
 drone's parts (systems/<drone>.assembly.json, posed seated as tools/seat_envelope.py does) are intersected with the funnel and deck
 solids as exact booleans (manifold3d; the funnel and deck come from their make.py, in the seat frame). A part that is not a
 manifold (the cage pattern's concatenated tubes) falls back to dense surface sampling against the funnel. Prints every crossing
-with the overlap volume, its bounding box in the seat frame and an approximate depth. python tools/seat_check.py scout|overseer|both [--descent] [--walls overseer|scout]  (default: the Scouts walls in, the Overseer walls out)
+with the overlap volume, its bounding box in the seat frame and an approximate depth. python tools/seat_check.py scout_v4|overseer|both
+[--descent] [--walls overseer|scout] (both = scout_v4 + overseer; Scout v3 archived 9 Nov; default walls: the Scouts in, the Overseer out)
 """
 import importlib.util, os, sys
 import numpy as np, trimesh, manifold3d as mf
@@ -97,7 +98,7 @@ def check(drone, verbose=True, offset=(0.0, 0.0, 0.0), walls=None):
 if __name__ == "__main__":
     which = sys.argv[1] if len(sys.argv) > 1 else "both"
     walls = sys.argv[sys.argv.index("--walls") + 1] if "--walls" in sys.argv else None           # default: each drone's own setting (walls_for); --walls overseer|scout forces one
-    for d in (["scout", "overseer"] if which == "both" else [which]):
+    for d in (["scout_v4", "overseer"] if which == "both" else [which]):   # the live Scout (v3 archived 9 Nov)
         check(d, walls=walls)
         if "--descent" in sys.argv:
             bad = 0

@@ -2,7 +2,7 @@
 the seated Scout: x nose, y left, z up; the receiver bottom at z -44.3) with their latch footprint at the same place, and every
 part but the latch set is sliced in 2 mm bands of height above the seat. Per band: the half-widths in x (nose / tail, about the
 receiver centre x 1.5) and y, and the part that sets each. Writes runs/seat_envelope/<drone>.json and prints the table.
-    python tools/seat_envelope.py scout|overseer|both
+    python tools/seat_envelope.py scout_v4|overseer|both   (both = scout_v4 + overseer; Scout v3 archived 9 Nov)
 Overseer -> seat: T_OV (tools/import_box.py): its catch centre x -30 and cartridge bottom z -76.9 (cage v5: the loop at -79.9 is 3 under it) onto the Scout's (1.5, -44.5).
 """
 import json, os, sys
@@ -60,7 +60,7 @@ def envelope(parts, hmax=260.0, step=2.0):
 if __name__ == "__main__":
     which = sys.argv[1] if len(sys.argv) > 1 else "both"
     os.makedirs(os.path.join(ROOT, "runs", "seat_envelope"), exist_ok=True)
-    for d in (["scout", "overseer"] if which == "both" else [which]):
+    for d in (["scout_v4", "overseer"] if which == "both" else [which]):   # the live Scout (v3 archived 9 Nov)
         ps = parts_of(d)
         lo = min(float(m.bounds[0][2]) for _, m in ps)
         rows = envelope(ps)

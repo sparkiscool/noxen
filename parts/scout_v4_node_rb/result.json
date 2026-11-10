@@ -1,0 +1,335 @@
+{
+ "name": "scout_v4_node_rb",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   1514.1
+  ],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 0,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 595.1,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
+  "outside_env_mm3": -0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "frame RM-RB axial 58 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.012,
+    "across": 0.006,
+    "at": [
+     -122.0,
+     2.5,
+     64.5
+    ]
+   },
+   {
+    "case": "frame RM-RB side 13.5 N",
+    "cls": "crash",
+    "inlayer": 0.004,
+    "across": 0.002,
+    "at": [
+     -123.0,
+     8.5,
+     61.5
+    ]
+   },
+   {
+    "case": "crash 35 g through the longest rod RM-RB (130 mm), axial + side",
+    "cls": "crash",
+    "inlayer": 0.014,
+    "across": 0.004,
+    "at": [
+     -119.0,
+     -2.5,
+     64.5
+    ]
+   }
+  ],
+  "worst": 0.014,
+  "worst_case": "crash 35 g through the longest rod RM-RB (130 mm), axial + side",
+  "worst_at": [
+   -119.0,
+   -2.5,
+   64.5
+  ]
+ },
+ "mass_g": 3.66,
+ "watertight": true,
+ "export": {
+  "faces_in": 34686,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "faces": 34686,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 172,
+   "folded": 8,
+   "caps_split": 13,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 45616
+  },
+  "volume_mm3": 2972.9,
+  "exact_mm3": 2972.9
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 2972.9,
+ "drawn_g": 2.25,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
+ "stl": "scout_v4_node_rb.stl",
+ "view_stl": "scout_v4_node_rb_view.stl",
+ "view_faces": 34686,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": false,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 6.44256687412536,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.14869888475836432,
+  "nd": 8070,
+  "sym_axes": [
+   1
+  ],
+  "n_real": 3,
+  "n_ties": 0,
+  "backend": "direct",
+  "iterations": 82,
+  "stopped": "max_stage"
+ },
+ "grid": {
+  "name": "scout_v4_node_rb",
+  "h": 1.0,
+  "shape": [
+   32,
+   40,
+   32
+  ],
+  "origin": [
+   -144.5,
+   -20.0,
+   45.0
+  ],
+  "cells": 40960,
+  "design": 8070,
+  "drawn": 1774,
+  "cases": [
+   "frame RM-RB axial 58 N (pull-out)",
+   "frame RM-RB side 13.5 N",
+   "crash 35 g through the longest rod RM-RB (130 mm), axial + side"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 17.0,
+ "layout_s": 65,
+ "peak_gb": 0.656568,
+ "gen_cm3": 1.2,
+ "h": 1.0,
+ "audit": {
+  "solid_ok": [],
+  "drawn_share": 0.18,
+  "load_room": [],
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 1774,
+    "inscribed_mm": 3.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.94,
+    "room_depth_mm": 29.0,
+    "at": [
+     -128.9,
+     0.0,
+     61.3
+    ],
+    "core_mm": 2.5,
+    "free_cells": 1774,
+    "share_of_drawn": 1.0
+   }
+  ],
+  "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 32.0,
+   "W_mm": 26.0,
+   "H_mm": 24.0,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "drawn_walls": [],
+  "cases": 3,
+  "supports": 1,
+  "fails": [],
+  "room_full": {
+   "worst": 0.009,
+   "worst_case": "crash 35 g through the longest rod RM-RB (130 mm), axial + side",
+   "worst_at": [
+    -125.0,
+    -4.5,
+    61.5
+   ],
+   "budget_share": 0.149,
+   "thinned": 0.06,
+   "max_worst": 0.3
+  }
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "frame RM-RB axial 58 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.018,
+    "across": 0.007,
+    "at": [
+     -123.0,
+     3.5,
+     63.5
+    ]
+   },
+   {
+    "case": "frame RM-RB side 13.5 N",
+    "cls": "crash",
+    "inlayer": 0.008,
+    "across": 0.002,
+    "at": [
+     -120.0,
+     4.5,
+     61.5
+    ]
+   },
+   {
+    "case": "crash 35 g through the longest rod RM-RB (130 mm), axial + side",
+    "cls": "crash",
+    "inlayer": 0.023,
+    "across": 0.006,
+    "at": [
+     -120.0,
+     -4.5,
+     61.5
+    ]
+   }
+  ],
+  "worst": 0.023,
+  "worst_case": "crash 35 g through the longest rod RM-RB (130 mm), axial + side",
+  "worst_at": [
+   -120.0,
+   -4.5,
+   61.5
+  ],
+  "beta": 4.0,
+  "iteration": 24,
+  "max_worst": 0.3,
+  "k": 3.0
+ },
+ "baseline": null,
+ "total_s": 82,
+ "part_sha": "de851e0aea30",
+ "lib_sha": "772dbb2b54e8",
+ "setup_sha": "c92580ca2675ed65",
+ "max_worst": 0.3,
+ "strength_ok": true,
+ "print_stl": {
+  "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_rb.stl",
+  "sha256": "9150bc73ea5eaec419e00a9efc0dab989e4b67a95e17381afe4ae09e4428e896",
+  "bytes": 1734384,
+  "faces": 34686,
+  "view_faces": 34686,
+  "view_sha256": "9150bc73ea5eaec419e00a9efc0dab989e4b67a95e17381afe4ae09e4428e896",
+  "at": "2026-11-10 00:58"
+ }
+}

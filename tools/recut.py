@@ -3,11 +3,13 @@ is built, its cuts (bores, resin grooves, lead-ins, teardrop crowns, bolt holes,
 parts/<part>/part.stl, the export cleanup and the solid gate (with the setup's thin_ok bodies) run on the result, and result.json is updated (solid, mass, hashes, a recut note).
 Strength is not re-solved: a cut only removes material round a hole, so the recorded index is a lower bound; the gate's
 thin-wall check is what guards the walls round the new grooves and crowns.
+The input is the full print mesh (tools/print_mesh.py local: the release asset); the output part.stl is the new full mesh, which
+the workflow (recut.yml) uploads with tools/print_mesh.py publish before it commits the viewing mesh.
 Run: python tools/recut.py <part> [<part> ...]      (from the repo root; writes part.stl, preview.png, result.json)
      python tools/recut.py --regate <part> ...      the gate alone on the existing mesh, result.json updated (a gate rule changed)
 """
 import importlib, json, os, sys, time
-import numpy as np, trimesh
+import numpy as np, trimesh, manifold3d as mf
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "tools"))
@@ -16,6 +18,7 @@ from topo import build as B                                                     
 from part_sha import part_sha, lib_sha                                          # noqa: E402
 from topo.run import design_hash                                                # noqa: E402
 from topo.material import MATERIALS                                             # noqa: E402
+import print_mesh                                                               # noqa: E402
 
 
 def recut(name, log=print):
@@ -23,7 +26,7 @@ def recut(name, log=print):
     res = json.load(open(rj))
     mod = importlib.import_module(f"parts.{name}.part")
     part = mod.setup(float(res["h"]))
-    m0 = trimesh.load(stl, force="mesh")
+    m0 = trimesh.load(print_mesh.local(name), force="mesh")                     # the full print mesh (the release), never the viewing mesh
     # a big exported STL (the head mount, 500k faces) carries a few duplicate vertices and degenerate faces that make manifold3d
     # read it as NotManifold (empty, volume 0: 29 Oct, the recut then crashed in export_cleanup); merge and drop them first
     m0.merge_vertices(); m0.update_faces(m0.nondegenerate_faces()); m0.update_faces(m0.unique_faces()); m0.remove_unreferenced_vertices()
@@ -32,6 +35,9 @@ def recut(name, log=print):
     if M0.volume() < 1.0:
         raise RuntimeError(f"{name}: part.stl does not read as a solid (manifold status {M0.status()}); nothing recut")
     v0 = m0.volume
+    fill = list(getattr(part, "solid_ok", []))                                   # 9 Nov (Spark: more material at the motor mount, no rerun):
+    if fill:                                                                      # the setup's solid_ok bodies are filled in, then cut
+        M0 = M0 + mf.Manifold.batch_boolean(fill, mf.OpType.Add)
     P = M0 - part.cuts_m
     del m0, M0                                                                    # the gate at 0.25 mm is the memory peak: nothing else held
     P, cleanup = B.export_cleanup(P, part, log=log)                              # the export cleanup, as a fresh run would do it
@@ -50,7 +56,7 @@ def recut(name, log=print):
     py = os.path.join(d, "part.py")
     res.update(solid_ok=bool(ok and export["watertight"]), solid=solid, export_cleanup=cleanup, export=export, mass_g=round(mass, 2), volume_mm3=round(PT.volume, 1), watertight=bool(export["watertight"]),
                part_sha=part_sha(py), lib_sha=lib_sha(py), setup_sha=design_hash(part, float(res["h"]), float(res.get("gen_cm3") or mod.SPEC["gen_cm3"]), mod.SPEC),
-               recut=dict(at=time.strftime("%Y-%m-%d %H:%M"), removed_cm3=round(removed, 3), note="holes recut from the current setup; strength not re-solved"))
+               recut=dict(at=time.strftime("%Y-%m-%d %H:%M"), removed_cm3=round(removed, 3), note="holes recut from the current setup" + (", solid_ok bodies filled solid" if fill else "") + "; strength not re-solved"))
     json.dump(res, open(rj, "w"), indent=1)
     log(f"{name}: recut, {removed:.2f} cm3 removed, {mass:.1f} g, solid check {'PASS' if ok else 'FAIL'}"
         + ("" if ok else f" {json.dumps({k: v for k, v in solid.items() if k in ('necks', 'drawn_not_in_main', 'thin_walls', 'bodies_plain')})[:400]}"))
@@ -64,7 +70,7 @@ def regate(name, log=print):
     res = json.load(open(rj))
     mod = importlib.import_module(f"parts.{name}.part")
     part = mod.setup(float(res["h"]))
-    PT = trimesh.load(stl, force="mesh")
+    PT = trimesh.load(print_mesh.local(name), force="mesh")
     ok, solid = B.solid_check(PT, [tm(part.drawn_m - part.cuts_m)], thin_ok=[tm(m - part.cuts_m) for m in getattr(part, "thin_ok", [])])
     res.update(solid_ok=bool(ok and res.get("watertight", True)), solid=solid,
                regate=dict(at=time.strftime("%Y-%m-%d %H:%M"), note="gate rerun on the existing mesh with the current gate; nothing cut or re-solved"))

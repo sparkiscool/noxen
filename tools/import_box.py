@@ -156,7 +156,11 @@ def main(nox):
     for p in scout["parts"]:
         if p["id"] not in ("frame_plate_bee35_carbon", "fc", "pack_4s_1500", "camera", "scout_nose_unit", "scout_tail_unit", "scout_nose_unit_room", "scout_tail_unit_room", "scout_cage_v19") and not p["id"].startswith(("scout_motor", "scout_prop")):
             continue
-        pid = slug("scout " + p["id"]); mesh, nf = copy_mesh(os.path.join(ROOT, p["mesh"]), pid)
+        pid = slug("scout " + p["id"])
+        if os.path.exists(os.path.join(ROOT, p["mesh"])):
+            mesh, nf = copy_mesh(os.path.join(ROOT, p["mesh"]), pid)
+        else:                                                  # Scout v3 archived (9 Nov): its folders are in archive/, the box keeps its own seated copy
+            mesh = f"parts/{pid}/part.stl"
         parts.append(dict(id=pid, name=f"Scout: {p['name']}", role=p.get("role", "bought"), group="landing: Scout", color=p.get("color"), mesh=mesh,
                           pose=(np.array(SEAT_TO_W) @ np.array(p["pose"], float)).tolist() if p.get("pose") else SEAT_TO_W,
                           material=p.get("material"), tag=p.get("tag", "E"), owner="scout v3", version=p.get("version"), source="systems/scout.assembly.json, seated"))

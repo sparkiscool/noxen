@@ -26,7 +26,7 @@ def main():
     statics = []
     for nm, mm, tri in sc.solids():
         t = tri.copy(); t.apply_transform(sc.SEAT_TO_W); statics.append((nm, t, None))
-    for drone in ("overseer", "scout"):
+    for drone in ("overseer", "scout_v4"):                         # the live Scout (v3 archived 9 Nov)
         for nm, m in se.parts_of(drone):
             m = m.copy(); m.apply_transform(sc.SEAT_TO_W)
             if m.bounds[0][2] > 260 or m.bounds[1][1] < -10 or m.bounds[0][1] > 300:
