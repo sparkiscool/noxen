@@ -9,9 +9,42 @@ kept connected (a body is never split from itself by its own grooves or bores) a
 python3 solid_check.py part.stl [--erode 1.0] [--pitch 0.25]   -> exit 1 on fail
 from solid_check import solid_check; ok, info = solid_check(trimesh_part, drawn=[trimesh, ...], thin_ok=[trimesh, ...])
 thin_ok: drawn bodies the setup declares deliberately thin (Part(..., thin_ok=[...])): their thin walls, and a neck under a blob holding one
-when the neck is at least as thick as the body's wall, are reported as thin_allowed, not failed."""
+when the neck is at least as thick as the body's wall, are reported as thin_allowed, not failed.
+Memory: ~40 bytes a cell of the grid (bounds + 2 pitch) at its peak (edt: scipy's transform bit for bit, a third of its memory;
+each drawn body's own transform on its box), so a 180 x 180 x 44 part (94 M cells) needs ~4 GB (topo/audit.py GATE_BYTES)."""
 import sys, numpy as np, trimesh
 from scipy import ndimage as ndi
+
+
+def edt(mask, slab=8):
+    """scipy's distance_transform_edt(mask) (float64, voxel units), bit for bit, at a third of its memory: scipy builds the
+    feature transform (3 x int32), then ft - indices (3 x int32 more), its float64 copy (3 x float64) and the sum, ~5 GB at
+    once on a 94 M-voxel gate grid (10 Nov: scout_v4_frame, 180 x 180 x 44 at 0.25, the runner killed after the export). Here
+    only the feature transform is kept and the distance is summed one x-slab at a time, in scipy's own order and types."""
+    mask = np.asarray(mask)
+    ft = ndi.distance_transform_edt(mask, return_distances=False, return_indices=True)
+    out = np.empty(mask.shape, np.float64)
+    n = mask.shape[0]
+    for a in range(0, n, slab):
+        b = min(a + slab, n)
+        idx = np.indices((b - a,) + mask.shape[1:], dtype=np.int32)
+        idx[0] += a
+        dt = (ft[:, a:b] - idx).astype(np.float64)
+        np.multiply(dt, dt, dt)
+        np.sqrt(np.add.reduce(dt, axis=0), out[a:b])
+    del ft
+    return out
+
+
+def edt_box(mask):
+    """(edt of mask on its bounding box grown by one voxel inside the grid, that box as slices): the same values as edt(mask)
+    there (a point's nearest background voxel outside the box clamps onto the box's outer layer, which is background, never
+    farther), on a box, not the whole gate grid."""
+    idx = np.argwhere(mask)
+    if not len(idx):
+        return np.zeros((0, 0, 0)), tuple(slice(0, 0) for _ in mask.shape)
+    sl = tuple(slice(max(int(a) - 1, 0), min(int(b) + 2, n)) for a, b, n in zip(idx.min(0), idx.max(0), mask.shape))
+    return edt(mask[sl]), sl
 
 
 def _ray_parity(mesh, xs, ys, zs, chunk=20000):
@@ -40,6 +73,22 @@ def voxels(mesh, pitch, lo, shape):
     return _ray_parity(mesh, xs, ys, zs)
 
 
+def voxels_in(mesh, pitch, lo, shape):
+    """voxels(mesh) on the full grid, ray-tested only over the cells inside the mesh's bounds (a cell centre outside them is
+    outside the mesh; each column's parity is its own): the same cells, one drawn body's footprint of rays, not the part's."""
+    out = np.zeros(shape, bool)
+    if not len(mesh.faces):
+        return out
+    lo = np.asarray(lo, float)
+    a = np.clip(np.floor((mesh.bounds[0] - lo) / pitch - 0.5).astype(int), 0, shape)
+    b = np.clip(np.ceil((mesh.bounds[1] - lo) / pitch + 0.5).astype(int) + 1, 0, shape)
+    if np.any(b <= a):
+        return out
+    sl = tuple(slice(int(i), int(j)) for i, j in zip(a, b))
+    out[sl] = voxels(mesh, pitch, lo + a * pitch, tuple(int(j - i) for i, j in zip(a, b)))
+    return out
+
+
 NECK_LEVELS = (0.9, 1.2, 1.5)        # erosion depths for the neck test (necks under 1.8 / 2.4 / 3.0 mm); 2.0 flagged 4.0 bolt-down plates joining two thick lumps (plates, not necks)
 NECK_AREA_K = 4.0                    # ... and its joint to the rest is smaller than 4 x (blob thickness)^2
 NECK_MARGIN = 0.8                    # a split-off blob fails if it is >= 1.6 mm thicker than the neck it hangs on
@@ -51,7 +100,7 @@ def _interface_mm2(V, Le, k, pitch, pad):
     idx = np.argwhere(Le == k); a = np.maximum(idx.min(0) - pad, 0); b = np.minimum(idx.max(0) + pad + 1, Le.shape)
     sl = tuple(slice(a[i], b[i]) for i in range(3))
     Ls, Vs = Le[sl], V[sl]
-    _, ind = ndi.distance_transform_edt(Ls == 0, return_indices=True)
+    ind = ndi.distance_transform_edt(Ls == 0, return_distances=False, return_indices=True)
     W = Ls[tuple(ind)]; W[~Vs] = -1
     A = 0
     for ax in range(3):
@@ -61,17 +110,21 @@ def _interface_mm2(V, Le, k, pitch, pad):
     return A * pitch ** 2
 
 
-def thin_walls(V, pitch, erode_mm=0.9, lo=(0.0, 0.0, 0.0), core_r_mm=0.35, min_core_mm3=0.3):
+def thin_walls(V, pitch, erode_mm=0.9, lo=(0.0, 0.0, 0.0), core_r_mm=0.35, min_core_mm3=0.3, d=None):
     """the material an opening with a ball of radius erode_mm removes (R), its components (labr) and, for every residue
     component whose core (inscribed radius >= core_r_mm, a real sliver / wall under 2 x erode_mm) is at least min_core_mm3,
     a dict: label (component of labr), core_label (component of labc, the cores), kind ("wall": the core spreads in 2 directions; "edge": the residue a convex edge
     loses to the opening spreads in 1), thick_mm, core_mm3, at, span, mm3 (the whole residue component). Shared by the gate
     (the thin_walls report) and the engine's export cleanup (topo/build.py drops the wall-kind ones under its core limit)."""
     lo = np.asarray(lo, float)
-    E = ndi.distance_transform_edt(V) * pitch > erode_mm
-    O = ndi.distance_transform_edt(~E) * pitch <= erode_mm
+    if d is None:                                                    # d: edt(V) * pitch when the caller has it (the gate)
+        t = edt(V); t *= pitch; E = t > erode_mm; del t
+    else:
+        E = d > erode_mm
+    t = edt(~E); t *= pitch; O = t <= erode_mm; del t, E
     R = V & ~O
-    dr = ndi.distance_transform_edt(R) * pitch
+    del O
+    dr = edt(R); dr *= pitch
     st = ndi.generate_binary_structure(3, 1)
     labr, nr = ndi.label(R, st)
     thin = []
@@ -105,7 +158,7 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0, thin_o
     V = voxels(mesh, pitch, lo, shape)
     st = ndi.generate_binary_structure(3, 1)                         # face connectivity only: no corner or edge links
     lab0, n0 = ndi.label(V, st)
-    d = ndi.distance_transform_edt(V) * pitch
+    d = edt(V); d *= pitch
     E = d > erode_mm
     lab, n = ndi.label(E, st)
     vols = np.bincount(lab.ravel())[1:] * pitch ** 3
@@ -117,31 +170,34 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0, thin_o
     n_plain = int((np.bincount(lab0.ravel())[1:] * pitch ** 3 >= min_cc_mm3).sum())
     info = dict(bodies_plain=n_plain, specks_plain=int(n0 - n_plain), bodies_eroded=int(len(keep)),
                 eroded_volumes_mm3=sorted([round(float(v), 1) for v in vols[keep - 1]], reverse=True)[:6])
+    del lab0
     bad = []
     big = np.r_[False, vols >= min_cc_mm3]                           # by label: is this eroded component a body
     for i, t in enumerate(drawn):
-        Dv = voxels(t, pitch, lo, shape) & E
+        Dv = voxels_in(t, pitch, lo, shape) & E
         if Dv.sum() == 0: continue                                   # a drawn feature thinner than 2 x erode: judged by its own size check
         off = (lab[Dv] != main) & big[lab[Dv]]
         share = 1.0 - float(off.mean())
         if share < 0.999: bad.append(dict(body=str(i), share=round(share, 3), erode_mm=erode_mm, **_where(Dv, off, lo, pitch)))
+    del lab, E                                                       # the gate grid is ~100 M voxels on a 180 mm part: hold only what is left to use
     # neck test (Spark 20 Oct 14:19, bracket_e v8 pads on ~2 mm necks passed the 0.9 test): erode deeper; a blob that splits
     # off and is clearly thicker than the neck it hung on (max inscribed radius >= e + NECK_MARGIN) is a sliver attachment.
     # A wall that is simply thin vanishes at that depth instead of splitting, so legal 2.0 walls are not flagged.
     # thin walls (the opening's residue, thin_walls) and the declared-thin bodies (thin_ok: the camera M2 insert posts, 1.2 wall, Spark
     # 29 Oct by coupon): a thin wall whose core lies in one of them is reported under thin_allowed and does not fail the part; each
     # such body's wall is the thickness of its own thin finding (a post is solid below its bore: its thickest part is not its wall)
-    R, labr, thin, labc = thin_walls(V, pitch, erode_mm, lo)
+    R, labr, thin, labc = thin_walls(V, pitch, erode_mm, lo, d=d)
+    del R, labr
     T = np.zeros(shape, bool); bodies_T = []
     for t in thin_ok:
-        Tb = voxels(t, pitch, lo, shape)
+        Tb = voxels_in(t, pitch, lo, shape)
         if Tb.any():
             T |= Tb; bodies_T.append(Tb)
     allowed = [t for t in thin if t["kind"] == "wall" and T.any() and T[labc == t["core_label"]].mean() >= 0.9]
     walls = []
     for Tb in bodies_T:
         own = [t["thick_mm"] for t in allowed if Tb[labc == t["core_label"]].mean() >= 0.5]
-        walls.append((Tb, max(own) if own else round(2 * float(ndi.distance_transform_edt(Tb).max()) * pitch, 2)))
+        walls.append((Tb, max(own) if own else round(2 * float(edt_box(Tb)[0].max()) * pitch, 2)))
     necks, allowed_necks = [], []
     prev = {e: (NECK_LEVELS[i - 1] if i else 0.0) for i, e in enumerate(NECK_LEVELS)}
     for e in NECK_LEVELS:
@@ -164,25 +220,32 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0, thin_o
                 row.update(kind="neck", thin_wall_mm=max(own), neck_over_mm=round(2 * prev[e], 1)); allowed_necks.append(row)
             else:
                 necks.append(row)
+        del Le
+    del T, labc
     info["necks"] = necks
     # every drawn body on its own, eroded to 0.4 x its own thickness (0.9..2.0): its core must stay in the main body. Its
     # thickness is its own (the body alone, 90th percentile of its wall: a 2.5 collar reads 2.5 where a boss overlaps it or a
     # fillet wraps it, 29 Oct: node 5's collar clusters and node 21's camera cones were eroded 2.0 for the material round them
     # and had to hang on 4 mm) and its voxels are kept connected (a collar's grooves or a cone's bore never split a body from
     # itself): the body is joined when any of it meets the main eroded body.
+    seeds = {}                                                       # ef -> one voxel of the main body eroded at ef
     for i, t in enumerate(drawn):
         for j, b in enumerate(t.split(only_watertight=False) if len(t.faces) else []):
-            Dv = voxels(b, pitch, lo, shape) & V
+            Dv = voxels_in(b, pitch, lo, shape) & V
             if Dv.sum() == 0: continue
-            own = ndi.distance_transform_edt(Dv) * pitch
-            ef = float(np.clip(0.8 * np.percentile(own[Dv], 90), erode_mm, 2.0))
+            own, sl = edt_box(Dv)
+            own *= pitch
+            ef = float(np.clip(0.8 * np.percentile(own[Dv[sl]], 90), erode_mm, 2.0))
+            del own
             Ee = d > ef
             core = Dv & Ee
             if core.sum() == 0: continue
-            Le, ne = ndi.label(Ee, st)
-            ve = np.bincount(Le.ravel())[1:]; mn = int(np.argmax(ve)) + 1
+            if ef not in seeds:
+                Le, ne = ndi.label(Ee, st)
+                ve = np.bincount(Le.ravel())[1:]; mn = int(np.argmax(ve)) + 1
+                seeds[ef] = np.unravel_index(int(np.argmax(Le == mn)), Le.shape); del Le
             Lc, _ = ndi.label(Ee | Dv, st)
-            mc = int(Lc[Le == mn][0])
+            mc = int(Lc[seeds[ef]])                                  # the main eroded body is connected: one label in Lc
             off = Lc[core] != mc
             share = 1.0 - float(off.mean())
             if share < 0.999: bad.append(dict(body=f"{i}.{j}", share=round(share, 3), erode_mm=round(ef, 2), **_where(core, off, lo, pitch)))

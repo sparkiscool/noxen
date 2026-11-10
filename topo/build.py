@@ -23,6 +23,7 @@ from scipy import ndimage as ndi
 from .part import tm, man, voxelise
 from .material import allowables
 from .fem import Solver
+from .audit import MemoryRefused
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -703,6 +704,26 @@ def export_view_mesh(mesh, path, faces=120_000):
     return len(m.faces)
 
 
+def _trim():
+    """collect the garbage and hand the freed heap back to the system (glibc malloc_trim): the export leaves GBs in reference
+    cycles (trimesh's meshes) that only the cyclic collector frees, and the gate came after it with all of it held (10 Nov,
+    scout_v4_frame: 5.3 GB held after the export, 1.2 GB after this)"""
+    import gc
+    gc.collect()
+    try:
+        import ctypes
+        ctypes.CDLL("libc.so.6").malloc_trim(0)
+    except Exception:
+        pass
+
+
+def _build_fit(P, layout, faces, log, when):
+    from .audit import build_fit
+    _trim()
+    b = np.asarray(P.bounding_box(), float)
+    return build_fit(b[:3], b[3:], layout.s.mem_limit_gb, faces=faces, log=log, hard=layout.s.audit != "off", when=when)
+
+
 def build_and_check(layout, out_dir, name, clip_margin=0.5, pitch=None, log=print, extra=None):
     """surface -> exact part -> every check -> STL, preview PNG, viewer STL, result.json. Returns the result dict."""
     os.makedirs(out_dir, exist_ok=True)
@@ -710,8 +731,27 @@ def build_and_check(layout, out_dir, name, clip_margin=0.5, pitch=None, log=prin
     t0 = time.time()
     gm = surface(layout, pitch=pitch, clip_margin=clip_margin, log=log)
     P, bod = assemble(layout, gm, log=log)
-    P, cleanup = export_cleanup(P, part, log=log)
-    PT, export = export_mesh(P, log=log)
+    nf = len(gm.faces) if hasattr(gm, "faces") else 0
+    del gm
+    try:
+        # memory of the steps on the gate grid (export cleanup, solid check) before they start (10 Nov: scout_v4_frame, the
+        # runner killed twice right after the export): over Settings.mem_limit_gb the result says so (status mem_refused)
+        mem = [_build_fit(P, layout, nf, log, "before the export cleanup")]
+        P, cleanup = export_cleanup(P, part, log=log)
+        PT, export = export_mesh(P, log=log)
+        if PT is not None and len(PT.faces):
+            mem.append(_build_fit(P, layout, 0, log, "before the solid check"))     # the export is done: the gate grid is what is left
+    except MemoryRefused as e:
+        why = e.info.get("fail") or str(e)
+        log(f"MEMORY REFUSED: {why}")
+        res = dict(name=name, engine="nox/topo", status="mem_refused", fail=why, solid_ok=False, watertight=False,
+                   strength=dict(rows=[], worst=None, worst_case=None, worst_at=None, ok=False, fail=why), mass_g=None,
+                   memory_build=e.info, bodies=bod, volume_mm3=round(P.volume(), 1), layout=layout.meta(), grid=part.summary(),
+                   build_s=round(time.time() - t0, 1), **(extra or {}))
+        with open(os.path.join(out_dir, "result.json"), "w") as fh:
+            json.dump(res, fh, indent=1, default=_json_default)
+        log("RESULT " + json.dumps(dict(name=name, solid_ok=False, status="mem_refused"), default=_json_default))
+        return res, None
     try:
         require_mesh(PT, export, P)
     except ExportError as e:
@@ -748,7 +788,7 @@ def build_and_check(layout, out_dir, name, clip_margin=0.5, pitch=None, log=prin
                strength=st, mass_g=round(mass, 2), watertight=bool(export["watertight"]), export=export, bodies=bod,
                volume_mm3=round(P.volume(), 1), drawn_g=round((part.drawn_m - part.cuts_m).volume() / 1000.0 *
                                                                layout.mat.density, 2),
-               export_cleanup=cleanup,
+               export_cleanup=cleanup, memory_build=mem,
                stl=os.path.basename(stl), view_stl=os.path.basename(view), view_faces=nview,
                preview=None if png is None else os.path.basename(png), layout=layout.meta(),
                grid=part.summary(), build_s=round(time.time() - t0, 1))

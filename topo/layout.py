@@ -102,7 +102,7 @@ class Settings:
     early_k: float = 3.0                # ... stop the run when the index there is over early_k x SPEC max_worst (SPEC settings override)
     mg_tol: float = 1e-5
     time_limit_s: float = 5.5 * 3600
-    mem_limit_gb: float = 14.0         # memory gate (topo/audit.py memory_fit): the GitHub runner has 16 GB and kills a run over it silently
+    mem_limit_gb: float = 14.0         # memory gate (topo/audit.py memory_fit, build_fit: the solve and the build / gate): the GitHub runner has 16 GB and kills a run over it silently
     checkpoint_every: int = 10
 
 

@@ -3,6 +3,7 @@ Each test prints PASS / FAIL with its numbers; exit code 1 if any fails. ~2-4 mi
 end-to-end run)."""
 import sys
 import time
+import json
 import traceback
 import numpy as np
 import scipy.sparse as sp
@@ -1255,10 +1256,106 @@ def t_memory_gate():
         check("memory gate", False, f"{type(e).__name__}: {e}")
 
 
+def t_gate_memory():
+    """gate memory (tools/solid_check.py edt / edt_box, 10 Nov: scout_v4_frame, 94 M gate cells, the runner killed right after the
+    export: scipy's distance transform held ~60 bytes a cell at once, ~5 GB a call). (a) edt is scipy's distance_transform_edt bit for
+    bit (also on a mask at the grid's edge) and edt_box is it on the body's box; (b) the gate with them reports exactly what the
+    gate with scipy's full-grid transforms reports (a pad on a sliver, a neck, thin walls, a thin_ok post); (c) its peak is under
+    audit.GATE_BYTES a cell and under 70 % of the old one's (on the frame: 37.5 vs 98 B a cell)."""
+    import tracemalloc
+    from scipy import ndimage as ndi
+    from .part import tm
+    from .build import _solid_check_module
+    from . import audit
+    try:
+        SC = _solid_check_module()
+        rng = np.random.default_rng(5)
+        M = ndi.binary_opening(rng.random((41, 33, 27)) > 0.35); M[0, :5, :5] = True
+        ok_a = all(np.array_equal(SC.edt(m, slab=s_), ndi.distance_transform_edt(m)) for m in (M, ~M) for s_ in (1, 7, 64))
+        B = np.zeros((40, 30, 20), bool); B[0:9, 3:12, 5:15] = True; B[20:30, 10:25, 2:18] = True
+        own, sl = SC.edt_box(B)
+        ok_a = ok_a and np.array_equal(own, ndi.distance_transform_edt(B)[sl])
+        cube = _mbox(20, 20, 20, (0, 0, 0)); pad = _mbox(4, 8, 8, (14.6, 0, 0)); sliver = _mbox(2.6, 1.2, 8, (11.3, 0, 0))
+        fin = _mbox(10, 1.4, 14, (-15, 0, 0)); post = _mbox(3, 3, 6, (0, 0, 13))
+        mesh, drawn, thin = tm(cube + sliver + pad + fin + post), [tm(pad + post)], [tm(post)]
+
+        def run(lean):
+            S2 = _solid_check_module()
+            if not lean:
+                S2.edt = lambda m, slab=8: ndi.distance_transform_edt(m)
+                S2.edt_box = lambda m: (ndi.distance_transform_edt(m), (slice(None),) * 3)
+            tracemalloc.start()
+            ok, info = S2.solid_check(mesh, drawn=drawn, thin_ok=thin)
+            peak = tracemalloc.get_traced_memory()[1]
+            tracemalloc.stop()
+            return ok, info, peak
+        ok1, i1, p1 = run(True)
+        ok0, i0, p0 = run(False)
+        ok_b = bool(ok1 == ok0) and json.dumps(i1, sort_keys=True, default=str) == json.dumps(i0, sort_keys=True, default=str) and not ok1 \
+            and bool(i1["drawn_not_in_main"]) and bool(i1["thin_walls"])
+        n = audit.gate_voxels(mesh.bounds[0], mesh.bounds[1])
+        ok_c = p1 < audit.GATE_BYTES * n and p1 < 0.7 * p0
+        check("gate memory: edt = scipy bit for bit, same verdict and report, peak under GATE_BYTES a cell", ok_a and ok_b and ok_c,
+              f"(a) {ok_a}; (b) {ok_b} ({ok1}, {len(i1['drawn_not_in_main'])} drawn off, {len(i1['thin_walls'])} thin, {len(i1['necks'])} necks); "
+              f"(c) peak {p1 / n:.0f} B a cell (old {p0 / n:.0f}, limit {audit.GATE_BYTES:.0f}) on {n:,} cells")
+    except Exception as e:
+        traceback.print_exc()
+        check("gate memory", False, f"{type(e).__name__}: {e}")
+
+
+def t_build_memory_gate():
+    """memory of the build and gate (topo/audit.py build_fit, topo/build.py build_and_check; 10 Nov: scout_v4_frame killed twice right
+    after the export, no result): (a) the estimate grows with the part's box (the gate grid) and its faces; (b) a setup whose gate
+    grid cannot fit is refused before the first solve (memory_fit's build entry); (c) a build over the limit after the layout
+    writes result.json with status mem_refused, its reason and memory_build, never a killed runner; (d) a build that fits carries
+    memory_build in result.json."""
+    import os, tempfile
+    from . import audit
+    from .run import optimise
+    g0 = audit.GATE_BYTES
+    try:
+        t1, _, n1 = audit.build_estimate((0, 0, 0), (50, 50, 20), faces=0, held_gb=0)
+        t2, _, n2 = audit.build_estimate((0, 0, 0), (180, 180, 44), faces=838_474, held_gb=0)
+        ok_a = n2 > 20 * n1 and t2 > 20 * t1 and 80e6 < n2 < 110e6
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn")
+        L = Layout(_mini_part(), volfrac=0.3, settings=s, log=lambda s_: None)
+        fits = "fail" not in L.mem and "build" in L.mem
+        audit.GATE_BYTES = 1e12
+        try:
+            audit.memory_fit(L, 14.0, log=lambda s_: None); pre = False
+        except audit.MemoryRefused as e:
+            pre = "build" in str(e) and "gate" in str(e)
+        audit.GATE_BYTES = g0
+        out = tempfile.mkdtemp(prefix="topo_bmem_")
+        so = Settings(min_member_mm=3.0, max_stage=2, min_stage=1, audit="warn", time_limit_s=120)
+
+        def hook(s_):
+            if "layout done" in str(s_):
+                audit.GATE_BYTES = 1e12                        # the build sees a part whose gate grid cannot fit
+        res = optimise(lambda h: _mini_part(h=h), 1.0, 0.6, out, "mini_bmem", settings=so, coarse=False, maxit=1, log=hook)
+        audit.GATE_BYTES = g0
+        rj = json.load(open(os.path.join(out, "result.json")))
+        ok_c = (rj.get("status") == "mem_refused" and res.get("status") == "mem_refused" and "gate" in (rj["strength"]["fail"] or "")
+                and rj["memory_build"]["when"] == "before the export cleanup" and not os.path.exists(os.path.join(out, "mini_bmem.stl")))
+        out2 = tempfile.mkdtemp(prefix="topo_bmem2_")
+        res2 = optimise(lambda h: _mini_part(h=h), 1.0, 0.6, out2, "mini_bmem2", settings=so, coarse=False, maxit=1, log=lambda s_: None)
+        mb = res2.get("memory_build") or []
+        ok_d = res2.get("status") is None and len(mb) == 2 and all("fail" not in m for m in mb) and mb[0]["faces"] > 0
+        check("build memory gate: estimate by the gate grid, refused before the solve or before the gate with status mem_refused",
+              ok_a and fits and pre and ok_c and ok_d,
+              f"(a) {n1:,} -> {n2:,} cells, {t1:.2f} -> {t2:.1f} GB; fits {fits}; (b) refused before the solve {pre}; (c) result.json "
+              f"{rj.get('status')} {str(rj['strength'].get('fail'))[:120]}; (d) {[m.get('estimate_gb') for m in mb]}")
+    except Exception as e:
+        traceback.print_exc()
+        check("build memory gate", False, f"{type(e).__name__}: {e}")
+    finally:
+        audit.GATE_BYTES = g0
+
+
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate):
         t()
     if not quick:
         t_end_to_end()
