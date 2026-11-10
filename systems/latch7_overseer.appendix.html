@@ -1,0 +1,42 @@
+<!-- latch v7: the audit behind the motion (written by parts/latch7/make.py; appended by tools/build_site.py). Scoped to #latch7ov. -->
+<style>
+#latch7ov { background: var(--bg); color: var(--fg); font: 14px/1.5 var(--sans); padding: 8px 16px 40px; }
+#latch7ov .wrap { max-width: 1040px; margin: 0 auto; }
+#latch7ov h2 { font: 600 16px/1.3 var(--sans); margin: 26px 0 6px; }
+#latch7ov p { margin: 6px 0; max-width: 78ch; }
+#latch7ov .t { overflow-x: auto; }
+#latch7ov table { border-collapse: collapse; font: 12px/1.4 var(--mono); margin: 8px 0; background: var(--panel); }
+#latch7ov th, #latch7ov td { border: 1px solid var(--line); padding: 4px 8px; text-align: left; vertical-align: top; }
+#latch7ov th { color: var(--muted); font-weight: 500; }
+#latch7ov a { color: var(--accent); }
+#latch7ov .open { border-left: 3px solid var(--bad); padding-left: 10px; }
+</style>
+<section id="latch7ov"><div class="wrap">
+<h2>The same latch on the Overseer pack</h2>
+<p>One latch module for both packs: the same slider, springs, 3 x 20 dowels, magnets and grabber blades. Only the cartridge and the receiver are sized to the pack (759.0 g with its cartridge). The audit behind the design is on the Scout page: <a href="https://claude.ai/artifact/Pqu6aZFdW9g7jtRyBFdraw">Battery Latch v7 (Scout)</a>.</p>
+<div class="t"><table><tr><th>pull-out, 57 N at the plug</th><th></th></tr>
+<tr><td>XT60 from the tab line / far heel pads</td><td>77.8 / 80.5 mm</td></tr>
+<tr><td>both nubs / far pads</td><td>119.6 / 55.1 N</td></tr>
+<tr><td>index: nub / foot / blade / worst</td><td>0.451 / 0.35 / 0.415 / 0.599</td></tr>
+<tr><td>springs at rest over the 35 g inertia of a slider</td><td>x1.74 (x0.87 with one lost)</td></tr>
+</table></div>
+<h2>Fit in the landing funnel (both packs)</h2>
+<div class="t"><table><tr><th></th><th>Scout set</th><th>Overseer set</th></tr>
+<tr><td>end walls</td><td>in 39.2 mm</td><td>out (the 184 seat)</td></tr>
+<tr><td>comes to rest, from its drawn height</td><td>-2.13 mm, on the low ends of its four TPU skid bars</td><td>0.0 mm, on the side ledges (995 mm&sup2;)</td></tr>
+<tr><td>free play once seated: to the nose / to the tail / across, mm</td><td>over 6 / over 6 / 0.14</td><td>0.4 / 0.35 / 0.61</td></tr>
+<tr><td>cartridge through the hole: nose / tail / each side, mm</td><td>38.5 / 42.5 / 5.3</td><td>1.5 / 1.5 / 1.0</td></tr>
+<tr><td>overlap seated / worst of 65 landing states / cartridge going down 160 mm / grabber heel and blades, mm&sup3;</td><td>0.34 / 0.26 / 0.0 / 0.0</td><td>0.0 / 0.0 / 0.0 / 0.0</td></tr>
+<tr><td>tab line along the arm's axis (seat x)</td><td>0.0 mm</td><td>1.98 mm</td></tr>
+<tr><td>verdict</td><td>clear; not held along its length (below)</td><td>clear</td></tr>
+</table></div>
+<p>The funnel was drawn round estimated outlines. Against the real latch sets its hole (170 x 50) was too small for the Overseer cartridge (174 x 55) and its seat (66.8 wide) too narrow for the Overseer receiver (68.0). Now: hole 177 x 57, seat 68.8 wide. The whole Scout v4 and Overseer still clear it: 0 crossings seated and in all 65 landing states each (tools/seat_check.py).</p>
+<p class="open">Open, Scout: its receiver is a 51 mm keel that hangs in the hole, and its ends are clipped at 45 degrees, so they never reach the end walls. Seated, nothing holds it along its length: over 6 mm of play each way (the whole Scout v4 touches first with its frame, 0.45 mm under its drawn height, and can still slide to the tail). Closing the walls further would hold it but blocks its own cartridge and crosses the Scout v4 frame. It needs a stop of its own on the Scout's base. Also open: the two tab lines sit 2.0 mm apart along the arm's axis, where the grabber has +-2.1 mm and the arm cannot move.</p>
+
+<h2>Holding it on the grabber</h2>
+<div class="t"><table><tr><th>per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th></tr><tr><td>15 N</td><td>1 g</td><td>33.42</td><td>x3.23</td><td>x2.54</td><td>0.0</td></tr><tr><td>15 N</td><td>2 g</td><td>33.42</td><td>x1.41</td><td>x1.14</td><td>0.0</td></tr><tr><td>15 N</td><td>3 g</td><td>33.42</td><td>x0.81</td><td>x0.65</td><td>3.0</td></tr><tr><td>20 N</td><td>1 g</td><td>49.62</td><td>x4.8</td><td>x3.76</td><td>0.0</td></tr><tr><td>20 N</td><td>2 g</td><td>49.62</td><td>x2.29</td><td>x1.85</td><td>0.0</td></tr><tr><td>20 N</td><td>3 g</td><td>49.62</td><td>x1.39</td><td>x1.12</td><td>0.0</td></tr></table></div>
+<h2>Bought parts</h2>
+<div class="t"><table><tr><th>part</th><th>spec</th><th>Amazon listing</th><th>check</th></tr><tr><td>latch spring</td><td>compression, 304 stainless, wire 0.3, OD 3.0, free 30</td><td><a href="https://www.amazon.com/PATIKIL-Compression-Stainless-Mechanical-Assortment/dp/B0DKCRCBV2">PATIKIL 0.3 x 3 x 30, 10 pcs</a></td><td>on a kitchen scale: 1.0..1.4 N at 19.8 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)</td></tr><tr><td>dowel pin (bolt pins and guide poles)</td><td>3 x 20, stainless, DIN 7</td><td><a href="https://www.amazon.com/Pieces-M3x20mm-Metric-Dowel-Stainless/dp/B09X5ZC9B6">M3 x 20 dowel pins A2-70 DIN 7</a></td><td>one size for both jobs; 50 pcs: https://www.amazon.com/Dowel-Pin-Std-M3x20mm-PK50/dp/B007IA6NTC</td></tr><tr><td>tab magnet</td><td>o 2 x 2 N52, axial</td><td><a href="https://us.amazon.com/Cylinder-Magnets-2x2mm-Very-Small/dp/B08YPBKNTS">tElement 2 x 2 N52 cylinder magnets, 500 pcs</a></td><td></td></tr><tr><td>XT60 pair</td><td>Amass XT60W, male + female (Spark 10 Nov)</td><td><a href="https://www.amazon.com/dp/B0DZ288QD2">ELFCULB 10 pairs Amass XT60W</a></td><td>the listing says over 100 cycles and 35 A; the receiver's carrier is drawn for the XT60E1-M panel mount: measure this plug's body before printing a carrier</td></tr><tr><td>spring guide pin</td><td>o 2.0 x 8, printed PCTG</td><td>printed</td><td></td></tr><tr><td>heel pad facing (grabber head)</td><td>TPU 95A, 2.0 thick, 3 x 7, four per head</td><td>printed from the TPU 95A on hand</td><td></td></tr></table></div>
+<h2>Checks</h2>
+<p>Static fit, squeeze, free insertion, held pull, blades and heel: 0 mm&sup3;. Motion, every frame: 787 frames, worst 0.0 mm&sup3;. Solid check: receiver, carrier, cap, cartridge, slider, strips PASS.</p>
+</div></section>

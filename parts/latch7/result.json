@@ -67,28 +67,28 @@
    "of_uts": 0.375
   },
   "solid_margin_mm": 1.0,
-  "slider_pin_magnet_g": 2.95,
-  "inertia_35g_N": 1.01,
+  "slider_pin_magnet_g": 3.37,
+  "inertia_35g_N": 1.16,
   "preload_pair_N": 2.59,
-  "preload_over_inertia": 2.56,
-  "one_spring_left_over_inertia": 1.28,
+  "preload_over_inertia": 2.23,
+  "one_spring_left_over_inertia": 1.12,
   "squeezed_pair_N": 4.66,
   "stress_of_uts_at_limit": 0.375,
   "v5": {
    "count": 1,
    "rest_N": 0.88,
-   "over_inertia": 0.87,
+   "over_inertia": 0.76,
    "squeezed_N": 2.4
   },
   "alternative_one_per_slider": {
    "each": "o 3 x 0.3, free 21.2, k 0.2 (E), tab + bar pocket 10 deep, seated on the rib face",
    "rest_N": 1.26,
    "squeezed_N": 2.08,
-   "over_inertia": 1.25,
+   "over_inertia": 1.09,
    "one_spring_fails": "that bolt has NO return force: it can sit retracted (one bolt holds the pack)",
    "why_not": "a broken or lost spring leaves one bolt dead instead of both at half force; each spring sits on the slider's centre line (no squaring couple); the 4.0 rib carries a standing preload on each face (PCTG creep) and its seats are 1.0 deep at most"
   },
-  "chosen": "two in parallel between the tabs: either one failing leaves both bolts sprung at half force (1.28 x the 35 g inertia), no standing load on the rib, a squaring couple on each slider"
+  "chosen": "two in parallel between the tabs: either one failing leaves both bolts sprung at half force (1.12 x the 35 g inertia), no standing load on the rib, a squaring couple on each slider"
  },
  "grabber_interface": {
   "open_vs_cart_mm3": 0.0,
@@ -110,6 +110,7 @@
   "blade_face_squeezed_mm": 6.2,
   "z_capture_mm": 2.1
  },
+ "pack": "scout",
  "hold": {
   "six_directions_at_8N_tpu_pads": {
    "+y (away from the head)": {
@@ -134,7 +135,7 @@
     "path": "pad + wedge friction; positive stop: the nub on the tab arch",
     "holds_N": 9.7,
     "stop_mm": 2.5,
-    "margin_1g": 4.54
+    "margin_1g": 4.53
    },
    "pitch about x (pack long axis vertical)": {
     "path": "pad pairs at z_T +- 21.9, preloaded",
@@ -187,11 +188,11 @@
     "wedge_x_N": 1.32,
     "draw_per_blade_N": 2.14,
     "pad_preload_N": 4.28,
-    "margin_pads_stay_down": 0.14,
+    "margin_pads_stay_down": 0.0,
     "worst_dir_lift": [
-     -0.43,
-     0.87,
-     0.25
+     0.0,
+     1.0,
+     0.0
     ],
     "margin_no_slip": 0.16,
     "worst_dir_slip": [
@@ -199,7 +200,7 @@
      0.87,
      0.0
     ],
-    "margin_pull_frictionless": 2.31,
+    "margin_pull_frictionless": 2.3,
     "slip_x_mm": 1.21,
     "pack_top_mm": 0.042,
     "pads": "TPU-faced pads"
@@ -224,7 +225,7 @@
      0.0
     ],
     "margin_pull_frictionless": 1.54,
-    "slip_x_mm": 2.45,
+    "slip_x_mm": 2.46,
     "pack_top_mm": 0.064,
     "pads": "TPU-faced pads"
    },
@@ -248,7 +249,7 @@
      0.0
     ],
     "margin_pull_frictionless": 4.61,
-    "slip_x_mm": 0.44,
+    "slip_x_mm": 0.45,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
    },
@@ -259,11 +260,11 @@
     "wedge_x_N": 1.32,
     "draw_per_blade_N": 2.14,
     "pad_preload_N": 4.28,
-    "margin_pads_stay_down": 0.14,
+    "margin_pads_stay_down": 0.0,
     "worst_dir_lift": [
-     -0.43,
-     0.87,
-     0.25
+     0.0,
+     1.0,
+     0.0
     ],
     "margin_no_slip": 0.08,
     "worst_dir_slip": [
@@ -271,7 +272,7 @@
      0.87,
      0.0
     ],
-    "margin_pull_frictionless": 2.31,
+    "margin_pull_frictionless": 2.3,
     "slip_x_mm": 1.53,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
@@ -307,19 +308,19 @@
     "wedge_x_N": 3.32,
     "draw_per_blade_N": 5.38,
     "pad_preload_N": 10.75,
-    "margin_pads_stay_down": 2.61,
+    "margin_pads_stay_down": 2.6,
     "worst_dir_lift": [
      -0.87,
      0.0,
-     -0.5
+     0.5
     ],
-    "margin_no_slip": 3.02,
+    "margin_no_slip": 3.01,
     "worst_dir_slip": [
      -1.0,
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 11.6,
+    "margin_pull_frictionless": 11.58,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.021,
     "pads": "TPU-faced pads"
@@ -331,19 +332,19 @@
     "wedge_x_N": 3.32,
     "draw_per_blade_N": 5.38,
     "pad_preload_N": 10.75,
-    "margin_pads_stay_down": 1.21,
+    "margin_pads_stay_down": 1.2,
     "worst_dir_lift": [
      -0.75,
      0.5,
      0.43
     ],
-    "margin_no_slip": 1.4,
+    "margin_no_slip": 1.39,
     "worst_dir_slip": [
      -0.87,
      0.5,
      0.0
     ],
-    "margin_pull_frictionless": 5.8,
+    "margin_pull_frictionless": 5.79,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.042,
     "pads": "TPU-faced pads"
@@ -361,14 +362,14 @@
      0.5,
      0.43
     ],
-    "margin_no_slip": 0.82,
+    "margin_no_slip": 0.81,
     "worst_dir_slip": [
      -0.87,
      0.5,
      0.0
     ],
-    "margin_pull_frictionless": 3.87,
-    "slip_x_mm": 0.51,
+    "margin_pull_frictionless": 3.86,
+    "slip_x_mm": 0.52,
     "pack_top_mm": 0.064,
     "pads": "TPU-faced pads"
    },
@@ -379,11 +380,11 @@
     "wedge_x_N": 3.32,
     "draw_per_blade_N": 5.38,
     "pad_preload_N": 10.75,
-    "margin_pads_stay_down": 2.61,
+    "margin_pads_stay_down": 2.6,
     "worst_dir_lift": [
      -0.87,
      0.0,
-     -0.5
+     0.5
     ],
     "margin_no_slip": 1.51,
     "worst_dir_slip": [
@@ -391,7 +392,7 @@
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 11.6,
+    "margin_pull_frictionless": 11.58,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
@@ -403,7 +404,7 @@
     "wedge_x_N": 3.32,
     "draw_per_blade_N": 5.38,
     "pad_preload_N": 10.75,
-    "margin_pads_stay_down": 1.21,
+    "margin_pads_stay_down": 1.2,
     "worst_dir_lift": [
      -0.75,
      0.5,
@@ -415,7 +416,7 @@
      0.5,
      0.0
     ],
-    "margin_pull_frictionless": 5.8,
+    "margin_pull_frictionless": 5.79,
     "slip_x_mm": 0.56,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
@@ -439,8 +440,8 @@
      0.5,
      0.0
     ],
-    "margin_pull_frictionless": 3.87,
-    "slip_x_mm": 1.64,
+    "margin_pull_frictionless": 3.86,
+    "slip_x_mm": 1.65,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
    },
@@ -451,19 +452,19 @@
     "wedge_x_N": 5.32,
     "draw_per_blade_N": 8.62,
     "pad_preload_N": 17.23,
-    "margin_pads_stay_down": 4.18,
+    "margin_pads_stay_down": 4.17,
     "worst_dir_lift": [
      -0.87,
      0.0,
      0.5
     ],
-    "margin_no_slip": 4.84,
+    "margin_no_slip": 4.83,
     "worst_dir_slip": [
      -1.0,
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 18.58,
+    "margin_pull_frictionless": 18.56,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.021,
     "pads": "TPU-faced pads"
@@ -487,7 +488,7 @@
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 9.29,
+    "margin_pull_frictionless": 9.28,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.042,
     "pads": "TPU-faced pads"
@@ -505,7 +506,7 @@
      0.5,
      0.43
     ],
-    "margin_no_slip": 1.52,
+    "margin_no_slip": 1.51,
     "worst_dir_slip": [
      -0.87,
      0.5,
@@ -523,7 +524,7 @@
     "wedge_x_N": 5.32,
     "draw_per_blade_N": 8.62,
     "pad_preload_N": 17.23,
-    "margin_pads_stay_down": 4.18,
+    "margin_pads_stay_down": 4.17,
     "worst_dir_lift": [
      -0.87,
      0.0,
@@ -535,7 +536,7 @@
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 18.58,
+    "margin_pull_frictionless": 18.56,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
@@ -559,7 +560,7 @@
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 9.29,
+    "margin_pull_frictionless": 9.28,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
@@ -584,7 +585,7 @@
      0.0
     ],
     "margin_pull_frictionless": 6.19,
-    "slip_x_mm": 0.67,
+    "slip_x_mm": 0.68,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
    },
@@ -595,19 +596,19 @@
     "wedge_x_N": 10.32,
     "draw_per_blade_N": 16.71,
     "pad_preload_N": 33.42,
-    "margin_pads_stay_down": 8.1,
+    "margin_pads_stay_down": 8.09,
     "worst_dir_lift": [
      -0.87,
      0.0,
      0.5
     ],
-    "margin_no_slip": 9.38,
+    "margin_no_slip": 9.37,
     "worst_dir_slip": [
      -1.0,
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 36.04,
+    "margin_pull_frictionless": 35.99,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.021,
     "pads": "TPU-faced pads"
@@ -625,13 +626,13 @@
      0.0,
      0.5
     ],
-    "margin_no_slip": 4.69,
+    "margin_no_slip": 4.68,
     "worst_dir_slip": [
      -1.0,
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 18.02,
+    "margin_pull_frictionless": 18.0,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.042,
     "pads": "TPU-faced pads"
@@ -649,13 +650,13 @@
      0.0,
      -0.5
     ],
-    "margin_no_slip": 3.13,
+    "margin_no_slip": 3.12,
     "worst_dir_slip": [
      -1.0,
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 12.01,
+    "margin_pull_frictionless": 12.0,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.064,
     "pads": "TPU-faced pads"
@@ -667,19 +668,19 @@
     "wedge_x_N": 10.32,
     "draw_per_blade_N": 16.71,
     "pad_preload_N": 33.42,
-    "margin_pads_stay_down": 8.1,
+    "margin_pads_stay_down": 8.09,
     "worst_dir_lift": [
      -0.87,
      0.0,
      0.5
     ],
-    "margin_no_slip": 4.69,
+    "margin_no_slip": 4.68,
     "worst_dir_slip": [
      -1.0,
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 36.04,
+    "margin_pull_frictionless": 35.99,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
@@ -697,13 +698,13 @@
      0.0,
      0.5
     ],
-    "margin_no_slip": 2.35,
+    "margin_no_slip": 2.34,
     "worst_dir_slip": [
      -1.0,
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 18.02,
+    "margin_pull_frictionless": 18.0,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
@@ -727,7 +728,7 @@
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 12.01,
+    "margin_pull_frictionless": 12.0,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.0,
     "pads": "bare PCTG pads"
@@ -977,7 +978,7 @@
    "buckles_unguided_above": 5.3,
    "deflection_ratio_squeezed": 0.61,
    "unsupported_each_side_mm": 4.9,
-   "guide": "2 x 8 steel pin inside each spring (v6: none; open slots under the pack)",
+   "guide": "2 x 8 printed pin inside each spring (v6: none; open slots under the pack)",
    "shortest_length_mm": 10.0,
    "solid_mm": 9.0
   },
@@ -1016,20 +1017,94 @@
    "XT60": "57 N to unmate is the project's own reading (the head research note); the spec sheet says 18 to 44 N"
   }
  },
+ "funnel": {
+  "setting": "scout",
+  "receiver_box": [
+   -51.5,
+   58.5,
+   -35.75,
+   35.75
+  ],
+  "seat_opening": [
+   -51.3,
+   54.3,
+   -34.4,
+   34.4
+  ],
+  "seat_gap_mm": {
+   "nose": -4.2,
+   "tail": -0.2,
+   "side": -1.35
+  },
+  "cartridge_box": [
+   -43.0,
+   53.0,
+   -23.2,
+   23.2
+  ],
+  "hole": [
+   -85.5,
+   91.5,
+   -28.5,
+   28.5
+  ],
+  "hole_gap_mm": {
+   "nose": 38.5,
+   "tail": 42.5,
+   "side": 5.3
+  },
+  "seated_mm3": {
+   "receiver": 0.34,
+   "cartridge": 0.0
+  },
+  "rests_at_mm": -2.13,
+  "tab_line_at_seat_x": 0.0,
+  "touches_at": {
+   "x": [
+    -36.2,
+    36.2
+   ],
+   "y_abs": [
+    35.8,
+    35.8
+   ],
+   "z": [
+    -44.1,
+    -42.4
+   ]
+  },
+  "pressed_0p3_in_mm3": 2.2,
+  "landing_mm3": {
+   "worst": 0.26,
+   "at": "+y 20 at h 24",
+   "states": 65
+  },
+  "swap_path_mm3": {
+   "cartridge": 0.0,
+   "at_mm_down": null,
+   "grabber_heel_and_blades": 0.0
+  },
+  "free_play_mm": {
+   "to_nose": null,
+   "to_tail": null,
+   "across": 0.14
+  },
+  "ok": true
+ },
  "mass_g": {
-  "latch7_receiver": 91.49,
+  "latch7_receiver": 91.4,
   "latch7_carrier": 4.8,
   "latch7_carrier_cap": 5.36,
-  "latch7_cartridge": 39.64,
-  "latch7_slider": 2.0,
-  "latch7_bolt_pin": 0.88,
+  "latch7_cartridge": 39.51,
+  "latch7_slider": 2.21,
+  "latch7_bolt_pin": 1.1,
   "latch7_receiver_strip_a": 0.98,
   "latch7_receiver_strip_b": 0.98
  },
- "swap_g": 217.9,
+ "swap_g": 218.2,
  "swap_cg": [
   0.0,
-  25.85,
+  25.83,
   43.0
  ],
  "insert_rows": [
@@ -1456,50 +1531,50 @@
   [
    -10.0,
    [
-    0.09,
-    0.09
+    0.1,
+    0.1
    ]
   ],
   [
    -9.5,
    [
-    0.38,
-    0.38
+    0.39,
+    0.39
    ]
   ],
   [
    -9.0,
    [
-    0.68,
-    0.68
+    0.69,
+    0.69
    ]
   ],
   [
    -8.5,
    [
-    0.98,
-    0.98
+    0.99,
+    0.99
    ]
   ],
   [
    -8.0,
    [
-    1.27,
-    1.27
+    1.28,
+    1.28
    ]
   ],
   [
    -7.5,
    [
-    1.57,
-    1.57
+    1.58,
+    1.58
    ]
   ],
   [
    -7.0,
    [
-    1.87,
-    1.87
+    1.88,
+    1.88
    ]
   ],
   [
@@ -1526,8 +1601,8 @@
   [
    -5.0,
    [
-    3.0,
-    3.0
+    3.01,
+    3.01
    ]
   ],
   [
@@ -1589,8 +1664,8 @@
   [
    -0.5,
    [
-    1.8,
-    1.8
+    1.81,
+    1.81
    ]
   ],
   [
@@ -1631,7 +1706,7 @@
   "Y_ZONE": 41.8,
   "FLOOR_T": 2.0,
   "Z_T": 43.0,
-  "SWAP_M": 217.878
+  "SWAP_M": 218.172
  },
  "v6": {
   "TAB_IN": 6.9,
@@ -1687,7 +1762,7 @@
   "SPR_YC": 9.6,
   "SPR_DEPTH": 3.0
  },
- "rest_stop_mm3_at_0.1_out": 4.64,
+ "rest_stop_mm3_at_0.1_out": 4.032,
  "bought": [
   {
    "part": "latch spring",
@@ -1695,23 +1770,16 @@
    "per_cartridge": 2,
    "listing": "PATIKIL 0.3 x 3 x 30, 10 pcs",
    "url": "https://www.amazon.com/PATIKIL-Compression-Stainless-Mechanical-Assortment/dp/B0DKCRCBV2",
-   "check": "on a kitchen scale: 1.0..1.4 N at 21.0 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)"
+   "check": "on a kitchen scale: 1.0..1.4 N at 19.8 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)"
   },
   {
-   "part": "bolt pin",
-   "spec": "dowel 3 x 16, 304 stainless",
+   "part": "dowel pin (bolt pins and guide poles)",
+   "spec": "3 x 20, stainless, DIN 7",
    "per_cartridge": 2,
-   "listing": "uxcell 3 x 16 dowel pin, 304 stainless, 50 pcs",
-   "url": "https://www.amazon.com/uxcell-Stainless-Support-Fasten-Elements/dp/B07MH1Q65Z",
-   "check": "alternative, hardened and ground DIN 6325, 100 pcs: https://www.amazon.com/Dowel-Hardened-Ground-Bright-Finish/dp/B07CVM9Z2N"
-  },
-  {
-   "part": "guide pole",
-   "spec": "dowel 3 x 20, stainless, DIN 7",
    "per_receiver": 2,
-   "listing": "M3 x 20 dowel pins A2-70 DIN 7, 12 pcs",
+   "listing": "M3 x 20 dowel pins A2-70 DIN 7",
    "url": "https://www.amazon.com/Pieces-M3x20mm-Metric-Dowel-Stainless/dp/B09X5ZC9B6",
-   "check": "or 50 pcs: https://www.amazon.com/Dowel-Pin-Std-M3x20mm-PK50/dp/B007IA6NTC"
+   "check": "one size for both jobs; 50 pcs: https://www.amazon.com/Dowel-Pin-Std-M3x20mm-PK50/dp/B007IA6NTC"
   },
   {
    "part": "tab magnet",
@@ -1722,12 +1790,20 @@
    "check": ""
   },
   {
+   "part": "XT60 pair",
+   "spec": "Amass XT60W, male + female (Spark 10 Nov)",
+   "per_cartridge": 1,
+   "listing": "ELFCULB 10 pairs Amass XT60W",
+   "url": "https://www.amazon.com/dp/B0DZ288QD2",
+   "check": "the listing says over 100 cycles and 35 A; the receiver's carrier is drawn for the XT60E1-M panel mount: measure this plug's body before printing a carrier"
+  },
+  {
    "part": "spring guide pin",
-   "spec": "dowel 2 x 8, stainless",
+   "spec": "o 2.0 x 8, printed PCTG",
    "per_cartridge": 2,
-   "listing": "uxcell 2 x 8 dowel pins, 304 stainless",
-   "url": "https://www.amazon.com/s?k=2mm+x+8mm+dowel+pin+stainless",
-   "check": "search link: pick any 2 x 8 stainless dowel; not a checked listing"
+   "listing": "printed",
+   "url": "",
+   "check": ""
   },
   {
    "part": "heel pad facing (grabber head)",
@@ -1959,7 +2035,7 @@
    "pose": null,
    "material": "PCTG",
    "tag": "C",
-   "mass_g": 2.0,
+   "mass_g": 2.21,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -1974,7 +2050,7 @@
    "pose": null,
    "material": null,
    "tag": "C",
-   "mass_g": 0.88,
+   "mass_g": 1.1,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -1989,7 +2065,7 @@
    "pose": null,
    "material": null,
    "tag": "C",
-   "mass_g": 0.88,
+   "mass_g": 1.1,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -2115,7 +2191,7 @@
   }
  ],
  "overseer": {
-  "swap_g": 758.8,
+  "swap_g": 759.0,
   "lever": {
    "xt60_from_tab_line_mm": 77.8,
    "far_pads_at_mm": 80.5,
@@ -2265,7 +2341,7 @@
      0.0
     ],
     "margin_pull_frictionless": 3.45,
-    "slip_x_mm": 2.99,
+    "slip_x_mm": 3.0,
     "pack_top_mm": 0.174
    },
    {
@@ -2298,7 +2374,7 @@
     "wedge_x_N": 15.32,
     "draw_per_blade_N": 24.81,
     "pad_preload_N": 49.62,
-    "margin_pads_stay_down": 2.3,
+    "margin_pads_stay_down": 2.29,
     "worst_dir_lift": [
      -0.75,
      0.5,
@@ -2321,7 +2397,7 @@
     "wedge_x_N": 15.32,
     "draw_per_blade_N": 24.81,
     "pad_preload_N": 49.62,
-    "margin_pads_stay_down": 1.4,
+    "margin_pads_stay_down": 1.39,
     "worst_dir_lift": [
      -0.75,
      0.5,
@@ -2337,11 +2413,7 @@
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.174
    }
-  ],
-  "static_mm3": 0.0,
-  "squeezed_mm3": 0.0,
-  "blades_tight_mm3": 0.0,
-  "pads_contact_mm2": 84.0
+  ]
  },
  "motion_collision": {
   "frames": 787,

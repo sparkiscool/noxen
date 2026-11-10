@@ -57,19 +57,23 @@ PUSH_Y = 7.5
 LUG_Y1 = 8.0                           # rest-stop lugs' top (v6 5.5): they join the plate, not only the magnet leg
 bl.SPR_DEPTH = 3.0                     # spring pocket (v6 3.5): ends 0.4 short of the relief
 bl.MAG_X, bl.MAG_Z = 8.6, 11.65        # magnet in a leg (the head's hall follows: x +-8.6, z_T +- 11.65)
-GUIDE_PIN = (2.0, 8.0)                 # steel pin inside each spring (spring inside o 2.4, shortest length 10.0)
+GUIDE_PIN = (2.0, 8.0)                 # pin inside each spring (spring inside o 2.4, shortest length 10.0): printed PCTG, nothing bought
+bl.BOLT_HZ = 11.0                      # bolt bar 22 wide (v6 18): it takes the same 3 x 20 dowel as the guide poles (Spark 10 Nov: one dowel size)
+v5.PIN_L = m6.PIN_L = 20.0
 F_BLADE = 15.0                         # the head's blade spring at the squeeze (heads v7 concept, E); 20 N recommended
 ARM = dict(x_deg_rss=0.30, x_deg_worst=0.55, x_capture_deg=1.20, y_axial_mm=1.8, tilt_x_deg=1.28, tilt_x_float_deg=2.37,
            roll_z_deg=0.74, roll_z_float_deg=1.06, stall_N=74.0, insert_N=60.0, xt60_pull_N=57.0, across_N=43.5, r_drone_mm=220.3)
 SERVO = {"DS3218 (on hand)": 20.0, "MG995 (ordered)": 9.2}      # kg cm (listings, dimensions M)
 CAM_KGCM_AT_19p5N = 1.98               # heads v7 concept: cam torque with the blades at 19.5 N open
-m6.BOUGHT = [b for b in m6.BOUGHT if b["part"] != "heel pad facing (grabber head)"] + [
-    dict(part="spring guide pin", spec="dowel 2 x 8, stainless", per_cartridge=2, listing="uxcell 2 x 8 dowel pins, 304 stainless",
-         url="https://www.amazon.com/s?k=2mm+x+8mm+dowel+pin+stainless", check="search link: pick any 2 x 8 stainless dowel; not a checked listing"),
+DOWEL = dict(part="dowel pin (bolt pins and guide poles)", spec="3 x 20, stainless, DIN 7", per_cartridge=2, per_receiver=2,
+             listing="M3 x 20 dowel pins A2-70 DIN 7", url="https://www.amazon.com/Pieces-M3x20mm-Metric-Dowel-Stainless/dp/B09X5ZC9B6",
+             check="one size for both jobs; 50 pcs: https://www.amazon.com/Dowel-Pin-Std-M3x20mm-PK50/dp/B007IA6NTC")
+m6.BOUGHT = [dict(b, check="on a kitchen scale: 1.0..1.4 N at 19.8 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)") for b in m6.BOUGHT if b["part"] == "latch spring"] + [DOWEL] + \
+    [b for b in m6.BOUGHT if b["part"] == "tab magnet"] + [
+    dict(part="XT60 pair", spec="Amass XT60W, male + female (Spark 10 Nov)", per_cartridge=1, listing="ELFCULB 10 pairs Amass XT60W",
+         url="https://www.amazon.com/dp/B0DZ288QD2", check="the listing says over 100 cycles and 35 A; the receiver's carrier is drawn for the XT60E1-M panel mount: measure this plug's body before printing a carrier"),
+    dict(part="spring guide pin", spec="o 2.0 x 8, printed PCTG", per_cartridge=2, listing="printed", url="", check=""),
     dict(part="heel pad facing (grabber head)", spec="TPU 95A, 2.0 thick, 3 x 7, four per head", listing="printed from the TPU 95A on hand", url="", check="")]
-for b in m6.BOUGHT:
-    if b["part"] == "latch spring":
-        b["check"] = "on a kitchen scale: 1.0..1.4 N at 21.0 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)"
 
 
 def pads_of(g):
@@ -209,7 +213,7 @@ def spring_column():
     D = m6.SPR["od"] - m6.SPR["d"]; L0 = m6.SPR["free"]
     rest = 2 * (bl.TAB_IN + bl.SPR_DEPTH)
     return dict(free_over_mean_dia=round(L0 / D, 1), buckles_unguided_above=5.3, deflection_ratio_squeezed=round((L0 - (rest - 2 * m6.R0)) / L0, 2),
-                unsupported_each_side_mm=round(bl.TAB_IN - bl.RIB_HX, 1), guide="2 x 8 steel pin inside each spring (v6: none; open slots under the pack)",
+                unsupported_each_side_mm=round(bl.TAB_IN - bl.RIB_HX, 1), guide="2 x 8 printed pin inside each spring (v6: none; open slots under the pack)",
                 shortest_length_mm=round(rest - 2 * bl.TRAVEL, 1), solid_mm=round((m6.SPR["n_active"] + 2) * m6.SPR["d"], 1))
 
 
@@ -295,15 +299,84 @@ def audit(B):
     return a
 
 
+
+# ------------------------------------------------------------------ fit in the landing funnel (parts/box_funnel/make.py, seat frame)
+def to_seat(B):
+    """cartridge coords -> the funnel's seat frame (x nose = the lead end, y left, z up): the receiver's bottom at seat z -44.3
+    and the receiver (with its skids) centred on the catch centre x, as the funnel's seat is drawn for each drone."""
+    fm = _funnel()
+    if B["g"]["pack"] == "scout":                         # the seat frame is the seated Scout's drone frame: the tab line at x 0
+        return np.array([[0, 0, 1, -B["g"]["Z_T"]], [1, 0, 0, 0], [0, 1, 0, fm.SEAT_Z - bl.Y_RB]])
+    R = m6.receiver_all(B); zc = [R.bounding_box()[2], R.bounding_box()[5]]
+    return np.array([[0, 0, 1, fm.CX - sum(zc) / 2], [1, 0, 0, 0], [0, 1, 0, fm.SEAT_Z - bl.Y_RB]])
+
+
+def _funnel():
+    sp = importlib.util.spec_from_file_location("box_funnel_make", os.path.join(ROOT, "parts", "box_funnel", "make.py"))
+    fm = importlib.util.module_from_spec(sp); sp.loader.exec_module(fm); return fm
+
+
+def funnel_fit(B, step=4.0):
+    g = B["g"]; pack = g["pack"]; setting = "scout" if pack == "scout" else "overseer"
+    fm = _funnel(); F = fm.funnel(setting); T = to_seat(B)
+    sys.path.insert(0, os.path.join(ROOT, "tools")); import seat_check
+    R = m6.receiver_all(B).transform(T)
+    Cs = (m6.cart_all(B) + m6.moving(g, 0, 1) + m6.moving(g, 0, -1) + bl.pack_body(g)).transform(T)
+    Cr = (m6.cart_all(B) + m6.moving(g, m6.R0, 1) + m6.moving(g, m6.R0, -1) + bl.pack_body(g)).transform(T)
+    deck, pads = heel(g)
+    H = U(deck, *pads, *m6.blades(g, bl.TAB_OUT - m6.R0, back=0.02)).transform(T)
+    # where it comes to rest: lowered from 2 mm up until more than 0.5 mm3 of it is in the funnel
+    lo, hi = -12.0, 2.0
+    for _ in range(12):
+        mid = (lo + hi) / 2
+        if vol(R.translate([0, 0, mid]) ^ F) > 0.5: lo = mid
+        else: hi = mid
+    rest = round(hi, 2)
+    touch = R.translate([0, 0, rest - 0.3]) ^ F; tb = touch.bounding_box()
+    R, Cs, Cr, H = (m.translate([0, 0, rest]) for m in (R, Cs, Cr, H))
+    up = lambda m, k=0.05: m.translate([0, 0, k])
+    rb, cb = R.bounding_box(), Cr.bounding_box()
+    x0, x1, y0, y1 = fm.SEAT; d = fm.SETTINGS[setting]; seat = (x0 + d, x1 - d, y0, y1); hole = fm.HOLE
+    out = dict(setting=setting,
+               receiver_box=[round(v, 2) for v in (rb[0], rb[3], rb[1], rb[4])], seat_opening=[round(v, 2) for v in seat],
+               seat_gap_mm=dict(nose=round(seat[1] - rb[3], 2), tail=round(rb[0] - seat[0], 2), side=round(seat[3] - rb[4], 2)),
+               cartridge_box=[round(v, 2) for v in (cb[0], cb[3], cb[1], cb[4])], hole=[round(v, 2) for v in hole],
+               hole_gap_mm=dict(nose=round(hole[1] - cb[3], 2), tail=round(cb[0] - hole[0], 2), side=round(hole[3] - cb[4], 2)),
+               seated_mm3=dict(receiver=round(vol(up(R) ^ F), 2), cartridge=round(vol(up(Cs) ^ F), 2)),
+               rests_at_mm=rest, tab_line_at_seat_x=round(float(T[0, 3] + g["Z_T"]), 2), touches_at=dict(x=[round(tb[0], 1), round(tb[3], 1)], y_abs=[round(min(abs(tb[1]), abs(tb[4])), 1), round(max(abs(tb[1]), abs(tb[4])), 1)], z=[round(tb[2], 1), round(tb[5], 1)]),
+               pressed_0p3_in_mm3=round(vol(touch), 1))
+    worst = (0.0, None)
+    for lab, ox, oy, h in seat_check.descent_states("scout_v4" if pack == "scout" else "overseer")[1:]:
+        v = vol((R + Cs).translate([ox, oy, h]) ^ F)
+        if v > worst[0]: worst = (v, lab)
+    out["landing_mm3"] = dict(worst=round(worst[0], 2), at=worst[1], states=len(seat_check.descent_states("overseer")) - 1)
+    wc = wh = 0.0; atc = None
+    for k in np.arange(0.0, 160.01, step):
+        v = vol(up(Cr).translate([0, 0, -k]) ^ F)
+        if v > wc: wc, atc = v, float(k)
+        wh = max(wh, vol(H.translate([0, 0, -k]) ^ F))
+    out["swap_path_mm3"] = dict(cartridge=round(wc, 2), at_mm_down=atc, grabber_heel_and_blades=round(wh, 2))
+    def play(dx, dy):                                        # how far the seated set can slide before the funnel stops it (to 6 mm)
+        lo, hi = 0.0, 6.0
+        if vol(up(R, 0.1).translate([hi * dx, hi * dy, 0]) ^ F) < 0.5: return None
+        for _ in range(8):
+            mid = (lo + hi) / 2
+            if vol(up(R, 0.1).translate([mid * dx, mid * dy, 0]) ^ F) > 0.5: hi = mid
+            else: lo = mid
+        return round(lo, 2)
+    out["free_play_mm"] = dict(to_nose=play(1, 0), to_tail=play(-1, 0), across=play(0, 1))
+    out["ok"] = bool(max(out["seated_mm3"].values()) < 0.5 and worst[0] < 0.5 and wc < 0.5 and wh < 0.5)
+    return out
+
 # ------------------------------------------------------------------ save, page
-PRINTED = ("latch7_receiver", "latch7_carrier", "latch7_carrier_cap", "latch7_cartridge", "latch7_slider", "latch7_receiver_strip_a", "latch7_receiver_strip_b")
+OUT = {"scout": ("latch7", "latch7_"), "overseer": ("latch7_overseer", "latch7_ov_")}     # result folder, part folder prefix
 
 
 def save(B):
-    g = B["g"]
-    out = {"latch7_receiver": B["recv"], "latch7_carrier": B["carrier"], "latch7_carrier_cap": B["cap"], "latch7_cartridge": B["cart"],
-           "latch7_slider": slider(g, 0, 1), "latch7_bolt_pin": m6.bolt_pin(g, 0, 1)}
-    for k, m in zip("ab", sorted(B["strips"].decompose(), key=lambda m: m.bounding_box()[0])): out[f"latch7_receiver_strip_{k}"] = m
+    g = B["g"]; pre = OUT[g["pack"]][1]
+    out = {pre + "receiver": B["recv"], pre + "carrier": B["carrier"], pre + "carrier_cap": B["cap"], pre + "cartridge": B["cart"],
+           pre + "slider": slider(g, 0, 1), pre + "bolt_pin": m6.bolt_pin(g, 0, 1)}
+    for k, m in zip("ab", sorted(B["strips"].decompose(), key=lambda m: m.bounding_box()[0])): out[f"{pre}receiver_strip_{k}"] = m
     paths = {}
     for nm, m in out.items():
         d = os.path.join(ROOT, "parts", nm); os.makedirs(d, exist_ok=True)
@@ -314,56 +387,60 @@ def save(B):
 ARTIFACT = "https://claude.ai/artifact/Pqu6aZFdW9g7jtRyBFdraw"
 
 
-def write_assembly(res):
-    a = res["audit"]; lv = a["lever"]; s = a["strength"]
-    asm = {"name": "latch v7", "title": "Battery Latch v7 (Scout)", "readme_view": "section", "artifact": ARTIFACT, "machine": "box", "order": 90,
-           "views": {"section": {"eye": [0, 95, 8], "target": [0, 0, 8]}, "wedge close": {"eye": [8, 34, 5], "target": [6, 0, 5]},
-                     "bolt close": {"eye": [30, 45, 6], "target": [19, 0, 8]}, "springs, from above": {"eye": [0, 42, 38], "target": [0, 3, 9]},
-                     "grabber side, from below": {"eye": [45, 70, -70], "target": [0, -4, 0]}, "lead end": {"eye": [120, -60, 70], "target": [8, -36, 34]},
-                     "held, tipped": {"eye": [150, 150, -85], "target": [0, 0, -112]}},
-           "note": "The press-two-tabs latch, v7, battery side: v6 run through four tests (error tolerance at every swap step, centred forces, "
-                   "the parts on hand, stressed parts as big as fits) and changed where it failed. Cut at the tab line. "
-                   f"The XT60 is {lv['xt60_from_tab_line_mm']} mm from the pull, so the two nubs carry {lv['pull']['both_nubs_N']} N, not 59: "
-                   f"nubs 13 wide, feet 18 wide, blades 4.7 x 16 (worst index {s['worst_index']}). 15 deg wedge: "
-                   f"+-{a['tolerance']['height_tolerance_mm']} mm of height tolerance (v6 +-0.14). The blade pushes one crowned pad on the slider's centre line. "
-                   "A steel pin inside each spring. Receiver, XT60 carrier, guide poles, bolts and their steel pins are v5's. Numbers under the viewer.",
-           "cg_ref": None, "timeline": "tools/latch7_motion.py:timeline", "appendix": "systems/latch7.appendix.html", "parts": res["page_parts"]}
-    json.dump(asm, open(os.path.join(ROOT, "systems", "latch7.assembly.json"), "w"), indent=1)
+ARTIFACT_OV = "TBD"
 
 
-def main():
-    B = build(); g = B["g"]
+def write_assembly(res, pack="scout"):
+    a = res["audit"]; lv = a["lever"]; st = a["strength"]; f = res["funnel"]; k = 1.0 if pack == "scout" else 1.7
+    nm = OUT[pack][0]; ey = lambda *v: [round(x * k, 1) for x in v]
+    asm = {"name": "latch v7" if pack == "scout" else "latch v7 overseer", "title": f"Battery Latch v7 ({pack.capitalize()})", "readme_view": "section",
+           "artifact": ARTIFACT if pack == "scout" else (ARTIFACT_OV if ARTIFACT_OV != "TBD" else None), "machine": "box", "order": 90 if pack == "scout" else 91,
+           "views": {"section": {"eye": ey(0, 95, 8), "target": [0, 0, 8]}, "wedge close": {"eye": [8, 34, 5], "target": [6, 0, 5]},
+                     "bolt close": {"eye": [res["geom"]["RF"] + 10, 45, 6], "target": [res["geom"]["RF"] - 1, 0, 8]}, "springs, from above": {"eye": [0, 42, 38], "target": [0, 3, 9]},
+                     "grabber side, from below": {"eye": ey(45, 70, -70), "target": [0, -4, 0]}, "lead end": {"eye": ey(120, -60, 70), "target": [8, round(-36 * k * 1.2), 34]},
+                     "held, tipped": {"eye": ey(150, 150, -85), "target": [0, 0, -112 if pack == "scout" else -150]}},
+           "note": f"The press-two-tabs latch, v7, on the {pack.capitalize()} pack ({res['swap_g']} g with its cartridge). The same latch module as the "
+                   f"{'Overseer' if pack == 'scout' else 'Scout'}'s: same slider, springs, 3 x 20 dowels and grabber blades. Cut at the tab line. "
+                   f"The XT60 is {lv['xt60_from_tab_line_mm']} mm from the pull, so the two nubs carry {lv['pull']['both_nubs_N']} N (worst index {st['worst_index']}). "
+                   f"In the landing funnel: {'clear seated, landing and on the swap path' if f['ok'] else 'NOT clear, see the numbers'}; "
+                   f"the cartridge passes the hole with {f['hole_gap_mm']['side']} mm a side. Numbers under the viewer.",
+           "cg_ref": None, "timeline": f"tools/{nm}_motion.py:timeline", "appendix": f"systems/{nm}.appendix.html", "parts": res["page_parts"]}
+    json.dump(asm, open(os.path.join(ROOT, "systems", f"{nm}.assembly.json"), "w"), indent=1)
+
+
+def main(pack="scout"):
+    nm = OUT[pack][0]; out_dir = os.path.join(ROOT, "parts", nm); os.makedirs(out_dir, exist_ok=True)
+    B = build(pack); g = B["g"]
     res, rows = m6.checks(B)
+    res["pack"] = pack
     res["hold"] = m6.hold_report(B)
     res["audit"] = audit(B)
+    res["funnel"] = funnel_fit(B)
     paths = save(B)
-    res["mass_g"] = {nm: round(abs(t.volume) / 1000 * (7.85 if "pin" in nm else 1.21 if "strip" in nm else 1.23), 2) for nm, t in paths.items()}
+    res["mass_g"] = {n: round(abs(t.volume) / 1000 * (7.85 if "pin" in n else 1.21 if "strip" in n else 1.23), 2) for n, t in paths.items()}
     res["swap_g"] = round(g["SWAP_M"], 1); res["swap_cg"] = [round(float(v), 2) for v in g["SWAP_CG"]]
     res["insert_rows"] = rows
     res["geom"] = {k: round(float(v), 3) for k, v in g.items() if isinstance(v, (int, float))}
-    res["v6"] = dict(TAB_IN=bl.TAB_IN, TAB_OUT=bl.TAB_OUT, TRAVEL=bl.TRAVEL, R0=m6.R0, NEED=m6.NEED, OVERLAP=bl.OVERLAP, ALPHA_deg=15.0, PUSH_Y=PUSH_Y, FOOT=(m6.FOOT_X1, m6.FOOT_Y, m6.FOOT_HZ), NUB=(m6.NUB_L, m6.NUB_HZ, m6.NUB_Y1), BLADE=(m6.BLADE_T, m6.BLADE_HZ, m6.BLADE_Y1), REC=(bl.REC_X, bl.REC_Z), MAG=(bl.MAG_X, bl.MAG_Z),
-                     BLADE_OPEN=m6.BLADE_OPEN, PAD_X=m6.PAD_X, PAD_Z=m6.PAD_Z, PAD_T=m6.PAD_T, K_BLADE=m6.K_BLADE, MU=m6.MU,
-                     SPR_DZ=m6.SPR_DZ, SPR_YC=bl.SPR_YC, SPR_DEPTH=bl.SPR_DEPTH)
+    res["v6"] = dict(TAB_IN=bl.TAB_IN, TAB_OUT=bl.TAB_OUT, TRAVEL=bl.TRAVEL, R0=m6.R0, NEED=m6.NEED, OVERLAP=bl.OVERLAP, ALPHA_deg=15.0, PUSH_Y=PUSH_Y,
+                     FOOT=(m6.FOOT_X1, m6.FOOT_Y, m6.FOOT_HZ), NUB=(m6.NUB_L, m6.NUB_HZ, m6.NUB_Y1), BLADE=(m6.BLADE_T, m6.BLADE_HZ, m6.BLADE_Y1),
+                     REC=(bl.REC_X, bl.REC_Z), MAG=(bl.MAG_X, bl.MAG_Z), BLADE_OPEN=m6.BLADE_OPEN, PAD_X=m6.PAD_X, PAD_Z=m6.PAD_Z, PAD_T=m6.PAD_T,
+                     K_BLADE=m6.K_BLADE, MU=m6.MU, SPR_DZ=m6.SPR_DZ, SPR_YC=bl.SPR_YC, SPR_DEPTH=bl.SPR_DEPTH)
     res["rest_stop_mm3_at_0.1_out"] = round(vol(slider(g, -0.1, 1) ^ B["cart"]), 3)
     res["bought"] = m6.BOUGHT
-    m6.HERE = HERE
+    m6.HERE = out_dir
     pp = m6.write_page(B, res)
     for p in pp:
-        p["id"] = p["id"].replace("latch6", "latch7"); p["version"] = "latch v7 (10 Nov)"; p["source"] = "parts/latch7/make.py"
+        p["id"] = p["id"].replace("latch6", nm); p["version"] = "latch v7 (10 Nov)"; p["source"] = "parts/latch7/make.py"
     res["page_parts"] = pp
-    ov = build("overseer")
-    res["overseer"] = dict(swap_g=round(ov["g"]["SWAP_M"], 1), **strength(ov),
-                           hold=[m6.hold(ov, Fb, m6.MU["pad_tpu"], n) for Fb in (15.0, 20.0) for n in (1.0, 2.0, 3.0)],
-                           static_mm3=round(max(vol(m6.moving(ov["g"], 0, s) ^ m6.cart_all(ov)) for s in (1, -1)), 3),
-                           squeezed_mm3=round(max(vol(m6.moving(ov["g"], bl.TRAVEL - 0.02, s) ^ m6.cart_all(ov)) for s in (1, -1)), 3),
-                           blades_tight_mm3=round(vol(U(*m6.blades(ov["g"], bl.TAB_OUT - m6.R0, back=0.02)) ^ ov["cart"]), 3),
-                           pads_contact_mm2=round(sum(vol(p.translate([0, 0.05, 0]) ^ ov["cart"]) / 0.05 for p in heel(ov["g"])[1]), 1))
-    B = build()
-    json.dump(res, open(os.path.join(HERE, "result.json"), "w"), indent=1)
-    write_assembly(res)
-    show = {k: v for k, v in res.items() if k not in ("insert_rows", "geom", "page_parts", "hold", "bought", "spring", "v6")}
-    print(json.dumps(show, indent=1, default=str))
-
+    if pack == "scout":
+        ov = build("overseer")
+        res["overseer"] = dict(swap_g=round(ov["g"]["SWAP_M"], 1), **strength(ov),
+                               hold=[m6.hold(ov, Fb, m6.MU["pad_tpu"], n) for Fb in (15.0, 20.0) for n in (1.0, 2.0, 3.0)])
+        build(pack)
+    json.dump(res, open(os.path.join(out_dir, "result.json"), "w"), indent=1)
+    write_assembly(res, pack)
+    print(pack, "funnel", json.dumps(res["funnel"]), "static", res["static_fit_mm3"], res["squeeze_mm3"], "stuck", res["insert_stuck"], "pull", res["gripped_pull_mm3"],
+          "blades", res["grabber_interface"]["squeezing_mm3"], res["grabber_interface"]["rising_open_vs_cart_and_tabs_mm3"], "worst", res["audit"]["strength"]["worst_index"])
 
 
 def appendix(res):
@@ -400,7 +477,7 @@ def appendix(res):
 {td("blade room along the pack (the arm is +-1.8 mm there)", "+-1.0 mm (the rest-stop lugs)", f"+-{res['grabber_interface']['z_capture_mm']} mm; swept clean to {a['blade_entry']['clean_along_mm_at_0p9_across']} mm")}
 {td("where the blade pushes the slider", f"{sl['v6_centred']['push_below_springs_mm']} mm under the springs, on two 1.6 mm strips: {sl['v6_centred']['blade_N_to_unlatch']} N to unlatch; 1 mm off along the pack the push is {sl['v6_head_1mm_off']['push_off_centre_mm']} mm off centre: {sl['v6_head_1mm_off']['blade_N_to_unlatch']} N", f"one crowned pad on the centre line, {sl['v7_centred']['push_below_springs_mm']} mm under the springs: {sl['v7_centred']['blade_N_to_unlatch']} N, {sl['v7_head_1p8_off']['blade_N_to_unlatch']} N with the head 1.8 off")}
 {td("slider tipped up against the pack's underside during the squeeze", f"{sl['v6_centred']['on_the_pack_underside_N']} N", f"{sl['v7_centred']['on_the_pack_underside_N']} N")}
-{td("spring column", f"30 long, 2.7 across (ratio {sc['free_over_mean_dia']}; unguided springs buckle above about {sc['buckles_unguided_above']}), in open slots under the pack", "the same spring with a 2 x 8 steel pin inside it: it cannot bow onto the pack or the rib")}
+{td("spring column", f"30 long, 2.7 across (ratio {sc['free_over_mean_dia']}; unguided springs buckle above about {sc['buckles_unguided_above']}), in open slots under the pack", "the same spring with a printed 2 x 8 pin inside it: it cannot bow onto the pack or the rib")}
 </table></div>
 <h2>1. Error at every step of the swap</h2>
 <div class="t"><table><tr><th>step</th><th>the error it meets</th><th>what the latch takes</th><th>v6</th><th>note</th></tr>{budget}</table></div>
@@ -420,7 +497,9 @@ def appendix(res):
 <div class="t"><table><tr><th>Scout, per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th><th>pack top moves, mm</th></tr>{hold}</table></div>
 <div class="t"><table><tr><th>Overseer ({ov['swap_g']} g), per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th></tr>{ohold}</table></div>
 <p>The wedge needs friction of {a['wedge_hold']['15 N']['mu_needed']} at 15 N per blade, {a['wedge_hold']['20 N']['mu_needed']} at 20 N, to keep the hardest pull from opening a blade (PCTG on PCTG is about 0.3, E). Across the pack the hold is friction and the two blade springs, as in v6.</p>
+<!--FIT-->
 <h2>4. The parts on hand</h2>
+<p>Printed parts: PCTG, the project's rule since 8 Nov (about 10 to 20 times PETG's impact toughness at 90 % of its stiffness; the PETG nodes and arms broke in testing). Heel pads and strips: TPU 95A. One dowel size, 3 x 20, does the bolt pins and the guide poles; the spring guide pins are printed.</p>
 <div class="t"><table><tr><th>part</th><th>needs</th><th>has</th></tr>
 {td("gripper servo, cam opening both blades", f"{p15['cam_kgcm']} kg cm at 15 N blades, {p20['cam_kgcm']} at 20 N (scaled from the heads v7 concept, E)", f"DS3218 20 kg cm: {p15['DS3218 (on hand)']} / {p20['DS3218 (on hand)']}; MG995 9.2 kg cm: {p15['MG995 (ordered)']} / {p20['MG995 (ordered)']}")}
 {td("head stepper, NEMA 17 at 2 A on the r 8 pinion", f"insert {stp['insert_N']:.0f} N, pull {stp['pull_N']:.1f} N", f"stall {stp['stall_N']:.0f} N: {stp['margin']} / {stp['pull_margin']}")}
@@ -451,11 +530,64 @@ def appendix(res):
 """
 
 
+
+def fit_section(rs, ro):
+    td = lambda *c: "<tr>" + "".join(f"<td>{x}</td>" for x in c) + "</tr>"
+    fs, fo = rs["funnel"], ro["funnel"]
+    pl = lambda f: " / ".join("over 6" if f["free_play_mm"][k] is None else str(f["free_play_mm"][k]) for k in ("to_nose", "to_tail", "across"))
+    ok = lambda f: "clear" if f["ok"] else "NOT clear"
+    return f"""<h2>Fit in the landing funnel (both packs)</h2>
+<div class="t"><table><tr><th></th><th>Scout set</th><th>Overseer set</th></tr>
+{td("end walls", "in 39.2 mm", "out (the 184 seat)")}
+{td("comes to rest, from its drawn height", f"{fs['rests_at_mm']} mm, on the low ends of its four TPU skid bars", f"{fo['rests_at_mm']} mm, on the side ledges ({fo['pressed_0p3_in_mm3'] / 0.3:.0f} mm&sup2;)")}
+{td("free play once seated: to the nose / to the tail / across, mm", pl(fs), pl(fo))}
+{td("cartridge through the hole: nose / tail / each side, mm", f"{fs['hole_gap_mm']['nose']} / {fs['hole_gap_mm']['tail']} / {fs['hole_gap_mm']['side']}", f"{fo['hole_gap_mm']['nose']} / {fo['hole_gap_mm']['tail']} / {fo['hole_gap_mm']['side']}")}
+{td("overlap seated / worst of 65 landing states / cartridge going down 160 mm / grabber heel and blades, mm&sup3;", f"{max(fs['seated_mm3'].values())} / {fs['landing_mm3']['worst']} / {fs['swap_path_mm3']['cartridge']} / {fs['swap_path_mm3']['grabber_heel_and_blades']}", f"{max(fo['seated_mm3'].values())} / {fo['landing_mm3']['worst']} / {fo['swap_path_mm3']['cartridge']} / {fo['swap_path_mm3']['grabber_heel_and_blades']}")}
+{td("tab line along the arm's axis (seat x)", f"{fs['tab_line_at_seat_x']} mm", f"{fo['tab_line_at_seat_x']} mm")}
+{td("verdict", ok(fs) + "; not held along its length (below)", ok(fo))}
+</table></div>
+<p>The funnel was drawn round estimated outlines. Against the real latch sets its hole (170 x 50) was too small for the Overseer cartridge (174 x 55) and its seat (66.8 wide) too narrow for the Overseer receiver (68.0). Now: hole 177 x 57, seat 68.8 wide. The whole Scout v4 and Overseer still clear it: 0 crossings seated and in all 65 landing states each (tools/seat_check.py).</p>
+<p class="open">Open, Scout: its receiver is a 51 mm keel that hangs in the hole, and its ends are clipped at 45 degrees, so they never reach the end walls. Seated, nothing holds it along its length: over 6 mm of play each way (the whole Scout v4 touches first with its frame, 0.45 mm under its drawn height, and can still slide to the tail). Closing the walls further would hold it but blocks its own cartridge and crosses the Scout v4 frame. It needs a stop of its own on the Scout's base. Also open: the two tab lines sit {abs(fo['tab_line_at_seat_x'] - fs['tab_line_at_seat_x']):.1f} mm apart along the arm's axis, where the grabber has +-2.1 mm and the arm cannot move.</p>
+"""
+
+
+def appendix_overseer(ro, rs):
+    td = lambda *c: "<tr>" + "".join(f"<td>{x}</td>" for x in c) + "</tr>"
+    st = ro["audit"]["strength"]; lv = ro["audit"]["lever"]; sp = ro["spring"]
+    hold = "".join(td(f"{h['Fb']:g} N", f"{h['n_g']:g} g", h["pad_preload_N"], f"x{h['margin_pads_stay_down']}", f"x{h['margin_no_slip']}", h["slip_x_mm"]) for h in rs["overseer"]["hold"] if h.get("releases"))
+    bought = "".join(td(b["part"], b["spec"], f'<a href="{b["url"]}">{b["listing"]}</a>' if b["url"] else b["listing"], b["check"]) for b in ro["bought"])
+    css = appendix(rs).split("</style>")[0].replace("#latch7", "#latch7ov") + "</style>"
+    return css + f"""
+<section id="latch7ov"><div class="wrap">
+<h2>The same latch on the Overseer pack</h2>
+<p>One latch module for both packs: the same slider, springs, 3 x 20 dowels, magnets and grabber blades. Only the cartridge and the receiver are sized to the pack ({ro['swap_g']} g with its cartridge). The audit behind the design is on the Scout page: <a href="{ARTIFACT}">Battery Latch v7 (Scout)</a>.</p>
+<div class="t"><table><tr><th>pull-out, 57 N at the plug</th><th></th></tr>
+{td("XT60 from the tab line / far heel pads", f"{lv['xt60_from_tab_line_mm']} / {lv['far_pads_at_mm']} mm")}
+{td("both nubs / far pads", f"{lv['pull']['both_nubs_N']} / {lv['pull']['far_pads_N']} N")}
+{td("index: nub / foot / blade / worst", f"{st['nub_pull']['index']} / {st['foot_pull']['index']} / {st['blade_pull']['index']} / {st['worst_index']}")}
+{td("springs at rest over the 35 g inertia of a slider", f"x{sp['preload_over_inertia']} (x{sp['one_spring_left_over_inertia']} with one lost)")}
+</table></div>
+{fit_section(rs, ro)}
+<h2>Holding it on the grabber</h2>
+<div class="t"><table><tr><th>per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th></tr>{hold}</table></div>
+<h2>Bought parts</h2>
+<div class="t"><table><tr><th>part</th><th>spec</th><th>Amazon listing</th><th>check</th></tr>{bought}</table></div>
+<h2>Checks</h2>
+<p>Static fit, squeeze, free insertion, held pull, blades and heel: 0 mm&sup3;. Motion, every frame: {ro.get('motion_collision', {}).get('frames')} frames, worst {ro.get('motion_collision', {}).get('max_mm3')} mm&sup3;. Solid check: receiver, carrier, cap, cartridge, slider, strips PASS.</p>
+</div></section>
+"""
+
 if __name__ == "__main__":
-    if "--appendix" in sys.argv:
+    pk = "overseer" if "--overseer" in sys.argv else "scout"
+    if "--fit" in sys.argv:
+        for q in ("scout", "overseer"):
+            print(q, json.dumps(funnel_fit(build(q)), indent=1))
+    elif "--appendix" in sys.argv:
+        rs = json.load(open(os.path.join(ROOT, "parts", "latch7", "result.json"))); ro = json.load(open(os.path.join(ROOT, "parts", "latch7_overseer", "result.json")))
         old = open(os.path.join(ROOT, "systems", "latch6.appendix.html")).read()      # v6's page section, kept under v7's, folded
         keep = ('<details style="max-width:1040px;margin:0 auto;padding:0 16px 40px;font:14px/1.5 var(--sans);color:var(--fg)"><summary>Latch v6\'s own numbers '
                 '(superseded: its pull-out loads left out the XT60\'s lever, see the first table above)</summary>' + old + '</details>\n')
-        open(os.path.join(ROOT, "systems", "latch7.appendix.html"), "w").write(appendix(json.load(open(os.path.join(HERE, "result.json")))) + keep)
+        open(os.path.join(ROOT, "systems", "latch7.appendix.html"), "w").write(appendix(rs).replace("<!--FIT-->", fit_section(rs, ro)) + keep)
+        open(os.path.join(ROOT, "systems", "latch7_overseer.appendix.html"), "w").write(appendix_overseer(ro, rs))
     else:
-        main()
+        main(pk)

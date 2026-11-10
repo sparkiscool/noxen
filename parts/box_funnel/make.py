@@ -31,8 +31,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SEAT_Z, FACE_DEG, WALL = -44.3, 55.0, 3.0            # seat frame; the seat's z 0 is W Z 215.3 (3 Nov: +60, the head extends 60 more at the drone slot)
 H_X, H_Y = 40.0, 28.0                             # the x (nose / tail) faces and the y faces end here, above the seat
 CX = 1.5                                          # the receiver centre x (the catch centre) in the seat frame
-SEAT = (CX - 92.0, CX + 92.0, -33.4, 33.4)        # the Overseer receiver v2 outline (E) = the Scout's belly skirt
-HOLE = (CX - 85.0, CX + 85.0, -25.0, 25.0)        # both cartridges and the swap head pass (Overseer cartridge width CHECK)
+SEAT = (CX - 92.0, CX + 92.0, -34.4, 34.4)        # the Overseer receiver's bottom (latch v7 CAD: 183.6 x 68.0, C) + 0.2 / 0.4 a side (10 Nov; was +-33.4 from an estimate)
+HOLE = (CX - 87.0, CX + 90.0, -28.5, 28.5)        # the Overseer cartridge (latch v7 CAD: x -84.0..90.0, +-27.5 at its rails) + 1.5 / 1.0 (10 Nov; was 170 x 50: it did not pass)
+# The Scout's receiver is a +-25.5 keel, narrower than the hole: it hangs in the hole and the Scout lands on the low ends of its four
+# TPU skid bars (o 3.5 at y +-34), which wedge between the side walls' feet about 1.9 under its drawn height (parts/latch7/make.py
+# funnel_fit finds the height); the nose and tail walls, moved in, hold it along x. The Overseer's flat feet (+-30.8..34.0) sit on the ledge.
 RIM, LEG, SKIRT = 0.0, 12.0, 8.0
 ZW = 220.3                                        # seat z 0 in W (the catch's 155.3 + 65, 3 Nov)
 BEAM_Y = 209.0                                    # the beams reach the side sheets (W X +-206..209)
@@ -44,7 +47,10 @@ END_CUT_X, END_CUT_Y, END_CUT_H = 100.0, 50.0, 24.0   # the y walls' ends (|x| >
 CORNER_Y = 45.0                                   # the x walls' top corners (h 28..40) stop at |y| 45 (at 48 an Overseer tube grazed the tail corner 1 mm3 at the diagonal capture limit, h 40) at its capture limits; the receiver still bears on them over |y| <= 48
 LEG_Y = 40.0                                       # the nose legs stand on the nose beam under the nose wall's end (|y| 40)      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
-SETTINGS = {"overseer": 0.0, "scout": 39.2}           # how far each end wall moves in from the 184 seat: the Scout receiver v3 is 105.6 long (x -51.35..54.25, centre 1.45)
+SETTINGS = {"overseer": 0.0, "scout": 39.2}           # how far each end wall moves in from the 184 seat: the Scout's cartridge (x -43..53) still passes between the walls' feet.
+# OPEN (10 Nov, parts/latch7/make.py funnel_fit): at this setting the real Scout latch set is not held along x (about 11 mm of play each way: its ends are
+# clipped at 45 deg and never reach the walls); closing the walls to 49.6 would hold it but blocks its cartridge and crosses the Scout v4 frame and flow sensor.
+TRAVEL = max(SETTINGS.values())
 
 
 def man(tri):
@@ -64,7 +70,7 @@ def body():
     w = WALL / np.sin(np.radians(FACE_DEG))
     inner = frustum(x0, x1, y0, y1, z0, z0 + H_X + 1, (H_X + 1) / TAN)
     outer = frustum(x0 - w, x1 + w, y0 - w, y1 + w, z0 - WALL, z0 + H_X, gx)
-    yw = 33.4 + gy + w                                                                  # the y walls' outer face at h 28
+    yw = SEAT[3] + gy + w                                                                  # the y walls' outer face at h 28
     top_cut = box(x0 - gy + 0.5, x1 + gy - 0.5, -200, 200, z0 + H_Y, z0 + H_X + 2)        # the y walls above h 28 go; the x walls (beyond the inner x at h 28) stay
     ox0, ox1 = x0 - gx - w, x1 + gx + w                                                 # the x walls' outer faces at h 40
     rim = [box(ox0 - RIM, ox0 + 2.0, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X), box(ox1 - 2.0, ox1 + RIM, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X)] if RIM else []
@@ -87,8 +93,8 @@ def carriage_home(sx):
     """the nose (sx +1) or tail (sx -1) wall as drawn in body(), at the Overseer setting: the shell beyond the corner hips
     (|x - xend| >= |y| - 33.4), between the side walls' inner faces, from the seat up"""
     x0, x1, y0, y1 = SEAT; z0 = SEAT_Z + 0.01; xe = x1 if sx > 0 else x0; zt = SEAT_Z + H_X + 2.0; X = 120.0   # 0.01 over the seat plane: no coplanar slivers
-    wedge = hull([(xe - sx * 33.4, 0.0, z0), (xe - sx * 33.4, 0.0, zt), (xe + sx * X, X + 33.4, z0), (xe + sx * X, -X - 33.4, z0),
-                  (xe + sx * X, X + 33.4, zt), (xe + sx * X, -X - 33.4, zt)])
+    wedge = hull([(xe - sx * y1, 0.0, z0), (xe - sx * y1, 0.0, zt), (xe + sx * X, X + y1, z0), (xe + sx * X, -X - y1, z0),
+                  (xe + sx * X, X + y1, zt), (xe + sx * X, -X - y1, zt)])
     g = (zt - z0) / TAN
     trough = hull([(xe - sx * 40, y0, z0), (xe - sx * 40, y1, z0), (xe + sx * X, y0, z0), (xe + sx * X, y1, z0),
                    (xe - sx * 40, y0 - g, zt), (xe - sx * 40, y1 + g, zt), (xe + sx * X, y0 - g, zt), (xe + sx * X, y1 + g, zt)])
@@ -99,8 +105,8 @@ TAB_H = (4.0, 8.0)                                # each wall reaches its nuts b
 SCREW_Y, SCREW_H, SCREW_R = 54.0, 6.0, 4.0        # one Tr8 lead screw per side, under the side walls' overhang, opposite-hand halves: one turn moves both walls in or out
 NUT_Y = (49.0, 59.0)                              # the nut blocks, outside the side walls' outer faces
 MOTOR = (-15.0, 15.0, 62.0, 82.0, 6.0, 26.0)      # x, |y|, h: a NEMA 8 per side beside the screw's middle, geared to it; under the Overseer base's side rails (h 31) and over the 60 / 120 deg bays
-STRIP_Y, STRIP_D = (25.5, 33.0), 1.5              # TPU strips flush in the side ledges, for the landing impact (both drones land on them)
-PROBES = [(1.5 + dx, sy * 29.5) for dx in (-30.0, 30.0) for sy in (-1, 1)]   # keep-alive and seat-sense spring probes in the ledges: both drones carry a bare pad at each
+STRIP_Y, STRIP_D = (31.2, 34.0), 1.5              # TPU strips flush in the side ledges, for the landing impact (both drones land on them)
+PROBES = [(1.5 + dx, sy * 32.6) for dx in (-30.0, 30.0) for sy in (-1, 1)]   # keep-alive and seat-sense spring probes in the ledges: both drones carry a bare pad at each
 BRACKET_Y = (26.0, 46.0)                          # the frame's ties from the ledges out to the beams, |y| 26..46 (the swap head rises at the tail end within |y| 20), under the seat plane
 
 
@@ -123,7 +129,7 @@ def frame():
     f = f + mf.Manifold.batch_boolean(ties, mf.OpType.Add)
     cuts = []
     for sx in (1, -1):                                                                              # the tabs' slots through the side walls, over the whole travel
-        xa, xb = tab_x(sx); lo, hi = (xa - SETTINGS["scout"] - 1.0, xb + 1.0) if sx > 0 else (xa - 1.0, xb + SETTINGS["scout"] + 1.0)
+        xa, xb = tab_x(sx); lo, hi = (xa - TRAVEL - 1.0, xb + 1.0) if sx > 0 else (xa - 1.0, xb + TRAVEL + 1.0)
         for sy in (-1, 1):
             ya, yb = sorted((sy * 33.0, sy * (NUT_Y[0] - 0.5)))
             cuts.append(box(lo, hi, ya, yb, z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5))
@@ -178,7 +184,7 @@ def drive():
         ya, yb = sorted((sy * (SCREW_Y - 4.0), sy * MOTOR[3])); out.append(box(-6.0, 6.0, ya, yb, z0 + SCREW_H - 4.0, z0 + MOTOR[5] - 2.0))   # the gear pair
     for sx in (1, -1):                                                                                     # switches at each nut's two ends, on the +y screw
         xa, xb = tab_x(sx)
-        for dx in (0.0, -sx * SETTINGS["scout"]):
+        for dx in (0.0, -sx * TRAVEL):
             xm = (xa + xb) / 2; xc = xm + sx * 10.0 + dx if dx == 0.0 else xm - sx * 10.0 + dx       # just beyond the nut block (xm +- 6) at each end of its travel
             out.append(box(xc - 3.0, xc + 3.0, SCREW_Y + 5.0, SCREW_Y + 15.0, z0 + SCREW_H - 6.0, z0 + SCREW_H + 6.0))
     for x, y in PROBES:
