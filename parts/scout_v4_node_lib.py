@@ -9,6 +9,7 @@ top (z -4.3), so the v21 funnel sweep is not cut. The sockets printed into the f
 probe's turret, TIED) are not node parts.
 Run: parts/scout_v4_node_<key>/part.py -> setup(h) = make("<KEY>")."""
 import json, os, sys
+import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -36,44 +37,126 @@ def _no_funnel():
 
 L.funnel_sweep = _no_funnel
 
-# The drawn collar (9 Nov, Spark: "the nodes seem very bulky ... why does the node opening have to be the same thickness"): only the
-# bore's minimum wall is drawn, 2.6 round the 3.2 bore (2.1 at the 0.5 resin annulus, over the audit's 2.0), floor to mouth; the room
-# round it stays the 3.0-wall strut + STRUT_M, so the engine grows the root where the collar's bending needs it. Numbers (worst socket,
-# TB's BT-TB / DT-TB: side 42.5 N, axial 454 N): mouth bearing, the side force on the outer quarter of the bore (2.5 x 3.0), 5.7 MPa;
-# root bending of the bare 2.1 wall alone (O8.2 / O4.2 tube, Z 50 mm3, 13 mm lever) 11 MPa + 454 N on its 39 mm2 12 MPa: under PCTG's
-# ~25 MPa across layers before any generated root, which the engine adds and its strength index checks. The 3.0 wall drew ~43 % of
-# every node's mass for a wall the mouth does not need. v4-only: the v3 Scout and Overseer nodes keep WALL (their setups unchanged).
+# 10 Nov, round 2 (Spark 9 Nov: "the nodes on this seem very bulky, we are using pctg ... why does the node opening have to be the same
+# thickness ... this isnt optimal"): the light nodes' mass was mostly their drawn collars (2.2 g drawn of 4.3), each 10 deep whatever its
+# load. Now each socket is as deep as its own load needs, its collar at the audit's wall, the room clear of the mouth plane.
+
+# Socket depth per socket, from its frame-model loads (systems/scout_v4.cage_loads.json, the worse of the 35 g crash set and the
+# head-first crash; the node's own longest-rod case uses the same two numbers). The resin is West System G/flex 650 (dimensions.md).
+#   Pull-out: the rod's bond to the resin, over the bore less its 2.0 lip (the lead-in and the plain bore at the mouth). G/flex 650 on
+#   sanded G-10 (glass/epoxy laminate, the nearest substrate to the carbon/epoxy rod) reads 3,459 psi = 23.8 MPa in West System's
+#   tensile adhesion (PATTI) table (westsystem.com G/flex TDS, E for this joint): half of it, 12 MPa, for a rod in shear with its
+#   peel at the mouth, and x2 on the crash loads (already the worst case): 12 * pi * 3.0 / 2 = 56.5 N per mm of bond. The resin
+#   sleeve itself cannot leave the print: it is cast in the 0.5 annulus and the grooves under the lip (a key, not a bond: no PCTG
+#   adhesion figure is needed). The 33-43 N pull-outs of the P / R nodes need 0.8 mm; 96 N 1.7 mm; DN-NB's 645 N 11.4 mm.
+#   Side: the side force V at the mouth is a couple on the bore, peak bearing 4 V / (D d) (a rigid pin in an elastic socket, no
+#   lever); allowed 0.3 x the across-layer Zt 23 x 0.85 / 1.1 (the engine's own crash strength at the node limit) = 5.3 MPa:
+#   d >= V / 4.3, 5.3 mm at the worst hub socket (22.8 N), 9.1 at BT-TB (38.9 N).
+#   Floor: 7.0, the injection pattern (parts/socket_inject.py) at its least: the O2.5 fill port in the 2.5 feed ring, 1.0 of wall,
+#   the O1.5 vent, the 2.0 lip; its two grooves, the annulus and its three lands scale with the depth.
+# Every cage-rod socket comes to 7.0 (was 10); the Ys' frame sockets DN-NB / DT-TB 13.5 and BN-NB / BT-TB 11.5 (were 10: at 10 the
+# 645 N bond had x1.4, not x2). A rod's cut length does not change (rod end on the bore floor, s0 to s0).
+BOND_N_PER_MM = 12.0 * np.pi * 3.0 / 2.0
+LIP_MM, BEAR_MPA, DEPTH_MIN = 2.0, 0.3 * 23.0 * 0.85 / 1.1, 7.0
+
+
+def socket_depth(axial, side):
+    d = max(DEPTH_MIN, LIP_MM + abs(axial) / BOND_N_PER_MM, 4.0 * abs(side) / (2 * L.BORE_R * BEAR_MPA))
+    return float(np.ceil(d * 2.0) / 2.0)
+
+
+_raw0 = L._raw_members
+
+
+def _raw_members(k, bridges=False):
+    out = _raw0(k, bridges)
+    for m in out:
+        f = L.LOADS.get(k, {}).get(m["name"]) or {}
+        m["depth"] = socket_depth(f.get("axial", 0.0), f.get("side", 0.0)) if f else L.DEPTH
+    return out
+
+
+L._raw_members = _raw_members
+L.DEPTH = DEPTH_MIN                                       # a socket with no frame-model load (none here: check_members refuses it)
+
+# The drawn collar: the audit's wall. 2.55 round the 3.2 bore, 2.05 at the 0.5 grooves and annulus (the audit's drawn_wall floor 2.0;
+# the 0.05 is the 40-gon's flats, 1.99 between a flat and a vertex). The Ys' two fork collars keep 3.0 (9 Nov run 4: the whole root
+# of the fork, worst at their floors). The room round every collar stays the 3.0-wall strut + STRUT_M, so the engine grows the root
+# wherever bending needs it. v4-only: the v3 Scout and Overseer nodes keep WALL.
 FORK_S0 = 20.0                                           # a bore pushed out past this by a near-parallel neighbour is one of a Y's two fork sockets
-L.DRAWN_WALL = lambda m: L.WALL if m["s0"] > FORK_S0 else 2.6
-# 9 Nov, run 4: at NB / TB / S0 / S1 (the Ys) the two fork sockets are the node's supports and its whole root: every other rod's load
-# reaches them as bending down a 29-34 mm fork onto two side-by-side collars, and the worst (0.35-0.43) sat in the 2.6 drawn wall at
-# their floors. Those two collars keep the 3.0 wall (section modulus x ~1.3); every other socket, a collar off a hub, stays 2.6.
-# The support / load regions stay the lib's (from 0.5 behind the floor): bore-only regions read 0.43 at TB against 0.32 (run 3).
+HUB_WALL = 2.55
+L.DRAWN_WALL = lambda m: L.WALL if m["s0"] > FORK_S0 else HUB_WALL
 
-# Budgets (9 Nov): the 1.54 x skeleton of spec_for was sized for strength at limit 0.3, but the v4 nodes came in at 0.005-0.18. The
-# light nodes (worst <= 0.042) go back to 1.1 x, the budget that joins every collar without flakes (5 Nov); TB / NB / S0 / S1 (0.16-
-# 0.18) to 1.25 x: an index ~ volume^-1.25 puts 1.54 -> 1.25 at ~0.23, short of the 0.25 target to leave the thinner collar its share.
-# The frame's paired sockets (9 Nov, the frame and base as one body inside the A1 mini's 180: DN/BN and DT/BT 17.2 apart at x +-75.5,
-# DS/BS 28.7 apart) are 12.3 deg apart from NB / TB and 14.2 from S0 / S1 (17 before), so their bores start 34 / 29 mm out. The bed
-# and the funnel fix those sockets; a short Y is the honest node here, its two bores side by side and the engine growing the fork
-# (the 25 mm limit was set on 5 Nov for ties 39-85 mm out, 290k-586k cells; these stay under 36 mm). v4-only.
+# The collar's outside is round with only the wall over the bore's crown (the crown's apex r sqrt 2 + HUB_WALL), not the bore's
+# teardrop scaled to the outside (apex (r + wall) sqrt 2): that put a sharp 1.7 mm ridge along the top of every collar, ending in
+# a tick at each mouth (Spark's fins, 9 Nov). The top of a collar is an up-facing surface, it needs no teardrop to print.
+_collar0 = L.collar_shape
+
+
+def collar_shape(c, u, s0, s1, r, wall, build=(0.0, 0.0, 1.0)):
+    from parts.cage_node_lib import crown_dir, _prism
+    d = crown_dir(u, build)
+    if d is None:
+        return _collar0(c, u, s0, s1, r, wall, build)
+    u = np.asarray(u, float) / np.linalg.norm(u); e1 = d; e2 = np.cross(u, e1); ro, apex = r + wall, r * np.sqrt(2.0) + wall
+    t0 = np.arccos(ro / apex)                             # where the apex's tangents touch the circle
+    a = np.linspace(t0, 2 * np.pi - t0, 48)
+    return _prism([(ro * np.cos(t), ro * np.sin(t)) for t in a] + [(apex, 0.0)], c, u, s0, s1, e1, e2)
+
+
+L.collar_shape = collar_shape
+
+# The mouth plane: the collar's end face, the strut's room and the keep-out round the rod all ended on it, and the export left
+# sliver sheets where the generated surface met those coplanar faces (the fins in the mouths of P5, P1, R0: P1's S0-P1 lead-in held
+# an open sheet in the print mesh). The room now ends 1.0 short of the mouth (the last mm is the drawn collar alone) and the keep-out
+# starts 0.5 past it (the lead-in cone, cut to 1.0 past the mouth, covers the gap).
+L.STRUT_BACK, L.KEEP_OFF = 1.0, 0.5
+
+# The Ys' forks (9 Nov): their bores side by side need only the audit's wall between the grooves (2.1). A hub's pair of near-parallel
+# bores (P1's RS0-P1 / S0-P1 13 mm out) at 2.1 put each groove 0.05 off its neighbour's 2.55 collar face: near-coincident faces,
+# the ticks in P1's bores. A hub pair gets 2.4 (0.35 off); a fork pair keeps 2.1 (its 3.0 collars 0.4 into the groove).
 L.MAX_START = 36.0
-# 10 Nov, run 5: TB 0.320 (96 N pull-out) just outside its fork collar's floor, NB 0.278 at 77 N: the moment down the fork. The two fork
-# collars are one drawn body, so their bores need only the audit's wall between the grooves (2.1, as the hub collars), not a whole
-# WALL: the fork 33.5 -> 29.4 at NB / TB, 29.2 -> 25.6 at S0 / S1, the lever 12 % shorter.
 L.BETWEEN_WALL = 2.1
-L.SOCKET_START = L._socket_starts()                       # recomputed with it (the import above computed them with WALL)
+BETWEEN_HUB = 2.4
 
-# 9 Nov, run 2 (the frame's sockets moved: NB / TB / S0 / S1 are Ys held at the fork's two sockets 29-34 mm out, the load path from the
-# cage rods' sockets runs through the hub and the fork): at 1.25 x NB 0.357 / TB 0.378 (fail), S0 0.266 / S1 0.283. Index ~ V^-1.25:
-# NB / TB 1.25 -> 1.7, S0 / S1 1.25 -> 1.35, each toward 0.25.
-BUDGET_X = {"TB": 1.9, "NB": 1.7, "S0": 1.35, "S1": 1.35}
+
+def _socket_starts():
+    st = {}
+    for k in L.sc.NODES:
+        ms = L._raw_members(k, bridges=True)
+        for m in ms:
+            def start(bw):
+                s0 = L.NODE_R
+                for o in ms:
+                    if o is m:
+                        continue
+                    t = float(np.arccos(np.clip(m["u"] @ o["u"], -1.0, 1.0)))
+                    if t > 1e-6:
+                        s0 = max(s0, (m["bore_r"] + o["bore_r"] + 2 * L.GROOVE_D + bw) / (2.0 * np.sin(t / 2.0)))
+                return s0
+            s0 = start(L.BETWEEN_WALL)
+            if L.NODE_R + 1e-6 < s0 <= FORK_S0:
+                s0 = start(BETWEEN_HUB)
+            st[(k, m["name"])] = float(np.ceil(s0 * 10.0) / 10.0)
+    return st
+
+
+L.SOCKET_START = _socket_starts()
+
+# Budgets (10 Nov): the light nodes read 6-40 x under the 0.3 limit at 1.1 x skeleton (P / R 0.017-0.054 at 1.7 cm3, RF / RB / RS
+# 0.005-0.014 at 1.2): their collars now overlap at the hub and carry most of the load drawn. BUDGET_CM3 sets their generated volume
+# outright toward ~0.25 (index ~ volume^-1.25), above what joins the collars' roots. The Ys (S0 / S1 0.20 / 0.23, NB 0.20, TB 0.23)
+# keep the volume they passed at.
+# P / R: two collars 13.9 out are a second drawn body; two 6.25 members from the hub collar to their floors are ~0.7 cm3, so 0.9
+# (1.0 at P3 / P4, 0.054 before). RF / RB / RS: their three collars from 5.0 are one drawn body already, 0.4.
+BUDGET_CM3 = {"P3": 1.0, "P4": 1.0, "P1": 0.9, "P2": 0.9, "P5": 0.9, "P6": 0.9, "R0": 0.9, "R7": 0.9,
+              "RF": 0.4, "RB": 0.4, "RS0": 0.4, "RS1": 0.4, "S0": 3.6, "S1": 3.6, "NB": 4.9, "TB": 5.5}
 
 
 def spec_for(group):
     s = L.spec_for(group)
     key = group if isinstance(group, str) else group[0]
-    s["gen_cm3"] = round(BUDGET_X.get(key, 1.1) * L.skeleton_cm3(group), 1)
+    s["gen_cm3"] = BUDGET_CM3[key]
     return s
 
 
