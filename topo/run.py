@@ -21,7 +21,7 @@ from dataclasses import replace
 
 from .layout import Layout, Settings, gate_member_mm
 from .build import build_and_check, strength
-from .audit import SetupError
+from .audit import SetupError, MemoryRefused
 
 MAX_CELLS = 300_000      # the grid the GitHub runner solves direct (16 GB, direct estimate 6 (n/4.5e5)^(4/3) GB): over it the multigrid
                          # fallback stalls (the arms at 1.0 M cells, 28-29 Oct: 300 CG iterations without converging, no attempt did one iteration)
@@ -169,8 +169,25 @@ def early_check(L, f, bi, max_worst, k, log=print):
 
 def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=False, log=None, maxit=400,
              extra=None, max_worst=0.5):
+    """the run. A run the memory gate refuses (topo/audit.py memory_fit / memory_measured) ends here with result.json
+    status "mem_refused" and the reason, never as a run the runner kills with no log (10 Nov, scout_v4_frame)."""
     os.makedirs(out_dir, exist_ok=True)
     log = log or Tee(os.path.join(out_dir, "log.txt"))
+    t0 = time.time()
+    try:
+        return _optimise(setup, h, gen_cm3, out_dir, name, settings, coarse, git, log, maxit, extra, max_worst)
+    except MemoryRefused as e:
+        why = e.info.get("fail") or str(e)
+        res = dict(name=name, engine="nox/topo", status="mem_refused", solid_ok=False, mass_g=None, gen_cm3=gen_cm3, h=h,
+                   strength=dict(worst=None, worst_case=None, worst_at=None, ok=False, fail=why), memory=e.info,
+                   peak_gb=peak_gb(), total_s=round(time.time() - t0), **(extra or {}))
+        log(f"MEMORY REFUSED: {why}")
+        with open(os.path.join(out_dir, "result.json"), "w") as fh:
+            json.dump(res, fh, indent=1, default=str)
+        return res
+
+
+def _optimise(setup, h, gen_cm3, out_dir, name, settings, coarse, git, log, maxit, extra, max_worst):
     s = settings or Settings()
     t0 = time.time()
     hook = git_checkpoint(out_dir, log) if git else None
@@ -194,6 +211,8 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
             # Part.load_multi raised and the run died at 2 min): same skip
             part_c = setup(2.0 * h)
             Lc = Layout(part_c, gen_cm3=gen_cm3, settings=sc, log=log)
+        except MemoryRefused:
+            raise
         except ValueError as e:
             # the 2h grid cannot resolve a small feature the fine grid can (29 Oct, node 21: the O5.6 camera posts' load faces fell
             # on the rod collars' support cells at h 2.0, "the load sits on fixed nodes", and the run died in 12 s): the warm start
@@ -232,7 +251,7 @@ def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=F
     L.save(os.path.join(out_dir, "density.npz"))
     t_layout = time.time() - t0
     log(f"layout done: {t_layout:.0f} s, peak {peak_gb()} GB")
-    ex = dict(layout_s=round(t_layout), peak_gb=peak_gb(), gen_cm3=gen_cm3, h=h, audit=rep_audit, early=early or None)
+    ex = dict(layout_s=round(t_layout), peak_gb=peak_gb(), memory=getattr(L, "mem", None), gen_cm3=gen_cm3, h=h, audit=rep_audit, early=early or None)
     if extra:
         ex.update(extra)
     res, P = build_and_check(L, out_dir, name, log=log, extra=ex)
@@ -385,6 +404,9 @@ def main(argv=None):
         r["strength_ok"] = bool(res["strength"]["worst"] is not None and res["strength"]["worst"] <= mw)
         with open(rj, "w") as fh:
             json.dump(r, fh, indent=1, default=str)
+        if res.get("status") == "mem_refused":
+            print(f"MEMORY REFUSED: {res['strength']['fail']}")
+            return 1
         if res.get("status") == "early_fail":
             print(f"EARLY FAIL: index {res['strength']['worst']} in '{res['strength']['worst_case']}' after beta {res['strength']['beta']:.0f}, "
                   f"over {res['strength']['k']} x max_worst {mw}: stopped at {res['total_s']} s")

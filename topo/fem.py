@@ -10,13 +10,13 @@ element gather / scatter into 8 strided slices and the element products into one
 Two solvers behind one facade (`Solver`):
   * DirectSolver: Pardiso (pypardiso, SPD Cholesky on the upper triangle, LU fallback) on the active dofs only
     (passive-void elements and the nodes that touch nothing else are removed). One factorisation per support group
-    per call, all right-hand sides of that group in one solve. Fastest up to ~0.5 M dofs; memory grows ~ n^(4/3).
+    per call, the right-hand sides of that group streamed through it in blocks (`Solver.solve_blocks`). Fastest up to ~0.5 M dofs; memory grows ~ n^(4/3).
   * MGSolver: preconditioned CG with a geometric multigrid V-cycle (Amir, Aage & Lazarov 2014; Ferrari & Sigmund
     2020). Galerkin coarse operators computed element by element: for 2:1 coarsening with trilinear prolongation the
     product P^T K P equals the assembly of P_c^T K_e P_c over the 8 children, so every level is stored as one 24 x 24
     matrix per coarse element and applied matrix-free. Damped Jacobi smoothing, Pardiso / splu on the coarsest level,
-    supports as stiff springs (lumped on coarse levels), warm start from the previous design iteration, all
-    right-hand sides of a support group iterated together. Memory ~ linear in the grid size.
+    supports as stiff springs (lumped on coarse levels), warm start from the previous design iteration, one
+    block of right-hand sides of a support group iterated together. Memory ~ linear in the grid size.
 """
 import os
 import time
@@ -178,37 +178,51 @@ def _octants(arr, shape):
     return a.reshape((nx * ny * nz // 8, 8) + tail)
 
 
-def _pardiso_factor_solve(K, B, mtype=2, log=print):
-    """solve K X = B with pypardiso; K full symmetric CSR. Returns X. Cholesky on the upper triangle, LU fallback."""
-    import pypardiso
-    from pypardiso.pardiso_wrapper import PyPardisoError
-    for mt in ((2, 11) if mtype == 2 else (mtype,)):
-        Kf = sp.triu(K, format="csr") if mt == 2 else K
-        ps = pypardiso.PyPardisoSolver()
-        ps.set_matrix_type(mt)
-        try:
-            os.environ.setdefault("PYPARDISO_MKL_RT", ps.libmkl._name)
-        except Exception:
-            pass
-        try:
-            X = ps.solve(Kf, np.ascontiguousarray(B))
-            ps.free_memory(everything=True)
-            return X.reshape(B.shape)
-        except PyPardisoError as e:
-            ps.free_memory(everything=True)
-            if mt == 11:
-                raise
-            log(f"fem: Cholesky failed ({e}); LU fallback")
+class _Factor:
+    """one direct factorisation of K, solved against blocks of right-hand sides: pypardiso Cholesky on the upper
+    triangle (LU fallback), else scipy splu."""
 
+    def __init__(self, K, log=print):
+        self.kind = None
+        try:
+            import pypardiso
+            from pypardiso.pardiso_wrapper import PyPardisoError
+        except ImportError:
+            from scipy.sparse.linalg import splu
+            self.lu = splu(K.tocsc())
+            self.kind = "splu"
+            return
+        for mt in (2, 11):
+            A = sp.triu(K, format="csr") if mt == 2 else K.tocsr()
+            ps = pypardiso.PyPardisoSolver()
+            ps.set_matrix_type(mt)
+            try:
+                os.environ.setdefault("PYPARDISO_MKL_RT", ps.libmkl._name)
+            except Exception:
+                pass
+            try:
+                ps.factorize(A)
+                ps.remove_stored_factorization()          # no Python-side copy of K; the solves below go straight to phase 33
+                self.ps, self.A, self.kind = ps, A, "pardiso"
+                return
+            except PyPardisoError as e:
+                ps.free_memory(everything=True)
+                if mt == 11:
+                    raise
+                log(f"fem: Cholesky failed ({e}); LU fallback")
 
-def _sparse_solve(K, B, log=print):
-    """direct solve with the best available backend: pypardiso, else scipy splu."""
-    try:
-        return _pardiso_factor_solve(K, B, log=log)
-    except ImportError:
-        from scipy.sparse.linalg import splu
-        lu = splu(K.tocsc())
-        return lu.solve(np.asarray(B, float))
+    def solve(self, B):
+        if self.kind == "splu":
+            return self.lu.solve(np.asarray(B, float))
+        B = np.asfortranarray(B, dtype=float)
+        self.ps.set_phase(33)
+        X = self.ps._call_pardiso(self.A, B)
+        return np.asarray(X).reshape(B.shape)
+
+    def free(self):
+        if self.kind == "pardiso":
+            self.ps.free_memory(everything=True)
+            self.A = None
 
 
 class _CoarseDirect:
@@ -338,17 +352,28 @@ class Solver:
         data = np.bincount(self.d_pos, weights=vals, minlength=len(self.d_indices))
         return sp.csr_matrix((data, self.d_indices, self.d_indptr), shape=(self.d_n, self.d_n))
 
-    def _solve_direct(self, E, F, groups):
-        U = np.zeros_like(F)
+    def _solve_direct(self, E, groups, make_F, consume, block):
         K = self._assemble_direct(E)
+        g = self.grid
         for sup, cols in groups.items():
             fr = self.d_free[sup]
             Kf = K[fr][:, fr].tocsr()
             gdof = self.d_used[fr]
-            X = _sparse_solve(Kf, F[gdof][:, cols], log=self.log)
-            U[np.ix_(gdof, cols)] = X.reshape(len(fr), len(cols))
+            fac = _Factor(Kf, log=self.log)
             del Kf
-        return U
+            try:
+                for a in range(0, len(cols), block):
+                    cb = cols[a:a + block]
+                    Fb = make_F(cb)
+                    X = fac.solve(Fb[gdof])
+                    Ub = np.zeros((g.ndof, len(cb)))
+                    Ub[gdof] = X
+                    del X
+                    consume(cb, Fb, Ub)
+                    del Fb, Ub
+            finally:
+                fac.free()
+        del K
 
     # ---------------------------------------------------------------------------------------------------- MG
     def _setup_mg(self):
@@ -498,31 +523,34 @@ class Solver:
             X += w * Dinv * (B - self._apply(lv, X))
         return X
 
-    def _solve_mg(self, E, F, groups, keys):
+    def _solve_mg(self, E, groups, keys, make_F, consume, block):
         g = self.grid
         E = np.where(self.active, np.maximum(E, self.EMIN_MG), 0.0)
-        U = np.zeros_like(F)
         for sup, cols in groups.items():
             fixed = self.fixed[sup]
             levels = self._mg_hierarchy(E, fixed)
             fmask = (fixed.reshape(g.nshape + (3,)) | self.dead[..., None])[None]
-            B = g.to_field(F[:, cols]) * ~fmask
-            X = np.zeros_like(B)
-            for q, c in enumerate(cols):
-                w = self.warm.get(keys[c])
-                if w is not None:
-                    X[q] = w
-            X *= ~fmask
-            t0 = time.time()
-            its = self._pcg(levels, B, X, ~fmask)
-            self.stats.append((sup, its, time.time() - t0))
-            for q, c in enumerate(cols):
-                self.warm[keys[c]] = X[q].copy()
-            U[:, cols] = g.to_flat(X)
+            for a in range(0, len(cols), block):
+                cb = cols[a:a + block]
+                Fb = make_F(cb)
+                B = g.to_field(Fb) * ~fmask
+                X = np.zeros_like(B)
+                for q, c in enumerate(cb):
+                    w = self.warm.get(keys[c])
+                    if w is not None:
+                        X[q] = w
+                X *= ~fmask
+                t0 = time.time()
+                its = self._pcg(levels, B, X, ~fmask)
+                self.stats.append((sup, its, time.time() - t0))
+                for q, c in enumerate(cb):
+                    self.warm[keys[c]] = X[q].copy()
+                del B
+                consume(cb, Fb, np.ascontiguousarray(g.to_flat(X)))
+                del Fb, X
             if "coarse" in levels[-1]:
                 levels[-1]["coarse"].free()
             del levels
-        return U
 
     def _pcg(self, levels, B, X, free):
         lv = levels[0]
@@ -558,19 +586,40 @@ class Solver:
         return its
 
     # ---------------------------------------------------------------------------------------------- facade
+    # right-hand sides solved at a time: the factor (or the multigrid hierarchy) is built once per support group and
+    # the cases stream through it in blocks, so a part with ~400 cases (scout_v4_frame: 54 + 342 ties, 0.7 M dofs, 5.6 MB a
+    # field) never holds every case's load and displacement at once (10 Nov: 13.6 GB peak and an OOM on the 16 GB runner)
+    BLOCK_MB = 256
+
+    def block_size(self):
+        return int(max(4, min(64, self.BLOCK_MB * 2 ** 20 // (8 * self.grid.ndof))))
+
+    def solve_blocks(self, E, ncase, make_F, consume, supports, keys=None, block=None):
+        """streamed solve: make_F(cols) -> (ndof, len(cols)) loads of those case columns, consume(cols, F, U) gets them back
+        with their displacements (ndof, len(cols)). Cases are grouped by support (supports: ncase names); one factor
+        (direct) or hierarchy (multigrid) per group, len(cols) <= block."""
+        groups = {}
+        for c, s in enumerate(supports):
+            groups.setdefault(s, []).append(c)
+        block = block or self.block_size()
+        E = np.asarray(E, float)
+        if self.backend == "direct":
+            return self._solve_direct(E, groups, make_F, consume, block)
+        keys = list(range(ncase)) if keys is None else keys
+        return self._solve_mg(E, groups, keys, make_F, consume, block)
+
     def solve(self, E, F, supports, keys=None):
         """E (nel,) element moduli (relative); F (ndof, k) loads; supports: list of k support names;
         keys: k hashable names for warm starts (multigrid). Returns U (ndof, k)."""
         F = np.asarray(F, float)
         if F.ndim == 1:
             F = F[:, None]
-        groups = {}
-        for c, s in enumerate(supports):
-            groups.setdefault(s, []).append(c)
-        if self.backend == "direct":
-            return self._solve_direct(np.asarray(E, float), F, groups)
-        keys = list(range(F.shape[1])) if keys is None else keys
-        return self._solve_mg(np.asarray(E, float), F, groups, keys)
+        U = np.zeros_like(F)
+
+        def put(cols, Fb, Ub):
+            U[:, cols] = Ub
+        self.solve_blocks(E, F.shape[1], lambda cols: F[:, cols], put, supports, keys=keys)
+        return U
 
     def element_energy(self, U, fe=None):
         """u_e^T KE u_e for every element and case: U (ndof, k) -> (k, nel). With fe (k, 24) or None rows, also

@@ -47,6 +47,13 @@ Checks (hard = raises, soft = logged + in the report):
                        frame's side lugs (16 x 8 room carrying 134 N 29 mm under the deck) read 2.55 after a 69 min run.
                        Open the room along the load path (deeper behind the socket, wider at the root), move the support
                        nearer the load, or shorten the lever.
+  memory         hard  (memory_fit, on the Layout before the first solve; memory_measured after the first iteration) the run's
+                       peak memory over Settings.mem_limit_gb (14 GB of the GitHub runner's 16): the runner kills such a run
+                       with no log and no result (10 Nov: scout_v4_frame, 396 cases, 14.3 GB, died at 2 h). The estimate is
+                       what the process holds + the solver (direct factor and assembly, or the multigrid hierarchy and one
+                       warm start per case) + the per-case element energies + one block of right-hand sides; after the first
+                       iteration the measured peak (ru_maxrss) is checked too. The reason goes to result.json (status
+                       "mem_refused"). Coarsen h, trim the envelope (fewer active dofs), or merge drawn bodies (fewer tie cases).
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -61,6 +68,95 @@ S26 = np.ones((3, 3, 3), bool)
 
 class SetupError(ValueError):
     pass
+
+
+class MemoryRefused(SetupError):
+    """the run would not fit the runner's memory (memory_fit / memory_measured); .info is the report for result.json"""
+
+    def __init__(self, msg, info):
+        super().__init__(msg)
+        self.info = info
+
+
+def _rss_gb():
+    try:
+        with open("/proc/self/status") as f:
+            for line in f:
+                if line.startswith("VmRSS"):
+                    return int(line.split()[1]) / 1048576.0
+    except OSError:
+        pass
+    return 0.0
+
+
+def _peak_gb():
+    try:
+        import resource
+        return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1048576.0
+    except Exception:
+        return 0.0
+
+
+def memory_estimate(L):
+    """(total GB, parts dict) for a Layout's optimisation: what the process holds now + its solver + the per-case element
+    energies + one block of right-hand sides in flight (fem.Solver.solve_blocks). Measured 10 Nov on scout_v4_frame (see
+    memory_fit's log line for estimate vs peak)."""
+    sol = L.fe_solver
+    g = sol.grid
+    nc = len(L.cases)
+    n_fe = sum(c.fe is not None for c in L.cases)
+    GB = 1024.0 ** 3
+    blk = sol.block_size()
+    parts = dict(held=_rss_gb())
+    if sol.backend == "direct":
+        nnz = len(sol.d_indices)
+        parts["factor"] = sol.direct_mem_estimate()
+        parts["assembly"] = nnz * 40.0 / GB                  # K, K[free][:, free], its upper triangle, int32 index copies
+        parts["block"] = blk * (2.0 * g.ndof + 4.0 * sol.d_n) * 8.0 / GB   # F and U (full dofs), F[free], Fortran copy, x, C copy
+    else:
+        lv = sum(g.nel / 8 ** l * 576 * 8.0 for l in range(1, sol.levels))
+        parts["factor"] = lv / GB + 0.5                       # coarse element matrices + the coarsest direct factor
+        parts["warm"] = nc * g.ndof * 8.0 / GB                 # one warm start per case
+        parts["block"] = blk * g.ndof * 8.0 * 10 / GB          # CG vectors (X, R, Z, P, AP, B) + V-cycle temporaries
+    parts["energies"] = (nc + n_fe) * g.nel * 8.0 / GB
+    return sum(parts.values()), {k: round(v, 2) for k, v in parts.items()}
+
+
+def memory_fit(L, limit_gb, log=print, hard=True):
+    """memory (see the module doc), before the first solve. Returns the report; raises MemoryRefused over the limit when hard."""
+    tot, parts = memory_estimate(L)
+    sol = L.fe_solver
+    rep = dict(estimate_gb=round(tot, 2), parts=parts, limit_gb=limit_gb, cases=len(L.cases), active_dofs=sol.n_active_dofs,
+               backend=sol.backend, block=sol.block_size())
+    msg = (f"memory: estimated peak {tot:.1f} GB ({', '.join(f'{k} {v}' for k, v in parts.items())}) for {len(L.cases)} cases on "
+           f"{sol.n_active_dofs:,} active dofs ({sol.backend})")
+    if tot > limit_gb:
+        why = (f"{msg}: over the {limit_gb:.0f} GB limit (the runner has 16 GB and kills a run over it with no log). Coarsen h, trim "
+               f"the envelope (fewer active dofs) or join drawn bodies (fewer tie cases: 6 per unheld body).")
+        log("audit: FAIL " + why)
+        rep["fail"] = why
+        if hard:
+            raise MemoryRefused("setup audit failed:\n  " + why, rep)
+    else:
+        log(f"audit: {msg}, limit {limit_gb:.0f} GB")
+    return rep
+
+
+def memory_measured(L, limit_gb, log=print, hard=True):
+    """memory after the first iteration: the measured peak (ru_maxrss) against the limit and the estimate."""
+    peak = _peak_gb()
+    rep = getattr(L, "mem", None) or {}
+    rep["peak_it1_gb"] = round(peak, 2)
+    msg = f"memory: peak {peak:.1f} GB after the first iteration (estimate {rep.get('estimate_gb')} GB, limit {limit_gb:.0f} GB)"
+    if peak > limit_gb:
+        why = f"{msg}: over the limit, the runner (16 GB) would kill this run. Coarsen h, trim the envelope or join drawn bodies."
+        log("audit: FAIL " + why)
+        rep["fail"] = why
+        if hard:
+            raise MemoryRefused("memory gate:\n  " + why, rep)
+    else:
+        log(msg)
+    return rep
 
 
 PLATE_MM = 180.0      # Bambu A1 mini: 180 x 180 plate, 180 tall (CLAUDE.md design rules)
