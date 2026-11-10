@@ -4,7 +4,7 @@ import importlib.util, os
 import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OFF = {"scout": -45.0, "overseer": 45.0}
+OFF = {"scout": 45.0, "overseer": -45.0}
 KEEP = ("cartridge below the seat", "bolt travel", "spring force", "heel pad load", "grip hold: pads stay down")
 
 

@@ -611,7 +611,7 @@ def appendix_overseer(ro, rs):
 """
 
 
-BOTH_X = {"scout": -45.0, "overseer": 45.0}       # page x of each set on the one page (tools/latch7_both_motion.py OFF)
+BOTH_X = {"scout": 45.0, "overseer": -45.0}       # page x (the section view looks from +y, so +x is on the left) of each set on the one page (tools/latch7_both_motion.py OFF)
 
 
 def write_both():
@@ -626,12 +626,12 @@ def write_both():
         f = os.path.join(ROOT, "systems", f"{nm}.assembly.json"); a = json.load(open(f)); a["artifact"] = None; a["archived"] = True
         json.dump(a, open(f, "w"), indent=1)
     rs, ro = res["scout"], res["overseer"]
-    asm = {"name": "latch v7 both", "title": "Battery Latch v7 (Scout and Overseer)", "readme_view": "both, section", "artifact": ARTIFACT, "machine": "box", "order": 90,
-           "views": {"both, section": {"eye": [0, 215, 12], "target": [0, 0, 4]}, "both, from below": {"eye": [95, 170, -150], "target": [0, -4, -6]},
-                     "scout close": {"eye": [BOTH_X["scout"], 95, 8], "target": [BOTH_X["scout"], 0, 8]},
-                     "overseer close": {"eye": [BOTH_X["overseer"], 120, 8], "target": [BOTH_X["overseer"], 0, 8]},
-                     "wedge, scout": {"eye": [BOTH_X["scout"] + 8, 34, 5], "target": [BOTH_X["scout"] + 6, 0, 5]},
-                     "held, tipped": {"eye": [280, 280, -150], "target": [0, 0, -135]}},
+    asm = {"name": "latch v7 both", "title": "Battery Latch v7 (Scout and Overseer)", "readme_view": "section", "artifact": ARTIFACT, "machine": "box", "order": 90,
+           "views": {"section": {"eye": [0, 215, 12], "target": [0, 0, 4]}, "below": {"eye": [95, 170, -150], "target": [0, -4, -6]},
+                     "scout": {"eye": [BOTH_X["scout"], 95, 8], "target": [BOTH_X["scout"], 0, 8]},
+                     "overseer": {"eye": [BOTH_X["overseer"], 120, 8], "target": [BOTH_X["overseer"], 0, 8]},
+                     "wedge": {"eye": [BOTH_X["scout"] + 8, 34, 5], "target": [BOTH_X["scout"] + 6, 0, 5]},
+                     "tipped": {"eye": [280, 280, -150], "target": [0, 0, -135]}},
            "note": "The press-two-tabs latch, v7, on both packs, side by side: the Scout's on the left, the Overseer's on the right. One latch module: the same slider, "
                    "springs, 3 x 20 dowels, magnets and grabber blades; only the cartridge and the receiver are sized to the pack. Each is cut at its tab line. "
                    f"Scout {rs['swap_g']} g with its cartridge, Overseer {ro['swap_g']} g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; "
