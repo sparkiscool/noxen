@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   11780.8
+   11786.1
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -29,7 +29,7 @@
     "case": "cradle, camera and LEDs crash 0 (35 g [1.0, 0.0, 0.0])",
     "cls": "crash",
     "inlayer": 0.082,
-    "across": 0.112,
+    "across": 0.111,
     "at": [
      18.6,
      -23.5,
@@ -95,7 +95,7 @@
     "case": "cradle, camera and LEDs crash 6 (35 g [0.58, 0.58, 0.58])",
     "cls": "crash",
     "inlayer": 0.07,
-    "across": 0.114,
+    "across": 0.113,
     "at": [
      18.6,
      -23.5,
@@ -172,11 +172,11 @@
     "case": "cradle, camera and LEDs crash 13 (35 g [-0.58, -0.58, -0.58])",
     "cls": "crash",
     "inlayer": 0.07,
-    "across": 0.081,
+    "across": 0.085,
     "at": [
-     7.6,
-     -22.5,
-     93.5
+     9.6,
+     -12.5,
+     85.5
     ]
    },
    {
@@ -270,7 +270,7 @@
    {
     "case": "SG90 crash 4 (35 g [0.0, 0.0, 1.0])",
     "cls": "crash",
-    "inlayer": 0.017,
+    "inlayer": 0.016,
     "across": 0.018,
     "at": [
      16.6,
@@ -281,7 +281,7 @@
    {
     "case": "SG90 crash 5 (35 g [0.0, 0.0, -1.0])",
     "cls": "crash",
-    "inlayer": 0.017,
+    "inlayer": 0.016,
     "across": 0.025,
     "at": [
      8.6,
@@ -378,10 +378,10 @@
     ]
    },
    {
-    "case": "head-first crash: 260 N on the crash stop (the cradle landed)",
+    "case": "head-first crash: 270 N on the crash stop (the cradle landed)",
     "cls": "crash",
-    "inlayer": 0.118,
-    "across": 0.122,
+    "inlayer": 0.123,
+    "across": 0.127,
     "at": [
      20.6,
      -13.5,
@@ -431,10 +431,10 @@
   ],
   "ok": true
  },
- "mass_g": 22.17,
+ "mass_g": 22.18,
  "watertight": true,
  "export": {
-  "faces_in": 109966,
+  "faces_in": 109850,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -444,7 +444,7 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 109966,
+  "faces": 109850,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -455,12 +455,12 @@
    "caps_split": 0,
    "caps_left": 0,
    "watertight": true,
-   "faces": 158588,
+   "faces": 158698,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 18022.9,
-  "exact_mm3": 18023.9
+  "volume_mm3": 18028.1,
+  "exact_mm3": 18029.2
  },
  "bodies": {
   "bodies_raw": 1,
@@ -468,7 +468,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 18023.9,
+ "volume_mm3": 18029.2,
  "drawn_g": 4.11,
  "export_cleanup": {
   "pitch": 0.25,
@@ -481,7 +481,7 @@
  },
  "stl": "scout_v4_head_frame.stl",
  "view_stl": "scout_v4_head_frame_view.stl",
- "view_faces": 109966,
+ "view_faces": 109850,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -534,6 +534,7 @@
    "early_k": 3.0,
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
+   "mem_limit_gb": 14.0,
    "checkpoint_every": 10
   },
   "R_mm": 6.44256687412536,
@@ -604,7 +605,7 @@
    "SG90 crash 11 (35 g [-0.58, 0.58, -0.58])",
    "SG90 crash 12 (35 g [-0.58, -0.58, 0.58])",
    "SG90 crash 13 (35 g [-0.58, -0.58, -0.58])",
-   "head-first crash: 260 N on the crash stop (the cradle landed)",
+   "head-first crash: 270 N on the crash stop (the cradle landed)",
    "head-first crash: the pivots until the SG90 slips (18 N)",
    "SG90 stall torque +1.8 kg cm on its tabs",
    "SG90 stall torque -1.8 kg cm on its tabs"
@@ -613,9 +614,25 @@
    "default"
   ]
  },
- "build_s": 43.3,
- "layout_s": 3897,
- "peak_gb": 6.799504,
+ "build_s": 29.0,
+ "layout_s": 2664,
+ "peak_gb": 5.678392,
+ "memory": {
+  "estimate_gb": 6.03,
+  "parts": {
+   "held": 0.79,
+   "factor": 3.32,
+   "assembly": 0.81,
+   "block": 0.96,
+   "energies": 0.14
+  },
+  "limit_gb": 14.0,
+  "cases": 66,
+  "active_dofs": 288837,
+  "backend": "direct",
+  "block": 54,
+  "peak_it1_gb": 5.42
+ },
  "gen_cm3": 14.0,
  "h": 1.0,
  "audit": {
@@ -1073,10 +1090,10 @@
     ]
    },
    {
-    "case": "head-first crash: 260 N on the crash stop (the cradle landed)",
+    "case": "head-first crash: 270 N on the crash stop (the cradle landed)",
     "cls": "crash",
-    "inlayer": 0.134,
-    "across": 0.136,
+    "inlayer": 0.139,
+    "across": 0.141,
     "at": [
      20.6,
      -12.5,
@@ -1131,19 +1148,19 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 3940,
+ "total_s": 2693,
  "part_sha": "7280b54024d8",
- "lib_sha": "d4a3e35601a1",
- "setup_sha": "763e50184a82acc8",
+ "lib_sha": "2d160c20579e",
+ "setup_sha": "8e9f59cdc6a2349f",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_head_frame.stl",
-  "sha256": "b792ad7814d6ebcf579c257e53af72b743b0d7c89543ef86ec42d585eb5aeb9e",
-  "bytes": 5498384,
-  "faces": 109966,
+  "sha256": "e33c5da4fccc688d1d7c193aad7c0f5f683fcce7a610735724968cc3d6f07a85",
+  "bytes": 5492584,
+  "faces": 109850,
   "view_faces": 60000,
-  "view_sha256": "5e8883e2907c6304c84f098e5b9cad7ba71f41972c30a08833c30fb3a8af3279",
-  "at": "2026-11-10 05:24"
+  "view_sha256": "1dd12dbbd33aab4bd437099a82649bebd32d08eed08b7f293c1395916f81f534",
+  "at": "2026-11-10 22:15"
  }
 }
