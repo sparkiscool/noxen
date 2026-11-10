@@ -642,13 +642,13 @@ ARTIFACT = "https://claude.ai/artifact/Pqu6aZFdW9g7jtRyBFdraw"
 def write_assembly(res):
     sp = res["spring"]; h8 = next(h for h in res["hold"]["all_gravity_directions"] if h["Fb"] == 8.0 and h["n_g"] == 1.0 and h["pads"].startswith("TPU"))
     a = {"name": "latch v6", "title": "Battery Latch v6 (Scout)", "readme_view": "section", "artifact": ARTIFACT, "machine": "box", "order": 90,
-         "views": {"section": {"eye": [0, 130, 8], "target": [0, 0, 12]},
-                   "wedge close": {"eye": [10, 46, 6], "target": [5, 0, 4]},
-                   "bolt close": {"eye": [36, 62, 2], "target": [19, 0, 7]},
-                   "springs, from above": {"eye": [0, 22, 60], "target": [0, 2, 9]},
+         "views": {"section": {"eye": [0, 95, 8], "target": [0, 0, 8]},
+                   "wedge close": {"eye": [6, 30, 4], "target": [6, 0, 4]},
+                   "bolt close": {"eye": [30, 45, 6], "target": [19, 0, 8]},
+                   "springs, from above": {"eye": [0, 42, 38], "target": [0, 3, 9]},
                    "grabber side, from below": {"eye": [45, 70, -70], "target": [0, -4, 0]},
                    "lead end": {"eye": [120, -60, 70], "target": [8, -36, 34]},
-                   "held, tipped": {"eye": [170, 170, -110], "target": [0, 0, -105]}},
+                   "held, tipped": {"eye": [150, 150, -85], "target": [0, 0, -112]}},
          "note": "The press-two-tabs latch, v6, battery side only: one push latches it, one squeeze unlatches it and holds the pack on the grabber. "
                  "Cut at the tab line; the +x slider and blade are in section, the -x ones whole. "
                  f"Two steel springs between the tabs ({sp['preload_pair_N']} N at rest, {sp['preload_over_inertia']} x the 35 g inertia of a slider; "
