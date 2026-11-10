@@ -171,9 +171,9 @@ def bodies():
     for pid, nm, below in (("scout_v4_ubec", "UBEC", True), ("scout_v4_xr2", "XR2", False), ("scout_v4_drv8833", "DRV8833", False)):
         b = bounds(pid)                                                               # tape lands (2.6: the gate's floor): the UBEC on one, the XR2 and the DRV8833 under theirs
         if below:
-            drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 0.6, b[0][2])
+            drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])
         else:
-            drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 3.1)); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 1.1)
+            drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 3.1)); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 3.1)
         cuts.append(box(b[0][0] - 0.5, b[1][0] + 0.5, b[0][1] - 0.5, b[1][1] + 0.5, b[0][2] - (0.0 if below else 0.5), b[1][2] + 0.5))
         boards.append((nm, [tuple(b.mean(0))], [reg], ASM[pid]["mass_g"], tuple(b.mean(0))))
     ub = bounds("scout_v4_ubec")
@@ -182,9 +182,9 @@ def bodies():
     drawn.append(box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6))   # the flow sensor's tape land over it
     cuts.append(box(lb[0][0] - 0.3, lb[1][0] + 0.3, lb[0][1] - 0.3, lb[1][1] + 0.3, lb[0][2] - 5, lb[1][2]))      # its body and window, open below
     cuts.append(box(lb[0][0] - 0.3, lb[0][0] + 4, -3, 3, lb[1][2] - 3, S.REC_TOP + 2.0))                          # its cable up the receiver's nose face
-    reg = box(lb[0][0], lb[1][0], lb[0][1], lb[1][1], lb[1][2], lb[1][2] + 0.6)
+    reg = box(lb[0][0], lb[1][0], lb[0][1], lb[1][1], lb[1][2], lb[1][2] + 2.6)   # (the whole land: h 2.25)
     boards.append(("flow MTF-02P", [tuple(lb.mean(0))], [reg], ASM["scout_v4_flow_mtf_02p"]["mass_g"], tuple(lb.mean(0))))
-    flow_reg = box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2] + 2.0, lb[1][2] + 2.6)   # the land's top face
+    flow_reg = box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6)   # the whole land
     # ---- the 8 rod sockets (crowns down: the print's up)
     side = [s for k in ("DS0", "BS0", "DS1", "BS1") for s in socks_of(k, cls=SockDown)]
     ends = [s for k in ("DN", "BN", "DT", "BT") for s in socks_of(k, cls=SockDown)]
@@ -230,7 +230,7 @@ def setup(h):
     for i, (mx, my) in enumerate(S.MOTORS):
         regs = B["pod_regs"][i]; at = (mx, my, zp); u = unit(np.array([mx, my, 0.0])); v = np.cross([0, 0, 1.0], u)
         for qs in (1, -1):
-            for lab, e in (("along", u), ("across", v)):
+            for lab, e in ((("across", v),) if qs > 0 else (("along", u),)):   # 10 Nov: 2 a pod, not 4 (run 189 died on the runner at ~16 GB;
                 p.load_multi(f"motor {i + 1}: thrust {T:.1f} N (1.20 kg x {DYN}) + torque {qs * Q_PEAK / 1000:+.2f} N m + imbalance {F_IMB:.0f} N {lab} the arm",
                              motor_parts(regs, mx, my, (0, 0, T) + F_IMB * e, at, qs * Q_PEAK), cls="flight")
             p.load_multi(f"motor {i + 1}: prop strike {qs * Q_STRIKE / 1000:+.1f} N m + {F_STRIKE:.0f} N blow + thrust {T_MAX:.1f} N",
