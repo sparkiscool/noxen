@@ -18,7 +18,7 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, hull, U, socks_of
 
 import json as _json, os as _os
 HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
-SPEC = dict(h=1.2, gen_cm3=20.0, max_worst=0.3)  # 10 Nov run 3: 14 cm3 read 0.50 at the +y roller guide (the 1.2 N m fold in y and the head-first crash share its one strut down to the floor bolts): 20. 9 Nov: 9 cm3 read 1.01 at RM-RB with its arms out to r 34 and the budget spent; 14 with the FE fold loads (1.2 N m in y) and the roller
+SPEC = dict(h=1.2, gen_cm3=23.0, max_worst=0.3)  # 10 Nov run 4: 20 read 0.34 (head-first at the -y side, 37.7 g) and skins under the spool; 23. Run 3: 14 cm3 read 0.50 at the +y roller guide (the 1.2 N m fold in y and the head-first crash share its one strut down to the floor bolts): 20. 9 Nov: 9 cm3 read 1.01 at RM-RB with its arms out to r 34 and the budget spent; 14 with the FE fold loads (1.2 N m in y) and the roller
 CUP_R, BLADE_T, CABLE_T = 15.0, 0.13, 0.6       # the 19 mm blade's cup radius and thickness (patents: R 12.7..25.4, t 0.11..0.19; E), the 6 x 30 AWG PTFE ribbon
 FOLD_NM = (0.6, 1.2)                             # the moment the mast can put on the throat before it folds, +-x and +-y (tools/probe_mast_fe.py: the unbonded lens folds at ~0.50 N m in x, 3.6 in y; x x 1.2, y capped at 2 x x: a bigger y moment is a crash on the head)
 
@@ -91,6 +91,7 @@ def bodies():
         seats.append(radial(r_full + 11.0, r_full + 11.6, 2.0, yc - 2.0, yc + 2.0))
     drawn += guides
     cuts.append(radial(r_empty - S.ROLLER["r"] - 0.8, r_full + 0.8, S.ROLLER["r"] + 0.8, -rw - 0.3, rw + 0.3))   # the roller's tube and its travel
+    cuts.append(box(cx - 13.0, cx + 13.0, S.SPOOL["y0"] - 0.6, S.SPOOL["y1"] + 0.6, DZ1, cz - 10.0))   # 10 Nov run 4: under the spool, between its sweep (down to z 24.1) and the N20's gearbox (up to 25.5), room left only skins 1.1-1.5 thick (the solid check): void
     # the spool, its gear and the pinion swept
     cuts.append(ycyl(cx, cz, r + 1.0, S.SPOOL["y0"] - 0.6, S.SPOOL["y1"] + 0.6))
     cuts.append(ycyl(cx, cz, ra + 0.8, gy0 - 0.5, gy1 + 0.5)); cuts.append(ycyl(cx, pz, rp + 0.8, gy0 - 0.5, gy1 + 0.5))
