@@ -49,8 +49,8 @@ CORNER_Y = 45.0                                   # the x walls' top corners (h 
 LEG_Y = 40.0                                       # the nose legs stand on the nose beam under the nose wall's end (|y| 40)      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
 TAN = np.tan(np.radians(FACE_DEG))
 SETTINGS = {"overseer": 0.0, "scout": 37.2}           # how far each end wall moves in from the 184 seat (37.2 since the seat moved 1.98 to the tail: the nose wall's foot stays at x 54.3, 1.3 clear of the Scout cartridge's x 53)
-# OPEN (10 Nov, parts/latch7/make.py funnel_fit): at this setting the real Scout latch set is not held along x (about 11 mm of play each way: its ends are
-# clipped at 45 deg and never reach the walls); closing the walls to 49.6 would hold it but blocks its cartridge and crosses the Scout v4 frame and flow sensor.
+# The Scout's receiver carries four landing feet (parts/latch7/make.py scout_feet, 10 Nov): pads on the side ledges, their outer ends 0.3 from these walls' feet.
+# Without them its clipped ends never reached the walls (11 mm of play each way).
 TRAVEL = max(SETTINGS.values())
 
 

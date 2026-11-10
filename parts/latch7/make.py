@@ -150,9 +150,36 @@ bl.slider, bl.cartridge = slider, cartridge
 v5.slider = slider
 
 
+FOOT_PLAY = 0.3                        # each Scout foot's outer end to its end wall's foot
+FOOT_PAD = dict(x=(29.2, 34.0), y1=4.0, L=6.0)      # foot pads on the funnel's side ledges (|y| 28.5..34.4): the same +-34.0 as the Overseer's feet
+FOOT_ANCHOR = dict(x=(26.0, 32.0), y=(13.5, 19.0), z=((84.5, 91.5), (-5.5, 1.5)))   # in the receiver's four corner bosses (nose, tail)
+
+
+def scout_feet(B):
+    """four landing feet on the Scout receiver (10 Nov, Spark: the battery must fit the funnel). Its keel hangs in the funnel's
+    hole and its clipped ends never reach the end walls, so nothing held it along x. Each foot is a pad on a side ledge, its outer
+    end 0.3 from an end wall's foot, on a leg down from a corner boss; the Scout then sits at its drawn height, held along x and y."""
+    g = B["g"]; fm = _funnel(); zt = g["Z_T"]
+    xn = fm.SEAT[1] - fm.SETTINGS["scout"] - FOOT_PLAY; xt = fm.SEAT[0] + fm.SETTINGS["scout"] + FOOT_PLAY      # drone x of the pads' outer ends
+    legs = []
+    for sx in (1, -1):
+        for zo, za in ((xn + zt, FOOT_ANCHOR["z"][0]), (xt + zt, FOOT_ANCHOR["z"][1])):
+            zp = sorted((zo, zo - math.copysign(FOOT_PAD["L"], zo - zt)))
+            pts = [[sx * x, y, z] for x in FOOT_PAD["x"] for y in (bl.Y_RB, FOOT_PAD["y1"]) for z in zp] + \
+                  [[sx * x, y, z] for x in FOOT_ANCHOR["x"] for y in FOOT_ANCHOR["y"] for z in za]
+            legs.append(hullp(pts))
+    legs = U(*legs)
+    for sk in B.get("rskids", []):                                   # 0.4 clear of the TPU skids
+        for dx, dy in ((0.4, 0), (-0.4, 0), (0, 0.4), (0, -0.4), (0, 0)):
+            legs = legs - sk.translate([dx, dy, 0])
+    return legs
+
+
 def build(pack="scout"):
     bl._CACHE.clear()
     B = m6.build(pack); set_pack(B["g"])
+    if pack == "scout":
+        B["feet"] = scout_feet(B); B["recv"] = B["recv"] + B["feet"]
     return B
 
 
@@ -416,6 +443,12 @@ def main(pack="scout"):
     res["hold"] = m6.hold_report(B)
     res["audit"] = audit(B)
     res["funnel"] = funnel_fit(B)
+    if pack == "scout":
+        W = (g["SWAP_M"] + 510.0) / 1000 * 9.81            # the Scout's weight without its pack, 510 g (E, ~730 g all-up)
+        Ff = max((ARM["xt60_pull_N"] + W) / 4, 3 * W / 2)      # per foot: the XT60 pull-out on four, or a 3 g landing on two
+        lever = 7.5; Z = 6.0 * 7.0 ** 2 / 6                    # pad centre to the anchor, the leg's 6 x 7 root
+        res["scout_feet"] = dict(count=4, added_g=round(vol(B["feet"]) / 1000 * 1.23, 1), pad_mm=[4.8, FOOT_PAD["L"]], end_play_mm=FOOT_PLAY,
+                                 per_foot_N=round(Ff, 1), root_MPa=round(Ff * lever / Z, 2), index=round(Ff * lever / Z / m6.ALLOW["functional"], 2))
     paths = save(B)
     res["mass_g"] = {n: round(abs(t.volume) / 1000 * (7.85 if "pin" in n else 1.21 if "strip" in n else 1.23), 2) for n, t in paths.items()}
     res["swap_g"] = round(g["SWAP_M"], 1); res["swap_cg"] = [round(float(v), 2) for v in g["SWAP_CG"]]
@@ -533,21 +566,21 @@ def appendix(res):
 
 def fit_section(rs, ro):
     td = lambda *c: "<tr>" + "".join(f"<td>{x}</td>" for x in c) + "</tr>"
-    fs, fo = rs["funnel"], ro["funnel"]
+    fs, fo = rs["funnel"], ro["funnel"]; sf = rs["scout_feet"]
     pl = lambda f: " / ".join("over 6" if f["free_play_mm"][k] is None else str(f["free_play_mm"][k]) for k in ("to_nose", "to_tail", "across"))
     ok = lambda f: "clear" if f["ok"] else "NOT clear"
     return f"""<h2>Fit in the landing funnel (both packs)</h2>
 <div class="t"><table><tr><th></th><th>Scout set</th><th>Overseer set</th></tr>
 {td("end walls", "in 39.2 mm", "out (the 184 seat)")}
-{td("comes to rest, from its drawn height", f"{fs['rests_at_mm']} mm, on the low ends of its four TPU skid bars", f"{fo['rests_at_mm']} mm, on the side ledges ({fo['pressed_0p3_in_mm3'] / 0.3:.0f} mm&sup2;)")}
+{td("comes to rest, from its drawn height", f"{fs['rests_at_mm'] + 0.0:.1f} mm, on its four feet on the side ledges ({fs['pressed_0p3_in_mm3'] / 0.3:.0f} mm&sup2;)", f"{fo['rests_at_mm']} mm, on the side ledges ({fo['pressed_0p3_in_mm3'] / 0.3:.0f} mm&sup2;)")}
 {td("free play once seated: to the nose / to the tail / across, mm", pl(fs), pl(fo))}
 {td("cartridge through the hole: nose / tail / each side, mm", f"{fs['hole_gap_mm']['nose']} / {fs['hole_gap_mm']['tail']} / {fs['hole_gap_mm']['side']}", f"{fo['hole_gap_mm']['nose']} / {fo['hole_gap_mm']['tail']} / {fo['hole_gap_mm']['side']}")}
 {td("overlap seated / worst of 65 landing states / cartridge going down 160 mm / grabber heel and blades, mm&sup3;", f"{max(fs['seated_mm3'].values())} / {fs['landing_mm3']['worst']} / {fs['swap_path_mm3']['cartridge']} / {fs['swap_path_mm3']['grabber_heel_and_blades']}", f"{max(fo['seated_mm3'].values())} / {fo['landing_mm3']['worst']} / {fo['swap_path_mm3']['cartridge']} / {fo['swap_path_mm3']['grabber_heel_and_blades']}")}
 {td("tab line along the arm's axis (seat x)", f"{fs['tab_line_at_seat_x']} mm", f"{fo['tab_line_at_seat_x']} mm")}
-{td("verdict", ok(fs) + "; not held along its length (below)", ok(fo))}
+{td("verdict", ok(fs), ok(fo))}
 </table></div>
 <p>The funnel was drawn round estimated outlines. Against the real latch sets its hole (170 x 50) was too small for the Overseer cartridge (174 x 55) and its seat (66.8 wide) too narrow for the Overseer receiver (68.0). Now: hole 177 x 57, seat 68.8 wide. The whole Scout v4 and Overseer still clear it: 0 crossings seated and in all 65 landing states each (tools/seat_check.py).</p>
-<p class="open">Open, Scout: its receiver is a 51 mm keel that hangs in the hole, and its ends are clipped at 45 degrees, so they never reach the end walls. Seated, nothing holds it along its length: over 6 mm of play each way (the whole Scout v4 touches first with its frame, 0.45 mm under its drawn height, and can still slide to the tail). Closing the walls further would hold it but blocks its own cartridge and crosses the Scout v4 frame. It needs a stop of its own on the Scout's base. Also open: the two tab lines sit {abs(fo['tab_line_at_seat_x'] - fs['tab_line_at_seat_x']):.1f} mm apart along the arm's axis, where the grabber has +-2.1 mm and the arm cannot move.</p>
+<p>The Scout's receiver is a 51 mm wide keel with ends clipped at 45 degrees: it hung in the hole and nothing held it along its length (over 6 mm of play each way). It now has four landing feet, one on a leg down from each corner boss: pads {sf['pad_mm'][0]} x {sf['pad_mm'][1]} mm on the funnel's side ledges, their outer ends {sf['end_play_mm']} mm from the end walls' feet, the same 68 mm across as the Overseer's. {sf['added_g']} g in all, part of the receiver print. At {sf['per_foot_N']} N a foot (the XT60 pull-out on four feet, or a 3 g landing on two) a leg's root is at index {sf['index']}. They clear the Scout v4's own parts, its TPU skids, the cartridge's path and the grabber. Both tab lines sit at the same place along the arm's axis ({abs(fo['tab_line_at_seat_x'] - fs['tab_line_at_seat_x']):.1f} mm apart).</p>
 """
 
 

@@ -1020,7 +1020,7 @@
  "funnel": {
   "setting": "scout",
   "receiver_box": [
-   -51.5,
+   -54.98,
    58.5,
    -35.75,
    35.75
@@ -1033,7 +1033,7 @@
   ],
   "seat_gap_mm": {
    "nose": -4.18,
-   "tail": 3.78,
+   "tail": 0.3,
    "side": -1.35
   },
   "cartridge_box": [
@@ -1054,29 +1054,29 @@
    "side": 5.3
   },
   "seated_mm3": {
-   "receiver": 0.34,
+   "receiver": 0.0,
    "cartridge": 0.0
   },
-  "rests_at_mm": -2.13,
+  "rests_at_mm": -0.0,
   "tab_line_at_seat_x": 0.0,
   "touches_at": {
    "x": [
-    -36.2,
-    36.2
+    -55.0,
+    54.0
    ],
    "y_abs": [
-    35.8,
-    35.8
+    34.0,
+    34.0
    ],
    "z": [
-    -44.1,
-    -42.4
+    -44.6,
+    -44.3
    ]
   },
-  "pressed_0p3_in_mm3": 2.2,
+  "pressed_0p3_in_mm3": 35.3,
   "landing_mm3": {
-   "worst": 0.26,
-   "at": "-y 20 at h 24",
+   "worst": 0.0,
+   "at": null,
    "states": 65
   },
   "swap_path_mm3": {
@@ -1085,14 +1085,26 @@
    "grabber_heel_and_blades": 0.0
   },
   "free_play_mm": {
-   "to_nose": null,
-   "to_tail": null,
-   "across": 0.14
+   "to_nose": 0.63,
+   "to_tail": 0.63,
+   "across": 0.7
   },
   "ok": true
  },
+ "scout_feet": {
+  "count": 4,
+  "added_g": 4.4,
+  "pad_mm": [
+   4.8,
+   6.0
+  ],
+  "end_play_mm": 0.3,
+  "per_foot_N": 16.0,
+  "root_MPa": 2.45,
+  "index": 0.25
+ },
  "mass_g": {
-  "latch7_receiver": 91.4,
+  "latch7_receiver": 95.54,
   "latch7_carrier": 4.8,
   "latch7_carrier_cap": 5.36,
   "latch7_cartridge": 39.51,
