@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   1028.8
+   773.8
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -28,19 +28,19 @@
    {
     "case": "frame RS0-P2 axial 40 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.018,
+    "inlayer": 0.03,
+    "across": 0.024,
     "at": [
-     -93.3,
-     155.6,
-     59.5
+     -99.3,
+     151.6,
+     63.5
     ]
    },
    {
     "case": "frame RS0-P2 side 12.2 N",
     "cls": "crash",
-    "inlayer": 0.014,
-    "across": 0.026,
+    "inlayer": 0.015,
+    "across": 0.029,
     "at": [
      -90.3,
      154.6,
@@ -48,19 +48,19 @@
     ]
    }
   ],
-  "worst": 0.026,
-  "worst_case": "frame RS0-P2 side 12.2 N",
+  "worst": 0.03,
+  "worst_case": "frame RS0-P2 axial 40 N (pull-out)",
   "worst_at": [
-   -90.3,
-   154.6,
-   58.5
+   -99.3,
+   151.6,
+   63.5
   ],
   "ok": true
  },
- "mass_g": 2.68,
+ "mass_g": 2.31,
  "watertight": true,
  "export": {
-  "faces_in": 27296,
+  "faces_in": 26600,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -70,7 +70,7 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 27296,
+  "faces": 26600,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -81,12 +81,12 @@
    "caps_split": 31,
    "caps_left": 4,
    "watertight": true,
-   "faces": 37944,
+   "faces": 36774,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 2175.8,
-  "exact_mm3": 2175.8
+  "volume_mm3": 1877.5,
+  "exact_mm3": 1877.5
  },
  "bodies": {
   "bodies_raw": 1,
@@ -94,7 +94,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 2175.8,
+ "volume_mm3": 1877.5,
  "drawn_g": 1.57,
  "export_cleanup": {
   "pitch": 0.25,
@@ -110,7 +110,7 @@
  },
  "stl": "scout_v4_node_p2.stl",
  "view_stl": "scout_v4_node_p2_view.stl",
- "view_faces": 27296,
+ "view_faces": 26600,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -175,14 +175,14 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.09824254993996288,
+  "volfrac": 0.0654950332933086,
   "nd": 9161,
   "sym_axes": [],
   "n_real": 2,
   "n_ties": 6,
   "backend": "direct",
-  "iterations": 87,
-  "stopped": "max_stage"
+  "iterations": 71,
+  "stopped": "grey"
  },
  "grid": {
   "name": "scout_v4_node_p2",
@@ -208,10 +208,10 @@
    "default"
   ]
  },
- "build_s": 20.9,
- "layout_s": 145,
- "peak_gb": 0.69668,
- "gen_cm3": 0.9,
+ "build_s": 21.0,
+ "layout_s": 151,
+ "peak_gb": 0.686724,
+ "gen_cm3": 0.6,
  "h": 1.0,
  "audit": {
   "solid_ok": [],
@@ -274,8 +274,8 @@
     153.6,
     63.5
    ],
-   "budget_share": 0.098,
-   "thinned": 0.11,
+   "budget_share": 0.065,
+   "thinned": 0.17,
    "max_worst": 0.3
   }
  },
@@ -284,19 +284,19 @@
    {
     "case": "frame RS0-P2 axial 40 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.03,
-    "across": 0.025,
+    "inlayer": 0.034,
+    "across": 0.029,
     "at": [
-     -93.3,
-     155.6,
-     59.5
+     -99.3,
+     150.6,
+     62.5
     ]
    },
    {
     "case": "frame RS0-P2 side 12.2 N",
     "cls": "crash",
-    "inlayer": 0.019,
-    "across": 0.026,
+    "inlayer": 0.021,
+    "across": 0.03,
     "at": [
      -89.3,
      154.6,
@@ -304,33 +304,33 @@
     ]
    }
   ],
-  "worst": 0.03,
+  "worst": 0.034,
   "worst_case": "frame RS0-P2 axial 40 N (pull-out)",
   "worst_at": [
-   -93.3,
-   155.6,
-   59.5
+   -99.3,
+   150.6,
+   62.5
   ],
   "ok": true,
   "beta": 4.0,
-  "iteration": 17,
+  "iteration": 25,
   "max_worst": 0.3,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 166,
+ "total_s": 172,
  "part_sha": "a6707d5a7c14",
- "lib_sha": "d7d867367953",
- "setup_sha": "e4c14b2c13d40300",
+ "lib_sha": "1cda3e8c6228",
+ "setup_sha": "a186dfbc534fc7ad",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_p2.stl",
-  "sha256": "37b91e5f376c776974bb502795ef05bf08044bbe07412f2504b7fd651d852dcc",
-  "bytes": 1364884,
-  "faces": 27296,
-  "view_faces": 27296,
-  "view_sha256": "37b91e5f376c776974bb502795ef05bf08044bbe07412f2504b7fd651d852dcc",
-  "at": "2026-11-10 04:48"
+  "sha256": "b141c5bab69bc5c1699154739a3243f0478830d831a12ff27984e2b06cf7ec65",
+  "bytes": 1330084,
+  "faces": 26600,
+  "view_faces": 26600,
+  "view_sha256": "b141c5bab69bc5c1699154739a3243f0478830d831a12ff27984e2b06cf7ec65",
+  "at": "2026-11-10 06:01"
  }
 }
