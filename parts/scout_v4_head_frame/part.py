@@ -7,7 +7,10 @@ drawing, E); the idler's boss (an M3 screw along the tilt axis into the cradle's
 Cuts: the SG90 and its spline; the cradle, camera and LED bars swept over the nod (-20..+90 deg) with 1 mm to spare; the blades'
 lens and the mast below; the screws and their drivers.
 Support: the clip (the blades hold the head). Loads: the cradle, camera and LEDs (48.5 g) through the idler and the SG90 in 35 g crashes
-and flight; the SG90 (9 g); the head-first crash (systems/scout_v4.head_load.json, ~250 N down onto the camera's top); the SG90's stall torque (1.8 kg cm) on its tabs."""
+and flight; the SG90 (9 g); the head-first crash (systems/scout_v4.head_load.json, ~250 N): hit on its top the cradle turns down (the SG90
+slips at its 1.8 kg cm) and lands on the crash stop, a drawn strip on the plate under the camera's lower front edge (the tilt sweep's lowest
+point, 2.6 over the plate), so the whole force goes stop -> clip; the pivots carry what the slipping SG90 holds (18 N at 10 mm) until then (10 Nov:
+the 250 N through the idler and the SG90's pads read 5.3 and stopped early); the SG90's stall torque (1.8 kg cm) on its tabs."""
 import math
 import numpy as np, trimesh
 from topo import Part
@@ -16,7 +19,7 @@ from parts.scout_v4_units_lib import S, ASM, box, cyl, U, payload_cases, point_c
 
 import json as _json, os as _os
 HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
-SPEC = dict(h=1.0, gen_cm3=3.0, max_worst=0.3)   # E: clip, plate and brackets 2.5 g as estimated, at the nodes' PCTG limit
+SPEC = dict(h=1.0, gen_cm3=10.0, max_worst=0.3)  # 10 Nov: 3 cm3 stopped early at 5.3 (250 N through the pivots; now the crash stop takes it), room_full 0.13 with ~3.6 uniformly thinned at 4 %: 10 for the SG90 stall and 35 g cases
 HOLES = 27.7                                      # SG90 tab holes apart (typical drawing, E; the DORHEA listing gives the tabs' 32.8 span)
 
 
@@ -65,6 +68,10 @@ def bodies():
         cuts.append(ycyl(x, az, 0.8, ay + sv + 5.0, ay + sv + 13.0))                    # M2 self-tapping into the pad
         pad_pts.append((x, ay + sv + 10.3, az)); pad_regs.append(box(x - 3.5, x + 3.5, ay + sv + 8.3, ay + sv + 9.2, az - 5.5, az + 5.5))
     drawn += pads
+    # the crash stop: under the camera's lower front edge (tools/scout_v4_shape.tilt_sweep's lowest point, x ~21 at -20 deg), on the plate
+    pz = hz + S.HEAD["clip"] + S.HEAD["plate"]; ys = (ay - S.CAM["side"] / 2, ay + S.CAM["side"] / 2)
+    stop = box(mx + 3.5, mx + 8.0, ys[0], ys[1], pz - 2.5, pz); drawn.append(stop)
+    stop_reg = box(mx + 3.5, mx + 8.0, ys[0], ys[1], pz - 0.6, pz)
     cuts.append(box(ax - 16.7, ax + 6.3, ay + sv - 0.3, ay + sv + 23.1, az - 6.55, az + 6.55))   # the SG90's body
     cuts.append(box(ax - 21.5, ax + 11.9, ay + sv + 5.7, ay + sv + 8.6, az - 6.55, az + 6.55))    # its tabs
     cuts.append(ycyl(ax, az, 7.6, ay + w, ay + sv + 0.1))                                     # the horn and the spline
@@ -75,7 +82,7 @@ def bodies():
     cuts.append(sweep())
     cuts.append(box(mx - 4.6, mx + 4.6, -hw - 0.3, hw + 0.3, -50, hz))                     # the mast below
     env = box(min(ax - 22.0, mx - 7.0), max(ax + 12.5, mx + 7.0), ay - w - 10.0, ay + sv + 12.5, hz, az + 7.0)   # -y: 10 of room for the idler's bracket (a 4.4 slab was a neck)
-    return dict(drawn=U(drawn), cuts=U(cuts), env=env, clip_reg=clip_reg, pad_pts=pad_pts, pad_regs=pad_regs, idler=((ax, ay - w - 2.75, az), idler_reg))
+    return dict(drawn=U(drawn), cuts=U(cuts), env=env, clip_reg=clip_reg, stop_reg=stop_reg, pad_pts=pad_pts, pad_regs=pad_regs, idler=((ax, ay - w - 2.75, az), idler_reg))
 
 
 def setup(h):
@@ -88,7 +95,8 @@ def setup(h):
     pts = [B["idler"][0]] + B["pad_pts"]; regs = [B["idler"][1]] + B["pad_regs"]
     payload_cases(p, "cradle, camera and LEDs", pts, regs, g, cg)
     payload_cases(p, "SG90", B["pad_pts"], B["pad_regs"], 9.0, (S.AXIS[0] - 5.2, S.AXIS[1] + S.CAM["side"] / 2 + 2.0 + 3.0 + 11.4, S.AXIS[2]), flight=False)
-    point_case(p, f"head-first crash: {HEAD_N} N down onto the camera's top", pts, regs, (0, 0, -float(HEAD_N)), (S.AXIS[0] + 10.0, S.AXIS[1], float(tilt.bounds[1][2])))
+    p.load(f"head-first crash: {HEAD_N} N on the crash stop (the cradle landed)", B["stop_reg"], (0, 0, -float(HEAD_N)), cls="crash")
+    point_case(p, "head-first crash: the pivots until the SG90 slips (18 N)", pts, regs, (0, 0, -18.0), (S.AXIS[0] + 10.0, S.AXIS[1], float(tilt.bounds[1][2])))
     F = 0.18 / (HOLES / 1000.0)
     for sgn in (1, -1):
         p.load_multi(f"SG90 stall torque {'+' if sgn > 0 else '-'}1.8 kg cm on its tabs", [(B["pad_regs"][0], (0, 0, sgn * F)), (B["pad_regs"][1], (0, 0, -sgn * F))], cls="flight")
