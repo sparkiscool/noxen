@@ -65,6 +65,9 @@ R_KEEP, Z_SWEEP = PROP_R + 4.0, 4.0             # the disc grown 4 and swept +-4
 KEEP = 12.0                                      # every rod 12 from the swept disc
 DECK = (-60.0, 60.0, 40.0)                       # the deck's body: x0, x1, |y| (E), arms from its corners to the pods
 ARM_W, POD_R = 18.0, 15.0                        # arm width, motor pod radius (the 2004's base O27 + 1.5)
+UBEC_LO = (-70.5, -11.0)                           # 11 Nov (run of 0dd1778: BT-TB 0.76, the room filled solid 0.255): the UBEC lay across the tail tray at BT's own
+                                                   # height (z 0.3..8.3, |y| 30.5) and its leads cut the 3 mm beside it: BT's 581 N had 4.5 mm of room behind its floor.
+                                                   # Now it hangs under the tray in a pod (z -11..-3, its bottom on zmin_walls_in + 2 at x -70.5 with 2 to spare), open below
 FC_X, FC_Z0, UBEC_YC = (18.5, 54.5), 10.0, 0.0     # 11 Nov: FC clear of the turret bosses at x 13 (r 5) and of the room behind DN (run a25e31d: 0.95 there with the FC at x 66.5)       # 9 Nov: the FC hangs under the deck over the receiver (x 15.5..51.5, z 10..20.5); the UBEC across the tail tray
 BED = 89.3                                       # 9 Nov (Spark: deck, arms, pods and base as ONE body): the body inside |x|, |y| <= 89.3, the A1 mini's 180 less 1.4
 # ---- the v3 base and the battery, unchanged ---------------------------------------------------------------------------------
@@ -204,12 +207,13 @@ def base():
     to the deck), where the FC, the Radxa, the XR2 and the DRV8833 hang under the deck (the nose bay is gone: with the nose sockets'
     collars inside the A1 mini's 180 there is no room for the FC between DN and BN); the nose block (x 55.6..89.3, |y| 26) for DN /
     BN and the flow sensor's pod under it (its bottom at -19.1, the rule's -21.1 + 2); the tail tray (x -89.3..-50, z -2.3 up) for DT /
-    BT and the UBEC on its floor; every bottom on zmin_walls_in + 2"""
+    BT, the UBEC's pod under it (11 Nov); every bottom on zmin_walls_in + 2"""
     lo, hi = np.array([-51.3 + BX, -32.8, -44.3]), np.array([54.3 + BX, 32.8, REC_TOP])   # the receiver v3 (C), not drawn
     parts = [box(lo[0], hi[0], -DECK[2], DECK[2], hi[2], DECK_Z0 + 0.5),             # the yokes over the receiver, the deck's width
              box(hi[0], BED, -26.0, 26.0, -2.3, DECK_Z0 + 0.5),                      # the nose block
              box(hi[0], 71.8, -12.0, 12.0, -19.1, -2.0),                             # the flow sensor's pod (open below: its window)
              box(-BED, lo[0], -34.0, 34.0, -2.3, DECK_TOP),                          # the tail tray
+             box(UBEC_LO[0] - 2.5, UBEC_LO[0] + 19.5, -33.0, 33.0, UBEC_LO[1], -2.0),  # the UBEC's pod under it (open below)
              ]
     return union(parts)
 
@@ -524,7 +528,7 @@ def write():
     meshes["radxa_zero_3w"] = place("radxa_zero_3w", rot=([0, 1, 0], 90), lo=(-73.9, 10.4), yc=0.0)
     meshes["radxa_zero_3w"].apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [0, 0, 1], meshes["radxa_zero_3w"].bounds.mean(0)))   # 65 along x
     meshes["radxa_zero_3w"].apply_translation([-73.9 - meshes["radxa_zero_3w"].bounds[0][0], 0, 0])   # 11 Nov: its front 0.4 off the turret's N20 cheeks (x -8.5)
-    meshes["ubec"] = place("ubec", lo=(-71.5, 0.3), yc=UBEC_YC)                        # 61 along y on the tail tray's land
+    meshes["ubec"] = place("ubec", lo=UBEC_LO, yc=UBEC_YC)                           # 61 along y, hung under its land below the tail tray (11 Nov)
     meshes["xr2"] = place("xr2", rot=([0, 0, 1], 90), lo=(4.0, 10.0), yc=28.5)        # flat, 34.5 x 13 x 4, under its land at +y
     meshes["xr2"].apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [1, 0, 0], meshes["xr2"].bounds.mean(0)))
     meshes["xr2"].apply_translation([0, 0, 10.0 - meshes["xr2"].bounds[0][2]])
@@ -588,7 +592,7 @@ def entries(meshes):
         add(f"probe_mast_{k}", f"probe mast, blade {k.upper()} (10 mm steel tape, curves facing)", "placeholder", "camera", col, 0.0, "E",
             f"drawn 1 mm long above the throat; the page's timeline rolls it out to {REACH:.0f} mm and back (tools/scout_v4_timeline.py). Its mass is in the feed's")
     add("fc", "FC MicoAir743 AIO (under the deck, over the receiver)", "bought", "electronics", "#1f6f3f", 10.0, "P", f"36 x 36 at x {FC_X[0]}..{FC_X[1]}, z {FC_Z0}..{FC_Z0 + 10.5}, component side up on 4 M3 posts down from the deck (grommets; heads from below with the receiver off); set its IMU offset in PX4 (EKF2_IMU_POS_X ~ +{(FC_X[0] + FC_X[1]) / 2000:.3f} m)")
-    for src, nm, g, note in (("ubec", "UBEC", 15.0, "on the tail tray's tape land, across the drone (x -71.5..-54.5, |y| 30.5), under the Radxa"), ("xr2", "XR2", 1.0, "flat under its tape land beside the FC (+y)"),
+    for src, nm, g, note in (("ubec", "UBEC", 15.0, "under its tape land in a pod below the tail tray, across the drone (x -70.5..-53.5, |y| 30.5, z -11..-3), open below"), ("xr2", "XR2", 1.0, "flat under its tape land beside the FC (+y)"),
                              ("drv8833", "DRV8833 (KOOBOOK, B07S7Z8CFL)", 1.0, "flat under its tape land beside the FC (-y): channel A the probe's N20, B its LED bars"),
                              ("radxa_zero_3w", "Radxa Zero 3W", 10.0, "under the deck behind the turret's N20 on four M2.5 posts (inserts in the deck), 65 along x, its USB-C plugs out the -y edge"),
                              ("scout_flow_mtf_02p", "flow MTF-02P", 1.5, "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn")):

@@ -989,6 +989,24 @@ def t_audit_block_measure():
     RESULTS.append(("audit_block_measure", ok)); print(f"audit block measure: {'ok' if ok else 'FAIL'} 8 mm -> {[round(d, 1) for d in thin]}  12 mm -> {[round(d, 1) for d in thick]}")
 
 
+def t_audit_parity():
+    """audit: parity (11 Nov, the Scout v4 frame's flow land flush on the nose room's floor): a box stacked flush on a wider one is two
+    shells in the manifold union and the +z rays meet the shared face twice: parity_columns reports those columns; the same boxes
+    overlapped 0.5 report none."""
+    try:
+        import manifold3d as mf
+        from topo.audit import parity_columns
+        from .part import tm
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        xs = ys = np.arange(-59.0, 60.0, 2.0)
+        flush = parity_columns(tm(box(-50, 50, -40, 40, 9.6, 24.5) + box(-52, 54, 33.8, 40, -2.3, 9.6)), xs, ys)
+        lap = parity_columns(tm(box(-50, 50, -40, 40, 9.6, 24.5) + box(-52, 54, 33.8, 40, -2.3, 10.1)), xs, ys)
+        check("audit parity: a box flush on another is refused, overlapped 0.5 passes", len(flush) > 0 and not lap, f"flush {len(flush)} columns, overlapped {len(lap)}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit parity", False, str(e))
+
+
 def t_audit_drawn_thin():
     """audit: drawn_thin (4 Nov: the Scout tail unit's 2 mm tape lands left blobs on necks, the arm clips' tie collar was sheared to a
     1.1 mm sliver by the plate keep-out). Exact geometry: a 2 mm land is refused, a 4 mm one passes, a collar (O8.2, 3.2 bore, 2.5 wall)
@@ -1410,7 +1428,7 @@ def t_build_memory_gate():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate):
         t()
     if not quick:
         t_end_to_end()

@@ -12,7 +12,7 @@ layers; here there is no layer seam between a pad and its arm). The drawn pad is
 motor: 6 + 2.5 into its base), with room under it to z 8 (z 2 at the arm's root) for the engine to gusset it in the same layers.
 Drawn (attachments only): the motor pads (4 x M2 on 12 x 12, O8 centre), the battery mechanism's 4 O10 insert bosses (M3 x 5.7 up from
 below, on the receiver's top z 9.6), the turret's 4 O10 insert bosses (M3 from the top), the FC's 4 O8 posts (M3 inserts, the FC on
-grommets under them, component side up) and the Radxa's 4 O8 posts (M2.5 inserts), the tape lands of the UBEC (the tail tray's floor),
+grommets under them, component side up) and the Radxa's 4 O8 posts (M2.5 inserts), the tape lands of the UBEC (over it, in its pod under the tail tray),
 the XR2 and the DRV8833 (over them) and the flow sensor (over it, open below), the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1).
 Cuts: the receiver's box under the yokes, the boards and their plugs, the props' discs + 12, the motors and their screws' drivers
 from below, the turret above the deck, its N20's pocket and its gear's slot, the bolt holes, the rods beyond the mouths.
@@ -94,12 +94,16 @@ def bodies():
     x0, x1, yb = S.DECK
     rx0, rx1 = -51.3 + S.BX, 54.3 + S.BX                                             # the receiver v3 (C), not drawn: it bolts up under the yokes
     env = [box(x0, x1, -yb, yb, S.REC_TOP, DZ1),                                      # the deck and the yokes over the receiver, one room
-           box(-S.BED, rx0, -34.0, 34.0, -2.3, DZ1),                                  # the tail tray (DT / BT, the UBEC)
-           box(rx1, S.BED, -34.0, 34.0, -2.3, DZ1), box(rx1, 78.0, -34.0, 34.0, -10.0, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod
+           box(-S.BED, rx0, -34.0, 34.0, -2.3, DZ1),                                  # the tail tray (DT / BT)
+           box(rx1, S.BED, -34.0, 34.0, -2.3, DZ1), box(rx1, 78.0, -34.0, 34.0, -10.5, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod (-10.5: into the flow land, not flush on it)
            box(rx1, 71.8, -12.0, 12.0, -19.1, -2.0),                                 # the flow sensor's pod (its bottom on the walls-in rule + 2)
-           box(rx0 - 0.5, rx1 + 0.5, 33.8, 40.0, -2.3, S.REC_TOP), box(rx0 - 0.5, rx1 + 0.5, -40.0, -33.8, -2.3, S.REC_TOP)]   # 10 Nov: beside the receiver, so the end
+           box(S.UBEC_LO[0] - 2.5, S.UBEC_LO[0] + 19.5, -33.0, 33.0, S.UBEC_LO[1], -2.0),   # 11 Nov: the UBEC's pod under the tail tray (S.UBEC_LO: off BT's path)
+           box(rx0 - 0.5, rx1 + 0.5, 33.8, 40.0, -2.3, S.REC_TOP + 0.5), box(rx0 - 0.5, rx1 + 0.5, -40.0, -33.8, -2.3, S.REC_TOP + 0.5)]   # 10 Nov: beside the receiver, so the end
     # sockets' loads climb to the battery bolts (z 9.6) on shallow in-layer diagonals; run 187 stopped early at 1.064 ACROSS the layers
-    # (BT-TB 527 N at (-51, -33, 3.7)): with room only over the receiver and behind it, the path had to rise as a wall at its tail end
+    # (BT-TB 527 N at (-51, -33, 3.7)): with room only over the receiver and behind it, the path had to rise as a wall at its tail end.
+    # 11 Nov (run of 0dd1778, the audit's parity check since): these rooms' tops flush under the deck's room (z 9.6) and the flow land
+    # flush on the nose room's floor (z -10) stayed separate shells: 52 columns voxelised empty up to the deck (a 1 mm U slot round the
+    # flow pod, 1.4 mm walls, two blobs on necks; the side rooms lost everything above 9.6 beside the receiver). Each now overlaps 0.5.
     for mx, my in S.MOTORS:
         a = np.array([np.sign(mx) * 30.0, np.sign(my) * 30.0, 0]); b = np.array([mx, my, 0])
         u = unit(b - a); n = np.array([-u[1], u[0], 0])
@@ -172,8 +176,8 @@ def bodies():
     for xa, xb in ((rb[1][0] - 58.5, rb[1][0] - 49.6), (rb[1][0] - 46.0, rb[1][0] - 37.1)):   # its two USB-C plugs out the -y edge
         cuts.append(box(xa - 1.0, xb + 1.0, -41.0, rb[0][1] + 1.0, rb[0][2] - 0.5, rb[0][2] + 7.0))
     boards.append(("Radxa Zero 3W", pts, regs, ASM["scout_v4_radxa_zero_3w"]["mass_g"], tuple(rb.mean(0))))
-    for pid, nm, below in (("scout_v4_ubec", "UBEC", True), ("scout_v4_xr2", "XR2", False), ("scout_v4_drv8833", "DRV8833", False)):
-        b = bounds(pid)                                                               # tape lands (2.6: the gate's floor): the UBEC on one, the XR2 and the DRV8833 under theirs
+    for pid, nm, below in (("scout_v4_ubec", "UBEC", False), ("scout_v4_xr2", "XR2", False), ("scout_v4_drv8833", "DRV8833", False)):
+        b = bounds(pid)                                                               # tape lands (2.6: the gate's floor) over each: the UBEC hangs under its land in its pod (11 Nov)
         if below:
             drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])
         else:
@@ -181,7 +185,7 @@ def bodies():
         cuts.append(box(b[0][0] - 0.5, b[1][0] + 0.5, b[0][1] - 0.5, b[1][1] + 0.5, b[0][2] - (0.0 if below else 0.5), b[1][2] + 0.5))
         boards.append((nm, [tuple(b.mean(0))], [reg], ASM[pid]["mass_g"], tuple(b.mean(0))))
     ub = bounds("scout_v4_ubec")
-    cuts += [box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[0][1] - 4, ub[0][1], ub[0][2], DZ0), box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[1][1], ub[1][1] + 3, ub[0][2], DZ0)]   # its leads out its ends
+    cuts += [box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[0][1] - 4, ub[0][1], ub[0][2] - 0.5, ub[1][2]), box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[1][1], ub[1][1] + 3, ub[0][2] - 0.5, ub[1][2])]   # its leads out its ends, in the pod's height only (11 Nov: up to the deck they cut the tray's sides through BT's path)
     lb = bounds("scout_v4_flow_mtf_02p")
     drawn.append(box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6))   # the flow sensor's tape land over it
     cuts.append(box(lb[0][0] - 0.3, lb[1][0] + 0.3, lb[0][1] - 0.3, lb[1][1] + 0.3, lb[0][2] - 5, lb[1][2]))      # its body and window, open below

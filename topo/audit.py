@@ -47,6 +47,12 @@ Checks (hard = raises, soft = logged + in the report):
                        frame's side lugs (16 x 8 room carrying 134 N 29 mm under the deck) read 2.55 after a 69 min run.
                        Open the room along the load path (deeper behind the socket, wider at the root), move the support
                        nearer the load, or shorten the lever.
+  parity         hard  a column of the grid where the room, the drawn or the cuts mesh has an odd number of distinct crossings: the
+                       ray-parity voxeliser (part.voxelise) then flips that column from the odd crossing up. Two bodies that only
+                       touch on a face (a box stacked flush on another) stay two shells in a manifold union, the ray meets the
+                       shared face twice at one height and counts it once. 11 Nov, the Scout v4 frame: the flow land's top flush
+                       on the nose room's floor (z -10) and the side rooms' tops flush under the deck (z 9.6) emptied 52 columns
+                       up to the deck: a 1 mm U slot round the flow pod, 1.4 mm walls, two blobs on necks. Overlap the bodies.
   memory         hard  (memory_fit, on the Layout before the first solve; memory_measured after the first iteration) the run's
                        peak memory over Settings.mem_limit_gb (14 GB of the GitHub runner's 16): the runner kills such a run
                        with no log and no result (10 Nov: scout_v4_frame, 396 cases, 14.3 GB, died at 2 h). The estimate is
@@ -317,6 +323,29 @@ def drawn_walls(drawn_m, cuts_m, thin_ok=(), pitch=0.15, erode_mm=0.9, min_core_
     return sorted(out, key=lambda t: -t["core_mm3"])
 
 
+def parity_columns(mesh, xs, ys, chunk=20000):
+    """the (x, y) columns of a grid where a closed mesh has an odd number of distinct crossings along +z (part.voxelise's rays,
+    the same offsets and the same 1e-6 merge): the voxeliser inverts each such column above its odd crossing. Returns
+    [(x, y, [z of the crossings])]."""
+    if len(mesh.faces) == 0:
+        return []
+    XX, YY = np.meshgrid(xs, ys, indexing="ij")
+    org = np.stack([XX.ravel() + 1.234e-5, YY.ravel() + 2.345e-5, np.full(XX.size, float(mesh.bounds[0][2]) - 5.0)], 1)
+    bad = []
+    for c0 in range(0, len(org), chunk):
+        o = org[c0:c0 + chunk]
+        loc, ray, _ = mesh.ray.intersects_location(o, np.tile([0, 0, 1.0], (len(o), 1)), multiple_hits=True)
+        if not len(ray):
+            continue
+        order = np.argsort(ray, kind="stable"); ray = np.asarray(ray)[order]; z = loc[order][:, 2]
+        st = np.r_[0, np.where(np.diff(ray))[0] + 1, len(ray)]
+        for a, b in zip(st[:-1], st[1:]):
+            zz = np.sort(z[a:b]); zz = zz[np.r_[True, np.diff(zz) > 1e-6]]
+            if len(zz) % 2:
+                bad.append((round(float(o[ray[a], 0]), 1), round(float(o[ray[a], 1]), 1), [round(float(v), 2) for v in zz]))
+    return bad
+
+
 def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
     sh, h = part.shape, part.h
     sol = (part.solid & ~part.insert_cells).reshape(sh)
@@ -512,6 +541,16 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         fails.append(f"drawn_wall: a drawn body has a wall under 2 mm at {w['at']} after its cuts ({w['thick_mm']:.1f} mm by the gate's rule, "
                      f"{w['core_mm3']:.1f} mm3){more}: the gate fails it wherever the engine leaves it exposed, and the cleanup may not cut drawn "
                      f"material (a 2.0 collar wall with 0.5 resin grooves is 1.5 at the grooves). Thicken the wall, shallow the cut, or declare it thin_ok.")
+
+    rep["parity"] = []
+    for nm, t in (("room", part.env_t), ("drawn", part.drawn_t), ("cuts", part.cuts_t)):
+        cols = parity_columns(t, part.axes[0], part.axes[1])
+        if cols:
+            zs_ = sorted({c[2][len(c[2]) // 2] for c in cols})[:4]
+            rep["parity"].append(dict(mesh=nm, columns=len(cols), at=[list(c[:2]) for c in cols[:4]], z=zs_))
+            fails.append(f"parity: the {nm} mesh has {len(cols)} grid columns with an odd number of crossings (near {[list(c[:2]) for c in cols[:3]]}, "
+                         f"crossings {cols[0][2]}): two bodies that only touch on a face (one flush on another) stay two shells, and the "
+                         f"voxeliser empties or fills those columns from the shared face up. Overlap them (0.5 mm) instead of stacking them flush.")
 
     rep["cases"] = len(part.cases)
     rep["supports"] = len(part.supports)
