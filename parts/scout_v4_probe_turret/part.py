@@ -87,7 +87,7 @@ def bodies():
     guides, seats = [], []
     for sy in (1, -1):                                                              # each guide 9 thick round the spring's O4.5 pocket: walls >= 2.25
         yc = sy * (rw + 4.0)
-        guides.append(radial(17.9, r_full + 13.5, 6.5, yc - 4.5, yc + 4.5))   # 10 Nov run 7: +-4.5 left 2.25 walls beside the slot and pocket, in the head-first path (0.33): 4.25 now
+        guides.append(radial(17.9, r_full + 13.5, 6.5, yc - 4.5, yc + 4.5) ^ box(-200, 200, -200, 200, DZ1, 400))   # 11 Nov: stops at the deck's top (its corner reached z 18.4, 0.8 from the frame's insert at (13, 19); the deck cut voided it already). 10 Nov run 7: +-4.5 left 2.25 walls beside the slot and pocket, in the head-first path (0.33): 4.25 now
         cuts.append(radial(17.0, r_full + 0.6, 1.65, yc - 6.0, yc + 6.0))                         # the axle's slot (M3 x 40), open through the guide's inner end (10 Nov: a 0.7 web was left before it)
         cuts.append(radial(r_full - 0.5, r_full + 11.0, 2.25, yc - 2.25, yc + 2.25))               # the spring's pocket on the slot's line (O4, 11 long at the full coil)
         seats.append(radial(r_full + 11.0, r_full + 11.6, 2.0, yc - 2.0, yc + 2.0))
