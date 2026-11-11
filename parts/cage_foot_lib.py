@@ -115,7 +115,7 @@ def build(n, h, log=print):
     if base:                                                    # v7: sockets 25..37 out, so the box is mostly air. Room is a HUB over the stud and one tapered arm from it
         #   to each socket (the hull of the hub with that collar grown by MARGIN), cut off under the collars, plus the stud. Not the hull of all the collars: in that
         #   room the layout joined the sockets to each other past the centre and hung the stud off the body's edge, backed on one side (11 Nov runs: 0.21 / 0.28 / 0.34
-        #   at the neck in the 1300 N hit on nodes 5 / 4 / 3; node 2, whose sockets surround the centre, 0.11). Every load path now crosses the hub.
+        #   at the neck in the 1300 N hit on nodes 5 / 4 / 3; node 2, whose sockets surround the centre, 0.11; that turned out to be the stud's opened core, below). Every load path crosses the hub.
         zs = zb + FOOT_T + NECK_T
         hub = [c + (NODE_R + MARGIN) * np.array([np.cos(a_) * np.cos(b_), np.sin(a_) * np.cos(b_), np.sin(b_)]) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False) for b_ in (-0.6, 0.0, 0.6, 1.2)]
         hub += [axis + up * z_ + (SHOULDER_R + 2.0) * np.array([np.cos(a_), np.sin(a_), 0.0]) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False) for z_ in (zs, zs + 2 * MARGIN)]
@@ -124,7 +124,10 @@ def build(n, h, log=print):
             e1 = np.cross(m["u"], [0, 0, 1.0] if abs(m["u"][2]) < 0.9 else [1.0, 0, 0]); e1 /= np.linalg.norm(e1); e2 = np.cross(m["u"], e1)
             sock = [c + m["u"] * s_ + (m["ro"] + MARGIN) * (np.cos(a_) * e1 + np.sin(a_) * e2) for s_ in (m["s0"] - FLOOR, m["s_end"]) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False)]
             arms.append(mf.Manifold.hull_points(np.array(hub + sock).tolist()))
-        env = (env ^ U(arms)) + foot
+        env = env ^ U(arms)                                     # the stud's disc and neck are NOT in the room: a drawn body inside the room keeps only a 2.5 mm
+        #   functional skin and its core is opened to the design (topo/part.py functional_skin), so the O28 neck printed as a shell: every 11 Nov run read its worst
+        #   in the 1300 N hit just inside that skin (r 11, mid neck: 0.11 / 0.21 / 0.28 / 0.35 on nodes 2 / 5 / 4 / 3) while the room filled solid read 0.09..0.12,
+        #   and the hub-and-arms room changed nothing. Drawn outside the room, every cell of the stud stays solid.
     drawn = U(collars + ([foot] if base else []) + ex.get("drawn", []))
     if base:
         bores.append(along(axis, up, zb - 1.0, zb + POCKET_H, POCKET_R, 48))   # the stud's relief pocket (drawn_blocks audit, 11 Nov: the solid stud was an 8..10 mm core)
