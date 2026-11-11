@@ -1,31 +1,32 @@
-"""Overseer base (foot) cage nodes 0-5, v7: the setup of parts/overseer_cage_node_{2,3,4,5} (3 mirrors for node 1, 4 for node 0).
+"""Overseer base (foot) cage nodes 0-5, v8: the setup of parts/overseer_cage_node_{2,3,4,5} (3 mirrors for node 1, 4 for node 0).
 The sockets, ports and member data are parts/cage_node_lib.py's; this file holds what the base nodes do differently. It is its own
 file because cage_node_lib.py is in the identity of every cage and Scout node: an edit there reruns whichever of them is stale.
 
-Base (foot) nodes 0-5, v7 (11 Nov, Spark: "the foot nodes broke again ... it pretty much just snaps everywhere", "a full in depth design"):
-  Root cause: the nodes on the drone are the 29-31 Oct prints (PETG, 12..17 g, gen 4.5..6 cm3), sized before any ground-hit case
-  existed: worst index 0.16..0.30 at the 67 N landing and the frame loads. A 0.6 m drop onto one node is 9.7 J into a rigid node on an
-  87 N/mm cage: 1300 N, 19x the landing they were sized for (node 5: 0.26 at 67 N -> 5.0 at 1300 N; printed PETG breaks near 0.30),
-  with nothing between the node and the ground to give stroke. They are overloaded everywhere at once, so they snap everywhere; no
-  one socket, port or layer line is the cause. Compared (parts/overseer_tpu_foot/make.py has the numbers):
-    full TPU 95A node (E 8 MPa): epoxy does not hold in it, a 285..490 N pull-out sits on a rubber collar and the base ring's joints
-      become hinges (the funnel seat floats); 68D (E 600..1190, 11 MPa across layers) is weaker than PCTG at the sockets and
-      still rigid: no stroke, the same 1300 N. A PCTG core in a TPU shell: 3 mm of skin is no stroke either (9.7 J needs ~15 mm).
-    the printed nodes + the v3 boots: the boot caps the hit near 560 N, still 8x what those nodes carry.
-    chosen: a PCTG node that passes the 1300 N hit on its own (the gate, max_worst as before) carrying a replaceable 68D crush
-      boot on a drawn stud, which caps the hit near 560 N (760 on a 40 % hard spool): two prints, because the boot's cells must
-      print on their side and the node on its foot (an AMS co-print would put one of them in the wrong layer direction).
-  Drawn besides the sockets, the same on all six so one boot fits every node: the boot stud, a disc O30 x 3.0 (the bed face, a O8 x 3
-  relief pocket in it; the landing face of a node without its boot) on a O28 neck 3.5 tall, under a O25..37 x 2.5 shoulder ring. The boot's
-  cup snaps over the disc, its lip and zip tie sit round the neck, and its RIM bears on the shoulder (0.4 of air under the disc), so
-  a sideways hit on the boot enters the body on a O30..36 ring, not through the neck. Nothing else may grow under the collars.
+v8 (11 Nov, Spark on v7's stud + 68D boot: "I dont want this stupid design with the tpu block under, i want a whole redesign it needs
+to look good and not be tall needs to still fit the funnel, it needs to not crack like the other ones before as well"):
+  Why the printed nodes cracked (v7's finding, kept): they are the 29-31 Oct prints (PETG, 12..17 g, gen 4.5..6 cm3), sized before any
+  ground-hit case existed: worst index 0.16..0.30 at the 67 N landing. A 0.6 m drop onto one node is 9.7 J into a rigid node on an
+  87 N/mm cage: 1300 N, 19x that (node 5: 0.26 at 67 N -> 5.0 at 1300 N; printed PETG breaks near 0.30). Overloaded everywhere at
+  once, so they snapped everywhere; and their bores started 10 mm from the centre, so the only material between six sockets was
+  2.5 mm webs with a resin groove, a port and a bore corner in each: every crack had a notch to start from.
+  The design: ONE PCTG body, no boot, no stud, no shoulder, nothing under it. The node itself carries the full 1300 N at its gate
+  (v7's bodies already did, 0.11..0.28, with the boot off), in PCTG (10-20x PETG's impact toughness).
+    Low: the landing face is the body's own flat belly at FOOT_DROP 9.1 under the loop axis (the tube collars' underside + one
+      wall), 4.05 less than the printed nodes' 13.15 and 31 less than v7 with its boot. The collars stay 3.0 off the ground.
+    One body: the room is a hub over the sole and one tapered arm to each socket, its floor the ground plane, so the belly, the
+      arms and the collars are one generated surface and the print stands on the belly (the largest flat face).
+    No notches in the load path: the sockets are one node length back (25..37 mm out), so the hub between them is solid body,
+      not webs; in the hit the arms bend with tension along their underside at the collar roots, in the layers (the arms lie in
+      the bed plane), and the ports leave on the crown side (the compression side); nothing drawn is under 3.0; the generated
+      skin is filleted 2.5 into every collar.
+    No TPU pad: 3 mm of 95A is no stroke (9.7 J needs ~15 mm) and it would be a second part glued to the bed face.
+  Drawn besides the sockets: the sole, a O30 x 3.0 flat in the belly (0.6 chamfer on the bed edge): 1.8 MPa of bearing in the hit.
   Sockets one node length back (Spark cuts the glued rods flush at the old collar mouths): each bore's floor is FOOT_GAP inside the
   PRINTED node's mouth (that lib's socket start, wall 2.5, + its 15 / 10 depth) and FOOT_DEEP deeper than a cage socket, so a hand
   cut up to 2.5 mm outside the old mouth still has the full 15 / 10 in the bore.
-  Cases on the foot: landing 6 g through the shoulder, and the 1300 N hit on the bare disc (the boot lost or spent), the 8 Nov
-  case; for these the node is held at every socket (support "sockets"): the frame model has no one-node drop case, so the sockets'
-  reactions are the stiff bound. MISSING: a sideways (skid) hit through the boot. It needs a friction number and the boot's
-  measured plateau (the drop test in overseer_tpu_foot/make.py); with mu 0.5 guessed, the boot rocks onto ~80 deg of its rim.
+  Cases on the foot: landing 6 g and the 1300 N hit, both on the sole; for these the node is held at every socket (support
+  "sockets"): the frame model has no one-node drop case, so the sockets' reactions are the stiff bound. MISSING: a hit on the
+  sole's edge with the drone tilted, and a sideways (skid) hit: they need the tilt and a friction number nobody has measured.
 Supports: the frame cases as cage_node_lib (the two tubes with the largest axial force); the foot cases every socket.
 """
 import numpy as np
@@ -35,10 +36,9 @@ from parts.cage_node_lib import (NODES, CAGE, NODE_R, BASE, WALL, FLOOR, MARGIN,
 from parts.cage_node_lib import members as _members
 from topo import Part
 
-FOOT_R, FOOT_T, NECK_R, NECK_T, FOOT_CH = 15.0, 3.0, 14.0, 3.5, 0.6      # v7 boot stud: disc O30 x 3.0 on a O28 neck 3.5 tall (O24 with a O14 x 5 pocket read 0.25 filled solid in the 1300 N hit on node 4, limit 0.2: 4.4 MPa of plain bearing across the layers)
-FOOT_GAP, FOOT_DEEP, PRINTED_WALL = 0.5, 2.5, 2.5          # v7 sockets: floor 0.5 inside the printed node's collar mouth, 2.5 deeper than 15 / 10; the printed lib's wall (its socket starts)
-POCKET_R, POCKET_H = 4.0, 3.0                              # a O8 x 3 relief pocket in the disc: the stud above it is 6.5 tall (drawn_blocks audit: solid, it was an 8..10 mm core)
-SHOULDER_R, SHOULDER_T, RIM_R = 18.5, 2.5, (15.0, 18.0)    # the shoulder the boot's rim bears on (rim: the cup wall, 3.0 from the disc)
+FOOT_R, FOOT_T, FOOT_CH = 15.0, 3.0, 0.6                   # v8 sole: O30 x 3.0 in the belly (O24 read 4.4 MPa of plain bearing across the layers in the 1300 N hit on node 4, v7)
+FOOT_DROP = KIND["tube"]["bore_r"] + 2 * WALL              # the belly 9.1 under the loop axis: one wall under the tube collars (the printed nodes: NODE_R + 3.0 = 13.15)
+FOOT_GAP, FOOT_DEEP, PRINTED_WALL = 0.5, 2.5, 2.5          # sockets: floor 0.5 inside the printed node's collar mouth, 2.5 deeper than 15 / 10; the printed lib's wall (its socket starts)
 
 
 def _printed_starts():
@@ -102,35 +102,26 @@ def build(n, h, log=print):
     lo, hi = pts.min(0) - MARGIN, pts.max(0) + MARGIN
     foot = None
     if base:
-        zb = c[2] - NODE_R - 3.0                                 # landing face bottom (z -93.05 on the base loop, as v6)
+        zb = c[2] - FOOT_DROP                                    # the belly: the landing face and the bed face (z -89.0 on the base loop; printed -93.05)
         axis = np.array([c[0], c[1], 0.0]); up = np.array([0, 0, 1.0])
-        foot = cone(axis + up * zb, up, 0.0, FOOT_CH, FOOT_R - FOOT_CH, FOOT_R, 64) + along(axis, up, zb + FOOT_CH - 0.05, zb + FOOT_T, FOOT_R, 64) \
-            + along(axis, up, zb + FOOT_T - 0.1, zb + FOOT_T + NECK_T + 0.3, NECK_R, 64) \
-            + (along(axis, up, zb + FOOT_T + NECK_T, zb + FOOT_T + NECK_T + SHOULDER_T, SHOULDER_R, 64) - along(axis, up, zb, zb + 20.0, NECK_R - 1.5, 64))   # the shoulder is a ring: over the neck is design room (drawn_blocks audit: disc + neck + a full shoulder was a 9.5 mm core)   # the bed chamfer leads the boot's lip on
-        lo[2] = zb + FOOT_T + NECK_T                            # no room under the collars: the boot's cup and tie sit round the stud
+        foot = cone(axis + up * zb, up, 0.0, FOOT_CH, FOOT_R - FOOT_CH, FOOT_R, 64) + along(axis, up, zb + FOOT_CH - 0.05, zb + FOOT_T, FOOT_R, 64)
+        lo[2] = zb                                              # the room's floor is the ground plane: nothing under the belly
     import manifold3d as mf
     box = mf.Manifold.cube((hi - lo).tolist()).translate(lo.tolist())
     ball = mf.Manifold.sphere(max(np.linalg.norm(pts - c, axis=1)) + MARGIN * 0.75, 48).translate(c.tolist())
     env = box ^ ball
-    if base:                                                    # v7: sockets 25..37 out, so the box is mostly air. Room is a HUB over the stud and one tapered arm from it
-        #   to each socket (the hull of the hub with that collar grown by MARGIN), cut off under the collars, plus the stud. Not the hull of all the collars: in that
-        #   room the layout joined the sockets to each other past the centre and hung the stud off the body's edge, backed on one side (11 Nov runs: 0.21 / 0.28 / 0.34
-        #   at the neck in the 1300 N hit on nodes 5 / 4 / 3; node 2, whose sockets surround the centre, 0.11; that turned out to be the stud's opened core, below). Every load path crosses the hub.
-        zs = zb + FOOT_T + NECK_T
+    if base:                                                    # sockets 25..37 out, so the box is mostly air. Room is a HUB over the sole and one tapered arm from it
+        #   to each socket (the hull of the hub with that collar grown by MARGIN), cut off at the ground plane. Not the hull of all the collars: in that room the
+        #   v7 layout joined the sockets to each other past the centre and hung the foot off the body's edge, backed on one side. Every load path crosses the hub.
         hub = [c + (NODE_R + MARGIN) * np.array([np.cos(a_) * np.cos(b_), np.sin(a_) * np.cos(b_), np.sin(b_)]) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False) for b_ in (-0.6, 0.0, 0.6, 1.2)]
-        hub += [axis + up * z_ + (SHOULDER_R + 2.0) * np.array([np.cos(a_), np.sin(a_), 0.0]) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False) for z_ in (zs, zs + 2 * MARGIN)]
+        hub += [axis + up * z_ + (FOOT_R + 3.0) * np.array([np.cos(a_), np.sin(a_), 0.0]) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False) for z_ in (zb, zb + 2 * MARGIN)]
         arms = []
         for m in ms:
             e1 = np.cross(m["u"], [0, 0, 1.0] if abs(m["u"][2]) < 0.9 else [1.0, 0, 0]); e1 /= np.linalg.norm(e1); e2 = np.cross(m["u"], e1)
             sock = [c + m["u"] * s_ + (m["ro"] + MARGIN) * (np.cos(a_) * e1 + np.sin(a_) * e2) for s_ in (m["s0"] - FLOOR, m["s_end"]) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False)]
             arms.append(mf.Manifold.hull_points(np.array(hub + sock).tolist()))
-        env = env ^ U(arms)                                     # the stud's disc and neck are NOT in the room: a drawn body inside the room keeps only a 2.5 mm
-        #   functional skin and its core is opened to the design (topo/part.py functional_skin), so the O28 neck printed as a shell: every 11 Nov run read its worst
-        #   in the 1300 N hit just inside that skin (r 11, mid neck: 0.11 / 0.21 / 0.28 / 0.35 on nodes 2 / 5 / 4 / 3) while the room filled solid read 0.09..0.12,
-        #   and the hub-and-arms room changed nothing. Drawn outside the room, every cell of the stud stays solid.
+        env = env ^ U(arms)
     drawn = U(collars + ([foot] if base else []) + ex.get("drawn", []))
-    if base:
-        bores.append(along(axis, up, zb - 1.0, zb + POCKET_H, POCKET_R, 48))   # the stud's relief pocket (drawn_blocks audit, 11 Nov: the solid stud was an 8..10 mm core)
     cuts = U(bores + keep + ex.get("cuts", []))
     if ex.get("env"):
         env = U([env] + ex["env"])
@@ -158,14 +149,11 @@ def build(n, h, log=print):
         p.load_multi(f"crash 35 g through the longest tube {L['name']} ({L['len']:.0f} mm), axial + side",
                      [(lining(L), -L["axial"] * L["u"] + L["side"] * sd)], cls="crash")
     if base:
-        face = along(axis, up, zb, zb + 2.5, FOOT_R - 1.0) - along(axis, up, zb - 1.0, zb + 4.0, POCKET_R + 0.5, 48)   # the bare disc, round its pocket
-        zs = zb + FOOT_T + NECK_T                                # the shoulder's underside
-        ring = along(axis, up, zs, zs + SHOULDER_T, RIM_R[1], 64) - along(axis, up, zs - 1.0, zs + SHOULDER_T + 1.0, RIM_R[0], 64)   # where the boot's rim bears
-        p.support("sockets", U([lining(m, 1.4) for m in ms]))    # the foot cases: the node is held by every rod glued into it (v6 held it by two
-        #   sockets 10 mm from the centre; with the bores 25..37 out that clamp alone read 0.25..0.35 with the room filled solid, room_full audit 11 Nov)
+        face = along(axis, up, zb, zb + 2.5, FOOT_R - 1.0)       # inside the drawn 3.0 sole
+        p.support("sockets", U([lining(m, 1.4) for m in ms]))    # the foot cases: the node is held by every rod glued into it
         fz = LAND_G * DRONE_G * GN / LAND_FEET
-        p.load_multi(f"landing 6 g on the foot ({fz:.0f} N up, 3 of 6 feet)", [(ring, np.array([0, 0, fz]))], cls="flight", support="sockets")
-        p.load_multi(f"ground hit {HIT_N:.0f} N on the bare disc (a 0.6 m drop onto this node alone, 8 Nov; the boot lost or spent)", [(face, np.array([0, 0, HIT_N]))], cls="crash", support="sockets")
+        p.load_multi(f"landing 6 g on the foot ({fz:.0f} N up, 3 of 6 feet)", [(face, np.array([0, 0, fz]))], cls="flight", support="sockets")
+        p.load_multi(f"ground hit {HIT_N:.0f} N on the foot (a 0.6 m drop onto this node alone, 8 Nov)", [(face, np.array([0, 0, HIT_N]))], cls="crash", support="sockets")
     if ex.get("loads"):
         ex["loads"](p)
     return p
