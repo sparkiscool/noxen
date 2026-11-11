@@ -29,7 +29,7 @@ Base (foot) nodes 0-5, v7 (11 Nov, Spark: "the foot nodes broke again ... it pre
       boot on a drawn stud, which caps the hit near 560 N (760 on a 40 % hard spool): two prints, because the boot's cells must
       print on their side and the node on its foot (an AMS co-print would put one of them in the wrong layer direction).
   Drawn besides the sockets, the same on all six so one boot fits every node: the boot stud, a disc O30 x 3.5 (the bed face; the
-  landing face of a node without its boot) on a O24 neck 3.5 tall, under a O37 x 2.5 shoulder. The boot's cup snaps over the disc,
+  landing face of a node without its boot) on a O24 neck 3.5 tall, under a O37 x 2.5 shoulder, with a O14 x 5 relief pocket up from the bed face. The boot's cup snaps over the disc,
   its lip and zip tie sit round the neck, and its RIM bears on the shoulder (0.4 of air under the disc): a first setup that
   carried the boot on the disc read 1.02 filled solid in the skid case, the skid's moment crossing the layers of the neck (room_full
   audit, 11 Nov); through the shoulder it enters the body on a O30..37 ring. Nothing else may grow under the collars.
@@ -65,6 +65,7 @@ LAND_FEET = 3                                         # a flat landing may rest 
 HIT_N = 1300.0                                        # ground hit on one base node (8 Nov, Spark: the rear base node broke in three in testing): 1.65 kg from 0.6 m, 9.6 J, stopped in ~15 mm of rod flex, peak ~2x the 640 N average
 FOOT_R, FOOT_T, NECK_R, NECK_T, FOOT_CH = 15.0, 3.5, 12.0, 3.5, 0.6      # v7 boot stud: disc O30 x 3.5 on a O24 neck 3.5 tall (the neck carries the skid moment at ~9 MPa; O20 was 15)
 FOOT_GAP, FOOT_DEEP, PRINTED_WALL = 0.5, 2.5, 2.5          # v7 sockets: floor 0.5 inside the printed node's collar mouth, 2.5 deeper than 15 / 10; the printed lib's wall (its socket starts)
+POCKET_R, POCKET_H = 7.0, 5.0                              # a O14 x 5 relief pocket up the stud from the bed face: no wall of the stud over 5 thick
 SHOULDER_R, SHOULDER_T, RIM_R = 18.5, 2.5, (15.0, 18.0)    # the shoulder the boot's rim bears on (rim: the cup wall, 3.0 from the disc)
 BOOT_N, BOOT_MU, BOOT_LEVER = 800.0, 0.5, 29.0             # the boot-capped hit (overseer_tpu_foot v4 model on a 40 % hard spool: 763 N at v3's block, x 36 / 34.5 deep, E), friction at the sole (E), the sole under the shoulder at that peak (7 of stud + 31.4 of boot - 9.7 of stroke)
 GN = 9.81e-3
@@ -412,6 +413,8 @@ def build(n, h, log=print, extra=None):
         hp += [c + (NODE_R + MARGIN) * np.array([np.cos(a_) * np.cos(b_), np.sin(a_) * np.cos(b_), np.sin(b_)]) for a_ in np.linspace(0, 2 * np.pi, 12, endpoint=False) for b_ in (-0.6, 0.0, 0.6, 1.2)]
         env = (env ^ mf.Manifold.hull_points(np.array(hp).tolist())) + foot
     drawn = U(collars + ([foot] if base else []) + ex.get("drawn", []))
+    if base:
+        bores.append(along(axis, up, zb - 1.0, zb + POCKET_H, POCKET_R, 48))   # the stud's relief pocket (drawn_blocks audit, 11 Nov: the solid stud was an 8..10 mm core)
     cuts = U(bores + keep + ex.get("cuts", []))
     if ex.get("env"):
         env = U([env] + ex["env"])
@@ -439,7 +442,7 @@ def build(n, h, log=print, extra=None):
         p.load_multi(f"crash 35 g through the longest tube {L['name']} ({L['len']:.0f} mm), axial + side",
                      [(lining(L), -L["axial"] * L["u"] + L["side"] * sd)], cls="crash")
     if base:
-        face = along(axis, up, zb, zb + 3.0, FOOT_R - 1.0)       # the bare disc
+        face = along(axis, up, zb, zb + 3.0, FOOT_R - 1.0) - along(axis, up, zb - 1.0, zb + 4.0, POCKET_R + 0.5, 48)   # the bare disc, round its pocket
         zs = zb + FOOT_T + NECK_T                                # the shoulder's underside
         ring = along(axis, up, zs, zs + SHOULDER_T, RIM_R[1], 64) - along(axis, up, zs - 1.0, zs + SHOULDER_T + 1.0, RIM_R[0], 64)   # where the boot's rim bears
         fz = LAND_G * DRONE_G * GN / LAND_FEET
