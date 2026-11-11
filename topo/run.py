@@ -63,13 +63,14 @@ def peak_gb():
 
 
 def _setup_hash(out_dir):
-    """part.py + its libs + the engine (tools/part_sha.py), or None for a demo part"""
+    """part.py + its libs + the data it reads + the engine (tools/part_sha.py), or None for a demo part: a checkpoint solved under
+    another head-first load (systems/scout_v4.head_load.json, 10 Nov) is not resumed either"""
     py = os.path.join(out_dir, "part.py")
     if not os.path.exists(py):
         return None
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
-    from part_sha import part_sha, lib_sha, engine_sha
-    return part_sha(py) + lib_sha(py) + engine_sha()
+    from part_sha import part_sha, lib_sha, data_sha, engine_sha
+    return part_sha(py) + lib_sha(py) + data_sha(py) + engine_sha()
 
 
 def design_hash(part, h, gen, spec, settings=None):

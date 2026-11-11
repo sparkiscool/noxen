@@ -778,6 +778,61 @@ def t_export_pinch():
         check("export pinch", False, str(e))
 
 
+def t_setup_reads():
+    """a part's identity is every repo file its setup reads (tools/part_sha.py record): a tools/ module the part imports (already imported
+    by the caller, served from __pycache__) and the systems/ data that module opens are in setup.json "reads"; a changed value there
+    changes the setup sha, the result reads stale and --affected reruns the part; a file it does not read reruns nothing (10 Nov: the
+    Scout v4 parts read systems/scout_v4.head_load.json, outside the old key, and CI neither reran nor superseded them)"""
+    try:
+        import os, sys, json, tempfile, shutil, importlib
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        sys.path.insert(0, os.path.join(root, "tools"))
+        import part_sha as PS
+        importlib.reload(PS)
+        tag = f"_t_reads_{os.getpid()}"
+        mod, dat = os.path.join(root, "tools", tag + ".py"), os.path.join(root, "systems", tag + ".json")
+        d = tempfile.mkdtemp(prefix="setup_reads_", dir=os.path.join(root, "parts"))
+        try:
+            open(dat, "w").write('{"load": -10.0}')
+            open(mod, "w").write("import json, os\nLOAD = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'systems', '%s.json')))['load']\n" % tag)
+            py = os.path.join(d, "part.py")
+            open(py, "w").write("import os, sys\nimport manifold3d as mf\nfrom topo.part import Part\n"
+                                "sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tools'))\n"
+                                f"from {tag} import LOAD\n"
+                                "box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])\n"
+                                "def setup(h):\n    p = Part('t', h, box(0, 3, 0, 12, 0, 12) + box(20, 24, 3, 9, 3, 9), box(100, 101, 100, 101, 100, 101), box(0, 24, 0, 12, 0, 12), log=lambda s_: None)\n"
+                                "    p.support('default', box(-1, 1.5, -1, 13, -1, 13)); p.load('down', box(20, 24, 3, 9, 3, 9), (0, 0, LOAD)); return p\n"
+                                "SPEC = dict(h=1.0, gen_cm3=1.0, max_worst=0.5)\n")
+            importlib.import_module(tag)                                       # the caller has it already: a fresh import must still record it
+            importlib.import_module(tag)
+            a = PS.setup_sha(py, refresh=True); reads = json.load(open(os.path.join(d, "setup.json")))["reads"]
+            ids = PS.files(py)
+            inkey = f"tools/{tag}.py" in reads and f"systems/{tag}.json" in reads and f"systems/{tag}.json" in ids
+            nojunk = not any(r.startswith(("topo/", ".git")) or "__pycache__" in r or r.endswith("setup.json") for r in reads)
+            res = dict(part_sha=PS.part_sha(py), lib_sha=PS.lib_sha(py), setup_sha=a)
+            json.dump(res, open(os.path.join(d, "result.json"), "w"))
+            name = os.path.basename(d)
+            quiet = PS.affected(["systems/runtimes.json", "tools/dim.py"], pys=[py]) == []      # not read: nothing reruns
+            same = PS.affected([f"systems/{tag}.json"], pys=[py]) == []                        # read, unchanged setup: nothing reruns
+            open(dat, "w").write('{"load": -14.0}')
+            b = PS.setup_sha(py)                                               # the cache sees the data change without refresh
+            stale = PS.stale(py, res)
+            rerun = PS.affected([f"systems/{tag}.json"], pys=[py]) == [name]
+            ok = inkey and nojunk and b != a and stale and quiet and same and rerun
+            check("setup reads: a read systems/ or tools/ file is the part's identity, its change reruns the part, other files do not", ok,
+                  f"in the key {inkey}, no engine or output files {nojunk}, sha changed {b != a}, stale {stale}, unread file quiet {quiet}, "
+                  f"unchanged setup quiet {same}, changed data reruns {rerun}; reads {reads}")
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+            for f in (mod, dat):
+                if os.path.exists(f):
+                    os.remove(f)
+            sys.modules.pop(tag, None)
+    except Exception as e:
+        traceback.print_exc()
+        check("setup reads", False, str(e))
+
+
 def t_setup_sha():
     """staleness by setup (tools/part_sha.py): a result carrying the setup_sha of the setup part.py builds now is current even when
     part.py's or a lib's file hash changed (30 Oct: a two-line validation in cage_node_lib flagged eight node results stale and they
@@ -817,11 +872,11 @@ def t_setup_sha():
             open(os.path.join(d, "inputs", "load.json"), "w").write('{"load": -14.0}')
             d2 = PS.setup_sha(py)
             data_stale = PS.stale(py, dict(part_sha=PS.part_sha(py), lib_sha="", setup_sha=d1))
-            sysjson = any(f.endswith("overseer.cage.json") for f in PS.data_files(py))
+            sysjson = any(f.endswith(os.path.join("inputs", "load.json")) for f in PS.data_files(py))      # the read file is in the key
             ok = a == b and cached["setup_sha"] == a and not_stale and other_stale and old_rule and c != a and d1 == c and d2 != d1 and data_stale and sysjson
             check("setup sha: a comment keeps a result current, a changed load or data file makes it stale, old results use the file rule", ok,
                   f"comment {a == b}, cache {cached['setup_sha'] == a}, current {not_stale}, other setup stale {other_stale}, old rule {old_rule}, load changed {c != a}, "
-                  f"data file: same {d1 == c}, changed {d2 != d1}, stale {data_stale}; systems/*.json in the key {sysjson}")
+                  f"data file: same {d1 == c}, changed {d2 != d1}, stale {data_stale}; the read file in the key {sysjson}")
         finally:
             shutil.rmtree(d, ignore_errors=True)
     except Exception as e:
@@ -1355,7 +1410,7 @@ def t_build_memory_gate():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate):
         t()
     if not quick:
         t_end_to_end()
