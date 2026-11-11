@@ -38,7 +38,8 @@ Base (foot) nodes 0-5, v7 (11 Nov, Spark: "the foot nodes broke again ... it pre
   cut up to 2.5 mm outside the old mouth still has the full 15 / 10 in the bore.
   Cases on the foot: landing 6 g and the boot-capped hit with a skid (BOOT_N up on the shoulder + BOOT_MU of it sideways at the
   sole, BOOT_LEVER under the shoulder at the peak, along x and along y; mu E: the boot is a lever the bare foot was not), both
-  through the shoulder; and the 1300 N hit on the bare disc (the boot lost or spent), the 8 Nov case.
+  through the shoulder; and the 1300 N hit on the bare disc (the boot lost or spent), the 8 Nov case. For these the node is held
+  at every socket (support "sockets"): the frame model has no one-node drop case, so the sockets' reactions are the stiff bound.
 Supports: the sockets of the two tube members with the largest frame-model axial force (the stiffest load paths: the ones
 the rest of the cage holds the node by); those sockets' own cases are not applied (a force on a fixed region is nothing).
 """
@@ -445,15 +446,17 @@ def build(n, h, log=print, extra=None):
         face = along(axis, up, zb, zb + 3.0, FOOT_R - 1.0) - along(axis, up, zb - 1.0, zb + 4.0, POCKET_R + 0.5, 48)   # the bare disc, round its pocket
         zs = zb + FOOT_T + NECK_T                                # the shoulder's underside
         ring = along(axis, up, zs, zs + SHOULDER_T, RIM_R[1], 64) - along(axis, up, zs - 1.0, zs + SHOULDER_T + 1.0, RIM_R[0], 64)   # where the boot's rim bears
+        p.support("sockets", U([lining(m, 1.4) for m in ms]))    # the foot cases: the node is held by every rod glued into it (v6 held it by two
+        #   sockets 10 mm from the centre; with the bores 25..37 out that clamp alone read 0.25..0.35 with the room filled solid, room_full audit 11 Nov)
         fz = LAND_G * DRONE_G * GN / LAND_FEET
-        p.load_multi(f"landing 6 g on the foot ({fz:.0f} N up, 3 of 6 feet)", [(ring, np.array([0, 0, fz]))], cls="flight")
-        p.load_multi(f"ground hit {HIT_N:.0f} N on the bare disc (a 0.6 m drop onto this node alone, 8 Nov; the boot lost or spent)", [(face, np.array([0, 0, HIT_N]))], cls="crash")
+        p.load_multi(f"landing 6 g on the foot ({fz:.0f} N up, 3 of 6 feet)", [(ring, np.array([0, 0, fz]))], cls="flight", support="sockets")
+        p.load_multi(f"ground hit {HIT_N:.0f} N on the bare disc (a 0.6 m drop onto this node alone, 8 Nov; the boot lost or spent)", [(face, np.array([0, 0, HIT_N]))], cls="crash", support="sockets")
         Fh = BOOT_MU * BOOT_N; a = 0.5 * (RIM_R[0] + RIM_R[1])
         P = Fh * (BOOT_LEVER - (FOOT_T / 2 + NECK_T)) / (2 * a)    # the skid's moment about the shoulder, less what the side force applied at the disc already carries, as a couple on the rim
         for nm, d in (("x", np.array([1.0, 0, 0])), ("y", np.array([0, 1.0, 0]))):
             pad = lambda sg: ring ^ along(axis + sg * a * d, up, zs - 1.0, zs + SHOULDER_T + 1.0, 5.0)
             p.load_multi(f"boot-capped hit {BOOT_N:.0f} N with a skid along {nm} ({Fh:.0f} N at the sole, {BOOT_LEVER:.0f} under the shoulder)",
-                         [(ring, np.array([0, 0, BOOT_N])), (face, Fh * d), (pad(1), np.array([0, 0, P])), (pad(-1), np.array([0, 0, -P]))], cls="crash")
+                         [(ring, np.array([0, 0, BOOT_N])), (face, Fh * d), (pad(1), np.array([0, 0, P])), (pad(-1), np.array([0, 0, -P]))], cls="crash", support="sockets")
     if ex.get("loads"):
         ex["loads"](p)
     return p
