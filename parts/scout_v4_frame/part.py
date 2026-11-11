@@ -41,16 +41,20 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of
                                       check_collars, rigid_split, SockDown, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
                                       M25_INS, BOSS_R, DIRS14, FLIGHT)
 
-SPEC = dict(h=2.0, gen_cm3=140.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
+SPEC = dict(h=2.0, gen_cm3=180.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
 # 10 Nov (the NODES stream's socket-depth rule, units_lib.socket_depth): DN / DT 13.5 and BN / BT 11.5 deep (their 645 / 528 N), taken
 # behind the standard floor (the mouths stay inside the 180; those 4 rods 3.5 / 1.5 longer), DS / BS 7.0 (their mouths 3 nearer).
 # 10 Nov, run 186 (60 cm3, 18 % of the room): FAIL 1.515 (BN-NB 528 N), 117 g; the result read what the room filled solid thinned
 # uniformly to the budget predicted (0.261 / 0.177 = 1.48): this many separate load paths leave the layout little to gain over
 # uniform. Budget 60 -> 120 and the nose block |y| 26 -> 34 as the tail tray (the BN socket's room: 100 alone thinned to ~1.0), arms' room 26 -> 32 wide (motor 1's root 1.25 in-layer), the lugs' room x +-20 -> +-28
 # (BS1-S1 1.28 across the layers: the lug bends as a column), the FC posts' clear ring r 6.5 -> 7.5 (one post off the main body).
+# 11 Nov, run of a093523 (solid check PASS, 222.9 g): FAIL 0.821 ACROSS at BS0-S0 (175 N out along y at z -8.8, 33 under the deck: the lug
+# x +-28 could only hang from the deck and bend across its layers), motors 0.35-0.65 in-layer, 0.25-0.55 across; the beta-4 check read
+# 0.54 and the room thinned uniformly ~0.56: the layout gains nothing over uniform here. The lugs' wedge runs the receiver's length
+# (a plate at the socket's height carries the pull along x in its layers to the nose and tail) and the budget 140 -> 180.
 POD_R, POD_T, POD_ROOM, ARM_W = 14.0, 8.0, 15.0, 32.0      # 11 Nov: pad 6 -> 8 (motors 0.29-0.53 in-layer, 0.33-0.39 across in run a25e31d); M2 x 10 screws
 ARM_Z0, POD_Z0 = 2.0, 8.0                            # the arms' room bottom at the root and at the pod (9 Nov smoke: room_full 0.33 at the rear arm's root, 12.5 deep)
-LUG_X, LUG_Y1 = 28.0, 64.0                         # the lugs' room: x +-20, out to y 64 at the deck (9 Nov)
+LUG_Y1 = 64.0                                      # the lugs' room: out to y 64 at the deck (9 Nov), along the receiver's whole length (11 Nov)
 # the motor (EMAX ECO II 2004 3000KV, the table above; dimensions.md open item 19: the KV)
 T_MAX, DYN, Q_PEAK, F_IMB, Q_STRIKE, F_STRIKE = 11.8, 1.5, 130.0, 11.0, 1000.0, 17.0   # N, -, N mm, N, N mm, N
 M2_PATTERN = 6.0                                   # 12 x 12, 4 x M2
@@ -112,7 +116,7 @@ def bodies():
     lx, ly0, ly1, lz = S.LUG
     for s_ in (1, -1):                                                                # the side lugs' room: a wedge from the deck's side down to the
         yz = [(ly0, lz), (ly1, lz), (ly1, lz + 1.2), (LUG_Y1, lz + 1.2 + 1.43 * (LUG_Y1 - ly1)), (LUG_Y1, DZ1), (ly0, DZ1)]   # BS socket, out under the
-        env.append(hull_pts([(x, s_ * y, z) for x in (-LUG_X, LUG_X) for y, z in yz]))   # discs' keep-out, its outer face up the funnel's 55 deg
+        env.append(hull_pts([(x, s_ * y, z) for x in (rx0 - 0.5, rx1 + 0.5) for y, z in yz]))   # discs' keep-out, its outer face up the funnel's 55 deg
     drawn, cuts = [], []
     cuts.append(box(rx0 - 0.1, rx1, -33.3, 33.3, -60.0, -2.6))                       # the battery mechanism (the receiver's box) under the yokes; above
     rr = 5.0                                                                          # z -2.6 its vertical corners round r 5 (10 Nov, run 188: 0.785 at the box's
