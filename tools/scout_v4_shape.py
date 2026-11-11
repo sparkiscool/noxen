@@ -65,7 +65,7 @@ R_KEEP, Z_SWEEP = PROP_R + 4.0, 4.0             # the disc grown 4 and swept +-4
 KEEP = 12.0                                      # every rod 12 from the swept disc
 DECK = (-60.0, 60.0, 40.0)                       # the deck's body: x0, x1, |y| (E), arms from its corners to the pods
 ARM_W, POD_R = 18.0, 15.0                        # arm width, motor pod radius (the 2004's base O27 + 1.5)
-FC_X, FC_Z0, UBEC_YC = (15.5, 51.5), 10.0, 0.0       # 9 Nov: the FC hangs under the deck over the receiver (x 15.5..51.5, z 10..20.5); the UBEC across the tail tray
+FC_X, FC_Z0, UBEC_YC = (30.5, 66.5), 10.0, 0.0     # 11 Nov: FC forward of the turret's roller-guide stubs (x 15.6..29.7 under the deck)       # 9 Nov: the FC hangs under the deck over the receiver (x 15.5..51.5, z 10..20.5); the UBEC across the tail tray
 BED = 89.3                                       # 9 Nov (Spark: deck, arms, pods and base as ONE body): the body inside |x|, |y| <= 89.3, the A1 mini's 180 less 1.4
 # ---- the v3 base and the battery, unchanged ---------------------------------------------------------------------------------
 BX = 1.3                                          # 9 Nov (Spark: "the center of gravity ... perfectly centered"): everything under the deck (receiver, cartridge, pack, base,
@@ -521,9 +521,9 @@ def write():
     # 9 Nov (one body, the nose bay gone): the FC and the Radxa hang under the deck over the receiver on posts (inserts in the deck),
     # the XR2 and the DRV8833 flat on tape lands beside the FC, the UBEC on the tail tray's floor across the drone
     meshes["fc"] = place("fc", lo=(FC_X[0], FC_Z0))                                  # 36 square, component side up, its posts down from the deck
-    meshes["radxa_zero_3w"] = place("radxa_zero_3w", rot=([0, 1, 0], 90), lo=(-72.6, 10.4), yc=0.0)
+    meshes["radxa_zero_3w"] = place("radxa_zero_3w", rot=([0, 1, 0], 90), lo=(-73.9, 10.4), yc=0.0)
     meshes["radxa_zero_3w"].apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [0, 0, 1], meshes["radxa_zero_3w"].bounds.mean(0)))   # 65 along x
-    meshes["radxa_zero_3w"].apply_translation([-72.6 - meshes["radxa_zero_3w"].bounds[0][0], 0, 0])
+    meshes["radxa_zero_3w"].apply_translation([-73.9 - meshes["radxa_zero_3w"].bounds[0][0], 0, 0])   # 11 Nov: its front 0.4 off the turret's N20 cheeks (x -8.5)
     meshes["ubec"] = place("ubec", lo=(-71.5, 0.3), yc=UBEC_YC)                        # 61 along y on the tail tray's land
     meshes["xr2"] = place("xr2", rot=([0, 0, 1], 90), lo=(4.0, 10.0), yc=28.5)        # flat, 34.5 x 13 x 4, under its land at +y
     meshes["xr2"].apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [1, 0, 0], meshes["xr2"].bounds.mean(0)))

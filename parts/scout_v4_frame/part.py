@@ -143,6 +143,9 @@ def bodies():
     cuts.append(box(cx - ra - 0.8, cx + ra + 0.8, S.GEAR["y"][0] - 0.5, S.GEAR["y"][1] + 0.5, cz - ra - 0.8, DZ1 + 1))   # the 40 T gear's slot
     tb = S.probe()["probe_turret"].bounds
     cuts.append(box(tb[0][0] - 0.5, tb[1][0] + 0.5, tb[0][1] - 0.5, tb[1][1] + 0.5, DZ1, 120))   # the turret above the deck
+    import parts.scout_v4_probe_turret.part as TUR                                    # 11 Nov (the PROBE stream's turret, main 722f7dc): its N20 cheeks,
+    tt = TUR.bodies(); tdown = (tt["drawn"] + tt["env"]) ^ box(-200, 200, -200, 200, -100, DZ1 - 0.01)   # stubs and roller guide hang below its floor pads
+    cuts.append(U([tdown.translate(list(d)) for d in ((0.4, 0, 0), (-0.4, 0, 0), (0, 0.4, 0), (0, -0.4, 0), (0, 0, -0.4), (0, 0, 0))]) ^ box(-200, 200, -200, 200, -100, DZ1))   # 0.4 clear, never above the deck top (the bosses keep their height)
     cuts += disc_cuts()
     # ---- the boards (bought meshes placed by tools/scout_v4_shape.py)
     boards = []
@@ -161,10 +164,10 @@ def bodies():
     posts, pts, regs = [], [], []
     for dx in (-28.925, 28.925):
         for dy in (-11.425, 11.425):                                                  # 4 M2.5 posts (Radxa STEP: 57.85 x 22.85), down from the deck
-            posts.append(cyl(rx + dx, ry + dy, rtop, DZ1, 4.0)); pts.append((rx + dx, ry + dy, rtop)); regs.append(region_bot(rx + dx, ry + dy, rtop, 4.0))
+            posts.append(cyl(rx + dx, ry + dy, rtop, DZ1, 3.75)); pts.append((rx + dx, ry + dy, rtop)); regs.append(region_bot(rx + dx, ry + dy, rtop, 3.75))   # 3.75: 2.0 round the insert
             cuts.append(cyl(rx + dx, ry + dy, rtop - 0.1, rtop + M25_INS[1], M25_INS[0]))
     drawn += posts
-    cuts.append(box(rb[0][0] - 0.5, rb[1][0] + 0.5, rb[0][1] - 0.5, rb[1][1] + 0.5, rb[0][2] - 0.5, rb[1][2] + 0.5) - U(posts))
+    cuts.append(box(rb[0][0] - 0.2, rb[1][0] + 0.2, rb[0][1] - 0.5, rb[1][1] + 0.5, rb[0][2] - 0.5, rb[1][2] + 0.5) - U(posts))   # 0.2 at its ends: 65 long between the turret's N20 cheeks and DT's collar
     for xa, xb in ((rb[1][0] - 58.5, rb[1][0] - 49.6), (rb[1][0] - 46.0, rb[1][0] - 37.1)):   # its two USB-C plugs out the -y edge
         cuts.append(box(xa - 1.0, xb + 1.0, -41.0, rb[0][1] + 1.0, rb[0][2] - 0.5, rb[0][2] + 7.0))
     boards.append(("Radxa Zero 3W", pts, regs, ASM["scout_v4_radxa_zero_3w"]["mass_g"], tuple(rb.mean(0))))
@@ -181,7 +184,7 @@ def bodies():
     lb = bounds("scout_v4_flow_mtf_02p")
     drawn.append(box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6))   # the flow sensor's tape land over it
     cuts.append(box(lb[0][0] - 0.3, lb[1][0] + 0.3, lb[0][1] - 0.3, lb[1][1] + 0.3, lb[0][2] - 5, lb[1][2]))      # its body and window, open below
-    cuts.append(box(lb[0][0] - 0.3, lb[0][0] + 4, -3, 3, lb[1][2] - 3, S.REC_TOP + 2.0))                          # its cable up the receiver's nose face
+    cuts.append(box(lb[0][0] - 0.3, lb[0][0] + 4, -3, 3, lb[1][2] - 3, S.REC_TOP + 0.3))                          # its cable up the receiver's nose face
     reg = box(lb[0][0], lb[1][0], lb[0][1], lb[1][1], lb[1][2], lb[1][2] + 2.6)   # (the whole land: h 2.25)
     boards.append(("flow MTF-02P", [tuple(lb.mean(0))], [reg], ASM["scout_v4_flow_mtf_02p"]["mass_g"], tuple(lb.mean(0))))
     flow_reg = box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6)   # the whole land
