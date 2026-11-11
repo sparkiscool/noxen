@@ -41,7 +41,7 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of
                                       check_collars, rigid_split, SockDown, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
                                       M25_INS, BOSS_R, DIRS14, FLIGHT)
 
-SPEC = dict(h=2.0, gen_cm3=180.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
+SPEC = dict(h=2.0, gen_cm3=200.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
 # 10 Nov (the NODES stream's socket-depth rule, units_lib.socket_depth): DN / DT 13.5 and BN / BT 11.5 deep (their 645 / 528 N), taken
 # behind the standard floor (the mouths stay inside the 180; those 4 rods 3.5 / 1.5 longer), DS / BS 7.0 (their mouths 3 nearer).
 # 10 Nov, run 186 (60 cm3, 18 % of the room): FAIL 1.515 (BN-NB 528 N), 117 g; the result read what the room filled solid thinned
@@ -52,7 +52,11 @@ SPEC = dict(h=2.0, gen_cm3=180.0, max_worst=0.3)   # E: the old frame's 36 + the
 # x +-28 could only hang from the deck and bend across its layers), motors 0.35-0.65 in-layer, 0.25-0.55 across; the beta-4 check read
 # 0.54 and the room thinned uniformly ~0.56: the layout gains nothing over uniform here. The lugs' wedge runs the receiver's length
 # (a plate at the socket's height carries the pull along x in its layers to the nose and tail) and the budget 140 -> 180.
-POD_R, POD_T, POD_ROOM, ARM_W = 14.0, 8.0, 15.0, 32.0      # 11 Nov: pad 6 -> 8 (motors 0.29-0.53 in-layer, 0.33-0.39 across in run a25e31d); M2 x 10 screws
+# Run of 071cc14: 274.1 g, solid PASS, FAIL 0.481 (motor 4's root; sockets <= 0.41 across, 0.40 in-layer): arms' root room 32 -> 48, 180 -> 200.
+POD_R, POD_T, POD_ROOM = 14.0, 8.0, 15.0             # 11 Nov: pad 6 -> 8 (motors 0.29-0.53 in-layer, 0.33-0.39 across in run a25e31d); M2 x 10 screws
+ARM_W0, ARM_W1 = 48.0, 30.0                         # the arms' room across, at the root and at the pod. 11 Nov, run of 071cc14 (274.1 g, 0.481): every
+                                                   # pod's flight case worst at its root by the deck's corner (0.29-0.48 in-layer), each arm one ~10 wide bar
+                                                   # in a 32 room: 48 at the root (was 32) lets the root spread into a V in its layers
 ARM_Z0, POD_Z0 = 2.0, 8.0                            # the arms' room bottom at the root and at the pod (9 Nov smoke: room_full 0.33 at the rear arm's root, 12.5 deep)
 LUG_Y1 = 64.0                                      # the lugs' room: out to y 64 at the deck (9 Nov), along the receiver's whole length (11 Nov)
 # the motor (EMAX ECO II 2004 3000KV, the table above; dimensions.md open item 19: the KV)
@@ -111,7 +115,7 @@ def bodies():
     for mx, my in S.MOTORS:
         a = np.array([np.sign(mx) * 30.0, np.sign(my) * 30.0, 0]); b = np.array([mx, my, 0])
         u = unit(b - a); n = np.array([-u[1], u[0], 0])
-        env.append(hull_pts([p + s * n * ARM_W / 2 + [0, 0, z] for p, z0 in ((a, ARM_Z0), (b, POD_Z0)) for s in (-1, 1) for z in (z0, DZ1)]))
+        env.append(hull_pts([p + s * n * w / 2 + [0, 0, z] for p, z0, w in ((a, ARM_Z0, ARM_W0), (b, POD_Z0, ARM_W1)) for s in (-1, 1) for z in (z0, DZ1)]))
         env.append(cyl(mx, my, POD_Z0, DZ1, POD_ROOM))
     lx, ly0, ly1, lz = S.LUG
     for s_ in (1, -1):                                                                # the side lugs' room: a wedge from the deck's side down to the
