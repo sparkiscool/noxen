@@ -1,6 +1,6 @@
 """TPU boot for the Overseer's base nodes, v4 (11 Nov, Spark: "the foot nodes broke again ... it pretty much just snaps everywhere",
-"a full in depth design"): ONE boot for all six nodes, on the stud the v7 nodes draw for it (parts/cage_node_lib.py: a disc O30 x 3.5,
-0.6 chamfer on its bed edge, on a O24 neck 3.5 tall, under a O37 shoulder: the cup's rim bears on the shoulder, 0.4 of air under the disc). v3 (10 Nov) was four boots cast slice by slice from the lobes of the 29-31 Oct
+"a full in depth design"): ONE boot for all six nodes, on the stud the v7 nodes draw for it (parts/cage_foot_lib.py: a disc O30 x 3.0,
+0.6 chamfer on its bed edge, on a O28 neck 3.5 tall, under a O37 shoulder: the cup's rim bears on the shoulder, 0.4 of air under the disc). v3 (10 Nov) was four boots cast slice by slice from the lobes of the 29-31 Oct
 PRINTED nodes; those nodes are being cut off the rods. The crush zone, the look and the print are v3's, the cup is now a plain socket.
 
 WHICH MATERIAL TAKES THE HIT (the 11 Nov study; absorber_model.py, every number E):
@@ -133,8 +133,8 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, HERE); sys.path.insert(0, ROOT)
 CAGE = json.load(open(os.path.join(ROOT, "systems", "overseer.cage.json")))
 NODES = np.array(CAGE["nodes"], float)
-from parts.cage_node_lib import FOOT_R, FOOT_T, NECK_R, NECK_T, FOOT_CH, NODE_R as _NODE_R   # the stud the v7 nodes draw
-AIR = 0.4                                                              # under the disc: the boot bears on the node's shoulder by its rim, never on the disc (cage_node_lib docstring)
+from parts.cage_foot_lib import FOOT_R, FOOT_T, NECK_R, NECK_T, FOOT_CH, NODE_R as _NODE_R   # the stud the v7 nodes draw
+AIR = 0.4                                                              # under the disc: the boot bears on the node's shoulder by its rim, never on the disc (cage_foot_lib docstring)
 DESIGN = 2                                                             # the node the one boot is built and previewed on
 MIRRORS = {DESIGN: (0, 1, 2, 3, 4, 5)}                                 # v4: one boot fits every base node (v3: four, cast from the printed lobes)
 DZ = 0.25                                # slice step
@@ -465,7 +465,7 @@ def preview(boot68, node_tri, curves, path, info):
     ax.imshow(img); ax.set_axis_off()
     ax.set_title(f"the one boot on a v7 node's stud: one 68D body, {info['mass_g']} g, {z_deck:.0f} under the landing face (cup blue, crush zone orange)", fontsize=9)
     ax = fig.add_subplot(1, 3, 2)
-    for mesh, col, lab in ((to_tri(boot68), "#2a7fff", "boot (68D, one body; cells 9.5 / 2.0 along y)"), (node_tri, "#444444", "the node's stud (O30 disc, O24 neck)")):
+    for mesh, col, lab in ((to_tri(boot68), "#2a7fff", "boot (68D, one body; cells 9.5 / 2.0 along y)"), (node_tri, "#444444", "the node's stud (O30 disc, O28 neck)")):
         segs = trimesh.intersections.mesh_plane(mesh, [0, 1.0, 0], [0, 0, 0])
         for i, sgm in enumerate(segs):
             ax.plot(sgm[:, 0], sgm[:, 2], color=col, lw=1.0, label=lab if i == 0 else None)

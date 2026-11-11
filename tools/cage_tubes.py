@@ -15,6 +15,10 @@ for _nm, _s in _hm.sockets().items():
     if getattr(_s, "t_mouth", 0):                                   # the node-17 sockets (v10, 8 Nov: one socket further out, where the
         SOCKET_START[(17, _nm)] = _s.t_mouth - _s.depth             # rods were cut at the v9 mouths; the crossbar saddle has none)
 
+from parts.cage_foot_lib import _PRINTED as _FP, printed_mouth as _mouth
+for _k in _FP:
+    SOCKET_START[_k] = _mouth(*_k)                                  # v7 foot nodes (11 Nov): the rods end at the PRINTED nodes' collar mouths, where Spark cuts them
+
 out, cuts = [], {}
 for a, b in CAGE["rods"]:
     nm = f"tube {a}-{b}"; p, q = NODES[a], NODES[b]; u = (q - p) / np.linalg.norm(q - p)
