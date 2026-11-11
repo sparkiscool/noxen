@@ -7,20 +7,20 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   175392.3
+   195303.9
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 14,
+  "acute_edges": 13,
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 13258.6,
+  "skin_mm3": 13259.0,
   "skin_missing_mm3": 0.0,
   "in_cuts_mm3": 0.0,
-  "outside_env_mm3": 0.0,
+  "outside_env_mm3": -0.0,
   "ok": true
  },
  "strength": {
@@ -28,30 +28,30 @@
    {
     "case": "motor 1: thrust 17.7 N (1.20 kg x 1.5) + torque +0.13 N m + imbalance 11 N across the arm",
     "cls": "flight",
-    "inlayer": 0.457,
-    "across": 0.309,
+    "inlayer": 0.29,
+    "across": 0.254,
     "at": [
-     63.0,
-     -49.0,
+     65.0,
+     -51.0,
      17.7
     ]
    },
    {
     "case": "motor 1: prop strike +1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.146,
-    "across": 0.085,
+    "inlayer": 0.124,
+    "across": 0.071,
     "at": [
-     55.0,
-     -51.0,
+     57.0,
+     -53.0,
      17.7
     ]
    },
    {
     "case": "motor 1: thrust 17.7 N (1.20 kg x 1.5) + torque -0.13 N m + imbalance 11 N along the arm",
     "cls": "flight",
-    "inlayer": 0.148,
-    "across": 0.096,
+    "inlayer": 0.132,
+    "across": 0.083,
     "at": [
      69.0,
      -75.0,
@@ -61,30 +61,30 @@
    {
     "case": "motor 1: prop strike -1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.13,
-    "across": 0.086,
+    "inlayer": 0.11,
+    "across": 0.073,
     "at": [
-     63.0,
-     -53.0,
-     19.7
+     69.0,
+     -59.0,
+     21.7
     ]
    },
    {
     "case": "motor 2: thrust 17.7 N (1.20 kg x 1.5) + torque +0.13 N m + imbalance 11 N across the arm",
     "cls": "flight",
-    "inlayer": 0.287,
-    "across": 0.258,
+    "inlayer": 0.246,
+    "across": 0.27,
     "at": [
-     -57.0,
-     63.0,
+     -63.0,
+     67.0,
      15.7
     ]
    },
    {
     "case": "motor 2: prop strike +1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.135,
-    "across": 0.071,
+    "inlayer": 0.118,
+    "across": 0.076,
     "at": [
      -61.0,
      67.0,
@@ -94,8 +94,8 @@
    {
     "case": "motor 2: thrust 17.7 N (1.20 kg x 1.5) + torque -0.13 N m + imbalance 11 N along the arm",
     "cls": "flight",
-    "inlayer": 0.104,
-    "across": 0.099,
+    "inlayer": 0.126,
+    "across": 0.092,
     "at": [
      -69.0,
      75.0,
@@ -105,131 +105,131 @@
    {
     "case": "motor 2: prop strike -1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.133,
-    "across": 0.055,
+    "inlayer": 0.118,
+    "across": 0.061,
     "at": [
-     -67.0,
+     -71.0,
      59.0,
-     21.7
+     19.7
     ]
    },
    {
     "case": "motor 3: thrust 17.7 N (1.20 kg x 1.5) + torque +0.13 N m + imbalance 11 N across the arm",
     "cls": "flight",
-    "inlayer": 0.351,
-    "across": 0.343,
+    "inlayer": 0.288,
+    "across": 0.386,
     "at": [
-     61.0,
-     51.0,
-     15.7
+     69.0,
+     59.0,
+     13.7
     ]
    },
    {
     "case": "motor 3: prop strike +1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.137,
-    "across": 0.077,
+    "inlayer": 0.138,
+    "across": 0.09,
     "at": [
      67.0,
-     59.0,
-     21.7
+     57.0,
+     19.7
     ]
    },
    {
     "case": "motor 3: thrust 17.7 N (1.20 kg x 1.5) + torque -0.13 N m + imbalance 11 N along the arm",
     "cls": "flight",
-    "inlayer": 0.164,
-    "across": 0.111,
+    "inlayer": 0.153,
+    "across": 0.122,
     "at": [
+     57.0,
      49.0,
-     55.0,
-     17.7
+     11.7
     ]
    },
    {
     "case": "motor 3: prop strike -1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.133,
-    "across": 0.072,
+    "inlayer": 0.131,
+    "across": 0.11,
     "at": [
      61.0,
-     67.0,
-     23.7
+     59.0,
+     19.7
     ]
    },
    {
     "case": "motor 4: thrust 17.7 N (1.20 kg x 1.5) + torque +0.13 N m + imbalance 11 N across the arm",
     "cls": "flight",
-    "inlayer": 0.481,
-    "across": 0.372,
+    "inlayer": 0.343,
+    "across": 0.308,
     "at": [
-     -59.0,
-     -51.0,
-     11.7
+     -63.0,
+     -53.0,
+     13.7
     ]
    },
    {
     "case": "motor 4: prop strike +1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.147,
-    "across": 0.109,
+    "inlayer": 0.134,
+    "across": 0.085,
     "at": [
-     -61.0,
-     -51.0,
-     15.7
+     -63.0,
+     -57.0,
+     19.7
     ]
    },
    {
     "case": "motor 4: thrust 17.7 N (1.20 kg x 1.5) + torque -0.13 N m + imbalance 11 N along the arm",
     "cls": "flight",
-    "inlayer": 0.152,
-    "across": 0.118,
+    "inlayer": 0.112,
+    "across": 0.106,
     "at": [
-     -75.0,
-     -69.0,
+     -73.0,
+     -67.0,
      17.7
     ]
    },
    {
     "case": "motor 4: prop strike -1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.141,
-    "across": 0.088,
+    "inlayer": 0.135,
+    "across": 0.081,
     "at": [
      -57.0,
-     -61.0,
+     -59.0,
      19.7
     ]
    },
    {
     "case": "crash 0 (35 g [1.0, 0.0, 0.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.052,
-    "across": 0.04,
+    "inlayer": 0.04,
+    "across": 0.039,
     "at": [
-     53.0,
-     -47.0,
-     15.7
+     55.0,
+     47.0,
+     13.7
     ]
    },
    {
     "case": "crash 1 (35 g [-1.0, 0.0, 0.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.052,
-    "across": 0.037,
+    "inlayer": 0.04,
+    "across": 0.036,
     "at": [
-     53.0,
-     -47.0,
-     15.7
+     55.0,
+     47.0,
+     13.7
     ]
    },
    {
     "case": "crash 2 (35 g [0.0, 1.0, 0.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.049,
-    "across": 0.035,
+    "inlayer": 0.037,
+    "across": 0.034,
     "at": [
-     -59.0,
+     -61.0,
      -51.0,
      17.7
     ]
@@ -237,76 +237,76 @@
    {
     "case": "crash 3 (35 g [0.0, -1.0, 0.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.049,
+    "inlayer": 0.037,
     "across": 0.037,
     "at": [
-     -59.0,
-     -51.0,
-     17.7
+     69.0,
+     57.0,
+     19.7
     ]
    },
    {
     "case": "crash 4 (35 g [0.0, 0.0, 1.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.056,
-    "across": 0.04,
+    "inlayer": 0.032,
+    "across": 0.026,
     "at": [
-     -55.0,
-     -51.0,
-     19.7
+     59.0,
+     47.0,
+     17.7
     ]
    },
    {
     "case": "crash 5 (35 g [0.0, 0.0, -1.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.056,
+    "inlayer": 0.032,
     "across": 0.033,
     "at": [
-     -55.0,
-     -51.0,
-     19.7
+     69.0,
+     61.0,
+     13.7
     ]
    },
    {
     "case": "crash 6 (35 g [0.58, 0.58, 0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.066,
-    "across": 0.038,
+    "inlayer": 0.039,
+    "across": 0.035,
     "at": [
-     -55.0,
-     -51.0,
+     -59.0,
+     -57.0,
      19.7
     ]
    },
    {
     "case": "crash 7 (35 g [0.58, 0.58, -0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.047,
-    "across": 0.048,
+    "inlayer": 0.041,
+    "across": 0.046,
     "at": [
-     9.0,
-     19.0,
-     19.7
+     69.0,
+     61.0,
+     13.7
     ]
    },
    {
     "case": "crash 8 (35 g [0.58, -0.58, 0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.05,
-    "across": 0.036,
+    "inlayer": 0.043,
+    "across": 0.042,
     "at": [
-     -61.0,
-     -51.0,
-     13.7
+     67.0,
+     53.0,
+     17.7
     ]
    },
    {
     "case": "crash 9 (35 g [0.58, -0.58, -0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.056,
+    "inlayer": 0.042,
     "across": 0.038,
     "at": [
-     -59.0,
+     -61.0,
      -51.0,
      17.7
     ]
@@ -314,10 +314,10 @@
    {
     "case": "crash 10 (35 g [-0.58, 0.58, 0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.056,
-    "across": 0.041,
+    "inlayer": 0.042,
+    "across": 0.031,
     "at": [
-     -59.0,
+     -61.0,
      -51.0,
      17.7
     ]
@@ -325,195 +325,195 @@
    {
     "case": "crash 11 (35 g [-0.58, 0.58, -0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.05,
-    "across": 0.041,
+    "inlayer": 0.043,
+    "across": 0.033,
     "at": [
-     -61.0,
-     -51.0,
-     13.7
+     67.0,
+     53.0,
+     17.7
     ]
    },
    {
     "case": "crash 12 (35 g [-0.58, -0.58, 0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.047,
-    "across": 0.034,
+    "inlayer": 0.041,
+    "across": 0.036,
     "at": [
-     53.0,
-     -47.0,
-     15.7
+     59.0,
+     47.0,
+     17.7
     ]
    },
    {
     "case": "crash 13 (35 g [-0.58, -0.58, -0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.066,
+    "inlayer": 0.039,
     "across": 0.037,
     "at": [
-     -55.0,
-     -51.0,
+     -59.0,
+     -57.0,
      19.7
     ]
    },
    {
     "case": "flight 4 g: every carried mass",
     "cls": "flight",
-    "inlayer": 0.023,
-    "across": 0.017,
+    "inlayer": 0.013,
+    "across": 0.011,
     "at": [
-     -55.0,
-     -51.0,
-     19.7
+     59.0,
+     47.0,
+     17.7
     ]
    },
    {
     "case": "flight 2 g x: every carried mass",
     "cls": "flight",
-    "inlayer": 0.013,
-    "across": 0.008,
+    "inlayer": 0.009,
+    "across": 0.007,
     "at": [
+     -57.0,
      -59.0,
-     -51.0,
-     11.7
+     19.7
     ]
    },
    {
     "case": "flight 2 g y: every carried mass",
     "cls": "flight",
-    "inlayer": 0.014,
-    "across": 0.009,
+    "inlayer": 0.01,
+    "across": 0.007,
     "at": [
-     -55.0,
+     -61.0,
      -51.0,
-     19.7
+     17.7
     ]
    },
    {
     "case": "landing 6 g: every carried mass",
     "cls": "flight",
-    "inlayer": 0.035,
-    "across": 0.025,
+    "inlayer": 0.02,
+    "across": 0.016,
     "at": [
-     -55.0,
-     -51.0,
-     19.7
+     59.0,
+     47.0,
+     17.7
     ]
    },
    {
     "case": "ground hit on the receiver's feet (81 g on all the bolts carry)",
     "cls": "crash",
-    "inlayer": 0.13,
-    "across": 0.093,
+    "inlayer": 0.073,
+    "across": 0.06,
     "at": [
-     -55.0,
-     -51.0,
-     19.7
+     59.0,
+     47.0,
+     17.7
     ]
    },
    {
     "case": "head-first crash: 261 N down the throat",
     "cls": "crash",
-    "inlayer": 0.067,
-    "across": 0.064,
+    "inlayer": 0.059,
+    "across": 0.056,
     "at": [
-     7.0,
-     -21.0,
-     19.7
+     -29.0,
+     25.0,
+     11.7
     ]
    },
    {
     "case": "DS0-S0 tension 170 N + side 32 N",
     "cls": "crash",
-    "inlayer": 0.04,
-    "across": 0.031,
+    "inlayer": 0.034,
+    "across": 0.029,
     "at": [
-     7.0,
-     45.0,
-     17.7
+     -9.0,
+     13.0,
+     21.7
     ]
    },
    {
     "case": "DS0-S0 compression 170 N + side 32 N",
     "cls": "crash",
-    "inlayer": 0.058,
-    "across": 0.037,
+    "inlayer": 0.05,
+    "across": 0.035,
     "at": [
      7.0,
-     45.0,
-     17.7
+     43.0,
+     21.7
     ]
    },
    {
     "case": "BS0-S0 tension 175 N + side 33 N",
     "cls": "crash",
-    "inlayer": 0.128,
-    "across": 0.229,
+    "inlayer": 0.22,
+    "across": 0.322,
     "at": [
-     -3.0,
-     39.0,
-     3.7
+     -1.0,
+     41.0,
+     -0.3
     ]
    },
    {
     "case": "BS0-S0 compression 175 N + side 33 N",
     "cls": "crash",
-    "inlayer": 0.133,
-    "across": 0.163,
+    "inlayer": 0.231,
+    "across": 0.336,
     "at": [
-     -7.0,
-     49.0,
-     -4.3
+     -3.0,
+     51.0,
+     3.7
     ]
    },
    {
     "case": "DS1-S1 tension 170 N + side 32 N",
     "cls": "crash",
-    "inlayer": 0.058,
-    "across": 0.028,
+    "inlayer": 0.041,
+    "across": 0.026,
     "at": [
      9.0,
-     -43.0,
-     17.7
+     -45.0,
+     21.7
     ]
    },
    {
     "case": "DS1-S1 compression 170 N + side 32 N",
     "cls": "crash",
-    "inlayer": 0.045,
-    "across": 0.044,
+    "inlayer": 0.032,
+    "across": 0.04,
     "at": [
-     9.0,
-     -43.0,
-     15.7
+     -35.0,
+     -29.0,
+     13.7
     ]
    },
    {
     "case": "BS1-S1 tension 175 N + side 33 N",
     "cls": "crash",
-    "inlayer": 0.301,
-    "across": 0.41,
+    "inlayer": 0.2,
+    "across": 0.458,
     "at": [
-     -7.0,
+     -3.0,
      -41.0,
-     1.7
+     -0.3
     ]
    },
    {
     "case": "BS1-S1 compression 175 N + side 33 N",
     "cls": "crash",
-    "inlayer": 0.269,
-    "across": 0.269,
+    "inlayer": 0.172,
+    "across": 0.191,
     "at": [
-     -3.0,
+     -1.0,
      -51.0,
-     1.7
+     3.7
     ]
    },
    {
     "case": "DN-NB tension 711 N + side 38 N",
     "cls": "crash",
-    "inlayer": 0.112,
-    "across": 0.122,
+    "inlayer": 0.105,
+    "across": 0.123,
     "at": [
      47.0,
      25.0,
@@ -523,8 +523,8 @@
    {
     "case": "DN-NB compression 711 N + side 38 N",
     "cls": "crash",
-    "inlayer": 0.111,
-    "across": 0.157,
+    "inlayer": 0.106,
+    "across": 0.152,
     "at": [
      51.0,
      -25.0,
@@ -534,8 +534,8 @@
    {
     "case": "BN-NB tension 581 N + side 41 N",
     "cls": "crash",
-    "inlayer": 0.226,
-    "across": 0.226,
+    "inlayer": 0.196,
+    "across": 0.202,
     "at": [
      57.0,
      25.0,
@@ -545,8 +545,8 @@
    {
     "case": "BN-NB compression 581 N + side 41 N",
     "cls": "crash",
-    "inlayer": 0.217,
-    "across": 0.176,
+    "inlayer": 0.197,
+    "across": 0.156,
     "at": [
      57.0,
      -25.0,
@@ -557,7 +557,7 @@
     "case": "DT-TB tension 698 N + side 40 N",
     "cls": "crash",
     "inlayer": 0.105,
-    "across": 0.133,
+    "across": 0.116,
     "at": [
      -35.0,
      -29.0,
@@ -567,8 +567,8 @@
    {
     "case": "DT-TB compression 698 N + side 40 N",
     "cls": "crash",
-    "inlayer": 0.105,
-    "across": 0.178,
+    "inlayer": 0.104,
+    "across": 0.163,
     "at": [
      -39.0,
      25.0,
@@ -578,30 +578,30 @@
    {
     "case": "BT-TB tension 581 N + side 44 N",
     "cls": "crash",
-    "inlayer": 0.4,
-    "across": 0.253,
+    "inlayer": 0.363,
+    "across": 0.217,
     "at": [
-     -49.0,
+     -51.0,
      -33.0,
-     5.7
+     1.7
     ]
    },
    {
     "case": "BT-TB compression 581 N + side 44 N",
     "cls": "crash",
-    "inlayer": 0.367,
-    "across": 0.245,
+    "inlayer": 0.339,
+    "across": 0.213,
     "at": [
-     -49.0,
+     -51.0,
      -33.0,
-     5.7
+     1.7
     ]
    },
    {
     "case": "handling: 10 N up on the flow sensor's pod (a hand)",
     "cls": "misuse",
     "inlayer": 0.005,
-    "across": 0.01,
+    "across": 0.009,
     "at": [
      53.0,
      -23.0,
@@ -611,8 +611,8 @@
    {
     "case": "handling: 10 N side on the flow sensor's pod (a hand)",
     "cls": "misuse",
-    "inlayer": 0.006,
-    "across": 0.008,
+    "inlayer": 0.005,
+    "across": 0.007,
     "at": [
      57.0,
      -25.0,
@@ -620,45 +620,45 @@
     ]
    }
   ],
-  "worst": 0.481,
-  "worst_case": "motor 4: thrust 17.7 N (1.20 kg x 1.5) + torque +0.13 N m + imbalance 11 N across the arm",
+  "worst": 0.458,
+  "worst_case": "BS1-S1 tension 175 N + side 33 N",
   "worst_at": [
-   -59.0,
-   -51.0,
-   11.7
+   -3.0,
+   -41.0,
+   -0.3
   ],
   "ok": true
  },
- "mass_g": 274.13,
+ "mass_g": 300.71,
  "watertight": true,
  "export": {
-  "faces_in": 710954,
+  "faces_in": 698504,
   "degenerate": 0,
-  "folded": 2,
-  "caps_split": 1,
+  "folded": 0,
+  "caps_split": 0,
   "pinch_vertices": 0,
   "caps_left": 0,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 710952,
+  "faces": 698504,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 840,
-   "folded": 44,
-   "caps_split": 55,
+   "degenerate": 828,
+   "folded": 42,
+   "caps_split": 56,
    "caps_left": 4,
    "watertight": true,
-   "faces": 1250986,
-   "n_dropped_shells": 7,
+   "faces": 1287352,
+   "n_dropped_shells": 8,
    "dropped_shells": [
     {
-     "faces": 114,
-     "mm3": 0.041,
+     "faces": 240,
+     "mm3": 0.052,
      "closed": true
     },
     {
@@ -673,8 +673,8 @@
     }
    ]
   },
-  "volume_mm3": 222864.2,
-  "exact_mm3": 222866.5
+  "volume_mm3": 244475.5,
+  "exact_mm3": 244478.8
  },
  "bodies": {
   "bodies_raw": 2,
@@ -684,7 +684,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 222866.5,
+ "volume_mm3": 244478.8,
  "drawn_g": 44.02,
  "export_cleanup": {
   "pitch": 0.25,
@@ -695,12 +695,12 @@
    {
     "at": [
      -56.9,
-     -33.4,
-     13.7
+     -33.1,
+     14.5
     ],
     "thick_mm": 1.0,
-    "core_mm3": 3.53,
-    "mm3": 43.6,
+    "core_mm3": 2.92,
+    "mm3": 47.7,
     "drawn_share": 0.0
    },
    {
@@ -710,36 +710,36 @@
      15.2
     ],
     "thick_mm": 1.12,
-    "core_mm3": 7.59,
-    "mm3": 26.5,
+    "core_mm3": 7.67,
+    "mm3": 31.3,
     "drawn_share": 0.01
    }
   ],
   "kept_walls": [],
-  "removed_mm3": 76.25
+  "removed_mm3": 86.06
  },
  "memory_build": [
   {
-   "estimate_gb": 12.66,
+   "estimate_gb": 12.9,
    "parts": {
-    "held": 1.33,
+    "held": 1.36,
     "gate": 3.46,
-    "mesh": 7.87
+    "mesh": 8.07
    },
    "limit_gb": 14.0,
    "gate_cells": 82651926,
    "bounds_mm": [
     178.6,
-    177.3,
+    177.4,
     39.0
    ],
-   "faces": 1407900,
+   "faces": 1444468,
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 4.99,
+   "estimate_gb": 5.02,
    "parts": {
-    "held": 1.53,
+    "held": 1.56,
     "gate": 3.46,
     "mesh": 0.0
    },
@@ -747,7 +747,7 @@
    "gate_cells": 82651926,
    "bounds_mm": [
     178.6,
-    177.3,
+    177.4,
     39.0
    ],
    "faces": 0,
@@ -822,8 +822,8 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.3971168207830567,
-  "nd": 59587,
+  "volfrac": 0.43259310778810006,
+  "nd": 60387,
   "sym_axes": [],
   "n_real": 54,
   "n_ties": 342,
@@ -845,7 +845,7 @@
    -21.3
   ],
   "cells": 221184,
-  "design": 58424,
+  "design": 59264,
   "drawn": 4722,
   "cases": [
    "motor 1: thrust 17.7 N (1.20 kg x 1.5) + torque +0.13 N m + imbalance 11 N across the arm",
@@ -907,27 +907,27 @@
    "default"
   ]
  },
- "build_s": 511.2,
- "layout_s": 4912,
- "peak_gb": 4.778504,
+ "build_s": 464.6,
+ "layout_s": 4523,
+ "peak_gb": 4.728436,
  "memory": {
-  "estimate_gb": 5.62,
+  "estimate_gb": 5.68,
   "parts": {
-   "held": 1.03,
-   "factor": 2.47,
-   "assembly": 0.61,
+   "held": 1.05,
+   "factor": 2.51,
+   "assembly": 0.62,
    "block": 0.82,
    "energies": 0.68
   },
   "limit_gb": 14.0,
   "cases": 396,
-  "active_dofs": 231249,
+  "active_dofs": 233781,
   "backend": "direct",
   "block": 47,
   "build": {
-   "estimate_gb": 4.91,
+   "estimate_gb": 4.93,
    "parts": {
-    "held": 1.03,
+    "held": 1.05,
     "gate": 3.88,
     "mesh": 0.0
    },
@@ -941,13 +941,13 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 4.56
+  "peak_it1_gb": 4.51
  },
- "gen_cm3": 180.0,
+ "gen_cm3": 200.0,
  "h": 2.0,
  "audit": {
   "solid_ok": [],
-  "drawn_share": 0.075,
+  "drawn_share": 0.074,
   "load_room": [],
   "bodies": [
    {
@@ -958,7 +958,7 @@
     "touches_support": false,
     "loaded": true,
     "room": 0.88,
-    "room_depth_mm": 166.0,
+    "room_depth_mm": 164.0,
     "at": [
      -74.3,
      -74.3,
@@ -1010,7 +1010,7 @@
     "touches_support": false,
     "loaded": true,
     "room": 0.87,
-    "room_depth_mm": 166.0,
+    "room_depth_mm": 164.0,
     "at": [
      -74.3,
      74.3,
@@ -1060,7 +1060,7 @@
     "touches_cut": true,
     "touches_support": false,
     "loaded": true,
-    "room": 0.69,
+    "room": 0.68,
     "room_depth_mm": 62.0,
     "at": [
      -62.0,
@@ -1077,7 +1077,7 @@
     "touches_cut": true,
     "touches_support": true,
     "loaded": false,
-    "room": 0.79,
+    "room": 0.78,
     "room_depth_mm": 130.0,
     "at": [
      -36.5,
@@ -1094,7 +1094,7 @@
     "touches_cut": true,
     "touches_support": true,
     "loaded": false,
-    "room": 0.82,
+    "room": 0.81,
     "room_depth_mm": 128.0,
     "at": [
      -36.5,
@@ -1315,7 +1315,7 @@
     "touches_cut": true,
     "touches_support": true,
     "loaded": false,
-    "room": 0.83,
+    "room": 0.78,
     "room_depth_mm": 142.0,
     "at": [
      49.5,
@@ -1332,7 +1332,7 @@
     "touches_cut": true,
     "touches_support": true,
     "loaded": false,
-    "room": 0.79,
+    "room": 0.75,
     "room_depth_mm": 142.0,
     "at": [
      49.5,
@@ -1401,7 +1401,7 @@
     "touches_support": false,
     "loaded": true,
     "room": 0.88,
-    "room_depth_mm": 166.0,
+    "room_depth_mm": 164.0,
     "at": [
      74.3,
      -74.3,
@@ -1418,7 +1418,7 @@
     "touches_support": false,
     "loaded": true,
     "room": 0.87,
-    "room_depth_mm": 166.0,
+    "room_depth_mm": 164.0,
     "at": [
      74.3,
      74.3,
@@ -1476,15 +1476,15 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.232,
+   "worst": 0.209,
    "worst_case": "BN-NB tension 581 N + side 41 N",
    "worst_at": [
     55.0,
     35.0,
     -2.3
    ],
-   "budget_share": 0.397,
-   "thinned": 0.58,
+   "budget_share": 0.433,
+   "thinned": 0.48,
    "max_worst": 0.3
   }
  },
@@ -1493,30 +1493,30 @@
    {
     "case": "motor 1: thrust 17.7 N (1.20 kg x 1.5) + torque +0.13 N m + imbalance 11 N across the arm",
     "cls": "flight",
-    "inlayer": 0.211,
-    "across": 0.136,
+    "inlayer": 0.191,
+    "across": 0.116,
     "at": [
-     59.0,
-     -45.0,
+     61.0,
+     -43.0,
      21.7
     ]
    },
    {
     "case": "motor 1: prop strike +1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.056,
-    "across": 0.04,
+    "inlayer": 0.051,
+    "across": 0.039,
     "at": [
-     79.0,
-     -73.0,
-     17.7
+     57.0,
+     -45.0,
+     21.7
     ]
    },
    {
     "case": "motor 1: thrust 17.7 N (1.20 kg x 1.5) + torque -0.13 N m + imbalance 11 N along the arm",
     "cls": "flight",
-    "inlayer": 0.069,
-    "across": 0.077,
+    "inlayer": 0.059,
+    "across": 0.065,
     "at": [
      51.0,
      -31.0,
@@ -1526,8 +1526,8 @@
    {
     "case": "motor 1: prop strike -1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.052,
-    "across": 0.032,
+    "inlayer": 0.04,
+    "across": 0.025,
     "at": [
      73.0,
      -79.0,
@@ -1537,8 +1537,8 @@
    {
     "case": "motor 2: thrust 17.7 N (1.20 kg x 1.5) + torque +0.13 N m + imbalance 11 N across the arm",
     "cls": "flight",
-    "inlayer": 0.104,
-    "across": 0.134,
+    "inlayer": 0.076,
+    "across": 0.117,
     "at": [
      -37.0,
      31.0,
@@ -1548,8 +1548,8 @@
    {
     "case": "motor 2: prop strike +1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.061,
-    "across": 0.035,
+    "inlayer": 0.057,
+    "across": 0.034,
     "at": [
      -79.0,
      73.0,
@@ -1559,8 +1559,8 @@
    {
     "case": "motor 2: thrust 17.7 N (1.20 kg x 1.5) + torque -0.13 N m + imbalance 11 N along the arm",
     "cls": "flight",
-    "inlayer": 0.064,
-    "across": 0.075,
+    "inlayer": 0.055,
+    "across": 0.067,
     "at": [
      -39.0,
      31.0,
@@ -1570,41 +1570,41 @@
    {
     "case": "motor 2: prop strike -1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.057,
-    "across": 0.044,
+    "inlayer": 0.05,
+    "across": 0.033,
     "at": [
-     -75.0,
-     61.0,
-     23.7
+     -79.0,
+     73.0,
+     17.7
     ]
    },
    {
     "case": "motor 3: thrust 17.7 N (1.20 kg x 1.5) + torque +0.13 N m + imbalance 11 N across the arm",
     "cls": "flight",
-    "inlayer": 0.094,
-    "across": 0.123,
+    "inlayer": 0.099,
+    "across": 0.097,
     "at": [
-     53.0,
-     31.0,
-     13.7
+     59.0,
+     45.0,
+     21.7
     ]
    },
    {
     "case": "motor 3: prop strike +1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.059,
-    "across": 0.047,
+    "inlayer": 0.047,
+    "across": 0.033,
     "at": [
-     71.0,
+     75.0,
      61.0,
-     23.7
+     21.7
     ]
    },
    {
     "case": "motor 3: thrust 17.7 N (1.20 kg x 1.5) + torque -0.13 N m + imbalance 11 N along the arm",
     "cls": "flight",
-    "inlayer": 0.068,
-    "across": 0.08,
+    "inlayer": 0.064,
+    "across": 0.068,
     "at": [
      51.0,
      31.0,
@@ -1614,8 +1614,8 @@
    {
     "case": "motor 3: prop strike -1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.065,
-    "across": 0.045,
+    "inlayer": 0.051,
+    "across": 0.037,
     "at": [
      79.0,
      73.0,
@@ -1625,8 +1625,8 @@
    {
     "case": "motor 4: thrust 17.7 N (1.20 kg x 1.5) + torque +0.13 N m + imbalance 11 N across the arm",
     "cls": "flight",
-    "inlayer": 0.12,
-    "across": 0.127,
+    "inlayer": 0.1,
+    "across": 0.113,
     "at": [
      -41.0,
      -29.0,
@@ -1636,8 +1636,8 @@
    {
     "case": "motor 4: prop strike +1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.06,
-    "across": 0.04,
+    "inlayer": 0.057,
+    "across": 0.034,
     "at": [
      -73.0,
      -79.0,
@@ -1647,19 +1647,19 @@
    {
     "case": "motor 4: thrust 17.7 N (1.20 kg x 1.5) + torque -0.13 N m + imbalance 11 N along the arm",
     "cls": "flight",
-    "inlayer": 0.083,
-    "across": 0.089,
+    "inlayer": 0.078,
+    "across": 0.076,
     "at": [
-     -39.0,
-     -31.0,
-     13.7
+     -79.0,
+     -73.0,
+     17.7
     ]
    },
    {
     "case": "motor 4: prop strike -1.0 N m + 17 N blow + thrust 11.8 N",
     "cls": "crash",
-    "inlayer": 0.061,
-    "across": 0.046,
+    "inlayer": 0.056,
+    "across": 0.039,
     "at": [
      -79.0,
      -73.0,
@@ -1669,7 +1669,7 @@
    {
     "case": "crash 0 (35 g [1.0, 0.0, 0.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.026,
+    "inlayer": 0.023,
     "across": 0.038,
     "at": [
      11.0,
@@ -1680,8 +1680,8 @@
    {
     "case": "crash 1 (35 g [-1.0, 0.0, 0.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.026,
-    "across": 0.033,
+    "inlayer": 0.023,
+    "across": 0.034,
     "at": [
      -9.0,
      17.0,
@@ -1691,8 +1691,8 @@
    {
     "case": "crash 2 (35 g [0.0, 1.0, 0.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.019,
-    "across": 0.032,
+    "inlayer": 0.02,
+    "across": 0.031,
     "at": [
      -35.0,
      29.0,
@@ -1702,8 +1702,8 @@
    {
     "case": "crash 3 (35 g [0.0, -1.0, 0.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.019,
-    "across": 0.032,
+    "inlayer": 0.02,
+    "across": 0.031,
     "at": [
      -35.0,
      -29.0,
@@ -1713,21 +1713,21 @@
    {
     "case": "crash 4 (35 g [0.0, 0.0, 1.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.027,
-    "across": 0.02,
+    "inlayer": 0.025,
+    "across": 0.015,
     "at": [
-     55.0,
-     -43.0,
+     59.0,
+     45.0,
      21.7
     ]
    },
    {
     "case": "crash 5 (35 g [0.0, 0.0, -1.0]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.027,
-    "across": 0.029,
+    "inlayer": 0.025,
+    "across": 0.026,
     "at": [
-     -37.0,
+     -39.0,
      -31.0,
      13.7
     ]
@@ -1735,43 +1735,43 @@
    {
     "case": "crash 6 (35 g [0.58, 0.58, 0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.025,
+    "inlayer": 0.023,
     "across": 0.025,
     "at": [
-     -29.0,
-     -23.0,
-     11.7
+     11.0,
+     17.0,
+     19.7
     ]
    },
    {
     "case": "crash 7 (35 g [0.58, 0.58, -0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.031,
-    "across": 0.044,
+    "inlayer": 0.028,
+    "across": 0.042,
     "at": [
-     7.0,
-     21.0,
+     11.0,
+     17.0,
      19.7
     ]
    },
    {
     "case": "crash 8 (35 g [0.58, -0.58, 0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.023,
+    "inlayer": 0.024,
+    "across": 0.017,
     "at": [
-     -29.0,
-     23.0,
-     9.7
+     59.0,
+     45.0,
+     21.7
     ]
    },
    {
     "case": "crash 9 (35 g [0.58, -0.58, -0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.03,
-    "across": 0.031,
+    "inlayer": 0.027,
+    "across": 0.028,
     "at": [
-     -9.0,
+     -1.0,
      -35.0,
      7.7
     ]
@@ -1779,19 +1779,19 @@
    {
     "case": "crash 10 (35 g [-0.58, 0.58, 0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.03,
+    "inlayer": 0.027,
     "across": 0.03,
     "at": [
-     55.0,
-     -43.0,
-     21.7
+     -9.0,
+     17.0,
+     15.7
     ]
    },
    {
     "case": "crash 11 (35 g [-0.58, 0.58, -0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.032,
+    "inlayer": 0.024,
+    "across": 0.031,
     "at": [
      -35.0,
      29.0,
@@ -1801,8 +1801,8 @@
    {
     "case": "crash 12 (35 g [-0.58, -0.58, 0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.031,
-    "across": 0.032,
+    "inlayer": 0.028,
+    "across": 0.03,
     "at": [
      7.0,
      21.0,
@@ -1812,8 +1812,8 @@
    {
     "case": "crash 13 (35 g [-0.58, -0.58, -0.58]): every carried mass",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.035,
+    "inlayer": 0.023,
+    "across": 0.033,
     "at": [
      -35.0,
      -29.0,
@@ -1823,18 +1823,18 @@
    {
     "case": "flight 4 g: every carried mass",
     "cls": "flight",
-    "inlayer": 0.011,
-    "across": 0.008,
+    "inlayer": 0.01,
+    "across": 0.006,
     "at": [
-     55.0,
-     -43.0,
+     59.0,
+     45.0,
      21.7
     ]
    },
    {
     "case": "flight 2 g x: every carried mass",
     "cls": "flight",
-    "inlayer": 0.005,
+    "inlayer": 0.004,
     "across": 0.006,
     "at": [
      11.0,
@@ -1845,41 +1845,41 @@
    {
     "case": "flight 2 g y: every carried mass",
     "cls": "flight",
-    "inlayer": 0.007,
-    "across": 0.007,
+    "inlayer": 0.006,
+    "across": 0.005,
     "at": [
-     -37.0,
-     -23.0,
-     13.7
+     61.0,
+     -43.0,
+     21.7
     ]
    },
    {
     "case": "landing 6 g: every carried mass",
     "cls": "flight",
-    "inlayer": 0.017,
-    "across": 0.013,
+    "inlayer": 0.015,
+    "across": 0.009,
     "at": [
-     55.0,
-     -43.0,
+     59.0,
+     45.0,
      21.7
     ]
    },
    {
     "case": "ground hit on the receiver's feet (81 g on all the bolts carry)",
     "cls": "crash",
-    "inlayer": 0.063,
-    "across": 0.046,
+    "inlayer": 0.057,
+    "across": 0.035,
     "at": [
-     55.0,
-     -43.0,
+     59.0,
+     45.0,
      21.7
     ]
    },
    {
     "case": "head-first crash: 261 N down the throat",
     "cls": "crash",
-    "inlayer": 0.071,
-    "across": 0.064,
+    "inlayer": 0.062,
+    "across": 0.058,
     "at": [
      7.0,
      21.0,
@@ -1889,8 +1889,8 @@
    {
     "case": "DS0-S0 tension 170 N + side 32 N",
     "cls": "crash",
-    "inlayer": 0.048,
-    "across": 0.032,
+    "inlayer": 0.04,
+    "across": 0.026,
     "at": [
      -11.0,
      13.0,
@@ -1900,21 +1900,21 @@
    {
     "case": "DS0-S0 compression 170 N + side 32 N",
     "cls": "crash",
-    "inlayer": 0.058,
-    "across": 0.033,
+    "inlayer": 0.052,
+    "across": 0.03,
     "at": [
-     5.0,
-     41.0,
+     7.0,
+     43.0,
      21.7
     ]
    },
    {
     "case": "BS0-S0 tension 175 N + side 33 N",
     "cls": "crash",
-    "inlayer": 0.111,
-    "across": 0.168,
+    "inlayer": 0.102,
+    "across": 0.141,
     "at": [
-     -5.0,
+     -3.0,
      35.0,
      7.7
     ]
@@ -1922,30 +1922,30 @@
    {
     "case": "BS0-S0 compression 175 N + side 33 N",
     "cls": "crash",
-    "inlayer": 0.101,
-    "across": 0.102,
+    "inlayer": 0.091,
+    "across": 0.082,
     "at": [
-     -21.0,
-     49.0,
-     3.7
+     -31.0,
+     33.0,
+     9.7
     ]
    },
    {
     "case": "DS1-S1 tension 170 N + side 32 N",
     "cls": "crash",
     "inlayer": 0.039,
-    "across": 0.039,
+    "across": 0.032,
     "at": [
-     15.0,
-     -37.0,
-     19.7
+     7.0,
+     -43.0,
+     21.7
     ]
    },
    {
     "case": "DS1-S1 compression 170 N + side 32 N",
     "cls": "crash",
-    "inlayer": 0.034,
-    "across": 0.034,
+    "inlayer": 0.029,
+    "across": 0.032,
     "at": [
      -35.0,
      -29.0,
@@ -1955,10 +1955,10 @@
    {
     "case": "BS1-S1 tension 175 N + side 33 N",
     "cls": "crash",
-    "inlayer": 0.11,
-    "across": 0.215,
+    "inlayer": 0.086,
+    "across": 0.16,
     "at": [
-     -9.0,
+     -1.0,
      -35.0,
      7.7
     ]
@@ -1966,19 +1966,19 @@
    {
     "case": "BS1-S1 compression 175 N + side 33 N",
     "cls": "crash",
-    "inlayer": 0.111,
-    "across": 0.113,
+    "inlayer": 0.097,
+    "across": 0.095,
     "at": [
+     -31.0,
      -33.0,
-     -23.0,
-     13.7
+     9.7
     ]
    },
    {
     "case": "DN-NB tension 711 N + side 38 N",
     "cls": "crash",
-    "inlayer": 0.223,
-    "across": 0.139,
+    "inlayer": 0.217,
+    "across": 0.122,
     "at": [
      75.0,
      7.0,
@@ -1988,8 +1988,8 @@
    {
     "case": "DN-NB compression 711 N + side 38 N",
     "cls": "crash",
-    "inlayer": 0.2,
-    "across": 0.192,
+    "inlayer": 0.196,
+    "across": 0.175,
     "at": [
      75.0,
      7.0,
@@ -1999,8 +1999,8 @@
    {
     "case": "BN-NB tension 581 N + side 41 N",
     "cls": "crash",
-    "inlayer": 0.353,
-    "across": 0.38,
+    "inlayer": 0.292,
+    "across": 0.304,
     "at": [
      57.0,
      21.0,
@@ -2010,30 +2010,30 @@
    {
     "case": "BN-NB compression 581 N + side 41 N",
     "cls": "crash",
-    "inlayer": 0.33,
-    "across": 0.238,
+    "inlayer": 0.279,
+    "across": 0.207,
     "at": [
      55.0,
-     19.0,
+     -19.0,
      9.7
     ]
    },
    {
     "case": "DT-TB tension 698 N + side 40 N",
     "cls": "crash",
-    "inlayer": 0.161,
-    "across": 0.149,
+    "inlayer": 0.139,
+    "across": 0.128,
     "at": [
      -43.0,
-     -19.0,
+     -15.0,
      21.7
     ]
    },
    {
     "case": "DT-TB compression 698 N + side 40 N",
     "cls": "crash",
-    "inlayer": 0.167,
-    "across": 0.222,
+    "inlayer": 0.153,
+    "across": 0.191,
     "at": [
      -39.0,
      -25.0,
@@ -2043,8 +2043,8 @@
    {
     "case": "BT-TB tension 581 N + side 44 N",
     "cls": "crash",
-    "inlayer": 0.419,
-    "across": 0.274,
+    "inlayer": 0.364,
+    "across": 0.23,
     "at": [
      -49.0,
      -33.0,
@@ -2054,8 +2054,8 @@
    {
     "case": "BT-TB compression 581 N + side 44 N",
     "cls": "crash",
-    "inlayer": 0.393,
-    "across": 0.23,
+    "inlayer": 0.34,
+    "across": 0.218,
     "at": [
      -49.0,
      -33.0,
@@ -2065,8 +2065,8 @@
    {
     "case": "handling: 10 N up on the flow sensor's pod (a hand)",
     "cls": "misuse",
-    "inlayer": 0.006,
-    "across": 0.01,
+    "inlayer": 0.005,
+    "across": 0.009,
     "at": [
      53.0,
      23.0,
@@ -2076,16 +2076,16 @@
    {
     "case": "handling: 10 N side on the flow sensor's pod (a hand)",
     "cls": "misuse",
-    "inlayer": 0.009,
-    "across": 0.01,
+    "inlayer": 0.008,
+    "across": 0.008,
     "at": [
      61.0,
-     -3.0,
+     1.0,
      -6.3
     ]
    }
   ],
-  "worst": 0.419,
+  "worst": 0.364,
   "worst_case": "BT-TB tension 581 N + side 44 N",
   "worst_at": [
    -49.0,
@@ -2099,19 +2099,19 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 5423,
- "part_sha": "76d951e3ba45",
+ "total_s": 4988,
+ "part_sha": "6a45916f47cc",
  "lib_sha": "7f3b7f6b12aa",
- "setup_sha": "1ad3d89de64ea705",
+ "setup_sha": "dffdf7c0e0f8832e",
  "max_worst": 0.3,
  "strength_ok": false,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_frame.stl",
-  "sha256": "33efe72fbec8cac614b5ca9cb174f39923670c4a8a2c6c26df5061bad9aa0379",
-  "bytes": 35547684,
-  "faces": 710952,
+  "sha256": "2b6ecd3dab27dd423e57fbc28d1fc5aad71e66f5dfcbf5e2cbf64b39e82ff39e",
+  "bytes": 34925284,
+  "faces": 698504,
   "view_faces": 60000,
-  "view_sha256": "ccbb27072b78e561819313a268ff4ce2a6c06c229605808a17125612c69b29ba",
-  "at": "2026-11-11 16:47"
+  "view_sha256": "78f0f680feb2533b5299bcfcb3c8177b57b59bf1b93d21b5556810e245d17b50",
+  "at": "2026-11-11 23:01"
  }
 }
