@@ -41,14 +41,14 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of
                                       check_collars, rigid_split, SockDown, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
                                       M25_INS, BOSS_R, DIRS14, FLIGHT)
 
-SPEC = dict(h=2.0, gen_cm3=120.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
+SPEC = dict(h=2.0, gen_cm3=140.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
 # 10 Nov (the NODES stream's socket-depth rule, units_lib.socket_depth): DN / DT 13.5 and BN / BT 11.5 deep (their 645 / 528 N), taken
 # behind the standard floor (the mouths stay inside the 180; those 4 rods 3.5 / 1.5 longer), DS / BS 7.0 (their mouths 3 nearer).
 # 10 Nov, run 186 (60 cm3, 18 % of the room): FAIL 1.515 (BN-NB 528 N), 117 g; the result read what the room filled solid thinned
 # uniformly to the budget predicted (0.261 / 0.177 = 1.48): this many separate load paths leave the layout little to gain over
 # uniform. Budget 60 -> 120 and the nose block |y| 26 -> 34 as the tail tray (the BN socket's room: 100 alone thinned to ~1.0), arms' room 26 -> 32 wide (motor 1's root 1.25 in-layer), the lugs' room x +-20 -> +-28
 # (BS1-S1 1.28 across the layers: the lug bends as a column), the FC posts' clear ring r 6.5 -> 7.5 (one post off the main body).
-POD_R, POD_T, POD_ROOM, ARM_W = 14.0, 6.0, 15.0, 32.0
+POD_R, POD_T, POD_ROOM, ARM_W = 14.0, 8.0, 15.0, 32.0      # 11 Nov: pad 6 -> 8 (motors 0.29-0.53 in-layer, 0.33-0.39 across in run a25e31d); M2 x 10 screws
 ARM_Z0, POD_Z0 = 2.0, 8.0                            # the arms' room bottom at the root and at the pod (9 Nov smoke: room_full 0.33 at the rear arm's root, 12.5 deep)
 LUG_X, LUG_Y1 = 28.0, 64.0                         # the lugs' room: x +-20, out to y 64 at the deck (9 Nov)
 # the motor (EMAX ECO II 2004 3000KV, the table above; dimensions.md open item 19: the KV)
@@ -119,7 +119,8 @@ def bodies():
     pods, pod_regs = [], []
     for mx, my in S.MOTORS:
         pods.append(cyl(mx, my, DZ1 - POD_T, DZ1, POD_R))
-        pod_regs.append([cyl(x, y, DZ1 - POD_T, DZ1, 2.6) for x, y, _ in screw_pts(mx, my, 0.0)])   # each screw's column of the pad
+        pod_regs.append(([cyl(x, y, DZ1 - POD_T, DZ1 - POD_T + 1.5, 2.6) for x, y, _ in screw_pts(mx, my, 0.0)],    # each screw head's seat on the pad's underside
+                         [cyl(x, y, DZ1 - 1.5, DZ1, 3.5) for x, y, _ in screw_pts(mx, my, 0.0)]))                 # and the motor base on the pad's top round it
         cuts.append(cyl(mx, my, ARM_Z0 - 1, DZ1 + 1, 4.0))
         for x, y, _ in screw_pts(mx, my, 0.0):
             cuts.append(cyl(x, y, ARM_Z0 - 1, DZ1 + 1, 1.1))                          # M2 clearance
@@ -215,13 +216,20 @@ def whole_drone(p, masses, name, a, cls, accel=None):
 
 
 def motor_parts(regs, mx, my, F, at, Q=0.0):
-    """a force F acting at `at` and a torque Q about the motor's axis (+z), into the pad through its 4 screws' columns"""
+    """a force F acting at `at` and a torque Q about the motor's axis (+z), into the pad through its 4 screws: the pull away from the
+    pad (+z) at each screw head's seat on its underside (the head bears up into the pad), the rest (lateral, torque, push) at the motor
+    base on its top round each screw (11 Nov: a column through the pad's thickness pulled its layers apart, an across-layer artefact)"""
     pts = screw_pts(mx, my, DZ1 - POD_T / 2)
     f = rigid_split(pts, np.asarray(F, float), np.asarray(at, float))
     for i, (x, y, _) in enumerate(pts):
         r = np.array([x - mx, y - my, 0.0]); t = np.cross([0, 0, 1.0], r) / np.linalg.norm(r)
         f[i] = f[i] + Q / (4 * np.linalg.norm(r)) * t
-    return [(regs[i], f[i]) for i in range(4)]
+    bot, top = regs
+    out = []
+    for i in range(4):
+        up = max(0.0, f[i][2])
+        out += [(bot[i], np.array([0.0, 0.0, up])), (top[i], f[i] - np.array([0.0, 0.0, up]))]
+    return out
 
 
 def setup(h):
@@ -241,7 +249,7 @@ def setup(h):
     masses = []
     for i, (mx, my) in enumerate(S.MOTORS):
         mg = ASM[f"scout_v4_motor_{i + 1}"]["mass_g"] + ASM[f"scout_v4_blades_{i + 1}"]["mass_g"]
-        masses.append((f"motor {i + 1}", screw_pts(mx, my, DZ1 - POD_T / 2), B["pod_regs"][i], mg, (mx, my, DZ1 + 11.0)))
+        masses.append((f"motor {i + 1}", screw_pts(mx, my, DZ1 - POD_T / 2), B["pod_regs"][i][1], mg, (mx, my, DZ1 + 11.0)))
     g, cg = probe_mass_cg()
     tpts = [(x, y, DZ1) for x, y in TURRET_BOLTS]
     masses.append(("probe", tpts, B["tur_regs"], g, cg))

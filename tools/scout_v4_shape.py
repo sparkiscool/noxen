@@ -65,7 +65,7 @@ R_KEEP, Z_SWEEP = PROP_R + 4.0, 4.0             # the disc grown 4 and swept +-4
 KEEP = 12.0                                      # every rod 12 from the swept disc
 DECK = (-60.0, 60.0, 40.0)                       # the deck's body: x0, x1, |y| (E), arms from its corners to the pods
 ARM_W, POD_R = 18.0, 15.0                        # arm width, motor pod radius (the 2004's base O27 + 1.5)
-FC_X, FC_Z0, UBEC_YC = (30.5, 66.5), 10.0, 0.0     # 11 Nov: FC forward of the turret's roller-guide stubs (x 15.6..29.7 under the deck)       # 9 Nov: the FC hangs under the deck over the receiver (x 15.5..51.5, z 10..20.5); the UBEC across the tail tray
+FC_X, FC_Z0, UBEC_YC = (18.5, 54.5), 10.0, 0.0     # 11 Nov: FC clear of the turret bosses at x 13 (r 5) and of the room behind DN (run a25e31d: 0.95 there with the FC at x 66.5)       # 9 Nov: the FC hangs under the deck over the receiver (x 15.5..51.5, z 10..20.5); the UBEC across the tail tray
 BED = 89.3                                       # 9 Nov (Spark: deck, arms, pods and base as ONE body): the body inside |x|, |y| <= 89.3, the A1 mini's 180 less 1.4
 # ---- the v3 base and the battery, unchanged ---------------------------------------------------------------------------------
 BX = 1.3                                          # 9 Nov (Spark: "the center of gravity ... perfectly centered"): everything under the deck (receiver, cartridge, pack, base,
@@ -553,7 +553,7 @@ def entries(meshes):
             e["opacity"] = opacity
         rows.append(e)
     fv = abs(meshes["frame"].volume)
-    add("frame", "frame v4, one body: deck, arms, motor pods, side lugs and the base (yokes, nose block, flow pod, tail tray) (generated, parts/scout_v4_frame)", "structure", "frame", "#d9d2c3", 110.0 if not os.path.exists(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")) else json.load(open(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")))["mass_g"], "E",
+    add("frame", "frame v4, one body: deck, arms, motor pods, side lugs and the base (yokes, nose block, flow pod, tail tray) (generated, parts/scout_v4_frame)", "structure", "frame", "#d9d2c3", (json.load(open(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json"))).get("mass_g") if os.path.exists(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")) else None) or 190.0, "E",
         f"one print inside |x|, |y| {BED} (the A1 mini's 180), deck-top down on the bed: deck z {DECK_Z0}..{DECK_TOP} and the yokes over the receiver down to its top 9.6, arms to O28 motor pads at (+-{HUB}, +-{HUB}), "
         "the battery mechanism's 4 M3 inserts, the FC's and the Radxa's posts, the XR2's, DRV8833's, UBEC's and flow sensor's lands, the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1), the turret's four insert bosses; the room until the run lands; PCTG", "PCTG", 0.85)
     for k in range(1, 5):
