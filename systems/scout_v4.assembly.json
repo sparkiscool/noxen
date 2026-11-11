@@ -294,23 +294,23 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "a 14 mm sleeve round the lens: blade A held by an M2 at its top, blade B's M2 in an 8 mm slot (on one spool B pays out 7.5 mm less than A over the 150: the ribbon between them, tools/probe_mast_sim.py), the ribbon's 4 mm loop; an M3 screw is the idler; PCTG",
+"note": "a 14 mm sleeve round the lens: blade A held by an M2 at its top, blade B's M2 in an 11 mm slot (on one spool B pays out 7.5 mm less than A over the 150: the ribbon between them, tools/probe_mast_sim.py), the ribbon's 4 mm loop; an M3 screw is the idler; PCTG",
 "material": "PCTG"
 },
 {
 "id": "scout_v4_probe_turret",
 "name": "probe turret: housing, throat, drum and the roof's middle node RM (PCTG, generated: parts/scout_v4_probe_turret)",
-"role": "placeholder",
+"role": "structure",
 "group": "camera",
 "color": "#f2b705",
 "mesh": "parts/scout_v4_probe_turret/part.stl",
-"mass_g": 5.0,
-"tag": "E",
+"mass_g": 41.2,
+"tag": "C",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "side plates the size of the spool and the drum, the roller's slots and spring pockets, a 32 mm throat: 4 (thin walls), TPU lip 1, wires 1 (E); drawn see-through until the run lands",
-"opacity": 0.22
+"note": "side plates round the spool and the drum, the N20's cheeks, the roller's guides and spring pockets, the throat up to the head's seat, RM's rod sockets; TPU lip 1, wires 1 (E); PCTG",
+"material": "PCTG"
 },
 {
 "id": "scout_v4_probe_spool",
