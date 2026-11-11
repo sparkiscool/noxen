@@ -144,7 +144,7 @@ def bodies():
     tb = S.probe()["probe_turret"].bounds
     cuts.append(box(tb[0][0] - 0.5, tb[1][0] + 0.5, tb[0][1] - 0.5, tb[1][1] + 0.5, DZ1, 120))   # the turret above the deck
     import parts.scout_v4_probe_turret.part as TUR                                    # 11 Nov (the PROBE stream's turret, main 722f7dc): its N20 cheeks,
-    tt = TUR.bodies(); tdown = (tt["drawn"] + tt["env"]) ^ box(-200, 200, -200, 200, -100, DZ1 - 0.01)   # stubs and roller guide hang below its floor pads
+    tt = TUR.bodies(); tdown = ((tt["drawn"] + tt["env"]) - tt["cuts"]) ^ box(-200, 200, -200, 200, -100, DZ1 - 0.01)   # what the turret prints there (its cuts win)   # stubs and roller guide hang below its floor pads
     cuts.append(U([tdown.translate(list(d)) for d in ((0.4, 0, 0), (-0.4, 0, 0), (0, 0.4, 0), (0, -0.4, 0), (0, 0, -0.4), (0, 0, 0))]) ^ box(-200, 200, -200, 200, -100, DZ1))   # 0.4 clear, never above the deck top (the bosses keep their height)
     cuts += disc_cuts()
     # ---- the boards (bought meshes placed by tools/scout_v4_shape.py)
