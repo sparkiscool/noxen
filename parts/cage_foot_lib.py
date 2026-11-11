@@ -112,14 +112,19 @@ def build(n, h, log=print):
     box = mf.Manifold.cube((hi - lo).tolist()).translate(lo.tolist())
     ball = mf.Manifold.sphere(max(np.linalg.norm(pts - c, axis=1)) + MARGIN * 0.75, 48).translate(c.tolist())
     env = box ^ ball
-    if base:                                                    # v7: sockets 25..37 out, so the box is mostly air: room is the hull of the collars grown by MARGIN (the
-        hp = []                                                 # load paths between the sockets and the stud), cut off under the collars, plus the stud
+    if base:                                                    # v7: sockets 25..37 out, so the box is mostly air. Room is a HUB over the stud and one tapered arm from it
+        #   to each socket (the hull of the hub with that collar grown by MARGIN), cut off under the collars, plus the stud. Not the hull of all the collars: in that
+        #   room the layout joined the sockets to each other past the centre and hung the stud off the body's edge, backed on one side (11 Nov runs: 0.21 / 0.28 / 0.34
+        #   at the neck in the 1300 N hit on nodes 5 / 4 / 3; node 2, whose sockets surround the centre, 0.11). Every load path now crosses the hub.
+        zs = zb + FOOT_T + NECK_T
+        hub = [c + (NODE_R + MARGIN) * np.array([np.cos(a_) * np.cos(b_), np.sin(a_) * np.cos(b_), np.sin(b_)]) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False) for b_ in (-0.6, 0.0, 0.6, 1.2)]
+        hub += [axis + up * z_ + (SHOULDER_R + 2.0) * np.array([np.cos(a_), np.sin(a_), 0.0]) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False) for z_ in (zs, zs + 2 * MARGIN)]
+        arms = []
         for m in ms:
             e1 = np.cross(m["u"], [0, 0, 1.0] if abs(m["u"][2]) < 0.9 else [1.0, 0, 0]); e1 /= np.linalg.norm(e1); e2 = np.cross(m["u"], e1)
-            for s_ in (m["s0"] - FLOOR, m["s_end"]):
-                hp += [c + m["u"] * s_ + (m["ro"] + MARGIN) * (np.cos(a_) * e1 + np.sin(a_) * e2) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False)]
-        hp += [c + (NODE_R + MARGIN) * np.array([np.cos(a_) * np.cos(b_), np.sin(a_) * np.cos(b_), np.sin(b_)]) for a_ in np.linspace(0, 2 * np.pi, 12, endpoint=False) for b_ in (-0.6, 0.0, 0.6, 1.2)]
-        env = (env ^ mf.Manifold.hull_points(np.array(hp).tolist())) + foot
+            sock = [c + m["u"] * s_ + (m["ro"] + MARGIN) * (np.cos(a_) * e1 + np.sin(a_) * e2) for s_ in (m["s0"] - FLOOR, m["s_end"]) for a_ in np.linspace(0, 2 * np.pi, 16, endpoint=False)]
+            arms.append(mf.Manifold.hull_points(np.array(hub + sock).tolist()))
+        env = (env ^ U(arms)) + foot
     drawn = U(collars + ([foot] if base else []) + ex.get("drawn", []))
     if base:
         bores.append(along(axis, up, zb - 1.0, zb + POCKET_H, POCKET_R, 48))   # the stud's relief pocket (drawn_blocks audit, 11 Nov: the solid stud was an 8..10 mm core)
