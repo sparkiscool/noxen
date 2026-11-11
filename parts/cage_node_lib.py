@@ -28,18 +28,17 @@ Base (foot) nodes 0-5, v7 (11 Nov, Spark: "the foot nodes broke again ... it pre
     chosen: a PCTG node that passes the 1300 N hit on its own (the gate, max_worst as before) carrying a replaceable 68D crush
       boot on a drawn stud, which caps the hit near 560 N (760 on a 40 % hard spool): two prints, because the boot's cells must
       print on their side and the node on its foot (an AMS co-print would put one of them in the wrong layer direction).
-  Drawn besides the sockets, the same on all six so one boot fits every node: the boot stud, a disc O30 x 3.5 (the bed face; the
-  landing face of a node without its boot) on a O24 neck 3.5 tall, under a O37 x 2.5 shoulder, with a O14 x 5 relief pocket up from the bed face. The boot's cup snaps over the disc,
-  its lip and zip tie sit round the neck, and its RIM bears on the shoulder (0.4 of air under the disc): a first setup that
-  carried the boot on the disc read 1.02 filled solid in the skid case, the skid's moment crossing the layers of the neck (room_full
-  audit, 11 Nov); through the shoulder it enters the body on a O30..37 ring. Nothing else may grow under the collars.
+  Drawn besides the sockets, the same on all six so one boot fits every node: the boot stud, a disc O30 x 3.5 (the bed face, a O8 x 3
+  relief pocket in it; the landing face of a node without its boot) on a O28 neck 3.5 tall, under a O37 x 2.5 shoulder. The boot's
+  cup snaps over the disc, its lip and zip tie sit round the neck, and its RIM bears on the shoulder (0.4 of air under the disc), so
+  a sideways hit on the boot enters the body on a O30..36 ring, not through the neck. Nothing else may grow under the collars.
   Sockets one node length back (Spark cuts the glued rods flush at the old collar mouths): each bore's floor is FOOT_GAP inside the
   PRINTED node's mouth (that lib's socket start, wall 2.5, + its 15 / 10 depth) and FOOT_DEEP deeper than a cage socket, so a hand
   cut up to 2.5 mm outside the old mouth still has the full 15 / 10 in the bore.
-  Cases on the foot: landing 6 g and the boot-capped hit with a skid (BOOT_N up on the shoulder + BOOT_MU of it sideways at the
-  sole, BOOT_LEVER under the shoulder at the peak, along x and along y; mu E: the boot is a lever the bare foot was not), both
-  through the shoulder; and the 1300 N hit on the bare disc (the boot lost or spent), the 8 Nov case. For these the node is held
-  at every socket (support "sockets"): the frame model has no one-node drop case, so the sockets' reactions are the stiff bound.
+  Cases on the foot: landing 6 g through the shoulder, and the 1300 N hit on the bare disc (the boot lost or spent), the 8 Nov
+  case; for these the node is held at every socket (support "sockets"): the frame model has no one-node drop case, so the sockets'
+  reactions are the stiff bound. MISSING: a sideways (skid) hit through the boot. It needs a friction number and the boot's
+  measured plateau (the drop test in overseer_tpu_foot/make.py); with mu 0.5 guessed, the boot rocks onto ~80 deg of its rim.
 Supports: the sockets of the two tube members with the largest frame-model axial force (the stiffest load paths: the ones
 the rest of the cage holds the node by); those sockets' own cases are not applied (a force on a fixed region is nothing).
 """
@@ -64,11 +63,10 @@ CROWN_MIN_SIN = 0.3                                    # a bore within ~17 deg o
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
 LAND_FEET = 3                                         # a flat landing may rest on 3 of the 6 feet (E)
 HIT_N = 1300.0                                        # ground hit on one base node (8 Nov, Spark: the rear base node broke in three in testing): 1.65 kg from 0.6 m, 9.6 J, stopped in ~15 mm of rod flex, peak ~2x the 640 N average
-FOOT_R, FOOT_T, NECK_R, NECK_T, FOOT_CH = 15.0, 3.5, 12.0, 3.5, 0.6      # v7 boot stud: disc O30 x 3.5 on a O24 neck 3.5 tall (the neck carries the skid moment at ~9 MPa; O20 was 15)
+FOOT_R, FOOT_T, NECK_R, NECK_T, FOOT_CH = 15.0, 3.5, 14.0, 3.5, 0.6      # v7 boot stud: disc O30 x 3.5 on a O28 neck 3.5 tall (O24 with a O14 x 5 pocket read 0.25 filled solid in the 1300 N hit on node 4, limit 0.2: 4.4 MPa of plain bearing across the layers)
 FOOT_GAP, FOOT_DEEP, PRINTED_WALL = 0.5, 2.5, 2.5          # v7 sockets: floor 0.5 inside the printed node's collar mouth, 2.5 deeper than 15 / 10; the printed lib's wall (its socket starts)
-POCKET_R, POCKET_H = 7.0, 5.0                              # a O14 x 5 relief pocket up the stud from the bed face: no wall of the stud over 5 thick
+POCKET_R, POCKET_H = 4.0, 3.0                              # a O8 x 3 relief pocket in the disc: the stud above it is 6.5 tall (drawn_blocks audit: solid, it was an 8..10 mm core)
 SHOULDER_R, SHOULDER_T, RIM_R = 18.5, 2.5, (15.0, 18.0)    # the shoulder the boot's rim bears on (rim: the cup wall, 3.0 from the disc)
-BOOT_N, BOOT_MU, BOOT_LEVER = 800.0, 0.5, 29.0             # the boot-capped hit (overseer_tpu_foot v4 model on a 40 % hard spool: 763 N at v3's block, x 36 / 34.5 deep, E), friction at the sole (E), the sole under the shoulder at that peak (7 of stud + 31.4 of boot - 9.7 of stroke)
 GN = 9.81e-3
 
 
@@ -451,12 +449,6 @@ def build(n, h, log=print, extra=None):
         fz = LAND_G * DRONE_G * GN / LAND_FEET
         p.load_multi(f"landing 6 g on the foot ({fz:.0f} N up, 3 of 6 feet)", [(ring, np.array([0, 0, fz]))], cls="flight", support="sockets")
         p.load_multi(f"ground hit {HIT_N:.0f} N on the bare disc (a 0.6 m drop onto this node alone, 8 Nov; the boot lost or spent)", [(face, np.array([0, 0, HIT_N]))], cls="crash", support="sockets")
-        Fh = BOOT_MU * BOOT_N; a = 0.5 * (RIM_R[0] + RIM_R[1])
-        P = Fh * (BOOT_LEVER - (FOOT_T / 2 + NECK_T)) / (2 * a)    # the skid's moment about the shoulder, less what the side force applied at the disc already carries, as a couple on the rim
-        for nm, d in (("x", np.array([1.0, 0, 0])), ("y", np.array([0, 1.0, 0]))):
-            pad = lambda sg: ring ^ along(axis + sg * a * d, up, zs - 1.0, zs + SHOULDER_T + 1.0, 5.0)
-            p.load_multi(f"boot-capped hit {BOOT_N:.0f} N with a skid along {nm} ({Fh:.0f} N at the sole, {BOOT_LEVER:.0f} under the shoulder)",
-                         [(ring, np.array([0, 0, BOOT_N])), (face, Fh * d), (pad(1), np.array([0, 0, P])), (pad(-1), np.array([0, 0, -P]))], cls="crash", support="sockets")
     if ex.get("loads"):
         ex["loads"](p)
     return p
