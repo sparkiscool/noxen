@@ -209,7 +209,10 @@ if __name__ == "__main__":
         for p in sys.argv[2:]:
             print("\n".join(files(os.path.join(ROOT, "parts", p, "part.py"))))
     elif sys.argv[1:2] == ["--affected"]:                # the parts a push of these changed files reruns (parts.yml)
-        print(" ".join(affected(sys.argv[2:] or sys.stdin.read().split())))
+        import contextlib                                # a setup's own printing goes to stderr: parts.yml reads stdout as the list (11 Nov: the
+        with contextlib.redirect_stdout(sys.stderr):     # cradle's support warning became the "parts", no run job, the commit step a shell error)
+            out = affected(sys.argv[2:] or sys.stdin.read().split())
+        print(" ".join(out))
     elif sys.argv[1:2] == ["--refresh"]:                   # recompute the setup.json caches: the named parts, or every part with a part.py
         pys = [os.path.join(ROOT, "parts", p, "part.py") for p in sys.argv[2:]] or sorted(glob.glob(os.path.join(ROOT, "parts", "*", "part.py")))
         for py in pys:
