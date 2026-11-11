@@ -1,16 +1,19 @@
-"""TPU boots for the Overseer's PRINTED base nodes, v3 (10 Nov design session; Spark 10 Nov: every bottom node cracked in landings,
-resined back, "need much better shock absorption", "an actual design session for this, for best padding"; "its tpu for ams": the
-spool is Bambu TPU for AMS, 68D). v1 (4fcba76, the same day) was the cup below over a plain O48 x 15 sole at 20 % gyroid; its cup
-and zip tie groove are kept, its fit is adapted to 68D, its sole is replaced by a replaceable crush puck. v3 (2c89467 -> here, Spark
-10 Nov "make the boot more aesthetic"): the same cells and fit in a shape that reads as one part, THE LOOK below.
+"""TPU boot for the Overseer's base nodes, v4 (11 Nov, Spark: "the foot nodes broke again ... it pretty much just snaps everywhere",
+"a full in depth design"): ONE boot for all six nodes, on the stud the v7 nodes draw for it (parts/cage_foot_lib.py: a disc O30 x 3.0,
+0.6 chamfer on its bed edge, on a O28 neck 3.5 tall, under a O37 shoulder: the cup's rim bears on the shoulder, 0.4 of air under the disc). v3 (10 Nov) was four boots cast slice by slice from the lobes of the 29-31 Oct
+PRINTED nodes; those nodes are being cut off the rods. The crush zone, the look and the print are v3's, the cup is now a plain socket.
 
-Printed nodes (the meshes are the full part.stl of these commits, read with git show; mirrors share a design, overseer.cage.json):
-  node 5  36fce92 (the 2239525 result of 30 Oct 03:02 UTC, "FINAL, printed 29 Oct", stray shells dropped)  1 boot
-  node 2  3432732 (30 Oct 09:25 UTC)                                  1 boot
-  node 3  188a69f (31 Oct 01:02 UTC), fits nodes 1 and 3              2 boots
-  node 4  6457305 (30 Oct 23:53 UTC), fits nodes 0 and 4              2 boots
-Every printed base node ends in the same kind of lobe: a bulb from the O16 landing face (z -13.2 from the node centre) widening to
-its equator near z -11 (r 12..14) and necking in again to z -6, under the collars (horizontal tube collars from z -5.6 up).
+WHICH MATERIAL TAKES THE HIT (the 11 Nov study; absorber_model.py, every number E):
+  the node itself in TPU: 95A (E 8 MPa) cannot hold a glued rod or the base ring's shape; 68D is rigid (E 600..1190) but 11 MPa across
+    layers: weaker than PCTG at the sockets and no stroke. A TPU skin on a PCTG core has no stroke either. The energy needs ~15 mm
+    of travel under the node, so the absorber is its own part under a rigid node.
+  95A columns (reusable; candidate B below) at this boot's 31 mm: 8 ribs 5.4 x 8 x 25.5 give a rising 260 -> 600 N, not a plateau:
+    the drop peaks at 713 N and uses the whole stroke; 945 N on a spool 40 % soft, 770 on one 40 % hard. At 37.5 tall (v2's 32 mm
+    ribs) it is 589 N, but Spark called 43 too tall. External spool only, ~35 g, 3.5 mm3/s.
+  68D honeycomb (candidate E, built): a flat plateau, so 561 -> ~585 N at the same 31 mm (the block is 36 deep now), 632 / 763 on a
+    soft / hard spool at v3's size; through the AMS, 19 g, 1 h. It folds for good in a full-energy hit and is replaced (a zip tie);
+    in a normal landing (0.16 J) it moves 0.7 mm, elastic. The node passes the full 1300 N without it (its gate), so a spent boot
+    is a lost margin, not a broken node.
 
 THE LOAD CASE. Worst case 1.65 kg from 0.6 m onto one node: 9.7 J at 3.4 m/s. The cage behind the node is a spring of about
 87 N/mm (the v7 frame model, 1300 N over 15 mm), in series with the boot: the peak at the node is where boot energy + cage energy
@@ -127,13 +130,15 @@ import numpy as np, trimesh, manifold3d as mf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
-sys.path.insert(0, HERE)
+sys.path.insert(0, HERE); sys.path.insert(0, ROOT)
 CAGE = json.load(open(os.path.join(ROOT, "systems", "overseer.cage.json")))
 NODES = np.array(CAGE["nodes"], float)
-PRINTED = {5: "36fce92", 2: "3432732", 3: "188a69f", 4: "6457305"}     # design node -> commit of the printed result
-MIRRORS = {5: (5,), 2: (2,), 3: (1, 3), 4: (0, 4)}                      # the nodes each boot is printed for
+from parts.cage_foot_lib import FOOT_R, FOOT_T, NECK_R, NECK_T, FOOT_CH, NODE_R as _NODE_R   # the stud the v7 nodes draw
+AIR = 0.4                                                              # under the disc: the boot bears on the node's shoulder by its rim, never on the disc (cage_foot_lib docstring)
+DESIGN = 2                                                             # the node the one boot is built and previewed on
+MIRRORS = {DESIGN: (0, 1, 2, 3, 4, 5)}                                 # v4: one boot fits every base node (v3: four, cast from the printed lobes)
 DZ = 0.25                                # slice step
-Z_TOP = -6.5                             # cup top, node frame (lowest collar -5.6)
+Z_TOP = -(_NODE_R + 3.0) + FOOT_T + NECK_T   # cup top = the node's shoulder (-6.15, node frame): the rim bears on it
 WALL, GROOVE_H, GROOVE_D = 3.0, 3.0, 1.0
 PLATE, SOLE_T, SOLE_R, SOLE_ROUND = 3.0, 2.5, 23.0, 2.0   # plate 3.0: at 2.5 it was a neck under 3 mm between the cup and the ribs (solid check, node 2)
 DECK_R = PLATE                           # the plate's top edge rounds over with this radius into the deck (THE LOOK)
@@ -142,7 +147,7 @@ RIB_R_IN, RIB_L = 16.5, 32.0             # the ring's inner radius at the rib en
 STOP_STROKE, STOP_R_BOT = 19.5, 9.0      # the cone under the cup floor meets the sole after this stroke; its tip radius
 GRADES = {"68d": dict(intf=0.08, lip=0.5, rho=1.26, suffix=""),                                      # the design: the spool on hand
           "95a": dict(intf=0.15, lip=1.2, rho=1.20, suffix="_95a", n=12, t=5.5, w=8.0, bow=0.8, E=8.0)}   # the elastic column boot
-CRUSH_W, CRUSH_H, CRUSH_D = 34.0, 30.0, 34.5  # the crush block (v2's puck, now part of the body, THE LOOK): width (drone x), height (the stroke axis: 2 skin + 26 of
+CRUSH_W, CRUSH_H, CRUSH_D = 34.0, 30.0, 36.0  # the crush block (v2's puck, now part of the body, THE LOOK): width (drone x), height (the stroke axis: 2 skin + 26 of
                                            # cells + the 3 plate overlapping the top skin; Spark 10 Nov "too tall" at 40), depth (drone y: the cell axis, the print height)
 HEX_ROWS = 2                               # rows of cells over the height, centred (3 at H 40)
 CRUSH_R = 8.0                              # the block's face outline: corner radius at the ground and into the deck
@@ -152,10 +157,13 @@ N_SEG = 96
 
 
 def node_mesh(n):
-    blob = subprocess.check_output(["git", "-C", ROOT, "show", f"{PRINTED[n]}:parts/overseer_cage_node_{n}/part.stl"])
-    t = trimesh.load(io.BytesIO(blob), file_type="stl", force="mesh", process=True)
-    t.merge_vertices(); t.apply_translation(-NODES[n])                                   # node frame: centre at 0, drone axes
-    return t
+    """the boot stud of a v7 base node, node frame (the same on every node): the disc with its bed chamfer and the neck, run on up
+    past the cup top so every cup slice has a section"""
+    z0 = -(_NODE_R + 3.0)
+    m = mf.Manifold.cylinder(FOOT_CH, FOOT_R - FOOT_CH, FOOT_R, N_SEG).translate([0, 0, z0 - AIR])
+    m += mf.Manifold.cylinder(FOOT_T - FOOT_CH + AIR, FOOT_R, FOOT_R, N_SEG).translate([0, 0, z0 - AIR + FOOT_CH])
+    m += mf.Manifold.cylinder(NECK_T + 4.0, NECK_R, NECK_R, N_SEG).translate([0, 0, z0 + FOOT_T - 0.01])
+    return to_tri(m)
 
 
 def man(t):
@@ -211,7 +219,7 @@ def lobe(n, intf, lip):
     z0 = float(t.bounds[0][2])                                        # the landing face
     zs = np.arange(z0 + 0.02, Z_TOP + 1e-6, DZ)
     areas = [m.slice(z).area() for z in zs]
-    z_eq = float(zs[int(np.argmax(areas))])                           # the bulb's equator
+    z_eq = float(zs[int(np.argmax(areas))])                           # the bulb's equator (v4: the disc's edge above its chamfer)
     S_eq = section(m, z_eq, sym)
     cav, cav_cs = [], {}
     for z in zs:
@@ -394,7 +402,7 @@ def boot(n, grade="68d", page=False):
     for z in np.arange(z0 + 0.1, Z_TOP, 0.5):                         # cup wall under 2.0: what a 1.0 erosion and dilation of the slice loses
         B = body.slice(z); thin.append(B.area() - B.offset(-0.99, mf.JoinType.Round).offset(0.99, mf.JoinType.Round).area())
     bb = body.bounding_box()
-    info = dict(node=n, grade=grade, commit=PRINTED[n], fits=MIRRORS[n], z_face=round(z0, 2), z_eq=round(z_eq, 2), r_eq=round(float(np.sqrt(S_eq.area() / np.pi)), 1),
+    info = dict(node=n, grade=grade, fits=MIRRORS[n], z_face=round(z0, 2), z_eq=round(z_eq, 2), r_eq=round(float(np.sqrt(S_eq.area() / np.pi)), 1),
                 height_under_face=round(z0 - zg, 1), rod_clash_mm3=round(clash.volume(), 1), node_overlap_mm3=round(over, 1), cup_wall_under_2_mm2=round(max(thin), 2),
                 beyond_bed_face_mm=round(max(0.0, -bb[1] - CRUSH_D / 2, bb[4] - CRUSH_D / 2), 2) if grade == "68d" else None,   # the cup past the block's y faces: printed on one, nothing may hang below it
                 dropped_mm3=round(sum(q.volume() for q in parts[1:]), 1), mass_g=round(body.volume() * 1e-3 * g["rho"], 1))
@@ -455,14 +463,14 @@ def preview(boot68, node_tri, curves, path, info):
     hi, lo = boot68.split_by_plane([0, 0, 1.0], z_deck - PLATE); hi, lo = to_tri(hi), to_tri(lo)   # the crush zone and the cup, coloured apart
     img = render([(dec(node_tri, 30000), cols["node"]), (dec(hi, 30000), cols["cup"]), (dec(lo, 40000), cols["crush"])], elev=20, azim=-62)
     ax.imshow(img); ax.set_axis_off()
-    ax.set_title(f"the boot on printed node 5: one 68D body, {info['mass_g']} g, {z_deck:.0f} under the landing face (cup blue, crush zone orange)", fontsize=9)
+    ax.set_title(f"the one boot on a v7 node's stud: one 68D body, {info['mass_g']} g, {z_deck:.0f} under the landing face (cup blue, crush zone orange)", fontsize=9)
     ax = fig.add_subplot(1, 3, 2)
-    for mesh, col, lab in ((to_tri(boot68), "#2a7fff", "boot (68D, one body; cells 9.5 / 2.0 along y)"), (node_tri, "#444444", "printed node")):
+    for mesh, col, lab in ((to_tri(boot68), "#2a7fff", "boot (68D, one body; cells 9.5 / 2.0 along y)"), (node_tri, "#444444", "the node's stud (O30 disc, O28 neck)")):
         segs = trimesh.intersections.mesh_plane(mesh, [0, 1.0, 0], [0, 0, 0])
         for i, sgm in enumerate(segs):
             ax.plot(sgm[:, 0], sgm[:, 2], color=col, lw=1.0, label=lab if i == 0 else None)
     ax.set_aspect("equal"); ax.set_xlabel("x (mm)"); ax.set_ylabel("z from the ground (mm)"); ax.legend(loc="upper left", fontsize=7)
-    ax.set_title(f"section y = 0, node 5 (node overlap {info['node_overlap_mm3']} mm3 = the 0.08 interference + the 0.5 lip; cells clear)", fontsize=8)
+    ax.set_title(f"section y = 0 (stud overlap {info['node_overlap_mm3']} mm3 = the 0.08 interference + the 0.5 lip; cells clear)", fontsize=8)
     ax = fig.add_subplot(1, 3, 3)
     for lab, x, F, col, ls in curves:
         ax.plot(x, F, label=lab, color=col, lw=1.6, ls=ls)
@@ -479,8 +487,10 @@ if __name__ == "__main__":
     if os.path.exists(old):
         os.remove(old)                                                # v2's separate puck: the boot is one body now
     plate, keep = [], {}
-    for grade in ("68d", "95a"):
-        for i, n in enumerate((5, 2, 3, 4)):
+    for stale in [f for f in os.listdir(os.path.join(ROOT, "print")) if f.startswith("overseer_tpu_foot_node")]:
+        os.remove(os.path.join(ROOT, "print", stale))                 # v3's four per-node boots
+    for grade in ("68d",):                                            # the 95A column boot (GRADES, rib) is not exported: the study above
+        for i, n in enumerate((DESIGN,)):
             b, info, shift = boot(n, grade)
             tb = to_tri(b)
             if grade == "68d":
@@ -501,8 +511,8 @@ if __name__ == "__main__":
             else:
                 tp = tb.copy()
             tp.apply_translation([0, 0, -float(tp.bounds[0][2])])
-            tp.export(os.path.join(ROOT, "print", f"overseer_tpu_foot_node{n}{GRADES[grade]['suffix']}.stl"))
-            if n == 5:
+            tp.export(os.path.join(ROOT, "print", "overseer_tpu_foot.stl"))
+            if n == DESIGN:
                 keep[grade] = (b, info, shift)
             info.update(vol_mm3=round(b.volume()), height=round(tb.extents[2], 1), print_height=round(tp.extents[2], 1), watertight=bool(tb.is_watertight), genus=b.genus())
             print(json.dumps(info))
@@ -521,6 +531,6 @@ if __name__ == "__main__":
         print(json.dumps(dict(curve="v3", sigma_y=sy, plateau_N=round(plateau), densify_mm=round(c[0, 3], 1), peak_N=round(pk3[0]), stroke_mm=round(pk3[1], 1), cage_mm=round(pk3[2], 1))))
     print(json.dumps(dict(curve="v2", sigma_y=15.0, peak_N=round(pk2[0]), stroke_mm=round(pk2[1], 1), cage_mm=round(pk2[2], 1))))
     tb, info, shift = keep["68d"]
-    node_t = node_mesh(5); node_t.apply_translation([0, 0, shift])      # the node in the boot's ground frame (v2 drew it 26 low: z_face with the wrong sign)
+    node_t = node_mesh(DESIGN); node_t.apply_translation([0, 0, shift])      # the node in the boot's ground frame (v2 drew it 26 low: z_face with the wrong sign)
     preview(tb, node_t, curves, os.path.join(HERE, "preview.png"), info)
     print("preview.png written")
