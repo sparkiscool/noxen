@@ -41,7 +41,7 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of
                                       check_collars, rigid_split, SockDown, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
                                       M25_INS, BOSS_R, DIRS14, FLIGHT)
 
-SPEC = dict(h=2.0, gen_cm3=200.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
+SPEC = dict(h=2.0, gen_cm3=90.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
 # 10 Nov (the NODES stream's socket-depth rule, units_lib.socket_depth): DN / DT 13.5 and BN / BT 11.5 deep (their 645 / 528 N), taken
 # behind the standard floor (the mouths stay inside the 180; those 4 rods 3.5 / 1.5 longer), DS / BS 7.0 (their mouths 3 nearer).
 # 10 Nov, run 186 (60 cm3, 18 % of the room): FAIL 1.515 (BN-NB 528 N), 117 g; the result read what the room filled solid thinned
@@ -57,7 +57,10 @@ POD_R, POD_T, POD_ROOM = 14.0, 8.0, 15.0             # 11 Nov: pad 6 -> 8 (motor
 ARM_W0, ARM_W1 = 48.0, 30.0                         # the arms' room across, at the root and at the pod. 11 Nov, run of 071cc14 (274.1 g, 0.481): every
                                                    # pod's flight case worst at its root by the deck's corner (0.29-0.48 in-layer), each arm one ~10 wide bar
                                                    # in a 32 room: 48 at the root (was 32) lets the root spread into a V in its layers
-ARM_Z0, POD_Z0 = 2.0, 8.0                            # the arms' room bottom at the root and at the pod (9 Nov smoke: room_full 0.33 at the rear arm's root, 12.5 deep)
+ARM_Z0 = POD_Z0 = DZ1 - 12.0                        # 12 Nov (the design chat: <= 160 g, every fail by geometry): the arms' room a 12 deep band in the deck's layers,
+                                                   # root to pod (was down to z 2 / 8): thrust bends a plate in its layers (a 10 x 34 section reads ~0.1 by hand), no
+                                                   # web hung under the pad (run of 4b95423: motor 3 0.386 ACROSS at z 13.7 under its pad)
+PAD_T = 2.5                                         # the drawn motor seat: the pad's top skin (the motor's base on it); the 4 screw bosses the pad's depth
 LUG_Y1 = 64.0                                      # the lugs' room: out to y 64 at the deck (9 Nov), along the receiver's whole length (11 Nov)
 # the motor (EMAX ECO II 2004 3000KV, the table above; dimensions.md open item 19: the KV)
 T_MAX, DYN, Q_PEAK, F_IMB, Q_STRIKE, F_STRIKE = 11.8, 1.5, 130.0, 11.0, 1000.0, 17.0   # N, -, N mm, N, N mm, N
@@ -102,11 +105,14 @@ def bodies():
     x0, x1, yb = S.DECK
     rx0, rx1 = -51.3 + S.BX, 54.3 + S.BX                                             # the receiver v3 (C), not drawn: it bolts up under the yokes
     env = [box(x0, x1, -yb, yb, S.REC_TOP, DZ1),                                      # the deck and the yokes over the receiver, one room
-           box(-S.BED, rx0, -34.0, 34.0, -2.3, DZ1),                                  # the tail tray (DT / BT)
-           box(rx1, S.BED, -34.0, 34.0, -2.3, DZ1), box(rx1, 78.0, -34.0, 34.0, -10.5, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod (-10.5: into the flow land, not flush on it)
+           box(-S.BED, rx0, -40.0, 40.0, -2.3, DZ1),                                  # the tail tray (DT / BT)
+           box(-S.BED, rx0 + 0.5, -40.0, 40.0, -12.0, -2.0), box(rx1 - 0.5, 78.0, -40.0, 40.0, -12.0, -2.0),   # 12 Nov: a belt round the receiver at the B
+           # sockets' height (with the side rooms down to -12): BS's 175 N out along y bends a bar along x in its layers to the nose and tail (run of
+           # 4b95423: BS1-S1 0.458 ACROSS, the lug hung from the deck); BT / BN's corners round the receiver in the same layers
+           box(rx1, S.BED, -40.0, 40.0, -2.3, DZ1), box(rx1, 78.0, -34.0, 34.0, -10.5, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod (-10.5: into the flow land, not flush on it)
            box(rx1, 71.8, -12.0, 12.0, -19.1, -2.0),                                 # the flow sensor's pod (its bottom on the walls-in rule + 2)
            box(S.UBEC_LO[0] - 2.5, S.UBEC_LO[0] + 19.5, -33.0, 33.0, S.UBEC_LO[1], -2.0),   # 11 Nov: the UBEC's pod under the tail tray (S.UBEC_LO: off BT's path)
-           box(rx0 - 0.5, rx1 + 0.5, 33.8, 40.0, -2.3, S.REC_TOP + 0.5), box(rx0 - 0.5, rx1 + 0.5, -40.0, -33.8, -2.3, S.REC_TOP + 0.5)]   # 10 Nov: beside the receiver, so the end
+           box(rx0 - 0.5, rx1 + 0.5, 33.8, 40.0, -12.0, S.REC_TOP + 0.5), box(rx0 - 0.5, rx1 + 0.5, -40.0, -33.8, -12.0, S.REC_TOP + 0.5)]   # 10 Nov: beside the receiver, so the end
     # sockets' loads climb to the battery bolts (z 9.6) on shallow in-layer diagonals; run 187 stopped early at 1.064 ACROSS the layers
     # (BT-TB 527 N at (-51, -33, 3.7)): with room only over the receiver and behind it, the path had to rise as a wall at its tail end.
     # 11 Nov (run of 0dd1778, the audit's parity check since): these rooms' tops flush under the deck's room (z 9.6) and the flow land
@@ -130,7 +136,8 @@ def bodies():
     # ---- the motor pods: the pad in the deck's layers, 4 x M2 up from below (the heads under the pad), the bell over it
     pods, pod_regs = [], []
     for mx, my in S.MOTORS:
-        pods.append(cyl(mx, my, DZ1 - POD_T, DZ1, POD_R))
+        pods.append(U([cyl(mx, my, DZ1 - PAD_T, DZ1, POD_R)] + [cyl(x, y, DZ1 - POD_T, DZ1, 3.5) for x, y, _ in screw_pts(mx, my, 0.0)]))   # 12 Nov: the seat
+        # skin and the 4 screw bosses (O7, 2.4 round the M2's 2.2), the rest of the pad generated (was a solid O28 x 8 disc: 18 g of the 44 g drawn)
         pod_regs.append(([cyl(x, y, DZ1 - POD_T, DZ1 - POD_T + 1.5, 2.6) for x, y, _ in screw_pts(mx, my, 0.0)],    # each screw head's seat on the pad's underside
                          [cyl(x, y, DZ1 - 1.5, DZ1, 3.5) for x, y, _ in screw_pts(mx, my, 0.0)]))                 # and the motor base on the pad's top round it
         cuts.append(cyl(mx, my, ARM_Z0 - 1, DZ1 + 1, 4.0))
