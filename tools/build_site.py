@@ -127,7 +127,8 @@ def rod_segments():
     try:
         sys.path.insert(0, ROOT)
         from parts.cage_node_lib import NODES, CAGE
-        cuts = CAGE.get("rod_cuts_mm", {}); was = CAGE.get("rod_cuts_was_mm", {})   # recut members: drawn red with the old length
+        cuts = json.load(open(os.path.join(ROOT, "systems", "overseer.rod_cuts.json")))   # tools/cage_tubes.py (12 Nov: out of cage.json)
+        was = CAGE.get("rod_cuts_was_mm", {})                                             # recut members: drawn red with the old length
     except Exception as e:
         print(f"site: no rod picking ({e})"); return {}
     shell, off = [], []

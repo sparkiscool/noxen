@@ -57,7 +57,8 @@ def camera():
     return cam
 def place_cams():
     cam = camera()
-    for nm, c in zip(("camera_left", "camera_right"), CAGE["cams"]):
+    ov = json.load(open(os.path.join(ROOT, "systems", "overseer.assembly.json")))["overlays"]   # 12 Nov: the head mount's poses (its part.py), as the page draws them
+    for nm, c in zip(("camera_left", "camera_right"), ov["cams"][:2]):
         write(nm, frame(cam, np.array(c["lens"]), np.array(c["r"]), np.array(c["u"]), np.array(c["f"])))
     # rear camera on node 21 (parts/overseer_cage_node_21/part.py): back, 40 deg down; board back 14 ahead of the node centre
     pitch = np.radians(40.0); F = np.array([-np.cos(pitch), 0.0, -np.sin(pitch)]); UP = np.array([-np.sin(pitch), 0.0, np.cos(pitch)]); RT = np.cross(F, UP)
@@ -155,7 +156,8 @@ def l2():
     body = cyl(0, 0, 6.0, 30.0, 36.0, 96)
     band = cyl(0, 0, 18.0, 30.0, 37.0, 96)                                               # the window band, slightly proud
     dome = mf.Manifold.sphere(35.0, 96).translate([0, 0, 30.0]) ^ box(-40, 40, -40, 40, 30.0, 66.0)   # the domed head, top at 65
-    holes = [cyl(25.5 * np.cos(a), 25.5 * np.sin(a), -1, 6.5, 1.6, 24) for a in np.radians((0.0, 90.0, 180.0, 270.0))]   # v9 head mount: rolled 22.5, the M3 sit as a diamond
+    rot = float(asm.get("l2_bolt_rot_deg", 0.0))                                         # head mount v12: 45, the M3 sit as a square (v9: 0, a diamond)
+    holes = [cyl(25.5 * np.cos(a), 25.5 * np.sin(a), -1, 6.5, 1.6, 24) for a in np.radians(rot + np.array((0.0, 90.0, 180.0, 270.0)))]
     notch = rotz(box(30, 40, -5, 5, -1, 8), -22.5)                                       # cable notch on the mount's cable side (down), 22.5 off after the roll
     m = union([flange, body, band, dome]) - union(holes + [notch])
     write("unitree_l2", frame(m, B, ex, ey, Ax))
