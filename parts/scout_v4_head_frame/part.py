@@ -1,7 +1,7 @@
 """Scout v4 probe head frame (9 Nov, Spark: "generate everything with topology"): the printed frame on the two tape blades' tip that
 carries the SG90 and the tilt cradle's idler (tools/scout_v4_shape.head_parts: the head's CG over the mast, the tilt axis 37 over the throat).
 Drawn (attachments only): the clip, a 14 mm sleeve round the lens at the blades' tips (blade A held by an M2 through the +x wall at
-y +5 at its top, blade B's M2 and nut ride an 11 mm slot in the -x wall at y -5: on one spool B pays out 7.5 mm less than A over the
+y +5 at its top, blade B's M2 and nut ride a 12 mm slot in the -x wall at y -5 (12 Nov: 10 of travel): on one spool B pays out 9.5 mm less than A over the
 150, the ribbon being between them, tools/probe_mast_sim.py; the ribbon's 4 mm loop under the sleeve's top); the SG90's two tab pads (M2 into its 32.8 tabs, holes 27.7 apart: the typical
 drawing, E); the idler's boss (an M3 screw along the tilt axis into the cradle's insert).
 Cuts: the SG90 and its spline; the cradle, camera and LED bars swept over the nod (-20..+90 deg) with 1 mm to spare; the blades'
@@ -53,19 +53,19 @@ def bodies():
     drawn, cuts = [], []
     # the clip: round the blades' tip, the lens slot through it
     top = hz + S.HEAD["clip"]
-    clip = box(mx - 6.5, mx + 6.5, -hw - 2.5, hw + 2.5, hz, top + 2.0); drawn.append(clip)
-    lens = box(mx - 4.6, mx + 4.6, -hw - 0.3, hw + 0.3, hz - 1, top - 0.5); cuts.append(lens)
+    cw = S.LENS_HALF + 0.4 + 2.2; clip = box(mx - cw, mx + cw, -hw - 2.5, hw + 2.5, hz, top + 2.0); drawn.append(clip)   # 12 Nov: 2.2 walls outside the lens (6.9 at T2; was 6.5, 1.9 walls)
+    lens = box(mx - S.LENS_HALF - 0.4, mx + S.LENS_HALF + 0.4, -hw - 0.3, hw + 0.3, hz - 1, top - 0.5); cuts.append(lens)   # 12 Nov: the lens + 0.4 (4.7 at T2 with the 0.81 ribbon; was 4.6)
     cuts.append(xcyl(5.0, top - 3.0, 0.8, mx, mx + 20))                                  # blade A's M2 (self-tapping) through the +x wall at y +5
-    cuts.append(xcyl(5.0, top - 3.0, 2.0, mx + 6.5, mx + 30))                            #   its head and driver
-    cuts.append(box(mx - 30, mx - 1.0, -5.0 - 1.15, -5.0 + 1.15, hz + 1.0, hz + 12.0))   # blade B's M2 in an 11 mm slot of the -x wall (8.8 of travel)
-    cuts.append(box(mx - 1.0, mx + 1.0, -2.0, 2.0, top - 1.0, top + 3.0))                # the ribbon up out of the sleeve
-    clip_reg = box(mx - 5.2, mx + 5.2, -hw - 0.9, hw + 0.9, hz, top - 0.5) - lens
+    cuts.append(xcyl(5.0, top - 3.0, 2.0, mx + cw, mx + 30))                            #   its head and driver
+    cuts.append(box(mx - 30, mx - 1.0, -5.0 - 1.15, -5.0 + 1.15, hz + 2.0, top))         # 12 Nov: blade B's M2 in a 12 mm slot of the -x wall, 2.0 of wall at each end: 10.0 of travel for the fight's 9.5 (the 0.81 ribbon, S.FIGHT; 9.7 at t 0.15)
+    cuts.append(box(mx - S.CABLE_T / 2 - 0.6, mx + S.CABLE_T / 2 + 0.6, -S.CABLE_W / 2 - 0.3, S.CABLE_W / 2 + 0.3, top - 1.0, top + 3.0))   # the ribbon (4.9 x 0.81) up out of the sleeve
+    clip_reg = box(mx - cw + 1.3, mx + cw - 1.3, -hw - 0.9, hw + 0.9, hz, top - 0.5) - lens
     # the SG90: its tab pads (+y) and its body / spline as cuts
     xc = ax + (-16.4 + 6.0) / 2; pads, pad_pts, pad_regs = [], [], []
     for s in (-1, 1):
         x = xc + s * HOLES / 2
         pads.append(box(x - 3.5, x + 3.5, ay + sv + 8.6, ay + sv + 12.0, az - 5.5, az + 5.5))
-        cuts.append(ycyl(x, az, 0.8, ay + sv + 5.0, ay + sv + 13.0))                    # M2 self-tapping into the pad
+        cuts += [ycyl(x + e, az, 0.8, ay + sv + 5.0, ay + sv + 13.0) for e in (-0.4, 0.4)] + [box(x - 0.4, x + 0.4, ay + sv + 5.0, ay + sv + 13.0, az - 0.8, az + 0.8)]   # 12 Nov: M2 self-tapping into an oval 1.6 x 2.4 pilot (its two flanks bite): the tab holes 27.7 +-0.4 (no listing gives them; nothing for Spark to check)
         pad_pts.append((x, ay + sv + 10.3, az)); pad_regs.append(box(x - 3.5, x + 3.5, ay + sv + 8.3, ay + sv + 9.2, az - 5.5, az + 5.5))
     drawn += pads
     # the crash stop: under the camera's lower front edge (tools/scout_v4_shape.tilt_sweep's lowest point, x ~21 at -20 deg), on the plate
