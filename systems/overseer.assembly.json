@@ -2451,7 +2451,7 @@
    "id": "spokes_ties_head_rods",
    "group": "cage",
    "color": "#444444",
-   "note": "v6: the 3 spokes of each arm end in sockets on the arm (no carbon through an arm); head rod c is inside the head mount; this mesh is the v5 layout model until the rods are redrawn."
+   "note": "v6: the 3 spokes of each arm end in sockets on the arm (no carbon through an arm); head rods cut off (8 Nov); core tie front.2 ends in the head mount's socket behind the L2 base (v12)."
   },
   {
    "name": "head mount (L2 + both cameras + node 17)",
@@ -2461,7 +2461,7 @@
    "mass_g": 76.2,
    "tag": "E",
    "owner": "overseer",
-   "version": "v10 setup (8 Nov, Spark option A): sockets one socket further along the cut rods (node 17's 4 tubes, core tie front.2), crossbar 15-16 saddle in place of the head rods (cut off), L2 20 back 60 up, cameras under node 17; PCTG",
+   "version": "v12 setup (12 Nov): L2 in the cage's front vertex where node 17 was, base (326, 0, 22); node 17's 4 tubes in deep U sockets and the core tie in a closed socket, all cut further back; crossbar 15-16 whole, not touched; cameras over the L2; PCTG",
    "source": "parts/overseer_head_mount/part.py",
    "id": "overseer_head_mount",
    "group": "printed",
@@ -2477,7 +2477,7 @@
    "mass_g": 230.0,
    "tag": "P",
    "owner": "overseer",
-   "version": "v10 head mount (8 Nov): base (364.0, 0, 111.0), axis 15 deg below +x",
+   "version": "v12 head mount (12 Nov): base (326.0, 0, 22.0), axis 15 deg below +x, M3 as a square",
    "source": "tools/bought_meshes.py",
    "id": "unitree_l2",
    "group": "bought",
@@ -2490,13 +2490,13 @@
    "mesh": "parts/camera_left/part.stl",
    "mass_g": 15.0,
    "cg": [
-    384.36,
-    72.98,
-    122.93
+    328.64,
+    26.96,
+    102.0
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v10 head mount (8 Nov): lens (340, +-30, 10), yawed 20 out, level, behind the cage front",
+   "version": "v12 head mount (12 Nov): lens (337, +-30, 102), yawed 20 out, level, over the L2, behind the cage front",
    "source": "tools/bought_meshes.py",
    "id": "camera_left",
    "group": "bought",
@@ -2509,13 +2509,13 @@
    "mesh": "parts/camera_right/part.stl",
    "mass_g": 15.0,
    "cg": [
-    384.36,
-    -72.98,
-    122.93
+    328.64,
+    -26.96,
+    102.0
    ],
    "tag": "E",
    "owner": "overseer",
-   "version": "v10 head mount (8 Nov): lens (340, +-30, 10), yawed 20 out, level, behind the cage front",
+   "version": "v12 head mount (12 Nov): lens (337, +-30, 102), yawed 20 out, level, over the L2, behind the cage front",
    "source": "tools/bought_meshes.py",
    "id": "camera_right",
    "group": "bought",
@@ -3563,9 +3563,9 @@
    -0.258819
   ],
   "l2_base": [
-   364.012,
+   326.0,
    0.0,
-   111.0
+   22.0
   ],
   "motors_xy": [
    [
@@ -3593,19 +3593,19 @@
   "cams": [
    {
     "lens": [
-     389.914942,
-     75.0,
-     121.887647
+     337.0,
+     30.0,
+     102.0
     ],
     "f": [
-     0.925417,
-     0.336824,
-     -0.173648
+     0.939693,
+     0.34202,
+     0.0
     ],
     "u": [
-     0.163176,
-     0.059391,
-     0.984808
+     0.0,
+     0.0,
+     1.0
     ],
     "r": [
      -0.34202,
@@ -3617,24 +3617,24 @@
    },
    {
     "lens": [
-     389.914942,
-     -75.0,
-     121.887647
+     337.0,
+     -30.0,
+     102.0
     ],
     "f": [
-     0.925417,
-     -0.336824,
-     -0.173648
+     0.939693,
+     -0.34202,
+     0.0
     ],
     "u": [
-     0.163176,
-     -0.059391,
-     0.984808
+     0.0,
+     0.0,
+     1.0
     ],
     "r": [
      0.34202,
      0.939693,
-     -0.0
+     0.0
     ],
     "ha": 44.5,
     "hv": 36.5
@@ -3663,6 +3663,7 @@
     "ha": 44.5,
     "hv": 36.5
    }
-  ]
+  ],
+  "l2_bolt_rot_deg": 45.0
  }
 }
