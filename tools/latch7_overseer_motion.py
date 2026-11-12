@@ -124,7 +124,7 @@ def timeline(a):
     series = [("cartridge below the seat", [s["d"] + s["drop"] for s in st], "mm"),
               ("bolt travel (lead-in cam or blades; 3.3 unlatches, 4.9 = tab on the rib)", [s["rho"] for s in st], "mm"),
               ("steel pin engagement past the receiver's locating face", [max(0.0, OVERLAP - s["rho"]) for s in st], "mm"),
-              ("spring force on each bolt (its four springs)", [4 * KS * (FREE - (L0 - s["rho"])) for s in st], "N"),
+              ("spring force on each bolt (its two springs)", [2 * KS * (FREE - (L0 - s["rho"])) for s in st], "N"),
               ("nub above its wedge foot (0 = tight, drawing the cartridge onto the pads)", [max(0.0, (STROKE - s["u"]) * TAN) if s["bz"] - (-s["d"]) > -1 or s["held"] else 0.0 for s in st], "mm"),
               ("heel pad load at 25 N blades (preload - what gravity takes off)", [h[2] for h in H], "N"),
               ("grip hold: pads stay down, margin at 1 g (25 N blades)", [h[0] for h in H], "x"),

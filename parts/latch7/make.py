@@ -98,9 +98,14 @@ m6.FOOT_HZ = bl.REC_Z                  # feet wall to wall
 #   springs    -> four per bolt in long slots along the bolt, bearing on the rib's faces (the rib has no spring notch at all)
 #   push pad   -> on a boss under the bolt's inner end, at the blade's height; the wall hole's floor is notched for it
 #   magnet     -> in the bolt's underside; the head reads it from a short post
+# No steel (12 Nov, Spark: printed parts instead of the metal rods). Each bolt's nose is printed: the pin's round where it cams in,
+# a flat 20 deg face where it sits on the receiver's ramp (area contact, not a line). The two guide poles are tapered pegs printed
+# on the plug carrier, in slots in the cartridge.
 # The rib stays part of the cartridge, fixed at both ends, gusseted, feet wall to wall. A shelf in each recess corner carries the
 # bolts' inner ends.
-SPRINGS_Z = (-16.5, -11.0, 11.0, 16.5)  # four springs per bolt, eight per cartridge
+SPRINGS_Z = (-10.0, 10.0)              # two springs per bolt, four per cartridge (the all-printed bolt is 2 g lighter than with its steel pins)
+PEG = dict(tip=(3.0, 4.6), root=(3.4, 5.0), boss=2.6)   # printed guide pegs (were 3 x 20 steel dowels): z x x section at the tip and at the carrier; boss: wall round each slot
+v5.POLE_L = 16.0                       # 16 long (the dowels were 20): they still enter 7.7 before the seat, the XT60's contacts at 6.0
 SPR_Y = 9.9                            # their axis (slot bottom 8.3)
 SLOT_X1 = 16.6                         # each slot's outer end with the bolt at rest: spring 14.6 long at rest, 9.7 at full travel
 GUS, GUS_Y0 = 4.0, 8.5                 # rib end gussets: 4 x 4 in plan, y 8.5..11.5 (the bolts' inner corners are cut to pass)
@@ -113,10 +118,10 @@ bl.MAG_X, bl.MAG_Z = 13.0, 19.7        # magnet up in the bolt's underside; the 
 F_BLADE = 25.0
 for _b in m6.BOUGHT:
     if _b["part"].startswith("latch spring"):
-        _b["per_cartridge"] = 8; _b["spec"] += "; eight per cartridge (four in each bolt)"
+        _b["per_cartridge"] = 4; _b["spec"] += "; four per cartridge (two in each bolt)"
         _b["check"] = "on a kitchen scale: 1.7..2.2 N at 14.6 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)"
-    if _b["part"].startswith("dowel pin"): _b["per_cartridge"] = 4; _b["spec"] += "; four per cartridge (two in each bolt), two per receiver"
-    if _b["part"].startswith("spring guide pin"): _b["spec"] = "o 2.0 x 7, printed PCTG; eight per cartridge"
+    if _b["part"].startswith("spring guide pin"): _b["spec"] = "o 2.0 x 7, printed PCTG; four per cartridge"
+m6.BOUGHT = [_b for _b in m6.BOUGHT if not _b["part"].startswith("dowel pin")]      # no steel: the bolt noses and the guide pegs are printed (Spark 12 Nov)
 m6.BOUGHT.append(dict(part="stop bar", spec="printed PCTG, one per cartridge, dropped in after the bolts", per_cartridge=1, listing="printed", url="", check=""))
 GUIDE_PIN = (2.0, 7.0)
 
@@ -170,8 +175,9 @@ def slider(g, retract=0.0, side=1):
     zt, tip = g["Z_T"], g["X_TIP"]; Y0, Y1 = bl.BOLT_Y0, bl.BOLT_Y1; HZ = bl.BOLT_HZ
     s = box(bl.TAB_IN, tip, Y0, Y1, zt - HZ, zt + HZ)
     s = s - prism_xy([(tip - bl.TIP_CH, Y1 + 0.01), (tip + 0.01, Y1 + 0.01), (tip + 0.01, Y1 - bl.TIP_CH)], zt - HZ - 1, zt + HZ + 1)
-    xp, yp = v5.pin_axis(g)
-    s = s - cyl("z", xp, yp, m6.PIN_R, zt - HZ - 0.01, zt - HZ + m6.PIN_L + 0.5, 32)
+    xp, yp = v5.pin_axis(g); xc, yc = v5.contact(g)                 # the printed nose: the pin's round, flat at 20 deg from its contact line out to the tip
+    s = s + cyl("z", xp, yp, m6.PIN_R, zt - HZ, zt + HZ, 32) + \
+        prism_xy([(xc, yc), (tip, yc - (tip - xc) * math.tan(bl.UNDER)), (tip, Y0 + 0.5), (xc - 0.5, Y0 + 0.5)], zt - HZ, zt + HZ)
     s = s + box(bl.TAB_IN, PLATE_OUT, BOSS["y0"], Y0 + 0.01, zt - BOSS["hz"], zt + BOSS["hz"])                          # the push boss
     s = s + hullp([[PLATE_OUT - 0.01, y, zt + z] for y in (BOSS["y0"], Y0) for z in (-BOSS["hz"], BOSS["hz"])] +         # and its crowned pad
                   [[bl.TAB_OUT, y, zt + z] for y in PAD_Y for z in (-2.0, 2.0)])
@@ -238,6 +244,7 @@ def heel(g):
 
 
 m6.cart_all = lambda B: U(B["cart"], B["stop"], B["female"], *B.get("cstrips", []))
+m6.VIEW = [(nm, ("guide pegs (printed, on the plug carrier)" if nm.startswith("guide_pole") else grp), col, op, cut, ("structure" if nm.startswith("guide_pole") else role), ("PCTG" if nm.startswith("guide_pole") else mat)) for nm, grp, col, op, cut, role, mat in m6.VIEW]
 m6.VIEW = m6.VIEW + [("stop_bar", m6.G_L, "#f2d14e", None, False, "structure", "PCTG")] + [(f"spring_{k}", m6.G_L, "#c9783f", None, False, "bought", None) for k in "cdefgh"] + [(f"spring_pin_{k}", m6.G_L, "#e3e7ec", None, False, "structure", None) for k in "abcdefgh"]
 _view_sources = m6.view_sources
 
@@ -245,7 +252,8 @@ _view_sources = m6.view_sources
 def view_sources(B):
     src = _view_sources(B); g = B["g"]
     src["stop_bar"] = B["stop"]
-    for k, (sx, dz) in zip("abcdefgh", [(sx_, dz_) for sx_ in (1, -1) for dz_ in SPRINGS_Z]):   # the guide pin inside each spring
+    src.pop("bolt_pin_p", None); src.pop("bolt_pin_n", None)
+    for k, (sx, dz) in [(nm_[i], (sx_, dz_)) for sx_, nm_ in ((1, "abcd"), (-1, "efgh")) for i, dz_ in enumerate(SPRINGS_Z)]:   # the guide pin inside each spring
         src[f"spring_pin_{k}"] = cyl("x", SPR_Y, g["Z_T"] + dz, GUIDE_PIN[0] / 2, *sorted((sx * 2.5, sx * (2.5 + GUIDE_PIN[1]))), 20)
     return src
 
@@ -257,7 +265,7 @@ def view_meshes(B):
     import trimesh
     out = _view_meshes(B); g = B["g"]; M = m6.page_matrix(g["Z_T"])
     L = SLOT_X1 - bl.RIB_HX; turns = m6.SPR["n_active"] + 2; rm = (m6.SPR["od"] - m6.SPR["d"]) / 2; n = turns * 12
-    for k, (sx, dz) in zip("abcdefgh", [(sx_, dz_) for sx_ in (1, -1) for dz_ in SPRINGS_Z]):   # a and b on the +x bolt, c and d on the -x one
+    for k, (sx, dz) in [(nm_[i], (sx_, dz_)) for sx_, nm_ in ((1, "abcd"), (-1, "efgh")) for i, dz_ in enumerate(SPRINGS_Z)]:   # a and b on the +x bolt, c and d on the -x one
         pts = np.array([[sx * (bl.RIB_HX + L * i / n), SPR_Y + rm * math.cos(2 * math.pi * turns * i / n), g["Z_T"] + dz + rm * math.sin(2 * math.pi * turns * i / n)] for i in range(n + 1)])
         sp = trimesh.util.concatenate([trimesh.creation.cylinder(radius=m6.SPR["d"] / 2, segment=[p, q], sections=6) for p, q in zip(pts[:-1], pts[1:])])
         sp.apply_transform(M); out[f"spring_{k}"] = sp
@@ -266,6 +274,51 @@ def view_meshes(B):
 
 m6.view_meshes = view_meshes
 m6.view_sources = view_sources
+def _no_pin(g, retract=0.0, side=1):
+    """there is no steel pin any more: a speck inside the bolt, so v6's sums that add a pin still run."""
+    b = box(12.0, 12.1, 7.4, 7.5, g["Z_T"] - 0.05, g["Z_T"] + 0.05).translate([-retract, 0, 0])
+    return b if side > 0 else rot_y180(b, g["Z_T"])
+
+
+def _peg_geo(r):
+    y1 = r["Y_DK1"]; y0 = y1 - v5.POLE_L; yr = r["LIP_Y0"]
+    zmax = r["Z_X"] - r["PKX_ZW"]                      # the float pocket's edge: the peg's root stays on the carrier's rail, not in the pocket
+    return y0, y1, yr, zmax
+
+
+def pegs(r):
+    """the two guide pegs, part of the plug carrier: tapered, rectangular, thin along the pack (the cartridge has no room there)."""
+    y0, y1, yr, zmax = _peg_geo(r); out = []
+    for (x, z) in v5.pole_xz(r):
+        rect = lambda y, zc, zz, xx: [[x + sx * xx / 2, y, zc + sz * zz / 2] for sx in (-1, 1) for sz in (-1, 1)]
+        zr = zmax - PEG["root"][0] / 2
+        out.append(hullp(rect(y0, z, PEG["tip"][0] - 1.4, PEG["tip"][1] - 1.4) + rect(y0 + 1.0, z, *PEG["tip"]) + rect(yr, zr, *PEG["root"]) + rect(y1, zr, *PEG["root"])))
+    return out
+
+
+def peg_tab_cut(r):
+    """the carrier's old dowel tabs beyond the pegs' roots go (a solid lump there hung on the carrier's 2.8 mm rail)."""
+    y0, y1, yr, zmax = _peg_geo(r)
+    return U(*[box(x - 3.7, x + 3.7, yr - 0.1, y1 + 0.1, zmax - PEG["root"][0] - 6.0, zmax - PEG["root"][0]) for (x, z) in v5.pole_xz(r)])
+
+
+def peg_slots(g, r):
+    """their slots in the cartridge: 0.2 clear a side, a 1.2 lead-in at the mouth; and the boss round each."""
+    y0, y1, yr, zmax = _peg_geo(r); yz = g["Y_ZONE"]; cut, boss = [], []
+    def at(y, x, z):                                   # the peg's section (z centre, z size, x size) at height y
+        k = min(1.0, max(0.0, (y - y0 - 1.0) / (yr - y0 - 1.0)))
+        return (z + (zmax - PEG["root"][0] / 2 - z) * k, PEG["tip"][0] + (PEG["root"][0] - PEG["tip"][0]) * k, PEG["tip"][1] + (PEG["root"][1] - PEG["tip"][1]) * k)
+    for (x, z) in v5.pole_xz(g):
+        rect = lambda y, zc, zz, xx: [[x + sx * xx / 2, y, zc + sz * zz / 2] for sx in (-1, 1) for sz in (-1, 1)]
+        a, b = at(y0, x, z), at(yz, x, z)
+        cut.append(hullp(rect(g["Y_SH0"] + 2.0, a[0], a[1] + 0.4, a[2] + 0.4) + rect(y0 - 0.6, a[0], a[1] + 0.4, a[2] + 0.4) + rect(yz + 0.01, b[0], b[1] + 0.4, b[2] + 0.4)) +   # down to a 2.0 floor, as the dowel's bore was (a solid boss under the slot is a lump)
+                   hullp(rect(yz - 1.2, b[0], b[1] + 0.4, b[2] + 0.4) + rect(yz + 0.01, b[0], b[1] + 2.8, b[2] + 2.8)))
+        s_ = 1 if x > 0 else -1
+        if PEG["boss"]: boss.append(box(*sorted((s_ * (abs(x) - b[2] / 2 - 0.2 - PEG["boss"]), s_ * (g["X_IN"] + 0.01))), g["Y_SH0"], yz, g["Z_P1"], g["Z_CW1"]))
+    return U(*cut), (U(*boss) if boss else None)
+
+
+m6.bolt_pin = _no_pin
 m6.slider, m6.cartridge, m6.heel, m6.centre_rib = slider, cartridge, heel, centre_rib
 bl.slider, bl.cartridge, bl.centre_rib = slider, cartridge, centre_rib
 v5.slider = slider
@@ -300,6 +353,12 @@ def build(pack="scout"):
     bl._CACHE.clear()
     B = m6.build(pack); set_pack(B["g"])
     B["stop"] = stop_bar(B["g"])
+    pg = pegs(B["r"]); cut, boss = peg_slots(B["g"], B["r"])
+    B["poles"] = pg; B["carrier"] = (B["carrier"] - peg_tab_cut(B["r"])) + U(*pg)
+    if boss is not None: B["cart"] = B["cart"] + (boss if B.get("clip") is None else boss ^ B["clip"])
+    B["cart"] = B["cart"] - cut
+    grow = U(*[p_.translate([dx, 0, dz]) for p_ in pg for dx in (-0.3, 0.3) for dz in (-0.3, 0.3)])
+    B["recv"] = B["recv"] - grow; B["cap"] = B["cap"] - grow
     if pack == "scout":
         B["feet"] = scout_feet(B); B["recv"] = B["recv"] + B["feet"]
     return B
@@ -359,15 +418,16 @@ def strength(B):
            "swap across 43.5 N": dict(MPa=round(rib_x(ARM["across_N"]), 2), index=idx(rib_x(ARM["across_N"]))),
            "insert + full across (the lead-ins centring it)": dict(MPa=round(rib_y(ins) + rib_x(ARM["across_N"]), 2), index=idx(rib_y(ins) + rib_x(ARM["across_N"]))),
            "full pull + full across at once (a jam: misuse class)": dict(MPa=round(rib_y(P) + rib_x(ARM["across_N"]), 2), index=idx(rib_y(P) + rib_x(ARM["across_N"]), "misuse"))}
-    # the bolts: a 35 g crash on the swap mass, half on each bolt; the pins' line on the receiver's PCTG ramp (Hertz)
+    # the bolts: a 35 g crash on the swap mass, half on each bolt; the printed nose's flat face on the receiver's 20 deg ramp
     Fc = g["SWAP_M"] / 1000 * 35 * 9.81 / 2; Es = m6.PCTG.E / (1 - 0.38 ** 2)
-    hz = lambda F, Lp: math.sqrt((F / Lp) * Es / (math.pi * m6.PIN_R))
+    hz = lambda F, Lp: math.sqrt((F / Lp) * Es / (math.pi * m6.PIN_R))       # the steel pin it replaces: a line on PCTG
+    xc_, yc_ = v5.contact(g); face = (g["X_TIP"] - xc_) / math.cos(bl.UNDER) * 2 * bl.BOLT_HZ
     W1 = g["SWAP_M"] / 1000 * 9.81 / 2
-    bolt = dict(crash_N_per_bolt=round(Fc, 0), pin_line_mm=m6.PIN_L, contact_MPa=dict(crash_35g=round(hz(Fc, m6.PIN_L), 0), flight_3g=round(hz(3 * W1, m6.PIN_L), 0),
-                                                                                          one_pin_20mm_crash=round(hz(Fc, 20.0), 0)),
+    bolt = dict(crash_N_per_bolt=round(Fc, 0), nose_face_mm2=round(face, 0),
+                contact_MPa=dict(crash_35g=round(Fc / math.cos(bl.UNDER) / face, 1), flight_3g=round(3 * W1 / math.cos(bl.UNDER) / face, 2),
+                                 steel_pins_40mm_crash=round(hz(Fc, 40.0), 0), one_pin_20mm_crash=round(hz(Fc, 20.0), 0)),
                 pctg_strength_MPa=round(m6.PCTG.Xt, 0), bar_shear_MPa=round(Fc / (2 * bl.BOLT_HZ * bl.BOLT_T), 2),
-                over_the_pin_bore_MPa=round(Fc / (m6.PIN_L * (bl.BOLT_T - 2 * m6.PIN_R + m6.PIN_DOWN)), 2),
-                index=round(max(Fc / (2 * bl.BOLT_HZ * bl.BOLT_T), Fc / (m6.PIN_L * (bl.BOLT_T - 2 * m6.PIN_R + m6.PIN_DOWN))) / (0.58 * A["misuse"]), 3))
+                index=round(max(Fc / (2 * bl.BOLT_HZ * bl.BOLT_T) / (0.58 * A["misuse"]), Fc / math.cos(bl.UNDER) / face / A["misuse"]), 3))
     out = dict(blade_pull=dict(N=round(P / 2, 1), MPa=round(s_b, 2), index=idx(s_b)), nub_pull=dict(N=round(P / 4, 1), MPa=round(s_n, 2), index=idx(s_n), root_mm=round(tn, 2)),
                foot_pull=dict(N=round(P / 4, 1), MPa=round(s_f, 2), index=idx(s_f)), rib=rib, bolt=bolt)
     out["worst_index"] = max([out[k]["index"] for k in ("blade_pull", "nub_pull", "foot_pull")] + [c["index"] for c in rib.values()] + [bolt["index"]])
@@ -561,7 +621,7 @@ OUT = {"scout": ("latch7", "latch7_"), "overseer": ("latch7_overseer", "latch7_o
 def save(B):
     g = B["g"]; pre = OUT[g["pack"]][1]
     out = {pre + "receiver": B["recv"], pre + "carrier": B["carrier"], pre + "carrier_cap": B["cap"], pre + "cartridge": B["cart"],
-           pre + "slider": slider(g, 0, 1), pre + "bolt_pin": m6.bolt_pin(g, 0, 1), pre + "stop_bar": B["stop"]}
+           pre + "slider": slider(g, 0, 1), pre + "stop_bar": B["stop"]}
     for k, m in zip("ab", sorted(B["strips"].decompose(), key=lambda m: m.bounding_box()[0])): out[f"{pre}receiver_strip_{k}"] = m
     paths = {}
     for nm, m in out.items():
@@ -620,6 +680,9 @@ def main(pack="scout"):
                      FOOT=(m6.FOOT_X1, m6.FOOT_Y, m6.FOOT_HZ), NUB=(m6.NUB_L, m6.NUB_HZ, m6.NUB_Y1), BLADE=(m6.BLADE_T, m6.BLADE_HZ, m6.BLADE_Y1),
                      REC=(bl.REC_X, bl.REC_Z), MAG=(bl.MAG_X, bl.MAG_Z), BLADE_OPEN=m6.BLADE_OPEN, PAD_X=m6.PAD_X, PAD_Z=m6.PAD_Z, PAD_T=m6.PAD_T,
                      K_BLADE=m6.K_BLADE, MU=m6.MU, SPRINGS_Z=SPRINGS_Z, SPR_Y=SPR_Y, SLOT_X1=SLOT_X1)
+    res["pull_drop_to_pin_mm"] = res["pull_drop_to_bolt_pctg_mm"]            # the printed nose is what lands on the ramp
+    res["wedge"] = dict(angle_deg=20.0, mu_pctg_pctg_E=0.3, outward_per_N_pull=round(max(0.0, math.sin(bl.UNDER) - 0.3 * math.cos(bl.UNDER)), 3),
+                        note="above mu 0.36 the nose simply stays where it is on the ramp: it is never driven inward")
     res["rest_stop_mm3_at_0.3_out"] = round(vol(slider(g, -0.3, 1) ^ B["stop"]), 3)      # > 0: the stop bar stops a bolt pushed 0.3 past rest
     res["stop_bar_mm3"] = dict(vs_cartridge=round(vol(B["stop"] ^ B["cart"]), 3), vs_bolts_at_rest=round(vol(B["stop"] ^ (slider(g, 0, 1) + slider(g, 0, -1))), 3),
                                vs_bolts_fully_in=round(vol(B["stop"] ^ (slider(g, bl.TRAVEL - 0.02, 1) + slider(g, bl.TRAVEL - 0.02, -1))), 3))
@@ -690,7 +753,7 @@ def appendix(res):
 {td("index: rib, pull / insert + full side force / full pull + full side force (a jam)", f"{rib[kp]['index']} / {rib[ki]['index']} / {rib[kj]['index']}", f"{orib[kp]['index']} / {orib[ki]['index']} / {orib[kj]['index']}")}
 </table></div>
 <p>Index 1.0 is the allowable for PCTG ({m6.ALLOW['functional']:.1f} MPa in use, {m6.ALLOW['misuse']:.1f} MPa in a jam). Hand models (E). The blade and nub are the grabber head's parts: 4.7 x 16 blade, nub 13 wide and 3.7 thick at its root, in PCTG.</p>
-<p>Springs: four on each bolt, in slots along it, bearing on the rib: {sp['preload_pair_N']} N at rest, x{sp['preload_over_inertia']} the 35 g inertia of a bolt with its two pins ({sp['slider_pin_magnet_g']} g); x{sp['one_spring_left_over_inertia']} with two of the four lost. {sp['squeezed_pair_N']} N squeezed, wire at {100 * sp['at_rib_limit']['of_uts']:.0f} % of tensile at the limit, {sp['solid_margin_mm']} mm above solid (E: the listing gives no coil count).</p>
+<p>Springs: two on each bolt, in slots along it, bearing on the rib: {sp['preload_pair_N']} N at rest, x{sp['preload_over_inertia']} the 35 g inertia of a bolt ({sp['slider_pin_magnet_g']} g, all printed); x{sp['one_spring_left_over_inertia']} with one of the two lost. {sp['squeezed_pair_N']} N squeezed, wire at {100 * sp['at_rib_limit']['of_uts']:.0f} % of tensile at the limit, {sp['solid_margin_mm']} mm above solid (E: the listing gives no coil count).</p>
 <h2>3. Holding the pack on the grabber</h2>
 <div class="t"><table><tr><th>Scout, per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th><th>pack top moves, mm</th></tr>{hold}</table></div>
 <div class="t"><table><tr><th>Overseer ({ov['swap_g']} g), per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th></tr>{ohold}</table></div>
@@ -698,7 +761,7 @@ def appendix(res):
 <!--FIT-->
 <!--BUILD-->
 <h2>4. The parts on hand</h2>
-<p>Printed parts: PCTG, the project's rule since 8 Nov (about 10 to 20 times PETG's impact toughness at 90 % of its stiffness; the PETG nodes and arms broke in testing). Heel pads and strips: TPU 95A. One dowel size, 3 x 20, does the bolt pins and the guide poles; the spring guide pins are printed.</p>
+<p>Printed parts: PCTG, the project's rule since 8 Nov (about 10 to 20 times PETG's impact toughness at 90 % of its stiffness; the PETG nodes and arms broke in testing). Heel pads and strips: TPU 95A. No steel parts: the bolt noses and the two guide pegs on the plug carrier are printed (the pegs print standing, across their layers: index about 0.6 if the full 7.6 N centring load lands on their tips, E; they enter 7.7 mm before the seat, the plug's contacts at 6.0). The only bought parts in the latch are the springs, the magnets and the XT60.</p>
 <div class="t"><table><tr><th>part</th><th>needs</th><th>has</th></tr>
 {td("gripper servo, cam opening both blades", f"{p15['cam_kgcm']} kg cm at 20 N blades, {p20['cam_kgcm']} at 25 N (scaled from the heads v7 concept, E)", f"DS3218 20 kg cm: {p15['DS3218 (on hand)']} / {p20['DS3218 (on hand)']}; MG995 9.2 kg cm: {p15['MG995 (ordered)']} / {p20['MG995 (ordered)']}")}
 {td("head stepper, NEMA 17 at 2 A on the r 8 pinion", f"insert {stp['insert_N']:.0f} N, pull {stp['pull_N']:.1f} N", f"stall {stp['stall_N']:.0f} N: {stp['margin']} / {stp['pull_margin']}")}
@@ -740,17 +803,17 @@ def strong_section(rs, ro):
     return f"""<h2>Made stronger for the larger pack (the same parts on both)</h2>
 <p>The Scout has no width to give, both packs have length, so the latch and the fingers grew along the pack.</p>
 <div class="t"><table><tr><th></th><th>before</th><th>now</th></tr>
-{td("bolt", "22 mm wide on one 3 x 20 steel pin, with a tab plate that could not be put in", "a plain bar 42 mm wide on two 3 x 20 pins end to end; slides in from outside")}
-{td("pin on the receiver's ramp in a 35 g crash, Overseer (PCTG strength " + str(so['bolt']['pctg_strength_MPa']) + " MPa)", f"{bo['one_pin_20mm_crash']:.0f} MPa", f"{bo['crash_35g']:.0f} MPa ({bo['flight_3g']:.0f} MPa at 3 g in flight)")}
+{td("bolt", "22 mm wide on one 3 x 20 steel pin, with a tab plate that could not be put in", "a plain printed bar 42 mm wide, no steel; slides in from outside")}
+{td("bolt on the receiver's ramp in a 35 g crash, Overseer (PCTG strength " + str(so['bolt']['pctg_strength_MPa']) + " MPa)", f"{bo['one_pin_20mm_crash']:.0f} MPa (a steel pin's line)", f"{bo['crash_35g']} MPa (the printed nose's flat face, {so['bolt']['nose_face_mm2']:.0f} mm&sup2;)")}
 {td("finger", "blade 16 mm wide, one hook 13 wide", "blade 34 mm wide, two hooks 9 wide, 25 mm apart")}
 {td("rib that the hooks pull on", "4 x 11.5, feet 18 long, two spring notches", "feet wall to wall, ends gusseted, no spring notch")}
-{td("springs per cartridge / over the 35 g inertia of a bolt: Scout, Overseer", f"2 / x{ps['spring']}, x{po['spring']}", f"8 / x{rs['spring']['preload_over_inertia']}, x{ro['spring']['preload_over_inertia']}")}
+{td("springs per cartridge / over the 35 g inertia of a bolt: Scout, Overseer", f"2 / x{ps['spring']}, x{po['spring']}", f"4 / x{rs['spring']['preload_over_inertia']}, x{ro['spring']['preload_over_inertia']}")}
 {td("index nub / foot / blade / rib at the XT60 pull-out: Scout", f"{ps['nub']} / {ps['foot']} / {ps['blade']} / {ps['rib']}", ix(ss))}
 {td("the same: Overseer", f"{po['nub']} / {po['foot']} / {po['blade']} / {po['rib']}", ix(so))}
 {td("worst index anywhere: Scout, Overseer", "0.72, 0.60", f"{ss['worst_index']}, {so['worst_index']}")}
-{td("blade force asked of the head", "15 N", "25 N (four latch springs on each bolt to beat; DS3218 " + rs['audit']['parts']['25 N blades']['DS3218 (on hand)'] + ", MG995 " + rs['audit']['parts']['25 N blades']['MG995 (ordered)'] + ")")}
+{td("blade force asked of the head", "15 N", "25 N (DS3218 " + rs['audit']['parts']['25 N blades']['DS3218 (on hand)'] + ", MG995 " + rs['audit']['parts']['25 N blades']['MG995 (ordered)'] + ")")}
 {td("hold at 3 g, pads stay down / no slip: Scout, Overseer", f"x{ps['hold3g'][0]} / x{ps['hold3g'][1]}, x{po['hold3g'][0]} / x{po['hold3g'][1]} (at 15 N)", f"{h3(rs, 25.0)}, {h3(ro, 25.0)} (at 25 N)")}
-{td("bought parts per cartridge", "2 springs, 2 dowels, 2 magnets", "8 springs, 4 dowels, 2 magnets (the same spring and dowel), and one printed stop bar")}
+{td("bought parts per cartridge", "2 springs, 2 dowels, 2 magnets", "4 springs and 2 magnets; no dowels. Printed: one stop bar, 4 spring guide pins")}
 {td("slider with its pins / cartridge, Scout", "3.4 g / 39.5 g", f"{rs['spring']['slider_pin_magnet_g']} g / {rs['mass_g']['latch7_cartridge']} g")}
 </table></div>
 <p>Below x1 on "pads stay down" the pack does not come off: the hooks hold it positively and lock on their wedges; it only stops being pressed tight. Hand models (E); the receiver's wider bolt pockets have not been through FE.</p>
@@ -855,14 +918,14 @@ def build_check(B):
     bolts = m6.moving(g, 0, 1) + m6.moving(g, 0, -1)
     sweep = lambda body, d, fixed, n=60, step=0.5: round(max(vol(body.translate([d[0] * k * step, d[1] * k * step, d[2] * k * step]) ^ fixed) for k in range(n + 1)), 3)
     steps = []
-    steps.append(dict(step="1 two dowels into each bolt's bore, a magnet into its underside", how="by hand, before the bolt goes in; the bore opens on the bolt's side", mm3=None, ok=True))
+    steps.append(dict(step="1 a magnet into each bolt's underside", how="pressed in by hand, before the bolt goes in", mm3=None, ok=True))
     v = sweep(m6.moving(g, 0, 1), (1, 0, 0), cart + m6.moving(g, 0, -1))
     v2 = sweep(m6.moving(g, 0, 1), (1, 0, 0), cart + m6.moving(g, 0, -1) + pack)
     steps.append(dict(step="2 each bolt in through its wall hole, from outside", how="straight in, 30 mm swept; also with the pack already in", mm3=max(v, v2), ok=bool(max(v, v2) < 0.05)))
     v = sweep(B["stop"], (0, 1, 0), B["cart"] + slider(g, 0, 1) + slider(g, 0, -1), n=40)
     steps.append(dict(step="3 stop bar down across the rib, into both bolts", how="straight down from above, 20 mm swept, bolts held at rest", mm3=v, ok=bool(v < 0.05)))
     Lr = SLOT_X1 - bl.RIB_HX
-    steps.append(dict(step="4 eight springs, each with its guide pin, into the bolts' slots", how="squeezed to %.1f mm and dropped in from above (slot %.1f wide, spring %.1f)" % (Lr, 2 * bl.SPR_R, m6.SPR["od"]),
+    steps.append(dict(step="4 four springs, each with its guide pin, into the bolts' slots", how="squeezed to %.1f mm and dropped in from above (slot %.1f wide, spring %.1f)" % (Lr, 2 * bl.SPR_R, m6.SPR["od"]),
                       mm3=None, ok=bool(2 * bl.SPR_R > m6.SPR["od"] and Lr > (m6.SPR["n_active"] + 2) * m6.SPR["d"])))
     v = sweep(pack, (0, 1, 0), B["cart"] + B["stop"] + bolts, n=40)
     steps.append(dict(step="5 pack down into the cartridge (over the bolts, springs and stop bar)", how="straight down, 20 mm swept (the 0.6 keeper lips snap over it, not counted)", mm3=v, ok=True, note="lips overlap %.1f mm3 by design" % v))
