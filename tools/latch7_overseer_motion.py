@@ -88,10 +88,11 @@ def poses_at(t):
     s = state(t)
     C = group(s)
     sp = np.diag([(L0 - 2 * s["rho"]) / L0, 1, 1, 1.0])
+    kk = (L0 - s["rho"]) / L0; spp = tr(2, 0, 0) @ np.diag([kk, 1, 1, 1.0]) @ tr(-2, 0, 0); spn = tr(-2, 0, 0) @ np.diag([kk, 1, 1, 1.0]) @ tr(2, 0, 0)
     Bm = tr(0, 0, s["bz"]) @ rot("x", s["pitch"]) @ rot("y", s["roll"]) if s["held"] else tr(0, 0, s["bz"])
-    return {"cartridge": C, "cartridge strip px": C, "cartridge strip nx": C, "pack": C, "xt60 female": C,
+    return {"cartridge": C, "stop bar": C, "cartridge strip px": C, "cartridge strip nx": C, "pack": C, "xt60 female": C,
             "slider p": C @ tr(-s["rho"], 0, 0), "slider n": C @ tr(s["rho"], 0, 0),
-            "bolt pin p": C @ tr(-s["rho"], 0, 0), "bolt pin n": C @ tr(s["rho"], 0, 0), "spring a": C @ sp, "spring b": C @ sp, "spring c": C @ sp, "spring d": C @ sp, "spring pin a": C, "spring pin b": C, "spring pin c": C, "spring pin d": C,
+            "bolt pin p": C @ tr(-s["rho"], 0, 0), "bolt pin n": C @ tr(s["rho"], 0, 0), **{f"spring {k}": C @ spp for k in "abcd"}, **{f"spring {k}": C @ spn for k in "efgh"}, **{f"spring pin {k}": C for k in "abcdefgh"},
             "blade p": Bm @ tr(-s["u"], 0, 0), "blade n": Bm @ tr(s["u"], 0, 0), "heel deck": Bm, "heel pads": Bm}
 
 
@@ -123,7 +124,7 @@ def timeline(a):
     series = [("cartridge below the seat", [s["d"] + s["drop"] for s in st], "mm"),
               ("bolt travel (lead-in cam or blades; 3.3 unlatches, 4.9 = tab on the rib)", [s["rho"] for s in st], "mm"),
               ("steel pin engagement past the receiver's locating face", [max(0.0, OVERLAP - s["rho"]) for s in st], "mm"),
-              ("spring force, all four springs", [4 * KS * (FREE - (L0 - 2 * s["rho"])) for s in st], "N"),
+              ("spring force on each bolt (its four springs)", [4 * KS * (FREE - (L0 - s["rho"])) for s in st], "N"),
               ("nub above its wedge foot (0 = tight, drawing the cartridge onto the pads)", [max(0.0, (STROKE - s["u"]) * TAN) if s["bz"] - (-s["d"]) > -1 or s["held"] else 0.0 for s in st], "mm"),
               ("heel pad load at 25 N blades (preload - what gravity takes off)", [h[2] for h in H], "N"),
               ("grip hold: pads stay down, margin at 1 g (25 N blades)", [h[0] for h in H], "x"),

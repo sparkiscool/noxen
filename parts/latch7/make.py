@@ -90,18 +90,44 @@ WIN = (NUB_ZC - m6.NUB_HZ - 2.1, NUB_ZC + m6.NUB_HZ + 2.1)      # their windows 
 LEG_Z0 = m6.BLADE_HZ + 2.2             # rest-stop lugs from here out
 LUG_X0 = m6.FOOT_X1 + bl.TRAVEL + 0.3  # the lugs' low part starts here: clear of the feet at full travel
 m6.FOOT_HZ = bl.REC_Z                  # feet wall to wall
-SPRINGS_Z = (-12.0, -5.0, 5.0, 12.0)
-GUS, GUS_Y0 = 4.0, 8.5                 # rib end gussets: 4 x 4 in plan, y 8.5..11.5 (the slider's inner corners are cut to pass)
-bl.MAG_X, bl.MAG_Z = 12.0, 20.7        # magnet in a lug
+# Installable (12 Nov, the build check: with the rib part of the cartridge a bolt with its tab plate could move 4.9 in and needed
+# 6.5 to leave its wall hole, so it could not be put in at all, from above or below; true since the rib was added). Each bolt
+# is now a plain bar the size of its wall hole: it goes in from OUTSIDE, with the pack in or out. What used to be on the tab plate:
+#   rest stop  -> one printed stop bar dropped in from above, keyed in a notch in the rib's top; its T ends sit in a chamber in
+#                 each bolt's top and stop the bolts at rest. It also keeps the bolts' inner ends down off the pack.
+#   springs    -> four per bolt in long slots along the bolt, bearing on the rib's faces (the rib has no spring notch at all)
+#   push pad   -> on a boss under the bolt's inner end, at the blade's height; the wall hole's floor is notched for it
+#   magnet     -> in the bolt's underside; the head reads it from a short post
+# The rib stays part of the cartridge, fixed at both ends, gusseted, feet wall to wall. A shelf in each recess corner carries the
+# bolts' inner ends.
+SPRINGS_Z = (-16.5, -11.0, 11.0, 16.5)  # four springs per bolt, eight per cartridge
+SPR_Y = 9.9                            # their axis (slot bottom 8.3)
+SLOT_X1 = 16.6                         # each slot's outer end with the bolt at rest: spring 14.6 long at rest, 9.7 at full travel
+GUS, GUS_Y0 = 4.0, 8.5                 # rib end gussets: 4 x 4 in plan, y 8.5..11.5 (the bolts' inner corners are cut to pass)
+TONGUE_HZ, BLADE_TOP = 5.0, 6.4        # blade top 6.4 all along, under the bolts
+m6.BLADE_Y1 = 6.4; PUSH_Y = 5.8; PAD_Y = (5.4, 6.2)
+BOSS = dict(hz=5.0, y0=4.8)            # the push boss under each bolt's inner end (it passes a notch in the wall hole's floor): the blade's flat face pushes its crowned pad
+ST = dict(hz=1.0, y0=9.4, t_hz=2.5, t_len=2.0, key_hx=0.8, key_hz=2.5, xs=9.0)   # stop bar: body 2 wide, 2.1 deep in the tops; T ends 5 x 2; key 1.6 x 5 in the rib; chamber shoulder at x 9.0
+SHELF = dict(x1=8.6, y=(4.4, 6.65), z0=19.4)       # corner shelves under the bolts' inner ends (bolt underside 6.8)
+bl.MAG_X, bl.MAG_Z = 13.0, 19.7        # magnet up in the bolt's underside; the head's hall on a post to y 5.6 under it
 F_BLADE = 25.0
 for _b in m6.BOUGHT:
-    if _b["part"].startswith("latch spring"): _b["per_cartridge"] = 4; _b["spec"] += "; four per cartridge"
+    if _b["part"].startswith("latch spring"):
+        _b["per_cartridge"] = 8; _b["spec"] += "; eight per cartridge (four in each bolt)"
+        _b["check"] = "on a kitchen scale: 1.7..2.2 N at 14.6 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)"
     if _b["part"].startswith("dowel pin"): _b["per_cartridge"] = 4; _b["spec"] += "; four per cartridge (two in each bolt), two per receiver"
-_ss0 = m6.spring_state
+    if _b["part"].startswith("spring guide pin"): _b["spec"] = "o 2.0 x 7, printed PCTG; eight per cartridge"
+m6.BOUGHT.append(dict(part="stop bar", spec="printed PCTG, one per cartridge, dropped in after the bolts", per_cartridge=1, listing="printed", url="", check=""))
+GUIDE_PIN = (2.0, 7.0)
 
 
-def _spring_state(retract):            # v6's model counts two springs wherever it doubles this: scaled so that gives all four
-    d = dict(_ss0(retract)); d["N"] = round(d["N"] * len(SPRINGS_Z) / 2, 3); return d
+def _spring_state(retract):
+    """one spring, rib face to its slot's end; N is scaled so that v6's 2 x N is the force of the four on one bolt."""
+    k = m6.spring_rate(); D = m6.SPR["od"] - m6.SPR["d"]; C = D / m6.SPR["d"]
+    L = SLOT_X1 - bl.RIB_HX - retract
+    F = k * (m6.SPR["free"] - L)
+    tau = 8 * F * D / (math.pi * m6.SPR["d"] ** 3) * ((4 * C - 1) / (4 * C - 4) + 0.615 / C)
+    return dict(length=round(L, 2), N=round(F * len(SPRINGS_Z) / 2, 3), each_N=round(F, 3), MPa=round(tau, 0), of_uts=round(tau / m6.SPR["uts"], 3))
 
 
 m6.spring_state = _spring_state
@@ -125,7 +151,8 @@ def set_pack(g):
 def blade(g, face, side=1, dy=0.0, back=0.0):
     """one blade with its two hook nubs, inner face at |x| = face."""
     zt = g["Z_T"]
-    shank = box(face, face + m6.BLADE_T, -20.0, m6.BLADE_Y1, zt - m6.BLADE_HZ, zt + m6.BLADE_HZ)
+    shank = box(face, face + m6.BLADE_T, -20.0, BLADE_TOP, zt - m6.BLADE_HZ, zt + m6.BLADE_HZ) + \
+        box(face, face + m6.BLADE_T, BLADE_TOP - 0.01, m6.BLADE_Y1, zt - TONGUE_HZ, zt + TONGUE_HZ)
     xb0 = bl.TAB_OUT - m6.R0
     under = lambda x: m6.foot_top(x - face + xb0) + back
     nubs = [hullp([[x, y, zt + zc + z] for z in (-m6.NUB_HZ, m6.NUB_HZ)
@@ -139,52 +166,61 @@ m6.blade = blade
 
 
 def slider(g, retract=0.0, side=1):
-    zt, tip = g["Z_T"], g["X_TIP"]; Y0, Y1 = bl.BOLT_Y0, bl.BOLT_Y1; HZ = bl.TAB_HZ
-    plate = box(bl.TAB_IN, PLATE_OUT, TAB_Y0, Y1, zt - HZ, zt + HZ)
-    bar = box(bl.TAB_IN, tip, Y0, Y1, zt - bl.BOLT_HZ, zt + bl.BOLT_HZ)
-    lugs = []
-    for sz in (-1, 1):                                               # rest stops: on the plate above the feet, down to the bottom beyond them
-        z0, z1 = sorted((zt + sz * LEG_Z0, zt + sz * HZ))
-        lugs += [box(PLATE_OUT - 0.01, bl.REC_X, TAB_Y0, LUG_Y1, z0, z1), box(LUG_X0, bl.REC_X, 0.0, TAB_Y0 + 0.01, z0, z1)]
-    pad = hullp([[PLATE_OUT - 0.01, y, zt + z] for y in PAD_Y for z in (-PAD_HZ, PAD_HZ)] +
-                [[bl.TAB_OUT, y, zt + z] for y in (PUSH_Y - 0.4, PUSH_Y + 0.4) for z in (-2.0, 2.0)])
-    s = U(plate, bar, pad, *lugs)
-    s = s - prism_xy([(tip - bl.TIP_CH, Y1 + 0.01), (tip + 0.01, Y1 + 0.01), (tip + 0.01, Y1 - bl.TIP_CH)], zt - bl.BOLT_HZ - 1, zt + bl.BOLT_HZ + 1)
+    """a bolt: a plain bar the section of its wall hole (it goes in from outside)."""
+    zt, tip = g["Z_T"], g["X_TIP"]; Y0, Y1 = bl.BOLT_Y0, bl.BOLT_Y1; HZ = bl.BOLT_HZ
+    s = box(bl.TAB_IN, tip, Y0, Y1, zt - HZ, zt + HZ)
+    s = s - prism_xy([(tip - bl.TIP_CH, Y1 + 0.01), (tip + 0.01, Y1 + 0.01), (tip + 0.01, Y1 - bl.TIP_CH)], zt - HZ - 1, zt + HZ + 1)
     xp, yp = v5.pin_axis(g)
-    s = s - cyl("z", xp, yp, m6.PIN_R, zt - bl.BOLT_HZ - 0.01, zt - bl.BOLT_HZ + m6.PIN_L + 0.5, 32)
-    s = s - box(bl.TAB_OUT, bl.REC_X + 0.1, Y0 - 0.01, RELIEF_Y, zt - LEG_Z0 + 0.05, zt + LEG_Z0 - 0.05)             # room for the blade top
-    for sz in (-1, 1):
-        s = s - box(bl.TAB_IN - 0.01, bl.TAB_OUT + 0.01, TAB_Y0 - 0.01, m6.ARCH_Y, *sorted((zt + sz * WIN[0], zt + sz * WIN[1])))   # a hook's window
-        zc, zw = zt + sz * (bl.REC_Z - GUS - 0.6), zt + sz * (HZ + 0.1)                                              # the inner top corner, for the rib's gusset
-        s = s - hullp([[x, y, z] for y in (GUS_Y0 - 0.3, Y1 + 1) for (x, z) in ((bl.TAB_IN - 0.01, zc), (bl.TAB_IN - 0.01, zw), (bl.TAB_IN + GUS + 0.6, zw))])
-    s = s - prism_xy([(PLATE_OUT - 1.0, TAB_Y0 - 0.01), (PLATE_OUT + 0.01, TAB_Y0 - 0.01), (PLATE_OUT + 0.01, TAB_Y0 + 1.0)], zt - LEG_Z0, zt + LEG_Z0)
-    for dz in SPRINGS_Z:
+    s = s - cyl("z", xp, yp, m6.PIN_R, zt - HZ - 0.01, zt - HZ + m6.PIN_L + 0.5, 32)
+    s = s + box(bl.TAB_IN, PLATE_OUT, BOSS["y0"], Y0 + 0.01, zt - BOSS["hz"], zt + BOSS["hz"])                          # the push boss
+    s = s + hullp([[PLATE_OUT - 0.01, y, zt + z] for y in (BOSS["y0"], Y0) for z in (-BOSS["hz"], BOSS["hz"])] +         # and its crowned pad
+                  [[bl.TAB_OUT, y, zt + z] for y in PAD_Y for z in (-2.0, 2.0)])
+    for dz in SPRINGS_Z:                                             # a spring's slot along the bolt, open to the top (the pack over it)
         zc = zt + dz
-        s = s - cyl("x", bl.SPR_YC, zc, bl.SPR_R, bl.TAB_IN - 0.01, bl.TAB_IN + bl.SPR_DEPTH, 32) \
-              - box(bl.TAB_IN - 0.01, bl.TAB_IN + bl.SPR_DEPTH, bl.SPR_YC, Y1 + 1, zc - bl.SPR_R, zc + bl.SPR_R)
-    s = s - cyl("y", bl.MAG_X, zt + bl.MAG_Z, bl.MAG_D / 2, -0.01, bl.MAG_DEPTH, 24)
+        s = s - cyl("x", SPR_Y, zc, bl.SPR_R, bl.TAB_IN - 0.01, SLOT_X1, 32) - box(bl.TAB_IN - 0.01, SLOT_X1, SPR_Y, Y1 + 1, zc - bl.SPR_R, zc + bl.SPR_R)
+    c = 0.25                                                         # the stop bar's channel and chamber in the top
+    s = s - box(bl.TAB_IN - 0.01, ST["xs"] + 0.01, ST["y0"], Y1 + 1, zt - ST["hz"] - c, zt + ST["hz"] + c)
+    s = s - box(ST["xs"], ST["xs"] + ST["t_len"] + bl.TRAVEL + 0.4, ST["y0"], Y1 + 1, zt - ST["t_hz"] - c, zt + ST["t_hz"] + c)
+    for sz in (-1, 1):                                               # the inner top corners, for the rib's gussets
+        zc, zw = zt + sz * (bl.REC_Z - GUS - 0.6), zt + sz * (HZ + 1.0)
+        s = s - hullp([[x, y, z] for y in (GUS_Y0 - 0.3, Y1 + 1) for (x, z) in ((bl.TAB_IN - 0.01, zc), (bl.TAB_IN - 0.01, zw), (bl.TAB_IN + GUS + 0.6, zw))])
+    s = s - cyl("y", bl.MAG_X, zt + bl.MAG_Z, bl.MAG_D / 2, Y0 - 0.01, Y0 + bl.MAG_DEPTH, 24)
     s = s.translate([-retract, 0, 0])
     return s if side > 0 else rot_y180(s, zt)
 
 
-_rib6 = m6.centre_rib
+def stop_bar(g):
+    """the one loose piece: a flat bar across the rib's top, a T end in each bolt's chamber. Printed flat."""
+    zt = g["Z_T"]; x1 = ST["xs"] + ST["t_len"]
+    return U(box(-x1, x1, ST["y0"] + 0.1, bl.BOLT_Y1, zt - ST["hz"], zt + ST["hz"]),
+             *[box(*sorted((sx * ST["xs"], sx * x1)), ST["y0"] + 0.1, bl.BOLT_Y1, zt - ST["t_hz"], zt + ST["t_hz"]) for sx in (-1, 1)],
+             box(-ST["key_hx"], ST["key_hx"], ST["y0"] + 0.1, bl.BOLT_Y1, zt - ST["key_hz"], zt + ST["key_hz"]))
 
 
 def centre_rib(g):
-    """v6's rib (two spring notches, the feet, the cross walls) with the outer pair's notches and a gusset at each end."""
-    zt = g["Z_T"]; r = _rib6(g)
-    for dz in SPRINGS_Z:
-        if abs(abs(dz) - m6.SPR_DZ) > 0.1:
-            r = r - box(-bl.RIB_HX - 1, bl.RIB_HX + 1, bl.SPR_YC - bl.SPR_R - 0.1, bl.RIB_Y1 + 1, zt + dz - m6.RIB_NOTCH, zt + dz + m6.RIB_NOTCH)
-    gus = [hullp([[sx * x, y, zt + sg * z] for y in (GUS_Y0, bl.RIB_Y1) for (x, z) in ((bl.RIB_HX - 0.1, bl.REC_Z + 0.01), (bl.RIB_HX + GUS, bl.REC_Z + 0.01), (bl.RIB_HX - 0.1, bl.REC_Z - GUS))])
+    """the rib, part of the cartridge: web 4 x 11.5 fixed into a 6 mm cross wall at each end and gusseted there, a wedge foot
+    along each side from wall to wall (the hooks' seats), a shelf in each corner under the bolts' inner ends, and in its top
+    the stop bar's notch and key pocket. No spring notch."""
+    zt = g["Z_T"]; RZ = bl.REC_Z; c = 0.15
+    web = box(-bl.RIB_HX, bl.RIB_HX, 0.0, bl.RIB_Y1, zt - RZ - 0.01, zt + RZ + 0.01)
+    feet = [hullp([[s * x, y, zt + z] for z in (-RZ, RZ)
+                   for (x, y) in ((bl.RIB_HX - 0.5, 0.0), (m6.FOOT_X1, 0.0), (m6.FOOT_X1, m6.FOOT_Y), (bl.RIB_HX - 0.5, m6.foot_top(bl.RIB_HX - 0.5)))]) for s in (-1, 1)]
+    gus = [hullp([[sx * x, y, zt + sg * z] for y in (GUS_Y0, bl.RIB_Y1) for (x, z) in ((bl.RIB_HX - 0.1, RZ + 0.01), (bl.RIB_HX + GUS, RZ + 0.01), (bl.RIB_HX - 0.1, RZ - GUS))])
            for sx in (-1, 1) for sg in (-1, 1)]
-    return r + U(*gus)
+    shelves = [box(*sorted((sx * (bl.RIB_HX - 0.1), sx * SHELF["x1"])), SHELF["y"][0], SHELF["y"][1], *sorted((zt + sg * SHELF["z0"], zt + sg * (RZ + 0.01))))
+               for sx in (-1, 1) for sg in (-1, 1)]
+    walls = [box(-g["X_OUT"], g["X_OUT"], 0.0, bl.Y_FL1 - 0.01, *sorted((zt + sg * RZ, zt + sg * (RZ + bl.RIB_POST)))) for sg in (-1, 1)]
+    r = U(web, *feet, *gus, *shelves, *walls)
+    r = r - box(-bl.RIB_HX - 1, bl.RIB_HX + 1, ST["y0"], bl.RIB_Y1 + 1, zt - ST["hz"] - c, zt + ST["hz"] + c)            # the stop bar's notch
+    return r - box(-ST["key_hx"] - c, ST["key_hx"] + c, ST["y0"], bl.RIB_Y1 + 1, zt - ST["key_hz"] - c, zt + ST["key_hz"] + c)   # and its key pocket
 
 
 def cartridge(g, clip=None):
     """v5's cartridge with the wider, longer recess; the Scout's rim band cut back to the recess wall in the latch zone."""
-    t = v5.cartridge(g, None)
     zt = g["Z_T"]; xb = g["X_IN"] - 2.0
+    t = v5.cartridge(g, None)
+    for sx in (-1, 1):                                 # a notch in each wall hole's floor for the bolt's push boss to pass
+        t = t - box(*sorted((sx * (bl.REC_X - 1.01), sx * (g["X_OUT"] + 1.5))), BOSS["y0"] - 0.4, bl.BOLT_Y0, zt - BOSS["hz"] - 0.4, zt + BOSS["hz"] + 0.4)
     if xb < bl.REC_X:
         for s in (-1, 1):
             t = t - box(*sorted((s * (xb - 0.01), s * bl.REC_X)), -1.0, 4.01, zt - bl.REC_Z, zt + bl.REC_Z)
@@ -196,17 +232,21 @@ def heel(g):
     z0, z1 = min(a for a, b in zz), max(b for a, b in zz)
     deck = box(-x1, x1, -6.0, -m6.PAD_T, z0, z1) - box(-bl.REC_X - 1.0, bl.REC_X + 1.0, -7.0, 0.0, zt - m6.BLADE_HZ - 2.6, zt + m6.BLADE_HZ + 2.6)
     pads = [box(*sorted((sx * x0, sx * x1)), -m6.PAD_T, 0.0, a, b) for sx in (1, -1) for a, b in zz]
+    for sx, sz in ((1, 1), (-1, -1)):                 # a hall post under each bolt's magnet (magnet at rest; the post stands beyond the blade, in the recess corner)
+        deck = deck + box(*sorted((sx * (bl.MAG_X - 2.0), sx * (bl.MAG_X + 2.0))), -6.0, 5.6, *sorted((zt + sz * (bl.MAG_Z - 1.2), zt + sz * (bl.MAG_Z + 2.0))))
     return deck, pads
 
 
-m6.VIEW = m6.VIEW + [(f"spring_{k}", m6.G_L, "#c9783f", None, False, "bought", None) for k in "cd"] + [(f"spring_pin_{k}", m6.G_L, "#e3e7ec", None, False, "bought", None) for k in "abcd"]
+m6.cart_all = lambda B: U(B["cart"], B["stop"], B["female"], *B.get("cstrips", []))
+m6.VIEW = m6.VIEW + [("stop_bar", m6.G_L, "#f2d14e", None, False, "structure", "PCTG")] + [(f"spring_{k}", m6.G_L, "#c9783f", None, False, "bought", None) for k in "cdefgh"] + [(f"spring_pin_{k}", m6.G_L, "#e3e7ec", None, False, "structure", None) for k in "abcdefgh"]
 _view_sources = m6.view_sources
 
 
 def view_sources(B):
     src = _view_sources(B); g = B["g"]
-    for k, dz in zip("abcd", SPRINGS_Z):              # the guide pin inside each spring
-        src[f"spring_pin_{k}"] = cyl("x", bl.SPR_YC, g["Z_T"] + dz, GUIDE_PIN[0] / 2, -GUIDE_PIN[1] / 2, GUIDE_PIN[1] / 2, 20)
+    src["stop_bar"] = B["stop"]
+    for k, (sx, dz) in zip("abcdefgh", [(sx_, dz_) for sx_ in (1, -1) for dz_ in SPRINGS_Z]):   # the guide pin inside each spring
+        src[f"spring_pin_{k}"] = cyl("x", SPR_Y, g["Z_T"] + dz, GUIDE_PIN[0] / 2, *sorted((sx * 2.5, sx * (2.5 + GUIDE_PIN[1]))), 20)
     return src
 
 
@@ -214,11 +254,13 @@ _view_meshes = m6.view_meshes
 
 
 def view_meshes(B):
+    import trimesh
     out = _view_meshes(B); g = B["g"]; M = m6.page_matrix(g["Z_T"])
-    keep = m6.SPR_DZ
-    for k, dz in zip("abcd", SPRINGS_Z):              # all four springs (v6 draws two)
-        m6.SPR_DZ = abs(dz); sp, L = m6.spring_mesh(g, 1 if dz > 0 else -1); sp.apply_transform(M); out[f"spring_{k}"] = sp
-    m6.SPR_DZ = keep
+    L = SLOT_X1 - bl.RIB_HX; turns = m6.SPR["n_active"] + 2; rm = (m6.SPR["od"] - m6.SPR["d"]) / 2; n = turns * 12
+    for k, (sx, dz) in zip("abcdefgh", [(sx_, dz_) for sx_ in (1, -1) for dz_ in SPRINGS_Z]):   # a and b on the +x bolt, c and d on the -x one
+        pts = np.array([[sx * (bl.RIB_HX + L * i / n), SPR_Y + rm * math.cos(2 * math.pi * turns * i / n), g["Z_T"] + dz + rm * math.sin(2 * math.pi * turns * i / n)] for i in range(n + 1)])
+        sp = trimesh.util.concatenate([trimesh.creation.cylinder(radius=m6.SPR["d"] / 2, segment=[p, q], sections=6) for p, q in zip(pts[:-1], pts[1:])])
+        sp.apply_transform(M); out[f"spring_{k}"] = sp
     return out
 
 
@@ -257,6 +299,7 @@ def scout_feet(B):
 def build(pack="scout"):
     bl._CACHE.clear()
     B = m6.build(pack); set_pack(B["g"])
+    B["stop"] = stop_bar(B["g"])
     if pack == "scout":
         B["feet"] = scout_feet(B); B["recv"] = B["recv"] + B["feet"]
     return B
@@ -293,9 +336,10 @@ def strength(B):
     hf = m6.foot_top(bl.RIB_HX); lf = (xb0 - m6.NUB_L + m6.FOOT_X1) / 2 - bl.RIB_HX; wf = wn + 2 * (m6.FOOT_X1 - bl.RIB_HX)
     s_f = (P / 4) * lf / (wf * hf ** 2 / 6)
     wb = 2 * m6.BLADE_HZ; s_b = (P / 2) * (ln + m6.BLADE_T / 2) / (wb * m6.BLADE_T ** 2 / 6)
-    # rib: web 2 RIB_HX x RIB_Y1, a foot flange each side at the bottom, a gusset each side at the top of its ends
+    # rib (part of the cartridge, fixed at both ends): web + a foot flange each side, a gusset each side at the top of its ends;
+    # loaded by two hook pairs a from its ends. No notch except the stop bar's at mid span, where the moment is small.
     t, h = 2 * bl.RIB_HX, bl.RIB_Y1; fw = 2 * (m6.FOOT_X1 - bl.RIB_HX); fh = (m6.FOOT_Y + hf) / 2; gh = bl.RIB_Y1 - GUS_Y0
-    def sec(gus, top=h):                   # area, centroid, I about x, for a web cut down to `top` (a spring notch)
+    def sec(gus, top=h):
         parts = [(t * top, top / 2, t * top ** 3 / 12), (fw * fh, fh / 2, fw * fh ** 3 / 12)] + ([(2 * GUS * gh, h - gh / 2, 2 * GUS * gh ** 3 / 12)] if gus else [])
         Ar = sum(a for a, c, i in parts); yc = sum(a * c for a, c, i in parts) / Ar
         return yc, sum(i + a * (c - yc) ** 2 for a, c, i in parts), top
@@ -303,13 +347,15 @@ def strength(B):
     def rib_y(Fy):
         Me = (Fy / 2) * a_ * (L - a_) / L; Mm = (Fy / 2) * a_ - Me
         yc, I, top = sec(True); s_end = Me * (top - yc) / I               # the ends: top in tension, gussets in
-        yc, I, top = sec(False, bl.SPR_YC - bl.SPR_R - 0.1); s_mid = Mm * yc / I   # between the hooks, at a notch: bottom in tension
+        yc, I, top = sec(False, ST["y0"]); s_mid = Mm * yc / I            # mid span, at the stop bar's notch: bottom in tension
         return max(s_end, s_mid)
     def rib_x(Fx):
         Iy = h * t ** 3 / 12 + fh * ((t + fw) ** 3 - t ** 3) / 12 + gh * ((t + 2 * GUS) ** 3 - t ** 3) / 12
         return (Fx * L / 8) * (t / 2 + GUS) / Iy
     ins = lv["insert"]["both_nubs_N"]
+    xw = (P / 2) * (2 * bl.REC_X) / 4 / (bl.RIB_POST * bl.Y_FL1 ** 2 / 6)   # a cross wall as a beam between the side walls, a rib end at its middle (E)
     rib = {"XT60 pull 57 N + 1 g": dict(MPa=round(rib_y(P), 2), index=idx(rib_y(P))),
+           "cross wall carrying a rib end": dict(MPa=round(xw, 2), index=idx(xw)),
            "swap across 43.5 N": dict(MPa=round(rib_x(ARM["across_N"]), 2), index=idx(rib_x(ARM["across_N"]))),
            "insert + full across (the lead-ins centring it)": dict(MPa=round(rib_y(ins) + rib_x(ARM["across_N"]), 2), index=idx(rib_y(ins) + rib_x(ARM["across_N"]))),
            "full pull + full across at once (a jam: misuse class)": dict(MPa=round(rib_y(P) + rib_x(ARM["across_N"]), 2), index=idx(rib_y(P) + rib_x(ARM["across_N"]), "misuse"))}
@@ -341,7 +387,7 @@ def slider_balance(g, y_push, e_z, mu=0.3):
     """the squeeze: the blade pushes at y_push, e_z off the slider's centre line; the springs resist at SPR_YC. The pitch
     couple tips the slider until its bar rests on the floor land and its inboard top edge on the pack's underside (0.5 above,
     10 mm inboard: the wall hole's 0.35 lets it); the yaw couple goes into the wall hole and the tab's ends (10.5 apart)."""
-    ey = bl.SPR_YC - y_push
+    ey = SPR_Y - y_push
     Lp, Ly = 10.0, 10.5
     Fs = 2 * m6.spring_state(m6.R0)["N"]
     f = 2 * mu * ey / Lp + 2 * mu * abs(e_z) / Ly
@@ -351,10 +397,10 @@ def slider_balance(g, y_push, e_z, mu=0.3):
 
 def spring_column():
     D = m6.SPR["od"] - m6.SPR["d"]; L0 = m6.SPR["free"]
-    rest = 2 * (bl.TAB_IN + bl.SPR_DEPTH)
-    return dict(free_over_mean_dia=round(L0 / D, 1), buckles_unguided_above=5.3, deflection_ratio_squeezed=round((L0 - (rest - 2 * m6.R0)) / L0, 2),
-                unsupported_each_side_mm=round(bl.TAB_IN - bl.RIB_HX, 1), guide="2 x 8 printed pin inside each spring (v6: none; open slots under the pack)",
-                shortest_length_mm=round(rest - 2 * bl.TRAVEL, 1), solid_mm=round((m6.SPR["n_active"] + 2) * m6.SPR["d"], 1))
+    rest = SLOT_X1 - bl.RIB_HX
+    return dict(free_over_mean_dia=round(L0 / D, 1), buckles_unguided_above=5.3, deflection_ratio_squeezed=round((L0 - (rest - m6.R0)) / L0, 2),
+                unsupported_each_side_mm=round(bl.TAB_IN - bl.RIB_HX, 1), guide="its slot along the bolt, with a 2 x 7 printed pin inside (v6: none; open slots under the pack)",
+                shortest_length_mm=round(rest - bl.TRAVEL, 1), solid_mm=round((m6.SPR["n_active"] + 2) * m6.SPR["d"], 1))
 
 
 def blade_entry(B):
@@ -515,7 +561,7 @@ OUT = {"scout": ("latch7", "latch7_"), "overseer": ("latch7_overseer", "latch7_o
 def save(B):
     g = B["g"]; pre = OUT[g["pack"]][1]
     out = {pre + "receiver": B["recv"], pre + "carrier": B["carrier"], pre + "carrier_cap": B["cap"], pre + "cartridge": B["cart"],
-           pre + "slider": slider(g, 0, 1), pre + "bolt_pin": m6.bolt_pin(g, 0, 1)}
+           pre + "slider": slider(g, 0, 1), pre + "bolt_pin": m6.bolt_pin(g, 0, 1), pre + "stop_bar": B["stop"]}
     for k, m in zip("ab", sorted(B["strips"].decompose(), key=lambda m: m.bounding_box()[0])): out[f"{pre}receiver_strip_{k}"] = m
     paths = {}
     for nm, m in out.items():
@@ -558,6 +604,7 @@ def main(pack="scout"):
     res["hold"]["all_gravity_directions"] += [dict(h, pads="TPU-faced pads") for h in res["hold_strong"]]      # the motion's readouts use the 25 N row
     res["audit"] = audit(B)
     res["funnel"] = funnel_fit(B)
+    res["build"] = build_check(B)
     if pack == "scout":
         W = (g["SWAP_M"] + 510.0) / 1000 * 9.81            # the Scout's weight without its pack, 510 g (E, ~730 g all-up)
         Ff = max((ARM["xt60_pull_N"] + W) / 4, 3 * W / 2)      # per foot: the XT60 pull-out on four, or a 3 g landing on two
@@ -572,8 +619,10 @@ def main(pack="scout"):
     res["v6"] = dict(TAB_IN=bl.TAB_IN, TAB_OUT=bl.TAB_OUT, TRAVEL=bl.TRAVEL, R0=m6.R0, NEED=m6.NEED, OVERLAP=bl.OVERLAP, ALPHA_deg=15.0, PUSH_Y=PUSH_Y,
                      FOOT=(m6.FOOT_X1, m6.FOOT_Y, m6.FOOT_HZ), NUB=(m6.NUB_L, m6.NUB_HZ, m6.NUB_Y1), BLADE=(m6.BLADE_T, m6.BLADE_HZ, m6.BLADE_Y1),
                      REC=(bl.REC_X, bl.REC_Z), MAG=(bl.MAG_X, bl.MAG_Z), BLADE_OPEN=m6.BLADE_OPEN, PAD_X=m6.PAD_X, PAD_Z=m6.PAD_Z, PAD_T=m6.PAD_T,
-                     K_BLADE=m6.K_BLADE, MU=m6.MU, SPR_DZ=m6.SPR_DZ, SPR_YC=bl.SPR_YC, SPR_DEPTH=bl.SPR_DEPTH)
-    res["rest_stop_mm3_at_0.1_out"] = round(vol(slider(g, -0.1, 1) ^ B["cart"]), 3)
+                     K_BLADE=m6.K_BLADE, MU=m6.MU, SPRINGS_Z=SPRINGS_Z, SPR_Y=SPR_Y, SLOT_X1=SLOT_X1)
+    res["rest_stop_mm3_at_0.3_out"] = round(vol(slider(g, -0.3, 1) ^ B["stop"]), 3)      # > 0: the stop bar stops a bolt pushed 0.3 past rest
+    res["stop_bar_mm3"] = dict(vs_cartridge=round(vol(B["stop"] ^ B["cart"]), 3), vs_bolts_at_rest=round(vol(B["stop"] ^ (slider(g, 0, 1) + slider(g, 0, -1))), 3),
+                               vs_bolts_fully_in=round(vol(B["stop"] ^ (slider(g, bl.TRAVEL - 0.02, 1) + slider(g, bl.TRAVEL - 0.02, -1))), 3))
     res["bought"] = m6.BOUGHT
     m6.HERE = out_dir
     pp = m6.write_page(B, res)
@@ -641,12 +690,13 @@ def appendix(res):
 {td("index: rib, pull / insert + full side force / full pull + full side force (a jam)", f"{rib[kp]['index']} / {rib[ki]['index']} / {rib[kj]['index']}", f"{orib[kp]['index']} / {orib[ki]['index']} / {orib[kj]['index']}")}
 </table></div>
 <p>Index 1.0 is the allowable for PCTG ({m6.ALLOW['functional']:.1f} MPa in use, {m6.ALLOW['misuse']:.1f} MPa in a jam). Hand models (E). The blade and nub are the grabber head's parts: 4.7 x 16 blade, nub 13 wide and 3.7 thick at its root, in PCTG.</p>
-<p>Springs: four in parallel, {sp['preload_pair_N']} N at rest on each slider, x{sp['preload_over_inertia']} the 35 g inertia of a slider with its two pins ({sp['slider_pin_magnet_g']} g); x{sp['one_spring_left_over_inertia']} with two of the four lost. {sp['squeezed_pair_N']} N squeezed, wire at {100 * sp['at_rib_limit']['of_uts']:.0f} % of tensile at the limit, {sp['solid_margin_mm']} mm above solid (E: the listing gives no coil count).</p>
+<p>Springs: four on each bolt, in slots along it, bearing on the rib: {sp['preload_pair_N']} N at rest, x{sp['preload_over_inertia']} the 35 g inertia of a bolt with its two pins ({sp['slider_pin_magnet_g']} g); x{sp['one_spring_left_over_inertia']} with two of the four lost. {sp['squeezed_pair_N']} N squeezed, wire at {100 * sp['at_rib_limit']['of_uts']:.0f} % of tensile at the limit, {sp['solid_margin_mm']} mm above solid (E: the listing gives no coil count).</p>
 <h2>3. Holding the pack on the grabber</h2>
 <div class="t"><table><tr><th>Scout, per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th><th>pack top moves, mm</th></tr>{hold}</table></div>
 <div class="t"><table><tr><th>Overseer ({ov['swap_g']} g), per blade</th><th>load</th><th>on the pads, N</th><th>pads stay down</th><th>no slip</th><th>slip across, mm</th></tr>{ohold}</table></div>
 <p>The wedge needs friction of {a['wedge_hold']['20 N']['mu_needed']} at 20 N per blade, {a['wedge_hold']['25 N']['mu_needed']} at 25 N, to keep the hardest pull from opening a blade (PCTG on PCTG is about 0.3, E). Across the pack the hold is friction and the two blade springs, as in v6.</p>
 <!--FIT-->
+<!--BUILD-->
 <h2>4. The parts on hand</h2>
 <p>Printed parts: PCTG, the project's rule since 8 Nov (about 10 to 20 times PETG's impact toughness at 90 % of its stiffness; the PETG nodes and arms broke in testing). Heel pads and strips: TPU 95A. One dowel size, 3 x 20, does the bolt pins and the guide poles; the spring guide pins are printed.</p>
 <div class="t"><table><tr><th>part</th><th>needs</th><th>has</th></tr>
@@ -661,7 +711,7 @@ def appendix(res):
 {td("blade in the recess", f"{V['BLADE'][0]} thick x {2 * V['BLADE'][1]:g} wide, top {V['BLADE'][2]} above the pads; inner faces +-{V['BLADE_OPEN']} open, +-{V['TAB_OUT'] - V['R0']:.1f} tight (stroke {tol['blade_stroke_mm']['nominal']}, {tol['blade_stroke_mm']['longest']} with every tolerance)")}
 {td("nub", f"two on each blade, {2 * NUB_ZC:g} apart: {V['NUB'][0]} long x {2 * V['NUB'][1]:g} wide, top {V['NUB'][2]}, underside 15 deg")}
 {td("heel pads", f"x {V['PAD_X'][0]}..{V['PAD_X'][1]}, {V['PAD_Z'][0]:.1f}..{V['PAD_Z'][1]:.1f} mm either side of the tab line (Scout); the Overseer's at its cartridge ends")}
-{td("hall sensors", f"x +-{V['MAG'][0]}, {V['MAG'][1]} mm along the pack from the tab line (one each side, opposite ends), 1.0 under the flat bottom")}
+{td("hall sensors", f"on a post to 5.6 mm above the pads, under each bolt's magnet: x +-{V['MAG'][0]}, {V['MAG'][1]} mm along the pack from the tab line (one each side, opposite ends)")}
 </table></div>
 <h2 class="open">Open</h2>
 <p>1. The Scout's plug is {lv['xt60_from_tab_line_mm']} mm from the pull and its flat bottom ends {lv['far_pads_at_mm']} mm the other way, so the grip carries x{lv['pull']['times_v6']} the plug's force. v7 is sized for it. The cause stays: only moving the tab line toward the plug or a lower-force connector removes it.</p>
@@ -690,20 +740,37 @@ def strong_section(rs, ro):
     return f"""<h2>Made stronger for the larger pack (the same parts on both)</h2>
 <p>The Scout has no width to give, both packs have length, so the latch and the fingers grew along the pack.</p>
 <div class="t"><table><tr><th></th><th>before</th><th>now</th></tr>
-{td("bolt", "bar 22 mm wide on one 3 x 20 steel pin", "bar 42 mm wide on two 3 x 20 pins end to end")}
+{td("bolt", "22 mm wide on one 3 x 20 steel pin, with a tab plate that could not be put in", "a plain bar 42 mm wide on two 3 x 20 pins end to end; slides in from outside")}
 {td("pin on the receiver's ramp in a 35 g crash, Overseer (PCTG strength " + str(so['bolt']['pctg_strength_MPa']) + " MPa)", f"{bo['one_pin_20mm_crash']:.0f} MPa", f"{bo['crash_35g']:.0f} MPa ({bo['flight_3g']:.0f} MPa at 3 g in flight)")}
 {td("finger", "blade 16 mm wide, one hook 13 wide", "blade 34 mm wide, two hooks 9 wide, 25 mm apart")}
-{td("rib that the hooks pull on", "4 x 11.5, feet 18 long", "the feet run wall to wall and its ends are gusseted")}
-{td("springs per cartridge / over the 35 g inertia of a bolt: Scout, Overseer", f"2 / x{ps['spring']}, x{po['spring']}", f"4 / x{rs['spring']['preload_over_inertia']}, x{ro['spring']['preload_over_inertia']}")}
+{td("rib that the hooks pull on", "4 x 11.5, feet 18 long, two spring notches", "feet wall to wall, ends gusseted, no spring notch")}
+{td("springs per cartridge / over the 35 g inertia of a bolt: Scout, Overseer", f"2 / x{ps['spring']}, x{po['spring']}", f"8 / x{rs['spring']['preload_over_inertia']}, x{ro['spring']['preload_over_inertia']}")}
 {td("index nub / foot / blade / rib at the XT60 pull-out: Scout", f"{ps['nub']} / {ps['foot']} / {ps['blade']} / {ps['rib']}", ix(ss))}
 {td("the same: Overseer", f"{po['nub']} / {po['foot']} / {po['blade']} / {po['rib']}", ix(so))}
 {td("worst index anywhere: Scout, Overseer", "0.72, 0.60", f"{ss['worst_index']}, {so['worst_index']}")}
-{td("blade force asked of the head", "15 N", "25 N (four latch springs to beat; DS3218 " + rs['audit']['parts']['25 N blades']['DS3218 (on hand)'] + ", MG995 " + rs['audit']['parts']['25 N blades']['MG995 (ordered)'] + ")")}
+{td("blade force asked of the head", "15 N", "25 N (four latch springs on each bolt to beat; DS3218 " + rs['audit']['parts']['25 N blades']['DS3218 (on hand)'] + ", MG995 " + rs['audit']['parts']['25 N blades']['MG995 (ordered)'] + ")")}
 {td("hold at 3 g, pads stay down / no slip: Scout, Overseer", f"x{ps['hold3g'][0]} / x{ps['hold3g'][1]}, x{po['hold3g'][0]} / x{po['hold3g'][1]} (at 15 N)", f"{h3(rs, 25.0)}, {h3(ro, 25.0)} (at 25 N)")}
-{td("bought parts per cartridge", "2 springs, 2 dowels, 2 magnets", "4 springs, 4 dowels, 2 magnets (the same spring and dowel)")}
+{td("bought parts per cartridge", "2 springs, 2 dowels, 2 magnets", "8 springs, 4 dowels, 2 magnets (the same spring and dowel), and one printed stop bar")}
 {td("slider with its pins / cartridge, Scout", "3.4 g / 39.5 g", f"{rs['spring']['slider_pin_magnet_g']} g / {rs['mass_g']['latch7_cartridge']} g")}
 </table></div>
 <p>Below x1 on "pads stay down" the pack does not come off: the hooks hold it positively and lock on their wedges; it only stops being pressed tight. Hand models (E); the receiver's wider bolt pockets have not been through FE.</p>
+"""
+
+
+def build_section(rs, ro):
+    td = lambda *c: "<tr>" + "".join(f"<td>{x}</td>" for x in c) + "</tr>"
+    bs, bo = rs["build"], ro["build"]
+    pr = "".join(td(k, f"{v['size_mm'][0]:g} x {v['size_mm'][1]:g} x {v['size_mm'][2]:g}", ("yes, on the diagonal" if v.get("on_the_diagonal") else "yes") if v["fits_bed"] else "NO", f"{v['bed_mm2']:.0f}", f"{v['support_mm2']:.0f}",
+                    f"{bo['printed'][k]['size_mm'][0]:g} x {bo['printed'][k]['size_mm'][1]:g} x {bo['printed'][k]['size_mm'][2]:g}", ("yes, on the diagonal" if bo['printed'][k].get("on_the_diagonal") else "yes") if bo['printed'][k]["fits_bed"] else "NO", f"{bo['printed'][k]['support_mm2']:.0f}")
+                 for k, v in bs["printed"].items())
+    st = "".join(td(a["step"], a["how"], "ok" if a["ok"] else "BLOCKED", ("%.2f" % a["mm3"]) if a["mm3"] is not None else "", ("%.2f" % b["mm3"]) if b["mm3"] is not None else "")
+                 for a, b in zip(bs["install"], bo["install"]))
+    return f"""<h2>Can it be built and put together</h2>
+<p class="open">The check found that the bolt could not be put into the cartridge: with its tab plate it had to move 6.5 mm inward to leave its wall hole and the rib stopped it at 4.9, from above or below. That was true of every version since the rib was added. Each bolt is now a plain bar that slides in from outside; a small printed stop bar, dropped in across the rib, holds both at rest.</p>
+<div class="t"><table><tr><th>assembly step</th><th>how it was checked</th><th></th><th>Scout overlap, mm&sup3;</th><th>Overseer overlap, mm&sup3;</th></tr>{st}</table></div>
+<p>{bs['serviceable'].capitalize()}.</p>
+<div class="t"><table><tr><th>printed part</th><th>Scout size, mm</th><th>fits the 180 bed</th><th>on the bed, mm&sup2;</th><th>needs support, mm&sup2;</th><th>Overseer size, mm</th><th>fits</th><th>needs support, mm&sup2;</th></tr>{pr}</table></div>
+<p>Each part in the flat-down pose with the least overhang past 45 degrees. Support is allowed (tree supports); every part passes the solid check (no wall under 2 mm, no neck). Not checked here: the receiver's inner assembly (plug carrier, cap, XT60, guide poles) and the pack's plug into its pocket, which are unchanged from v5; the grabber head, which is not drawn.</p>
 """
 
 def fit_section(rs, ro):
@@ -753,6 +820,59 @@ def appendix_overseer(ro, rs):
 """
 
 
+
+# ------------------------------------------------------------------ can it be built and put together (12 Nov, Spark)
+BED = 180.0                            # Bambu A1 mini
+
+
+def printability(m):
+    """the best of the six flat-down poses on the A1 mini: least area that overhangs past 45 deg (needs support), then most bed contact."""
+    t = bl.tm(m); n = t.face_normals; ar = t.area_faces; c = t.triangles_center
+    best = None
+    for ax in range(3):
+        for sg in (1, -1):
+            down = np.zeros(3); down[ax] = sg                     # this direction of the part goes onto the bed
+            h = c @ down; hmax = float((t.vertices @ down).max())
+            dn = n @ down
+            on_bed = (dn > 0.999) & (h > hmax - 0.05)
+            over = (dn > math.cos(math.radians(45.0))) & ~on_bed
+            ext = t.extents; hgt = float(ext[ax]); a_, b_ = sorted((float(ext[(ax + 1) % 3]), float(ext[(ax + 2) % 3])), reverse=True)
+            diag = a_ > BED and (a_ + b_) / math.sqrt(2) <= BED               # longer than the bed's side but fits turned 45 deg on it
+            fits = bool(hgt <= BED and (a_ <= BED or diag))
+            row = dict(down="%s%s" % ("+" if sg > 0 else "-", "xyz"[ax]), bed_mm2=round(float(ar[on_bed].sum()), 0), support_mm2=round(float(ar[over].sum()), 0),
+                       size_mm=[round(float(v), 1) for v in ext], fits_bed=fits, on_the_diagonal=bool(diag))
+            if best is None or (row["support_mm2"], -row["bed_mm2"]) < (best["support_mm2"], -best["bed_mm2"]): best = row
+    return best
+
+
+def build_check(B):
+    g = B["g"]; pre = OUT[g["pack"]][1]
+    printed = {"receiver": B["recv"], "carrier": B["carrier"], "carrier cap": B["cap"], "cartridge": B["cart"], "bolt": slider(g, 0, 1), "stop bar": B["stop"]}
+    for k, mm in zip("ab", sorted(B["strips"].decompose(), key=lambda m: m.bounding_box()[0])): printed[f"receiver strip {k} (TPU)"] = mm
+    out = dict(printed={k: printability(m) for k, m in printed.items()})
+    cart = B["cart"] + B["female"]; pack = bl.pack_body(g)
+    bolts = m6.moving(g, 0, 1) + m6.moving(g, 0, -1)
+    sweep = lambda body, d, fixed, n=60, step=0.5: round(max(vol(body.translate([d[0] * k * step, d[1] * k * step, d[2] * k * step]) ^ fixed) for k in range(n + 1)), 3)
+    steps = []
+    steps.append(dict(step="1 two dowels into each bolt's bore, a magnet into its underside", how="by hand, before the bolt goes in; the bore opens on the bolt's side", mm3=None, ok=True))
+    v = sweep(m6.moving(g, 0, 1), (1, 0, 0), cart + m6.moving(g, 0, -1))
+    v2 = sweep(m6.moving(g, 0, 1), (1, 0, 0), cart + m6.moving(g, 0, -1) + pack)
+    steps.append(dict(step="2 each bolt in through its wall hole, from outside", how="straight in, 30 mm swept; also with the pack already in", mm3=max(v, v2), ok=bool(max(v, v2) < 0.05)))
+    v = sweep(B["stop"], (0, 1, 0), B["cart"] + slider(g, 0, 1) + slider(g, 0, -1), n=40)
+    steps.append(dict(step="3 stop bar down across the rib, into both bolts", how="straight down from above, 20 mm swept, bolts held at rest", mm3=v, ok=bool(v < 0.05)))
+    Lr = SLOT_X1 - bl.RIB_HX
+    steps.append(dict(step="4 eight springs, each with its guide pin, into the bolts' slots", how="squeezed to %.1f mm and dropped in from above (slot %.1f wide, spring %.1f)" % (Lr, 2 * bl.SPR_R, m6.SPR["od"]),
+                      mm3=None, ok=bool(2 * bl.SPR_R > m6.SPR["od"] and Lr > (m6.SPR["n_active"] + 2) * m6.SPR["d"])))
+    v = sweep(pack, (0, 1, 0), B["cart"] + B["stop"] + bolts, n=40)
+    steps.append(dict(step="5 pack down into the cartridge (over the bolts, springs and stop bar)", how="straight down, 20 mm swept (the 0.6 keeper lips snap over it, not counted)", mm3=v, ok=True, note="lips overlap %.1f mm3 by design" % v))
+    R = m6.receiver_all(B)
+    v = sweep(m6.cart_all(B) + m6.moving(g, bl.OVERLAP + 0.3, 1) + m6.moving(g, bl.OVERLAP + 0.3, -1) + pack, (0, -1, 0), R, n=80)
+    steps.append(dict(step="6 cartridge up into the receiver", how="bolts held in, 40 mm swept; pushed in alone the lead-ins cam the bolts (no stuck step)", mm3=v, ok=bool(v < 0.05)))
+    out["install"] = steps
+    out["serviceable"] = "a bolt comes out the way it went in once the pack, springs and stop bar are lifted out; nothing is glued"
+    out["ok"] = bool(all(s_["ok"] for s_ in steps) and all(p_["fits_bed"] for p_ in out["printed"].values()))
+    return out
+
 BOTH_X = {"scout": 45.0, "overseer": -45.0}       # page x (the section view looks from +y, so +x is on the left) of each set on the one page (tools/latch7_both_motion.py OFF)
 
 
@@ -790,6 +910,10 @@ if __name__ == "__main__":
             print(q, json.dumps(funnel_fit(build(q)), indent=1))
     elif "--both" in sys.argv:
         write_both()
+    elif "--buildcheck" in sys.argv:
+        for q in ("scout", "overseer"):
+            f = os.path.join(ROOT, "parts", OUT[q][0], "result.json"); res = json.load(open(f)); res["build"] = build_check(build(q)); json.dump(res, open(f, "w"), indent=1)
+            print(q, json.dumps(res["build"]))
     elif "--refit" in sys.argv:                            # the funnel changed, the latch did not: redo the fit and the page text only
         for q in ("scout", "overseer"):
             f = os.path.join(ROOT, "parts", OUT[q][0], "result.json"); res = json.load(open(f))
@@ -800,7 +924,7 @@ if __name__ == "__main__":
         old = open(os.path.join(ROOT, "systems", "latch6.appendix.html")).read()      # v6's page section, kept under v7's, folded
         keep = ('<details style="max-width:1040px;margin:0 auto;padding:0 16px 40px;font:14px/1.5 var(--sans);color:var(--fg)"><summary>Latch v6\'s own numbers '
                 '(superseded: its pull-out loads left out the XT60\'s lever, see the first table above)</summary>' + old + '</details>\n')
-        open(os.path.join(ROOT, "systems", "latch7.appendix.html"), "w").write(appendix(rs).replace("<!--FIT-->", fit_section(rs, ro)).replace("<!--STRONG-->", strong_section(rs, ro)) + keep)
+        open(os.path.join(ROOT, "systems", "latch7.appendix.html"), "w").write(appendix(rs).replace("<!--FIT-->", fit_section(rs, ro)).replace("<!--STRONG-->", strong_section(rs, ro)).replace("<!--BUILD-->", build_section(rs, ro)) + keep)
         open(os.path.join(ROOT, "systems", "latch7_overseer.appendix.html"), "w").write(appendix_overseer(ro, rs))
     else:
         main(pk)

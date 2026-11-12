@@ -79,7 +79,7 @@
    ]
   }
  },
- "note": "The press-two-tabs latch, v7, on both packs, side by side: the Scout's on the left, the Overseer's on the right. One latch module: the same slider, springs, 3 x 20 dowels, magnets and grabber blades; only the cartridge and the receiver are sized to the pack. Each is cut at its tab line. Made stronger on 10 Nov: bolts 42 wide on two steel pins each, blades 34 wide with two hooks each, four springs. Scout 221.3 g with its cartridge, Overseer 765.3 g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; the Scout receiver stands on four landing feet. Worst strength index 0.436 (Scout), 0.326 (Overseer). Numbers under the viewer.",
+ "note": "The press-two-tabs latch, v7, on both packs, side by side: the Scout's on the left, the Overseer's on the right. One latch module: the same slider, springs, 3 x 20 dowels, magnets and grabber blades; only the cartridge and the receiver are sized to the pack. Each is cut at its tab line. Made stronger on 10 Nov: bolts 42 wide on two steel pins each, blades 34 wide with two hooks each, four springs. Scout 220.8 g with its cartridge, Overseer 764.6 g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; the Scout receiver stands on four landing feet. Worst strength index 0.483 (Scout), 0.361 (Overseer). Numbers under the viewer.",
  "cg_ref": null,
  "timeline": "tools/latch7_both_motion.py:timeline",
  "appendix": "systems/latch7.appendix.html",
@@ -680,7 +680,7 @@
    ],
    "material": "PCTG",
    "tag": "C",
-   "mass_g": 3.56,
+   "mass_g": 3.12,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -1005,6 +1005,46 @@
    "source": "parts/latch7/make.py"
   },
   {
+   "id": "latch7_view_stop_bar_both",
+   "name": "scout: stop bar",
+   "role": "structure",
+   "group": "Scout: latch (moving)",
+   "color": "#f2d14e",
+   "opacity": null,
+   "mesh": "parts/latch7/view/stop_bar.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": 0.15,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
    "id": "latch7_view_spring_c_both",
    "name": "scout: spring c",
    "role": "bought",
@@ -1085,9 +1125,169 @@
    "source": "parts/latch7/make.py"
   },
   {
+   "id": "latch7_view_spring_e_both",
+   "name": "scout: spring e",
+   "role": "bought",
+   "group": "Scout: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_e.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_f_both",
+   "name": "scout: spring f",
+   "role": "bought",
+   "group": "Scout: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_f.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_g_both",
+   "name": "scout: spring g",
+   "role": "bought",
+   "group": "Scout: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_g.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_h_both",
+   "name": "scout: spring h",
+   "role": "bought",
+   "group": "Scout: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_h.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
    "id": "latch7_view_spring_pin_a_both",
    "name": "scout: spring pin a",
-   "role": "bought",
+   "role": "structure",
    "group": "Scout: latch (moving)",
    "color": "#e3e7ec",
    "opacity": null,
@@ -1127,7 +1327,7 @@
   {
    "id": "latch7_view_spring_pin_b_both",
    "name": "scout: spring pin b",
-   "role": "bought",
+   "role": "structure",
    "group": "Scout: latch (moving)",
    "color": "#e3e7ec",
    "opacity": null,
@@ -1167,7 +1367,7 @@
   {
    "id": "latch7_view_spring_pin_c_both",
    "name": "scout: spring pin c",
-   "role": "bought",
+   "role": "structure",
    "group": "Scout: latch (moving)",
    "color": "#e3e7ec",
    "opacity": null,
@@ -1207,11 +1407,171 @@
   {
    "id": "latch7_view_spring_pin_d_both",
    "name": "scout: spring pin d",
-   "role": "bought",
+   "role": "structure",
    "group": "Scout: latch (moving)",
    "color": "#e3e7ec",
    "opacity": null,
    "mesh": "parts/latch7/view/spring_pin_d.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_pin_e_both",
+   "name": "scout: spring pin e",
+   "role": "structure",
+   "group": "Scout: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_pin_e.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_pin_f_both",
+   "name": "scout: spring pin f",
+   "role": "structure",
+   "group": "Scout: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_pin_f.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_pin_g_both",
+   "name": "scout: spring pin g",
+   "role": "structure",
+   "group": "Scout: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_pin_g.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_view_spring_pin_h_both",
+   "name": "scout: spring pin h",
+   "role": "structure",
+   "group": "Scout: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7/view/spring_pin_h.stl",
    "pose": [
     [
      1.0,
@@ -1720,7 +2080,7 @@
    ],
    "material": "PCTG",
    "tag": "C",
-   "mass_g": 5.38,
+   "mass_g": 4.94,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -2045,6 +2405,46 @@
    "source": "parts/latch7/make.py"
   },
   {
+   "id": "latch7_overseer_view_stop_bar_both",
+   "name": "overseer: stop bar",
+   "role": "structure",
+   "group": "Overseer: latch (moving)",
+   "color": "#f2d14e",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/stop_bar.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "mass_g": 0.15,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
    "id": "latch7_overseer_view_spring_c_both",
    "name": "overseer: spring c",
    "role": "bought",
@@ -2125,9 +2525,169 @@
    "source": "parts/latch7/make.py"
   },
   {
+   "id": "latch7_overseer_view_spring_e_both",
+   "name": "overseer: spring e",
+   "role": "bought",
+   "group": "Overseer: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_e.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_f_both",
+   "name": "overseer: spring f",
+   "role": "bought",
+   "group": "Overseer: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_f.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_g_both",
+   "name": "overseer: spring g",
+   "role": "bought",
+   "group": "Overseer: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_g.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_h_both",
+   "name": "overseer: spring h",
+   "role": "bought",
+   "group": "Overseer: latch (moving)",
+   "color": "#c9783f",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_h.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
    "id": "latch7_overseer_view_spring_pin_a_both",
    "name": "overseer: spring pin a",
-   "role": "bought",
+   "role": "structure",
    "group": "Overseer: latch (moving)",
    "color": "#e3e7ec",
    "opacity": null,
@@ -2167,7 +2727,7 @@
   {
    "id": "latch7_overseer_view_spring_pin_b_both",
    "name": "overseer: spring pin b",
-   "role": "bought",
+   "role": "structure",
    "group": "Overseer: latch (moving)",
    "color": "#e3e7ec",
    "opacity": null,
@@ -2207,7 +2767,7 @@
   {
    "id": "latch7_overseer_view_spring_pin_c_both",
    "name": "overseer: spring pin c",
-   "role": "bought",
+   "role": "structure",
    "group": "Overseer: latch (moving)",
    "color": "#e3e7ec",
    "opacity": null,
@@ -2247,11 +2807,171 @@
   {
    "id": "latch7_overseer_view_spring_pin_d_both",
    "name": "overseer: spring pin d",
-   "role": "bought",
+   "role": "structure",
    "group": "Overseer: latch (moving)",
    "color": "#e3e7ec",
    "opacity": null,
    "mesh": "parts/latch7_overseer/view/spring_pin_d.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_pin_e_both",
+   "name": "overseer: spring pin e",
+   "role": "structure",
+   "group": "Overseer: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_pin_e.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_pin_f_both",
+   "name": "overseer: spring pin f",
+   "role": "structure",
+   "group": "Overseer: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_pin_f.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_pin_g_both",
+   "name": "overseer: spring pin g",
+   "role": "structure",
+   "group": "Overseer: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_pin_g.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": 0.2,
+   "version": "latch v7 (10 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_spring_pin_h_both",
+   "name": "overseer: spring pin h",
+   "role": "structure",
+   "group": "Overseer: latch (moving)",
+   "color": "#e3e7ec",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/spring_pin_h.stl",
    "pose": [
     [
      1.0,
