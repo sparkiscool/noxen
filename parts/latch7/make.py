@@ -761,7 +761,7 @@ def build_section(rs, ro):
     td = lambda *c: "<tr>" + "".join(f"<td>{x}</td>" for x in c) + "</tr>"
     bs, bo = rs["build"], ro["build"]
     pr = "".join(td(k, f"{v['size_mm'][0]:g} x {v['size_mm'][1]:g} x {v['size_mm'][2]:g}", ("yes, on the diagonal" if v.get("on_the_diagonal") else "yes") if v["fits_bed"] else "NO", f"{v['bed_mm2']:.0f}", f"{v['support_mm2']:.0f}",
-                    f"{bo['printed'][k]['size_mm'][0]:g} x {bo['printed'][k]['size_mm'][1]:g} x {bo['printed'][k]['size_mm'][2]:g}", ("yes, on the diagonal" if bo['printed'][k].get("on_the_diagonal") else "yes") if bo['printed'][k]["fits_bed"] else "NO", f"{bo['printed'][k]['support_mm2']:.0f}")
+                    f"{bo['printed'][k]['size_mm'][0]:g} x {bo['printed'][k]['size_mm'][1]:g} x {bo['printed'][k]['size_mm'][2]:g}", (("yes, on the diagonal, %.1f to spare" % bo['printed'][k]["diag_spare_mm"]) if bo['printed'][k].get("on_the_diagonal") else "yes") if bo['printed'][k]["fits_bed"] else "NO", f"{bo['printed'][k]['support_mm2']:.0f}")
                  for k, v in bs["printed"].items())
     st = "".join(td(a["step"], a["how"], "ok" if a["ok"] else "BLOCKED", ("%.2f" % a["mm3"]) if a["mm3"] is not None else "", ("%.2f" % b["mm3"]) if b["mm3"] is not None else "")
                  for a, b in zip(bs["install"], bo["install"]))
@@ -841,7 +841,8 @@ def printability(m):
             fits = bool(hgt <= BED and (a_ <= BED or diag))
             row = dict(down="%s%s" % ("+" if sg > 0 else "-", "xyz"[ax]), bed_mm2=round(float(ar[on_bed].sum()), 0), support_mm2=round(float(ar[over].sum()), 0),
                        size_mm=[round(float(v), 1) for v in ext], fits_bed=fits, on_the_diagonal=bool(diag))
-            if best is None or (row["support_mm2"], -row["bed_mm2"]) < (best["support_mm2"], -best["bed_mm2"]): best = row
+            row["diag_spare_mm"] = round(BED - (a_ + b_) / math.sqrt(2), 1) if diag else None
+            if best is None or (not row["fits_bed"], row["support_mm2"], -row["bed_mm2"]) < (not best["fits_bed"], best["support_mm2"], -best["bed_mm2"]): best = row
     return best
 
 

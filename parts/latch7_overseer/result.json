@@ -1115,16 +1115,17 @@
  "build": {
   "printed": {
    "receiver": {
-    "down": "-z",
-    "bed_mm2": 4500.0,
-    "support_mm2": 4291.0,
+    "down": "+y",
+    "bed_mm2": 2626.0,
+    "support_mm2": 8765.0,
     "size_mm": [
      68.0,
      68.6,
      183.6
     ],
-    "fits_bed": false,
-    "on_the_diagonal": false
+    "fits_bed": true,
+    "on_the_diagonal": true,
+    "diag_spare_mm": 2.1
    },
    "carrier": {
     "down": "+y",
@@ -1136,7 +1137,8 @@
      22.1
     ],
     "fits_bed": true,
-    "on_the_diagonal": false
+    "on_the_diagonal": false,
+    "diag_spare_mm": null
    },
    "carrier cap": {
     "down": "+y",
@@ -1148,7 +1150,8 @@
      20.0
     ],
     "fits_bed": true,
-    "on_the_diagonal": false
+    "on_the_diagonal": false,
+    "diag_spare_mm": null
    },
    "cartridge": {
     "down": "-z",
@@ -1160,7 +1163,8 @@
      174.0
     ],
     "fits_bed": true,
-    "on_the_diagonal": false
+    "on_the_diagonal": false,
+    "diag_spare_mm": null
    },
    "bolt": {
     "down": "+x",
@@ -1172,7 +1176,8 @@
      42.0
     ],
     "fits_bed": true,
-    "on_the_diagonal": false
+    "on_the_diagonal": false,
+    "diag_spare_mm": null
    },
    "stop bar": {
     "down": "+y",
@@ -1184,7 +1189,8 @@
      5.0
     ],
     "fits_bed": true,
-    "on_the_diagonal": false
+    "on_the_diagonal": false,
+    "diag_spare_mm": null
    },
    "receiver strip a (TPU)": {
     "down": "+y",
@@ -1196,7 +1202,8 @@
      148.6
     ],
     "fits_bed": true,
-    "on_the_diagonal": false
+    "on_the_diagonal": false,
+    "diag_spare_mm": null
    },
    "receiver strip b (TPU)": {
     "down": "+y",
@@ -1208,7 +1215,8 @@
      148.6
     ],
     "fits_bed": true,
-    "on_the_diagonal": false
+    "on_the_diagonal": false,
+    "diag_spare_mm": null
    }
   },
   "install": [
@@ -1251,7 +1259,7 @@
    }
   ],
   "serviceable": "a bolt comes out the way it went in once the pack, springs and stop bar are lifted out; nothing is glued",
-  "ok": false
+  "ok": true
  },
  "mass_g": {
   "latch7_ov_receiver": 209.55,
