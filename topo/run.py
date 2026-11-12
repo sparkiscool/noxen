@@ -135,37 +135,39 @@ def early_check(L, f, bi, max_worst, k, log=print):
     strength dict with beta / iteration added, or None when the field is not yet one body from the loads to the supports
     (an index on a broken field means nothing). Raises EarlyFail over the limit."""
     from scipy import ndimage as ndi
-    part = L.part
-    A = ((f["rho_n"] > 0.5) | L.solid).reshape(part.shape)
-    lab, n = ndi.label(A, ndi.generate_binary_structure(3, 1))
-    sup = np.zeros(part.nel, bool)
-    for el in part.support_cells.values():
-        sup[el] = True
-    held = set(np.unique(lab[sup.reshape(part.shape)])) - {0}
-    loaded = np.zeros(part.nel, bool)
-    nx, ny, nz = part.shape
-    for c in L.cases:
-        if c.tie or c.nodes is None or not len(c.nodes):
-            continue
-        nid = np.asarray(c.nodes)
-        kk = nid % (nz + 1); j = (nid // (nz + 1)) % (ny + 1); i = nid // ((nz + 1) * (ny + 1))
-        for a in (0, -1):
-            for b in (0, -1):
-                for cc in (0, -1):
-                    ii, jj, k2 = i + a, j + b, kk + cc
-                    ok = (ii >= 0) & (ii < nx) & (jj >= 0) & (jj < ny) & (k2 >= 0) & (k2 < nz)
-                    loaded[np.ravel_multi_index((ii[ok], jj[ok], k2[ok]), part.shape)] = True
-    lab_loaded = set(np.unique(lab[(loaded & A.ravel()).reshape(part.shape)])) - {0}
-    if not held or not lab_loaded or not lab_loaded <= held:
+    A = (f["rho_n"] > 0.5) | L.solid
+    lc = getattr(L, "last_check", None)
+    if lc is not None and lc.get("it") == len(L.hist):                   # the stage-end check (Layout.check_stage) read this field
+        st = {k: v for k, v in lc.items() if k not in ("it", "beta")}
+    elif not L.joined(A):
+        n = ndi.label(A.reshape(L.part.shape), ndi.generate_binary_structure(3, 1))[1]
         log(f"early check: skipped after beta {L.s.betas[bi]:.0f}: the field is not one body from the loads to the supports yet "
             f"({n} bodies)")
         return None
-    st = strength(L, mask=A, log=log)
+    else:
+        st = strength(L, mask=A, log=log)
     st.update(beta=float(L.s.betas[bi]), iteration=len(L.hist), max_worst=max_worst, k=k)
     if st["worst"] is not None and st["worst"] > k * max_worst:
         raise EarlyFail(st)
     log(f"early check: index {st['worst']:.2f} after beta {L.s.betas[bi]:.0f} (limit {k * max_worst:.2f}): the run goes on")
     return st
+
+
+def _layout_build(L, out_dir, name, t0, ex_base, early, extra, log):
+    """the finished layout: density.npz, the final field's index, the build and every check. Returns the result dict."""
+    L.save(os.path.join(out_dir, "density.npz"))
+    # the final field's own index (the thresholded layout, before the surface and export): splits a gap between the run's checks
+    # and the built part into what the optimiser did (early / checks -> field) and what the build did (field -> built)
+    ff = L.field_strength(L.fields(L.result["x"], L.result["beta"]))
+    field = None if ff is None else dict(worst=ff["worst"], worst_case=ff["worst_case"], worst_at=ff["worst_at"],
+                                         beta=L.result["beta"], iteration=len(L.hist))
+    t_layout = time.time() - t0
+    log(f"layout done: {t_layout:.0f} s, peak {peak_gb()} GB")
+    ex = dict(layout_s=round(t_layout), peak_gb=peak_gb(), memory=getattr(L, "mem", None), early=early or None, field=field, **ex_base)
+    if extra:
+        ex.update(extra)
+    res, P = build_and_check(L, out_dir, name, log=log, extra=ex)
+    return res
 
 
 def optimise(setup, h, gen_cm3, out_dir, name, settings=None, coarse=True, git=False, log=None, maxit=400,
@@ -249,16 +251,23 @@ def _optimise(setup, h, gen_cm3, out_dir, name, settings, coarse, git, log, maxi
         with open(os.path.join(out_dir, "result.json"), "w") as fh:
             json.dump(res, fh, indent=1, default=str)
         return res
-    L.save(os.path.join(out_dir, "density.npz"))
-    t_layout = time.time() - t0
-    log(f"layout done: {t_layout:.0f} s, peak {peak_gb()} GB")
-    ex = dict(layout_s=round(t_layout), peak_gb=peak_gb(), memory=getattr(L, "mem", None), gen_cm3=gen_cm3, h=h, audit=rep_audit, early=early or None)
-    if extra:
-        ex.update(extra)
-    res, P = build_and_check(L, out_dir, name, log=log, extra=ex)
+    ex_base = dict(gen_cm3=gen_cm3, h=h, audit=rep_audit)
+    res = _layout_build(L, out_dir, name, t0, ex_base, early, extra, log)
+    if L.hold is not None and not res["solid_ok"] and res.get("status") is None and time.time() - t0 < 0.6 * s.time_limit_s:
+        # the gate comes first (12 Nov): a design held to the checked strength that the gate fails (the budget buys the strength or
+        # the robust joints, not both) is released and the last stage goes on until the ties have rejoined the drawn bodies
+        failed = dict(worst=res["strength"]["worst"], mass_g=res.get("mass_g"))
+        L.release_hold(f"the solid check failed with the hold on (built index {failed['worst']})")
+        L.run(maxit=maxit, beta_start=len(s.betas) - 1)
+        res = _layout_build(L, out_dir, name, t0, ex_base, early, extra, log)
+        res["layout"]["hold"] = dict(L.hold_info, failed=failed)
+    field = res.get("field")
     if early.get("worst") is not None and res["strength"]["worst"]:
         log(f"early check vs final: {early['worst']:.2f} after beta {early['beta']:.0f} -> {res['strength']['worst']:.2f} built "
             f"(ratio {early['worst'] / max(res['strength']['worst'], 1e-9):.2f})")
+    if field and field.get("worst") and res["strength"]["worst"]:
+        log(f"final field vs built: {field['worst']:.2f} on the layout's field -> {res['strength']['worst']:.2f} built "
+            f"(built / field {res['strength']['worst'] / max(field['worst'], 1e-9):.2f})")
     res["total_s"] = round(time.time() - t0)
     with open(os.path.join(out_dir, "result.json"), "w") as fh:
         json.dump(res, fh, indent=1, default=str)

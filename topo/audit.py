@@ -113,8 +113,9 @@ def memory_estimate(L):
     memory_fit's log line for estimate vs peak)."""
     sol = L.fe_solver
     g = sol.grid
-    nc = len(L.cases)
-    n_fe = sum(c.fe is not None for c in L.cases)
+    real = [c for c in L.cases if not c.tie] if getattr(L.s, "nominal_hold", False) else []   # the nominal-hold copies (layout.py)
+    nc = len(L.cases) + len(real)
+    n_fe = sum(c.fe is not None for c in L.cases) + sum(c.fe is not None for c in real)
     GB = 1024.0 ** 3
     blk = sol.block_size()
     parts = dict(held=_rss_gb())

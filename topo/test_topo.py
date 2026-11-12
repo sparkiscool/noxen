@@ -1,6 +1,6 @@
 """Self-test of nox/topo. Run from nox/:  python3 -m topo.test_topo [--quick]
-Each test prints PASS / FAIL with its numbers; exit code 1 if any fails. ~2-4 min on a 4 vCPU box (--quick skips the
-end-to-end run)."""
+Each test prints PASS / FAIL with its numbers; exit code 1 if any fails. ~16 min on a 4 vCPU box, ~10 of them the slender-arm run
+(--quick skips the end-to-end runs: ~1.5 min)."""
 import sys
 import time
 import json
@@ -1425,13 +1425,117 @@ def t_build_memory_gate():
         audit.GATE_BYTES = g0
 
 
+def _arms_part(arms=((45, 1), (-45, 1), (135, 1), (-135, 1)), h=2.0, sockets=(16,)):
+    """slender arms (12 Nov, scout_v4_frame): a deck held at four bolt bosses, 74 mm diagonal arms (22 x 12 mm envelope) to motor pads
+    loaded by thrust 17.7 N + 11 N imbalance across / along (flight), and socket bosses on the deck with 600 N rod loads (crash) that
+    compete for the material. At gen 14 cm3 (four arms) the arms come out near the 6.25 mm minimum member at h 2.0 (~3 cells)."""
+    import manifold3d as mf
+    from .part import Part
+    box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+    cyl = lambda r, z0, z1, x, y: mf.Manifold.cylinder(z1 - z0, r, r, 32).translate([x, y, z0])
+    env = box(-24, 24, -24, 24, 0, 12)
+    drawn, cuts, pads = [], [], []
+    for ang, _ in arms:
+        env = env + box(0, 80, -11, 11, 0, 12).rotate([0, 0, ang])
+        px, py = 74 * np.cos(np.radians(ang)), 74 * np.sin(np.radians(ang))
+        pad = cyl(9, 6, 12, px, py)
+        drawn.append(pad); cuts.append(cyl(2.0, -1, 13, px, py)); pads.append((ang, pad))
+    regs = []
+    for bx, by in ((-18, -18), (18, -18), (-18, 18), (18, 18)):
+        drawn.append(cyl(5, 0, 4, bx, by)); cuts.append(cyl(1.6, -1, 13, bx, by)); regs.append(cyl(5, -1, 0.9, bx, by))
+    socks = []
+    for y in sockets:
+        for sy in (1, -1)[:2 if len(arms) > 2 else 1]:
+            sk = cyl(6, 0, 12, 0, sy * y)
+            drawn.append(sk); cuts.append(cyl(3.1, 3, 13, 0, sy * y)); socks.append(sk)
+    p = Part("arms", h, mf.Manifold.batch_boolean(drawn, mf.OpType.Add), mf.Manifold.batch_boolean(cuts, mf.OpType.Add), env,
+             log=lambda s: None)
+    p.support("default", mf.Manifold.batch_boolean(regs, mf.OpType.Add))
+    for i, (ang, pad) in enumerate(pads):
+        a = np.radians(ang)
+        along, across = np.array([np.cos(a), np.sin(a), 0]), np.array([-np.sin(a), np.cos(a), 0])
+        p.load(f"motor {i + 1} across", pad, tuple(np.array([0, 0, 17.7]) + 11 * across), cls="flight")
+        p.load(f"motor {i + 1} along", pad, tuple(np.array([0, 0, 17.7]) + 11 * along), cls="flight")
+    for j, sk in enumerate(socks):
+        p.load(f"socket {j} tension", sk, (0, 40.0, 600.0), cls="crash")
+        p.load(f"socket {j} compression", sk, (0, -40.0, -600.0), cls="crash")
+    return p
+
+
+def t_built_hold():
+    """the built hold (layout.py Settings.nominal_hold): inactive rows before it starts; once started every real case's compliance on
+    the build projection (nominal and gate-eroded) reads 1 / (1 + hold_tol) - 1 on the reference design, and its gradient (through the
+    sharp projection, body forces included) matches finite differences"""
+    try:
+        p = _mini_part()
+        p.accel_case("grav", (0, 0, -9.81 * 30), cls="crash")
+        rng = np.random.default_rng(5)
+        beta = 4.0
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn", hold_proj_beta=6.0)
+        L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+        x = rng.uniform(0.3, 0.7, L.nd)
+        f = L.fields(x, beta)
+        comp, (U, _) = L._compliance(f["rho_e"])
+        fv0, _ = L._hold_constraints(f, comp, U)
+        L.start_hold(f)
+        f = L.fields(x, beta)
+        comp, (U, _) = L._compliance(f["rho_e"], rho_g=f["rho_g"], rho_b=f["rho_b"], rho_be=f["fb"]["rho_e"])
+        fv, dg = L._hold_constraints(f, comp, U)
+
+        def G(xx):
+            ff = L.fields(xx, beta)
+            c, _ = L._compliance(ff["rho_e"], need_grad=False, rho_g=ff["rho_g"], rho_b=ff["rho_b"], rho_be=ff["fb"]["rho_e"])
+            return c[len(L.cases):] / ((1 + s.hold_tol) * L.c_hold) - 1
+        errs = []
+        for i in rng.choice(L.nd, 6, replace=False):
+            e = 1e-3        # the eroded copies' roundoff (Emin cells) swamps 1e-4 steps; truncation at 1e-3 is ~1e-6 at beta 6
+            xp, xm = x.copy(), x.copy()
+            xp[i] += e
+            xm[i] -= e
+            fd = (G(xp) - G(xm)) / (2 * e)
+            errs += [abs(fd[k] - dg[k][i]) / max(abs(fd[k]), 1e-2 * np.abs(dg[k]).max()) for k in range(len(fv))]
+        ok = (fv0 == [-1.0] * 2 * L.n_real and len(fv) == 2 * L.n_real == 6 and np.allclose(fv, 1 / (1 + s.hold_tol) - 1, atol=1e-9)
+              and max(errs) < 1e-3 and L.mma.m == 3 + 2 * L.n_real)
+        check("built hold: rows inactive before it starts, at the reference after, gradient vs finite differences", ok,
+              f"rows {np.round(fv, 4).tolist()}, max rel err {max(errs):.1e}")
+    except Exception as e:
+        traceback.print_exc()
+        check("built hold", False, str(e))
+
+
+def t_slender_arm_gap():
+    """the slender-arm gap (12 Nov, scout_v4_frame: arms built at 1.7-1.9x the run's beta-4 index): a deck, four 74 mm diagonal arms
+    near the minimum member and two 600 N sockets (frame-lite), run end to end at h 2.0 (~10 min). Without the built hold it reads
+    0.87 at the beta-4 check and 1.20 built (1.38x), the arms 15 -> 9 cells across. The as-built index must stay within 10 % of the run's own
+    beta-4 check (early), the final field's within 10 % of the built, and the part must pass the gate."""
+    import tempfile
+    from .run import optimise
+    try:
+        out = tempfile.mkdtemp(prefix="topo_arms_")
+        res = optimise(lambda h: _arms_part(h=h), 2.0, ARMS_GEN, out, "arms", settings=Settings(backend="direct", time_limit_s=1800),
+                       coarse=False, log=lambda s_: None)
+        e, fl, b = (res.get("early") or {}).get("worst"), (res.get("field") or {}).get("worst"), res["strength"]["worst"]
+        ok = bool(e and fl and b and b <= 1.10 * e and abs(b - fl) <= 0.10 * fl and res["solid_ok"])
+        check("slender arms: built index within 10 % of the beta-4 check and of the final field, gate passes", ok,
+              f"early {e} (beta {(res.get('early') or {}).get('beta')}), field {fl}, built {b} (built / early "
+              f"{b / e if e and b else None:.2f}), {res['mass_g']} g, solid {'PASS' if res['solid_ok'] else 'FAIL'}, "
+              f"{res['total_s']} s")
+    except Exception as e:
+        traceback.print_exc()
+        check("slender arms", False, str(e))
+
+
+ARMS_GEN = 14.0
+
+
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold):
         t()
     if not quick:
         t_end_to_end()
+        t_slender_arm_gap()
     bad = [n for n, ok in RESULTS if not ok]
     print(f"\n{len(RESULTS) - len(bad)} / {len(RESULTS)} passed in {time.time() - t0:.0f} s" +
           (f"; FAILED: {bad}" if bad else ""))
