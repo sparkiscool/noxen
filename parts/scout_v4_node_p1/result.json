@@ -26,10 +26,10 @@
  "strength": {
   "rows": [
    {
-    "case": "frame RS0-P1 axial 36 N (pull-out)",
+    "case": "frame RS0-P1 axial 39 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.018,
+    "inlayer": 0.024,
+    "across": 0.02,
     "at": [
      99.0,
      151.5,
@@ -37,10 +37,10 @@
     ]
    },
    {
-    "case": "frame RS0-P1 side 12.8 N",
+    "case": "frame RS0-P1 side 14.4 N",
     "cls": "crash",
-    "inlayer": 0.013,
-    "across": 0.014,
+    "inlayer": 0.015,
+    "across": 0.015,
     "at": [
      94.0,
      150.5,
@@ -48,8 +48,8 @@
     ]
    }
   ],
-  "worst": 0.022,
-  "worst_case": "frame RS0-P1 axial 36 N (pull-out)",
+  "worst": 0.024,
+  "worst_case": "frame RS0-P1 axial 39 N (pull-out)",
   "worst_at": [
    99.0,
    151.5,
@@ -105,6 +105,42 @@
   "kept_walls": [],
   "removed_mm3": 0.0
  },
+ "memory_build": [
+  {
+   "estimate_gb": 0.54,
+   "parts": {
+    "held": 0.32,
+    "gate": 0.03,
+    "mesh": 0.2
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 660285,
+   "bounds_mm": [
+    32.7,
+    15.5,
+    17.0
+   ],
+   "faces": 34940,
+   "when": "before the export cleanup"
+  },
+  {
+   "estimate_gb": 0.36,
+   "parts": {
+    "held": 0.33,
+    "gate": 0.03,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 660285,
+   "bounds_mm": [
+    32.7,
+    15.5,
+    17.0
+   ],
+   "faces": 0,
+   "when": "before the solid check"
+  }
+ ],
  "stl": "scout_v4_node_p1.stl",
  "view_stl": "scout_v4_node_p1_view.stl",
  "view_faces": 26104,
@@ -160,6 +196,7 @@
    "early_k": 3.0,
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
+   "mem_limit_gb": 14.0,
    "checkpoint_every": 10
   },
   "R_mm": 6.44256687412536,
@@ -198,16 +235,49 @@
   "design": 9692,
   "drawn": 1256,
   "cases": [
-   "frame RS0-P1 axial 36 N (pull-out)",
-   "frame RS0-P1 side 12.8 N"
+   "frame RS0-P1 axial 39 N (pull-out)",
+   "frame RS0-P1 side 14.4 N"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 13.7,
- "layout_s": 120,
- "peak_gb": 0.717704,
+ "build_s": 14.1,
+ "layout_s": 176,
+ "peak_gb": 0.71266,
+ "memory": {
+  "estimate_gb": 0.9,
+  "parts": {
+   "held": 0.32,
+   "factor": 0.24,
+   "assembly": 0.11,
+   "block": 0.23,
+   "energies": 0.0
+  },
+  "limit_gb": 14.0,
+  "cases": 8,
+  "active_dofs": 40164,
+  "backend": "direct",
+  "block": 64,
+  "build": {
+   "estimate_gb": 0.42,
+   "parts": {
+    "held": 0.32,
+    "gate": 0.1,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 2349232,
+   "bounds_mm": [
+    40.4,
+    28.0,
+    29.3
+   ],
+   "faces": 0,
+   "when": "from the envelope"
+  },
+  "peak_it1_gb": 0.68
+ },
  "gen_cm3": 0.6,
  "h": 1.0,
  "audit": {
@@ -260,12 +330,13 @@
   },
   "drawn_thin": [],
   "drawn_walls": [],
+  "parity": [],
   "cases": 2,
   "supports": 1,
   "fails": [],
   "room_full": {
    "worst": 0.009,
-   "worst_case": "frame RS0-P1 axial 36 N (pull-out)",
+   "worst_case": "frame RS0-P1 axial 39 N (pull-out)",
    "worst_at": [
     92.0,
     155.5,
@@ -279,10 +350,10 @@
  "early": {
   "rows": [
    {
-    "case": "frame RS0-P1 axial 36 N (pull-out)",
+    "case": "frame RS0-P1 axial 39 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.024,
+    "inlayer": 0.027,
+    "across": 0.026,
     "at": [
      93.0,
      155.5,
@@ -290,10 +361,10 @@
     ]
    },
    {
-    "case": "frame RS0-P1 side 12.8 N",
+    "case": "frame RS0-P1 side 14.4 N",
     "cls": "crash",
-    "inlayer": 0.018,
-    "across": 0.02,
+    "inlayer": 0.02,
+    "across": 0.022,
     "at": [
      96.0,
      150.5,
@@ -301,8 +372,8 @@
     ]
    }
   ],
-  "worst": 0.025,
-  "worst_case": "frame RS0-P1 axial 36 N (pull-out)",
+  "worst": 0.027,
+  "worst_case": "frame RS0-P1 axial 39 N (pull-out)",
   "worst_at": [
    93.0,
    155.5,
@@ -315,10 +386,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 134,
+ "total_s": 190,
  "part_sha": "753ed9fe179c",
  "lib_sha": "a69fb4f2aa8f",
- "setup_sha": "c6234bdaab857713",
+ "setup_sha": "2ae0dcb88d2ce2fc",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
@@ -328,6 +399,6 @@
   "faces": 26104,
   "view_faces": 26104,
   "view_sha256": "3e43c47ec9bfc5dd87d8da560c840ddabdee126ddf46d84319857ed8d3fc48cb",
-  "at": "2026-11-10 08:28"
+  "at": "2026-11-12 04:05"
  }
 }
