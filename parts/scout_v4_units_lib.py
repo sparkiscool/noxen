@@ -135,7 +135,7 @@ class SockDown(Sock):
 
     def collar(self):
         from parts.cage_node_lib import collar_shape
-        return collar_shape(self.c, self.d, min(0.0, self.t_floor - FLOOR), self.t_mouth, BORE_R, WALL, build=self.BUILD)
+        return collar_shape(self.c, self.d, min(0.0, self.t_floor), self.t_mouth, BORE_R, WALL, build=self.BUILD)   # a deep socket's floor behind its bore is generated (11 Nov: DT's collar met the Radxa)
 
     def bores(self):
         from parts.socket_inject import injectable_socket_cuts

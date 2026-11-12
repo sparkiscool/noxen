@@ -224,10 +224,10 @@
     ]
    },
    {
-    "case": "head-first crash: 250 N down onto the case's top",
+    "case": "head-first crash: 270 N down onto the case's top",
     "cls": "crash",
-    "inlayer": 0.133,
-    "across": 0.168,
+    "inlayer": 0.144,
+    "across": 0.182,
     "at": [
      8.9,
      13.8,
@@ -235,13 +235,14 @@
     ]
    }
   ],
-  "worst": 0.168,
-  "worst_case": "head-first crash: 250 N down onto the case's top",
+  "worst": 0.182,
+  "worst_case": "head-first crash: 270 N down onto the case's top",
   "worst_at": [
    8.9,
    13.8,
    113.8
-  ]
+  ],
+  "ok": true
  },
  "mass_g": 8.23,
  "watertight": true,
@@ -250,10 +251,12 @@
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
+  "pinch_vertices": 0,
   "caps_left": 0,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
+  "open_kept": [],
   "faces": 127842,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
@@ -282,6 +285,42 @@
   "removed_mm3": 0.05,
   "specks": 1
  },
+ "memory_build": [
+  {
+   "estimate_gb": 1.96,
+   "parts": {
+    "held": 0.66,
+    "gate": 0.19,
+    "mesh": 1.11
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 4503990,
+   "bounds_mm": [
+    35.0,
+    45.5,
+    40.5
+   ],
+   "faces": 198696,
+   "when": "before the export cleanup"
+  },
+  {
+   "estimate_gb": 0.89,
+   "parts": {
+    "held": 0.7,
+    "gate": 0.19,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 4503990,
+   "bounds_mm": [
+    35.0,
+    45.5,
+    40.5
+   ],
+   "faces": 0,
+   "when": "before the solid check"
+  }
+ ],
  "stl": "scout_v4_cradle.stl",
  "view_stl": "scout_v4_cradle_view.stl",
  "view_faces": 120000,
@@ -337,6 +376,7 @@
    "early_k": 3.0,
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
+   "mem_limit_gb": 14.0,
    "checkpoint_every": 10
   },
   "R_mm": 3.659377984503204,
@@ -393,15 +433,48 @@
    "camera and LED bars flight 2 g x",
    "camera and LED bars flight 2 g y",
    "camera and LED bars landing 6 g",
-   "head-first crash: 250 N down onto the case's top"
+   "head-first crash: 270 N down onto the case's top"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 53.7,
- "layout_s": 2018,
- "peak_gb": 4.787452,
+ "build_s": 42.3,
+ "layout_s": 1710,
+ "peak_gb": 2.713136,
+ "memory": {
+  "estimate_gb": 3.54,
+  "parts": {
+   "held": 0.61,
+   "factor": 1.58,
+   "assembly": 0.43,
+   "block": 0.72,
+   "energies": 0.2
+  },
+  "limit_gb": 14.0,
+  "cases": 97,
+  "active_dofs": 165666,
+  "backend": "direct",
+  "block": 46,
+  "build": {
+   "estimate_gb": 0.85,
+   "parts": {
+    "held": 0.61,
+    "gate": 0.24,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 5707782,
+   "bounds_mm": [
+    38.6,
+    45.5,
+    47.1
+   ],
+   "faces": 0,
+   "when": "from the envelope"
+  },
+  "peak_it1_gb": 2.53
+ },
  "gen_cm3": 2.0,
  "h": 0.8,
  "audit": {
@@ -556,19 +629,20 @@
   },
   "drawn_thin": [],
   "drawn_walls": [],
+  "parity": [],
   "cases": 19,
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.106,
-   "worst_case": "head-first crash: 250 N down onto the case's top",
+   "worst": 0.114,
+   "worst_case": "head-first crash: 270 N down onto the case's top",
    "worst_at": [
     13.7,
     -27.0,
     113.8
    ],
    "budget_share": 0.114,
-   "thinned": 0.93,
+   "thinned": 1.0,
    "max_worst": 0.3
   }
  },
@@ -773,10 +847,10 @@
     ]
    },
    {
-    "case": "head-first crash: 250 N down onto the case's top",
+    "case": "head-first crash: 270 N down onto the case's top",
     "cls": "crash",
-    "inlayer": 0.166,
-    "across": 0.175,
+    "inlayer": 0.179,
+    "across": 0.189,
     "at": [
      9.7,
      -20.7,
@@ -784,32 +858,33 @@
     ]
    }
   ],
-  "worst": 0.175,
-  "worst_case": "head-first crash: 250 N down onto the case's top",
+  "worst": 0.189,
+  "worst_case": "head-first crash: 270 N down onto the case's top",
   "worst_at": [
    9.7,
    -20.7,
    113.8
   ],
+  "ok": true,
   "beta": 4.0,
   "iteration": 35,
   "max_worst": 0.3,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 2072,
+ "total_s": 1752,
  "part_sha": "c2c7c597943a",
- "lib_sha": "d4a3e35601a1",
- "setup_sha": "1b6523ec8ec9189b",
+ "lib_sha": "7f3b7f6b12aa",
+ "setup_sha": "2344052800d0b334",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_cradle.stl",
-  "sha256": "94fb4d5cdf9dbfa425357abfd05b94e43edc40a970bd6e1cc6caeedd0125c7ee",
+  "sha256": "e7bb9dc9bfe9af4f27756c0a1eb73c859af749ceb1ad8013fa037282ab321ec8",
   "bytes": 6392184,
   "faces": 127842,
   "view_faces": 60000,
-  "view_sha256": "2e304e45f3dc39aeb854545d611a37543d802821af4cb8a65b9c92955f52c74c",
-  "at": "2026-11-09 23:17"
+  "view_sha256": "d58803e351918b1f39030662b6f1e188c8bc1668ffdacf74420c4827a2824a2f",
+  "at": "2026-11-12 10:46"
  }
 }

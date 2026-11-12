@@ -1,8 +1,9 @@
 """Self-test of nox/topo. Run from nox/:  python3 -m topo.test_topo [--quick]
-Each test prints PASS / FAIL with its numbers; exit code 1 if any fails. ~2-4 min on a 4 vCPU box (--quick skips the
-end-to-end run)."""
+Each test prints PASS / FAIL with its numbers; exit code 1 if any fails. ~16 min on a 4 vCPU box, ~10 of them the slender-arm run
+(--quick skips the end-to-end runs: ~1.5 min)."""
 import sys
 import time
+import json
 import traceback
 import numpy as np
 import scipy.sparse as sp
@@ -777,6 +778,61 @@ def t_export_pinch():
         check("export pinch", False, str(e))
 
 
+def t_setup_reads():
+    """a part's identity is every repo file its setup reads (tools/part_sha.py record): a tools/ module the part imports (already imported
+    by the caller, served from __pycache__) and the systems/ data that module opens are in setup.json "reads"; a changed value there
+    changes the setup sha, the result reads stale and --affected reruns the part; a file it does not read reruns nothing (10 Nov: the
+    Scout v4 parts read systems/scout_v4.head_load.json, outside the old key, and CI neither reran nor superseded them)"""
+    try:
+        import os, sys, json, tempfile, shutil, importlib
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        sys.path.insert(0, os.path.join(root, "tools"))
+        import part_sha as PS
+        importlib.reload(PS)
+        tag = f"_t_reads_{os.getpid()}"
+        mod, dat = os.path.join(root, "tools", tag + ".py"), os.path.join(root, "systems", tag + ".json")
+        d = tempfile.mkdtemp(prefix="setup_reads_", dir=os.path.join(root, "parts"))
+        try:
+            open(dat, "w").write('{"load": -10.0}')
+            open(mod, "w").write("import json, os\nLOAD = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'systems', '%s.json')))['load']\n" % tag)
+            py = os.path.join(d, "part.py")
+            open(py, "w").write("import os, sys\nimport manifold3d as mf\nfrom topo.part import Part\n"
+                                "sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tools'))\n"
+                                f"from {tag} import LOAD\n"
+                                "box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])\n"
+                                "def setup(h):\n    p = Part('t', h, box(0, 3, 0, 12, 0, 12) + box(20, 24, 3, 9, 3, 9), box(100, 101, 100, 101, 100, 101), box(0, 24, 0, 12, 0, 12), log=lambda s_: None)\n"
+                                "    p.support('default', box(-1, 1.5, -1, 13, -1, 13)); p.load('down', box(20, 24, 3, 9, 3, 9), (0, 0, LOAD)); return p\n"
+                                "SPEC = dict(h=1.0, gen_cm3=1.0, max_worst=0.5)\n")
+            importlib.import_module(tag)                                       # the caller has it already: a fresh import must still record it
+            importlib.import_module(tag)
+            a = PS.setup_sha(py, refresh=True); reads = json.load(open(os.path.join(d, "setup.json")))["reads"]
+            ids = PS.files(py)
+            inkey = f"tools/{tag}.py" in reads and f"systems/{tag}.json" in reads and f"systems/{tag}.json" in ids
+            nojunk = not any(r.startswith(("topo/", ".git")) or "__pycache__" in r or r.endswith("setup.json") for r in reads)
+            res = dict(part_sha=PS.part_sha(py), lib_sha=PS.lib_sha(py), setup_sha=a)
+            json.dump(res, open(os.path.join(d, "result.json"), "w"))
+            name = os.path.basename(d)
+            quiet = PS.affected(["systems/runtimes.json", "tools/dim.py"], pys=[py]) == []      # not read: nothing reruns
+            same = PS.affected([f"systems/{tag}.json"], pys=[py]) == []                        # read, unchanged setup: nothing reruns
+            open(dat, "w").write('{"load": -14.0}')
+            b = PS.setup_sha(py)                                               # the cache sees the data change without refresh
+            stale = PS.stale(py, res)
+            rerun = PS.affected([f"systems/{tag}.json"], pys=[py]) == [name]
+            ok = inkey and nojunk and b != a and stale and quiet and same and rerun
+            check("setup reads: a read systems/ or tools/ file is the part's identity, its change reruns the part, other files do not", ok,
+                  f"in the key {inkey}, no engine or output files {nojunk}, sha changed {b != a}, stale {stale}, unread file quiet {quiet}, "
+                  f"unchanged setup quiet {same}, changed data reruns {rerun}; reads {reads}")
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+            for f in (mod, dat):
+                if os.path.exists(f):
+                    os.remove(f)
+            sys.modules.pop(tag, None)
+    except Exception as e:
+        traceback.print_exc()
+        check("setup reads", False, str(e))
+
+
 def t_setup_sha():
     """staleness by setup (tools/part_sha.py): a result carrying the setup_sha of the setup part.py builds now is current even when
     part.py's or a lib's file hash changed (30 Oct: a two-line validation in cage_node_lib flagged eight node results stale and they
@@ -816,11 +872,11 @@ def t_setup_sha():
             open(os.path.join(d, "inputs", "load.json"), "w").write('{"load": -14.0}')
             d2 = PS.setup_sha(py)
             data_stale = PS.stale(py, dict(part_sha=PS.part_sha(py), lib_sha="", setup_sha=d1))
-            sysjson = any(f.endswith("overseer.cage.json") for f in PS.data_files(py))
+            sysjson = any(f.endswith(os.path.join("inputs", "load.json")) for f in PS.data_files(py))      # the read file is in the key
             ok = a == b and cached["setup_sha"] == a and not_stale and other_stale and old_rule and c != a and d1 == c and d2 != d1 and data_stale and sysjson
             check("setup sha: a comment keeps a result current, a changed load or data file makes it stale, old results use the file rule", ok,
                   f"comment {a == b}, cache {cached['setup_sha'] == a}, current {not_stale}, other setup stale {other_stale}, old rule {old_rule}, load changed {c != a}, "
-                  f"data file: same {d1 == c}, changed {d2 != d1}, stale {data_stale}; systems/*.json in the key {sysjson}")
+                  f"data file: same {d1 == c}, changed {d2 != d1}, stale {data_stale}; the read file in the key {sysjson}")
         finally:
             shutil.rmtree(d, ignore_errors=True)
     except Exception as e:
@@ -931,6 +987,24 @@ def t_audit_block_measure():
     thick = [diameter_mm(slab(12.0, h), h) for h in (1.5, 2.0, 1.0)]
     ok = all(d <= 8.0 for d in thin) and all(d > 8.0 for d in thick) and all(abs(d - 8.0) <= 2.0 for d in thin) and all(abs(d - 12.0) <= 2.0 for d in thick)
     RESULTS.append(("audit_block_measure", ok)); print(f"audit block measure: {'ok' if ok else 'FAIL'} 8 mm -> {[round(d, 1) for d in thin]}  12 mm -> {[round(d, 1) for d in thick]}")
+
+
+def t_audit_parity():
+    """audit: parity (11 Nov, the Scout v4 frame's flow land flush on the nose room's floor): a box stacked flush on a wider one is two
+    shells in the manifold union and the +z rays meet the shared face twice: parity_columns reports those columns; the same boxes
+    overlapped 0.5 report none."""
+    try:
+        import manifold3d as mf
+        from topo.audit import parity_columns
+        from .part import tm
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        xs = ys = np.arange(-59.0, 60.0, 2.0)
+        flush = parity_columns(tm(box(-50, 50, -40, 40, 9.6, 24.5) + box(-52, 54, 33.8, 40, -2.3, 9.6)), xs, ys)
+        lap = parity_columns(tm(box(-50, 50, -40, 40, 9.6, 24.5) + box(-52, 54, 33.8, 40, -2.3, 10.1)), xs, ys)
+        check("audit parity: a box flush on another is refused, overlapped 0.5 passes", len(flush) > 0 and not lap, f"flush {len(flush)} columns, overlapped {len(lap)}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit parity", False, str(e))
 
 
 def t_audit_drawn_thin():
@@ -1202,13 +1276,266 @@ def t_audit_room_full():
         check("audit room_full", False, str(e))
 
 
+def t_memory_gate():
+    """memory (topo/audit.py memory_fit / memory_measured, fem.Solver.solve_blocks; 10 Nov: scout_v4_frame's 396 cases held
+    13.6 GB and the 16 GB runner killed the run at 2 h with no log). (1) The streamed solve, 1 case a block, gives the
+    compliances and the gradient of one solve of every case at once (direct and multigrid). (2) A setup over the limit is
+    refused before the first solve, and optimise writes result.json with status mem_refused and the reason."""
+    import os, json, tempfile
+    from .audit import memory_fit, MemoryRefused
+    from .run import optimise
+    try:
+        p = _mini_part()
+        errs = []
+        for be in ("direct", "mg"):
+            s = Settings(min_member_mm=3.2, backend=be, reach_check="off", auto_sym=False, finish="drawn")
+            L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+            x = np.random.default_rng(3).uniform(0.2, 0.8, L.nd)
+            f = L.fields(x, 4.0)
+            rho = f["rho_e"]
+            E = (s.emin + (1.0 - s.emin) * rho ** s.penal) * L.stiff
+            F = np.stack([c.Fe for c in L.cases], 1)
+            L.fe_solver.warm.clear()
+            U = L.fe_solver.solve(E, F, [c.support for c in L.cases], keys=[c.name for c in L.cases])
+            c_all = (F * U).sum(0)
+            en = L.fe_solver.element_energy(U)
+            J, dJdc, r = L._objective(c_all)
+            dE = s.penal * np.maximum(rho, 1e-12) ** (s.penal - 1.0) * (1.0 - s.emin) * L.stiff
+            g_all = sum(-dJdc[q] * dE * en[q] for q in range(len(L.cases)))
+            L.fe_solver.warm.clear()
+            L.fe_solver.block_size = lambda: 1
+            comp, (S, _) = L._compliance(rho)
+            g = L._grad_rho_e(rho, S, dJdc)
+            errs.append(max(float(np.abs(comp - c_all).max() / np.abs(c_all).max()), float(np.abs(g - g_all).max() / np.abs(g_all).max())))
+        ok1 = errs[0] < 1e-9 and errs[1] < 1e-6
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn")
+        L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+        fits = "fail" not in memory_fit(L, 14.0, log=lambda s_: None)
+        try:
+            memory_fit(L, 1e-3, log=lambda s_: None); refused = False
+        except MemoryRefused as e:
+            refused = "memory" in str(e) and e.info["estimate_gb"] > 1e-3
+        out = tempfile.mkdtemp(prefix="topo_mem_")
+        so = Settings(min_member_mm=3.0, max_stage=2, min_stage=1, audit="warn", time_limit_s=120, mem_limit_gb=1e-3)
+        lines = []
+        res = optimise(lambda h: _mini_part(h=h), 1.0, 0.6, out, "mini_mem", settings=so, coarse=False, maxit=1, log=lines.append)
+        rj = json.load(open(os.path.join(out, "result.json")))
+        written = rj["status"] == "mem_refused" and "GB" in (rj["strength"]["fail"] or "") and res["status"] == "mem_refused"
+        check("memory: streamed solve = one solve of every case; over the limit refused before the solve, reason in result.json",
+              ok1 and fits and refused and written,
+              f"streamed vs all (direct, mg) rel err {errs[0]:.1e} {errs[1]:.1e}, fits 14 GB {fits}, refused {refused}, result.json {written}")
+    except Exception as e:
+        traceback.print_exc()
+        check("memory gate", False, f"{type(e).__name__}: {e}")
+
+
+def t_gate_memory():
+    """gate memory (tools/solid_check.py edt / edt_box, 10 Nov: scout_v4_frame, 94 M gate cells, the runner killed right after the
+    export: scipy's distance transform held ~60 bytes a cell at once, ~5 GB a call). (a) edt is scipy's distance_transform_edt bit for
+    bit (also on a mask at the grid's edge) and edt_box is it on the body's box; (b) the gate with them reports exactly what the
+    gate with scipy's full-grid transforms reports (a pad on a sliver, a neck, thin walls, a thin_ok post); (c) its peak is under
+    audit.GATE_BYTES a cell and under 70 % of the old one's (on the frame: 37.5 vs 98 B a cell)."""
+    import tracemalloc
+    from scipy import ndimage as ndi
+    from .part import tm
+    from .build import _solid_check_module
+    from . import audit
+    try:
+        SC = _solid_check_module()
+        rng = np.random.default_rng(5)
+        M = ndi.binary_opening(rng.random((41, 33, 27)) > 0.35); M[0, :5, :5] = True
+        ok_a = all(np.array_equal(SC.edt(m, slab=s_), ndi.distance_transform_edt(m)) for m in (M, ~M) for s_ in (1, 7, 64))
+        B = np.zeros((40, 30, 20), bool); B[0:9, 3:12, 5:15] = True; B[20:30, 10:25, 2:18] = True
+        own, sl = SC.edt_box(B)
+        ok_a = ok_a and np.array_equal(own, ndi.distance_transform_edt(B)[sl])
+        cube = _mbox(20, 20, 20, (0, 0, 0)); pad = _mbox(4, 8, 8, (14.6, 0, 0)); sliver = _mbox(2.6, 1.2, 8, (11.3, 0, 0))
+        fin = _mbox(10, 1.4, 14, (-15, 0, 0)); post = _mbox(3, 3, 6, (0, 0, 13))
+        mesh, drawn, thin = tm(cube + sliver + pad + fin + post), [tm(pad + post)], [tm(post)]
+
+        def run(lean):
+            S2 = _solid_check_module()
+            if not lean:
+                S2.edt = lambda m, slab=8: ndi.distance_transform_edt(m)
+                S2.edt_box = lambda m: (ndi.distance_transform_edt(m), (slice(None),) * 3)
+            tracemalloc.start()
+            ok, info = S2.solid_check(mesh, drawn=drawn, thin_ok=thin)
+            peak = tracemalloc.get_traced_memory()[1]
+            tracemalloc.stop()
+            return ok, info, peak
+        ok1, i1, p1 = run(True)
+        ok0, i0, p0 = run(False)
+        ok_b = bool(ok1 == ok0) and json.dumps(i1, sort_keys=True, default=str) == json.dumps(i0, sort_keys=True, default=str) and not ok1 \
+            and bool(i1["drawn_not_in_main"]) and bool(i1["thin_walls"])
+        n = audit.gate_voxels(mesh.bounds[0], mesh.bounds[1])
+        ok_c = p1 < audit.GATE_BYTES * n and p1 < 0.7 * p0
+        check("gate memory: edt = scipy bit for bit, same verdict and report, peak under GATE_BYTES a cell", ok_a and ok_b and ok_c,
+              f"(a) {ok_a}; (b) {ok_b} ({ok1}, {len(i1['drawn_not_in_main'])} drawn off, {len(i1['thin_walls'])} thin, {len(i1['necks'])} necks); "
+              f"(c) peak {p1 / n:.0f} B a cell (old {p0 / n:.0f}, limit {audit.GATE_BYTES:.0f}) on {n:,} cells")
+    except Exception as e:
+        traceback.print_exc()
+        check("gate memory", False, f"{type(e).__name__}: {e}")
+
+
+def t_build_memory_gate():
+    """memory of the build and gate (topo/audit.py build_fit, topo/build.py build_and_check; 10 Nov: scout_v4_frame killed twice right
+    after the export, no result): (a) the estimate grows with the part's box (the gate grid) and its faces; (b) a setup whose gate
+    grid cannot fit is refused before the first solve (memory_fit's build entry); (c) a build over the limit after the layout
+    writes result.json with status mem_refused, its reason and memory_build, never a killed runner; (d) a build that fits carries
+    memory_build in result.json."""
+    import os, tempfile
+    from . import audit
+    from .run import optimise
+    g0 = audit.GATE_BYTES
+    try:
+        t1, _, n1 = audit.build_estimate((0, 0, 0), (50, 50, 20), faces=0, held_gb=0)
+        t2, _, n2 = audit.build_estimate((0, 0, 0), (180, 180, 44), faces=838_474, held_gb=0)
+        ok_a = n2 > 20 * n1 and t2 > 20 * t1 and 80e6 < n2 < 110e6
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn")
+        L = Layout(_mini_part(), volfrac=0.3, settings=s, log=lambda s_: None)
+        fits = "fail" not in L.mem and "build" in L.mem
+        audit.GATE_BYTES = 1e12
+        try:
+            audit.memory_fit(L, 14.0, log=lambda s_: None); pre = False
+        except audit.MemoryRefused as e:
+            pre = "build" in str(e) and "gate" in str(e)
+        audit.GATE_BYTES = g0
+        out = tempfile.mkdtemp(prefix="topo_bmem_")
+        so = Settings(min_member_mm=3.0, max_stage=2, min_stage=1, audit="warn", time_limit_s=120)
+
+        def hook(s_):
+            if "layout done" in str(s_):
+                audit.GATE_BYTES = 1e12                        # the build sees a part whose gate grid cannot fit
+        res = optimise(lambda h: _mini_part(h=h), 1.0, 0.6, out, "mini_bmem", settings=so, coarse=False, maxit=1, log=hook)
+        audit.GATE_BYTES = g0
+        rj = json.load(open(os.path.join(out, "result.json")))
+        ok_c = (rj.get("status") == "mem_refused" and res.get("status") == "mem_refused" and "gate" in (rj["strength"]["fail"] or "")
+                and rj["memory_build"]["when"] == "before the export cleanup" and not os.path.exists(os.path.join(out, "mini_bmem.stl")))
+        out2 = tempfile.mkdtemp(prefix="topo_bmem2_")
+        res2 = optimise(lambda h: _mini_part(h=h), 1.0, 0.6, out2, "mini_bmem2", settings=so, coarse=False, maxit=1, log=lambda s_: None)
+        mb = res2.get("memory_build") or []
+        ok_d = res2.get("status") is None and len(mb) == 2 and all("fail" not in m for m in mb) and mb[0]["faces"] > 0
+        check("build memory gate: estimate by the gate grid, refused before the solve or before the gate with status mem_refused",
+              ok_a and fits and pre and ok_c and ok_d,
+              f"(a) {n1:,} -> {n2:,} cells, {t1:.2f} -> {t2:.1f} GB; fits {fits}; (b) refused before the solve {pre}; (c) result.json "
+              f"{rj.get('status')} {str(rj['strength'].get('fail'))[:120]}; (d) {[m.get('estimate_gb') for m in mb]}")
+    except Exception as e:
+        traceback.print_exc()
+        check("build memory gate", False, f"{type(e).__name__}: {e}")
+    finally:
+        audit.GATE_BYTES = g0
+
+
+def _arms_part(arms=((45, 1), (-45, 1), (135, 1), (-135, 1)), h=2.0, sockets=(16,)):
+    """slender arms (12 Nov, scout_v4_frame): a deck held at four bolt bosses, 74 mm diagonal arms (22 x 12 mm envelope) to motor pads
+    loaded by thrust 17.7 N + 11 N imbalance across / along (flight), and socket bosses on the deck with 600 N rod loads (crash) that
+    compete for the material. At gen 14 cm3 (four arms) the arms come out near the 6.25 mm minimum member at h 2.0 (~3 cells)."""
+    import manifold3d as mf
+    from .part import Part
+    box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+    cyl = lambda r, z0, z1, x, y: mf.Manifold.cylinder(z1 - z0, r, r, 32).translate([x, y, z0])
+    env = box(-24, 24, -24, 24, 0, 12)
+    drawn, cuts, pads = [], [], []
+    for ang, _ in arms:
+        env = env + box(0, 80, -11, 11, 0, 12).rotate([0, 0, ang])
+        px, py = 74 * np.cos(np.radians(ang)), 74 * np.sin(np.radians(ang))
+        pad = cyl(9, 6, 12, px, py)
+        drawn.append(pad); cuts.append(cyl(2.0, -1, 13, px, py)); pads.append((ang, pad))
+    regs = []
+    for bx, by in ((-18, -18), (18, -18), (-18, 18), (18, 18)):
+        drawn.append(cyl(5, 0, 4, bx, by)); cuts.append(cyl(1.6, -1, 13, bx, by)); regs.append(cyl(5, -1, 0.9, bx, by))
+    socks = []
+    for y in sockets:
+        for sy in (1, -1)[:2 if len(arms) > 2 else 1]:
+            sk = cyl(6, 0, 12, 0, sy * y)
+            drawn.append(sk); cuts.append(cyl(3.1, 3, 13, 0, sy * y)); socks.append(sk)
+    p = Part("arms", h, mf.Manifold.batch_boolean(drawn, mf.OpType.Add), mf.Manifold.batch_boolean(cuts, mf.OpType.Add), env,
+             log=lambda s: None)
+    p.support("default", mf.Manifold.batch_boolean(regs, mf.OpType.Add))
+    for i, (ang, pad) in enumerate(pads):
+        a = np.radians(ang)
+        along, across = np.array([np.cos(a), np.sin(a), 0]), np.array([-np.sin(a), np.cos(a), 0])
+        p.load(f"motor {i + 1} across", pad, tuple(np.array([0, 0, 17.7]) + 11 * across), cls="flight")
+        p.load(f"motor {i + 1} along", pad, tuple(np.array([0, 0, 17.7]) + 11 * along), cls="flight")
+    for j, sk in enumerate(socks):
+        p.load(f"socket {j} tension", sk, (0, 40.0, 600.0), cls="crash")
+        p.load(f"socket {j} compression", sk, (0, -40.0, -600.0), cls="crash")
+    return p
+
+
+def t_built_hold():
+    """the built hold (layout.py Settings.nominal_hold): inactive rows before it starts; once started every real case's compliance on
+    the build projection (nominal and gate-eroded) reads 1 / (1 + hold_tol) - 1 on the reference design, and its gradient (through the
+    sharp projection, body forces included) matches finite differences"""
+    try:
+        p = _mini_part()
+        p.accel_case("grav", (0, 0, -9.81 * 30), cls="crash")
+        rng = np.random.default_rng(5)
+        beta = 4.0
+        s = Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn", hold_proj_beta=6.0)
+        L = Layout(p, volfrac=0.3, settings=s, log=lambda s_: None)
+        x = rng.uniform(0.3, 0.7, L.nd)
+        f = L.fields(x, beta)
+        comp, (U, _) = L._compliance(f["rho_e"])
+        fv0, _ = L._hold_constraints(f, comp, U)
+        L.start_hold(f)
+        f = L.fields(x, beta)
+        comp, (U, _) = L._compliance(f["rho_e"], rho_g=f["rho_g"], rho_b=f["rho_b"], rho_be=f["fb"]["rho_e"])
+        fv, dg = L._hold_constraints(f, comp, U)
+
+        def G(xx):
+            ff = L.fields(xx, beta)
+            c, _ = L._compliance(ff["rho_e"], need_grad=False, rho_g=ff["rho_g"], rho_b=ff["rho_b"], rho_be=ff["fb"]["rho_e"])
+            return c[len(L.cases):] / ((1 + s.hold_tol) * L.c_hold) - 1
+        errs = []
+        for i in rng.choice(L.nd, 6, replace=False):
+            e = 1e-3        # the eroded copies' roundoff (Emin cells) swamps 1e-4 steps; truncation at 1e-3 is ~1e-6 at beta 6
+            xp, xm = x.copy(), x.copy()
+            xp[i] += e
+            xm[i] -= e
+            fd = (G(xp) - G(xm)) / (2 * e)
+            errs += [abs(fd[k] - dg[k][i]) / max(abs(fd[k]), 1e-2 * np.abs(dg[k]).max()) for k in range(len(fv))]
+        ok = (fv0 == [-1.0] * 2 * L.n_real and len(fv) == 2 * L.n_real == 6 and np.allclose(fv, 1 / (1 + s.hold_tol) - 1, atol=1e-9)
+              and max(errs) < 1e-3 and L.mma.m == 3 + 2 * L.n_real)
+        check("built hold: rows inactive before it starts, at the reference after, gradient vs finite differences", ok,
+              f"rows {np.round(fv, 4).tolist()}, max rel err {max(errs):.1e}")
+    except Exception as e:
+        traceback.print_exc()
+        check("built hold", False, str(e))
+
+
+def t_slender_arm_gap():
+    """the slender-arm gap (12 Nov, scout_v4_frame: arms built at 1.7-1.9x the run's beta-4 index): a deck, four 74 mm diagonal arms
+    near the minimum member and two 600 N sockets (frame-lite), run end to end at h 2.0 (~10 min). Without the built hold it reads
+    0.87 at the beta-4 check and 1.20 built (1.38x), the arms 15 -> 9 cells across. The as-built index must stay within 10 % of the run's own
+    beta-4 check (early), the final field's within 10 % of the built, and the part must pass the gate."""
+    import tempfile
+    from .run import optimise
+    try:
+        out = tempfile.mkdtemp(prefix="topo_arms_")
+        res = optimise(lambda h: _arms_part(h=h), 2.0, ARMS_GEN, out, "arms", settings=Settings(backend="direct", time_limit_s=1800),
+                       coarse=False, log=lambda s_: None)
+        e, fl, b = (res.get("early") or {}).get("worst"), (res.get("field") or {}).get("worst"), res["strength"]["worst"]
+        ok = bool(e and fl and b and b <= 1.10 * e and abs(b - fl) <= 0.10 * fl and res["solid_ok"])
+        check("slender arms: built index within 10 % of the beta-4 check and of the final field, gate passes", ok,
+              f"early {e} (beta {(res.get('early') or {}).get('beta')}), field {fl}, built {b} (built / early "
+              f"{b / e if e and b else None:.2f}), {res['mass_g']} g, solid {'PASS' if res['solid_ok'] else 'FAIL'}, "
+              f"{res['total_s']} s")
+    except Exception as e:
+        traceback.print_exc()
+        check("slender arms", False, str(e))
+
+
+ARMS_GEN = 14.0
+
+
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold):
         t()
     if not quick:
         t_end_to_end()
+        t_slender_arm_gap()
     bad = [n for n, ok in RESULTS if not ok]
     print(f"\n{len(RESULTS) - len(bad)} / {len(RESULTS)} passed in {time.time() - t0:.0f} s" +
           (f"; FAILED: {bad}" if bad else ""))

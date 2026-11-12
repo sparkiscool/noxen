@@ -100,8 +100,24 @@ class Settings:
     backend: str = "auto"               # "auto" | "direct" | "mg"
     early_beta: int = 4                 # early strength check once this beta stage is done (later if the field is not one body yet; 0 = off): topo/run.py early_check
     early_k: float = 3.0                # ... stop the run when the index there is over early_k x SPEC max_worst (SPEC settings override)
+    # built hold (12 Nov, scout_v4_frame: the arms built at 1.7-1.9x the run's beta-4 index while the sockets improved). The
+    # objective is the p-mean of compliance over the full solid's, and the tie cases (unit loads holding the drawn bodies to the hub)
+    # hold over 90 % of it (frame-lite: ties 92-96 %, the four arms 0.01-0.4 %); it also sees only the eroded design, whose core near
+    # the minimum member is pinned by the erosion threshold. So as beta sharpens the optimiser thinned the built section of the arms
+    # down to what keeps that core, unseen: an arm 15 cells across at beta 4 left 9 at beta 32 with the same 4-cell eroded core, its
+    # index 0.87 -> 1.26 at a constant volume. From the stage end at hold_beta on (where the run's early check reads the field) every
+    # real case is also solved on the design as the build will threshold it (x_tilde projected at eta_n with hold_proj_beta), and its
+    # compliance there is held by one MMA constraint per case to (1 + hold_tol) x its value on the checked field.
+    nominal_hold: bool = True
+    hold_beta: float = 4.0
+    hold_proj_beta: float = 32.0
+    hold_tol: float = 0.05
+    hold_eroded: bool = True            # ... and on the gate's view of it (eta_e, same projection): the hold cannot be met by thin walls
+    hold_stage: int = 50                # the last beta stage's limit with the hold on (max_stage without): a held run needs ~15 more
+    #   iterations there to rejoin the eroded design (frame-lite gen 14: 35 left the pads' cores off and the gate failed, 50 passed)
     mg_tol: float = 1e-5
     time_limit_s: float = 5.5 * 3600
+    mem_limit_gb: float = 14.0         # memory gate (topo/audit.py memory_fit, build_fit: the solve and the build / gate): the GitHub runner has 16 GB and kills a run over it silently
     checkpoint_every: int = 10
 
 
@@ -380,6 +396,9 @@ class Layout:
         self.fe_solver = Solver(shape, h, self.C, self.supports, active=active,
                                 backend=os.environ.get("NOX_TOPO_BACKEND", s.backend), log=log, mg_tol=s.mg_tol)
         self.KE = self.fe_solver.KE
+        # ---- memory gate before the first solve (10 Nov: the frame died at 2 h on the 16 GB runner with no log)
+        from .audit import memory_fit
+        self.mem = memory_fit(self, s.mem_limit_gb, log=log, hard=s.audit != "off")
         # ---- reference compliances (full solid)
         full = np.where(void, 0.0, 1.0)
         c_ref, _ = self._compliance(full, need_grad=False)
@@ -387,13 +406,16 @@ class Layout:
         if bad:
             raise ValueError(f"layout: zero compliance of the full solid for {bad}: the load sits on fixed nodes")
         self.c_ref = c_ref
+        self.checks, self.last_check = [], None   # the field's strength at each stage end from hold_beta (check_stage)
+        self.hold, self.c_hold = None, None      # built hold (Settings.nominal_hold): real-case ids and their reference compliances
+        self.hold_info = {}
         self.normed = False
         self.warm = False
         self.hist = []
         self.scale = None
         self.vlim = self.volfrac
         self.x = np.full(self.nd, self.volfrac)
-        self.mma = MMA(self.nd, 3, move=s.move)
+        self.mma = MMA(self.nd, 3 + self._hold_rows(), move=s.move)       # volume, 2 geometric, the built hold
 
     # ------------------------------------------------------------------------------------------ anchors
     def _anchors(self):
@@ -668,6 +690,15 @@ class Layout:
         return a.ravel()
 
     def fields(self, x, beta):
+        """the realizations at beta; with the built hold on, also fb: the same at max(beta, hold_proj_beta), the design as the build
+        thresholds it (rho_b = its nominal, dHb) and as the gate erodes it (its rho_e)"""
+        f = self._fields(x, beta)
+        if self.hold is not None:
+            fb = self._fields(x, max(beta, self.s.hold_proj_beta))
+            f.update(fb=fb, rho_b=fb["rho_n"], dHb=fb["dHn"])
+        return f
+
+    def _fields(self, x, beta):
         xh = self.solid.astype(float)
         xh[self.design] = x
         xt = self.filt(xh)
@@ -695,7 +726,8 @@ class Layout:
         rho_g = None if dHc is None else np.where(self.cover, Hc, rho_e)
         rho_n = np.where(self.solid, 1.0, np.where(self.void, 0.0, Hn))
         rho_d = np.where(self.solid, 1.0, np.where(self.void, 0.0, Hd))
-        return dict(xt=xt, xte=xte, dHc=dHc, dHs=dHs, rho_e=rho_e, rho_g=rho_g, rho_n=rho_n, rho_d=rho_d, dHe=dHe, dHn=dHn, dHd=dHd, Hn=Hn)
+        return dict(xt=xt, xte=xte, dHc=dHc, dHs=dHs, rho_e=rho_e, rho_g=rho_g, rho_n=rho_n, rho_d=rho_d, dHe=dHe, dHn=dHn, dHd=dHd, Hn=Hn,
+                    rho_b=None, dHb=None, x=x, beta=beta)
 
     def _back(self, g_xt):
         """d/dx_tilde -> d/dx on the design cells (filter transpose; the kernel is symmetric)."""
@@ -731,76 +763,124 @@ class Layout:
         return self._den_c
 
     # ---------------------------------------------------------------------------------------- compliance
-    def _compliance(self, rho_e, need_grad=True, rho_g=None):
+    def _compliance(self, rho_e, need_grad=True, rho_g=None, rho_b=None, hold_only=False, rho_be=None):
         """compliance of every case. Gate ties run on rho_g (the gate realization) when it is given, the rest on
-        rho_e (a held thin body stays whole there, so the real cases and the ordinary ties keep it attached)."""
+        rho_e (a held thin body stays whole there, so the real cases and the ordinary ties keep it attached).
+        The cases stream through the solver in blocks (fem.Solver.solve_blocks) and each block's displacements are
+        reduced to what the gradient needs, the element energies u_e^T KE u_e (and u_e . fe for body forces), at once:
+        (ncase, nel) instead of (ndof, ncase), and no full load or displacement matrix (10 Nov, scout_v4_frame: 396
+        cases x 0.7 M dofs held 13.6 GB and the 16 GB runner killed the run). Returns comp, and with need_grad
+        (energies, E) for _grad_rho_e."""
         s = self.s
         E = (s.emin + (1.0 - s.emin) * rho_e ** s.penal) * self.stiff
         g = self.fe_solver.grid
         cases = self.cases
-        F = np.zeros((self.part.ndof, len(cases)))
-        for q, c in enumerate(cases):
-            F[:, q] = c.Fe
-            if c.fe is not None:
-                r = (rho_e[:, None] * c.fe[None, :])[None]
-                F[:, q] += g.to_flat(g.scatter(r))[:, 0]
+        nc = len(cases)
+        # the built hold's copies of the real cases past the cases: on rho_b (nominal loads), then on rho_be (eroded loads)
+        hold = self.hold if (rho_b is not None and self.hold is not None) else np.zeros(0, int)
+        copies = [] if not len(hold) else [(rho_b, False)] + ([(rho_be, True)] if rho_be is not None else [])
+        hold = np.tile(hold, len(copies))
+        nh = len(hold)
+        n1 = nh // len(copies) if copies else 1
+        rho_c = lambda q: copies[(q - nc) // n1]
+        comp = np.zeros(nc + nh)
+        en = np.zeros((nc + nh, self.nel)) if need_grad else None
+        fo = {}
+
+        def make_F(cols):
+            # columns q >= nc are the built-hold copies of real case hold[q - nc] (rho_c: their design and loads)
+            F = np.zeros((self.part.ndof, len(cols)))
+            for j, q in enumerate(cols):
+                c = cases[q] if q < nc else cases[hold[q - nc]]
+                if q < nc or rho_c(q)[1]:
+                    c.add_Fe(F[:, j])
+                else:
+                    F[:, j] += c.F
+                if c.fe is not None:
+                    r = ((rho_e if q < nc else rho_c(q)[0])[:, None] * c.fe[None, :])[None]
+                    F[:, j] += g.to_flat(g.scatter(r))[:, 0]
+            return F
+
+        def consume(cols, F, U):
+            comp[cols] = (F * U).sum(0)
+            if not need_grad:
+                return
+            CH = 4
+            for a in range(0, len(cols), CH):
+                sl = cols[a:a + CH]
+                fe = [(cases[q] if q < nc else cases[hold[q - nc]]).fe for q in sl]
+                e_, f_ = self.fe_solver.element_energy(U[:, a:a + len(sl)], fe=fe)
+                for j, q in enumerate(sl):
+                    en[q] = e_[j]
+                    if fe[j] is not None:
+                        fo[q] = f_[j]
+
         gate = np.array([c.support == "_gate" for c in cases])
         tie = np.array([c.tie for c in cases]) & self.has_inserts
         if (rho_g is None or not gate.any()) and not tie.any():
-            U = self.fe_solver.solve(E, F, [c.support for c in cases], keys=[c.name for c in cases])
+            runs = ((np.ones(nc, bool), E),)
         else:
             # gate ties on the gate realization; with inserts, every tie case without them: the printed part must hold
             # its drawn bodies together by itself (an insert is bonded in after printing)
-            U = np.zeros_like(F)
             rg = rho_e if (rho_g is None or not gate.any()) else rho_g
             Eg = (s.emin + (1.0 - s.emin) * rg ** s.penal) * self.stiff_tie
             Et = (s.emin + (1.0 - s.emin) * rho_e ** s.penal) * self.stiff_tie
-            for m, EE in ((~gate & ~tie, E), (~gate & tie, Et), (gate, Eg)):
-                idx = np.where(m)[0]
-                if len(idx) == 0:
-                    continue
-                U[:, idx] = self.fe_solver.solve(EE, F[:, idx], [cases[q].support for q in idx],
-                                                 keys=[cases[q].name for q in idx])
-        comp = (F * U).sum(0)
+            runs = ((~gate & ~tie, E), (~gate & tie, Et), (gate, Eg))
+        for m, EE in (() if hold_only else runs):
+            idx = [int(q) for q in np.where(m)[0]]
+            if not idx:
+                continue
+
+            def mk(cols, idx=idx):
+                return make_F([idx[c] for c in cols])
+
+            def co(cols, F, U, idx=idx):
+                consume([idx[c] for c in cols], F, U)
+            self.fe_solver.solve_blocks(EE, len(idx), mk, co, [cases[q].support for q in idx],
+                                        keys=[cases[q].name for q in idx])
+        for k, (rho_k, ero) in enumerate(copies):
+            Ek = (s.emin + (1.0 - s.emin) * rho_k ** s.penal) * self.stiff
+            idx = list(range(nc + k * n1, nc + (k + 1) * n1))
+            self.fe_solver.solve_blocks(Ek, n1, lambda cols, idx=idx: make_F([idx[c] for c in cols]),
+                                        lambda cols, F, U, idx=idx: consume([idx[c] for c in cols], F, U),
+                                        [cases[q].support for q in hold[:n1]],
+                                        keys=[cases[q].name + (" (gate)" if ero else " (built)") for q in hold[:n1]])
         if not need_grad:
             return comp, None
-        return comp, (U, E)
+        return comp, (_Energies(en, fo), E)
 
     def _objective(self, comp):
         s = self.s
-        r = comp / self.c_ref
         w = np.array([c.w for c in self.cases])
+        c_ref = self.c_ref
+        comp = comp[:len(self.cases)]                                       # entries past the cases: the built hold's rows
+        r = comp / c_ref
         P = s.pmean
         sw = w.sum()
         J = (np.sum(w * r ** P) / sw) ** (1.0 / P)
-        dJdc = J ** (1.0 - P) * w * r ** (P - 1.0) / sw / self.c_ref
+        dJdc = J ** (1.0 - P) * w * r ** (P - 1.0) / sw / c_ref
         return J, dJdc, r
 
     def _grad_rho_e(self, rho_e, U, dJdc, rho_g=None):
-        """dJ / d rho_e (nel,), accumulated case by case; with rho_g, (dJ / d rho_e, dJ / d rho_g) where the gate
-        ties contribute to the second."""
+        """dJ / d rho_e (nel,), accumulated case by case from the element energies _compliance kept (U: its _Energies);
+        with rho_g, (dJ / d rho_e, dJ / d rho_g) where the gate ties contribute to the second."""
         s = self.s
         g = np.zeros(self.nel)
         gg = np.zeros(self.nel) if rho_g is not None else None
         dE = s.penal * np.maximum(rho_e, 1e-12) ** (s.penal - 1.0) * (1.0 - s.emin) * self.stiff
         dEt = dE if not self.has_inserts else dE / self.stiff * self.stiff_tie
         dEg = None if rho_g is None else s.penal * np.maximum(rho_g, 1e-12) ** (s.penal - 1.0) * (1.0 - s.emin) * self.stiff_tie
-        CH = 4
-        for a in range(0, len(self.cases), CH):
-            sl = list(range(a, min(a + CH, len(self.cases))))
-            fe = [self.cases[q].fe for q in sl]
-            en, fo = self.fe_solver.element_energy(U[:, sl], fe=fe)
-            for j, q in enumerate(sl):
-                if dJdc[q] == 0.0:
-                    continue
-                on_g = gg is not None and self.cases[q].support == "_gate"
-                d = -(dEg if on_g else (dEt if self.cases[q].tie else dE)) * en[j]
-                if fe[j] is not None:
-                    d = d + 2.0 * fo[j]
-                if on_g:
-                    gg += dJdc[q] * d
-                else:
-                    g += dJdc[q] * d
+        for q in range(len(self.cases)):
+            if dJdc[q] == 0.0:
+                continue
+            on_g = gg is not None and self.cases[q].support == "_gate"
+            d = -(dEg if on_g else (dEt if self.cases[q].tie else dE)) * U.en[q]
+            if q in U.fo:
+                d = d + 2.0 * U.fo[q]
+            if on_g:
+                gg += dJdc[q] * d
+            else:
+                g += dJdc[q] * d
         return g if gg is None else (g, gg)
 
     # --------------------------------------------------------------------------------- geometric constraints
@@ -867,7 +947,10 @@ class Layout:
         np.savez_compressed(tmp, x=self.x, it=it, bi=bi, since=since, vlim=self.vlim,
                             scale=self.scale if self.scale else 0.0, hist=np.array(self.hist, float),
                             xold1=st["xold1"], xold2=st["xold2"], low=st["low"], upp=st["upp"], k=st["k"],
-                            stopped=stopped, c_ref=self.c_ref, normed=self.normed)
+                            stopped=stopped, c_ref=self.c_ref, normed=self.normed, checks=json.dumps(self.checks),
+                            hold_info=json.dumps(self.hold_info),
+                            hold=np.zeros(0, int) if self.hold is None else self.hold,
+                            c_hold=np.zeros(0) if self.c_hold is None else self.c_hold)
         os.replace(tmp, path)
 
     def _load(self, path):
@@ -879,6 +962,11 @@ class Layout:
         if "c_ref" in ck.files and len(ck["c_ref"]) == len(self.c_ref):
             self.c_ref = ck["c_ref"].copy()
             self.normed = bool(ck["normed"])
+        if "checks" in ck.files:
+            self.checks = json.loads(str(ck["checks"]))
+            self.hold_info = json.loads(str(ck["hold_info"]))
+            if len(ck["hold"]):
+                self.hold, self.c_hold = ck["hold"].astype(int), ck["c_hold"].copy()
         self.mma.load_state(dict(xold1=ck["xold1"], xold2=ck["xold2"], low=ck["low"], upp=ck["upp"], k=ck["k"]))
         return int(ck["it"]), int(ck["bi"]), int(ck["since"]), str(ck["stopped"])
 
@@ -926,14 +1014,19 @@ class Layout:
             ti = time.time()
             x = self.symmetrise_design(self.x)
             f = self.fields(x, beta)
-            comp, (U, E) = self._compliance(f["rho_e"], rho_g=f["rho_g"])
+            comp, (U, E) = self._compliance(f["rho_e"], rho_g=f["rho_g"], rho_b=f["rho_b"],
+                                            rho_be=f["fb"]["rho_e"] if self.hold is not None and s.hold_eroded else None)
             if s.case_norm == "frame" and not self.normed and (self.warm or bi > int(beta_start)):
                 self._renorm(comp)
             J, dJdc, r = self._objective(comp)
             if self.scale is None:
                 self.scale = 10.0 / J
             g_rho = self._grad_rho_e(f["rho_e"], U, dJdc, rho_g=f["rho_g"])
+            hold = self._hold_constraints(f, comp, U)
             del U
+            if len(self.hist) == 0:
+                from .audit import memory_measured
+                memory_measured(self, s.mem_limit_gb, log=log, hard=s.audit != "off")
             df0 = self.scale * self.grad_eroded(f, g_rho)
             vd = float(f["rho_d"][self.design].mean())
             vn = float(f["rho_n"][self.design].mean())
@@ -947,6 +1040,9 @@ class Layout:
                 for q, (val, dg) in enumerate(geo):
                     fval[1 + q] = val / geo_eps - 1.0
                     dfdx[1 + q] = self._back(dg) / geo_eps
+            if hold[0]:
+                fval += hold[0]
+                dfdx += hold[1]
             df0 = self.symmetrise_design(df0)
             dfdx = [self.symmetrise_design(d) for d in dfdx]
             xnew = self.mma.step(x, self.scale * J, df0, np.array(fval), np.array(dfdx))
@@ -961,6 +1057,7 @@ class Layout:
                 st = self.fe_solver.stats[-1] if self.fe_solver.stats else None
                 log(f"it {it:3d} beta {beta:4.0f} J {self.scale * J:8.4f} vol {vn:.4f} (dil {vd:.4f} g {gvol:+.3f}) "
                     f"grey {grey:5.1%} ch {ch:.3f} worst {self.cases[worst].name[:28]} {r[worst]:.3g}"
+                    + (f" hold {max(hold[0]) + 1:.3f}" if hold[0] and self.hold is not None else "")
                     + (f" geo {fval[1]:+.2f}/{fval[2]:+.2f}" if geo else "")
                     + (f" cg {st[1]}" if st else "") + f" {dt:.1f}s")
             if it % 5 == 0 and vn > 0:
@@ -972,7 +1069,11 @@ class Layout:
                 and abs(gvol) < 0.02
             elapsed = time.time() - t0
             hurry = s.time_limit_s and elapsed > 0.75 * s.time_limit_s
-            if bi < last_bi and (settled or since >= s.max_stage or (hurry and since >= 3)):
+            stage_end = bi < last_bi and (settled or since >= s.max_stage or (hurry and since >= 3))
+            if stage_end and beta >= s.hold_beta:
+                # f is the design this iteration was solved on (before the MMA step); r its ratios (eroded, then the hold copies)
+                self.check_stage(f, beta, r)
+            if stage_end:
                 self._connect_report(f, beta)
                 if on_stage:
                     if checkpoint:
@@ -985,7 +1086,7 @@ class Layout:
             elif bi >= last_bi and beta_stop is not None and (settled or since >= s.max_stage):
                 self.stopped = "beta_stop"
                 break
-            elif bi >= last_bi and ((grey <= s.grey_stop and settled) or since >= s.max_stage):
+            elif bi >= last_bi and ((grey <= s.grey_stop and settled) or since >= (s.hold_stage if self.hold is not None else s.max_stage)):
                 self.stopped = "grey" if grey <= s.grey_stop else "max_stage"
                 break
             if checkpoint and it % s.checkpoint_every == 0:
@@ -999,6 +1100,107 @@ class Layout:
             self._save(checkpoint, it, bi, since, self.stopped)
         log(f"layout: stopped ({self.stopped}) at it {it}, beta {s.betas[bi]}, {time.time() - t0:.0f} s")
         return self.final(bi)
+
+    # ------------------------------------------------------------------------------------ strength on the field
+    def joined(self, A):
+        """True when the cell mask A (nel,) is one body from every loaded region to the supports: an index on a broken field
+        means nothing (the loads on a piece no support reaches carry nothing)"""
+        part = self.part
+        lab, n = ndi.label(A.reshape(part.shape), S6)
+        sup = np.zeros(part.nel, bool)
+        for el in part.support_cells.values():
+            sup[el] = True
+        held = set(np.unique(lab[sup.reshape(part.shape)])) - {0}
+        loaded = np.zeros(part.nel, bool)
+        nx, ny, nz = part.shape
+        for c in self.cases:
+            if c.tie or c.nodes is None or not len(c.nodes):
+                continue
+            nid = np.asarray(c.nodes)
+            kk = nid % (nz + 1); j = (nid // (nz + 1)) % (ny + 1); i = nid // ((nz + 1) * (ny + 1))
+            for a in (0, -1):
+                for b in (0, -1):
+                    for cc in (0, -1):
+                        ii, jj, k2 = i + a, j + b, kk + cc
+                        ok = (ii >= 0) & (ii < nx) & (jj >= 0) & (jj < ny) & (k2 >= 0) & (k2 < nz)
+                        loaded[np.ravel_multi_index((ii[ok], jj[ok], k2[ok]), part.shape)] = True
+        lab_loaded = set(np.unique(lab[(loaded & A).reshape(part.shape)])) - {0}
+        return bool(held) and bool(lab_loaded) and lab_loaded <= held
+
+    def field_strength(self, f):
+        """the as-built strength (topo/build.py strength, the solver build_and_check runs on the built mesh) of the thresholded
+        field: nominal density > 0.5 plus the drawn cells. None when the field is not one body from the loads to the supports."""
+        from .build import strength
+        A = (f["rho_n"] > 0.5) | self.solid
+        if not self.joined(A):
+            return None
+        return strength(self, mask=A, log=lambda s_: None)
+
+    def check_stage(self, f, beta, r=None):
+        """at a stage end from hold_beta on: the field's strength, recorded (self.checks, result.json layout.checks; the early
+        check reads it, topo/run.py), and on the first one the built hold starts (Settings.nominal_hold). Returns the strength dict
+        or None (the field is not one body from the loads to the supports yet: the hold waits for the next stage end)."""
+        st = self.field_strength(f)
+        if st is None or st.get("worst") is None:
+            return None
+        it = len(self.hist)
+        self.checks.append(dict(it=it, beta=beta, worst=st["worst"], worst_case=st["worst_case"]))
+        self.last_check = dict(st, it=it, beta=beta)
+        if self.s.nominal_hold and self.hold is None and not self.hold_info:
+            self.start_hold(f, r)
+            self.hold_info = dict(started_it=it, beta=beta, index=st["worst"])
+            self.log(f"layout: built hold from it {it} (beta {beta:.0f}, index {st['worst']:.2f}): each of {len(self.hold)} real cases "
+                     f"keeps its compliance on the design as built within {1 + self.s.hold_tol:.2f} x its value here")
+        return st
+
+    def start_hold(self, f, r=None):
+        """the built hold's reference: every real case's compliance on the field f as the build thresholds it (x_tilde projected at
+        eta_n with hold_proj_beta): the check's field (rho_n > 0.5) with smooth edges"""
+        self.hold = np.array([q for q, c in enumerate(self.cases) if not c.tie], int)
+        fb = self._fields(f["x"], self.s.hold_proj_beta)
+        cb, _ = self._compliance(f["rho_e"], need_grad=False, rho_b=fb["rho_n"], hold_only=True,
+                                 rho_be=fb["rho_e"] if self.s.hold_eroded else None)
+        cb = cb[len(self.cases):]
+        self.c_hold = np.where(cb > 0, cb, np.inf)                         # a case with nothing to hold never binds
+
+
+    def release_hold(self, why):
+        """the gate comes first: the hold's rows go inactive (topo/run.py, when the part built under it fails the solid check)"""
+        self.hold, self.c_hold = None, None
+        self.hold_info.update(released_it=len(self.hist), why=why)
+        self.mma.reset()
+        self.log(f"layout: built hold released at it {len(self.hist)}: {why}")
+
+    def _hold_rows(self):
+        s = self.s
+        return self.n_real * (2 if s.hold_eroded else 1) if s.nominal_hold else 0
+
+    def _hold_constraints(self, f, comp, U):
+        """(fval list, dfdx list) of the built hold: per real case c_q / ((1 + hold_tol) c_hold,q) - 1 <= 0 on the design as built (rho_b)
+        and, with hold_eroded, as the gate erodes it (fb's rho_e); gradients through the sharp projection. Inactive (-1, 0) before
+        the hold starts; empty lists without nominal_hold."""
+        s = self.s
+        if not s.nominal_hold:
+            return [], []
+        n = self.n_real * (2 if s.hold_eroded else 1)
+        if self.hold is None or f.get("rho_b") is None:
+            return [-1.0] * self._hold_rows(), [np.zeros(self.nd)] * self._hold_rows()
+        nc, n1 = len(self.cases), len(self.hold)
+        fb = f["fb"]
+        lim = (1.0 + s.hold_tol) * self.c_hold
+        fv, dg = [], []
+        for k in range(n):
+            j = nc + k
+            ero = k >= n1
+            rho = fb["rho_e"] if ero else fb["rho_n"]
+            dE = s.penal * np.maximum(rho, 1e-12) ** (s.penal - 1.0) * (1.0 - s.emin) * self.stiff
+            d = -dE * U.en[j]
+            if j in U.fo:
+                d = d + 2.0 * U.fo[j]
+            fv.append(float(comp[j] / lim[k] - 1.0))
+            gx = self.grad_eroded(fb, d) if ero else self._back(np.where(self.design, d * fb["dHn"], 0.0))
+            dg.append(gx / lim[k])
+        return fv, dg
 
     def _renorm(self, comp):
         """case_norm "frame": every case from now on counts by its compliance over its value on this design."""
@@ -1063,17 +1265,48 @@ class Layout:
         return dict(settings=asdict(self.s), R_mm=self.R_mm, R_cells=self.R, calibration=self.cal,
                     volfrac=self.volfrac, nd=self.nd, sym_axes=self.sym_axes, n_real=self.n_real,
                     n_ties=len(self.cases) - self.n_real, backend=self.fe_solver.backend,
-                    iterations=len(self.hist), stopped=getattr(self, "stopped", None))
+                    iterations=len(self.hist), stopped=getattr(self, "stopped", None), checks=self.checks,
+                    hold=self.hold_info or None)
 
 
-@dataclass
+class _Energies:
+    """per-case element energies from _compliance: en (ncase, nel) u_e^T KE u_e, fo {case: (nel,) u_e . fe} for body forces."""
+
+    def __init__(self, en, fo):
+        self.en, self.fo = en, fo
+
+
+def _sparse_load(F):
+    F = np.asarray(F, float)
+    nz = np.flatnonzero(F)
+    return (len(F), nz, F[nz])
+
+
 class _Case:
-    name: str
-    F: np.ndarray        # nominal nodal loads
-    Fe: np.ndarray       # loads for the eroded analysis (moved to anchored nodes)
-    support: str
-    fe: np.ndarray       # (24,) body force per full element, or None
-    w: float
-    tie: bool
-    cls: str
-    nodes: np.ndarray
+    """one solved case. The nodal loads are kept sparse (a tie loads one body's nodes, a real case its region): ~400 dense
+    0.7 M-dof vectors were 2.5 GB on scout_v4_frame. F / Fe read back dense; add_Fe adds the eroded loads into a column."""
+    __slots__ = ("name", "_F", "_Fe", "support", "fe", "w", "tie", "cls", "nodes")
+
+    def __init__(self, name, F, Fe, support, fe, w, tie, cls, nodes):
+        self.name, self.support, self.fe, self.w, self.tie, self.cls, self.nodes = name, support, fe, w, tie, cls, nodes
+        self._F = _sparse_load(F)
+        self._Fe = self._F if Fe is F else _sparse_load(Fe)
+
+    @staticmethod
+    def _dense(sv):
+        n, nz, v = sv
+        out = np.zeros(n)
+        out[nz] = v
+        return out
+
+    @property
+    def F(self):           # nominal nodal loads
+        return self._dense(self._F)
+
+    @property
+    def Fe(self):          # loads for the eroded analysis (moved to anchored nodes)
+        return self._dense(self._Fe)
+
+    def add_Fe(self, col):
+        n, nz, v = self._Fe
+        col[nz] += v

@@ -47,7 +47,7 @@ def bodies():
     drawn, cuts, env = [], [], []
     # room: a drum-shaped housing round the spool from the deck to the roof's ring, the ring node, and the motor's pocket
     env.append(cyl(cx, 0, DZ1, 67.0, 36.0))
-    env.append(box(cx - 8.0, cx + 8.0, g0 - 30.0, yp + 6.0, pz - 7.0, DZ1 + 1))
+    env.append(box(cx - 8.0, cx + 8.0, g0 - 30.0, yp + 6.0, pz, DZ1 + 1))   # 10 Nov run 5: from the N20's axis up (below it the can left 1.7 strips: two loose bodies)
     lh_, hw_ = lens_half(), S.BLADE_W / 2 + 0.5
     env.append(box(mx - lh_ - 6.0, mx + lh_ + 6.0, -hw_ - 6.0, hw_ + 6.0, 55.0, t["z1"]))   # 10 Nov: room up the throat to its seat (the drum ended at 67, the throat's top 6 stood on drawn 2 mm walls: 0.53 in the 1.2 N m fold)
     # floor bosses
@@ -63,7 +63,9 @@ def bodies():
     # the N20: face plate with 2 x M1.6 on 7.7 and the shaft hole; the shaft tip's bearing beyond the pinion
     face = box(cx - 6.5, cx + 6.5, g0 + 0.15, g0 + 2.75, pz - 5.5, pz + 5.5); drawn.append(face)   # 2.6 thick (the gate's floor 2.5)
     cuts.append(ycyl(cx, pz, 2.2, g0 - 1, g0 + 3.5)); cuts += [ycyl(cx + s * 3.85, pz, 0.9, g0 - 1, g0 + 3.5) for s in (-1, 1)]
-    drawn.append(ycyl(cx, pz, 3.5, gy1 + 1.0, gy1 + 4.6)); cuts.append(ycyl(cx, pz, 1.6, gy1 + 0.5, gy1 + 5.0))   # the shaft's tip (10 from the face) in its bearing
+    drawn.append(ycyl(cx, pz, 3.5, gy1 + 1.0, gy1 + 4.6)); cuts.append(ycyl(cx, pz, 1.6, gy1 + 0.5, gy1 + 5.0))
+    for sx in (-1, 1):                                                                              # 10 Nov run 5: the N20's mount drawn, its two 2.0 cheeks beside the gearbox
+        drawn.append(box(*sorted((cx + sx * 6.5, cx + sx * 8.5)), g0 + 0.15, gy1 + 4.6, pz - 4.5, DZ1))   # from the face plate to the tip bearing (the pocket's room gave only 1.7 strips)   # the shaft's tip (10 from the face) in its bearing
     cuts.append(box(cx - 6.4, cx + 6.4, g0 - 10.0 - 0.3, g0 + 0.2, pz - 5.3, pz + 5.3))           # the gearbox
     cuts.append(ycyl(cx, pz, 6.3, g0 - 27.5, g0 - 10.0))                                           # the can
     # the throat: walls round the blades' path, a flat slot at the spool's height to the lens at its top (the head's clip seats in it)
@@ -74,7 +76,7 @@ def bodies():
     cuts.append(box(mx - lh - 6.0, mx + lh + 6.0, -hw - 3.0, hw + 3.0, t["z1"], 400))               # the mast and the head above
     cuts.append(box(mx - sl - 0.2, mx + sl + 0.2, -hw, hw, cz - 2.0, t["z0"] + 0.5))                 # the blades from the spool's tangent into the throat
     # the drum round the cable's coil
-    drawn.append(yz_ring(cx, cz, dr + 0.3, dr + 2.8, dy0 - 2.6, dy1))                               # 2.5 wall and a 2.6 end (the gate's floor)
+    drawn.append(yz_ring(cx, cz, dr + 0.3, dr + 2.8, dy0 - 2.6, dy1))                               # 2.5 wall and a 2.6 end (10 Nov run 6: 4.0 on r 11 still peaked in it; the drum is r 9 now, the room round it generated)
     cuts.append(ycyl(cx, cz, dr + 0.3, dy0, dy1 + 0.5)); cuts.append(box(cx - 2, cx + 2, ym - 8, dy0 + 1, cz - 2, cz + 2))   # its cavity; the cable's way out to the Radxa
     # the coil's pressure roller: its axle's ends in radial slots (30 deg before the exit), a spring behind each down the slot's line
     a = np.radians(S.ROLLER["ang"]); u = np.array([np.cos(a), np.sin(a)]); v = np.array([-u[1], u[0]]); rw = S.ROLLER["w"] / 2
@@ -85,13 +87,13 @@ def bodies():
     guides, seats = [], []
     for sy in (1, -1):                                                              # each guide 9 thick round the spring's O4.5 pocket: walls >= 2.25
         yc = sy * (rw + 4.0)
-        guides.append(radial(17.9, r_full + 13.5, 4.5, yc - 4.5, yc + 4.5))
-        cuts.append(radial(10.0, r_full + 0.6, 1.65, yc - 6.0, yc + 6.0))                         # the axle's slot (M3 x 40), open through the guide's inner end (10 Nov: a 0.7 web was left before it)
+        guides.append(radial(17.9, r_full + 13.5, 6.5, yc - 4.5, yc + 4.5) ^ box(-200, 200, -200, 200, DZ1, 400))   # 11 Nov: stops at the deck's top (its corner reached z 18.4, 0.8 from the frame's insert at (13, 19); the deck cut voided it already). 10 Nov run 7: +-4.5 left 2.25 walls beside the slot and pocket, in the head-first path (0.33): 4.25 now
+        cuts.append(radial(17.0, r_full + 0.6, 1.65, yc - 6.0, yc + 6.0))                         # the axle's slot (M3 x 40), open through the guide's inner end (10 Nov: a 0.7 web was left before it)
         cuts.append(radial(r_full - 0.5, r_full + 11.0, 2.25, yc - 2.25, yc + 2.25))               # the spring's pocket on the slot's line (O4, 11 long at the full coil)
         seats.append(radial(r_full + 11.0, r_full + 11.6, 2.0, yc - 2.0, yc + 2.0))
     drawn += guides
     cuts.append(radial(r_empty - S.ROLLER["r"] - 0.8, r_full + 0.8, S.ROLLER["r"] + 0.8, -rw - 0.3, rw + 0.3))   # the roller's tube and its travel
-    cuts.append(box(cx - 13.0, cx + 13.0, S.SPOOL["y0"] - 0.6, S.SPOOL["y1"] + 0.6, DZ1, cz - 10.0))   # 10 Nov run 4: under the spool, between its sweep (down to z 24.1) and the N20's gearbox (up to 25.5), room left only skins 1.1-1.5 thick (the solid check): void
+    cuts.append(box(cx - 13.0, cx + 13.0, S.SPOOL["y0"] - 0.6, g0 - 0.3, DZ1, cz - 10.0))   # 10 Nov run 4: under the spool, between its sweep (down to z 24.1) and the N20's gearbox (up to 25.5), room left only skins 1.1-1.5 thick (the solid check): void
     # the spool, its gear and the pinion swept
     cuts.append(ycyl(cx, cz, r + 1.0, S.SPOOL["y0"] - 0.6, S.SPOOL["y1"] + 0.6))
     cuts.append(ycyl(cx, cz, ra + 0.8, gy0 - 0.5, gy1 + 0.5)); cuts.append(ycyl(cx, pz, rp + 0.8, gy0 - 0.5, gy1 + 0.5))

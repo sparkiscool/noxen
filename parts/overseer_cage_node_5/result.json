@@ -7,19 +7,19 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   26129.8
+   40129.6
   ],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 0,
+  "acute_edges": 2,
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 3937.3,
+  "skin_mm3": 5571.9,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": -0.0,
+  "in_cuts_mm3": 0.0,
   "outside_env_mm3": 0.0,
   "ok": true
  },
@@ -28,170 +28,209 @@
    {
     "case": "frame tube 0-5 axial 89 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.024,
-    "across": 0.014,
+    "inlayer": 0.022,
+    "across": 0.02,
     "at": [
-     -224.6,
-     -17.4,
-     -85.4
+     -212.7,
+     -41.3,
+     -72.1
     ]
    },
    {
     "case": "frame tube 0-5 side 11.0 N",
     "cls": "crash",
-    "inlayer": 0.007,
-    "across": 0.005,
+    "inlayer": 0.004,
+    "across": 0.003,
     "at": [
-     -221.0,
-     -24.6,
-     -75.8
+     -215.5,
+     -41.3,
+     -74.9
     ]
    },
    {
     "case": "frame tube 4-5 axial 136 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.035,
-    "across": 0.021,
+    "inlayer": 0.034,
+    "across": 0.031,
     "at": [
-     -218.6,
-     13.8,
-     -83.0
+     -212.7,
+     41.3,
+     -72.1
     ]
    },
    {
     "case": "frame tube 4-5 side 11.0 N",
     "cls": "crash",
-    "inlayer": 0.007,
-    "across": 0.007,
+    "inlayer": 0.004,
+    "across": 0.004,
     "at": [
-     -223.4,
-     24.6,
-     -78.2
+     -222.5,
+     37.1,
+     -77.7
     ]
    },
    {
     "case": "frame tube 5-13 axial 91 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.033,
-    "across": 0.036,
+    "inlayer": 0.028,
+    "across": 0.03,
     "at": [
-     -246.2,
-     3.0,
-     -67.4
+     -251.9,
+     17.5,
+     -70.7
     ]
    },
    {
     "case": "frame tube 5-13 side 2.9 N",
     "cls": "crash",
-    "inlayer": 0.001,
-    "across": 0.0,
+    "inlayer": 0.002,
+    "across": 0.001,
     "at": [
-     -246.2,
-     21.0,
-     -66.2
+     -232.3,
+     27.3,
+     -65.1
     ]
    },
    {
     "case": "frame tube 5-14 axial 90 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.033,
-    "across": 0.036,
+    "inlayer": 0.028,
+    "across": 0.03,
     "at": [
-     -246.2,
-     -3.0,
-     -67.4
+     -251.9,
+     -17.5,
+     -70.7
     ]
    },
    {
     "case": "frame tube 5-14 side 2.9 N",
     "cls": "crash",
-    "inlayer": 0.001,
-    "across": 0.0,
+    "inlayer": 0.002,
+    "across": 0.001,
     "at": [
-     -247.4,
-     -19.8,
-     -67.4
+     -232.3,
+     -27.3,
+     -65.1
     ]
    },
    {
     "case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
     "cls": "flight",
-    "inlayer": 0.049,
-    "across": 0.052,
+    "inlayer": 0.034,
+    "across": 0.035,
     "at": [
-     -237.8,
-     18.6,
-     -71.0
+     -246.3,
+     -3.5,
+     -84.7
     ]
    },
    {
     "case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
     "cls": "crash",
-    "inlayer": 0.263,
-    "across": 0.279,
+    "inlayer": 0.18,
+    "across": 0.189,
     "at": [
-     -237.8,
-     18.6,
-     -71.0
+     -246.3,
+     -3.5,
+     -84.7
     ]
    }
   ],
-  "worst": 0.279,
+  "worst": 0.189,
   "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
   "worst_at": [
-   -237.8,
-   18.6,
-   -71.0
-  ]
+   -246.3,
+   -3.5,
+   -84.7
+  ],
+  "ok": true
  },
- "mass_g": 42.0,
+ "mass_g": 66.13,
  "watertight": true,
  "export": {
-  "faces_in": 167014,
+  "faces_in": 271354,
   "degenerate": 0,
   "folded": 0,
-  "caps_split": 0,
+  "caps_split": 1,
+  "pinch_vertices": 0,
   "caps_left": 0,
   "dropped_shells": [],
   "n_dropped_shells": 0,
-  "bodies": 1,
-  "faces": 167014,
+  "bodies": 2,
+  "open_kept": [],
+  "faces": 271354,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 36,
-   "folded": 8,
-   "caps_split": 28,
-   "caps_left": 0,
+   "degenerate": 30,
+   "folded": 6,
+   "caps_split": 41,
+   "caps_left": 2,
    "watertight": true,
-   "faces": 271112
+   "faces": 520646,
+   "n_dropped_shells": 0,
+   "dropped_shells": []
   },
-  "volume_mm3": 34147.9,
-  "exact_mm3": 34149.5
+  "volume_mm3": 53764.7,
+  "exact_mm3": 53765.7
  },
  "bodies": {
-  "bodies_raw": 1,
+  "bodies_raw": 2,
   "dropped_specks_mm3": [],
-  "cavities_mm3": [],
+  "cavities_mm3": [
+   8918.79
+  ],
   "bodies": 1
  },
- "volume_mm3": 34149.5,
- "drawn_g": 13.43,
+ "volume_mm3": 53765.7,
+ "drawn_g": 16.02,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
-  "specks_mm3": [
-   0.016,
-   0.016
-  ],
+  "specks_mm3": [],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.02,
-  "specks": 2
+  "removed_mm3": 0.0
  },
+ "memory_build": [
+  {
+   "estimate_gb": 5.08,
+   "parts": {
+    "held": 0.84,
+    "gate": 0.81,
+    "mesh": 3.42
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 19353672,
+   "bounds_mm": [
+    64.2,
+    99.6,
+    45.0
+   ],
+   "faces": 612372,
+   "when": "before the export cleanup"
+  },
+  {
+   "estimate_gb": 1.73,
+   "parts": {
+    "held": 0.92,
+    "gate": 0.81,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 19353672,
+   "bounds_mm": [
+    64.2,
+    99.6,
+    45.0
+   ],
+   "faces": 0,
+   "when": "before the solid check"
+  }
+ ],
  "stl": "overseer_cage_node_5.stl",
  "view_stl": "overseer_cage_node_5_view.stl",
  "view_faces": 120000,
@@ -247,10 +286,11 @@
    "early_k": 3.0,
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
+   "mem_limit_gb": 14.0,
    "checkpoint_every": 10
   },
   "R_mm": 6.44256687412536,
-  "R_cells": 5.3688057284378,
+  "R_cells": 4.601833481518114,
   "calibration": {
    "rod": 0.9701102250255644,
    "plate": 0.8809289894691206,
@@ -259,31 +299,33 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.13057393576922535,
-  "nd": 107251,
-  "sym_axes": [],
+  "volfrac": 0.32126642212776724,
+  "nd": 46856,
+  "sym_axes": [
+   1
+  ],
   "n_real": 10,
-  "n_ties": 30,
+  "n_ties": 66,
   "backend": "direct",
-  "iterations": 48,
-  "stopped": "grey"
+  "iterations": 80,
+  "stopped": "max_stage"
  },
  "grid": {
   "name": "overseer_cage_node_5",
-  "h": 1.2,
+  "h": 1.4,
   "shape": [
-   56,
+   64,
    80,
    40
   ],
   "origin": [
-   -266.0118,
-   -48.0,
-   -95.5909
+   -274.9771,
+   -56.0,
+   -92.4246
   ],
-  "cells": 179200,
-  "design": 106557,
-  "drawn": 6456,
+  "cells": 204800,
+  "design": 46380,
+  "drawn": 5032,
   "cases": [
    "frame tube 0-5 axial 89 N (pull-out)",
    "frame tube 0-5 side 11.0 N",
@@ -297,111 +339,197 @@
    "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)"
   ],
   "supports": [
-   "default"
+   "default",
+   "sockets"
   ]
  },
- "build_s": 70.0,
- "layout_s": 5673,
- "peak_gb": 8.018536,
- "gen_cm3": 23.0,
- "h": 1.2,
+ "build_s": 201.7,
+ "layout_s": 3966,
+ "peak_gb": 3.16396,
+ "memory": {
+  "estimate_gb": 3.83,
+  "parts": {
+   "held": 0.71,
+   "factor": 1.75,
+   "assembly": 0.49,
+   "block": 0.76,
+   "energies": 0.12
+  },
+  "limit_gb": 14.0,
+  "cases": 76,
+  "active_dofs": 178725,
+  "backend": "direct",
+  "block": 51,
+  "build": {
+   "estimate_gb": 1.86,
+   "parts": {
+    "held": 0.71,
+    "gate": 1.15,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 27342432,
+   "bounds_mm": [
+    76.9,
+    107.8,
+    49.2
+   ],
+   "faces": 0,
+   "when": "from the envelope"
+  },
+  "peak_it1_gb": 3.02
+ },
+ "gen_cm3": 40.0,
+ "h": 1.4,
  "audit": {
   "solid_ok": [],
-  "drawn_share": 0.057,
+  "drawn_share": 0.098,
   "load_room": [],
   "bodies": [
    {
     "id": 1,
-    "cells": 1846,
-    "inscribed_mm": 3.0,
+    "cells": 667,
+    "inscribed_mm": 3.4,
     "touches_cut": true,
-    "touches_support": false,
+    "touches_support": true,
     "loaded": true,
-    "room": 0.94,
-    "room_depth_mm": 57.6,
+    "room": 0.95,
+    "room_depth_mm": 58.8,
     "at": [
-     -247.3,
-     0.0,
-     -67.9
+     -251.9,
+     -20.1,
+     -57.0
     ],
-    "core_mm": 2.2,
-    "free_cells": 1846,
-    "share_of_drawn": 0.29
+    "core_mm": 2.6,
+    "free_cells": 667
    },
    {
     "id": 2,
-    "cells": 936,
-    "inscribed_mm": 3.6,
+    "cells": 667,
+    "inscribed_mm": 3.4,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.95,
+    "room_depth_mm": 58.8,
+    "at": [
+     -251.9,
+     20.1,
+     -57.0
+    ],
+    "core_mm": 2.6,
+    "free_cells": 667
+   },
+   {
+    "id": 3,
+    "cells": 1056,
+    "inscribed_mm": 4.2,
     "touches_cut": false,
     "touches_support": false,
     "loaded": true,
     "room": 1.0,
-    "room_depth_mm": 55.2,
+    "room_depth_mm": 46.2,
     "at": [
-     -242.6,
+     -242.5,
      0.0,
-     -91.4
+     -87.5
     ],
-    "core_mm": 3.6,
-    "free_cells": 936
-   },
-   {
-    "id": 3,
-    "cells": 1838,
-    "inscribed_mm": 3.0,
-    "touches_cut": true,
-    "touches_support": true,
-    "loaded": true,
-    "room": 0.93,
-    "room_depth_mm": 68.4,
-    "at": [
-     -224.5,
-     -21.8,
-     -76.2
-    ],
-    "core_mm": 2.2,
-    "free_cells": 1838
+    "core_mm": 4.2,
+    "free_cells": 1056,
+    "share_of_drawn": 0.21
    },
    {
     "id": 4,
-    "cells": 1836,
-    "inscribed_mm": 3.0,
+    "cells": 665,
+    "inscribed_mm": 3.4,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.93,
+    "room_depth_mm": 92.4,
+    "at": [
+     -222.3,
+     -37.4,
+     -69.8
+    ],
+    "core_mm": 2.6,
+    "free_cells": 665
+   },
+   {
+    "id": 5,
+    "cells": 665,
+    "inscribed_mm": 3.4,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.93,
+    "room_depth_mm": 92.4,
+    "at": [
+     -222.3,
+     37.4,
+     -69.8
+    ],
+    "core_mm": 2.6,
+    "free_cells": 665
+   },
+   {
+    "id": 6,
+    "cells": 656,
+    "inscribed_mm": 2.6,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
     "room": 0.93,
-    "room_depth_mm": 68.4,
+    "room_depth_mm": 77.0,
     "at": [
-     -224.6,
-     21.9,
-     -76.2
+     -208.9,
+     -28.0,
+     -79.3
     ],
-    "core_mm": 2.2,
-    "free_cells": 1836
+    "core_mm": 2.6,
+    "free_cells": 656
+   },
+   {
+    "id": 7,
+    "cells": 656,
+    "inscribed_mm": 2.6,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.93,
+    "room_depth_mm": 77.0,
+    "at": [
+     -208.9,
+     28.0,
+     -79.3
+    ],
+    "core_mm": 2.6,
+    "free_cells": 656
    }
   ],
   "envelope_waste": 0.0,
   "plate": {
-   "L_mm": 88.8,
-   "W_mm": 62.4,
-   "H_mm": 45.6,
+   "L_mm": 106.4,
+   "W_mm": 75.6,
+   "H_mm": 49.0,
    "fits": true
   },
   "drawn_thin": [],
   "drawn_walls": [],
+  "parity": [],
   "cases": 10,
-  "supports": 1,
+  "supports": 2,
   "fails": [],
   "room_full": {
-   "worst": 0.171,
+   "worst": 0.053,
    "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
    "worst_at": [
-    -237.8,
-    -18.6,
-    -71.0
+    -251.9,
+    -13.3,
+    -69.3
    ],
-   "budget_share": 0.131,
-   "thinned": 1.31,
+   "budget_share": 0.321,
+   "thinned": 0.16,
    "max_worst": 0.3
   }
  },
@@ -410,23 +538,23 @@
    {
     "case": "frame tube 0-5 axial 89 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.024,
+    "inlayer": 0.025,
     "across": 0.02,
     "at": [
-     -227.0,
-     -21.0,
-     -80.6
+     -214.1,
+     -39.9,
+     -72.1
     ]
    },
    {
     "case": "frame tube 0-5 side 11.0 N",
     "cls": "crash",
-    "inlayer": 0.009,
-    "across": 0.005,
+    "inlayer": 0.004,
+    "across": 0.003,
     "at": [
-     -222.2,
-     -24.6,
-     -77.0
+     -209.9,
+     -35.7,
+     -80.5
     ]
    },
    {
@@ -435,31 +563,31 @@
     "inlayer": 0.037,
     "across": 0.03,
     "at": [
-     -222.2,
-     24.6,
-     -75.8
+     -214.1,
+     39.9,
+     -72.1
     ]
    },
    {
     "case": "frame tube 4-5 side 11.0 N",
     "cls": "crash",
-    "inlayer": 0.009,
-    "across": 0.008,
+    "inlayer": 0.004,
+    "across": 0.004,
     "at": [
-     -222.2,
-     24.6,
-     -75.8
+     -209.9,
+     35.7,
+     -80.5
     ]
    },
    {
     "case": "frame tube 5-13 axial 91 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.055,
-    "across": 0.046,
+    "inlayer": 0.033,
+    "across": 0.034,
     "at": [
-     -243.8,
-     0.6,
-     -68.6
+     -250.5,
+     11.9,
+     -56.7
     ]
    },
    {
@@ -468,82 +596,83 @@
     "inlayer": 0.001,
     "across": 0.001,
     "at": [
-     -248.6,
-     19.8,
-     -67.4
+     -228.1,
+     28.7,
+     -65.1
     ]
    },
    {
     "case": "frame tube 5-14 axial 90 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.055,
-    "across": 0.042,
+    "inlayer": 0.033,
+    "across": 0.034,
     "at": [
-     -243.8,
-     -0.6,
-     -68.6
+     -250.5,
+     -11.9,
+     -56.7
     ]
    },
    {
     "case": "frame tube 5-14 side 2.9 N",
     "cls": "crash",
     "inlayer": 0.001,
-    "across": 0.0,
+    "across": 0.001,
     "at": [
-     -246.2,
-     -21.0,
-     -65.0
+     -228.1,
+     -28.7,
+     -65.1
     ]
    },
    {
     "case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
     "cls": "flight",
-    "inlayer": 0.049,
-    "across": 0.051,
+    "inlayer": 0.031,
+    "across": 0.031,
     "at": [
-     -237.8,
-     18.6,
-     -71.0
+     -246.3,
+     -6.3,
+     -84.7
     ]
    },
    {
     "case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
     "cls": "crash",
-    "inlayer": 0.26,
-    "across": 0.274,
+    "inlayer": 0.165,
+    "across": 0.166,
     "at": [
-     -237.8,
-     18.6,
-     -71.0
+     -246.3,
+     -6.3,
+     -84.7
     ]
    }
   ],
-  "worst": 0.274,
+  "worst": 0.166,
   "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
   "worst_at": [
-   -237.8,
-   18.6,
-   -71.0
+   -246.3,
+   -6.3,
+   -84.7
   ],
+  "ok": true,
   "beta": 4.0,
-  "iteration": 13,
+  "iteration": 14,
   "max_worst": 0.3,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 5743,
- "part_sha": "dc32fdb50c6e",
- "lib_sha": "3bca3914ee6f",
- "setup_sha": "3a27824d8e0a45ef",
+ "total_s": 4167,
+ "part_sha": "255ac7fa6c7e",
+ "lib_sha": "9cb5498854de",
+ "setup_sha": "ef4d06c01cb706cb",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/overseer_cage_node_5.stl",
-  "sha256": "ae4bc809bb6581d364173fa51630bca1354fbfe964e34561b42da0b5285ab1b4",
-  "bytes": 8350784,
-  "faces": 167014,
+  "sha256": "07bfad67f565c313aaf2d99947eb5275fb6761247dbf20639c7fd5ae4ea2cbcc",
+  "bytes": 13567784,
+  "faces": 271354,
   "view_faces": 60000,
-  "view_sha256": "8d4e8c0813fadce9d4be56dee1a82459c5cc81749dff4808c2d929b38b7e1bb1",
-  "at": "2026-11-10 02:31"
+  "view_sha256": "e578ed8c0be8028341ffd0a477330a37797b852f53a1133e6cdcb7965b1eb97d",
+  "at": "2026-11-11 23:11"
  }
 }

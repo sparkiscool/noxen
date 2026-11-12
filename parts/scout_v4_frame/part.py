@@ -12,7 +12,7 @@ layers; here there is no layer seam between a pad and its arm). The drawn pad is
 motor: 6 + 2.5 into its base), with room under it to z 8 (z 2 at the arm's root) for the engine to gusset it in the same layers.
 Drawn (attachments only): the motor pads (4 x M2 on 12 x 12, O8 centre), the battery mechanism's 4 O10 insert bosses (M3 x 5.7 up from
 below, on the receiver's top z 9.6), the turret's 4 O10 insert bosses (M3 from the top), the FC's 4 O8 posts (M3 inserts, the FC on
-grommets under them, component side up) and the Radxa's 4 O8 posts (M2.5 inserts), the tape lands of the UBEC (the tail tray's floor),
+grommets under them, component side up) and the Radxa's 4 O8 posts (M2.5 inserts), the tape lands of the UBEC (over it, in its pod under the tail tray),
 the XR2 and the DRV8833 (over them) and the flow sensor (over it, open below), the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1).
 Cuts: the receiver's box under the yokes, the boards and their plugs, the props' discs + 12, the motors and their screws' drivers
 from below, the turret above the deck, its N20's pocket and its gear's slot, the bolt holes, the rods beyond the mouths.
@@ -41,16 +41,29 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of
                                       check_collars, rigid_split, SockDown, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
                                       M25_INS, BOSS_R, DIRS14, FLIGHT)
 
-SPEC = dict(h=2.0, gen_cm3=120.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
+SPEC = dict(h=2.0, gen_cm3=100.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
 # 10 Nov (the NODES stream's socket-depth rule, units_lib.socket_depth): DN / DT 13.5 and BN / BT 11.5 deep (their 645 / 528 N), taken
 # behind the standard floor (the mouths stay inside the 180; those 4 rods 3.5 / 1.5 longer), DS / BS 7.0 (their mouths 3 nearer).
 # 10 Nov, run 186 (60 cm3, 18 % of the room): FAIL 1.515 (BN-NB 528 N), 117 g; the result read what the room filled solid thinned
 # uniformly to the budget predicted (0.261 / 0.177 = 1.48): this many separate load paths leave the layout little to gain over
 # uniform. Budget 60 -> 120 and the nose block |y| 26 -> 34 as the tail tray (the BN socket's room: 100 alone thinned to ~1.0), arms' room 26 -> 32 wide (motor 1's root 1.25 in-layer), the lugs' room x +-20 -> +-28
 # (BS1-S1 1.28 across the layers: the lug bends as a column), the FC posts' clear ring r 6.5 -> 7.5 (one post off the main body).
-POD_R, POD_T, POD_ROOM, ARM_W = 14.0, 6.0, 15.0, 32.0
-ARM_Z0, POD_Z0 = 2.0, 8.0                            # the arms' room bottom at the root and at the pod (9 Nov smoke: room_full 0.33 at the rear arm's root, 12.5 deep)
-LUG_X, LUG_Y1 = 28.0, 64.0                         # the lugs' room: x +-20, out to y 64 at the deck (9 Nov)
+# 11 Nov, run of a093523 (solid check PASS, 222.9 g): FAIL 0.821 ACROSS at BS0-S0 (175 N out along y at z -8.8, 33 under the deck: the lug
+# x +-28 could only hang from the deck and bend across its layers), motors 0.35-0.65 in-layer, 0.25-0.55 across; the beta-4 check read
+# 0.54 and the room thinned uniformly ~0.56: the layout gains nothing over uniform here. The lugs' wedge runs the receiver's length
+# (a plate at the socket's height carries the pull along x in its layers to the nose and tail) and the budget 140 -> 180.
+# Run of 071cc14: 274.1 g, solid PASS, FAIL 0.481 (motor 4's root; sockets <= 0.41 across, 0.40 in-layer): arms' root room 32 -> 48, 180 -> 200.
+POD_R, POD_T, POD_ROOM = 14.0, 8.0, 15.0             # 11 Nov: pad 6 -> 8 (motors 0.29-0.53 in-layer, 0.33-0.39 across in run a25e31d); M2 x 10 screws
+ARM_W0, ARM_W1 = 48.0, 30.0                         # the arms' room across, at the root and at the pod. 11 Nov, run of 071cc14 (274.1 g, 0.481): every
+                                                   # pod's flight case worst at its root by the deck's corner (0.29-0.48 in-layer), each arm one ~10 wide bar
+                                                   # in a 32 room: 48 at the root (was 32) lets the root spread into a V in its layers
+POD_Z0 = DZ1 - 12.0                                 # 12 Nov (the design chat: <= 160 g, every fail by geometry): the arms' room a 12 deep band in the deck's layers,
+                                                   # root to pod (was down to z 2 / 8): thrust bends a plate in its layers (a 10 x 34 section reads ~0.1 by hand), no
+                                                   # web hung under the pad (run of 4b95423: motor 3 0.386 ACROSS at z 13.7 under its pad)
+ARM_Z0 = 6.0                                        # the arm's room deeper at the root only: a haunch ~8 deg off the layers from the pod's 12.5 to 6 at the deck's corner
+                                                   # (12 Nov smoke: room filled solid 0.185 at motor 4's root with the 12 band)
+PAD_T = 2.5                                         # the drawn motor seat: the pad's top skin (the motor's base on it); the 4 screw bosses the pad's depth
+LUG_Y1 = 64.0                                      # the lugs' room: out to y 64 at the deck (9 Nov), along the receiver's whole length (11 Nov)
 # the motor (EMAX ECO II 2004 3000KV, the table above; dimensions.md open item 19: the KV)
 T_MAX, DYN, Q_PEAK, F_IMB, Q_STRIKE, F_STRIKE = 11.8, 1.5, 130.0, 11.0, 1000.0, 17.0   # N, -, N mm, N, N mm, N
 M2_PATTERN = 6.0                                   # 12 x 12, 4 x M2
@@ -94,28 +107,42 @@ def bodies():
     x0, x1, yb = S.DECK
     rx0, rx1 = -51.3 + S.BX, 54.3 + S.BX                                             # the receiver v3 (C), not drawn: it bolts up under the yokes
     env = [box(x0, x1, -yb, yb, S.REC_TOP, DZ1),                                      # the deck and the yokes over the receiver, one room
-           box(-S.BED, rx0, -34.0, 34.0, -2.3, DZ1),                                  # the tail tray (DT / BT, the UBEC)
-           box(rx1, S.BED, -34.0, 34.0, -2.3, DZ1), box(rx1, 78.0, -34.0, 34.0, -10.0, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod
+           box(-S.BED, rx0, -40.0, 40.0, -2.3, DZ1),                                  # the tail tray (DT / BT)
+           box(-S.BED, rx0 + 0.5, -40.0, 40.0, -12.0, -2.0), box(rx1 - 0.5, 78.0, -40.0, 40.0, -12.0, -2.0),   # 12 Nov: the nose and tail blocks down to
+           # -12 across |y| 40: BS0 / BS1 now sit in the nose block's corners (x 60, z -8.8) and pull in its layers; BT / BN turn the receiver's corners
+           # in the same layers (run of 4b95423: BS1-S1 0.458 ACROSS, the lug hung from the deck mid-way along the receiver)
+           box(rx1, S.BED, -40.0, 40.0, -2.3, DZ1), box(rx1, 78.0, -34.0, 34.0, -10.5, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod (-10.5: into the flow land, not flush on it)
            box(rx1, 71.8, -12.0, 12.0, -19.1, -2.0),                                 # the flow sensor's pod (its bottom on the walls-in rule + 2)
-           box(rx0 - 0.5, rx1 + 0.5, 33.8, 40.0, -2.3, S.REC_TOP), box(rx0 - 0.5, rx1 + 0.5, -40.0, -33.8, -2.3, S.REC_TOP)]   # 10 Nov: beside the receiver, so the end
+           box(S.UBEC_LO[0] - 2.5, S.UBEC_LO[0] + 19.5, -33.0, 33.0, S.UBEC_LO[1], -2.0),   # 11 Nov: the UBEC's pod under the tail tray (S.UBEC_LO: off BT's path)
+           box(rx0 - 0.5, rx1 + 0.5, 33.8, 40.0, -2.3, S.REC_TOP + 0.5), box(rx0 - 0.5, rx1 + 0.5, -40.0, -33.8, -2.3, S.REC_TOP + 0.5)]   # 10 Nov: beside the receiver, so the end
     # sockets' loads climb to the battery bolts (z 9.6) on shallow in-layer diagonals; run 187 stopped early at 1.064 ACROSS the layers
-    # (BT-TB 527 N at (-51, -33, 3.7)): with room only over the receiver and behind it, the path had to rise as a wall at its tail end
+    # (BT-TB 527 N at (-51, -33, 3.7)): with room only over the receiver and behind it, the path had to rise as a wall at its tail end.
+    # 11 Nov (run of 0dd1778, the audit's parity check since): these rooms' tops flush under the deck's room (z 9.6) and the flow land
+    # flush on the nose room's floor (z -10) stayed separate shells: 52 columns voxelised empty up to the deck (a 1 mm U slot round the
+    # flow pod, 1.4 mm walls, two blobs on necks; the side rooms lost everything above 9.6 beside the receiver). Each now overlaps 0.5.
     for mx, my in S.MOTORS:
         a = np.array([np.sign(mx) * 30.0, np.sign(my) * 30.0, 0]); b = np.array([mx, my, 0])
         u = unit(b - a); n = np.array([-u[1], u[0], 0])
-        env.append(hull_pts([p + s * n * ARM_W / 2 + [0, 0, z] for p, z0 in ((a, ARM_Z0), (b, POD_Z0)) for s in (-1, 1) for z in (z0, DZ1)]))
+        env.append(hull_pts([p + s * n * w / 2 + [0, 0, z] for p, z0, w in ((a, ARM_Z0, ARM_W0), (b, POD_Z0, ARM_W1)) for s in (-1, 1) for z in (z0, DZ1)]))
         env.append(cyl(mx, my, POD_Z0, DZ1, POD_ROOM))
     lx, ly0, ly1, lz = S.LUG
-    for s_ in (1, -1):                                                                # the side lugs' room: a wedge from the deck's side down to the
-        yz = [(ly0, lz), (ly1, lz), (ly1, lz + 1.2), (LUG_Y1, lz + 1.2 + 1.43 * (LUG_Y1 - ly1)), (LUG_Y1, DZ1), (ly0, DZ1)]   # BS socket, out under the
-        env.append(hull_pts([(x, s_ * y, z) for x in (-LUG_X, LUG_X) for y, z in yz]))   # discs' keep-out, its outer face up the funnel's 55 deg
+    yz = [(-ly0, lz), (ly0, lz), (ly1, lz), (ly1, lz + 1.2), (LUG_Y1, lz + 1.2 + 1.43 * (LUG_Y1 - ly1)), (LUG_Y1, DZ1), (-ly0, DZ1)]
+    side_clip = U([hull_pts([(x, s_ * y, z) for x in (-S.BED, S.BED) for y, z in yz]) for s_ in (1, -1)])   # the side sockets' rooms stay inside the
+    # lugs' old profile: under the discs' keep-out, the outer face up the funnel's 55 deg (12 Nov: the lug wedges and the belt along the receiver went
+    # with BS moving to the nose block's corners, tools/scout_v4_shape.BS_X)
     drawn, cuts = [], []
-    cuts.append(box(rx0 - 0.1, rx1, -33.3, 33.3, -60.0, S.REC_TOP))                  # the battery mechanism (the receiver's box) under the yokes
+    cuts.append(box(rx0 - 0.1, rx1, -33.3, 33.3, -60.0, -2.6))                       # the battery mechanism (the receiver's box) under the yokes; above
+    rr = 5.0                                                                          # z -2.6 its vertical corners round r 5 (10 Nov, run 188: 0.785 at the box's
+    cuts.append(hull_pts([(x, y, z) for x in (rx0 - 0.1 + rr, rx1 - rr) for y in (-33.3 + rr, 33.3 - rr) for z in (-2.7, S.REC_TOP)]))   # tail corner; the
+    cuts += [cyl(x, y, -2.7, S.REC_TOP, rr) for x in (rx0 - 0.1 + rr, rx1 - rr) for y in (-33.3 + rr, 33.3 - rr)]   # receiver v3 mesh is empty there, checked)
+    cuts += [box(rx0 - 0.1 + rr, rx1 - rr, -33.3, 33.3, -2.7, S.REC_TOP), box(rx0 - 0.1, rx1, -33.3 + rr, 33.3 - rr, -2.7, S.REC_TOP)]
     # ---- the motor pods: the pad in the deck's layers, 4 x M2 up from below (the heads under the pad), the bell over it
     pods, pod_regs = [], []
     for mx, my in S.MOTORS:
-        pods.append(cyl(mx, my, DZ1 - POD_T, DZ1, POD_R))
-        pod_regs.append([cyl(x, y, DZ1 - POD_T, DZ1, 2.6) for x, y, _ in screw_pts(mx, my, 0.0)])   # each screw's column of the pad
+        pods.append(U([cyl(mx, my, DZ1 - PAD_T, DZ1, POD_R)] + [cyl(x, y, DZ1 - POD_T, DZ1, 3.5) for x, y, _ in screw_pts(mx, my, 0.0)]))   # 12 Nov: the seat
+        # skin and the 4 screw bosses (O7, 2.4 round the M2's 2.2), the rest of the pad generated (was a solid O28 x 8 disc: 18 g of the 44 g drawn)
+        pod_regs.append(([cyl(x, y, DZ1 - POD_T, DZ1 - POD_T + 1.5, 2.6) for x, y, _ in screw_pts(mx, my, 0.0)],    # each screw head's seat on the pad's underside
+                         [cyl(x, y, DZ1 - 1.5, DZ1, 3.5) for x, y, _ in screw_pts(mx, my, 0.0)]))                 # and the motor base on the pad's top round it
         cuts.append(cyl(mx, my, ARM_Z0 - 1, DZ1 + 1, 4.0))
         for x, y, _ in screw_pts(mx, my, 0.0):
             cuts.append(cyl(x, y, ARM_Z0 - 1, DZ1 + 1, 1.1))                          # M2 clearance
@@ -139,6 +166,9 @@ def bodies():
     cuts.append(box(cx - ra - 0.8, cx + ra + 0.8, S.GEAR["y"][0] - 0.5, S.GEAR["y"][1] + 0.5, cz - ra - 0.8, DZ1 + 1))   # the 40 T gear's slot
     tb = S.probe()["probe_turret"].bounds
     cuts.append(box(tb[0][0] - 0.5, tb[1][0] + 0.5, tb[0][1] - 0.5, tb[1][1] + 0.5, DZ1, 120))   # the turret above the deck
+    import parts.scout_v4_probe_turret.part as TUR                                    # 11 Nov (the PROBE stream's turret, main 722f7dc): its N20 cheeks,
+    tt = TUR.bodies(); tdown = ((tt["drawn"] + tt["env"]) - tt["cuts"]) ^ box(-200, 200, -200, 200, -100, DZ1 - 0.01)   # what the turret prints there (its cuts win)   # stubs and roller guide hang below its floor pads
+    cuts.append(U([tdown.translate(list(d)) for d in ((0.4, 0, 0), (-0.4, 0, 0), (0, 0.4, 0), (0, -0.4, 0), (0, 0, -0.4), (0, 0, 0))]) ^ box(-200, 200, -200, 200, -100, DZ1))   # 0.4 clear, never above the deck top (the bosses keep their height)
     cuts += disc_cuts()
     # ---- the boards (bought meshes placed by tools/scout_v4_shape.py)
     boards = []
@@ -157,29 +187,31 @@ def bodies():
     posts, pts, regs = [], [], []
     for dx in (-28.925, 28.925):
         for dy in (-11.425, 11.425):                                                  # 4 M2.5 posts (Radxa STEP: 57.85 x 22.85), down from the deck
-            posts.append(cyl(rx + dx, ry + dy, rtop, DZ1, 4.0)); pts.append((rx + dx, ry + dy, rtop)); regs.append(region_bot(rx + dx, ry + dy, rtop, 4.0))
+            posts.append(cyl(rx + dx, ry + dy, rtop, DZ1, 3.75)); pts.append((rx + dx, ry + dy, rtop)); regs.append(region_bot(rx + dx, ry + dy, rtop, 3.75))   # 3.75: 2.0 round the insert
             cuts.append(cyl(rx + dx, ry + dy, rtop - 0.1, rtop + M25_INS[1], M25_INS[0]))
     drawn += posts
-    cuts.append(box(rb[0][0] - 0.5, rb[1][0] + 0.5, rb[0][1] - 0.5, rb[1][1] + 0.5, rb[0][2] - 0.5, rb[1][2] + 0.5) - U(posts))
-    for xa, xb in ((rb[1][0] - 58.5, rb[1][0] - 49.6), (rb[1][0] - 46.0, rb[1][0] - 37.1)):   # its two USB-C plugs out the -y edge
+    cuts.append(box(rb[0][0] - 0.2, rb[1][0] + 0.2, rb[0][1] - 0.5, rb[1][1] + 0.5, rb[0][2] - 0.5, rb[1][2] + 0.5) - U(posts))   # 0.2 at its ends: 65 long between the turret's N20 cheeks and DT's collar
+    for xa, xb in ((rb[1][0] - 46.0, rb[1][0] - 37.1),):                         # one USB-C plug out the -y edge, the camera's (12 Nov: the board runs on the UBEC
+        # through its 5 V pins, so the other port's cut, x -67..-58 across motor 4's arm root, went: room filled solid 0.270 there; it flashes on this one)
         cuts.append(box(xa - 1.0, xb + 1.0, -41.0, rb[0][1] + 1.0, rb[0][2] - 0.5, rb[0][2] + 7.0))
     boards.append(("Radxa Zero 3W", pts, regs, ASM["scout_v4_radxa_zero_3w"]["mass_g"], tuple(rb.mean(0))))
-    for pid, nm, below in (("scout_v4_ubec", "UBEC", True), ("scout_v4_xr2", "XR2", False), ("scout_v4_drv8833", "DRV8833", False)):
-        b = bounds(pid)                                                               # tape lands (2.6: the gate's floor): the UBEC on one, the XR2 and the DRV8833 under theirs
+    for pid, nm, below in (("scout_v4_ubec", "UBEC", False), ("scout_v4_xr2", "XR2", False), ("scout_v4_drv8833", "DRV8833", False)):
+        b = bounds(pid)                                                               # tape lands (2.6: the gate's floor) over each: the UBEC hangs under its land in its pod (11 Nov)
         if below:
-            drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 0.6, b[0][2])
+            drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])
         else:
-            drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 3.1)); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 1.1)
+            drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 3.1)); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 3.1)
         cuts.append(box(b[0][0] - 0.5, b[1][0] + 0.5, b[0][1] - 0.5, b[1][1] + 0.5, b[0][2] - (0.0 if below else 0.5), b[1][2] + 0.5))
         boards.append((nm, [tuple(b.mean(0))], [reg], ASM[pid]["mass_g"], tuple(b.mean(0))))
     ub = bounds("scout_v4_ubec")
-    cuts += [box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[0][1] - 4, ub[0][1], ub[0][2], DZ0), box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[1][1], ub[1][1] + 3, ub[0][2], DZ0)]   # its leads out its ends
+    cuts += [box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[0][1] - 4, ub[0][1], ub[0][2] - 0.5, ub[1][2]), box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[1][1], ub[1][1] + 3, ub[0][2] - 0.5, ub[1][2])]   # its leads out its ends, in the pod's height only (11 Nov: up to the deck they cut the tray's sides through BT's path)
     lb = bounds("scout_v4_flow_mtf_02p")
     drawn.append(box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6))   # the flow sensor's tape land over it
     cuts.append(box(lb[0][0] - 0.3, lb[1][0] + 0.3, lb[0][1] - 0.3, lb[1][1] + 0.3, lb[0][2] - 5, lb[1][2]))      # its body and window, open below
-    cuts.append(box(lb[0][0] - 0.3, lb[0][0] + 4, -3, 3, lb[1][2] - 3, S.REC_TOP + 2.0))                          # its cable up the receiver's nose face
-    reg = box(lb[0][0], lb[1][0], lb[0][1], lb[1][1], lb[1][2], lb[1][2] + 0.6)
+    cuts.append(box(lb[0][0] - 0.3, lb[0][0] + 4, -3, 3, lb[1][2] - 3, S.REC_TOP + 0.3))                          # its cable up the receiver's nose face
+    reg = box(lb[0][0], lb[1][0], lb[0][1], lb[1][1], lb[1][2], lb[1][2] + 2.6)   # (the whole land: h 2.25)
     boards.append(("flow MTF-02P", [tuple(lb.mean(0))], [reg], ASM["scout_v4_flow_mtf_02p"]["mass_g"], tuple(lb.mean(0))))
+    flow_reg = box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6)   # the whole land
     # ---- the 8 rod sockets (crowns down: the print's up)
     side = [s for k in ("DS0", "BS0", "DS1", "BS1") for s in socks_of(k, cls=SockDown)]
     ends = [s for k in ("DN", "BN", "DT", "BT") for s in socks_of(k, cls=SockDown)]
@@ -190,10 +222,11 @@ def bodies():
     drawn += d; cuts += c
     from parts.scout_units_lib import BORE_R as _BR, WALL as _W
     env += [along(s.pt(-8.0), s.pt(s.t_mouth), _BR + _W + 5.0) for s in ends]       # room round each end socket and back into the body
+    env += [along(s.pt(-8.0), s.pt(s.t_mouth), _BR + _W + 5.0) ^ side_clip for s in side]   # and round each side socket (DS in the deck, BS in the nose block)
     env += [along(s.pt(-8.0), np.array([s.c[0] - np.sign(s.c[0]) * 25.0, 0.0, 10.0]), 7.0) for s in ends]
     env = U(env) ^ box(-S.BED, S.BED, -S.BED, S.BED, -60.0, DZ1) ^ funnel_room()     # the A1 mini's 180; nothing below the walls-in funnel's line
     check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
-    return dict(drawn=U(drawn) ^ box(-S.BED - 5, S.BED + 5, -S.BED - 5, S.BED + 5, -60.0, DZ1), cuts=U(cuts), env=env,   # the bed: DN / DT's deeper collars rise to 24.8 at their back (10 Nov)
+    return dict(drawn=U(drawn) ^ box(-S.BED - 5, S.BED + 5, -S.BED - 5, S.BED + 5, -60.0, DZ1), cuts=U(cuts), env=env, flow_reg=flow_reg,   # the bed: DN / DT's deeper collars rise to 24.8 at their back (10 Nov)
                 pod_regs=pod_regs, rec_regs=rec_regs, tur_regs=tur_regs, socks=socks, boards=boards)
 
 
@@ -207,13 +240,20 @@ def whole_drone(p, masses, name, a, cls, accel=None):
 
 
 def motor_parts(regs, mx, my, F, at, Q=0.0):
-    """a force F acting at `at` and a torque Q about the motor's axis (+z), into the pad through its 4 screws' columns"""
+    """a force F acting at `at` and a torque Q about the motor's axis (+z), into the pad through its 4 screws: the pull away from the
+    pad (+z) at each screw head's seat on its underside (the head bears up into the pad), the rest (lateral, torque, push) at the motor
+    base on its top round each screw (11 Nov: a column through the pad's thickness pulled its layers apart, an across-layer artefact)"""
     pts = screw_pts(mx, my, DZ1 - POD_T / 2)
     f = rigid_split(pts, np.asarray(F, float), np.asarray(at, float))
     for i, (x, y, _) in enumerate(pts):
         r = np.array([x - mx, y - my, 0.0]); t = np.cross([0, 0, 1.0], r) / np.linalg.norm(r)
         f[i] = f[i] + Q / (4 * np.linalg.norm(r)) * t
-    return [(regs[i], f[i]) for i in range(4)]
+    bot, top = regs
+    out = []
+    for i in range(4):
+        up = max(0.0, f[i][2])
+        out += [(bot[i], np.array([0.0, 0.0, up])), (top[i], f[i] - np.array([0.0, 0.0, up]))]
+    return out
 
 
 def setup(h):
@@ -225,7 +265,7 @@ def setup(h):
     for i, (mx, my) in enumerate(S.MOTORS):
         regs = B["pod_regs"][i]; at = (mx, my, zp); u = unit(np.array([mx, my, 0.0])); v = np.cross([0, 0, 1.0], u)
         for qs in (1, -1):
-            for lab, e in (("along", u), ("across", v)):
+            for lab, e in ((("across", v),) if qs > 0 else (("along", u),)):   # 10 Nov: 2 a pod, not 4 (run 189 died on the runner at ~16 GB;
                 p.load_multi(f"motor {i + 1}: thrust {T:.1f} N (1.20 kg x {DYN}) + torque {qs * Q_PEAK / 1000:+.2f} N m + imbalance {F_IMB:.0f} N {lab} the arm",
                              motor_parts(regs, mx, my, (0, 0, T) + F_IMB * e, at, qs * Q_PEAK), cls="flight")
             p.load_multi(f"motor {i + 1}: prop strike {qs * Q_STRIKE / 1000:+.1f} N m + {F_STRIKE:.0f} N blow + thrust {T_MAX:.1f} N",
@@ -233,7 +273,7 @@ def setup(h):
     masses = []
     for i, (mx, my) in enumerate(S.MOTORS):
         mg = ASM[f"scout_v4_motor_{i + 1}"]["mass_g"] + ASM[f"scout_v4_blades_{i + 1}"]["mass_g"]
-        masses.append((f"motor {i + 1}", screw_pts(mx, my, DZ1 - POD_T / 2), B["pod_regs"][i], mg, (mx, my, DZ1 + 11.0)))
+        masses.append((f"motor {i + 1}", screw_pts(mx, my, DZ1 - POD_T / 2), B["pod_regs"][i][1], mg, (mx, my, DZ1 + 11.0)))
     g, cg = probe_mass_cg()
     tpts = [(x, y, DZ1) for x, y in TURRET_BOLTS]
     masses.append(("probe", tpts, B["tur_regs"], g, cg))
@@ -247,4 +287,6 @@ def setup(h):
     f = rigid_split(tpts, np.array([0, 0, -261.0]), np.array([S.AXIS[0], 0.0, 130.0]))
     p.load_multi("head-first crash: 261 N down the throat", [(B["tur_regs"][i], f[i]) for i in range(4)], cls="crash")
     socket_cases(p, B["socks"])
+    for lab, F in (("up", (0, 0, 10.0)), ("side", (0, 10.0, 0))):                     # 10 Nov (run 188: the land on 1.8 mm necks): the frame's lowest, most
+        p.load(f"handling: 10 N {lab} on the flow sensor's pod (a hand)", B["flow_reg"], F, cls="misuse")   # exposed printed feature, picked by hand
     return p

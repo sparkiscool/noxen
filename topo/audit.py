@@ -47,6 +47,23 @@ Checks (hard = raises, soft = logged + in the report):
                        frame's side lugs (16 x 8 room carrying 134 N 29 mm under the deck) read 2.55 after a 69 min run.
                        Open the room along the load path (deeper behind the socket, wider at the root), move the support
                        nearer the load, or shorten the lever.
+  parity         hard  a column of the grid where the room, the drawn or the cuts mesh has an odd number of distinct crossings: the
+                       ray-parity voxeliser (part.voxelise) then flips that column from the odd crossing up. Two bodies that only
+                       touch on a face (a box stacked flush on another) stay two shells in a manifold union, the ray meets the
+                       shared face twice at one height and counts it once. 11 Nov, the Scout v4 frame: the flow land's top flush
+                       on the nose room's floor (z -10) and the side rooms' tops flush under the deck (z 9.6) emptied 52 columns
+                       up to the deck: a 1 mm U slot round the flow pod, 1.4 mm walls, two blobs on necks. Overlap the bodies.
+  memory         hard  (memory_fit, on the Layout before the first solve; memory_measured after the first iteration) the run's
+                       peak memory over Settings.mem_limit_gb (14 GB of the GitHub runner's 16): the runner kills such a run
+                       with no log and no result (10 Nov: scout_v4_frame, 396 cases, 14.3 GB, died at 2 h). The estimate is
+                       what the process holds + the solver (direct factor and assembly, or the multigrid hierarchy and one
+                       warm start per case) + the per-case element energies + one block of right-hand sides; after the first
+                       iteration the measured peak (ru_maxrss) is checked too. The reason goes to result.json (status
+                       "mem_refused"). Coarsen h, trim the envelope (fewer active dofs), or merge drawn bodies (fewer tie cases).
+                       The build and gate after the layout too (build_fit: held + GATE_BYTES a cell of the 0.25 mm gate grid over
+                       the part's box + the export's mesh), from the envelope's box before the first solve and from the part's
+                       before the export cleanup and before the solid check (10 Nov: the frame was killed twice right after the
+                       export): a part over it ends with status mem_refused and the reason (split it: the grid is its box).
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -61,6 +78,153 @@ S26 = np.ones((3, 3, 3), bool)
 
 class SetupError(ValueError):
     pass
+
+
+class MemoryRefused(SetupError):
+    """the run would not fit the runner's memory (memory_fit / memory_measured); .info is the report for result.json"""
+
+    def __init__(self, msg, info):
+        super().__init__(msg)
+        self.info = info
+
+
+def _rss_gb():
+    try:
+        with open("/proc/self/status") as f:
+            for line in f:
+                if line.startswith("VmRSS"):
+                    return int(line.split()[1]) / 1048576.0
+    except OSError:
+        pass
+    return 0.0
+
+
+def _peak_gb():
+    try:
+        import resource
+        return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1048576.0
+    except Exception:
+        return 0.0
+
+
+def memory_estimate(L):
+    """(total GB, parts dict) for a Layout's optimisation: what the process holds now + its solver + the per-case element
+    energies + one block of right-hand sides in flight (fem.Solver.solve_blocks). Measured 10 Nov on scout_v4_frame (see
+    memory_fit's log line for estimate vs peak)."""
+    sol = L.fe_solver
+    g = sol.grid
+    real = [c for c in L.cases if not c.tie] if getattr(L.s, "nominal_hold", False) else []   # the nominal-hold copies (layout.py)
+    nc = len(L.cases) + len(real)
+    n_fe = sum(c.fe is not None for c in L.cases) + sum(c.fe is not None for c in real)
+    GB = 1024.0 ** 3
+    blk = sol.block_size()
+    parts = dict(held=_rss_gb())
+    if sol.backend == "direct":
+        nnz = len(sol.d_indices)
+        parts["factor"] = sol.direct_mem_estimate()
+        parts["assembly"] = nnz * 40.0 / GB                  # K, K[free][:, free], its upper triangle, int32 index copies
+        parts["block"] = blk * (2.0 * g.ndof + 4.0 * sol.d_n) * 8.0 / GB   # F and U (full dofs), F[free], Fortran copy, x, C copy
+    else:
+        lv = sum(g.nel / 8 ** l * 576 * 8.0 for l in range(1, sol.levels))
+        parts["factor"] = lv / GB + 0.5                       # coarse element matrices + the coarsest direct factor
+        parts["warm"] = nc * g.ndof * 8.0 / GB                 # one warm start per case
+        parts["block"] = blk * g.ndof * 8.0 * 10 / GB          # CG vectors (X, R, Z, P, AP, B) + V-cycle temporaries
+    parts["energies"] = (nc + n_fe) * g.nel * 8.0 / GB
+    return sum(parts.values()), {k: round(v, 2) for k, v in parts.items()}
+
+
+def memory_fit(L, limit_gb, log=print, hard=True):
+    """memory (see the module doc), before the first solve. Returns the report; raises MemoryRefused over the limit when hard."""
+    tot, parts = memory_estimate(L)
+    sol = L.fe_solver
+    rep = dict(estimate_gb=round(tot, 2), parts=parts, limit_gb=limit_gb, cases=len(L.cases), active_dofs=sol.n_active_dofs,
+               backend=sol.backend, block=sol.block_size())
+    msg = (f"memory: estimated peak {tot:.1f} GB ({', '.join(f'{k} {v}' for k, v in parts.items())}) for {len(L.cases)} cases on "
+           f"{sol.n_active_dofs:,} active dofs ({sol.backend})")
+    if tot > limit_gb:
+        why = (f"{msg}: over the {limit_gb:.0f} GB limit (the runner has 16 GB and kills a run over it with no log). Coarsen h, trim "
+               f"the envelope (fewer active dofs) or join drawn bodies (fewer tie cases: 6 per unheld body).")
+        log("audit: FAIL " + why)
+        rep["fail"] = why
+        if hard:
+            raise MemoryRefused("setup audit failed:\n  " + why, rep)
+    else:
+        log(f"audit: {msg}, limit {limit_gb:.0f} GB")
+    # the build and gate steps after the layout, on the envelope's box (the part's bounds are inside it): a part whose gate grid
+    # cannot fit is refused before the run, not killed after it (10 Nov, scout_v4_frame, twice right after the export)
+    part = L.part
+    g0 = np.asarray(part.origin, float); g1 = g0 + np.asarray(part.shape) * part.h
+    try:
+        b = np.asarray(part.env_m.bounding_box(), float)
+        lo, hi = np.maximum(b[:3], g0), np.minimum(b[3:], g1)
+    except Exception:
+        lo, hi = g0, g1
+    rep["build"] = build_fit(lo, hi, limit_gb, held_gb=parts["held"], log=log, hard=hard, when="from the envelope")
+    if "fail" in rep["build"]:
+        rep["fail"] = rep["build"]["fail"]
+    return rep
+
+
+def memory_measured(L, limit_gb, log=print, hard=True):
+    """memory after the first iteration: the measured peak (ru_maxrss) against the limit and the estimate."""
+    peak = _peak_gb()
+    rep = getattr(L, "mem", None) or {}
+    rep["peak_it1_gb"] = round(peak, 2)
+    msg = f"memory: peak {peak:.1f} GB after the first iteration (estimate {rep.get('estimate_gb')} GB, limit {limit_gb:.0f} GB)"
+    if peak > limit_gb:
+        why = f"{msg}: over the limit, the runner (16 GB) would kill this run. Coarsen h, trim the envelope or join drawn bodies."
+        log("audit: FAIL " + why)
+        rep["fail"] = why
+        if hard:
+            raise MemoryRefused("memory gate:\n  " + why, rep)
+    else:
+        log(msg)
+    return rep
+
+
+GATE_PITCH = 0.25        # the solid gate's voxel pitch (tools/solid_check.py solid_check, topo/build.py export_cleanup)
+GATE_MARGIN = 2          # voxels of air round the part's bounds on the gate grid
+GATE_BYTES = 45.0        # bytes per gate cell at the gate's peak, its voxelisation included (bool grids, labels, one float64
+                         # distance field held and one being built by solid_check.edt). Measured 10 Nov on scout_v4_frame's mesh
+                         # (82 M cells, 524 k faces): +3.09 GB = 37.5 B a cell (the old gate, scipy's transform: +7.57 GB, 98 B)
+MESH_BYTES = 6000.0      # bytes per face of the surface still to be exported (the boolean's mesh, the weld, their garbage until
+                         # the collector runs): the frame's export took the process from 1.05 to 5.28 GB on an 838 k-face surface
+
+
+def gate_voxels(lo, hi, pitch=GATE_PITCH):
+    """cells of the gate grid over the box lo..hi (the part's bounds)"""
+    lo, hi = np.asarray(lo, float), np.asarray(hi, float)
+    return int(np.prod([np.ceil((hi[k] - lo[k] + 2 * GATE_MARGIN * pitch) / pitch) for k in range(3)]))
+
+
+def build_estimate(lo, hi, faces=0, held_gb=None):
+    """(total GB, parts, gate cells) of the build: what the process holds + the gate grid (export cleanup and solid check,
+    GATE_BYTES a cell at GATE_PITCH over the part's bounds) + the export of a surface of `faces` faces still to come. 10 Nov: scout_v4_frame (180 x 180 x 44 mm, 94 M
+    gate cells, 838 k faces) was killed on the 16 GB runner right after the export, the gate's distance transforms at ~5 GB each."""
+    n = gate_voxels(lo, hi)
+    GB = 1024.0 ** 3
+    parts = dict(held=_rss_gb() if held_gb is None else float(held_gb), gate=GATE_BYTES * n / GB, mesh=MESH_BYTES * faces / GB)
+    return sum(parts.values()), {k: round(v, 2) for k, v in parts.items()}, n
+
+
+def build_fit(lo, hi, limit_gb, faces=0, held_gb=None, log=print, hard=True, when="before the gate"):
+    """memory of the build and gate steps (see the module doc): over the limit raises MemoryRefused (hard), so the run ends with
+    result.json status mem_refused and the reason, not with the runner killed after the export."""
+    tot, parts, n = build_estimate(lo, hi, faces, held_gb)
+    size = np.round(np.asarray(hi, float) - np.asarray(lo, float), 1).tolist()
+    rep = dict(estimate_gb=round(tot, 2), parts=parts, limit_gb=limit_gb, gate_cells=n, bounds_mm=size, faces=int(faces), when=when)
+    msg = (f"memory: build {when}: estimated peak {tot:.1f} GB ({', '.join(f'{k} {v}' for k, v in parts.items())}) for a "
+           f"{' x '.join(str(x) for x in size)} mm part ({n / 1e6:.0f} M gate cells at {GATE_PITCH} mm{f', {faces:,} faces' if faces else ''})")
+    if tot > limit_gb:
+        why = (f"{msg}: over the {limit_gb:.0f} GB limit (the runner has 16 GB and kills a run over it with no result). Split the part "
+               f"(the gate grid grows with its bounding box), or trim the envelope.")
+        log("audit: FAIL " + why)
+        rep["fail"] = why
+        if hard:
+            raise MemoryRefused("memory gate:\n  " + why, rep)
+    else:
+        log(f"audit: {msg}, limit {limit_gb:.0f} GB")
+    return rep
 
 
 PLATE_MM = 180.0      # Bambu A1 mini: 180 x 180 plate, 180 tall (CLAUDE.md design rules)
@@ -158,6 +322,29 @@ def drawn_walls(drawn_m, cuts_m, thin_ok=(), pitch=0.15, erode_mm=0.9, min_core_
             if t["kind"] == "wall" and t["core_mm3"] >= min_core_mm3:
                 out.append(dict(thick_mm=t["thick_mm"], core_mm3=t["core_mm3"], mm3=t["mm3"], at=t["at"], pitch=round(p, 3)))
     return sorted(out, key=lambda t: -t["core_mm3"])
+
+
+def parity_columns(mesh, xs, ys, chunk=20000):
+    """the (x, y) columns of a grid where a closed mesh has an odd number of distinct crossings along +z (part.voxelise's rays,
+    the same offsets and the same 1e-6 merge): the voxeliser inverts each such column above its odd crossing. Returns
+    [(x, y, [z of the crossings])]."""
+    if len(mesh.faces) == 0:
+        return []
+    XX, YY = np.meshgrid(xs, ys, indexing="ij")
+    org = np.stack([XX.ravel() + 1.234e-5, YY.ravel() + 2.345e-5, np.full(XX.size, float(mesh.bounds[0][2]) - 5.0)], 1)
+    bad = []
+    for c0 in range(0, len(org), chunk):
+        o = org[c0:c0 + chunk]
+        loc, ray, _ = mesh.ray.intersects_location(o, np.tile([0, 0, 1.0], (len(o), 1)), multiple_hits=True)
+        if not len(ray):
+            continue
+        order = np.argsort(ray, kind="stable"); ray = np.asarray(ray)[order]; z = loc[order][:, 2]
+        st = np.r_[0, np.where(np.diff(ray))[0] + 1, len(ray)]
+        for a, b in zip(st[:-1], st[1:]):
+            zz = np.sort(z[a:b]); zz = zz[np.r_[True, np.diff(zz) > 1e-6]]
+            if len(zz) % 2:
+                bad.append((round(float(o[ray[a], 0]), 1), round(float(o[ray[a], 1]), 1), [round(float(v), 2) for v in zz]))
+    return bad
 
 
 def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
@@ -355,6 +542,16 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         fails.append(f"drawn_wall: a drawn body has a wall under 2 mm at {w['at']} after its cuts ({w['thick_mm']:.1f} mm by the gate's rule, "
                      f"{w['core_mm3']:.1f} mm3){more}: the gate fails it wherever the engine leaves it exposed, and the cleanup may not cut drawn "
                      f"material (a 2.0 collar wall with 0.5 resin grooves is 1.5 at the grooves). Thicken the wall, shallow the cut, or declare it thin_ok.")
+
+    rep["parity"] = []
+    for nm, t in (("room", part.env_t), ("drawn", part.drawn_t), ("cuts", part.cuts_t)):
+        cols = parity_columns(t, part.axes[0], part.axes[1])
+        if cols:
+            zs_ = sorted({c[2][len(c[2]) // 2] for c in cols})[:4]
+            rep["parity"].append(dict(mesh=nm, columns=len(cols), at=[list(c[:2]) for c in cols[:4]], z=zs_))
+            fails.append(f"parity: the {nm} mesh has {len(cols)} grid columns with an odd number of crossings (near {[list(c[:2]) for c in cols[:3]]}, "
+                         f"crossings {cols[0][2]}): two bodies that only touch on a face (one flush on another) stay two shells, and the "
+                         f"voxeliser empties or fills those columns from the shared face up. Overlap them (0.5 mm) instead of stacking them flush.")
 
     rep["cases"] = len(part.cases)
     rep["supports"] = len(part.supports)

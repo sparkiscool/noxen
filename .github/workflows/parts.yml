@@ -1,4 +1,5 @@
-# Runs the topology engine for every part whose part.py changed in the push, one runner per part, all at once.
+# Runs the topology engine for every part whose setup changed in the push (part.py or inputs/, or any file the setup reads: its libs,
+# systems/ data, tools/ modules, recorded in parts/<name>/setup.json "reads" by tools/part_sha.py), one runner per part, all at once.
 # A run that does not finish inside the runner's 6 h cap saves its checkpoint and re-launches itself, so no run is
 # ever lost. Results are committed back to main by the last job. Nothing here involves Claude.
 name: parts
@@ -6,11 +7,11 @@ name: parts
 on:
   push:
     branches: [main]
-    paths: ['parts/*/part.py', 'parts/*/inputs/**']
+    paths: ['parts/*/part.py', 'parts/*/inputs/**', 'parts/*.py', 'systems/**', 'tools/**']   # a lib, data or tools change reruns only the parts it moves (part_sha.py --affected)
   workflow_dispatch:
     inputs:
       parts:
-        description: 'part names, space separated (empty = every part whose result is missing or stale)'
+        description: 'part names, separated by spaces and/or commas (empty = every part whose result is missing or stale); an unknown name fails the dispatch'
         required: false
         default: ''
       attempt:
@@ -34,11 +35,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
+      # the stale and affected checks build setups (topo, numpy) on a cache miss
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip }
+      - run: pip install -r requirements.txt
       - id: p
         shell: bash
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ -n "${{ inputs.parts }}" ]; then list="${{ inputs.parts }}"
+            if [ -n "$IN_PARTS" ]; then
+              # commas and/or spaces (10 Nov: "a,b,c" was one name and ran nothing, twice); a name that is not a part fails loudly
+              list=$(echo "$IN_PARTS" | tr ',' ' ' | xargs -n1 | sort -u | tr '\n' ' ')
+              bad=$(for n in $list; do if ! [[ "$n" =~ ^[A-Za-z0-9_-]+$ ]] || [ ! -f "parts/$n/part.py" ]; then echo -n " $n"; fi; done)
+              if [ -n "$bad" ]; then echo "::error::not a part (no parts/<name>/part.py):$bad; nothing dispatched"; exit 1; fi
             else list=$(python3 tools/stale_parts.py); fi
             # a push made with Spark's own credentials already started these runs: skip every part that another run
             # of this workflow is still working on (the dispatch is then only for the ones it missed). A run whose
@@ -52,15 +61,14 @@ jobs:
               [ -z "$pending" ] && break
               echo "another run is still finding its parts, waiting"; sleep 10
             done
-            # a part running elsewhere is skipped only when that run works on the same setup files (part.py, the libs, the
-            # systems data); on an older setup it stops itself (the run job's watchdog, below) and the new one runs here
-            # (Spark 29 Oct: an old design never keeps running once a new one supersedes it)
-            DESIGN_FILES="parts/*.py systems/*.json :!systems/runtimes.json"
+            # a part running elsewhere is skipped only when that run works on the same setup files (part.py, the libs, every file
+            # the setup reads: tools/part_sha.py --files); on an older setup it stops itself (the run job's watchdog, below) and the
+            # new one runs here (Spark 29 Oct: an old design never keeps running once a new one supersedes it)
             for id in $(others); do
               sha=$(gh run view "$id" --json headSha --jq .headSha)
               for b in $(gh run view "$id" --json jobs --jq '.jobs[] | select(.status != "completed") | .name' | sed -n 's/^run (\(.*\))$/\1/p'); do
                 case " $list " in *" $b "*) ;; *) continue;; esac
-                if git cat-file -e "$sha" 2>/dev/null && git diff --quiet "$sha" HEAD -- "parts/$b/part.py" $DESIGN_FILES; then
+                if git cat-file -e "$sha" 2>/dev/null && git diff --quiet "$sha" HEAD -- $(python3 tools/part_sha.py --files "$b"); then
                   list=$(echo " $list " | sed "s/ $b / /g"); echo "$b: already running on this same setup (run $id), skipped"
                 else
                   echo "$b: running on an older setup in run $id; that run stops itself, the new one starts here"
@@ -68,15 +76,17 @@ jobs:
               done
             done
           else
-            # every commit of the push, not only the last one; deleted parts excluded
-            list=$(git diff --name-only --diff-filter=AM ${{ github.event.before }} ${{ github.sha }} -- 'parts/*/part.py' 'parts/*/inputs/*' \
-                   | cut -d/ -f2 | sort -u | tr '\n' ' ')
+            # every commit of the push, not only the last one: a part whose part.py or inputs/ changed, or one whose identity (libs,
+            # the files its setup read: tools/part_sha.py) changed and now builds another setup than its result's (10 Nov: a new
+            # systems/scout_v4.head_load.json reran nothing and superseded nothing); deleted parts excluded
+            list=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | python3 tools/part_sha.py --affected)
           fi
           # xargs -r: an empty list gives [] and no run job (29 Oct: a dispatch for a part already running elsewhere ran a job with no part and went red)
           echo "parts=$(echo $list | xargs -r -n1 | jq -R . | jq -s -c .)" >> "$GITHUB_OUTPUT"
           echo "will run: $list"
         env:
           GH_TOKEN: ${{ github.token }}
+          IN_PARTS: ${{ inputs.parts }}
 
   run:
     needs: find
@@ -116,9 +126,10 @@ jobs:
           P=parts/${{ matrix.part }}
           rm -f $P/result.json $P/part.stl $P/preview.png      # the checked-out result is not this run's: a crashed run must upload nothing (run 67, 30 Oct: node 21 died at setup and its job uploaded the tree's old result.json, which the commit job then put over a newer re-gated one)
           DESIGN=$(python -m topo.run $P --design-hash 2>/dev/null | tail -1); echo "design $DESIGN"
+          FILES=$(python3 tools/part_sha.py --files ${{ matrix.part }})   # part.py, libs and every file the setup reads
           ( while sleep 180; do
               git fetch -q origin main 2>/dev/null || continue
-              if git diff --quiet HEAD origin/main -- "$P/part.py" 'parts/*.py' 'systems/*.json' ':!systems/runtimes.json'; then continue; fi
+              if git diff --quiet HEAD origin/main -- $FILES; then continue; fi
               rm -rf /tmp/mainwt; git worktree add -q --detach /tmp/mainwt origin/main 2>/dev/null || continue
               if [ -f /tmp/mainwt/$P/part.py ]; then new=$(cd /tmp/mainwt && python -m topo.run $P --design-hash 2>/dev/null | tail -1); else new="gone"; fi
               if [ -n "$new" ] && [ "$new" != "$DESIGN" ]; then

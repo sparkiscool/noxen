@@ -65,7 +65,10 @@ R_KEEP, Z_SWEEP = PROP_R + 4.0, 4.0             # the disc grown 4 and swept +-4
 KEEP = 12.0                                      # every rod 12 from the swept disc
 DECK = (-60.0, 60.0, 40.0)                       # the deck's body: x0, x1, |y| (E), arms from its corners to the pods
 ARM_W, POD_R = 18.0, 15.0                        # arm width, motor pod radius (the 2004's base O27 + 1.5)
-FC_X, FC_Z0, UBEC_YC = (15.5, 51.5), 10.0, 0.0       # 9 Nov: the FC hangs under the deck over the receiver (x 15.5..51.5, z 10..20.5); the UBEC across the tail tray
+UBEC_LO = (-70.5, -11.0)                           # 11 Nov (run of 0dd1778: BT-TB 0.76, the room filled solid 0.255): the UBEC lay across the tail tray at BT's own
+                                                   # height (z 0.3..8.3, |y| 30.5) and its leads cut the 3 mm beside it: BT's 581 N had 4.5 mm of room behind its floor.
+                                                   # Now it hangs under the tray in a pod (z -11..-3, its bottom on zmin_walls_in + 2 at x -70.5 with 2 to spare), open below
+FC_X, FC_Z0, UBEC_YC = (18.5, 54.5), 10.0, 0.0     # 11 Nov: FC clear of the turret bosses at x 13 (r 5) and of the room behind DN (run a25e31d: 0.95 there with the FC at x 66.5)       # 9 Nov: the FC hangs under the deck over the receiver (x 15.5..51.5, z 10..20.5); the UBEC across the tail tray
 BED = 89.3                                       # 9 Nov (Spark: deck, arms, pods and base as ONE body): the body inside |x|, |y| <= 89.3, the A1 mini's 180 less 1.4
 # ---- the v3 base and the battery, unchanged ---------------------------------------------------------------------------------
 BX = 1.3                                          # 9 Nov (Spark: "the center of gravity ... perfectly centered"): everything under the deck (receiver, cartridge, pack, base,
@@ -90,7 +93,7 @@ ROLLER = dict(ang=-30.0, r=5.05, gap=0.0, w=19.0, F=(12.0, 7.8))  # the coil's p
                                                   # 8 N locks a 2.4 N push at mu 0.3): O10.1 printed tube on two MR63ZZ (10 Nov: O8 left 1.0 round their O6.05 seats; 2.0 now), an M3 axle in radial slots, two 4 x 0.5 x 15 springs, 12 N on the full coil, 7.8 empty
 GEAR = dict(spool_t=40, pinion_t=12, m=0.8, y=(11.7, 14.7))      # printed spur pair, module 0.8, 40 / 12 on 20.8 centres: the N20 sits under the spool (9 Nov: outboard along +y it ran through the DS0 lug socket); ~1.5 s for the 150 mm, 3.3x its torque
 N20_FACE = GEAR["y"][0] - 2.9                                    # the N20's gearbox face (y): 2.9 short of the pinion, the turret's 2.6 face plate between (9 Nov audit: 1.6 was too thin)
-DRUM = dict(r=11.0, y0=-17.7, y1=-11.7)                        # the drum on the spool's -y side: the camera cable's loose coil, 3.5 turns of room for the spool's ~2.2
+DRUM = dict(r=9.0, y0=-17.7, y1=-11.7)   # 10 Nov turret run 6: r 11 put the drum's ring in the head-first path (0.34); the 0.6 ribbon's 3.5 turns of room need r ~8.2                        # the drum on the spool's -y side: the camera cable's loose coil, 3.5 turns of room for the spool's ~2.2
 MOTOR = dict(x=6.0, y0=-17.3, y1=9.7, z0=15.2, z1=25.2)           # N20 6 V 100 rpm (B07MZH851L; the 300 rpm stalled at ~140 N mm on the spool, the coil's own unwind is ~100 + friction): under the spool and the drum, facing +y, in a pocket through the deck
 THROAT = dict(x0=MAST_X - 4.0, x1=MAST_X + 4.0, y=11.0, z0=41.0, z1=73.0)   # the 32 mm guide from the coil's tangent: the stack re-forms into the lens in it (tools/probe_mast_fe.py) and it grips the mast's base
 AXIS = np.array([MAST_X + HEAD["dx"], HEAD["ay"], THROAT["z1"] + HEAD["az"]])   # the tilt axis parked
@@ -101,13 +104,16 @@ CH_LINE = 2 * HUB + (R_KEEP + KEEP) * math.sqrt(2)   # 262.7: the corner chamfer
 ZR, ZB, XR = 61.0, 12.0, 130.0                    # ring and flat roof, the bottom nodes, the roof's nose / tail apex
 ZR = max(ZR, Z_PROP + Z_SWEEP + 13.0)
 YC = CH_LINE - FLAT                              # 107.7: where a flat meets a chamfer
+BS_X = 60.0                                      # 12 Nov: BS0 / BS1 in the nose block's corners (were x 0, mid-way along the receiver: the frame could anchor
+                                                 # their 175 N only by bending a 106 mm bar or a hanger across its layers; here the block holds them in its layers).
+                                                 # The D / B pair to S0 keeps its 28.7 depth and spreads 60 in x; BS's rod 117 -> 131
 NODES = {
     "R0": (FLAT, YC, ZR), "P1": (YC, FLAT, ZR), "P2": (-YC, FLAT, ZR), "P3": (-FLAT, YC, ZR),                               # the ring's eight corners (left half, nose -> tail)
     "P4": (-FLAT, -YC, ZR), "P5": (-YC, -FLAT, ZR), "P6": (YC, -FLAT, ZR), "R7": (FLAT, -YC, ZR),                           # right half
     "RF": (XR, 0, ZR), "RM": (PROBE_DX, 0, ZR), "RB": (-XR, 0, ZR), "RS0": (0.0, XR, ZR), "RS1": (0.0, -XR, ZR),            # the flat roof: a cross from RM to four apexes 25 in from the ring (9 Nov: the same on all four sides)                                                              # the flat roof's spine
     "TB": (-FLAT, 0, ZB), "S0": (0.0, FLAT, ZB), "S1": (0.0, -FLAT, ZB),                                                    # the bottom nodes in the flats' planes
     "NB": (FLAT, 0, ZB),                                                                                                     # the nose node: on a rod triangle to the deck's nose end and the nose bay (9 Nov: was a solid stub of the base, there for the old front camera)
-    "DS0": (0.0, 40.0, 19.9), "BS0": (0.0, 40.0, -8.8), "DS1": (0.0, -40.0, 19.9), "BS1": (0.0, -40.0, -8.8),               # 9 Nov one body (printed deck-top down): DS's collar top on the bed (24.5), BS's crown (down in print) over the funnel's y walls           # (9 Nov: 33.8 apart, so the two rods to S0 / S1 are 17 deg apart and their sockets stay a node; DS under the discs' 27.7)            # sockets on the deck's side lugs (PRINTED)
+    "DS0": (0.0, 40.0, 19.9), "BS0": (BS_X, 40.0, -8.8), "DS1": (0.0, -40.0, 19.9), "BS1": (BS_X, -40.0, -8.8),               # 9 Nov one body (printed deck-top down): DS's collar top on the bed (24.5), BS's crown (down in print) over the funnel's y walls           # (9 Nov: 33.8 apart, so the two rods to S0 / S1 are 17 deg apart and their sockets stay a node; DS under the discs' 27.7)            # sockets on the deck's side lugs (PRINTED)
     "DN": (75.5, 0, 19.9), "BN": (75.5, 0, 2.7),                                                                           # 9 Nov one body: the collars (13 toward NB, crowns down) end at x 89.2, inside the A1 mini's 180; BN's crown (down in print) on the funnel's -2.3                                                                            # two sockets on the nose bay's front face, 62 mm rods to NB (PRINTED; DN on the deck's nose end, 95 mm, read 1.1 x Euler nose-first)
     "DT": (-75.5, 0, 19.9), "BT": (-75.5, 0, 2.7),                                                                         # 9 Nov one body: as DN / BN at the tail                                                     # both on the tail tray's end, 17 deg apart from TB (9 Nov: DT on the deck's tail end was 11 deg off BT, a fork)                                                                # sockets on the deck's tail end and the tail tray's end, its socket's bottom over the moved tail wall's top + 2 (PRINTED)
 }
@@ -204,12 +210,13 @@ def base():
     to the deck), where the FC, the Radxa, the XR2 and the DRV8833 hang under the deck (the nose bay is gone: with the nose sockets'
     collars inside the A1 mini's 180 there is no room for the FC between DN and BN); the nose block (x 55.6..89.3, |y| 26) for DN /
     BN and the flow sensor's pod under it (its bottom at -19.1, the rule's -21.1 + 2); the tail tray (x -89.3..-50, z -2.3 up) for DT /
-    BT and the UBEC on its floor; every bottom on zmin_walls_in + 2"""
+    BT, the UBEC's pod under it (11 Nov); every bottom on zmin_walls_in + 2"""
     lo, hi = np.array([-51.3 + BX, -32.8, -44.3]), np.array([54.3 + BX, 32.8, REC_TOP])   # the receiver v3 (C), not drawn
     parts = [box(lo[0], hi[0], -DECK[2], DECK[2], hi[2], DECK_Z0 + 0.5),             # the yokes over the receiver, the deck's width
              box(hi[0], BED, -26.0, 26.0, -2.3, DECK_Z0 + 0.5),                      # the nose block
              box(hi[0], 71.8, -12.0, 12.0, -19.1, -2.0),                             # the flow sensor's pod (open below: its window)
              box(-BED, lo[0], -34.0, 34.0, -2.3, DECK_TOP),                          # the tail tray
+             box(UBEC_LO[0] - 2.5, UBEC_LO[0] + 19.5, -33.0, 33.0, UBEC_LO[1], -2.0),  # the UBEC's pod under it (open below)
              ]
     return union(parts)
 
@@ -521,10 +528,10 @@ def write():
     # 9 Nov (one body, the nose bay gone): the FC and the Radxa hang under the deck over the receiver on posts (inserts in the deck),
     # the XR2 and the DRV8833 flat on tape lands beside the FC, the UBEC on the tail tray's floor across the drone
     meshes["fc"] = place("fc", lo=(FC_X[0], FC_Z0))                                  # 36 square, component side up, its posts down from the deck
-    meshes["radxa_zero_3w"] = place("radxa_zero_3w", rot=([0, 1, 0], 90), lo=(-72.6, 10.4), yc=0.0)
+    meshes["radxa_zero_3w"] = place("radxa_zero_3w", rot=([0, 1, 0], 90), lo=(-73.9, 10.4), yc=0.0)
     meshes["radxa_zero_3w"].apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [0, 0, 1], meshes["radxa_zero_3w"].bounds.mean(0)))   # 65 along x
-    meshes["radxa_zero_3w"].apply_translation([-72.6 - meshes["radxa_zero_3w"].bounds[0][0], 0, 0])
-    meshes["ubec"] = place("ubec", lo=(-71.5, 0.3), yc=UBEC_YC)                        # 61 along y on the tail tray's land
+    meshes["radxa_zero_3w"].apply_translation([-73.9 - meshes["radxa_zero_3w"].bounds[0][0], 0, 0])   # 11 Nov: its front 0.4 off the turret's N20 cheeks (x -8.5)
+    meshes["ubec"] = place("ubec", lo=UBEC_LO, yc=UBEC_YC)                           # 61 along y, hung under its land below the tail tray (11 Nov)
     meshes["xr2"] = place("xr2", rot=([0, 0, 1], 90), lo=(4.0, 10.0), yc=28.5)        # flat, 34.5 x 13 x 4, under its land at +y
     meshes["xr2"].apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [1, 0, 0], meshes["xr2"].bounds.mean(0)))
     meshes["xr2"].apply_translation([0, 0, 10.0 - meshes["xr2"].bounds[0][2]])
@@ -553,7 +560,7 @@ def entries(meshes):
             e["opacity"] = opacity
         rows.append(e)
     fv = abs(meshes["frame"].volume)
-    add("frame", "frame v4, one body: deck, arms, motor pods, side lugs and the base (yokes, nose block, flow pod, tail tray) (generated, parts/scout_v4_frame)", "structure", "frame", "#d9d2c3", 110.0 if not os.path.exists(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")) else json.load(open(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")))["mass_g"], "E",
+    add("frame", "frame v4, one body: deck, arms, motor pods, side lugs and the base (yokes, nose block, flow pod, tail tray) (generated, parts/scout_v4_frame)", "structure", "frame", "#d9d2c3", (json.load(open(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json"))).get("mass_g") if os.path.exists(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")) else None) or 190.0, "E",
         f"one print inside |x|, |y| {BED} (the A1 mini's 180), deck-top down on the bed: deck z {DECK_Z0}..{DECK_TOP} and the yokes over the receiver down to its top 9.6, arms to O28 motor pads at (+-{HUB}, +-{HUB}), "
         "the battery mechanism's 4 M3 inserts, the FC's and the Radxa's posts, the XR2's, DRV8833's, UBEC's and flow sensor's lands, the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1), the turret's four insert bosses; the room until the run lands; PCTG", "PCTG", 0.85)
     for k in range(1, 5):
@@ -570,9 +577,9 @@ def entries(meshes):
     add("probe_servo", "probe tilt servo: SG90 (DORHEA, B0DFKPVRC2) and its 470 uF capacitor", "bought", "camera", "#2f3b45", 10.0, "listing",
         "its shaft on the tilt axis facing -y, held by its 32.8 tabs on the head frame's +y pads; the capacitor on its lead covers its > 1 A start")
     add("head_frame", "probe head frame: the clip on the blades' tip, the SG90's pads, the idler's boss (generated, parts/scout_v4_head_frame)", "structure", "camera", "#56606a", 2.5, "E",
-        "a 14 mm sleeve round the lens: blade A held by an M2 at its top, blade B's M2 in an 8 mm slot (on one spool B pays out 7.5 mm less than A over the 150: the ribbon between them, tools/probe_mast_sim.py), the ribbon's 4 mm loop; an M3 screw is the idler; PCTG", "PCTG")
-    add("probe_turret", "probe turret: housing, throat, drum and the roof's middle node RM (PCTG, generated: parts/scout_v4_probe_turret)", "placeholder", "camera", "#f2b705", 5.0, "E",
-        "side plates the size of the spool and the drum, the roller's slots and spring pockets, a 32 mm throat: 4 (thin walls), TPU lip 1, wires 1 (E); drawn see-through until the run lands", opacity=0.22)
+        "a 14 mm sleeve round the lens: blade A held by an M2 at its top, blade B's M2 in an 11 mm slot (on one spool B pays out 7.5 mm less than A over the 150: the ribbon between them, tools/probe_mast_sim.py), the ribbon's 4 mm loop; an M3 screw is the idler; PCTG", "PCTG")
+    add("probe_turret", "probe turret: housing, throat, drum and the roof's middle node RM (PCTG, generated: parts/scout_v4_probe_turret)", "structure", "camera", "#f2b705", 41.2, "C",
+        "side plates round the spool and the drum, the N20's cheeks, the roller's guides and spring pockets, the throat up to the head's seat, RM's rod sockets; TPU lip 1, wires 1 (E); PCTG", "PCTG")
     add("probe_spool", "probe spool with its 40 T gear (drawn: parts/scout_v4_probe_spool/make.py)", "structure", "camera", "#d08a1e", 21.0, "C",
         f"hub O28 between O31.8 flanges 19.6 apart, the 40 T gear (module 0.8, x -0.35, generated involute) outside the +y one, the drum's hub O8 outside the -y one; the stack (blade A outside, the 0.6 ribbon, blade B on the hub) wound 1.6 turns to O30.8 for the {REACH:.0f} mm; its three ends epoxied in one 1.2 slot at 45 deg into the hub, the ribbon on through the hub to the drum; turns on an M3 x 40; PCTG, gear face down", "PCTG")
     add("probe_pinion", "probe pinion, 12 T, on the N20's 3 mm D shaft (drawn: parts/scout_v4_probe_pinion/make.py)", "structure", "camera", "#a85f10", 0.3, "C", "x +0.35 (no undercut), centres 20.8 from the spool's; D bore 3.1 / 2.6 pressed on with CA; PCTG", "PCTG")
@@ -588,7 +595,7 @@ def entries(meshes):
         add(f"probe_mast_{k}", f"probe mast, blade {k.upper()} (10 mm steel tape, curves facing)", "placeholder", "camera", col, 0.0, "E",
             f"drawn 1 mm long above the throat; the page's timeline rolls it out to {REACH:.0f} mm and back (tools/scout_v4_timeline.py). Its mass is in the feed's")
     add("fc", "FC MicoAir743 AIO (under the deck, over the receiver)", "bought", "electronics", "#1f6f3f", 10.0, "P", f"36 x 36 at x {FC_X[0]}..{FC_X[1]}, z {FC_Z0}..{FC_Z0 + 10.5}, component side up on 4 M3 posts down from the deck (grommets; heads from below with the receiver off); set its IMU offset in PX4 (EKF2_IMU_POS_X ~ +{(FC_X[0] + FC_X[1]) / 2000:.3f} m)")
-    for src, nm, g, note in (("ubec", "UBEC", 15.0, "on the tail tray's tape land, across the drone (x -71.5..-54.5, |y| 30.5), under the Radxa"), ("xr2", "XR2", 1.0, "flat under its tape land beside the FC (+y)"),
+    for src, nm, g, note in (("ubec", "UBEC", 15.0, "under its tape land in a pod below the tail tray, across the drone (x -70.5..-53.5, |y| 30.5, z -11..-3), open below"), ("xr2", "XR2", 1.0, "flat under its tape land beside the FC (+y)"),
                              ("drv8833", "DRV8833 (KOOBOOK, B07S7Z8CFL)", 1.0, "flat under its tape land beside the FC (-y): channel A the probe's N20, B its LED bars"),
                              ("radxa_zero_3w", "Radxa Zero 3W", 10.0, "under the deck behind the turret's N20 on four M2.5 posts (inserts in the deck), 65 along x, its USB-C plugs out the -y edge"),
                              ("scout_flow_mtf_02p", "flow MTF-02P", 1.5, "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn")):

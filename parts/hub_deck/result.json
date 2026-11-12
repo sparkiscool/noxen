@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   35209.5
+   35209.8
   ],
   "necks": [],
   "drawn_not_in_main": [],
@@ -274,34 +274,45 @@
    99.7,
    16.2,
    8.2
-  ]
+  ],
+  "ok": true
  },
  "mass_g": 60.88,
  "watertight": true,
  "export": {
-  "faces_in": 157682,
+  "faces_in": 157474,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
+  "pinch_vertices": 0,
   "caps_left": 2,
   "dropped_shells": [],
   "n_dropped_shells": 0,
   "bodies": 1,
-  "faces": 157682,
+  "open_kept": [],
+  "faces": 157474,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 182,
+   "degenerate": 180,
    "folded": 18,
    "caps_split": 24,
    "caps_left": 4,
    "watertight": true,
-   "faces": 338790
+   "faces": 338796,
+   "n_dropped_shells": 1,
+   "dropped_shells": [
+    {
+     "faces": 68,
+     "mm3": 0.003,
+     "closed": true
+    }
+   ]
   },
-  "volume_mm3": 49491.9,
-  "exact_mm3": 49492.5
+  "volume_mm3": 49492.0,
+  "exact_mm3": 49492.8
  },
  "bodies": {
   "bodies_raw": 3,
@@ -312,7 +323,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 49492.5,
+ "volume_mm3": 49492.8,
  "drawn_g": 20.05,
  "export_cleanup": {
   "pitch": 0.25,
@@ -327,6 +338,42 @@
   "removed_mm3": 0.04,
   "specks": 2
  },
+ "memory_build": [
+  {
+   "estimate_gb": 4.36,
+   "parts": {
+    "held": 0.92,
+    "gate": 0.96,
+    "mesh": 2.48
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 22952160,
+   "bounds_mm": [
+    140.7,
+    87.0,
+    27.6
+   ],
+   "faces": 443776,
+   "when": "before the export cleanup"
+  },
+  {
+   "estimate_gb": 1.94,
+   "parts": {
+    "held": 0.98,
+    "gate": 0.96,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 22952160,
+   "bounds_mm": [
+    140.7,
+    87.0,
+    27.6
+   ],
+   "faces": 0,
+   "when": "before the solid check"
+  }
+ ],
  "stl": "hub_deck.stl",
  "view_stl": "hub_deck_view.stl",
  "view_faces": 120000,
@@ -382,6 +429,7 @@
    "early_k": 3.0,
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
+   "mem_limit_gb": 14.0,
    "checkpoint_every": 10
   },
   "R_mm": 6.44256687412536,
@@ -447,9 +495,42 @@
    "default"
   ]
  },
- "build_s": 281.8,
- "layout_s": 2019,
- "peak_gb": 5.163156,
+ "build_s": 158.7,
+ "layout_s": 2015,
+ "peak_gb": 3.38316,
+ "memory": {
+  "estimate_gb": 4.42,
+  "parts": {
+   "held": 0.81,
+   "factor": 2.08,
+   "assembly": 0.55,
+   "block": 0.75,
+   "energies": 0.23
+  },
+  "limit_gb": 14.0,
+  "cases": 106,
+  "active_dofs": 203607,
+  "backend": "direct",
+  "block": 42,
+  "build": {
+   "estimate_gb": 2.05,
+   "parts": {
+    "held": 0.81,
+    "gate": 1.24,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 29693664,
+   "bounds_mm": [
+    179.2,
+    87.0,
+    28.0
+   ],
+   "faces": 0,
+   "when": "from the envelope"
+  },
+  "peak_it1_gb": 3.14
+ },
  "gen_cm3": 32.0,
  "h": 1.3,
  "audit": {
@@ -655,6 +736,7 @@
   },
   "drawn_thin": [],
   "drawn_walls": [],
+  "parity": [],
   "cases": 22,
   "supports": 1,
   "fails": [],
@@ -923,13 +1005,14 @@
    12.3,
    6.9
   ],
+  "ok": true,
   "beta": 4.0,
   "iteration": 35,
   "max_worst": 0.5,
   "k": 3.0
  },
  "baseline": null,
- "total_s": 2301,
+ "total_s": 2174,
  "part_sha": "312aec8bec55",
  "lib_sha": "3bca3914ee6f",
  "setup_sha": "808aca33dd30591b",
@@ -937,11 +1020,11 @@
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/hub_deck.stl",
-  "sha256": "6787fb09a48b8205a60a6bcf1e1b0177f5bde6905990bdc851f8d964b1523790",
-  "bytes": 7884184,
-  "faces": 157682,
+  "sha256": "5c137004de28aedbb5416c3dc356fd8c8ce608f27ce7697a3a16e17c2595307d",
+  "bytes": 7873784,
+  "faces": 157474,
   "view_faces": 60000,
-  "view_sha256": "3a26caefd0b67d24f84d5c9674e3aab0cd5bfe3024a02f0fe7f36b5d0e38b6fd",
-  "at": "2026-11-09 23:04"
+  "view_sha256": "c3ff31984bc4a5d802fc657ad7bb2e41df8ac70d024377638e540d2860177ff3",
+  "at": "2026-11-12 04:39"
  }
 }
