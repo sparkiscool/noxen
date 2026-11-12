@@ -26,10 +26,10 @@
  "strength": {
   "rows": [
    {
-    "case": "frame RF-R0 axial 36 N (pull-out)",
+    "case": "frame RF-R0 axial 19 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.018,
+    "inlayer": 0.011,
+    "across": 0.009,
     "at": [
      151.5,
      99.0,
@@ -37,10 +37,10 @@
     ]
    },
    {
-    "case": "frame RF-R0 side 14.2 N",
+    "case": "frame RF-R0 side 12.3 N",
     "cls": "crash",
-    "inlayer": 0.016,
-    "across": 0.021,
+    "inlayer": 0.014,
+    "across": 0.018,
     "at": [
      155.5,
      92.0,
@@ -48,12 +48,12 @@
     ]
    }
   ],
-  "worst": 0.022,
-  "worst_case": "frame RF-R0 axial 36 N (pull-out)",
+  "worst": 0.018,
+  "worst_case": "frame RF-R0 side 12.3 N",
   "worst_at": [
-   151.5,
-   99.0,
-   63.8
+   155.5,
+   92.0,
+   58.8
   ],
   "ok": true
  },
@@ -109,9 +109,9 @@
  },
  "memory_build": [
   {
-   "estimate_gb": 0.56,
+   "estimate_gb": 0.54,
    "parts": {
-    "held": 0.34,
+    "held": 0.32,
     "gate": 0.03,
     "mesh": 0.19
    },
@@ -126,9 +126,9 @@
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 0.38,
+   "estimate_gb": 0.36,
    "parts": {
-    "held": 0.35,
+    "held": 0.33,
     "gate": 0.03,
     "mesh": 0.0
    },
@@ -237,16 +237,16 @@
   "design": 9687,
   "drawn": 1256,
   "cases": [
-   "frame RF-R0 axial 36 N (pull-out)",
-   "frame RF-R0 side 14.2 N"
+   "frame RF-R0 axial 19 N (pull-out)",
+   "frame RF-R0 side 12.3 N"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 11.7,
- "layout_s": 135,
- "peak_gb": 0.707812,
+ "build_s": 8.1,
+ "layout_s": 110,
+ "peak_gb": 0.706652,
  "memory": {
   "estimate_gb": 0.9,
   "parts": {
@@ -278,7 +278,7 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 0.68
+  "peak_it1_gb": 0.67
  },
  "gen_cm3": 0.6,
  "h": 1.0,
@@ -337,25 +337,25 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.009,
-   "worst_case": "frame RF-R0 axial 36 N (pull-out)",
+   "worst": 0.004,
+   "worst_case": "frame RF-R0 axial 19 N (pull-out)",
    "worst_at": [
     155.5,
     92.0,
     60.8
    ],
    "budget_share": 0.062,
-   "thinned": 0.15,
+   "thinned": 0.06,
    "max_worst": 0.3
   }
  },
  "early": {
   "rows": [
    {
-    "case": "frame RF-R0 axial 36 N (pull-out)",
+    "case": "frame RF-R0 axial 19 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.024,
+    "inlayer": 0.013,
+    "across": 0.012,
     "at": [
      155.5,
      93.0,
@@ -363,10 +363,10 @@
     ]
    },
    {
-    "case": "frame RF-R0 side 14.2 N",
+    "case": "frame RF-R0 side 12.3 N",
     "cls": "crash",
-    "inlayer": 0.02,
-    "across": 0.026,
+    "inlayer": 0.017,
+    "across": 0.023,
     "at": [
      155.5,
      90.0,
@@ -374,8 +374,8 @@
     ]
    }
   ],
-  "worst": 0.026,
-  "worst_case": "frame RF-R0 side 14.2 N",
+  "worst": 0.023,
+  "worst_case": "frame RF-R0 side 12.3 N",
   "worst_at": [
    155.5,
    90.0,
@@ -388,10 +388,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 147,
+ "total_s": 118,
  "part_sha": "5f43f559feab",
- "lib_sha": "a69fb4f2aa8f",
- "setup_sha": "eea7250b753b2ae8",
+ "lib_sha": "183b1c1fc75e",
+ "setup_sha": "2a06c0cbe61ca2a1",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
@@ -401,6 +401,6 @@
   "faces": 26036,
   "view_faces": 26036,
   "view_sha256": "706f0140329835260c27751dca6740f57bed42a0ff75c07423e7b7289730b4b7",
-  "at": "2026-11-12 04:04"
+  "at": "2026-11-12 10:18"
  }
 }
