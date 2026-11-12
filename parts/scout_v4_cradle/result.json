@@ -224,10 +224,10 @@
     ]
    },
    {
-    "case": "head-first crash: 270 N down onto the case's top",
+    "case": "head-first crash: 280 N down onto the case's top",
     "cls": "crash",
-    "inlayer": 0.144,
-    "across": 0.182,
+    "inlayer": 0.149,
+    "across": 0.189,
     "at": [
      8.9,
      13.8,
@@ -235,8 +235,8 @@
     ]
    }
   ],
-  "worst": 0.182,
-  "worst_case": "head-first crash: 270 N down onto the case's top",
+  "worst": 0.189,
+  "worst_case": "head-first crash: 280 N down onto the case's top",
   "worst_at": [
    8.9,
    13.8,
@@ -285,6 +285,42 @@
   "removed_mm3": 0.05,
   "specks": 1
  },
+ "memory_build": [
+  {
+   "estimate_gb": 1.96,
+   "parts": {
+    "held": 0.66,
+    "gate": 0.19,
+    "mesh": 1.11
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 4503990,
+   "bounds_mm": [
+    35.0,
+    45.5,
+    40.5
+   ],
+   "faces": 198696,
+   "when": "before the export cleanup"
+  },
+  {
+   "estimate_gb": 0.89,
+   "parts": {
+    "held": 0.7,
+    "gate": 0.19,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 4503990,
+   "bounds_mm": [
+    35.0,
+    45.5,
+    40.5
+   ],
+   "faces": 0,
+   "when": "before the solid check"
+  }
+ ],
  "stl": "scout_v4_cradle.stl",
  "view_stl": "scout_v4_cradle_view.stl",
  "view_faces": 120000,
@@ -397,19 +433,19 @@
    "camera and LED bars flight 2 g x",
    "camera and LED bars flight 2 g y",
    "camera and LED bars landing 6 g",
-   "head-first crash: 270 N down onto the case's top"
+   "head-first crash: 280 N down onto the case's top"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 36.9,
- "layout_s": 1349,
- "peak_gb": 2.704504,
+ "build_s": 37.2,
+ "layout_s": 1679,
+ "peak_gb": 2.761316,
  "memory": {
-  "estimate_gb": 3.54,
+  "estimate_gb": 3.55,
   "parts": {
-   "held": 0.61,
+   "held": 0.62,
    "factor": 1.58,
    "assembly": 0.43,
    "block": 0.72,
@@ -420,7 +456,24 @@
   "active_dofs": 165666,
   "backend": "direct",
   "block": 46,
-  "peak_it1_gb": 2.54
+  "build": {
+   "estimate_gb": 0.86,
+   "parts": {
+    "held": 0.62,
+    "gate": 0.24,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 5707782,
+   "bounds_mm": [
+    38.6,
+    45.5,
+    47.1
+   ],
+   "faces": 0,
+   "when": "from the envelope"
+  },
+  "peak_it1_gb": 2.56
  },
  "gen_cm3": 2.0,
  "h": 0.8,
@@ -576,19 +629,20 @@
   },
   "drawn_thin": [],
   "drawn_walls": [],
+  "parity": [],
   "cases": 19,
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.114,
-   "worst_case": "head-first crash: 270 N down onto the case's top",
+   "worst": 0.119,
+   "worst_case": "head-first crash: 280 N down onto the case's top",
    "worst_at": [
     13.7,
     -27.0,
     113.8
    ],
    "budget_share": 0.114,
-   "thinned": 1.0,
+   "thinned": 1.04,
    "max_worst": 0.3
   }
  },
@@ -793,10 +847,10 @@
     ]
    },
    {
-    "case": "head-first crash: 270 N down onto the case's top",
+    "case": "head-first crash: 280 N down onto the case's top",
     "cls": "crash",
-    "inlayer": 0.179,
-    "across": 0.189,
+    "inlayer": 0.185,
+    "across": 0.196,
     "at": [
      9.7,
      -20.7,
@@ -804,8 +858,8 @@
     ]
    }
   ],
-  "worst": 0.189,
-  "worst_case": "head-first crash: 270 N down onto the case's top",
+  "worst": 0.196,
+  "worst_case": "head-first crash: 280 N down onto the case's top",
   "worst_at": [
    9.7,
    -20.7,
@@ -818,19 +872,19 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 1386,
+ "total_s": 1716,
  "part_sha": "c2c7c597943a",
- "lib_sha": "2d160c20579e",
- "setup_sha": "2344052800d0b334",
+ "lib_sha": "7f3b7f6b12aa",
+ "setup_sha": "e7a371b80fdb73fc",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_cradle.stl",
-  "sha256": "95fdb87ce1401fe375c11d298b6cd74073810807b28352e82b83e8102cf49dbf",
+  "sha256": "f4f6d3e1c8a0224f9ba46b76ddbcca065c70d90f64c876438cbc77205fc0d9fd",
   "bytes": 6392184,
   "faces": 127842,
   "view_faces": 60000,
-  "view_sha256": "3f00d98c81cc23c7e1f7b220975c851864c8c1453a446348f73238689292d3fc",
-  "at": "2026-11-10 21:52"
+  "view_sha256": "2f725bc8ff8f526a18cd9626d5c906f68fddb22ebe9e600c1474470833e963e9",
+  "at": "2026-11-12 04:31"
  }
 }
