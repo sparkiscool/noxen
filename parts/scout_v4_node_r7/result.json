@@ -26,10 +26,10 @@
  "strength": {
   "rows": [
    {
-    "case": "frame RF-R7 axial 36 N (pull-out)",
+    "case": "frame RF-R7 axial 19 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.022,
-    "across": 0.018,
+    "inlayer": 0.011,
+    "across": 0.009,
     "at": [
      151.5,
      -99.0,
@@ -37,10 +37,10 @@
     ]
    },
    {
-    "case": "frame RF-R7 side 14.2 N",
+    "case": "frame RF-R7 side 12.3 N",
     "cls": "crash",
-    "inlayer": 0.015,
-    "across": 0.015,
+    "inlayer": 0.013,
+    "across": 0.013,
     "at": [
      151.5,
      -91.0,
@@ -48,12 +48,12 @@
     ]
    }
   ],
-  "worst": 0.022,
-  "worst_case": "frame RF-R7 axial 36 N (pull-out)",
+  "worst": 0.013,
+  "worst_case": "frame RF-R7 side 12.3 N",
   "worst_at": [
    151.5,
-   -99.0,
-   63.8
+   -91.0,
+   56.8
   ],
   "ok": true
  },
@@ -238,16 +238,16 @@
   "design": 9687,
   "drawn": 1256,
   "cases": [
-   "frame RF-R7 axial 36 N (pull-out)",
-   "frame RF-R7 side 14.2 N"
+   "frame RF-R7 axial 19 N (pull-out)",
+   "frame RF-R7 side 12.3 N"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 8.5,
- "layout_s": 103,
- "peak_gb": 0.706916,
+ "build_s": 10.3,
+ "layout_s": 135,
+ "peak_gb": 0.708964,
  "memory": {
   "estimate_gb": 0.9,
   "parts": {
@@ -279,7 +279,7 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 0.67
+  "peak_it1_gb": 0.68
  },
  "gen_cm3": 0.6,
  "h": 1.0,
@@ -338,25 +338,25 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.009,
-   "worst_case": "frame RF-R7 axial 36 N (pull-out)",
+   "worst": 0.004,
+   "worst_case": "frame RF-R7 axial 19 N (pull-out)",
    "worst_at": [
     155.5,
     -92.0,
     60.8
    ],
    "budget_share": 0.062,
-   "thinned": 0.15,
+   "thinned": 0.06,
    "max_worst": 0.3
   }
  },
  "early": {
   "rows": [
    {
-    "case": "frame RF-R7 axial 36 N (pull-out)",
+    "case": "frame RF-R7 axial 19 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.025,
-    "across": 0.024,
+    "inlayer": 0.013,
+    "across": 0.012,
     "at": [
      155.5,
      -93.0,
@@ -364,10 +364,10 @@
     ]
    },
    {
-    "case": "frame RF-R7 side 14.2 N",
+    "case": "frame RF-R7 side 12.3 N",
     "cls": "crash",
-    "inlayer": 0.02,
-    "across": 0.021,
+    "inlayer": 0.017,
+    "across": 0.019,
     "at": [
      150.5,
      -96.0,
@@ -375,12 +375,12 @@
     ]
    }
   ],
-  "worst": 0.025,
-  "worst_case": "frame RF-R7 axial 36 N (pull-out)",
+  "worst": 0.019,
+  "worst_case": "frame RF-R7 side 12.3 N",
   "worst_at": [
-   155.5,
-   -93.0,
-   59.8
+   150.5,
+   -96.0,
+   56.8
   ],
   "ok": true,
   "beta": 4.0,
@@ -389,19 +389,19 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 111,
+ "total_s": 146,
  "part_sha": "2d8055676d11",
- "lib_sha": "a69fb4f2aa8f",
- "setup_sha": "eb862d1dd1b3a3d5",
+ "lib_sha": "183b1c1fc75e",
+ "setup_sha": "2669d78390f01832",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_r7.stl",
-  "sha256": "df54e65762c4d1be986f63f054c57c2bdab6acd3ecc02ff13f306ebae52bde78",
+  "sha256": "26226625f3720b82bf6558816a76854bfc8466bceb7644b67119c497f1747836",
   "bytes": 1301084,
   "faces": 26020,
   "view_faces": 26020,
-  "view_sha256": "df54e65762c4d1be986f63f054c57c2bdab6acd3ecc02ff13f306ebae52bde78",
-  "at": "2026-11-12 04:04"
+  "view_sha256": "26226625f3720b82bf6558816a76854bfc8466bceb7644b67119c497f1747836",
+  "at": "2026-11-12 10:19"
  }
 }
