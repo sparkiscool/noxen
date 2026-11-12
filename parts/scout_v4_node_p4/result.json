@@ -26,10 +26,10 @@
  "strength": {
   "rows": [
    {
-    "case": "frame P4-P5 axial 48 N (pull-out)",
+    "case": "frame P4-P5 axial 68 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.151,
-    "across": 0.075,
+    "inlayer": 0.214,
+    "across": 0.108,
     "at": [
      -155.5,
      -101.0,
@@ -37,10 +37,10 @@
     ]
    },
    {
-    "case": "frame P4-P5 side 15.9 N",
+    "case": "frame P4-P5 side 17.8 N",
     "cls": "crash",
-    "inlayer": 0.058,
-    "across": 0.025,
+    "inlayer": 0.065,
+    "across": 0.028,
     "at": [
      -155.5,
      -102.0,
@@ -48,8 +48,8 @@
     ]
    }
   ],
-  "worst": 0.151,
-  "worst_case": "frame P4-P5 axial 48 N (pull-out)",
+  "worst": 0.214,
+  "worst_case": "frame P4-P5 axial 68 N (pull-out)",
   "worst_at": [
    -155.5,
    -101.0,
@@ -235,16 +235,16 @@
   "design": 9690,
   "drawn": 1256,
   "cases": [
-   "frame P4-P5 axial 48 N (pull-out)",
-   "frame P4-P5 side 15.9 N"
+   "frame P4-P5 axial 68 N (pull-out)",
+   "frame P4-P5 side 17.8 N"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 13.1,
- "layout_s": 89,
- "peak_gb": 0.723372,
+ "build_s": 10.5,
+ "layout_s": 77,
+ "peak_gb": 0.720304,
  "memory": {
   "estimate_gb": 0.9,
   "parts": {
@@ -335,25 +335,25 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.02,
-   "worst_case": "frame P4-P5 axial 48 N (pull-out)",
+   "worst": 0.029,
+   "worst_case": "frame P4-P5 axial 68 N (pull-out)",
    "worst_at": [
     -152.5,
     -99.0,
     62.8
    ],
    "budget_share": 0.072,
-   "thinned": 0.28,
+   "thinned": 0.4,
    "max_worst": 0.3
   }
  },
  "early": {
   "rows": [
    {
-    "case": "frame P4-P5 axial 48 N (pull-out)",
+    "case": "frame P4-P5 axial 68 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.238,
-    "across": 0.087,
+    "inlayer": 0.339,
+    "across": 0.124,
     "at": [
      -154.5,
      -99.0,
@@ -361,10 +361,10 @@
     ]
    },
    {
-    "case": "frame P4-P5 side 15.9 N",
+    "case": "frame P4-P5 side 17.8 N",
     "cls": "crash",
-    "inlayer": 0.098,
-    "across": 0.032,
+    "inlayer": 0.109,
+    "across": 0.036,
     "at": [
      -149.5,
      -100.0,
@@ -372,8 +372,8 @@
     ]
    }
   ],
-  "worst": 0.238,
-  "worst_case": "frame P4-P5 axial 48 N (pull-out)",
+  "worst": 0.339,
+  "worst_case": "frame P4-P5 axial 68 N (pull-out)",
   "worst_at": [
    -154.5,
    -99.0,
@@ -386,10 +386,10 @@
   "k": 3.0
  },
  "baseline": null,
- "total_s": 102,
+ "total_s": 88,
  "part_sha": "c3bb8cfe0b9c",
- "lib_sha": "a69fb4f2aa8f",
- "setup_sha": "5bc95eec45a9d9ee",
+ "lib_sha": "183b1c1fc75e",
+ "setup_sha": "64f030da17c18cb8",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
@@ -399,6 +399,6 @@
   "faces": 26614,
   "view_faces": 26614,
   "view_sha256": "0477b2f791cd4d0eccd73d069ad5d9d39844834367a042060be9fe51400d0f30",
-  "at": "2026-11-12 04:04"
+  "at": "2026-11-12 10:18"
  }
 }
