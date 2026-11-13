@@ -1,0 +1,1392 @@
+{
+ "name": "latch7_ov_receiver",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   50344.8
+  ],
+  "sealed_voids": [],
+  "inner_shells": [],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 6,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 10146.7,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "crash 0 35 g (+1.0 +0.0 +0.0)",
+    "cls": "crash",
+    "inlayer": 0.134,
+    "across": 0.128,
+    "at": [
+     32.2,
+     89.2,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 1 35 g (-1.0 +0.0 +0.0)",
+    "cls": "crash",
+    "inlayer": 0.134,
+    "across": 0.128,
+    "at": [
+     -32.2,
+     89.2,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 2 35 g (+0.0 +1.0 +0.0)",
+    "cls": "crash",
+    "inlayer": 0.055,
+    "across": 0.055,
+    "at": [
+     -23.2,
+     92.2,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 3 35 g (+0.0 -1.0 +0.0)",
+    "cls": "crash",
+    "inlayer": 0.078,
+    "across": 0.171,
+    "at": [
+     -32.2,
+     87.8,
+     57.6
+    ]
+   },
+   {
+    "case": "crash 4 35 g (+0.0 +0.0 +1.0)",
+    "cls": "crash",
+    "inlayer": 0.116,
+    "across": 0.235,
+    "at": [
+     -29.2,
+     62.2,
+     63.6
+    ]
+   },
+   {
+    "case": "crash 5 35 g (+0.0 +0.0 -1.0)",
+    "cls": "crash",
+    "inlayer": 0.103,
+    "across": 0.216,
+    "at": [
+     -32.2,
+     92.2,
+     62.0
+    ]
+   },
+   {
+    "case": "crash 6 35 g (+0.6 +0.6 +0.6)",
+    "cls": "crash",
+    "inlayer": 0.101,
+    "across": 0.205,
+    "at": [
+     -29.2,
+     62.2,
+     63.6
+    ]
+   },
+   {
+    "case": "crash 7 35 g (+0.6 +0.6 -0.6)",
+    "cls": "crash",
+    "inlayer": 0.089,
+    "across": 0.191,
+    "at": [
+     -32.2,
+     90.8,
+     57.6
+    ]
+   },
+   {
+    "case": "crash 8 35 g (+0.6 -0.6 +0.6)",
+    "cls": "crash",
+    "inlayer": 0.145,
+    "across": 0.298,
+    "at": [
+     -29.2,
+     62.2,
+     63.6
+    ]
+   },
+   {
+    "case": "crash 9 35 g (+0.6 -0.6 -0.6)",
+    "cls": "crash",
+    "inlayer": 0.128,
+    "across": 0.288,
+    "at": [
+     -32.2,
+     89.2,
+     57.6
+    ]
+   },
+   {
+    "case": "crash 10 35 g (-0.6 +0.6 +0.6)",
+    "cls": "crash",
+    "inlayer": 0.101,
+    "across": 0.205,
+    "at": [
+     29.2,
+     62.2,
+     63.6
+    ]
+   },
+   {
+    "case": "crash 11 35 g (-0.6 +0.6 -0.6)",
+    "cls": "crash",
+    "inlayer": 0.089,
+    "across": 0.191,
+    "at": [
+     32.2,
+     90.8,
+     57.6
+    ]
+   },
+   {
+    "case": "crash 12 35 g (-0.6 -0.6 +0.6)",
+    "cls": "crash",
+    "inlayer": 0.145,
+    "across": 0.298,
+    "at": [
+     29.2,
+     62.2,
+     63.6
+    ]
+   },
+   {
+    "case": "crash 13 35 g (-0.6 -0.6 -0.6)",
+    "cls": "crash",
+    "inlayer": 0.128,
+    "across": 0.288,
+    "at": [
+     32.2,
+     89.2,
+     57.6
+    ]
+   },
+   {
+    "case": "flight 4 g + 2 g +x",
+    "cls": "flight",
+    "inlayer": 0.044,
+    "across": 0.097,
+    "at": [
+     -32.2,
+     87.8,
+     57.6
+    ]
+   },
+   {
+    "case": "flight 4 g + 2 g -x",
+    "cls": "flight",
+    "inlayer": 0.044,
+    "across": 0.097,
+    "at": [
+     32.2,
+     87.8,
+     57.6
+    ]
+   },
+   {
+    "case": "flight 4 g + 2 g +z",
+    "cls": "flight",
+    "inlayer": 0.056,
+    "across": 0.115,
+    "at": [
+     -29.2,
+     62.2,
+     63.6
+    ]
+   },
+   {
+    "case": "flight 4 g + 2 g -z",
+    "cls": "flight",
+    "inlayer": 0.05,
+    "across": 0.112,
+    "at": [
+     -32.2,
+     89.2,
+     57.6
+    ]
+   },
+   {
+    "case": "catch 6 g",
+    "cls": "flight",
+    "inlayer": 0.048,
+    "across": 0.106,
+    "at": [
+     -32.2,
+     87.8,
+     57.6
+    ]
+   },
+   {
+    "case": "swap insert, the head at its limit 118 N on the seats",
+    "cls": "flight",
+    "inlayer": 0.09,
+    "across": 0.09,
+    "at": [
+     -23.2,
+     92.2,
+     3.5
+    ]
+   },
+   {
+    "case": "swap across 43.5 N +x",
+    "cls": "flight",
+    "inlayer": 0.216,
+    "across": 0.185,
+    "at": [
+     32.2,
+     89.2,
+     3.5
+    ]
+   },
+   {
+    "case": "stall 118 N on the +x lead-in (fault)",
+    "cls": "misuse",
+    "inlayer": 0.145,
+    "across": 0.12,
+    "at": [
+     30.8,
+     90.8,
+     3.5
+    ]
+   },
+   {
+    "case": "swap across 43.5 N -x",
+    "cls": "flight",
+    "inlayer": 0.216,
+    "across": 0.185,
+    "at": [
+     -32.2,
+     89.2,
+     3.5
+    ]
+   },
+   {
+    "case": "stall 118 N on the -x lead-in (fault)",
+    "cls": "misuse",
+    "inlayer": 0.145,
+    "across": 0.12,
+    "at": [
+     -30.8,
+     90.8,
+     3.5
+    ]
+   },
+   {
+    "case": "swap pull 64.5 N, bolts in (fault)",
+    "cls": "misuse",
+    "inlayer": 0.043,
+    "across": 0.095,
+    "at": [
+     -32.2,
+     87.8,
+     57.6
+    ]
+   },
+   {
+    "case": "bay: the pack's weight 1 g +x",
+    "cls": "flight",
+    "inlayer": 0.014,
+    "across": 0.013,
+    "at": [
+     32.2,
+     89.2,
+     3.5
+    ]
+   },
+   {
+    "case": "bay: the pack's weight 1 g -x",
+    "cls": "flight",
+    "inlayer": 0.014,
+    "across": 0.013,
+    "at": [
+     -32.2,
+     89.2,
+     3.5
+    ]
+   },
+   {
+    "case": "bay: the pack's weight 1 g +y",
+    "cls": "flight",
+    "inlayer": 0.006,
+    "across": 0.006,
+    "at": [
+     -23.2,
+     92.2,
+     3.5
+    ]
+   },
+   {
+    "case": "bay: the pack's weight 1 g +z",
+    "cls": "flight",
+    "inlayer": 0.012,
+    "across": 0.024,
+    "at": [
+     -29.2,
+     62.2,
+     63.6
+    ]
+   },
+   {
+    "case": "bay: the pack's weight 1 g -z",
+    "cls": "flight",
+    "inlayer": 0.011,
+    "across": 0.022,
+    "at": [
+     -32.2,
+     92.2,
+     62.0
+    ]
+   },
+   {
+    "case": "landing 6 g on the tail wall's two tongues",
+    "cls": "flight",
+    "inlayer": 0.264,
+    "across": 0.24,
+    "at": [
+     33.8,
+     -3.8,
+     60.6
+    ]
+   },
+   {
+    "case": "landing 6 g on the lead wall's two tongues",
+    "cls": "flight",
+    "inlayer": 0.343,
+    "across": 0.526,
+    "at": [
+     -11.2,
+     176.2,
+     23.0
+    ]
+   },
+   {
+    "case": "hold-down: the head's 118 N up on the seats, held by the funnel's four end-wall tongues",
+    "cls": "flight",
+    "inlayer": 0.167,
+    "across": 0.319,
+    "at": [
+     33.8,
+     -3.8,
+     60.6
+    ]
+   },
+   {
+    "case": "landing 6 g on the four feet (funnel)",
+    "cls": "flight",
+    "inlayer": 0.094,
+    "across": 0.103,
+    "at": [
+     -11.2,
+     176.2,
+     23.0
+    ]
+   },
+   {
+    "case": "XT60 pull-out 57 N + 1 g on the four feet",
+    "cls": "flight",
+    "inlayer": 0.057,
+    "across": 0.062,
+    "at": [
+     -11.2,
+     176.2,
+     23.0
+    ]
+   }
+  ],
+  "worst": 0.526,
+  "worst_case": "landing 6 g on the lead wall's two tongues",
+  "worst_at": [
+   -11.2,
+   176.2,
+   23.0
+  ],
+  "ok": true
+ },
+ "mass_g": 105.15,
+ "watertight": true,
+ "export": {
+  "faces_in": 449816,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "pinch_vertices": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "open_kept": [],
+  "faces": 449816,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 30,
+   "folded": 0,
+   "caps_split": 2,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 1047102,
+   "n_dropped_shells": 0,
+   "dropped_shells": []
+  },
+  "volume_mm3": 85490.6,
+  "exact_mm3": 85491.2
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 85491.2,
+ "drawn_g": 22.5,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
+ "memory_build": [
+  {
+   "estimate_gb": 10.85,
+   "parts": {
+    "held": 1.3,
+    "gate": 2.38,
+    "mesh": 7.16
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 56905956,
+   "bounds_mm": [
+    68.0,
+    183.6,
+    68.6
+   ],
+   "faces": 1282052,
+   "when": "before the export cleanup"
+  },
+  {
+   "estimate_gb": 3.82,
+   "parts": {
+    "held": 1.43,
+    "gate": 2.38,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 56905956,
+   "bounds_mm": [
+    68.0,
+    183.6,
+    68.6
+   ],
+   "faces": 0,
+   "when": "before the solid check"
+  }
+ ],
+ "stl": "latch7_ov_receiver.stl",
+ "view_stl": "latch7_ov_receiver_view.stl",
+ "view_faces": 120000,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 3.2,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": false,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": true,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "nominal_hold": true,
+   "hold_beta": 4.0,
+   "hold_proj_beta": 32.0,
+   "hold_tol": 0.05,
+   "hold_eroded": true,
+   "hold_stage": 50,
+   "no_cavity": true,
+   "cavity_ratio": 5.0,
+   "cavity_ks": 0.0001,
+   "cavity_p": 8.0,
+   "cavity_on": 0.5,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "mem_limit_gb": 14.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 3.2985942395521843,
+  "R_cells": 2.199062826368123,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.2817509057851385,
+  "nd": 67304,
+  "sym_axes": [
+   0
+  ],
+  "n_real": 35,
+  "n_ties": 102,
+  "backend": "direct",
+  "iterations": 97,
+  "stopped": "max_stage",
+  "checks": [
+   {
+    "it": 13,
+    "beta": 4.0,
+    "worst": 0.331,
+    "worst_case": "hold-down: the head's 118 N up on the seats, held by the funnel's four end-wall tongues"
+   },
+   {
+    "it": 28,
+    "beta": 8.0,
+    "worst": 0.342,
+    "worst_case": "hold-down: the head's 118 N up on the seats, held by the funnel's four end-wall tongues"
+   },
+   {
+    "it": 47,
+    "beta": 16.0,
+    "worst": 0.356,
+    "worst_case": "crash 9 35 g (+0.6 -0.6 -0.6)"
+   }
+  ],
+  "hold": {
+   "started_it": 13,
+   "beta": 4.0,
+   "index": 0.331
+  },
+  "cavity": {
+   "last": 2.770607706305728,
+   "ratio": 5.0,
+   "T0": 7.401505872170247,
+   "row": true
+  }
+ },
+ "grid": {
+  "name": "latch7_ov_receiver",
+  "h": 1.5,
+  "shape": [
+   48,
+   128,
+   48
+  ],
+  "origin": [
+   -36.0,
+   -10.5,
+   -1.7
+  ],
+  "cells": 294912,
+  "design": 67304,
+  "drawn": 5578,
+  "cases": [
+   "crash 0 35 g (+1.0 +0.0 +0.0)",
+   "crash 1 35 g (-1.0 +0.0 +0.0)",
+   "crash 2 35 g (+0.0 +1.0 +0.0)",
+   "crash 3 35 g (+0.0 -1.0 +0.0)",
+   "crash 4 35 g (+0.0 +0.0 +1.0)",
+   "crash 5 35 g (+0.0 +0.0 -1.0)",
+   "crash 6 35 g (+0.6 +0.6 +0.6)",
+   "crash 7 35 g (+0.6 +0.6 -0.6)",
+   "crash 8 35 g (+0.6 -0.6 +0.6)",
+   "crash 9 35 g (+0.6 -0.6 -0.6)",
+   "crash 10 35 g (-0.6 +0.6 +0.6)",
+   "crash 11 35 g (-0.6 +0.6 -0.6)",
+   "crash 12 35 g (-0.6 -0.6 +0.6)",
+   "crash 13 35 g (-0.6 -0.6 -0.6)",
+   "flight 4 g + 2 g +x",
+   "flight 4 g + 2 g -x",
+   "flight 4 g + 2 g +z",
+   "flight 4 g + 2 g -z",
+   "catch 6 g",
+   "swap insert, the head at its limit 118 N on the seats",
+   "swap across 43.5 N +x",
+   "stall 118 N on the +x lead-in (fault)",
+   "swap across 43.5 N -x",
+   "stall 118 N on the -x lead-in (fault)",
+   "swap pull 64.5 N, bolts in (fault)",
+   "bay: the pack's weight 1 g +x",
+   "bay: the pack's weight 1 g -x",
+   "bay: the pack's weight 1 g +y",
+   "bay: the pack's weight 1 g +z",
+   "bay: the pack's weight 1 g -z",
+   "landing 6 g on the tail wall's two tongues",
+   "landing 6 g on the lead wall's two tongues",
+   "hold-down: the head's 118 N up on the seats, held by the funnel's four end-wall tongues",
+   "landing 6 g on the four feet (funnel)",
+   "XT60 pull-out 57 N + 1 g on the four feet"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 212.5,
+ "layout_s": 4621,
+ "peak_gb": 4.64978,
+ "memory": {
+  "estimate_gb": 6.07,
+  "parts": {
+   "held": 1.01,
+   "factor": 3.17,
+   "assembly": 0.72,
+   "block": 0.8,
+   "energies": 0.38
+  },
+  "limit_gb": 14.0,
+  "cases": 137,
+  "active_dofs": 278946,
+  "backend": "direct",
+  "block": 36,
+  "build": {
+   "estimate_gb": 3.39,
+   "parts": {
+    "held": 1.01,
+    "gate": 2.38,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 56905956,
+   "bounds_mm": [
+    68.0,
+    183.6,
+    68.6
+   ],
+   "faces": 0,
+   "when": "from the envelope"
+  },
+  "peak_it1_gb": 4.43
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "crash 0 35 g (+1.0 +0.0 +0.0)",
+    "cls": "crash",
+    "inlayer": 0.165,
+    "across": 0.165,
+    "at": [
+     -32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 1 35 g (-1.0 +0.0 +0.0)",
+    "cls": "crash",
+    "inlayer": 0.165,
+    "across": 0.165,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 2 35 g (+0.0 +1.0 +0.0)",
+    "cls": "crash",
+    "inlayer": 0.081,
+    "across": 0.086,
+    "at": [
+     -27.8,
+     92.2,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 3 35 g (+0.0 -1.0 +0.0)",
+    "cls": "crash",
+    "inlayer": 0.092,
+    "across": 0.205,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 4 35 g (+0.0 +0.0 +1.0)",
+    "cls": "crash",
+    "inlayer": 0.128,
+    "across": 0.217,
+    "at": [
+     29.2,
+     62.2,
+     63.6
+    ]
+   },
+   {
+    "case": "crash 5 35 g (+0.0 +0.0 -1.0)",
+    "cls": "crash",
+    "inlayer": 0.13,
+    "across": 0.215,
+    "at": [
+     32.2,
+     92.2,
+     62.0
+    ]
+   },
+   {
+    "case": "crash 6 35 g (+0.6 +0.6 +0.6)",
+    "cls": "crash",
+    "inlayer": 0.136,
+    "across": 0.192,
+    "at": [
+     -32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 7 35 g (+0.6 +0.6 -0.6)",
+    "cls": "crash",
+    "inlayer": 0.129,
+    "across": 0.19,
+    "at": [
+     -32.2,
+     89.2,
+     57.6
+    ]
+   },
+   {
+    "case": "crash 8 35 g (+0.6 -0.6 +0.6)",
+    "cls": "crash",
+    "inlayer": 0.143,
+    "across": 0.32,
+    "at": [
+     -32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 9 35 g (+0.6 -0.6 -0.6)",
+    "cls": "crash",
+    "inlayer": 0.145,
+    "across": 0.316,
+    "at": [
+     -32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 10 35 g (-0.6 +0.6 +0.6)",
+    "cls": "crash",
+    "inlayer": 0.136,
+    "across": 0.192,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 11 35 g (-0.6 +0.6 -0.6)",
+    "cls": "crash",
+    "inlayer": 0.129,
+    "across": 0.19,
+    "at": [
+     32.2,
+     89.2,
+     57.6
+    ]
+   },
+   {
+    "case": "crash 12 35 g (-0.6 -0.6 +0.6)",
+    "cls": "crash",
+    "inlayer": 0.143,
+    "across": 0.32,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "crash 13 35 g (-0.6 -0.6 -0.6)",
+    "cls": "crash",
+    "inlayer": 0.145,
+    "across": 0.316,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "flight 4 g + 2 g +x",
+    "cls": "flight",
+    "inlayer": 0.054,
+    "across": 0.119,
+    "at": [
+     -32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "flight 4 g + 2 g -x",
+    "cls": "flight",
+    "inlayer": 0.054,
+    "across": 0.119,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "flight 4 g + 2 g +z",
+    "cls": "flight",
+    "inlayer": 0.055,
+    "across": 0.123,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "flight 4 g + 2 g -z",
+    "cls": "flight",
+    "inlayer": 0.056,
+    "across": 0.122,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "catch 6 g",
+    "cls": "flight",
+    "inlayer": 0.057,
+    "across": 0.128,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "swap insert, the head at its limit 118 N on the seats",
+    "cls": "flight",
+    "inlayer": 0.133,
+    "across": 0.14,
+    "at": [
+     -27.8,
+     92.2,
+     3.5
+    ]
+   },
+   {
+    "case": "swap across 43.5 N +x",
+    "cls": "flight",
+    "inlayer": 0.27,
+    "across": 0.224,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "stall 118 N on the +x lead-in (fault)",
+    "cls": "misuse",
+    "inlayer": 0.197,
+    "across": 0.147,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "swap across 43.5 N -x",
+    "cls": "flight",
+    "inlayer": 0.27,
+    "across": 0.224,
+    "at": [
+     -32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "stall 118 N on the -x lead-in (fault)",
+    "cls": "misuse",
+    "inlayer": 0.197,
+    "across": 0.147,
+    "at": [
+     -32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "swap pull 64.5 N, bolts in (fault)",
+    "cls": "misuse",
+    "inlayer": 0.051,
+    "across": 0.114,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "bay: the pack's weight 1 g +x",
+    "cls": "flight",
+    "inlayer": 0.017,
+    "across": 0.017,
+    "at": [
+     -32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "bay: the pack's weight 1 g -x",
+    "cls": "flight",
+    "inlayer": 0.017,
+    "across": 0.017,
+    "at": [
+     32.2,
+     84.8,
+     3.5
+    ]
+   },
+   {
+    "case": "bay: the pack's weight 1 g +y",
+    "cls": "flight",
+    "inlayer": 0.008,
+    "across": 0.009,
+    "at": [
+     -27.8,
+     92.2,
+     3.5
+    ]
+   },
+   {
+    "case": "bay: the pack's weight 1 g +z",
+    "cls": "flight",
+    "inlayer": 0.013,
+    "across": 0.023,
+    "at": [
+     29.2,
+     62.2,
+     63.6
+    ]
+   },
+   {
+    "case": "bay: the pack's weight 1 g -z",
+    "cls": "flight",
+    "inlayer": 0.013,
+    "across": 0.022,
+    "at": [
+     32.2,
+     92.2,
+     62.0
+    ]
+   },
+   {
+    "case": "landing 6 g on the tail wall's two tongues",
+    "cls": "flight",
+    "inlayer": 0.254,
+    "across": 0.092,
+    "at": [
+     33.8,
+     -3.8,
+     60.6
+    ]
+   },
+   {
+    "case": "landing 6 g on the lead wall's two tongues",
+    "cls": "flight",
+    "inlayer": 0.255,
+    "across": 0.124,
+    "at": [
+     33.8,
+     174.8,
+     60.6
+    ]
+   },
+   {
+    "case": "hold-down: the head's 118 N up on the seats, held by the funnel's four end-wall tongues",
+    "cls": "flight",
+    "inlayer": 0.173,
+    "across": 0.331,
+    "at": [
+     33.8,
+     174.8,
+     60.6
+    ]
+   },
+   {
+    "case": "landing 6 g on the four feet (funnel)",
+    "cls": "flight",
+    "inlayer": 0.09,
+    "across": 0.047,
+    "at": [
+     33.8,
+     -3.8,
+     60.6
+    ]
+   },
+   {
+    "case": "XT60 pull-out 57 N + 1 g on the four feet",
+    "cls": "flight",
+    "inlayer": 0.054,
+    "across": 0.028,
+    "at": [
+     33.8,
+     -3.8,
+     60.6
+    ]
+   }
+  ],
+  "worst": 0.331,
+  "worst_case": "hold-down: the head's 118 N up on the seats, held by the funnel's four end-wall tongues",
+  "worst_at": [
+   33.8,
+   174.8,
+   60.6
+  ],
+  "ok": true,
+  "beta": 4.0,
+  "iteration": 13,
+  "max_worst": 0.5,
+  "k": 3.0
+ },
+ "field": {
+  "worst": 0.342,
+  "worst_case": "hold-down: the head's 118 N up on the seats, held by the funnel's four end-wall tongues",
+  "worst_at": [
+   -33.8,
+   -3.8,
+   60.6
+  ],
+  "beta": 32.0,
+  "iteration": 97
+ },
+ "gen_cm3": 64.0,
+ "h": 1.5,
+ "audit": {
+  "solid_ok": [],
+  "drawn_share": 0.077,
+  "load_room": [],
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 258,
+    "inscribed_mm": 4.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 1.0,
+    "room_depth_mm": 84.0,
+    "at": [
+     -31.7,
+     0.2,
+     61.9
+    ],
+    "core_mm": 4.5,
+    "free_cells": 258
+   },
+   {
+    "id": 2,
+    "cells": 1017,
+    "inscribed_mm": 4.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.76,
+    "room_depth_mm": 117.0,
+    "at": [
+     -32.1,
+     86.2,
+     61.1
+    ],
+    "core_mm": 3.7,
+    "free_cells": 1017,
+    "share_of_drawn": 0.18
+   },
+   {
+    "id": 3,
+    "cells": 265,
+    "inscribed_mm": 4.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 1.0,
+    "room_depth_mm": 67.5,
+    "at": [
+     -31.6,
+     170.9,
+     61.8
+    ],
+    "core_mm": 4.5,
+    "free_cells": 265
+   },
+   {
+    "id": 4,
+    "cells": 415,
+    "inscribed_mm": 2.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 1.0,
+    "room_depth_mm": 181.5,
+    "at": [
+     -28.5,
+     -0.4,
+     9.7
+    ],
+    "core_mm": 1.5,
+    "free_cells": 415
+   },
+   {
+    "id": 5,
+    "cells": 584,
+    "inscribed_mm": 2.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 1.0,
+    "room_depth_mm": 108.0,
+    "at": [
+     -28.1,
+     86.2,
+     8.3
+    ],
+    "core_mm": 2.7,
+    "free_cells": 584
+   },
+   {
+    "id": 6,
+    "cells": 250,
+    "inscribed_mm": 4.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 1.0,
+    "room_depth_mm": 181.5,
+    "at": [
+     -28.9,
+     170.4,
+     13.9
+    ],
+    "core_mm": 4.5,
+    "free_cells": 250
+   },
+   {
+    "id": 7,
+    "cells": 584,
+    "inscribed_mm": 2.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 1.0,
+    "room_depth_mm": 108.0,
+    "at": [
+     28.1,
+     86.2,
+     8.3
+    ],
+    "core_mm": 2.7,
+    "free_cells": 584
+   },
+   {
+    "id": 8,
+    "cells": 415,
+    "inscribed_mm": 2.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 1.0,
+    "room_depth_mm": 181.5,
+    "at": [
+     28.5,
+     -0.4,
+     9.7
+    ],
+    "core_mm": 1.5,
+    "free_cells": 415
+   },
+   {
+    "id": 9,
+    "cells": 250,
+    "inscribed_mm": 4.5,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 1.0,
+    "room_depth_mm": 181.5,
+    "at": [
+     28.9,
+     170.4,
+     13.9
+    ],
+    "core_mm": 4.5,
+    "free_cells": 250
+   },
+   {
+    "id": 10,
+    "cells": 258,
+    "inscribed_mm": 4.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 1.0,
+    "room_depth_mm": 84.0,
+    "at": [
+     31.7,
+     0.2,
+     61.9
+    ],
+    "core_mm": 4.5,
+    "free_cells": 258
+   },
+   {
+    "id": 11,
+    "cells": 1017,
+    "inscribed_mm": 4.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.76,
+    "room_depth_mm": 117.0,
+    "at": [
+     32.1,
+     86.2,
+     61.1
+    ],
+    "core_mm": 3.7,
+    "free_cells": 1017
+   },
+   {
+    "id": 12,
+    "cells": 265,
+    "inscribed_mm": 4.5,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 1.0,
+    "room_depth_mm": 67.5,
+    "at": [
+     31.6,
+     170.9,
+     61.8
+    ],
+    "core_mm": 4.5,
+    "free_cells": 265
+   }
+  ],
+  "envelope_waste": 0.145,
+  "plate": {
+   "L_mm": 183.0,
+   "W_mm": 69.0,
+   "H_mm": 69.0,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "drawn_walls": [],
+  "parity": [],
+  "cases": 35,
+  "supports": 1,
+  "fails": [],
+  "room_full": {
+   "worst": 0.269,
+   "worst_case": "hold-down: the head's 118 N up on the seats, held by the funnel's four end-wall tongues",
+   "worst_at": [
+    33.8,
+    174.8,
+    60.6
+   ],
+   "budget_share": 0.282,
+   "thinned": 0.95,
+   "max_worst": 0.5,
+   "fin_cells": 684,
+   "worst_in_fin": false
+  }
+ },
+ "baseline": null,
+ "total_s": 4834,
+ "part_sha": "c4a1806e8bb0",
+ "lib_sha": "5883f3f6ad47",
+ "setup_sha": "5cdf2d4aec36005f",
+ "max_worst": 0.5,
+ "strength_ok": false,
+ "print_stl": {
+  "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/latch7_ov_receiver.stl",
+  "sha256": "05cde544d08893d56bfdd8f78c00a90cd66cda78ebb80bfd4d691748d66ad829",
+  "bytes": 22490884,
+  "faces": 449816,
+  "view_faces": 60000,
+  "view_sha256": "4c4cdc70b1803a09a05f5ba5a95d6bd8a52cf52cbb78f52b44c659dd4f0a179f",
+  "at": "2026-11-13 22:35"
+ }
+}
