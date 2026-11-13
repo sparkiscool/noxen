@@ -12,3 +12,8 @@
 - Asked of the head (offered to Spark 10 Nov, he said go on): locating features that take about 3 mm across and along before the blades rise; give in tilt and roll (the latch takes 0.6 deg roll and 1.6 deg pitch rigid; the arm's worst is 0.74 / 1.28, and the Overseer receiver cannot hold more than 0.65 roll); adjustable heel pads; each bolt read by its Hall sensor before the drone is released; more push: the stepper stalls at 74 N and the insert is 57 N of plug (E) plus the pack's weight (7.5 N Overseer): at least x1.5 over that.
 - Servos: DS3218 20 kg cm on hand, MG995 9.2 ordered (dimensions M).
 - Clear of the funnel on the whole swap path, both packs (parts/latch7/make.py `funnel_fit`), and of every bay on the ring (systems/box.assembly.json).
+
+## Arm worker (13 Nov), its reading, not Spark's words
+- Arm v8 is drawn in parts/box_arm8/make.py (shared geometry parts/box_arm8_lib.py, setups parts/box_arm8_setups.py), system file systems/swap_arm.assembly.json, numbers parts/box_arm8/result.json. The v7 scripts repo (jy202108g-bot/repo1) could not be added to the session (refused): v8 is built from the v7 meshes and dimensions.md, not from the v7 scripts.
+- State: swap cycle 502 states, both packs, 0 overlaps. Not ready to print: the hub, carriage and lift setups fail the setup audit (result.json audit_smoke) and two drawn pieces fail the solid check (solid_check).
+- Open, not the arm's to decide: the plug is at the pack's far end from the rail (latch v7 to_seat: lead end = nose); the 60 / 120 deg bays; the stand's keel under the -90 deg bay; the receivers have no mounting features for a bay; a hold-down in the funnel for the 118 N push limit (v7: 74).
