@@ -34,7 +34,7 @@ def lift(h):
     nut = L._b(L.LUG)
     bosses = [box(px - 9.0, px + 9.0, py - 7.0, py + 7.0, L.TIE_U[0], L.TIE_U[1]) for px, py in L.float_pts()]
     drawn = U(*housings, nut, *bosses)
-    p = Part("box_arm8_lift", h, drawn, L.lift_cuts(), env, build="+z", material="PCTG")
+    p = Part("box_arm8_lift", h, drawn, L.lift_cuts(), env, build="+x", material="PCTG")   # on its side (the far boom's outer face down): pull and push are in-layer; flat (+z) reads 0.78 across layers
     p.support("default", U(*housings, nut))
     pts = [np.array([px, py, sum(L.TIE_U) / 2]) for px, py in L.float_pts()]
     for nm, cls, F, P, s in _cases():

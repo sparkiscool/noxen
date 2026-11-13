@@ -168,16 +168,16 @@ def lift_block(): return U(_b(BLOCK), _b(LUG))
 def float_pts():
     return [(sx * FLOAT_X, Y_C + z) for sx in (-1, 1) for z in FLOAT_Z]
 def ties():
-    return [box(-33.5, 33.5, Y_C + z - 7.0, Y_C + z + 7.0, TIE_U[0], TIE_U[1]) for z in FLOAT_Z]
+    return [box(-33.5, 33.5, Y_C + z - 13.0, Y_C + z + 7.0, TIE_U[0], TIE_U[1]) for z in FLOAT_Z]      # 20 wide
 def lift_cuts():
     b = BLOCK; x, y = SCREW
     c = [cyl("z", xx, ROD_Y, 6.05, a, e) for xx, a, e in lm_seats()] + [cyl("z", xx, ROD_Y, 3.6, b["u"][0] - 1, b["u"][1] + 1) for xx in RODS_X]
     c += [cyl("z", x, y, 5.2, LUG["u"][0] - 1, LUG["u"][1] + 1), box(x - 9.2, x + 9.2, LUG["y"][0] - 1, y + 7.6, NUT_U[1], NUT_U[1] + 3.7)]   # the nut's body and its flange slot, in the lug
-    c += [U(cyl("z", px, py, 5.0, TIE_U[0] - 1, 30), cyl("z", px, py, 7.6, TIE_U[0] - 1, TIE_U[0] + 3.0)) for px, py in float_pts()]         # o 10 round each o 5 shoulder (+-2.5 of float), head and washer 3 into the underside
+    c += [cyl("z", px, py, 2.8, TIE_U[0] + 2.0, 30) for px, py in float_pts()]                                                             # M4 heat-set inserts in the ties, from above: the float bolts screw down into them
     return U(*c)
 def deep_wedge():
     """DEEP, tapered: its depth grows from the cross-over's own at the boom side to the full 27 below the axle line by x 58, and runs out toward the booms along y"""
-    d = DEEP; pts = [[d["x"][0], y, u] for y in (d["y"][0], XARM["y"][1]) for u in (-1.0, d["u"][1])]
+    d = DEEP; pts = [[d["x"][0], y, u] for y in (d["y"][0], XARM["y"][1]) for u in (XARM["u"][0], d["u"][1])]       # flush with the cross-over's underside at the boom side: no lip
     pts += [[x, y, u] for x in (58.0, d["x"][1]) for y in (d["y"][0], 92.0) for u in d["u"]] + [[x, XARM["y"][1], u] for x in (58.0, d["x"][1]) for u in (3.0, d["u"][1])]
     return hullp(pts)
 def lift_env():
@@ -250,11 +250,11 @@ def unit_body():
         guides.append(gd)
     bbs = [q.bounding_box() for q in pads]
     jacks = [box(b[0] - 1, b[3] + 1, -10.0, -5.9, b[2] - 1, b[5] + 1) for b in bbs]                        # a boss under each pad for its M3 jack screw
-    m = U(deck, *walls, base, *cross, *blocks, *guides, *jacks, *[cyl("y", sx * FLOAT_X, z, 5.0, y1 - 0.01, y1 + 4.5) for sx in (-1, 1) for z in FLOAT_Z])
+    m = U(deck, *walls, base, *cross, *blocks, *guides, *jacks)
     cut = [cyl("x", ROD_YT, z, 1.6, -40, 40) for z in (-12.0, 12.0)]                                       # o 3 carbon rods (the blades slide on them)
     cut += [cyl("z", 0.0, CAM_Y, 6.5, 22.0, 28.0)]                                                         # the servo's boss through its wall
     cut += [U(box(*sorted((sx * 10.2, sx * 17.1)), -40, -5.0, *sorted((sz * (STEM_Z[0] - 0.4), sz * (STEM_Z[1] + 0.4)))), box(*sorted((sx * 10.2, sx * 17.1)), -9.5, 0.0, *sorted((sz * 17.0, sz * (STEM_Z[1] + 0.4))))) for sx, sz in PILOTS]
-    cut += [cyl("y", sx * FLOAT_X, z, 2.8, y0 - 1, y1 + 4.6) for sx in (-1, 1) for z in FLOAT_Z]              # M4 heat-set inserts for the float bolts, from below
+    cut += [U(cyl("y", sx * FLOAT_X, z, 5.0, y0 - 1, y1 + 1), cyl("y", sx * FLOAT_X, z, 8.0, y1, y1 + 6.5)) for sx in (-1, 1) for z in FLOAT_Z]   # o 10 round each o 5 shoulder (+-2.5 of float); room for the head and its washer
     cut += [box(*sorted((sx * 11.3, sx * 14.7)), 3.8, 5.7, *sorted((sz * 18.7, sz * 21.5))) for sx, sz in ((1, 1), (-1, -1))]   # a pocket in each post for its hall sensor
     cut += [cyl("y", (b[0] + b[3]) / 2, (b[2] + b[5]) / 2, 1.25, -45, -5.5) for b in bbs]                  # M3 jack screws, tapped in the print
     cut += [box(-10.2, 30.2, CAM_Y - 10.2, CAM_Y + 10.2, 27.0, 68.5)]                                      # the servo
@@ -269,7 +269,7 @@ def unit_bought(state="grip"):
                blade_rods=U(*[cyl("x", ROD_YT, z, 1.5, -33.0, 33.0) for z in (-12.0, 12.0)]),
                blade_springs=U(*[cyl("x", ROD_YT, z, 3.0, *sorted((sx * (f + 7.5), sx * SEAT_X))) - cyl("x", ROD_YT, z, 2.3, -40, 40) for sx in (-1, 1) for z in (-12.0, 12.0)]),
                halls=U(*[box(*sorted((sx * 11.5, sx * 14.5)), 4.0, 5.5, *sorted((sz * 18.9, sz * 21.3))) for sx, sz in ((1, 1), (-1, -1))]),
-               float_bolts=U(*[U(cyl("y", x, z, 2.5, -54.0, -33.0), cyl("y", x, z, 7.5, -55.2, -54.0), cyl("y", x, z, 4.2, -57.0, -55.2)) for x, z in fb]),
+               float_bolts=U(*[U(cyl("y", x, z, 2.5, -56.0, -36.5), cyl("y", x, z, 7.5, -36.5, -35.3), cyl("y", x, z, 4.2, -35.3, -31.8)) for x, z in fb]),
                float_springs=U(*[cyl("y", x, z, 4.0, -50.4, -38.5) - cyl("y", x, z, 3.0, -51, -38) for x, z in fb]))
     return out
 

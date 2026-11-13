@@ -977,9 +977,10 @@
   ]
  },
  "audit_smoke": {
-  "box_arm8_hub": "audit PASS at h 2.5 (room filled solid 0.471, limit 0.5)",
-  "box_arm8_carriage": "FAIL at h 1.6, one check: room filled solid reads 2.15 (limit 0.5) in the plain Overseer pull-out, at the top of the lower clamp's column under the tail plate (13.8, 67.3, 20.6). Every other check passes. Cause: the lower rod clamps' 72 N goes up a tail plate 26 x 9.85 past the lower wheel (the lift's cross-over is over it at 79.2, a carried Overseer starts at 81.1); it read 18 before that path existed.",
-  "box_arm8_lift": "FAIL at h 1.8, one check: room filled solid reads 0.745 (limit 0.5), across layers, in the plain Overseer pull-out, on the cross-over's tapered underside beside the block (38.8, 94.3, 1.8); 0.66 printed on its side (+x). Every other check passes. It read 3.1 before the riser went over the block."
+  "box_arm8_hub": "audit PASS at h 2.5: room filled solid 0.471 (limit 0.5). At its 170 cm3 budget (32 % of the room) the audit's own estimate is ~1.46: the run is likely to fail strength",
+  "box_arm8_lift": "audit PASS at h 1.8, printed on its side (+x): room filled solid 0.488 (flat, +z, it reads 0.78 across layers). At a 40 cm3 budget the estimate is ~2.1, and even solid it is 0.49: the run is likely to fail strength",
+  "box_arm8_carriage": "FAIL at h 1.6, one check: room filled solid reads 2.15 (limit 0.5) in the plain Overseer pull-out, where the lower rod clamps' load turns into the 9.85 mm wheel plate. Three more layouts tried (thicker plate, wheel on the other side, deeper column): none under 1.7",
+  "cause": "the head pushes at the tab line, 102 mm along the axle from the rods: 6.6 N m in a plain Overseer insert (v7 had 5.5 at 60 N on a hand-section frame model). In PCTG at the swap class's safety of 4 the sections this layout leaves are at or over the limit even solid"
  },
  "solid_check": {
   "pass": [
@@ -1020,7 +1021,7 @@
    "part": "box_arm8_unit_body",
    "material": "PCTG",
    "count": 2,
-   "g_each": 110.2,
+   "g_each": 106.7,
    "box_mm": [
     67.0,
     44.1,
