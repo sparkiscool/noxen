@@ -7,7 +7,7 @@
  },
  "insert_cart_vs_recv_mm3": 0.0,
  "insert_stuck": [],
- "insert_max_cam_mm": 3.01,
+ "insert_max_cam_mm": 2.98,
  "snap_out_depth_mm": 2.0,
  "gripped_pull_mm3": 0.0,
  "gripped_pull_at_min_retract_mm3": 0.0,
@@ -1373,7 +1373,7 @@
    "receiver": {
     "down": "+y",
     "bed_mm2": 2626.0,
-    "support_mm2": 8787.0,
+    "support_mm2": 8806.0,
     "size_mm": [
      68.0,
      68.6,
@@ -1384,13 +1384,13 @@
     "diag_spare_mm": 2.1
    },
    "carrier": {
-    "down": "+y",
-    "bed_mm2": 890.0,
-    "support_mm2": 247.0,
+    "down": "+x",
+    "bed_mm2": 60.0,
+    "support_mm2": 253.0,
     "size_mm": [
      65.6,
      16.0,
-     20.4
+     20.7
     ],
     "fits_bed": true,
     "on_the_diagonal": false,
@@ -1412,7 +1412,7 @@
    "cartridge": {
     "down": "-z",
     "bed_mm2": 3125.0,
-    "support_mm2": 4987.0,
+    "support_mm2": 4988.0,
     "size_mm": [
      55.0,
      58.6,
@@ -1443,6 +1443,19 @@
      22.0,
      2.0,
      5.0
+    ],
+    "fits_bed": true,
+    "on_the_diagonal": false,
+    "diag_spare_mm": null
+   },
+   "plug collar": {
+    "down": "+y",
+    "bed_mm2": 206.0,
+    "support_mm2": 0.0,
+    "size_mm": [
+     27.1,
+     3.0,
+     12.5
     ],
     "fits_bed": true,
     "on_the_diagonal": false,
@@ -1512,6 +1525,18 @@
     "how": "bolts held in, 40 mm swept; pushed in alone the lead-ins cam the bolts (no stuck step)",
     "mm3": 0.0,
     "ok": true
+   },
+   {
+    "step": "7 receiver onto the drone: 6 M3 from below through the bosses",
+    "how": "each bolt and its driver swept from 60 mm below, through receiver, carrier and cap",
+    "mm3": 0.0,
+    "ok": true
+   },
+   {
+    "step": "8 XT60W-M glued into its collar, laid in the carrier, cap on",
+    "how": "the plug's body against collar, carrier, cap and receiver, seated",
+    "mm3": 0.0,
+    "ok": true
    }
   ],
   "serviceable": "a bolt comes out the way it went in once the pack, springs and stop bar are lifted out; nothing is glued",
@@ -1568,8 +1593,13 @@
    {
     "roll_deg": 0.74,
     "pitch_deg": 0.0,
-    "enters": false,
-    "latched": false
+    "enters": true,
+    "stops_short_mm": 0.32,
+    "bolt_held_in_mm": [
+     0.25,
+     0.0
+    ],
+    "latched": true
    },
    {
     "roll_deg": 0.0,
@@ -1706,27 +1736,37 @@
    {
     "roll_deg": 0.74,
     "pitch_deg": 1.28,
-    "enters": false,
-    "latched": false
+    "enters": true,
+    "stops_short_mm": 0.59,
+    "bolt_held_in_mm": [
+     0.25,
+     0.0
+    ],
+    "latched": true
    },
    {
     "roll_deg": 0.74,
     "pitch_deg": -1.28,
-    "enters": false,
-    "latched": false
+    "enters": true,
+    "stops_short_mm": 0.52,
+    "bolt_held_in_mm": [
+     0.25,
+     0.0
+    ],
+    "latched": true
    }
   ],
-  "roll_ok_deg": 0.6,
+  "roll_ok_deg": 0.74,
   "pitch_ok_deg": 1.6,
-  "arm_worst_both_ok": false
+  "arm_worst_both_ok": true
  },
  "mass_g": {
-  "latch7_ov_receiver": 209.87,
-  "latch7_ov_carrier": 5.24,
-  "latch7_ov_carrier_cap": 7.88,
+  "latch7_ov_carrier": 5.25,
+  "latch7_ov_carrier_cap": 7.89,
   "latch7_ov_cartridge": 100.78,
   "latch7_ov_slider": 5.53,
   "latch7_ov_stop_bar": 0.15,
+  "latch7_plug_collar": 0.76,
   "latch7_ov_receiver_strip_a": 0.36,
   "latch7_ov_receiver_strip_b": 0.36
  },
@@ -2216,64 +2256,64 @@
   [
    -6.0,
    [
-    3.0,
-    3.0
+    2.98,
+    2.98
    ]
   ],
   [
    -5.5,
    [
-    3.01,
-    3.01
+    2.98,
+    2.98
    ]
   ],
   [
    -5.0,
    [
-    3.01,
-    3.01
+    2.98,
+    2.98
    ]
   ],
   [
    -4.5,
    [
-    3.01,
-    3.01
+    2.98,
+    2.98
    ]
   ],
   [
    -4.0,
    [
-    3.01,
-    3.01
+    2.98,
+    2.98
    ]
   ],
   [
    -3.5,
    [
-    3.01,
-    3.01
+    2.98,
+    2.98
    ]
   ],
   [
    -3.0,
    [
-    3.01,
-    3.01
+    2.98,
+    2.98
    ]
   ],
   [
    -2.5,
    [
-    3.01,
-    3.01
+    2.98,
+    2.98
    ]
   ],
   [
    -2.0,
    [
-    3.01,
-    3.01
+    2.98,
+    2.98
    ]
   ],
   [
@@ -2536,7 +2576,7 @@
    "pose": null,
    "material": null,
    "tag": "C",
-   "mass_g": 1.97,
+   "mass_g": 2.0,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -2551,7 +2591,7 @@
    "pose": null,
    "material": null,
    "tag": "C",
-   "mass_g": 1.97,
+   "mass_g": 2.0,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -2833,8 +2873,8 @@
   "limit_mm3": 0.05,
   "worst_mm3": {
    "cartridge / receiver": 0.0,
-   "slider p / receiver": 0.0,
-   "slider n / receiver": 0.0,
+   "slider p / receiver": 0.0044,
+   "slider n / receiver": 0.0044,
    "blade p / receiver": 0.0,
    "blade n / receiver": 0.0,
    "heel deck / receiver": 0.0,
@@ -2852,8 +2892,11 @@
    "slider p / heel deck": 0.0,
    "slider n / heel deck": 0.0
   },
-  "at_s": {},
-  "max_mm3": 0.0,
+  "at_s": {
+   "slider p / receiver": 4.42,
+   "slider n / receiver": 4.42
+  },
+  "max_mm3": 0.0044,
   "ok": true
  }
 }

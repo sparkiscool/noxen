@@ -141,6 +141,34 @@ def _rgeom(g):
     r["PK_HZ"] = bl.BOLT_HZ + PK_END; r["PK_Y1"] = bl.BOLT_Y1 + PK_OVER
     return r
 bl.rgeom = _rgeom
+# ---- the plug (13 Nov): Spark buys XT60W (Amazon B0DZ288QD2), the carrier was drawn for an XT60E1-M panel plug. Amass XT60W-M sheet (33.XT60W-M-SPEC-2025V0, E until
+#      Spark measures one): 20.5 +-0.3 long with its solder tabs, 15.5 x 8.1 body, no flange, 33.0 mated with the XT60W-F (20.2 long). The float carrier holds a flange,
+#      so the XT60W-M gets one: a printed collar 27.1 x 12.5 x 3.0 round its body, glued (CA or epoxy on the scuffed housing: 57 N on 142 mm2 = 0.4 MPa), 1.5 behind its
+#      mating face. Carrier, cap and float are as they were but 0.4 deeper (the collar's long walls are 2.05, the E1-M's flange was 12.1). The body (17.0 E without tabs)
+#      stands 12.5 above the collar: 6.5 mm (Scout) / 4.8 (Overseer) above the receiver's mount plane, 10.0 / 8.3 with its solder tabs, where the E1-M's body stood 0.2: the drones need that room
+XT60W = dict(L=20.5, body=17.0, W=15.5, D=8.1, tabs=3.5, glue=0.15, back=1.5)
+bl.XM_FD = 12.5
+
+
+def plug_collar(g):
+    zx, ym = g["Z_X"], g["Y_XF_FACE"] + 1.5
+    return box(-bl.XM_FW / 2, bl.XM_FW / 2, ym, ym + bl.XM_FT, zx - bl.XM_FD / 2, zx + bl.XM_FD / 2) - \
+        box(-XT60W["W"] / 2 - XT60W["glue"], XT60W["W"] / 2 + XT60W["glue"], ym - 1, ym + bl.XM_FT + 1, zx - XT60W["D"] / 2 - XT60W["glue"], zx + XT60W["D"] / 2 + XT60W["glue"])
+
+
+def _xt60w_male(g, collar=True):
+    """the XT60W-M in its collar, where the E1-M sat: its nose in the pack's plug as before (the checks' engage depth), the body up through the cap"""
+    zx, ym = g["Z_X"], g["Y_XF_FACE"] + 1.5; y1 = ym - XT60W["back"] + XT60W["body"]
+    m = U(box(-bl.XM_IW / 2, bl.XM_IW / 2, ym - bl.XM_IL, ym, zx - bl.XM_ID / 2, zx + bl.XM_ID / 2),
+          box(-XT60W["W"] / 2, XT60W["W"] / 2, ym - 0.01, y1, zx - XT60W["D"] / 2, zx + XT60W["D"] / 2),
+          *[cyl("y", sx * 3.6, zx, 1.8, y1 - 0.5, y1 + XT60W["tabs"]) for sx in (-1, 1)])
+    return m + plug_collar(g) if collar else m
+bl.xt60_male = _xt60w_male
+
+
+WALL_RELIEF = {"overseer": 0.1}        # 13 Nov: the Overseer cartridge (55 x 58.6) rolled 0.74 deg (the arm's worst) is 0.38 wider a side at its rail's top edge; at 0.3 a side
+#                                        it did not enter (0.65 deg); 0.4 a side takes 0.74. The bolts, pockets and bosses stay where they are (RF itself is not moved): a bolt's
+#                                        bearing on its shelf is 2.9 long centred (was 3.0). The Scout (40 x 45.6) takes 0.74 at 0.3
 SEAT_HZ = 13.0                         # each seat strip: z_T +- 13
 SEAT_KEY = 2.0                         # the keys beside a strip's ends, along the pack (0.2 clear of it)
 
@@ -354,14 +382,20 @@ def scout_feet(B):
     end 0.3 from an end wall's foot, on a leg down from a corner boss; the Scout then sits at its drawn height, held along x and y."""
     g = B["g"]; fm = _funnel(); zt = g["Z_T"]
     xn = fm.SEAT[1] - fm.SETTINGS["scout"] - FOOT_PLAY; xt = fm.SEAT[0] + fm.SETTINGS["scout"] + FOOT_PLAY      # drone x of the pads' outer ends
-    legs = []
+    legs = []; pads = []
     for sx in (1, -1):
         for zo, za in ((xn + zt, FOOT_ANCHOR["z"][0]), (xt + zt, FOOT_ANCHOR["z"][1])):
             zp = sorted((zo, zo - math.copysign(FOOT_PAD["L"], zo - zt)))
             pts = [[sx * x, y, z] for x in FOOT_PAD["x"] for y in (bl.Y_RB, FOOT_PAD["y1"]) for z in zp] + \
                   [[sx * x, y, z] for x in FOOT_ANCHOR["x"] for y in FOOT_ANCHOR["y"] for z in za]
-            legs.append(hullp(pts))
+            bz = min((z for _, z in B["r"]["MOUNT"]), key=lambda z: abs(z - sum(za) / 2))            # this corner's mount bolt
+            ring = [[sx * B["r"]["BX"] + (bl.HEAD_R + 3.0) * math.cos(a), y, bz + (bl.HEAD_R + 3.0) * math.sin(a)] for a in np.linspace(0, 2 * math.pi, 24, endpoint=False) for y in (10.0, bl.HEAD_Y - 2.5)]
+            legs.append(hullp(pts) + hullp(pts[:8] + ring))                         # 13 Nov: the leg's room goes round the bolt's head bore, not through it
+            pads.append(hullp(pts[:8]))
     legs = U(*legs)
+    # 13 Nov: the legs filled the mount bolts' head counterbores (131 mm3 of 945 each) and bores: the receiver could not be bolted on. Bolt and driver sweep cut through
+    legs = legs - U(*[c for bx, bz in B["r"]["MOUNT"] for c in (cyl("y", bx, bz, bl.HEAD_R, -60.0, bl.HEAD_Y), cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, 100.0))])
+    B["foot_pads"] = pads
     for sk in B.get("rskids", []):                                   # 0.4 clear of the TPU skids
         for dx, dy in ((0.4, 0), (-0.4, 0), (0, 0.4), (0, -0.4), (0, 0)):
             legs = legs - sk.translate([dx, dy, 0])
@@ -391,13 +425,15 @@ def build(pack="scout"):
     r = B["r"]
     B["strips"] = seat_strips(r)
     B["recv"] = (B["recv"] + seat_keys(r)) - box(-r["RF"], r["RF"], r["Y_DK0"] - 0.01, r["Y_DK0"] + bl.STRIP_REC, r["Z_E0"], r["Z_P0"] - 0.99)   # closed end relief
-    B["stop"] = stop_bar(B["g"])
+    B["stop"] = stop_bar(B["g"]); B["collar"] = plug_collar(B["g"])
     pg = pegs(B["r"]); cut, boss = peg_slots(B["g"], B["r"])
     B["poles"] = pg; B["carrier"] = (B["carrier"] - peg_tab_cut(B["r"])) + U(*pg)
     if boss is not None: B["cart"] = B["cart"] + (boss if B.get("clip") is None else boss ^ B["clip"])
     B["cart"] = B["cart"] - cut
     grow = U(*[p_.translate([dx, 0, dz]) for p_ in pg for dx in (-0.3, 0.3) for dz in (-0.3, 0.3)])
     B["recv"] = B["recv"] - grow; B["cap"] = B["cap"] - grow
+    if WALL_RELIEF.get(pack):                # the side walls' faces set back above the lead-in: the cartridge rolled the arm's worst still enters
+        B["recv"] = B["recv"] - U(*[box(*sorted((s * (r["RF"] - 0.01), s * (r["RF"] + WALL_RELIEF[pack]))), bl.Y_RB + bl.HCAP - 0.01, r["Y_DK0"] + 0.01, r["Z_E0"], r["Z_E1"]) for s in (1, -1)])
     if pack == "scout":
         B["feet"] = scout_feet(B); B["recv"] = B["recv"] + B["feet"]
     return B
@@ -698,7 +734,10 @@ OUT = {"scout": ("latch7", "latch7_"), "overseer": ("latch7_overseer", "latch7_o
 def save(B):
     g = B["g"]; pre = OUT[g["pack"]][1]
     out = {pre + "receiver": B["recv"], pre + "carrier": B["carrier"], pre + "carrier_cap": B["cap"], pre + "cartridge": B["cart"],
-           pre + "slider": slider(g, 0, 1), pre + "stop_bar": B["stop"]}
+           pre + "slider": slider(g, 0, 1), pre + "stop_bar": B["stop"], "latch7_plug_collar": B["collar"]}       # one collar, the same on both packs
+    if os.path.exists(os.path.join(ROOT, "parts", pre + "receiver", "part.py")):       # the receiver is an engine part (parts/latch7_recv_lib.py): its part.stl is the run's.
+        os.makedirs(os.path.join(ROOT, "parts", OUT[g["pack"]][0], "view"), exist_ok=True)   # What is drawn here is its room, filled: the fit, motion and slant checks run on that
+        bl.tm(out.pop(pre + "receiver")).export(os.path.join(ROOT, "parts", OUT[g["pack"]][0], "view", "receiver_room.stl"))
     for k, m in zip("ab", sorted(B["strips"].decompose(), key=lambda m: m.bounding_box()[0])): out[f"{pre}receiver_strip_{k}"] = m
     paths = {}
     for nm, m in out.items():
@@ -1023,7 +1062,7 @@ def printability(m):
 
 def build_check(B):
     g = B["g"]; pre = OUT[g["pack"]][1]
-    printed = {"receiver": B["recv"], "carrier": B["carrier"], "carrier cap": B["cap"], "cartridge": B["cart"], "bolt": slider(g, 0, 1), "stop bar": B["stop"]}
+    printed = {"receiver": B["recv"], "carrier": B["carrier"], "carrier cap": B["cap"], "cartridge": B["cart"], "bolt": slider(g, 0, 1), "stop bar": B["stop"], "plug collar": B["collar"]}
     for k, mm in zip("ab", sorted(B["strips"].decompose(), key=lambda m: m.bounding_box()[0])): printed[f"receiver strip {k} (TPU)"] = mm
     out = dict(printed={k: printability(m) for k, m in printed.items()})
     cart = B["cart"] + B["female"]; pack = bl.pack_body(g)
@@ -1044,6 +1083,12 @@ def build_check(B):
     R = m6.receiver_all(B)
     v = sweep(m6.cart_all(B) + m6.moving(g, bl.OVERLAP + 0.3, 1) + m6.moving(g, bl.OVERLAP + 0.3, -1) + pack, (0, -1, 0), R, n=80)
     steps.append(dict(step="6 cartridge up into the receiver", how="bolts held in, 40 mm swept; pushed in alone the lead-ins cam the bolts (no stuck step)", mm3=v, ok=bool(v < 0.05)))
+    r = B["r"]; scout = g["pack"] == "scout"                 # 13 Nov: the Scout's feet were drawn through the mount bolts' head bores; nothing checked that the receiver can be bolted on
+    sw = U(*[c for bx, bz in r["MOUNT"] for c in ([cyl("y", bx, bz, bl.BOLT_D / 2 - 0.05, -60.0, r["Y_M"] + 1)] + ([cyl("y", bx, bz, bl.HEAD_R - 0.05, -60.0, bl.HEAD_Y - 0.05)] if abs(bx) > g["RF"] else []))])
+    v = round(vol(sw ^ U(B["recv"], B["carrier"], B["cap"])), 3)
+    steps.append(dict(step="7 receiver onto the drone: %d M3 from below through the bosses" % len(r["MOUNT"]), how="each bolt and its driver swept from 60 mm below" + (" up to the head seat" if scout else "") + ", through receiver, carrier and cap", mm3=v, ok=bool(v < 0.05)))
+    v = round(vol(_xt60w_male(g, collar=False) ^ U(B["recv"], B["carrier"], B["cap"], B["collar"])), 3)
+    steps.append(dict(step="8 XT60W-M glued into its collar, laid in the carrier, cap on", how="the plug's body against collar, carrier, cap and receiver, seated", mm3=v, ok=bool(v < 0.05)))
     out["install"] = steps
     out["serviceable"] = "a bolt comes out the way it went in once the pack, springs and stop bar are lifted out; nothing is glued"
     out["ok"] = bool(all(s_["ok"] for s_ in steps) and all(p_["fits_bed"] for p_ in out["printed"].values()))
@@ -1063,6 +1108,14 @@ def write_both():
             parts.append(dict(p, id=p["id"] + "_both", name=f"{pk}: {p['name']}", group=f"{pk.capitalize()}: {p['group']}", pose=T.tolist()))
         f = os.path.join(ROOT, "systems", f"{nm}.assembly.json"); a = json.load(open(f)); a["artifact"] = None; a["archived"] = True
         json.dump(a, open(f, "w"), indent=1)
+        rid = OUT[pk][1] + "receiver"                         # the receiver as the engine's part (parts/latch7_recv_lib.py), in its print pose: mount plane on the bed
+        if os.path.exists(os.path.join(ROOT, "parts", rid, "part.py")):
+            B = build(pk); ym = B["r"]["Y_M"]; bb = B["recv"].bounding_box(); done = os.path.exists(os.path.join(ROOT, "parts", rid, "result.json"))
+            P = T @ m6.page_matrix(B["g"]["Z_T"]) @ np.array([[1, 0, 0, 0], [0, 0, -1, ym], [0, 1, 0, 0], [0, 0, 0, 1.0]])
+            if done: parts[:] = [p for p in parts if p["id"] != f"{nm}_view_receiver_both"]      # the run's part replaces its drawn room on the page
+            parts.append(dict(id=rid, name=f"{pk}: receiver (generated)", role="structure", group=f"{pk.capitalize()}: receiver (on the drone)" + ("" if done else ", cut away"),
+                              color="#9fb4cc", opacity=None if done else 0.12, printed=done, box=[round(float(v), 1) for v in (bb[0], bb[3], bb[2], bb[5], 0.0, ym - bb[1])], pose=P.tolist(),
+                              material="PCTG", tag="C", version="latch v7 receiver, engine part (13 Nov)", source=f"parts/{rid}/part.py"))
     rs, ro = res["scout"], res["overseer"]
     asm = {"name": "latch v7 both", "title": "Battery Latch v7 (Scout and Overseer)", "readme_view": "section", "artifact": ARTIFACT, "machine": "box", "order": 90,
            "views": {"section": {"eye": [0, 215, 12], "target": [0, 0, 4]}, "below": {"eye": [95, 170, -150], "target": [0, -4, -6]},

@@ -360,7 +360,7 @@
    ],
    "material": null,
    "tag": "C",
-   "mass_g": 1.97,
+   "mass_g": 2.0,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -400,7 +400,7 @@
    ],
    "material": null,
    "tag": "C",
-   "mass_g": 1.97,
+   "mass_g": 2.0,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -1205,6 +1205,53 @@
    "source": "parts/latch7/make.py"
   },
   {
+   "id": "latch7_receiver",
+   "name": "scout: receiver (generated)",
+   "role": "structure",
+   "group": "Scout: receiver (on the drone), cut away",
+   "color": "#9fb4cc",
+   "opacity": 0.12,
+   "printed": false,
+   "box": [
+    -34.0,
+    34.0,
+    -12.1,
+    99.3,
+    0.0,
+    53.9
+   ],
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     0.0,
+     -1.0,
+     0.0,
+     42.87
+    ],
+    [
+     0.0,
+     0.0,
+     -1.0,
+     54.1
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "version": "latch v7 receiver, engine part (13 Nov)",
+   "source": "parts/latch7_receiver/part.py"
+  },
+  {
    "id": "latch7_overseer_view_receiver_both",
    "name": "overseer: receiver",
    "role": "structure",
@@ -1440,7 +1487,7 @@
    ],
    "material": null,
    "tag": "C",
-   "mass_g": 1.97,
+   "mass_g": 2.0,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -1480,7 +1527,7 @@
    ],
    "material": null,
    "tag": "C",
-   "mass_g": 1.97,
+   "mass_g": 2.0,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -2203,6 +2250,53 @@
    "mass_g": 0.2,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_ov_receiver",
+   "name": "overseer: receiver (generated)",
+   "role": "structure",
+   "group": "Overseer: receiver (on the drone), cut away",
+   "color": "#9fb4cc",
+   "opacity": 0.12,
+   "printed": false,
+   "box": [
+    -34.0,
+    34.0,
+    -6.3,
+    177.3,
+    0.0,
+    68.6
+   ],
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     -1.0,
+     0.0,
+     86.07
+    ],
+    [
+     0.0,
+     0.0,
+     -1.0,
+     68.8
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": "PCTG",
+   "tag": "C",
+   "version": "latch v7 receiver, engine part (13 Nov)",
+   "source": "parts/latch7_ov_receiver/part.py"
   }
  ]
 }
