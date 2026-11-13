@@ -121,7 +121,7 @@ class Settings:
     cavity_ratio: float = 5.0           # open voids read 1-2 x the all-void room, a sealed one 25-600 (test_topo t_no_cavity)
     cavity_ks: float = 1e-4             # solid's conductivity (void 1)
     cavity_p: float = 8.0               # p-mean over the design cells
-    cavity_on: float = 0.5              # the row is inert (-1, no gradient) while the measure is under cavity_on x cavity_ratio
+    cavity_on: float = 0.5              # the row joins MMA once the measure reaches cavity_on x cavity_ratio (none before)
     mg_tol: float = 1e-5
     time_limit_s: float = 5.5 * 3600
     mem_limit_gb: float = 14.0         # memory gate (topo/audit.py memory_fit, build_fit: the solve and the build / gate): the GitHub runner has 16 GB and kills a run over it silently
@@ -426,7 +426,8 @@ class Layout:
         if s.no_cavity:
             from .cavity import Cavity
             self.cavity = Cavity(shape, h, solid, void, design, ks=s.cavity_ks, p=s.cavity_p, log=log)
-        self.mma = MMA(self.nd, 3 + self._hold_rows() + (1 if self.cavity else 0), move=s.move)   # volume, 2 geometric, the built hold, no cavity
+        self.cavity_rows = 0                     # the no-cavity row joins MMA when the measure first reaches cavity_on x cavity_ratio
+        self.mma = MMA(self.nd, 3 + self._hold_rows(), move=s.move)       # volume, 2 geometric, the built hold (+ no cavity, later)
 
     # ------------------------------------------------------------------------------------------ anchors
     def _anchors(self):
@@ -959,7 +960,7 @@ class Layout:
                             scale=self.scale if self.scale else 0.0, hist=np.array(self.hist, float),
                             xold1=st["xold1"], xold2=st["xold2"], low=st["low"], upp=st["upp"], k=st["k"],
                             stopped=stopped, c_ref=self.c_ref, normed=self.normed, checks=json.dumps(self.checks),
-                            hold_info=json.dumps(self.hold_info),
+                            hold_info=json.dumps(self.hold_info), cavity_rows=self.cavity_rows,
                             hold=np.zeros(0, int) if self.hold is None else self.hold,
                             c_hold=np.zeros(0) if self.c_hold is None else self.c_hold)
         os.replace(tmp, path)
@@ -978,6 +979,9 @@ class Layout:
             self.hold_info = json.loads(str(ck["hold_info"]))
             if len(ck["hold"]):
                 self.hold, self.c_hold = ck["hold"].astype(int), ck["c_hold"].copy()
+        if "cavity_rows" in ck.files and int(ck["cavity_rows"]) and not self.cavity_rows and self.cavity is not None:
+            self.mma.add_rows(1)
+            self.cavity_rows = 1
         self.mma.load_state(dict(xold1=ck["xold1"], xold2=ck["xold2"], low=ck["low"], upp=ck["upp"], k=ck["k"]))
         return int(ck["it"]), int(ck["bi"]), int(ck["since"]), str(ck["stopped"])
 
@@ -1074,7 +1078,7 @@ class Layout:
                     f"grey {grey:5.1%} ch {ch:.3f} worst {self.cases[worst].name[:28]} {r[worst]:.3g}"
                     + (f" hold {max(hold[0]) + 1:.3f}" if hold[0] and self.hold is not None else "")
                     + (f" geo {fval[1]:+.2f}/{fval[2]:+.2f}" if geo else "")
-                    + (f" cav {self.cavity_last:.2f}" if cav is not None else "")
+                    + (f" cav {self.cavity_last:.2f}{'' if self.cavity_rows else ' (off)'}" if self.cavity is not None else "")
                     + (f" cg {st[1]}" if st else "") + f" {dt:.1f}s")
             if it % 5 == 0 and vn > 0:
                 new = self.volfrac * vd / vn
@@ -1230,10 +1234,14 @@ class Layout:
         rho, dHb = self.cavity_view(f["xt"], beta)
         val, d = self.cavity.measure(rho, need_grad=True)
         self.cavity_last = float(val)
-        if val < self.s.cavity_on * self.s.cavity_ratio:
-            # inert until a void starts to close (13 Nov: the row's sharp gradients, live but far from binding, still bent MMA's
-            # moves: the slender-arm test built 1.04 against 0.94 without it, at the same mass, with nothing sealed)
-            return -1.0, np.zeros(self.nd)
+        if not self.cavity_rows:
+            if val < self.s.cavity_on * self.s.cavity_ratio:
+                # no row until a void starts to close: a part that never seals one runs as it did without the rule (13 Nov: one
+                # more MMA row, even inert, moved the slender-arm test from 0.94 to 1.04 built, with nothing sealed)
+                return None
+            self.mma.add_rows(1)
+            self.cavity_rows = 1
+            self.log(f"layout: no-cavity row on at it {len(self.hist) + 1} (measure {val:.2f}, limit {self.s.cavity_ratio})")
         return float(val / self.s.cavity_ratio - 1.0), self._back(np.where(self.design, d * dHb, 0.0)) / self.s.cavity_ratio
 
     def _renorm(self, comp):
@@ -1301,7 +1309,7 @@ class Layout:
                     n_ties=len(self.cases) - self.n_real, backend=self.fe_solver.backend,
                     iterations=len(self.hist), stopped=getattr(self, "stopped", None), checks=self.checks,
                     hold=self.hold_info or None, cavity=None if self.cavity is None else dict(
-                        last=self.cavity_last, ratio=self.s.cavity_ratio, T0=self.cavity.T0))
+                        last=self.cavity_last, ratio=self.s.cavity_ratio, T0=self.cavity.T0, row=bool(self.cavity_rows)))
 
 
 class _Energies:

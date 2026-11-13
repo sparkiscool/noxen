@@ -1495,7 +1495,7 @@ def t_built_hold():
             fd = (G(xp) - G(xm)) / (2 * e)
             errs += [abs(fd[k] - dg[k][i]) / max(abs(fd[k]), 1e-2 * np.abs(dg[k]).max()) for k in range(len(fv))]
         ok = (fv0 == [-1.0] * 2 * L.n_real and len(fv) == 2 * L.n_real == 6 and np.allclose(fv, 1 / (1 + s.hold_tol) - 1, atol=1e-9)
-              and max(errs) < 1e-3 and L.mma.m == 3 + 2 * L.n_real + 1)
+              and max(errs) < 1e-3 and L.mma.m == 3 + 2 * L.n_real)
         check("built hold: rows inactive before it starts, at the reference after, gradient vs finite differences", ok,
               f"rows {np.round(fv, 4).tolist()}, max rel err {max(errs):.1e}")
     except Exception as e:
@@ -1555,7 +1555,7 @@ def t_no_cavity():
         P = man(trimesh.creation.box((20.0, 20.0, 20.0))) - man(trimesh.creation.box((6.0, 6.0, 6.0)))
         M, rep = export_mesh(P, log=lambda s_: None)
         ok_f, i_f = solid_check(M)
-        ok = (max(opn) < lim and min(sealed) > 4 * lim and max(errs) < 1e-3 and max(lerr) < 1e-3 and L.mma.m == 3 + 2 * L.n_real + 1
+        ok = (max(opn) < lim and min(sealed) > 4 * lim and max(errs) < 1e-3 and max(lerr) < 1e-3 and L.mma.m == 3 + 2 * L.n_real + 1 and L.cavity_rows == 1
               and not ok_h and ih["sealed_voids"] and ih["inner_shells"] and rep.get("cavities_filled_mm3") == [216.0]
               and abs(M.volume - 8000.0) < 1e-6 and ok_f)
         check("no sealed void: open rooms under the limit, sealed pockets over 4 x it, gradients vs FD, the export fills, the gate refuses", ok,
