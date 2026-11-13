@@ -1292,6 +1292,15 @@ def t_audit_room_full():
         ok = ok_rep["worst"] is not None and ok_rep["worst"] < 0.5 and refused and soft.get("fail") and soft["thinned"] > soft["worst"]
         check("audit room_full: a room that holds its load passes, one that cannot even filled solid is refused", bool(ok),
               f"10 N {ok_rep['worst']}, 20 kN {soft['worst']} refused {refused}, thinned {soft['thinned']}")
+        # the peak in a fin (13 Nov, the funnel's nose half): the pad hangs on a strip of room one cell thin; the refusal names the fin
+        f = Part("mini_fin", 1.0, box(0, 3, 0, 10, 0, 10) + box(20, 24, 2, 8, 2, 8), box(100, 101, 100, 101, 100, 101),
+                 box(0, 24, 0, 10, 4.5, 5.5), log=lambda s_: None)
+        f.support("default", box(-1, 1.5, -1, 11, -1, 11))
+        f.load("down 200 N", box(20, 24, 2, 8, 2, 8), (0, 0, -200.0), cls="crash")
+        fin = room_strength(Layout(f, volfrac=0.3, settings=s, log=lambda s_: None), 0.5, log=lambda s_: None, hard=False)
+        check("audit room_full: a peak in room one cell thin is named as a fin, a peak in a solid bar is not",
+              bool(fin.get("worst_in_fin") and "fin of room" in (fin.get("fail") or "") and not soft.get("worst_in_fin")),
+              f"fin {fin.get('worst')} in_fin {fin.get('worst_in_fin')} {fin.get('fin')}; bar in_fin {soft.get('worst_in_fin')}")
     except Exception as e:
         traceback.print_exc()
         check("audit room_full", False, str(e))

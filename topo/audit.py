@@ -46,7 +46,8 @@ Checks (hard = raises, soft = logged + in the report):
                        index a uniformly thinned room would read (a rough guide: a good layout beats it). 9 Nov: the Scout v4
                        frame's side lugs (16 x 8 room carrying 134 N 29 mm under the deck) read 2.55 after a 69 min run.
                        Open the room along the load path (deeper behind the socket, wider at the root), move the support
-                       nearer the load, or shorten the lever.
+                       nearer the load, or shorten the lever. When the peak sits in a fin (room_fins: design room one cell
+                       thin), the refusal says so and gives its box: close the fin first (13 Nov, the funnel's nose half).
   parity         hard  a column of the grid where the room, the drawn or the cuts mesh has an odd number of distinct crossings: the
                        ray-parity voxeliser (part.voxelise) then flips that column from the odd crossing up. Two bodies that only
                        touch on a face (a box stacked flush on another) stay two shells in a manifold union, the ray meets the
@@ -594,6 +595,13 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
     return rep
 
 
+def room_fins(part):
+    """design cells in no 2 x 2 x 2 block of design cells: room one cell thin, between a drawn face, a cut and the envelope's edge
+    in any mix. Common and harmless where nothing peaks (a skin on a collar); room_strength names it when the peak sits in it."""
+    des = np.asarray(part.design, bool).reshape(part.shape)
+    return des & ~ndi.binary_opening(np.pad(des, 1), np.ones((2, 2, 2), bool))[1:-1, 1:-1, 1:-1]
+
+
 def room_strength(L, max_worst, log=print, hard=True):
     """room_full (see the module doc): the build's own as-built strength (topo/build.py strength) on the room filled solid.
     Returns the report dict; raises SetupError over max_worst when hard."""
@@ -607,9 +615,28 @@ def room_strength(L, max_worst, log=print, hard=True):
     if st["worst"] is None:
         log("audit: room_full: no classed load cases")
         return rep
-    msg = (f"room_full: the room filled solid reads {st['worst']:.2f} in '{st['worst_case']}' at {st['worst_at']} (max_worst {max_worst}): "
-           f"no layout in this room can pass. Open the room along that load's path (deeper behind the socket or pad, wider at the root), "
-           f"move a support nearer the load, or shorten the lever.")
+    # is the peak in a fin (13 Nov, the funnel's nose half: a cut stopped 0.9 mm short of the room's edge, and a wedge under a member
+    # wide between a sloped drawn wall and a cut, each one cell at h 2.2 ending on the motor's drawn front plate, read 0.60 and 0.67;
+    # three changes to the room along the load path did not move it, and the mirrored half passed only because its grid put that
+    # cell among the ones left out beside a loaded node). No layout builds a member there: the fix is to close the fin, and only the
+    # reading after that says anything about the room.
+    fins = room_fins(part); rep["fin_cells"] = int(fins.sum())
+    ijk = np.floor((np.asarray(st["worst_at"], float) - np.asarray(part.origin, float)) / part.h).astype(int)
+    lo, hi = np.maximum(ijk - 1, 0), np.minimum(ijk + 2, part.shape)
+    near = fins[lo[0]:hi[0], lo[1]:hi[1], lo[2]:hi[2]]
+    rep["worst_in_fin"] = bool(near.any())
+    if rep["worst_in_fin"]:
+        lab, _ = ndi.label(fins, S26); k = lab[lo[0]:hi[0], lo[1]:hi[1], lo[2]:hi[2]][near][0]
+        ii = np.argwhere(lab == k); c0, c1 = (np.asarray(part.origin) + ii.min(0) * part.h).round(1).tolist(), (np.asarray(part.origin) + (ii.max(0) + 1) * part.h).round(1).tolist()
+        rep["fin"] = dict(cells=int(len(ii)), lo=c0, hi=c1)
+        msg = (f"room_full: the room filled solid reads {st['worst']:.2f} in '{st['worst_case']}' at {st['worst_at']} (max_worst {max_worst}), and that "
+               f"peak sits in a fin of room one cell thin ({len(ii)} cells, {c0} to {c1}): room under a member wide between a drawn face, a cut "
+               f"or the envelope's edge, which no layout can build in. Close the fin first (run the cut out past the room's edge or up to the "
+               f"drawn face), then read the room again: the reading says nothing about the load path until then.")
+    else:
+        msg = (f"room_full: the room filled solid reads {st['worst']:.2f} in '{st['worst_case']}' at {st['worst_at']} (max_worst {max_worst}): "
+               f"no layout in this room can pass. Open the room along that load's path (deeper behind the socket or pad, wider at the root), "
+               f"move a support nearer the load, or shorten the lever.")
     if st["worst"] > max_worst:
         log("audit: FAIL " + msg)
         rep["fail"] = msg

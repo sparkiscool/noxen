@@ -143,7 +143,7 @@ def funnel_parts():
             ("box_funnel_wall_tail", f"funnel tail wall (slides {fm.TRAVEL} in for the Scout)", "#3070e0", "PCTG", "structure", "as the nose wall"),
             ("box_funnel_strips", "funnel ledge strips (TPU 95A, landing impact)", "#3a3a3a", "TPU", "structure", "flush in the side ledges; holes for the four probes"),
             ("box_funnel_drive", "funnel wall drive and fasteners (bought)", "#555555", None, "bought",
-             "4 N20 gearmotors with an M4 x 55 screw shaft, 4 KW12-3 roller switches (+y), 4 P156 spring probes in R156 sleeves, 16 M4 x 60 lap bolts, 8 M4 x 16 sheet bolts, 2 M4 x 16 and 2 M3 x 16 joint bolts")):
+             "4 N20 gearmotors with an M4 x 100 screw shaft cut to 62, 4 KW12-3 roller switches (+y), 4 P156 spring probes in R156 sleeves, 16 M4 x 60 lap bolts, 8 M4 x 16 sheet bolts, 4 M4 x 16 and 2 M3 x 16 joint bolts")):
         out.append(dict(base, id=pid, name=name, role=role, color=col, material=mat, mesh=f"parts/{pid}/part.stl", pose=SEAT_TO_W, version="v5 drawn 13 Nov", note=note))
     return out
 
@@ -192,15 +192,15 @@ def drone_parts():
 
 
 BOUGHT_LIST = [
-    ("N20 gearmotor, M4 x 55 screw shaft, 6 V 100 rpm (12 x 10 x 25 body)", 4, "https://www.amazon.com/BRINGSMART-Threaded-Electric-Reducer-100rpm/dp/B0DGSYFD2Y",
-     "one per wall tab; pick the 6 V 100 rpm option (alt B093GRCQLS); 37.2 mm at 0.7 mm a turn = 32 s"),
+    ("N20 gearmotor, M4 x 100 screw shaft, 6 V 100 rpm (12 x 10 x 25 body)", 4, "https://www.amazon.com/Thread-Shaft-100mm-Motor-terminals/dp/B0GDTKHL8T",
+     "one per wall tab; pick the 6 V 100 rpm option (alt B07JD2SY8W); each shaft cut to 62: Amazon lists this motor with a 34, 55 or 100 shaft only (searched 13 Nov), and the wall's travel needs 59.3 (front plate 3.5 + half the nut block 6.0 + 48.2 of travel + half the nut 1.6), so the 55 is 4.3 short; 37.2 mm at 0.7 mm a turn = 32 s"),
     ("KW12-3 roller lever micro switch, 10 pack", 2, "https://www.amazon.com/SDTC-Tech-Momentary-Microswitch-Normally/dp/B0CPYNDYPP", "one home switch a wall (outmost), on the +y side; every other position is timed from it"),
     ("P156-E spring probe, 100 pack", 4, "https://www.amazon.com/Spring-Probes-Accuracy-Testing-Contact/dp/B0CC2GQKL1", "seat sense and keep-alive, in the ledges"),
     ("R156-4S probe sleeve, 100 pack", 4, "https://www.amazon.com/100Pcs-Spring-Sleeve-R156-4S-Welding/dp/B0CPWSZN8L", "glued in the ledge bores"),
 ]
-FASTENERS = "16 M4 x 60 with nuts and washers (the four laps), 8 M4 x 16 with nuts and washers (arms to the side sheets: 8 holes O4.5 in the acrylic, 99 under the seat plane's W Z 220.3 = W Z 121.3), 2 M4 x 16 and 2 M3 x 16 with nuts (the halves' joint), 4 M4 nuts (the walls' blocks), 8 M2 x 10 self-tapping (switches), 4 cable ties (motors)"
-PRINT = [("box_funnel_half_nose", "frame, nose half", "128 x 176 x 83", "upside down: the side walls' top edges on the bed; supports under the ledges and the beam's wings", "PCTG"),
-         ("box_funnel_half_tail", "frame, tail half", "162 x 176 x 83", "as the nose half", "PCTG"),
+FASTENERS = "16 M4 x 60 with nuts and washers (the four laps), 8 M4 x 16 with nuts and washers (arms to the side sheets: 8 holes O4.5 in the acrylic, 99 under the seat plane's W Z 220.3 = W Z 121.3), 4 M4 x 16 and 2 M3 x 16 with nuts and washers (the halves' joint: an M4 behind each side wall, an M4 outside each rib at |y| 83, an M3 under each ledge), 4 M4 nuts (the walls' blocks), 8 M2 x 10 self-tapping (switches), 4 cable ties (motors)"
+PRINT = [("box_funnel_half_nose", "frame, nose half", "162 x 176 x 83", "upside down: the side walls' top edges on the bed; supports under the ledges and the beam's wings", "PCTG"),
+         ("box_funnel_half_tail", "frame, tail half", "128 x 176 x 83", "as the nose half", "PCTG"),
          ("box_funnel_arm", "cross arm, 2 as drawn + 2 mirrored", "44 x 162 x 28", "on its outer face (the beam's 29 deep side flat on the bed)", "PCTG"),
          ("box_funnel_wall_nose", "nose wall", "31 x 121 x 40", "on its back, the 55 deg sliding face up", "PCTG"),
          ("box_funnel_wall_tail", "tail wall", "31 x 121 x 40", "as the nose wall", "PCTG"),
@@ -223,7 +223,30 @@ def appendix(chk):
 <h3>Clearances (mm, sampled to about 1)</h3><table><tr><th>mm</th><th>between</th><th>and</th><th>where</th></tr>{clr}</table>
 <h2>Funnel v5: printed pieces (A1 mini, 180 bed)</h2><table><tr><th>piece</th><th>size</th><th>pose on the bed</th><th>material</th></tr>{prt}</table>
 <h3>Bought</h3><table><tr><th>part</th><th>qty</th><th>note</th></tr>{bought}</table><p>Fasteners: {e(FASTENERS)}.</p>
-<p>Not drawn: the hold-down. The swap's insert (60 N; the arm v8 head pushes up to 118 N) is more than either drone weighs (Overseer 21.6 N, Scout 4.9 N); nothing on the funnel or the drones holds them on the seat, so that case has no load path yet. Neither latch v7 receiver has a shoulder to hook (the Overseer's end faces are flat, the Scout's clipped), and a lip on a sliding 55 degree face would stop a drone above the seat: it needs a hook feature on both receivers and a part that enters from the side walls after seating.</p>"""
+<p>Hold-down: each end wall carries two 3 x 3 x 16 steel keys that enter the notches in the receiver's end faces; the walls land a drone at park, back off to open and drive in to seated (the arm v8 head pushes up to 118 N; the Overseer weighs 21.6 N, the Scout 4.9 N).</p>
+<p><b>Stand: not ready to print.</b> {e(STAND_NOTE)}</p>"""
+
+
+UNCUT_CM3 = {"box_stand_cradle_keel": 55.2, "box_stand_toe": 41.5}     # the built demo's pieces before any cut (git 33cd639)
+STAND_NOTE = ("The arm v8 wheel (seat faces at R 127, was 113) swings its bays to within 8.1 mm of the floor (the -90 bay's lowest point W Z -192.9, "
+              "its corners r 195.4 over W Y 108..222; the floor is W Z -201), through the built demo's cradle keel and toe. Cut back 2.5 clear of that bay "
+              "(what the page shows) the keel keeps 30.0 of 55.2 cm3: its cradle (W Z -181..-153 over W Y 143..197) is gone and its 20 mm bar is 9.2 high "
+              "over W Y 107..197, section modulus 89 mm3 where it was 5637 (W Y 143..197) and about 105 where it was 580 (W Y 107..137); the toe keeps 37.7 "
+              "of 41.5 cm3, 95 to 241 mm3 at its root (W Y 200..212) where it was 354 to 2657. In PETG at index 0.5 (flight class, 10.8 MPa in the layers) "
+              "the cut keel carries 3 N at the toe's front edge (uncut 193 N); a 50 N hand there reads 5.1 against the misuse limit of 1.0. FAIL: the cut "
+              "pieces must not be printed or the demo's keel cut to match. Nothing thicker than 3 mm fits under the wheel on the centre line; the room "
+              "is at the sides (the swept circle is 15 above the floor at |X| 70, 28 at |X| 100), so the spine from the cross bars to the front sheet has "
+              "to become two rails outside |X| 70, or the hub has to stand 15 higher over the floor (mast, sheets and funnel with it). That is a change "
+              "to the box structure with the arm, not a recut.")
+
+
+def stand_versions(parts):
+    """the cut stand pieces say what is left of them and that they fail (recut_stand only knows its own last cut)"""
+    for p in parts:
+        if p["id"] in UNCUT_CM3 and p.get("mesh"):
+            v = trimesh.load(os.path.join(ROOT, p["mesh"]), force="mesh").volume / 1000
+            if v < UNCUT_CM3[p["id"]] - 0.2:
+                p["version"] = f"{str(p.get('version') or '').split('; recut')[0]}; recut round the arm v8 bay -90: {v:.1f} of {UNCUT_CM3[p['id']]} cm3 left, 2.5 clear. FAILS strength as cut (the page's stand note): not to print"
 
 
 def recut_stand(parts, arm_parts, clear=2.5):
@@ -284,13 +307,14 @@ def main(nox=None):
                 p["version"] = "v7, superseded (the arm stream's systems/swap_arm.assembly.json replaces it when pushed)"
     if os.path.exists(new_arm):
         recut_stand(parts, json.load(open(new_arm))["parts"])
+    stand_versions(parts)
     parts += funnel_parts() + kept("box_dome_") + latch_parts() + drone_parts()
     a = dict(old, parts=parts, appendix="systems/box.appendix.html", fps=8,
              note=("Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). "
                    "In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are "
                    "engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, "
                    + ("the swap arm from systems/swap_arm.assembly.json, " if os.path.exists(new_arm) else "the swap arm v7 at park with 11 bay receivers and two packs (3 Nov import, SUPERSEDED: the arm stream's new arm replaces it when pushed), ")
-                   + "the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the hold-down (not designed), the electronics. "
+                   + "the stand of the built demo with its keel and toe cut back from the arm v8 bays (they FAIL strength as cut: the note under the viewer), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. "
                    "Compatibility between the streams: tools/box_check.py, its result under the viewer."))
     import box_check
     json.dump(a, open(out, "w"), indent=0, ensure_ascii=False)

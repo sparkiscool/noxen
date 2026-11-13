@@ -19,12 +19,15 @@ landing and sagged over 10 mm, and its wall drive was a placeholder. Now:
                         twice mirrored. The beams are 24 wide and 29 to 42 deep (v4: 12 x 12 and 12 x 8); the tail one moved from
                         seat x -121..-109 to -158..-134, behind the rails' disc (r 151 over W Y 38..73) and over the hub (r 115).
   wall_nose, wall_tail  the sliding end walls: two tabs each out through slots in the side walls to an M4 nut block per side.
-  drive                 per tab one N20 gearmotor with an M4 x 55 screw shaft (4 in all, self-locking: the walls hold a landing
+  drive                 per tab one N20 gearmotor with an M4 x 100 screw shaft cut to 62 (4 in all, self-locking: the walls hold a landing
                         with no power), seated on the half under the side wall's overhang; a roller switch at each wall's two
                         positions (+y side) pressed by a dog on the nut block; hard stops at "out". No opposite-hand screw, no gears.
   strips                TPU, flush in the ledges; four spring probes through them (seat sense, keep-alive).
-Not drawn (named, not guessed): the hold-down. The swap's insert (60 N; the arm v8 head pushes up to 118 N, design chat 13 Nov) is more than either drone weighs (Overseer
-21.6 N, Scout 4.9 N) and nothing on the funnel or the drones holds them down, so the insert case has no path through the seat.
+Hold-down: two steel keys on each end wall into the receivers' end notches (PIN, POS below).
+13 Nov, the nose half's audit (0.60, then honest readings): no cut stops short of the room's edge or of a drawn face by less than a
+member (the blocks' lane out past ROOM_Y and in to the side wall's back, the joint nut's pocket open to the side: topo/audit.py names
+such a fin when the room's peak sits in one); the joint has a second M4 outside the rib (JOINT top) and the rib is RIB_Y wide with a
+deeper root (ROOT_Z).
 Run: python parts/box_funnel/make.py [--gate]   (writes the drawn pieces' meshes, checks the walls' travel; --gate: tools/solid_check.py
      on every drawn printed piece)
 """
@@ -84,7 +87,10 @@ RING_Y, RING_Z = 166.0, -91.5                     # beyond |y| 166 the arm passe
 SPOKE = (52.0, 72.0, -88.5, 10.0)                 # a dome spoke crosses the arm's outer 10 mm over |y| 56..68 down to z -86: |y|, top there, width
 FLANGE = (200.7, 205.7, -108.0, -91.5, 20.0)      # the arm's end plate on the sheet's inner face (|y| 206): |y|, z, and its reach inboard of the beam
 SHEET_BOLT_Z = -99.0
-JOINT = dict(hi=(53.0, -34.0, 2.2), lo=(47.0, -52.2, 1.7))   # the low one outside the carried pack's sweep
+RIB_Y = 77.0                                      # the rib's outer face (v5 first 74); the joint's outer bolt stands 6 beyond it, in the open, its flange to |y| 88 (the beam's own width: the half stays 176 wide for the A1 mini's 180)
+JOINT = dict(hi=(53.0, -34.0, 2.2), lo=(47.0, -52.2, 1.7), top=(RIB_Y + 6.0, -24.5, 2.2))   # the low one outside the carried pack's sweep
+ROOT_Z = -41.0                                    # the rib's root and its flange at the joint reach down to here (the rib elsewhere to z -31.7, over the drive)
+ROOM_Y = 59.0                                     # the room behind the side walls ends here (the bays beside the drone, the Overseer's foot nodes); a cut that nears it runs out past it, never short of it
 ARM_LANE = (88.1, 113.1, -116.0, 116.0, -58.8)   # arm v8's carriage and rods at the drone: nothing below W Z 161.5 over W X -28..116, Y 58..79 (turned pose, restated by the arm worker 13 Nov: W Y 54..79, W X +-116 = seat x 88.1..113.1; parts/box_arm8/make.py funnel_keepout() is the source, tools/box_check.py reads it)
 PACK_R = 169.0                                    # a pack carried on the wheel sweeps r 165 about the axle over W Y 114..210 (seat x -53..43), + 4   # the halves' joint at x 0: (|y|, z, hole r) of the M4 and the M3
 
@@ -245,7 +251,11 @@ def wall_sweep(sx):
     lo, hi = min(xm0, xm1) - bx - 0.8, max(xm0, xm1) + bx + 0.8
     pf = motor_x(sx)[1] + sx * 3.5                                # the blocks' lane runs flush to the motor's front plate (a 0.6 mm fin of room stood between them: one hot cell at h 2.2 in the nose half's audit)
     lo, hi = (min(lo, pf), hi) if sx > 0 else (lo, max(hi, pf))
-    b = [box(lo, hi, sy * (SCREW_Y - by - 0.5), sy * (SCREW_Y + by + 0.6), zc - bz - 0.5, zc + bz + 0.6) for sy in (-1, 1)]
+    b = [box(lo, hi, sy * (SCREW_Y - by - 0.5), sy * (ROOM_Y + 0.5), zc - bz - 0.5, zc + bz + 0.6) for sy in (-1, 1)]   # out past the room's edge: stopped at |y| 58.1 it left a 0.9 fin of room to 59, one cell at h 2.2, the rib's lowest fibre ending on the motor's front plate (the nose half's audit, 0.60)
+    hm = (SCREW_Y - by - 0.5 - 3.2 - SEAT[3] - W_H) * TAN          # above this height the room between the side wall's back and the lane is under a member (3.2) wide, to nothing at h 11.3:
+    for sy in (-1, 1):                                            # the lane takes it (a wedge one cell thin at h 2.2 beside the motor's front plate, where the tab's slot, the lane and the plate all end: 0.67 in the nose half's audit)
+        yb = lambda h_: sy * (SEAT[3] + W_H + h_ / TAN + 0.05)
+        b.append(hull([(x, y, z0 + h_) for x in (lo, hi) for h_ in (hm, BLOCK[2] + SCREW_H + 0.6) for y in (yb(h_), sy * (SCREW_Y - by - 0.4))]))
     b.append(box(min(lo, xm1 - sx * (DOG + 1.0)), max(hi, xm1 - sx * (DOG + 1.0)), SCREW_Y + 6.9, SW_Y - 1.0, z0 + SW_H + 0.5, z0 + SW_H + SW[2] + 0.1))      # the dog
     xa, xb = tab_x(sx); tl, th = (xa - TRAVEL - 1.0, xb + OPEN + 1.0) if sx > 0 else (xa - OPEN - 1.0, xb + TRAVEL + 1.0)
     b += [box(tl, th, sy * 33.0, sy * (SCREW_Y - by + 0.5), z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5) for sy in (-1, 1)]
@@ -270,7 +280,15 @@ def half_bodies(sx):
         # the joint at x 0: a flange high behind the wall (M4) and one under the ledge (M3)
         (yh, zh, rh), (yl, zl, rl) = JOINT["hi"], JOINT["lo"]
         fh = box(0.0, sx * 5.0, *Y(44.0, 60.0), -41.0, -27.0); fl = box(0.0, sx * 5.0, *Y(42.0, 52.0), -56.5, z0 - FLOOR + 0.5)
+        # a second M4 outside the rib (13 Nov). The two above hold the joint over |y| 42..60 only: no lever against the ear's landing
+        # turning the rail about z, and the rib's corner beside the flange read 0.53 (nose) and 0.42 (tail) filled solid. A bolt IN the
+        # rib necked its outer fibre round the nut's pocket (0.57). So the flange runs out past the rib's outer face (RIB_Y) and the
+        # bolt sits there in the open: head and nut on the flange's back, no pocket, the rib whole behind the flange.
+        yt, zt_, rt = JOINT["top"]; ft = box(0.0, sx * 5.0, *Y(59.0, yt + 5.0), ROOT_Z, z0 + 27.0)
+        R[f"joint_top{sy:+d}"] = ft; drawn.append(ft)
+        cuts += [cyl_x(-sx * 1.0, sx * 19.0, sy * yt, zt_, rt), cyl_x(sx * 5.0, sx * 19.0, sy * yt, zt_, 4.8)]
         R[f"joint_hi{sy:+d}"], R[f"joint_lo{sy:+d}"] = fh, fl; drawn += [fh, fl]
+        cuts.append(box(sx * 5.0, sx * 19.0, *Y(yh, ROOM_Y + 0.5), zh - 4.8, zh + 4.8))                                    # the M4 nut's pocket, open to the side (as a bore it left a 1.2 fin of room to |y| 59)
         cuts += [cyl_x(-sx * 1.0, sx * 19.0, sy * yh, zh, rh), cyl_x(sx * 5.0, sx * 19.0, sy * yh, zh, 4.8),
                  cyl_x(-sx * 1.0, sx * 19.0, sy * yl, zl, rl), cyl_x(sx * 5.0, sx * 19.0, sy * yl, zl, 3.4)]
         # the motor's seat: a floor under it, a plate its gearbox face pulls on (slot for the screw), a stop behind it
@@ -295,10 +313,12 @@ def half_bodies(sx):
             cuts += [cyl_z(z0 + SW_H - 1.0, z0 + LUG_H[1] + 1.0, xs + d, sy * (SW_Y + 7.3), 0.85, 12) for d in (-4.75, 4.75)]                # M2 self-tapping, up into the lug
         # ---- room
         zt = z0 + 27.0
-        env.append(box(0.0, sx * 92.0, *Y(38.0, 59.0), z0 - FLOOR - 0.2, zt))                                               # behind the side wall
-        env.append(box(sx * 92.0, sx * 112.0, *Y(38.0, 59.0), z0 - FLOOR - 0.2, -31.0))                                      # behind the ear: full depth under h 13,
+        env.append(box(0.0, sx * 92.0, *Y(38.0, ROOM_Y), z0 - FLOOR - 0.2, zt))                                               # behind the side wall
+        env.append(box(sx * 92.0, sx * 112.0, *Y(38.0, ROOM_Y), z0 - FLOOR - 0.2, -31.0))                                      # behind the ear: full depth under h 13,
         env.append(box(sx * 90.0, sx * (112.0 if sx > 0 else 108.0), *Y(38.0, 56.0), -33.0, zt))                                                    # 5 less above it (the Overseer's foot nodes and tubes pass |y| 59 from z -28)
-        env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 12.6, zt))                                 # a rib's room outside the wall, over the drive (the Overseer's foot nodes pass beyond its ends)
+        env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 12.6, zt))
+        env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(73.0, RIB_Y), z0 + 12.6, zt))                                # out to RIB_Y from the joint on: at |y| 74 the rib's lower outer fibre over the motor read 0.43, and any step or taper in its width near the joint was a notch (0.46 to 0.64)
+        env.append(box(0.0, sx * 22.0, *Y(46.0, RIB_Y), ROOT_Z, zt))                                                         # the rib's root at the joint, deeper (inboard of the motors: nothing of the drive there; the bays' saddles reach z -43 under it)
         if sx > 0:
             env.append(box(ARM_LANE[1] + 0.3, 128.0, *Y(26.0, 56.0), -63.0, -50.0))                                         # down behind the arm's lane (the rails' tips pass under at z -68),
             env.append(box(126.0, xout, *Y(20.0, 88.0), -63.0, -55.0))
@@ -386,8 +406,8 @@ def drive():
             out += [cyl_x(min(bxa, bxb + sx * ARM_W) - 4.0, max(bxb, bxa + sx * ARM_W) + 4.0, sy * y, z, 2.0, 12) for y, z in LAP_BOLTS]
             out += [cyl_y(y - sy * 9.0, y - sy * 0.05, x, z, 2.0, 12) for x, y, z in arm_bodies(sx, sy)[3]["sheet_bolts"]]   # to the sheet's face (through it and its nut outside: the sheet's)
     for sy in (-1, 1):
-        (yh, zh, rh), (yl, zl, rl) = JOINT["hi"], JOINT["lo"]
-        out += [cyl_x(-8.5, 8.5, sy * yh, zh, 2.0, 12), cyl_x(-8.0, 8.0, sy * yl, zl, 1.5, 12)]
+        (yh, zh, rh), (yl, zl, rl), (yt, zt_, rt) = JOINT["hi"], JOINT["lo"], JOINT["top"]
+        out += [cyl_x(-8.5, 8.5, sy * yh, zh, 2.0, 12), cyl_x(-8.0, 8.0, sy * yl, zl, 1.5, 12), cyl_x(-8.5, 8.5, sy * yt, zt_, 2.0, 12)]
     for x, y in PROBES:
         out.append(cyl_z(z0 - 14.0, z0, x, y, 1.5, 16))
     return U(out)
