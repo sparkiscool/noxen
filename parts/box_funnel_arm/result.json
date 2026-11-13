@@ -1,0 +1,606 @@
+{
+ "name": "box_funnel_arm",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   38521.0
+  ],
+  "sealed_voids": [],
+  "inner_shells": [],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 0,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 6592.8,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "Overseer seated, 6 g: a quarter on each foot",
+    "cls": "flight",
+    "inlayer": 0.31,
+    "across": 0.187,
+    "at": [
+     164.6,
+     107.4,
+     -91.2
+    ]
+   },
+   {
+    "case": "Overseer one side first, 6 g on the +y ledge",
+    "cls": "flight",
+    "inlayer": 0.312,
+    "across": 0.188,
+    "at": [
+     164.6,
+     107.4,
+     -91.2
+    ]
+   },
+   {
+    "case": "Overseer off centre onto the +y face at the nose ear",
+    "cls": "flight",
+    "inlayer": 0.368,
+    "across": 0.172,
+    "at": [
+     164.6,
+     166.2,
+     -92.4
+    ]
+   },
+   {
+    "case": "Overseer off centre onto the nose wall",
+    "cls": "flight",
+    "inlayer": 0.448,
+    "across": 0.224,
+    "at": [
+     185.0,
+     87.1,
+     -99.6
+    ]
+   },
+   {
+    "case": "swap pull-out 50 N, the Overseer seated",
+    "cls": "flight",
+    "inlayer": 0.171,
+    "across": 0.103,
+    "at": [
+     164.6,
+     107.4,
+     -91.2
+    ]
+   },
+   {
+    "case": "arm head push 118 N, the Overseer held down by the pins",
+    "cls": "flight",
+    "inlayer": 0.231,
+    "across": 0.135,
+    "at": [
+     164.6,
+     107.4,
+     -91.2
+    ]
+   },
+   {
+    "case": "handling 50 N along the box on the arm",
+    "cls": "misuse",
+    "inlayer": 0.401,
+    "across": 0.251,
+    "at": [
+     176.6,
+     172.2,
+     -104.4
+    ]
+   },
+   {
+    "case": "handling 50 N down on the arm",
+    "cls": "misuse",
+    "inlayer": 0.299,
+    "across": 0.175,
+    "at": [
+     164.6,
+     107.4,
+     -91.2
+    ]
+   }
+  ],
+  "worst": 0.448,
+  "worst_case": "Overseer off centre onto the nose wall",
+  "worst_at": [
+   185.0,
+   87.1,
+   -99.6
+  ],
+  "ok": true
+ },
+ "mass_g": 63.65,
+ "watertight": true,
+ "export": {
+  "faces_in": 381638,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "pinch_vertices": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "open_kept": [],
+  "faces": 381638,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": false,
+  "volume_mm3": 51751.2,
+  "exact_mm3": 51751.2
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 51751.2,
+ "drawn_g": 13.88,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
+ "memory_build": [
+  {
+   "estimate_gb": 4.0,
+   "parts": {
+    "held": 0.77,
+    "gate": 0.56,
+    "mesh": 2.67
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 13455000,
+   "bounds_mm": [
+    44.0,
+    161.4,
+    27.7
+   ],
+   "faces": 477924,
+   "when": "before the export cleanup"
+  },
+  {
+   "estimate_gb": 1.43,
+   "parts": {
+    "held": 0.86,
+    "gate": 0.56,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 13455000,
+   "bounds_mm": [
+    44.0,
+    161.4,
+    27.7
+   ],
+   "faces": 0,
+   "when": "before the solid check"
+  }
+ ],
+ "stl": "box_funnel_arm.stl",
+ "view_stl": "box_funnel_arm_view.stl",
+ "view_faces": 120000,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": false,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "nominal_hold": true,
+   "hold_beta": 4.0,
+   "hold_proj_beta": 32.0,
+   "hold_tol": 0.05,
+   "hold_eroded": true,
+   "hold_stage": 50,
+   "no_cavity": true,
+   "cavity_ratio": 5.0,
+   "cavity_ks": 0.0001,
+   "cavity_p": 8.0,
+   "cavity_on": 0.5,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "mem_limit_gb": 14.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 5.3688057284378,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.46017086861604567,
+  "nd": 50964,
+  "sym_axes": [],
+  "n_real": 8,
+  "n_ties": 18,
+  "backend": "direct",
+  "iterations": 108,
+  "stopped": "max_stage",
+  "checks": [
+   {
+    "it": 14,
+    "beta": 4.0,
+    "worst": 0.463,
+    "worst_case": "Overseer off centre onto the nose wall"
+   },
+   {
+    "it": 37,
+    "beta": 8.0,
+    "worst": 0.474,
+    "worst_case": "Overseer off centre onto the nose wall"
+   },
+   {
+    "it": 58,
+    "beta": 16.0,
+    "worst": 0.515,
+    "worst_case": "Overseer off centre onto the nose wall"
+   }
+  ],
+  "hold": {
+   "started_it": 14,
+   "beta": 4.0,
+   "index": 0.463
+  },
+  "cavity": {
+   "last": 2.611651874170766,
+   "ratio": 5.0,
+   "T0": 34.75864247907098,
+   "row": true
+  }
+ },
+ "grid": {
+  "name": "box_funnel_arm",
+  "h": 1.2,
+  "shape": [
+   40,
+   144,
+   32
+  ],
+  "origin": [
+   140.0,
+   38.45,
+   -113.35
+  ],
+  "cells": 184320,
+  "design": 50660,
+  "drawn": 6432,
+  "cases": [
+   "Overseer seated, 6 g: a quarter on each foot",
+   "Overseer one side first, 6 g on the +y ledge",
+   "Overseer off centre onto the +y face at the nose ear",
+   "Overseer off centre onto the nose wall",
+   "swap pull-out 50 N, the Overseer seated",
+   "arm head push 118 N, the Overseer held down by the pins",
+   "handling 50 N along the box on the arm",
+   "handling 50 N down on the arm"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 106.9,
+ "layout_s": 3585,
+ "peak_gb": 2.83836,
+ "memory": {
+  "estimate_gb": 4.01,
+  "parts": {
+   "held": 0.63,
+   "factor": 1.96,
+   "assembly": 0.54,
+   "block": 0.83,
+   "energies": 0.05
+  },
+  "limit_gb": 14.0,
+  "cases": 26,
+  "active_dofs": 194670,
+  "backend": "direct",
+  "block": 57,
+  "build": {
+   "estimate_gb": 1.19,
+   "parts": {
+    "held": 0.63,
+    "gate": 0.56,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 13475700,
+   "bounds_mm": [
+    44.0,
+    161.7,
+    27.7
+   ],
+   "faces": 0,
+   "when": "from the envelope"
+  },
+  "peak_it1_gb": 2.71
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "Overseer seated, 6 g: a quarter on each foot",
+    "cls": "flight",
+    "inlayer": 0.328,
+    "across": 0.188,
+    "at": [
+     165.8,
+     106.2,
+     -90.0
+    ]
+   },
+   {
+    "case": "Overseer one side first, 6 g on the +y ledge",
+    "cls": "flight",
+    "inlayer": 0.33,
+    "across": 0.189,
+    "at": [
+     165.8,
+     106.2,
+     -90.0
+    ]
+   },
+   {
+    "case": "Overseer off centre onto the +y face at the nose ear",
+    "cls": "flight",
+    "inlayer": 0.33,
+    "across": 0.187,
+    "at": [
+     165.8,
+     106.2,
+     -90.0
+    ]
+   },
+   {
+    "case": "Overseer off centre onto the nose wall",
+    "cls": "flight",
+    "inlayer": 0.463,
+    "across": 0.215,
+    "at": [
+     182.6,
+     93.1,
+     -103.2
+    ]
+   },
+   {
+    "case": "swap pull-out 50 N, the Overseer seated",
+    "cls": "flight",
+    "inlayer": 0.181,
+    "across": 0.104,
+    "at": [
+     165.8,
+     106.2,
+     -90.0
+    ]
+   },
+   {
+    "case": "arm head push 118 N, the Overseer held down by the pins",
+    "cls": "flight",
+    "inlayer": 0.244,
+    "across": 0.165,
+    "at": [
+     165.8,
+     106.2,
+     -90.0
+    ]
+   },
+   {
+    "case": "handling 50 N along the box on the arm",
+    "cls": "misuse",
+    "inlayer": 0.351,
+    "across": 0.269,
+    "at": [
+     182.6,
+     109.8,
+     -102.0
+    ]
+   },
+   {
+    "case": "handling 50 N down on the arm",
+    "cls": "misuse",
+    "inlayer": 0.317,
+    "across": 0.215,
+    "at": [
+     165.8,
+     106.2,
+     -90.0
+    ]
+   }
+  ],
+  "worst": 0.463,
+  "worst_case": "Overseer off centre onto the nose wall",
+  "worst_at": [
+   182.6,
+   93.1,
+   -103.2
+  ],
+  "ok": true,
+  "beta": 4.0,
+  "iteration": 14,
+  "max_worst": 0.5,
+  "k": 3.0
+ },
+ "field": {
+  "worst": 0.458,
+  "worst_case": "Overseer off centre onto the nose wall",
+  "worst_at": [
+   183.8,
+   87.1,
+   -99.6
+  ],
+  "beta": 32.0,
+  "iteration": 108
+ },
+ "gen_cm3": 40.0,
+ "h": 1.2,
+ "audit": {
+  "solid_ok": [],
+  "drawn_share": 0.113,
+  "load_room": [],
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 1936,
+    "inscribed_mm": 3.6,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": true,
+    "room": 0.6,
+    "room_depth_mm": 154.8,
+    "at": [
+     164.0,
+     202.9,
+     -100.2
+    ],
+    "core_mm": 3.6,
+    "free_cells": 1936
+   },
+   {
+    "id": 2,
+    "cells": 2136,
+    "inscribed_mm": 6.0,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.79,
+    "room_depth_mm": 152.4,
+    "at": [
+     172.8,
+     51.6,
+     -89.9
+    ],
+    "core_mm": 3.6,
+    "free_cells": 2136
+   },
+   {
+    "id": 3,
+    "cells": 2360,
+    "inscribed_mm": 6.0,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.92,
+    "room_depth_mm": 124.8,
+    "at": [
+     173.6,
+     80.0,
+     -89.4
+    ],
+    "core_mm": 3.6,
+    "free_cells": 2360,
+    "share_of_drawn": 0.37
+   }
+  ],
+  "envelope_waste": 0.126,
+  "plate": {
+   "L_mm": 160.8,
+   "W_mm": 43.2,
+   "H_mm": 28.8,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "drawn_walls": [],
+  "parity": [],
+  "cases": 8,
+  "supports": 1,
+  "fails": [],
+  "room_full": {
+   "worst": 0.241,
+   "worst_case": "Overseer off centre onto the nose wall",
+   "worst_at": [
+    163.4,
+    166.2,
+    -92.4
+   ],
+   "budget_share": 0.46,
+   "thinned": 0.52,
+   "max_worst": 0.5,
+   "fin_cells": 252,
+   "worst_in_fin": false
+  }
+ },
+ "baseline": null,
+ "total_s": 3692,
+ "part_sha": "70d39dd5115a",
+ "lib_sha": "d423d150a3f0",
+ "setup_sha": "be776bf9c8b13537",
+ "max_worst": 0.5,
+ "strength_ok": true,
+ "print_stl": {
+  "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/box_funnel_arm.stl",
+  "sha256": "4a5cb8cb8f564558fb212bfa18267262c7818ae73dae33a8f1c4537233d72433",
+  "bytes": 19081984,
+  "faces": 381638,
+  "view_faces": 60000,
+  "view_sha256": "25a5bf003d175a235cc00a771a061c071656334343a5171cce65d62f1cedd140",
+  "at": "2026-11-13 22:16"
+ }
+}
