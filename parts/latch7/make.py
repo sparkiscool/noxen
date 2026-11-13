@@ -124,6 +124,25 @@ for _b in m6.BOUGHT:
 m6.BOUGHT = [_b for _b in m6.BOUGHT if not _b["part"].startswith("dowel pin")]      # no steel: the bolt noses and the guide pegs are printed (Spark 12 Nov)
 m6.BOUGHT.append(dict(part="stop bar", spec="printed PCTG, one per cartridge, dropped in after the bolts", per_cartridge=1, listing="printed", url="", check=""))
 GUIDE_PIN = (2.0, 7.0)
+# ---- slanted landings (Spark 13 Nov: "if the battery lands slightly slanted it might not latch"). The bolts sprang out only in the last 0.45 mm
+#      before the seat, and the seat was two strips the whole length of the pack: a cartridge held 0.5 deg off square left a bolt behind.
+#   window  -> the bolts spring out 1.5 mm before the seat (the pocket shelf 1.05 lower; the lead-in under it 35 deg, was 30, to make the room)
+#   seat    -> the strips are 26 mm long at the tab line, so a pitched cartridge still comes up to the seat where the bolts are; past them the
+#              recess is empty (2.4 over the cartridge's rim). Two keys in each recess hold a strip along the pack
+#   cost    -> released, the pack settles up to 1.5 mm onto the ramps (was 0.46) and the plug sits that much less deep
+v5.SNAP = 1.5
+bl.LEAD = math.radians(35.0); bl.HCAP = bl.CAP / math.tan(bl.LEAD)
+#   pocket  -> 2.0 clear of the bolt's ends along the pack (was 0.8: pitched about the end walls at the top, a bolt at the bottom swings 1.0 along
+#              the pack at 1.28 deg on the Overseer) and 0.85 over it (was 0.35); the deck is relieved 0.9 over the cartridge's closed end
+PK_END, PK_OVER = 2.0, 0.85
+_rgeom7 = bl.rgeom
+def _rgeom(g):
+    r = _rgeom7(g)
+    r["PK_HZ"] = bl.BOLT_HZ + PK_END; r["PK_Y1"] = bl.BOLT_Y1 + PK_OVER
+    return r
+bl.rgeom = _rgeom
+SEAT_HZ = 13.0                         # each seat strip: z_T +- 13
+SEAT_KEY = 2.0                         # the keys beside a strip's ends, along the pack (0.2 clear of it)
 
 
 def _spring_state(retract):
@@ -349,9 +368,29 @@ def scout_feet(B):
     return legs
 
 
+def seat_strips(r):
+    """the two TPU seat strips, on the cartridge's rim at the tab line only."""
+    return U(*[box(*sorted((s * (r["X_IN"] - 1.55), s * (r["RF"] - 0.05))), r["Y_TOP"], r["Y_TOP"] + bl.STRIP_T, r["Z_T"] - SEAT_HZ, r["Z_T"] + SEAT_HZ)
+               for s in (-1, 1)])
+
+
+def seat_keys(r):
+    """the recess filled back beside each strip's ends: the strip cannot walk along the pack."""
+    out = []
+    for s in (-1, 1):
+        a0, a1 = sorted((s * (r["X_IN"] - 1.6), s * r["RF"]))
+        for e in (-1, 1):
+            z0, z1 = sorted((r["Z_T"] + e * (SEAT_HZ + 0.2), r["Z_T"] + e * (SEAT_HZ + 0.2 + SEAT_KEY)))
+            out.append(box(a0, a1, r["Y_DK0"], r["Y_DK0"] + bl.STRIP_REC + 0.01, z0, z1))
+    return U(*out)
+
+
 def build(pack="scout"):
     bl._CACHE.clear()
     B = m6.build(pack); set_pack(B["g"])
+    r = B["r"]
+    B["strips"] = seat_strips(r)
+    B["recv"] = (B["recv"] + seat_keys(r)) - box(-r["RF"], r["RF"], r["Y_DK0"] - 0.01, r["Y_DK0"] + bl.STRIP_REC, r["Z_E0"], r["Z_P0"] - 0.99)   # closed end relief
     B["stop"] = stop_bar(B["g"])
     pg = pegs(B["r"]); cut, boss = peg_slots(B["g"], B["r"])
     B["poles"] = pg; B["carrier"] = (B["carrier"] - peg_tab_cut(B["r"])) + U(*pg)
@@ -362,6 +401,44 @@ def build(pack="scout"):
     if pack == "scout":
         B["feet"] = scout_feet(B); B["recv"] = B["recv"] + B["feet"]
     return B
+
+
+# ------------------------------------------------------------------ slanted landings (CAD, rigid: the worst case)
+SLANT_CASES = [(0.0, 0.0), (0.25, 0.0), (0.5, 0.0), (0.6, 0.0), (0.74, 0.0), (0.0, 0.5), (0.0, -0.5), (0.0, 1.0), (0.0, -1.0), (0.0, 1.28), (0.0, -1.28),
+               (0.0, 1.6), (0.0, -1.6), (0.0, 2.0), (0.0, -2.0), (0.5, 1.28), (0.5, -1.28), (0.74, 1.28), (0.74, -1.28)]      # roll, pitch, deg (the arm's worst: 0.74, 1.28)
+SLANT_OUT = 0.5                        # a bolt within this of fully out counts as latched (2.5 of its 3.0 mm in the pocket; the tip is 0.2 off the pocket's back wall)
+
+
+def slant(B, cases=None):
+    """the cartridge held off square and rigid (a head with no give, strips that do not squash), pushed up until it meets the seat
+    strips or the receiver, then each bolt let out. The plug carrier floats and is left out. latched = both bolts fully out."""
+    g = B["g"]; r = B["r"]; zt, ym, yb = g["Z_T"], g["Y_TOP"] / 2, (r["Y_END0"] + g["Y_TOP"]) / 2
+    R = U(B["recv"], B["strips"]); body = U(B["cart"], B["stop"], *B.get("cstrips", []))
+    def pose(m, roll, pitch, d):           # pitched about the end walls' band (they hold it along the pack), rolled about mid height (the side plates)
+        return m.translate([0, -yb, -zt]).rotate([pitch, 0, 0]).translate([0, yb - ym, 0]).rotate([0, 0, roll]).translate([0, ym - d, zt])
+    rows = []
+    for roll, pitch in (cases or SLANT_CASES):
+        row = dict(roll_deg=roll, pitch_deg=pitch)
+        if vol(pose(body, roll, pitch, 6.0) ^ R) > 0.5:
+            rows.append(dict(row, enters=False, latched=False)); continue
+        lo, hi = -0.3, 6.0
+        for _ in range(11):
+            mid = (lo + hi) / 2
+            if vol(pose(body, roll, pitch, mid) ^ R) > 0.5: lo = mid
+            else: hi = mid
+        need = []
+        for s in (1, -1):
+            n = None
+            for rt in np.arange(0.0, bl.TRAVEL + 0.01, 0.25):
+                if vol(pose(m6.moving(g, float(rt), s), roll, pitch, hi) ^ R) < 0.3: n = float(rt); break
+            need.append(n)
+        rows.append(dict(row, enters=True, stops_short_mm=round(hi, 2), bolt_held_in_mm=need, latched=bool(all(n is not None and n <= SLANT_OUT for n in need))))
+    ok = lambda f: [r for r in rows if f(r) and r["latched"]]
+    return dict(window_mm=v5.SNAP, seat_strip_mm=2 * SEAT_HZ, rows=rows,
+                roll_ok_deg=max([r["roll_deg"] for r in ok(lambda r: r["pitch_deg"] == 0)], default=None),
+                pitch_ok_deg=min(max([r["pitch_deg"] for r in ok(lambda r: r["roll_deg"] == 0 and r["pitch_deg"] >= 0)], default=0.0),
+                                 max([-r["pitch_deg"] for r in ok(lambda r: r["roll_deg"] == 0 and r["pitch_deg"] <= 0)], default=0.0)),
+                arm_worst_both_ok=all(r["latched"] for r in rows if r["roll_deg"] == ARM["roll_z_deg"] and abs(r["pitch_deg"]) == ARM["tilt_x_deg"]))
 
 
 # ------------------------------------------------------------------ the audit (hand models E, CAD sweeps C)
@@ -509,7 +586,7 @@ def error_budget(g, be):
              takes="54 / 40 / 46 / 30 % left", v6="same (v5 receiver)", ok=True, note="roll is the tightest: it needs the per-bay gravity offset in the axle's step target"),
         dict(step="6 XT60 mates", error="carrier floats +-1.0, the poles' cones take 1.5, poles in 11.7 before the seat, plug at 6.0",
              takes="cartridge is inside 0.3 by then", v6="same", ok=True, note="push through the lead pads: Scout's plug is past them (nubs carry the rest)"),
-        dict(step="7 release: bolts out", error="head stops on the stall (74 N), not a position; bolts snap out 0.5 under the seat",
+        dict(step="7 release: bolts out", error="head stops on the stall (74 N), not a position; bolts snap out %.1f under the seat (was 0.45)" % v5.SNAP + "",
              takes="stall 74 N vs 60 N needed: x1.23", v6="same", ok=True, note="the two halls read each bolt; a bolt not out = no release of the drone"),
     ]
 
@@ -665,6 +742,7 @@ def main(pack="scout"):
     res["audit"] = audit(B)
     res["funnel"] = funnel_fit(B)
     res["build"] = build_check(B)
+    res["slant"] = slant(B)
     if pack == "scout":
         W = (g["SWAP_M"] + 510.0) / 1000 * 9.81            # the Scout's weight without its pack, 510 g (E, ~730 g all-up)
         Ff = max((ARM["xt60_pull_N"] + W) / 4, 3 * W / 2)      # per foot: the XT60 pull-out on four, or a 3 g landing on two
@@ -730,6 +808,7 @@ def appendix(res):
 #latch7 .open {{ border-left: 3px solid var(--bad); padding-left: 10px; }}
 </style>
 <section id="latch7"><div class="wrap">
+<!--SLANT-->
 <!--STRONG-->
 <h2>What the run-through found in v6, and what v7 changes</h2>
 <div class="t"><table><tr><th>test</th><th>v6</th><th>v7</th></tr>
@@ -817,6 +896,39 @@ def strong_section(rs, ro):
 {td("slider with its pins / cartridge, Scout", "3.4 g / 39.5 g", f"{rs['spring']['slider_pin_magnet_g']} g / {rs['mass_g']['latch7_cartridge']} g")}
 </table></div>
 <p>Below x1 on "pads stay down" the pack does not come off: the hooks hold it positively and lock on their wedges; it only stops being pressed tight. Hand models (E); the receiver's wider bolt pockets have not been through FE.</p>
+"""
+
+
+SLANT_PREV = dict(scout=dict(roll=0.6, pitch=0.5, worst=False), overseer=dict(roll=0.5, pitch=0.25, worst=False))   # the same test on the latch before
+                                       # this pass (commit 03a9545's geometry): the Overseer failed at 0.5 deg of pitch, the smallest step tried
+
+
+def slant_section(rs, ro):
+    td = lambda *c: "<tr>" + "".join(f"<td>{x}</td>" for x in c) + "</tr>"
+    a, b = rs["slant"], ro["slant"]; ps, po = SLANT_PREV["scout"], SLANT_PREV["overseer"]
+    yn = lambda v: "latches" if v else "does not latch"
+    def row(sl, roll, pitch):
+        r = next((x for x in sl["rows"] if x["roll_deg"] == roll and x["pitch_deg"] == pitch), None)
+        if r is None: return ""
+        if not r["enters"]: return "the receiver's walls do not let it sit this far off square"
+        return ("latches" if r["latched"] else "does not latch") + f", stops {max(0.0, r['stops_short_mm']):.2f} mm short of the seat"
+    return f"""<h2>Landing slanted (13 Nov)</h2>
+<p class="open">The latch was too tight for a slanted cartridge. The bolts sprang out only in the last 0.45 mm before the seat, and the seat was two strips the whole length of the pack, so the high end stopped the cartridge before the bolts were up. With one end 0.5 degrees high the Scout still latched and the Overseer did not; at 1.0 neither did.</p>
+<div class="t"><table><tr><th>largest slant that still latches (cartridge held rigid, strips not squashed: the worst case)</th><th>Scout before</th><th>Scout now</th><th>Overseer before</th><th>Overseer now</th></tr>
+{td("one side high (roll); the arm's worst is " + str(ARM['roll_z_deg']) + " deg", f"{ps['roll']} deg", f"{a['roll_ok_deg']} deg", f"{po['roll']} deg", f"{b['roll_ok_deg']} deg")}
+{td("one end high (pitch), either end; the arm's worst is " + str(ARM['tilt_x_deg']) + " deg", f"{ps['pitch']} deg", f"{a['pitch_ok_deg']} deg", f"under 0.5 deg", f"{b['pitch_ok_deg']} deg")}
+{td("0.5 deg of roll with the worst pitch", "does not latch", row(a, 0.5, 1.28), "does not latch", row(b, 0.5, 1.28))}
+{td("the arm's worst roll and worst pitch together", yn(ps['worst']), row(a, 0.74, 1.28), yn(po['worst']), row(b, 0.74, 1.28))}
+</table></div>
+<p>What changed, all of it in the receiver (the cartridge, the bolts and the fingers are the same parts):</p>
+<div class="t"><table><tr><th></th><th>before</th><th>now</th></tr>
+{td("the bolts spring out this far before the seat", "0.45 mm", f"{a['window_mm']} mm (the pocket shelf is 1.05 lower; the lead-in under it is 35 degrees, was 30)")}
+{td("seat strips (TPU)", "the whole length of the pack", f"{a['seat_strip_mm']:.0f} mm long at the latch line, keyed in place; past them the cartridge's rim has 2.4 mm of room")}
+{td("pocket round each bolt: past its ends / over it", "0.8 / 0.35 mm", f"{PK_END} / {PK_OVER} mm")}
+{td("deck over the cartridge's closed end", "1.5 mm over it", "2.4 mm")}
+</table></div>
+<p>The cost: once the grabber lets go, the pack can settle up to {rs['pull_drop_to_pin_mm']} mm onto the bolts' ramps (was 0.46), and the plug sits that much less deep (an XT60's contacts overlap about 7 mm). The plug's own grip holds the pack up at the seat until a hard knock moves it.</p>
+<p>Not fixed here: the Overseer's receiver is taller, so its side walls stop the cartridge rolling more than about 0.65 degrees inside it. At the arm's worst roll ({ARM['roll_z_deg']}) the cartridge has to be squared by 0.1 degree as it goes in: the grabber head needs that much give (it is not drawn yet), or the Overseer receiver 0.1 mm more side clearance. Rigid test in CAD (C): real parts give a little, which helps. The plug carrier floats and was left out.</p>
 """
 
 
@@ -983,12 +1095,16 @@ if __name__ == "__main__":
             f = os.path.join(ROOT, "parts", OUT[q][0], "result.json"); res = json.load(open(f))
             res["funnel"] = funnel_fit(build(q)); json.dump(res, open(f, "w"), indent=1); write_assembly(res, q)
             print(q, {k: res["funnel"][k] for k in ("rests_at_mm", "tab_line_at_seat_x", "free_play_mm", "hole_gap_mm", "seated_mm3", "landing_mm3", "swap_path_mm3", "ok")})
+    elif "--slant" in sys.argv:
+        for q in ("scout", "overseer"):
+            f = os.path.join(ROOT, "parts", OUT[q][0], "result.json"); res = json.load(open(f)); res["slant"] = slant(build(q)); json.dump(res, open(f, "w"), indent=1)
+            print(q, json.dumps({k: v for k, v in res["slant"].items() if k != "rows"}))
     elif "--appendix" in sys.argv:
         rs = json.load(open(os.path.join(ROOT, "parts", "latch7", "result.json"))); ro = json.load(open(os.path.join(ROOT, "parts", "latch7_overseer", "result.json")))
         old = open(os.path.join(ROOT, "systems", "latch6.appendix.html")).read()      # v6's page section, kept under v7's, folded
         keep = ('<details style="max-width:1040px;margin:0 auto;padding:0 16px 40px;font:14px/1.5 var(--sans);color:var(--fg)"><summary>Latch v6\'s own numbers '
                 '(superseded: its pull-out loads left out the XT60\'s lever, see the first table above)</summary>' + old + '</details>\n')
-        open(os.path.join(ROOT, "systems", "latch7.appendix.html"), "w").write(appendix(rs).replace("<!--FIT-->", fit_section(rs, ro)).replace("<!--STRONG-->", strong_section(rs, ro)).replace("<!--BUILD-->", build_section(rs, ro)) + keep)
+        open(os.path.join(ROOT, "systems", "latch7.appendix.html"), "w").write(appendix(rs).replace("<!--FIT-->", fit_section(rs, ro)).replace("<!--STRONG-->", strong_section(rs, ro)).replace("<!--SLANT-->", slant_section(rs, ro)).replace("<!--BUILD-->", build_section(rs, ro)) + keep)
         open(os.path.join(ROOT, "systems", "latch7_overseer.appendix.html"), "w").write(appendix_overseer(ro, rs))
     else:
         main(pk)

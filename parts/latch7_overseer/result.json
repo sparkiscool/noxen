@@ -8,12 +8,12 @@
  "insert_cart_vs_recv_mm3": 0.0,
  "insert_stuck": [],
  "insert_max_cam_mm": 3.01,
- "snap_out_depth_mm": 0.5,
+ "snap_out_depth_mm": 2.0,
  "gripped_pull_mm3": 0.0,
  "gripped_pull_at_min_retract_mm3": 0.0,
  "gripped_pull_at_rib_limit_mm3": 0.0,
- "pull_drop_to_pin_mm": 0.5,
- "pull_drop_to_bolt_pctg_mm": 0.5,
+ "pull_drop_to_pin_mm": 1.54,
+ "pull_drop_to_bolt_pctg_mm": 1.54,
  "wedge": {
   "angle_deg": 20.0,
   "mu_pctg_pctg_E": 0.3,
@@ -1212,7 +1212,7 @@
    },
    {
     "step": "7 release: bolts out",
-    "error": "head stops on the stall (74 N), not a position; bolts snap out 0.5 under the seat",
+    "error": "head stops on the stall (74 N), not a position; bolts snap out 1.5 under the seat (was 0.45)",
     "takes": "stall 74 N vs 60 N needed: x1.23",
     "v6": "same",
     "ok": true,
@@ -1350,7 +1350,7 @@
     -44.3
    ]
   },
-  "pressed_0p3_in_mm3": 312.8,
+  "pressed_0p3_in_mm3": 316.5,
   "landing_mm3": {
    "worst": 0.0,
    "at": "+y 20 at h 24",
@@ -1373,7 +1373,7 @@
    "receiver": {
     "down": "+y",
     "bed_mm2": 2626.0,
-    "support_mm2": 8765.0,
+    "support_mm2": 8787.0,
     "size_mm": [
      68.0,
      68.6,
@@ -1450,12 +1450,12 @@
    },
    "receiver strip a (TPU)": {
     "down": "+y",
-    "bed_mm2": 713.0,
+    "bed_mm2": 125.0,
     "support_mm2": 0.0,
     "size_mm": [
      4.8,
      2.4,
-     148.6
+     26.0
     ],
     "fits_bed": true,
     "on_the_diagonal": false,
@@ -1463,12 +1463,12 @@
    },
    "receiver strip b (TPU)": {
     "down": "+y",
-    "bed_mm2": 713.0,
+    "bed_mm2": 125.0,
     "support_mm2": 0.0,
     "size_mm": [
      4.8,
      2.4,
-     148.6
+     26.0
     ],
     "fits_bed": true,
     "on_the_diagonal": false,
@@ -1517,15 +1517,218 @@
   "serviceable": "a bolt comes out the way it went in once the pack, springs and stop bar are lifted out; nothing is glued",
   "ok": true
  },
+ "slant": {
+  "window_mm": 1.5,
+  "seat_strip_mm": 26.0,
+  "rows": [
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": 0.0,
+    "enters": true,
+    "stops_short_mm": -0.0,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.25,
+    "pitch_deg": 0.0,
+    "enters": true,
+    "stops_short_mm": 0.1,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.5,
+    "pitch_deg": 0.0,
+    "enters": true,
+    "stops_short_mm": 0.21,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.6,
+    "pitch_deg": 0.0,
+    "enters": true,
+    "stops_short_mm": 0.26,
+    "bolt_held_in_mm": [
+     0.25,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.74,
+    "pitch_deg": 0.0,
+    "enters": false,
+    "latched": false
+   },
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": 0.5,
+    "enters": true,
+    "stops_short_mm": 0.08,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": -0.5,
+    "enters": true,
+    "stops_short_mm": 0.08,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": 1.0,
+    "enters": true,
+    "stops_short_mm": 0.17,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": -1.0,
+    "enters": true,
+    "stops_short_mm": 0.17,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": 1.28,
+    "enters": true,
+    "stops_short_mm": 0.38,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": -1.28,
+    "enters": true,
+    "stops_short_mm": 0.23,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": 1.6,
+    "enters": true,
+    "stops_short_mm": 0.85,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": -1.6,
+    "enters": true,
+    "stops_short_mm": 0.36,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": 2.0,
+    "enters": true,
+    "stops_short_mm": 1.45,
+    "bolt_held_in_mm": [
+     3.0,
+     3.0
+    ],
+    "latched": false
+   },
+   {
+    "roll_deg": 0.0,
+    "pitch_deg": -2.0,
+    "enters": true,
+    "stops_short_mm": 0.87,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.5,
+    "pitch_deg": 1.28,
+    "enters": true,
+    "stops_short_mm": 0.51,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.5,
+    "pitch_deg": -1.28,
+    "enters": true,
+    "stops_short_mm": 0.42,
+    "bolt_held_in_mm": [
+     0.0,
+     0.0
+    ],
+    "latched": true
+   },
+   {
+    "roll_deg": 0.74,
+    "pitch_deg": 1.28,
+    "enters": false,
+    "latched": false
+   },
+   {
+    "roll_deg": 0.74,
+    "pitch_deg": -1.28,
+    "enters": false,
+    "latched": false
+   }
+  ],
+  "roll_ok_deg": 0.6,
+  "pitch_ok_deg": 1.6,
+  "arm_worst_both_ok": false
+ },
  "mass_g": {
-  "latch7_ov_receiver": 209.55,
+  "latch7_ov_receiver": 209.87,
   "latch7_ov_carrier": 5.24,
   "latch7_ov_carrier_cap": 7.88,
   "latch7_ov_cartridge": 100.78,
   "latch7_ov_slider": 5.53,
   "latch7_ov_stop_bar": 0.15,
-  "latch7_ov_receiver_strip_a": 2.07,
-  "latch7_ov_receiver_strip_b": 2.07
+  "latch7_ov_receiver_strip_a": 0.36,
+  "latch7_ov_receiver_strip_b": 0.36
  },
  "swap_g": 765.8,
  "swap_cg": [
@@ -1957,71 +2160,71 @@
   [
    -10.0,
    [
-    0.1,
-    0.1
+    0.13,
+    0.13
    ]
   ],
   [
    -9.5,
    [
-    0.39,
-    0.39
+    0.5,
+    0.5
    ]
   ],
   [
    -9.0,
    [
-    0.69,
-    0.69
+    0.85,
+    0.85
    ]
   ],
   [
    -8.5,
    [
-    0.99,
-    0.99
+    1.22,
+    1.22
    ]
   ],
   [
    -8.0,
    [
-    1.28,
-    1.28
+    1.57,
+    1.57
    ]
   ],
   [
    -7.5,
    [
-    1.58,
-    1.58
+    1.93,
+    1.93
    ]
   ],
   [
    -7.0,
    [
-    1.88,
-    1.88
+    2.3,
+    2.3
    ]
   ],
   [
    -6.5,
    [
-    2.17,
-    2.17
+    2.65,
+    2.65
    ]
   ],
   [
    -6.0,
    [
-    2.47,
-    2.47
+    3.0,
+    3.0
    ]
   ],
   [
    -5.5,
    [
-    2.77,
-    2.77
+    3.01,
+    3.01
    ]
   ],
   [
@@ -2076,22 +2279,22 @@
   [
    -1.5,
    [
-    3.01,
-    3.01
+    0.0,
+    0.0
    ]
   ],
   [
    -1.0,
    [
-    3.01,
-    3.01
+    0.0,
+    0.0
    ]
   ],
   [
    -0.5,
    [
-    3.01,
-    3.01
+    0.0,
+    0.0
    ]
   ],
   [

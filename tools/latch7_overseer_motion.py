@@ -2,8 +2,8 @@
 (x across, y = z_T - pack z, the lead end toward -y; z up the install axis, the receiver on top, cut at the tab line y 0).
 
 1 push in alone: the cartridge rises 55 into the receiver, the feet's lead-ins cam both bolts in (the cam each depth needs is
-  the CAD sweep's, parts/latch7/result.json insert_rows), the bolts snap out 0.5 below the seat on their two springs.
-2 pull: a load drops the cartridge 0.5 until both steel pins sit on their 20 deg seat ramps.
+  the CAD sweep's, parts/latch7/result.json insert_rows), the bolts snap out 1.5 below the seat on their two springs.
+2 pull: a load drops the cartridge up to 1.5 until both printed noses sit on their 20 deg seat ramps.
 3 the grabber comes up open (its four heel pads land on the cartridge's rim bands, each nub rises through its tab's arch) and
   squeezes: the blade faces push the tabs in 4.1, the nubs slide onto the rib's wedge feet and draw the cartridge onto the pads.
 4 pulled out, held; tipped 90 deg each way about both axes (the hold readouts follow gravity); pushed back in; the blades
