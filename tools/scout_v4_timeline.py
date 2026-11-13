@@ -17,7 +17,7 @@ OUT = S.REACH
 AXIS = np.array(S.AXIS, float)             # the tilt axis parked
 TILT0 = math.degrees(S.TILT)               # parked tilt, deg up
 SPOOL = S.SPOOL["c"]
-PINION = (SPOOL[0], SPOOL[1] - (S.GEAR["spool_t"] + S.GEAR["pinion_t"]) * S.GEAR["m"] / 2)
+PINION = (SPOOL[0], SPOOL[1] - S.GEAR["c"])
 R_WOUND, RATIO = S.SPOOL["hub"] + 1.6, S.GEAR["spool_t"] / S.GEAR["pinion_t"]   # mean wound radius; the pinion turns RATIO times the spool
 
 ease = lambda u: 0.0 if u <= 0 else 1.0 if u >= 1 else u * u * (3 - 2 * u)

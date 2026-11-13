@@ -32,7 +32,7 @@ ALLOW = 0.9 * SY                        # the coil is a static, cycled state: 90
 RHO_STEEL = 7.85e-3                     # g/mm^3
 HEAD_G = 60.5                           # head frame 2.5 + SG90 10 + cradle 2.5 + camera 45 + LEDs 0.5 (systems/scout_v4.assembly.json)
 REACH = 150.0
-CABLE_T = 0.6                           # the head's 6 wires as a flat ribbon of 28 / 30 AWG PTFE hook-up wire (the 26 AWG pair made it 1.2)
+CABLE_T = 0.81                          # 12 Nov: the head's 6 wires as a flat ribbon of 30 AWG PTFE, MIL-W-16878/4 type E, OD 0.032 in (Remington kit listings, E; was 0.6 assumed; the 26 AWG pair made it 1.2)
 CABLE_T_OLD = 1.2
 G = 9.81
 
@@ -196,7 +196,7 @@ def layout():
 MOTORS = {  # output stall torque at 6 V (N mm) and no-load rpm; all E: vendors' tables disagree by 2x; measure
     "N20 spur 300 rpm (now, B0BZDC951L)": dict(stall=0.5 * G * 10, rpm=300, lock=False),
     "N20 worm 1:236 (GA12T, B0D9CMZPT4)": dict(stall=0.6 * G * 10, rpm=80, lock=True),
-    "N20 spur 100 rpm (chosen, B07MZH851L)": dict(stall=1.5 * G * 10, rpm=100, lock=False),
+    "N20 spur 100 rpm (chosen, B07MZH851L)": dict(stall=1.5 * G * 10, rpm=100, lock=False),   # 12 Nov: vendors 1.5..2.2 kg cm (Zbotic N20-6V-100: 2.2, 0.67 A); the low end kept here, the turret's load case takes 2.2
 }
 CF_F = 1.96 * 4.448                      # JCF160-250 constant-force spring (B07N1SNSHX): 1.96 lb, 12.7 wide, 0.15 thick, ID 11.2
 

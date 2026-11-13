@@ -9,7 +9,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scout_v4_probe_mech_lib import S, cyl, minus, to_drone, save  # noqa: E402
 
 R, W = S.ROLLER["r"], S.ROLLER["w"]
-tube = minus(cyl(R, -W / 2, W / 2), [cyl(3.025, -W / 2 - 1, -W / 2 + 2.7, n=64), cyl(3.025, W / 2 - 2.7, W / 2 + 1, n=64), cyl(2.0, -W / 2, W / 2, n=48)])
-rr = S.SPOOL["hub"] + 1.4 + R; a = math.radians(S.ROLLER["ang"]); cx, cz = S.SPOOL["c"]
+sr = S.pick("B") / 2                                                              # the coupon's B
+tube = minus(cyl(R, -W / 2, W / 2), [cyl(sr, -W / 2 - 1, -W / 2 + 2.7, n=64), cyl(sr, W / 2 - 2.7, W / 2 + 1, n=64), cyl(2.0, -W / 2, W / 2, n=48)])
+rr = S.SPOOL["hub"] + S.COIL + R; a = math.radians(S.ROLLER["ang"]); cx, cz = S.SPOOL["c"]
 pr = tube.copy(); pr.apply_translation([0, 0, W / 2])
 save("scout_v4_probe_roller", pr, to_drone(tube, cx + rr * math.cos(a), cz + rr * math.sin(a)), "on end, ~15 min")

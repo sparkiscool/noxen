@@ -10,9 +10,10 @@ import trimesh
 from shapely.geometry import Point, box as sbox
 
 G0, G1 = S.GEAR["y"]
-pz = S.SPOOL["c"][1] - (S.GEAR["spool_t"] + S.GEAR["pinion_t"]) * S.GEAR["m"] / 2
+pz = S.SPOOL["c"][1] - S.GEAR["c"]
 body = union([extrude(gear_2d(S.GEAR["pinion_t"], SHIFT["pinion"]), G0, G1), cyl(3.5, G1 - 0.1, G1 + 0.7)])
-dbore = extrude(Point(0, 0).buffer(1.55, 48).intersection(sbox(-2, -2, 1.05, 2)), G0 - 1, G1 + 2)
+dd, df = S.pick("D")                                                              # the coupon's D: diameter, across the flat
+dbore = extrude(Point(0, 0).buffer(dd / 2, 48).intersection(sbox(-2, -2, df - dd / 2, 2)), G0 - 1, G1 + 2)
 pin = minus(body, [dbore])
 pr = pin.copy(); pr.apply_translation([0, 0, -G0])
 save("scout_v4_probe_pinion", pr, to_drone(pin, S.SPOOL["c"][0], pz), "teeth down, ~10 min, print 2")

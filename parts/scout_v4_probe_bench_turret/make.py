@@ -20,7 +20,7 @@ T.socks_of = lambda *a, **k: []; T.check_collars = lambda *a, **k: None         
 B = T.bodies()
 cx, cz = S.SPOOL["c"]; t = S.THROAT; mx = S.MAST_X
 yp, ym = S.GEAR["y"][1] + 0.8, S.DRUM["y0"] - 0.8
-lh = T.lens_half(); pz = cz - (S.GEAR['spool_t'] + S.GEAR['pinion_t']) * S.GEAR['m'] / 2
+lh = T.lens_half(); pz = cz - S.GEAR['c']
 env = B["env"]
 plates = [box(cx - 36, cx + 36, yp, yp + 3.0, DZ1, 67.0),                           # +y wall (the axle's and the shaft tip's bosses)
           box(cx - 36, cx + 36, -26.0, ym, DZ1, 67.0),                              # -y wall (the axle's boss, the drum's end), out to the floor bosses' faces: the flat side it prints on
@@ -29,7 +29,8 @@ plates = [box(cx - 36, cx + 36, yp, yp + 3.0, DZ1, 67.0),                       
           box(mx + lh + 2.0, mx + lh + 5.0, ym - 3.0, yp + 3.0, DZ1, t["z1"]),      # back wall behind the throat, to its seat
           box(cx - 8.0, cx + 8.0, S.N20_FACE + 0.15, yp + 3.0, pz - 5.5, DZ1 + 0.1)]   # from the N20's face plate to the +y wall, below the deck's top, round the pinion (cut) and the shaft's tip bearing
 solid = U(plates) + B["drawn"]
-part = solid - B["cuts"]
+g0 = S.N20_FACE
+part = solid - B["cuts"] - box(cx - 6.5, cx + 6.5, g0 - 27.5, S.SPOOL["y0"] - 0.6, DZ1 - 1.0, DZ1 + 3.1)   # 12 Nov: the floor open over the N20's can (its top z 26.5 left a 1.0 skin in the 3.0 floor: the solid check)
 m = part.to_mesh(); tm = trimesh.Trimesh(np.asarray(m.vert_properties)[:, :3], np.asarray(m.tri_verts), process=True)
 parts_ = tm.split(only_watertight=False)
 tm = max(parts_, key=lambda p: abs(p.volume)) if len(parts_) > 1 else tm         # loose RM collar stubs off the plates are dropped

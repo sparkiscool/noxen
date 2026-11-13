@@ -10,7 +10,7 @@ Cuts: the spool, its 40 T gear and the 12 T pinion swept; the roller's travel, i
 the bolts and their drivers; the props' discs + 12; the deck (z < 24.5) but the motor's pocket. (The DRV8833 is in the nose bay.)
 Support: the four floor bosses. Loads: the head-first crash (systems/scout_v4.head_load.json, ~250 N down the throat); the parked head (60 g) on the throat's seat in 35 g
 crashes; the mast's fold-limited bending at the throat (0.6 N m in x, 1.2 in y: the FE's fold moments); the spool's tape tension at the N20's stall
-(28 N each way on the axle: the 100 rpm N20, 420 N mm); the roller's springs (12 N against the axle); the turret's own spool, blades and cable (15 g) on the axle bosses in crashes; RM's rods."""
+(44 N each way on the axle: the 100 rpm N20's 2.2 kg cm, 612 N mm at the spool, E); the roller's springs (12 N against the axle); the turret's own spool, blades and cable (15 g) on the axle bosses in crashes; RM's rods."""
 import numpy as np
 from topo import Part
 from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, hull, U, socks_of, socket_cases, socket_bodies, payload_cases, point_case,
@@ -19,13 +19,12 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, hull, U, socks_of
 import json as _json, os as _os
 HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
 SPEC = dict(h=1.2, gen_cm3=23.0, max_worst=0.3)  # 10 Nov run 4: 20 read 0.34 (head-first at the -y side, 37.7 g) and skins under the spool; 23. Run 3: 14 cm3 read 0.50 at the +y roller guide (the 1.2 N m fold in y and the head-first crash share its one strut down to the floor bolts): 20. 9 Nov: 9 cm3 read 1.01 at RM-RB with its arms out to r 34 and the budget spent; 14 with the FE fold loads (1.2 N m in y) and the roller
-CUP_R, BLADE_T, CABLE_T = 15.0, 0.13, 0.6       # the 19 mm blade's cup radius and thickness (patents: R 12.7..25.4, t 0.11..0.19; E), the 6 x 30 AWG PTFE ribbon
+CUP_R, BLADE_T, CABLE_T = S.CUP_R, S.BLADE_T, S.CABLE_T   # 12 Nov: the cup radius is the coupon's T, t 0.13 E, the 30 AWG PTFE ribbon 0.81 (tools/scout_v4_shape.py)
 FOLD_NM = (0.6, 1.2)                             # the moment the mast can put on the throat before it folds, +-x and +-y (tools/probe_mast_fe.py: the unbonded lens folds at ~0.50 N m in x, 3.6 in y; x x 1.2, y capped at 2 x x: a bigger y moment is a crash on the head)
 
 
 def lens_half():
-    hw = S.BLADE_W / 2; sag = CUP_R - np.sqrt(CUP_R ** 2 - hw ** 2)
-    return sag + BLADE_T + CABLE_T / 2 + 0.4                              # half the lens's thickness along x, with clearance
+    return S.LENS_HALF                                                     # half the lens's thickness along x, with clearance (tools/scout_v4_shape.py: the coupon's T)
 
 
 def yz_ring(cx, cz, r0, r1, y0, y1):
@@ -41,7 +40,7 @@ def ycyl(cx, cz, r, y0, y1):
 def bodies():
     cx, cz = S.SPOOL["c"]; r = S.SPOOL["r"]; t = S.THROAT; mx = S.MAST_X; hw = S.BLADE_W / 2 + 0.5
     gy0, gy1 = S.GEAR["y"]; ra = (S.GEAR["spool_t"] / 2 + 1) * S.GEAR["m"]; rp = (S.GEAR["pinion_t"] / 2 + 1) * S.GEAR["m"]
-    pz = cz - (S.GEAR["spool_t"] + S.GEAR["pinion_t"]) * S.GEAR["m"] / 2; g0 = S.N20_FACE
+    pz = cz - S.GEAR["c"]; g0 = S.N20_FACE
     dy0, dy1, dr = S.DRUM["y0"], S.DRUM["y1"], S.DRUM["r"]
     yp, ym = gy1 + 0.8, dy0 - 0.8
     drawn, cuts, env = [], [], []
@@ -69,7 +68,7 @@ def bodies():
     cuts.append(box(cx - 6.4, cx + 6.4, g0 - 10.0 - 0.3, g0 + 0.2, pz - 5.3, pz + 5.3))           # the gearbox
     cuts.append(ycyl(cx, pz, 6.3, g0 - 27.5, g0 - 10.0))                                           # the can
     # the throat: walls round the blades' path, a flat slot at the spool's height to the lens at its top (the head's clip seats in it)
-    lh = lens_half(); sl = BLADE_T + CABLE_T / 2 + 0.3 + 0.7                        # the stack's half and the 1.4 its tangent walks as the coil empties
+    lh = lens_half(); sl = S.STACK / 2 + max(S.MAST_X - S.SPOOL["hub"] - S.STACK / 2, S.SPOOL["hub"] + S.COIL - S.STACK / 2 - S.MAST_X) + 0.3   # the stack's half, the walk of its tangent off the coil (full to empty) from the mast's axis, 0.3
     path = hull(np.array([[mx + sx * sl, sy * hw, t["z0"]] for sx in (-1, 1) for sy in (-1, 1)] + [[mx + sx * lh, sy * hw, t["z1"] + 0.5] for sx in (-1, 1) for sy in (-1, 1)]))
     walls = hull(np.array([[mx + sx * (sl + 2.0), sy * (hw + 2.0), t["z0"]] for sx in (-1, 1) for sy in (-1, 1)] + [[mx + sx * (lh + 2.0), sy * (hw + 2.0), t["z1"]] for sx in (-1, 1) for sy in (-1, 1)]))
     drawn.append(walls - path - ycyl(cx, cz, S.SPOOL["r"] + 3.0, S.SPOOL["y0"] - 3, S.SPOOL["y1"] + 3)); cuts.append(path)   # the -x wall stops 3 short of the spool's sweep (no sliver)
@@ -80,7 +79,7 @@ def bodies():
     cuts.append(ycyl(cx, cz, dr + 0.3, dy0, dy1 + 0.5)); cuts.append(box(cx - 2, cx + 2, ym - 8, dy0 + 1, cz - 2, cz + 2))   # its cavity; the cable's way out to the Radxa
     # the coil's pressure roller: its axle's ends in radial slots (30 deg before the exit), a spring behind each down the slot's line
     a = np.radians(S.ROLLER["ang"]); u = np.array([np.cos(a), np.sin(a)]); v = np.array([-u[1], u[0]]); rw = S.ROLLER["w"] / 2
-    r_full = S.SPOOL["hub"] + 1.4 + S.ROLLER["r"]; r_empty = S.SPOOL["hub"] + 0.15 + S.ROLLER["r"]
+    r_full = S.SPOOL["hub"] + S.COIL + S.ROLLER["r"]; r_empty = S.SPOOL["hub"] + 0.15 + S.ROLLER["r"]
     def radial(s0, s1, hv, y0, y1):                                                 # a box along the slot's line: radial s0..s1, tangential +-hv
         pts = [[cx + q * u[0] + w * v[0], yy, cz + q * u[1] + w * v[1]] for q in (s0, s1) for w in (-hv, hv) for yy in (y0, y1)]
         return hull(np.array(pts))
@@ -120,8 +119,9 @@ def setup(h):
     for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
         M = FOLD_NM[0] if d[0] else FOLD_NM[1]; Fm = M / ((t["z1"] - t["z0"]) / 1000.0)
         p.load(f"the mast's fold moment {M} N m at the throat ({d})", B["seat"], (Fm * d[0], Fm * d[1], 0), cls="misuse")
+    Ft = round(S.SPOOL_STALL / S.SPOOL["hub"], 1)                                  # 12 Nov: the N20's stall 2.2 kg cm (E, the listings' top) through 40 / 12 on the hub: 44 N (was 28)
     for sgn, lab in ((1, "paying out"), (-1, "pulling in")):
-        p.load_multi(f"tape tension at the N20's stall, {lab} (28 N)", [(B["axle"][0], (0, 0, -14.0 * sgn)), (B["axle"][1], (0, 0, -14.0 * sgn))], cls="flight")
+        p.load_multi(f"tape tension at the N20's stall, {lab} ({Ft:.0f} N)", [(B["axle"][0], (0, 0, -Ft / 2 * sgn)), (B["axle"][1], (0, 0, -Ft / 2 * sgn))], cls="flight")
     u = B["roller_u"]; fu = (6.0 * u[0], 0.0, 6.0 * u[1])                           # the springs push their seats out and the coil (the axle) in: 12 N
     p.load_multi("the roller's springs on the full coil (12 N)", [(B["roller_seats"][0], fu), (B["roller_seats"][1], fu),
                  (B["axle"][0], (-fu[0], 0, -fu[2])), (B["axle"][1], (-fu[0], 0, -fu[2]))], cls="flight")

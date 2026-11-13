@@ -161,7 +161,7 @@ L.SOCKET_START = _socket_starts()
 # at 3.6: 0.209 / 0.210, NB at 4.9: 0.220, TB at 5.5: 0.210. Round 3: the Ys toward 0.25 (index ~ V^-1.25: x0.87), P3 / P4 0.7
 # (~0.14), P / R 0.6 (two 6.25 members from the hub collar to the paired collars' floors are ~0.6 cm3), RF / RB / RS 0.3.
 BUDGET_CM3 = {"P3": 0.7, "P4": 0.7, "P1": 0.6, "P2": 0.6, "P5": 0.6, "P6": 0.6, "R0": 0.6, "R7": 0.6,
-              "RF": 0.3, "RB": 0.3, "RS0": 0.3, "RS1": 0.3, "S0": 3.1, "S1": 3.1, "NB": 5.7, "TB": 5.6}   # 12 Nov: NB 4.3 -> 5.7, 0.354 at 4.3 once BS moved to the nose block (NB-R7 pull-out 126 N; index ~ V^-1.25 toward 0.25)   # 12 Nov: TB 4.8 -> 5.6, 0.301 at 4.8 under the heavier frame's TB-P3 108 N (index ~ V^-1.25 toward 0.25)
+              "RF": 0.3, "RB": 0.3, "RS0": 0.3, "RS1": 0.3, "S0": 3.1, "S1": 3.1, "NB": 6.9, "TB": 5.6}   # 13 Nov: NB 5.7 -> 6.9, 0.314 at 5.7 (index ~ V^-1.25 toward 0.25). 12 Nov: NB 4.3 -> 5.7, 0.354 at 4.3 once BS moved to the nose block (NB-R7 pull-out 126 N; index ~ V^-1.25 toward 0.25)   # 12 Nov: TB 4.8 -> 5.6, 0.301 at 4.8 under the heavier frame's TB-P3 108 N (index ~ V^-1.25 toward 0.25)
 
 
 def spec_for(group):
