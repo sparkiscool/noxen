@@ -213,21 +213,24 @@ def assemble(layout, gen_mesh, speck_mm3=20.0, log=print):
     vols = sorted([b.volume() for b in bodies], reverse=True)
     dropped, cavities = [], []
     if len(bodies) > 1:
-        specks = None
+        keep = []
         for b in bodies:
             v = b.volume()
             if v < 0:
-                # an inverted shell is a sealed cavity of a body (the nominal field enclosed a void: a hollow
-                # section). It stays: filling it adds mass the optimiser did not ask for (bar_half topo-v2: +4.8 g,
-                # same worst index), and it prints as an internal wall.
+                # an inverted shell is a sealed cavity of a body (the nominal field enclosed a void: a hollow section). A printed
+                # part has none (Spark 13 Nov, foot nodes v8: the slicer fills it with supports that rattle inside for good): the
+                # optimiser keeps the nominal field free of them (Settings.no_cavity, topo/cavity.py) and what the build still
+                # seals is filled here (the shell is dropped, the body is solid there); the gate refuses any left
+                # (tools/solid_check.py sealed_voids, inner_shells).
                 cavities.append(round(-v, 2))
             elif v < speck_mm3:
                 dropped.append(round(v, 2))
-                specks = b if specks is None else specks + b
-        if specks is not None:
-            P = P - specks
+            else:
+                keep.append(b)
+        if dropped or cavities:
+            P = type(P).compose(keep) if len(keep) > 1 else keep[0]
         log(f"build: {len(bodies)} shells, volumes {[round(v_, 1) for v_ in vols[:6]]} mm3; dropped specks {dropped}; "
-            f"sealed cavities kept {cavities} mm3")
+            f"sealed cavities filled {cavities} mm3")
     return P, dict(bodies_raw=len(bodies), dropped_specks_mm3=dropped, cavities_mm3=cavities,
                    bodies=len([b for b in P.decompose() if b.volume() > 0]))
 
@@ -493,6 +496,19 @@ def export_report(rep, tag="build: export"):
             f"{'watertight' if rep['watertight'] else 'NOT WATERTIGHT: ' + str(rep['boundary_edges']) + ' open, ' + str(rep['nonmanifold_edges']) + ' non-manifold edges'}")
 
 
+def fill_cavities(P):
+    """(P with every sealed cavity filled, [their volumes mm3]): a body's inverted shell (decompose: negative volume) is dropped, so
+    the body is solid there (Spark 13 Nov, foot nodes v8: a sealed void prints full of supports that never come out)"""
+    bodies = P.decompose()
+    if len(bodies) < 2:
+        return P, []
+    keep = [b for b in bodies if b.volume() >= 0]
+    cav = [round(-b.volume(), 2) for b in bodies if b.volume() < 0]
+    if not cav:
+        return P, []
+    return (type(P).compose(keep) if len(keep) > 1 else keep[0]), cav
+
+
 def export_mesh(P, log=print, min_mm3=1.0):
     """the one export of a manifold part, for the run and for tools/recut.py: P -> float64 mesh -> weld_clean. The exact part
     from the booleans holds sliver triangles thinner than float32 wherever two surfaces nearly coincide (the organic surface
@@ -501,9 +517,12 @@ def export_mesh(P, log=print, min_mm3=1.0):
     the recut of node 5, 467 open edges; the head mount CI export, 931; node 21, 126 stray 1..3-face shells; the page's
     decimation tore node 5 open). Here the welding happens before the gate and the file, and the result is checked.
     Returns (mesh, report); report["watertight"] False is a failed export (the caller fails the part)."""
-    mg = P.to_mesh64()
+    P, cav = fill_cavities(P)                                  # the run's assemble already filled; a recut's own cuts never seal one, but
+    mg = P.to_mesh64()                                         # an older print mesh read back can hold one (13 Nov: nodes 3-5)
     m, rep = weld_clean(np.asarray(mg.vert_properties)[:, :3], np.asarray(mg.tri_verts), min_mm3=min_mm3)
     rep["volume_mm3"] = round(float(m.volume), 1); rep["exact_mm3"] = round(float(P.volume()), 1)
+    if cav:
+        rep["cavities_filled_mm3"] = cav
     # the export holds the body the build made, or it is a failed export (10 Nov: a closed 55 mm3 export of a 95 cm3 part passed
     # as watertight): over EXPORT_LOSS of the exact volume (and 5 mm3: dropped specks) gone is reported and fails the part
     lost = abs(rep["exact_mm3"]) - abs(rep["volume_mm3"])

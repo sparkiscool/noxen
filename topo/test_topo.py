@@ -1495,12 +1495,76 @@ def t_built_hold():
             fd = (G(xp) - G(xm)) / (2 * e)
             errs += [abs(fd[k] - dg[k][i]) / max(abs(fd[k]), 1e-2 * np.abs(dg[k]).max()) for k in range(len(fv))]
         ok = (fv0 == [-1.0] * 2 * L.n_real and len(fv) == 2 * L.n_real == 6 and np.allclose(fv, 1 / (1 + s.hold_tol) - 1, atol=1e-9)
-              and max(errs) < 1e-3 and L.mma.m == 3 + 2 * L.n_real)
+              and max(errs) < 1e-3 and L.mma.m == 3 + 2 * L.n_real + 1)
         check("built hold: rows inactive before it starts, at the reference after, gradient vs finite differences", ok,
               f"rows {np.round(fv, 4).tolist()}, max rel err {max(errs):.1e}")
     except Exception as e:
         traceback.print_exc()
         check("built hold", False, str(e))
+
+
+def t_no_cavity():
+    """no sealed void (Spark 13 Nov, foot nodes v8: the build kept 2.4-8.9 cm3 sealed cavities, full of slicer supports for good).
+    The virtual-temperature measure (topo/cavity.py) on a 32 mm room: an open truss, a lump with a pocket open by a 4 mm channel
+    and a solid block with a blind bore read under cavity_ratio, a 3 mm sealed pocket in a lump and a 2 mm one in a block over 4 x
+    it; its gradient and the layout row's (through the build projection) match finite differences; the export fills a sealed
+    cavity (fill_cavities, export_mesh) and the gate fails a mesh that holds one (sealed_voids, inner_shells), passes it filled."""
+    try:
+        import sys, os
+        import trimesh
+        from .cavity import Cavity
+        from .part import man
+        from .build import export_mesh
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools"))
+        from solid_check import solid_check
+        n = 40; sh = (n, n, n); idx = np.indices(sh)
+        env = np.all((idx >= 4) & (idx < n - 4), 0)
+        C = Cavity(sh, 1.0, np.zeros(n ** 3, bool), (~env).ravel(), env.ravel(), ks=Settings.cavity_ks, log=lambda s_: None)
+        c = (n - 1) / 2; r = np.sqrt(((idx - c) ** 2).sum(0))
+        rods = env & ((((idx[0] % 10) < 4) & ((idx[1] % 10) < 4)) | (((idx[1] % 10) < 4) & ((idx[2] % 10) < 4))
+                      | (((idx[0] % 10) < 4) & ((idx[2] % 10) < 4)))
+        lump = rods & ~(r <= 7) | (env & (r <= 7) & (r > 3))
+        bore = (np.abs(idx[0] - c) < 2) & (np.abs(idx[1] - c) < 2) & (idx[2] < c)
+        m = lambda A: C.measure(np.where(A, 1.0, 0.0).ravel())[0]
+        opn = [m(rods), m(lump & ~bore), m(env & ~bore)]
+        sealed = [m(lump), m(env & ~(r <= 2))]
+        lim = Settings.cavity_ratio
+        rng = np.random.default_rng(3)
+        rho = np.where(env, rng.uniform(0.2, 0.8, sh), 0.0).ravel()
+        g, d = C.measure(rho, need_grad=True)
+        errs = []
+        for k in rng.choice(np.flatnonzero(env.ravel()), 5, replace=False):
+            e = 1e-4; rp, rm = rho.copy(), rho.copy(); rp[k] += e; rm[k] -= e
+            fd = (C.measure(rp)[0] - C.measure(rm)[0]) / (2 * e)
+            errs.append(abs(fd - d[k]) / max(abs(fd), 1e-3 * np.abs(d).max()))
+        # the layout's row, through the build projection
+        p = _mini_part()
+        L = Layout(p, volfrac=0.3, settings=Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn",
+                                                     hold_proj_beta=4.0), log=lambda s_: None)
+        x = rng.uniform(0.3, 0.7, L.nd)
+        fv, dg = L._cavity_constraint(L.fields(x, 2.0), 2.0)
+        lerr = []
+        for i in rng.choice(L.nd, 4, replace=False):
+            e = 1e-4; xp, xm = x.copy(), x.copy(); xp[i] += e; xm[i] -= e
+            fd = (L._cavity_constraint(L.fields(xp, 2.0), 2.0)[0] - L._cavity_constraint(L.fields(xm, 2.0), 2.0)[0]) / (2 * e)
+            lerr.append(abs(fd - dg[i]) / max(abs(fd), 1e-3 * np.abs(dg).max()))
+        # export and gate
+        outer = trimesh.creation.box((20.0, 20.0, 20.0)); inner = trimesh.creation.box((6.0, 6.0, 6.0)); inner.invert()
+        hollow = trimesh.util.concatenate([outer, inner])
+        ok_h, ih = solid_check(hollow)
+        P = man(trimesh.creation.box((20.0, 20.0, 20.0))) - man(trimesh.creation.box((6.0, 6.0, 6.0)))
+        M, rep = export_mesh(P, log=lambda s_: None)
+        ok_f, i_f = solid_check(M)
+        ok = (max(opn) < lim and min(sealed) > 4 * lim and max(errs) < 1e-3 and max(lerr) < 1e-3 and L.mma.m == 3 + 2 * L.n_real + 1
+              and not ok_h and ih["sealed_voids"] and ih["inner_shells"] and rep.get("cavities_filled_mm3") == [216.0]
+              and abs(M.volume - 8000.0) < 1e-6 and ok_f)
+        check("no sealed void: open rooms under the limit, sealed pockets over 4 x it, gradients vs FD, the export fills, the gate refuses", ok,
+              f"open {np.round(opn, 2).tolist()}, sealed {np.round(sealed, 1).tolist()} (limit {lim}), grad err {max(errs):.1e}, layout row "
+              f"{fv:+.3f} err {max(lerr):.1e}; hollow gate {'PASS' if ok_h else 'FAIL'} {ih['sealed_voids']} {ih['inner_shells']}, "
+              f"export filled {rep.get('cavities_filled_mm3')} -> {M.volume:.0f} mm3, gate {'PASS' if ok_f else 'FAIL'}")
+    except Exception as e:
+        traceback.print_exc()
+        check("no sealed void", False, str(e))
 
 
 def t_slender_arm_gap():
@@ -1531,7 +1595,7 @@ ARMS_GEN = 14.0
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_no_cavity):
         t()
     if not quick:
         t_end_to_end()

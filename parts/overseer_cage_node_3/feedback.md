@@ -9,3 +9,7 @@
 ## 11 Nov (Spark) on foot nodes v7 (PCTG node + stud + 68D boot block)
 - "I dont want this stupid design with the tpu block under, i want a whole redesign it needs to look good and not be tall needs to still fit the funnel, it needs to not crack like the other ones before as well."
 - So: no TPU block or boot hanging under the node and no stud for one; low (no taller under the cage than the printed nodes), good-looking (one smooth organic body that reads like the rest of the cage), still seats in the funnel, and survives the ground hit without cracking. Rods stay cut at the old printed nodes (sockets one node length back, as v7).
+
+## 13 Nov (Spark) on v8 as printed
+- "the bottom nodes have an empty hole in the middle that shouldnt be the case because support there just rattle around" (sealed cavities: node 3 2.7, node 4 2.4, node 5 8.9 cm3; the engine kept them).
+- "heavier is fine but lets rerun the nodes so they are not just filling the holes and calling that it": the engine worker makes no-sealed-void part of the optimisation and reruns nodes 2-5.

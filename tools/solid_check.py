@@ -4,7 +4,8 @@ neck thinner than 2.0 splits off when eroded and fails here, even when a plain b
 (pads, cheeks, plates, slot walls) must also sit in the main eroded body (drawn_not_in_main: body, share, erode_mm, and at / mm3 of the detached core).
 Neck test: also eroded at 1.2 / 1.5 (necks under 3 mm); a blob that splits off, is >= 1.6 mm thicker than its neck and joins the rest over less than
 4 x its thickness squared fails (pads on
-~2 mm necks). Each drawn body is also eroded to 0.4 x its own thickness (its own wall, 90th percentile, not what wraps it) with its voxels
+~2 mm necks). No sealed void (13 Nov): a void the outside cannot reach, in the voxels or as an inward-facing shell in the mesh, fails.
+Each drawn body is also eroded to 0.4 x its own thickness (its own wall, 90th percentile, not what wraps it) with its voxels
 kept connected (a body is never split from itself by its own grooves or bores) and its core must stay in the main body.
 python3 solid_check.py part.stl [--erode 1.0] [--pitch 0.25]   -> exit 1 on fail
 from solid_check import solid_check; ok, info = solid_check(trimesh_part, drawn=[trimesh, ...], thin_ok=[trimesh, ...])
@@ -152,6 +153,20 @@ def _where(core, off, lo, pitch):
     return dict(at=np.round(lo + (idx.mean(0) + 0.5) * pitch, 1).tolist(), mm3=round(float(len(idx)) * pitch ** 3, 2))
 
 
+SEALED_MM3 = 0.5                     # a sealed void this size or more in the gate's voxels fails the part
+
+
+def inner_shells(mesh):
+    """volumes (mm3) of the mesh's inward-facing closed shells: the surfaces of sealed cavities"""
+    if not len(mesh.faces):
+        return []
+    out = []
+    for b in mesh.split(only_watertight=False):
+        if b.is_watertight and b.volume < 0:
+            out.append(round(float(-b.volume), 2))
+    return sorted(out, reverse=True)[:12]
+
+
 def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0, thin_ok=()):
     lo = mesh.bounds[0] - 2 * pitch; hi = mesh.bounds[1] + 2 * pitch
     shape = tuple(int(np.ceil((hi[k] - lo[k]) / pitch)) for k in range(3))
@@ -171,6 +186,19 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0, thin_o
     info = dict(bodies_plain=n_plain, specks_plain=int(n0 - n_plain), bodies_eroded=int(len(keep)),
                 eroded_volumes_mm3=sorted([round(float(v), 1) for v in vols[keep - 1]], reverse=True)[:6])
     del lab0
+    # sealed voids (Spark 13 Nov, foot nodes v8: "an empty hole in the middle ... support there just rattle around"): a void no face path
+    # reaches the outside from fills with slicer supports that never come out. Any one of SEALED_MM3 or more in the voxels, or any
+    # inward-facing shell in the mesh (a cavity's own surface, however small), fails the part.
+    sv = ndi.binary_fill_holes(V) & ~V
+    ls, ns = ndi.label(sv, st)
+    sv_mm3 = np.bincount(ls.ravel())[1:] * pitch ** 3 if ns else np.zeros(0)
+    sealed = []
+    for k in np.where(sv_mm3 >= SEALED_MM3)[0]:
+        c = lo + (np.array(ndi.center_of_mass(ls == k + 1)) + 0.5) * pitch
+        sealed.append(dict(mm3=round(float(sv_mm3[k]), 2), at=np.round(c, 1).tolist()))
+    del sv, ls
+    info["sealed_voids"] = sorted(sealed, key=lambda t: -t["mm3"])[:12]
+    info["inner_shells"] = inner_shells(mesh)
     bad = []
     big = np.r_[False, vols >= min_cc_mm3]                           # by label: is this eroded component a body
     for i, t in enumerate(drawn):
@@ -254,7 +282,8 @@ def solid_check(mesh, drawn=(), pitch=0.25, erode_mm=0.9, min_cc_mm3=1.0, thin_o
     info["thin_walls"] = sorted([strip(t) for t in thin if t["kind"] == "wall" and t not in allowed], key=lambda t: -t["core_mm3"])[:12]
     info["thin_allowed"] = sorted([strip(t) for t in allowed], key=lambda t: -t["core_mm3"])[:12] + allowed_necks
     info["acute_edges"] = len([t for t in thin if t["kind"] == "edge"])
-    ok = n_plain == 1 and len(keep) == 1 and not bad and not info["thin_walls"] and not necks
+    ok = n_plain == 1 and len(keep) == 1 and not bad and not info["thin_walls"] and not necks and not info["sealed_voids"] \
+        and not info["inner_shells"]
     info["ok"] = bool(ok)
     return ok, info
 
