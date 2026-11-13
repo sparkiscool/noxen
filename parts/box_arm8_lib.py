@@ -70,11 +70,11 @@ MOTOR = dict(x=(37.85, 80.15), y=(41.35, 83.65), u=(-92.5, -44.5))    # the head
 NUT_U = (6.0, 21.0)            # the nut in a lug on the lift's arm; flange 3.5 over it, its two sides filed off to the body (15 x 10.4): it holds along the axle side only
 LUG = dict(x=(51.3, 66.7), y=(55.4, 71.5), u=(3.0, 27.5))
 ARM = dict(x=(58.2, 66.0), y=(71.49, 91.7), u=(-5.0, 40.0))           # from the nut's lug past the MGN block to the yoke's plate: 45 deep along the bar (in a bay the neighbour's cartridge is at 110.6 over x 64: 41.8 at park)
-YOKE = dict(x=(-26.5, 27.6), y=(80.0, 112.0), u=(2.1, 43.0))         # across the head from the far socket to the MGN block's side, behind the Scout bays beside the drone (their receivers start at y 108.5)
-PLATE_L = dict(x=(27.5, 66.0), y=(91.6, 108.0), u=(-30.0, 43.0))      # the yoke's plate on the MGN block's face (four M3), 16.4 thick, and on down past the block
+YOKE = dict(x=(-26.5, 27.6), y=(82.0, 112.0), u=(2.1, 43.0))         # across the head from the far socket to the MGN block's side, behind the Scout bays beside the drone (their receivers start at y 108.5)
+PLATE_L = dict(x=(27.5, 66.0), y=(91.6, 108.0), u=(-43.0, 43.0))      # the yoke's plate on the MGN block's face (four M3), 16.4 thick, and on down past the block
 BOOMS = [(0.0, 7.6), (-21.0, 7.6), (21.0, 7.6)]                      # three o 6 carbon rods (x, u) side by side under the grab unit's base, the float bolts between them. They carry the lever in bending:
 #                                55 of rod from the socket mouths to the tab line. Nothing of the booms stands over 13.1: beside the drone the neighbour bays' receivers come down to 14.4 (park height) at |x| 36
-SOCKET = (82.0, 112.0)         # socket floor, mouth (y): 30 deep, bore 6.2
+SOCKET = (84.0, 112.0)         # socket floor, mouth (y): 28 deep, bore 6.2
 COLLAR_R = 5.5                 # 2.1 of wall outside the 0.3 resin pockets
 BOOM_END = 199.0               # 117 long
 TIE_U = (1.0, 9.6)             # two ties across the booms under the grab unit: the float bolts screw down into them
@@ -157,6 +157,8 @@ CAR_TOP = MGN_U[1] + 3.0
 def carriage_env():
     s = SPINE; w3 = Z0 + WHEELS[2][1]
     return U(box(12.0, s["x"][0] + 0.01, PLATE_Y[0], PLATE_Y[1], 2.0, CAR_TOP),                               # the wheel pair's column of plate, 9.85 thick
+             box(12.0, RAIL_X - 6.1, PLATE_Y[1] - 0.01, YOKE["y"][0] - 1.0, 2.0, MGN_U[1]),                   # 12.25 thick from the wheel pair to the rail's side, 1.0 behind the yoke and 0.6 behind the MGN block
+             #                                                                                                  (13 Nov run: 0.53 where the plate bends between the low wheel's axle and the spine)
              box(-30.5, 12.01, PLATE_Y[0], PLATE_Y[1], w3 - 22.0, w3 + 22.0),                                 # and a strap across the rail to the third wheel, 44 wide
              box(s["x"][0], s["x"][1], s["y"][0], s["y"][1], MGN_U[0], CAR_TOP),                                 # the spine: the MGN rail on its front, the wheel pair beside it
              box(s["x"][0], s["x"][1], s["y"][1] - 0.01, s["y"][1] + MGN["H"] - 0.2, MGN_U[1], CAR_TOP))      # the stop over the rail's top: the block lifts the carriage by it

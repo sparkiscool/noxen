@@ -1,0 +1,907 @@
+{
+ "name": "box_funnel_half_nose",
+ "engine": "nox/topo",
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   152794.8
+  ],
+  "sealed_voids": [],
+  "inner_shells": [],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 2,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 36526.3,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.0,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "Overseer seated, 6 g on its four feet",
+    "cls": "flight",
+    "inlayer": 0.051,
+    "across": 0.057,
+    "at": [
+     55.7,
+     -40.7,
+     -39.2
+    ]
+   },
+   {
+    "case": "Overseer one side first, 6 g on the +y ledge",
+    "cls": "flight",
+    "inlayer": 0.101,
+    "across": 0.109,
+    "at": [
+     55.7,
+     40.7,
+     -39.2
+    ]
+   },
+   {
+    "case": "Overseer off centre onto the +y face, at its middle",
+    "cls": "flight",
+    "inlayer": 0.205,
+    "across": 0.13,
+    "at": [
+     24.9,
+     73.7,
+     -30.4
+    ]
+   },
+   {
+    "case": "Overseer off centre onto the +y face, at its joint",
+    "cls": "flight",
+    "inlayer": 0.057,
+    "across": 0.04,
+    "at": [
+     9.5,
+     58.3,
+     -28.2
+    ]
+   },
+   {
+    "case": "Overseer off centre onto the +y face, at its ear",
+    "cls": "flight",
+    "inlayer": 0.545,
+    "across": 0.385,
+    "at": [
+     24.9,
+     73.7,
+     -30.4
+    ]
+   },
+   {
+    "case": "Overseer off centre onto this end wall (walls parked): the screws pull the gearboxes onto their front plates, the wall's foot on the ledges",
+    "cls": "flight",
+    "inlayer": 0.096,
+    "across": 0.174,
+    "at": [
+     55.7,
+     -40.7,
+     -39.2
+    ]
+   },
+   {
+    "case": "arm head push 118 N, the Overseer held down by this wall's two pins",
+    "cls": "flight",
+    "inlayer": 0.348,
+    "across": 0.36,
+    "at": [
+     57.9,
+     42.9,
+     -34.8
+    ]
+   },
+   {
+    "case": "arm head push 118 N, the Scout held down by this wall's two pins",
+    "cls": "flight",
+    "inlayer": 0.125,
+    "across": 0.205,
+    "at": [
+     55.7,
+     42.9,
+     -37.0
+    ]
+   },
+   {
+    "case": "Scout seated, 6 g on its two feet of this end (walls in)",
+    "cls": "flight",
+    "inlayer": 0.013,
+    "across": 0.016,
+    "at": [
+     51.3,
+     -38.5,
+     -41.4
+    ]
+   },
+   {
+    "case": "Scout off centre onto this end wall (walls in): the screws pull the gearboxes onto their front plates",
+    "cls": "flight",
+    "inlayer": 0.016,
+    "across": 0.027,
+    "at": [
+     55.7,
+     -40.7,
+     -37.0
+    ]
+   },
+   {
+    "case": "swap pull-out 50 N, the Overseer seated",
+    "cls": "flight",
+    "inlayer": 0.028,
+    "across": 0.031,
+    "at": [
+     55.7,
+     -40.7,
+     -39.2
+    ]
+   },
+   {
+    "case": "wall driven out against a jam, the +y gearmotor stalled (135 N)",
+    "cls": "flight",
+    "inlayer": 0.088,
+    "across": 0.061,
+    "at": [
+     20.5,
+     60.5,
+     -39.2
+    ]
+   },
+   {
+    "case": "wall driven in against a jam, the +y gearmotor stalled (135 N)",
+    "cls": "flight",
+    "inlayer": 0.16,
+    "across": 0.09,
+    "at": [
+     49.1,
+     58.3,
+     -43.6
+    ]
+   },
+   {
+    "case": "handling 50 N out on the +y wall's top edge",
+    "cls": "misuse",
+    "inlayer": 0.041,
+    "across": 0.025,
+    "at": [
+     24.9,
+     73.7,
+     -30.4
+    ]
+   },
+   {
+    "case": "handling 50 N down on the +y wall's top edge",
+    "cls": "misuse",
+    "inlayer": 0.048,
+    "across": 0.03,
+    "at": [
+     7.3,
+     51.7,
+     -54.6
+    ]
+   },
+   {
+    "case": "handling 50 N in on the +y ear",
+    "cls": "misuse",
+    "inlayer": 0.058,
+    "across": 0.025,
+    "at": [
+     93.1,
+     47.3,
+     -26.0
+    ]
+   }
+  ],
+  "worst": 0.545,
+  "worst_case": "Overseer off centre onto the +y face, at its ear",
+  "worst_at": [
+   24.9,
+   73.7,
+   -30.4
+  ],
+  "ok": true
+ },
+ "mass_g": 244.86,
+ "watertight": true,
+ "export": {
+  "faces_in": 296226,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 1,
+  "pinch_vertices": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "open_kept": [],
+  "faces": 296226,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 8,
+   "folded": 4,
+   "caps_split": 5,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 505780,
+   "n_dropped_shells": 0,
+   "dropped_shells": []
+  },
+  "volume_mm3": 199067.7,
+  "exact_mm3": 199071.4
+ },
+ "bodies": {
+  "bodies_raw": 3,
+  "dropped_specks_mm3": [
+   0.0,
+   0.0
+  ],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 199071.4,
+ "drawn_g": 72.86,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
+ "memory_build": [
+  {
+   "estimate_gb": 11.77,
+   "parts": {
+    "held": 0.77,
+    "gate": 6.52,
+    "mesh": 4.49
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 155564592,
+   "bounds_mm": [
+    162.0,
+    176.0,
+    83.2
+   ],
+   "faces": 803212,
+   "when": "before the export cleanup"
+  },
+  {
+   "estimate_gb": 7.36,
+   "parts": {
+    "held": 0.84,
+    "gate": 6.52,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 155564592,
+   "bounds_mm": [
+    162.0,
+    176.0,
+    83.2
+   ],
+   "faces": 0,
+   "when": "before the solid check"
+  }
+ ],
+ "stl": "box_funnel_half_nose.stl",
+ "view_stl": "box_funnel_half_nose_view.stl",
+ "view_faces": 120000,
+ "preview": "preview.png",
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": true,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "nominal_hold": true,
+   "hold_beta": 4.0,
+   "hold_proj_beta": 32.0,
+   "hold_tol": 0.05,
+   "hold_eroded": true,
+   "hold_stage": 50,
+   "no_cavity": true,
+   "cavity_ratio": 5.0,
+   "cavity_ks": 0.0001,
+   "cavity_p": 8.0,
+   "cavity_on": 0.5,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "mem_limit_gb": 14.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 2.9284394882387996,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.4728139030414847,
+  "nd": 27808,
+  "sym_axes": [
+   1
+  ],
+  "n_real": 16,
+  "n_ties": 60,
+  "backend": "direct",
+  "iterations": 96,
+  "stopped": "max_stage",
+  "checks": [
+   {
+    "it": 19,
+    "beta": 4.0,
+    "worst": 0.752,
+    "worst_case": "Overseer off centre onto the +y face, at its ear"
+   },
+   {
+    "it": 36,
+    "beta": 8.0,
+    "worst": 0.706,
+    "worst_case": "Overseer off centre onto the +y face, at its ear"
+   },
+   {
+    "it": 46,
+    "beta": 16.0,
+    "worst": 0.654,
+    "worst_case": "Overseer off centre onto the +y face, at its ear"
+   }
+  ],
+  "hold": {
+   "started_it": 19,
+   "beta": 4.0,
+   "index": 0.752
+  },
+  "cavity": {
+   "last": 1.9870327896142814,
+   "ratio": 5.0,
+   "T0": 23.131076082108535,
+   "row": true
+  }
+ },
+ "grid": {
+  "name": "box_funnel_half_nose",
+  "h": 2.2,
+  "shape": [
+   80,
+   88,
+   40
+  ],
+  "origin": [
+   -7.0,
+   -96.8,
+   -101.9
+  ],
+  "cells": 281600,
+  "design": 27808,
+  "drawn": 5368,
+  "cases": [
+   "Overseer seated, 6 g on its four feet",
+   "Overseer one side first, 6 g on the +y ledge",
+   "Overseer off centre onto the +y face, at its middle",
+   "Overseer off centre onto the +y face, at its joint",
+   "Overseer off centre onto the +y face, at its ear",
+   "Overseer off centre onto this end wall (walls parked): the screws pull the gearboxes onto their front plates, the wall's foot on the ledges",
+   "arm head push 118 N, the Overseer held down by this wall's two pins",
+   "arm head push 118 N, the Scout held down by this wall's two pins",
+   "Scout seated, 6 g on its two feet of this end (walls in)",
+   "Scout off centre onto this end wall (walls in): the screws pull the gearboxes onto their front plates",
+   "swap pull-out 50 N, the Overseer seated",
+   "wall driven out against a jam, the +y gearmotor stalled (135 N)",
+   "wall driven in against a jam, the +y gearmotor stalled (135 N)",
+   "handling 50 N out on the +y wall's top edge",
+   "handling 50 N down on the +y wall's top edge",
+   "handling 50 N in on the +y ear"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 442.0,
+ "layout_s": 1204,
+ "peak_gb": 2.38346,
+ "memory": {
+  "estimate_gb": 2.92,
+  "parts": {
+   "held": 0.61,
+   "factor": 1.15,
+   "assembly": 0.33,
+   "block": 0.63,
+   "energies": 0.19
+  },
+  "limit_gb": 14.0,
+  "cases": 76,
+  "active_dofs": 130641,
+  "backend": "direct",
+  "block": 37,
+  "build": {
+   "estimate_gb": 7.13,
+   "parts": {
+    "held": 0.61,
+    "gate": 6.52,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 155564592,
+   "bounds_mm": [
+    162.0,
+    176.0,
+    83.2
+   ],
+   "faces": 0,
+   "when": "from the envelope"
+  },
+  "peak_it1_gb": 2.17
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "Overseer seated, 6 g on its four feet",
+    "cls": "flight",
+    "inlayer": 0.056,
+    "across": 0.073,
+    "at": [
+     55.7,
+     40.7,
+     -37.0
+    ]
+   },
+   {
+    "case": "Overseer one side first, 6 g on the +y ledge",
+    "cls": "flight",
+    "inlayer": 0.112,
+    "across": 0.14,
+    "at": [
+     55.7,
+     40.7,
+     -37.0
+    ]
+   },
+   {
+    "case": "Overseer off centre onto the +y face, at its middle",
+    "cls": "flight",
+    "inlayer": 0.36,
+    "across": 0.167,
+    "at": [
+     18.3,
+     69.3,
+     -30.4
+    ]
+   },
+   {
+    "case": "Overseer off centre onto the +y face, at its joint",
+    "cls": "flight",
+    "inlayer": 0.074,
+    "across": 0.049,
+    "at": [
+     7.3,
+     73.7,
+     -32.6
+    ]
+   },
+   {
+    "case": "Overseer off centre onto the +y face, at its ear",
+    "cls": "flight",
+    "inlayer": 0.752,
+    "across": 0.472,
+    "at": [
+     18.3,
+     69.3,
+     -30.4
+    ]
+   },
+   {
+    "case": "Overseer off centre onto this end wall (walls parked): the screws pull the gearboxes onto their front plates, the wall's foot on the ledges",
+    "cls": "flight",
+    "inlayer": 0.143,
+    "across": 0.219,
+    "at": [
+     55.7,
+     40.7,
+     -39.2
+    ]
+   },
+   {
+    "case": "arm head push 118 N, the Overseer held down by this wall's two pins",
+    "cls": "flight",
+    "inlayer": 0.321,
+    "across": 0.401,
+    "at": [
+     55.7,
+     42.9,
+     -37.0
+    ]
+   },
+   {
+    "case": "arm head push 118 N, the Scout held down by this wall's two pins",
+    "cls": "flight",
+    "inlayer": 0.141,
+    "across": 0.257,
+    "at": [
+     55.7,
+     42.9,
+     -37.0
+    ]
+   },
+   {
+    "case": "Scout seated, 6 g on its two feet of this end (walls in)",
+    "cls": "flight",
+    "inlayer": 0.019,
+    "across": 0.028,
+    "at": [
+     44.7,
+     38.5,
+     -41.4
+    ]
+   },
+   {
+    "case": "Scout off centre onto this end wall (walls in): the screws pull the gearboxes onto their front plates",
+    "cls": "flight",
+    "inlayer": 0.024,
+    "across": 0.037,
+    "at": [
+     55.7,
+     40.7,
+     -37.0
+    ]
+   },
+   {
+    "case": "swap pull-out 50 N, the Overseer seated",
+    "cls": "flight",
+    "inlayer": 0.031,
+    "across": 0.041,
+    "at": [
+     55.7,
+     40.7,
+     -37.0
+    ]
+   },
+   {
+    "case": "wall driven out against a jam, the +y gearmotor stalled (135 N)",
+    "cls": "flight",
+    "inlayer": 0.108,
+    "across": 0.093,
+    "at": [
+     20.5,
+     56.1,
+     -41.4
+    ]
+   },
+   {
+    "case": "wall driven in against a jam, the +y gearmotor stalled (135 N)",
+    "cls": "flight",
+    "inlayer": 0.184,
+    "across": 0.118,
+    "at": [
+     49.1,
+     58.3,
+     -43.6
+    ]
+   },
+   {
+    "case": "handling 50 N out on the +y wall's top edge",
+    "cls": "misuse",
+    "inlayer": 0.077,
+    "across": 0.04,
+    "at": [
+     18.3,
+     69.3,
+     -30.4
+    ]
+   },
+   {
+    "case": "handling 50 N down on the +y wall's top edge",
+    "cls": "misuse",
+    "inlayer": 0.059,
+    "across": 0.048,
+    "at": [
+     7.3,
+     58.3,
+     -19.4
+    ]
+   },
+   {
+    "case": "handling 50 N in on the +y ear",
+    "cls": "misuse",
+    "inlayer": 0.059,
+    "across": 0.033,
+    "at": [
+     93.1,
+     47.3,
+     -26.0
+    ]
+   }
+  ],
+  "worst": 0.752,
+  "worst_case": "Overseer off centre onto the +y face, at its ear",
+  "worst_at": [
+   18.3,
+   69.3,
+   -30.4
+  ],
+  "ok": true,
+  "beta": 4.0,
+  "iteration": 19,
+  "max_worst": 0.5,
+  "k": 3.0
+ },
+ "field": {
+  "worst": 0.543,
+  "worst_case": "Overseer off centre onto the +y face, at its ear",
+  "worst_at": [
+   24.9,
+   73.7,
+   -30.4
+  ],
+  "beta": 32.0,
+  "iteration": 96
+ },
+ "gen_cm3": 140.0,
+ "h": 2.2,
+ "audit": {
+  "solid_ok": [],
+  "drawn_share": 0.162,
+  "load_room": [],
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 3576,
+    "inscribed_mm": 4.0,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.6,
+    "room_depth_mm": 125.4,
+    "at": [
+     40.4,
+     0.0,
+     -35.0
+    ],
+    "core_mm": 2.2,
+    "free_cells": 3576,
+    "share_of_drawn": 0.67
+   },
+   {
+    "id": 2,
+    "cells": 28,
+    "inscribed_mm": 2.2,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.77,
+    "room_depth_mm": 125.4,
+    "at": [
+     1.8,
+     -47.3,
+     -52.4
+    ],
+    "core_mm": 2.2,
+    "free_cells": 28
+   },
+   {
+    "id": 3,
+    "cells": 28,
+    "inscribed_mm": 2.2,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.77,
+    "room_depth_mm": 125.4,
+    "at": [
+     1.8,
+     47.3,
+     -52.4
+    ],
+    "core_mm": 2.2,
+    "free_cells": 28
+   },
+   {
+    "id": 4,
+    "cells": 59,
+    "inscribed_mm": 2.2,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": false,
+    "room": 0.77,
+    "room_depth_mm": 0.0,
+    "at": [
+     78.7,
+     -68.2,
+     -32.6
+    ],
+    "core_mm": 0.0,
+    "free_cells": 59
+   },
+   {
+    "id": 5,
+    "cells": 49,
+    "inscribed_mm": 2.2,
+    "touches_cut": true,
+    "touches_support": false,
+    "loaded": false,
+    "room": 0.76,
+    "room_depth_mm": 0.0,
+    "at": [
+     78.7,
+     67.1,
+     -32.6
+    ],
+    "core_mm": 0.0,
+    "free_cells": 49
+   },
+   {
+    "id": 6,
+    "cells": 407,
+    "inscribed_mm": 6.6,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.93,
+    "room_depth_mm": 22.0,
+    "at": [
+     150.3,
+     -80.4,
+     -89.8
+    ],
+    "core_mm": 2.2,
+    "free_cells": 407
+   },
+   {
+    "id": 7,
+    "cells": 407,
+    "inscribed_mm": 6.6,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.96,
+    "room_depth_mm": 121.0,
+    "at": [
+     150.3,
+     -51.6,
+     -89.8
+    ],
+    "core_mm": 2.2,
+    "free_cells": 407
+   },
+   {
+    "id": 8,
+    "cells": 407,
+    "inscribed_mm": 6.6,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.95,
+    "room_depth_mm": 123.2,
+    "at": [
+     150.3,
+     51.6,
+     -89.8
+    ],
+    "core_mm": 2.2,
+    "free_cells": 407
+   },
+   {
+    "id": 9,
+    "cells": 407,
+    "inscribed_mm": 6.6,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": false,
+    "room": 0.93,
+    "room_depth_mm": 22.0,
+    "at": [
+     150.3,
+     80.4,
+     -89.8
+    ],
+    "core_mm": 2.2,
+    "free_cells": 407
+   }
+  ],
+  "envelope_waste": 0.001,
+  "plate": {
+   "L_mm": 176.0,
+   "W_mm": 162.8,
+   "H_mm": 83.6,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "drawn_walls": [],
+  "parity": [],
+  "cases": 16,
+  "supports": 1,
+  "fails": [],
+  "room_full": {
+   "worst": 0.469,
+   "worst_case": "Overseer off centre onto the +y face, at its ear",
+   "worst_at": [
+    22.7,
+    75.9,
+    -30.4
+   ],
+   "budget_share": 0.473,
+   "thinned": 0.99,
+   "max_worst": 0.5,
+   "fin_cells": 634,
+   "worst_in_fin": false
+  }
+ },
+ "baseline": null,
+ "total_s": 1646,
+ "part_sha": "d1f8a8b3ab2d",
+ "lib_sha": "d423d150a3f0",
+ "setup_sha": "c7d61daaf493e331",
+ "max_worst": 0.5,
+ "strength_ok": false,
+ "print_stl": {
+  "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/box_funnel_half_nose.stl",
+  "sha256": "d9dea2486a9944838ba42e8d43d1a52f6746e99175838137db17b92292185c4c",
+  "bytes": 14811384,
+  "faces": 296226,
+  "view_faces": 60000,
+  "view_sha256": "afaeb20b53c1bb17eef0f54e1f4b1f5920f3293278ebdc2d28d8365b3302a098",
+  "at": "2026-11-13 22:14"
+ }
+}

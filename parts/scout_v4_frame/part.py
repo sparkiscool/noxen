@@ -63,7 +63,7 @@ POD_Z0 = DZ1 - 12.0                                 # 12 Nov (the design chat: <
 ARM_Z0 = POD_Z0 = DZ1 - 16.0                        # 13 Nov (variant vb of the round va / vb / vc): a flat 16 deep band, root to pod: 159.0 g, solid PASS, worst 0.59
                                                    # (BS0 compression across), every motor case <= 0.44, the engine's hold kept; the 12 band (va) 0.81 and the haunch at
                                                    # gen 130 (vc) 0.46 at 196 g. Was a haunch to z 6 at the root (0.83 across where its bottom chord met the body)
-END_NODES, TUBE_NODES = ("DN", "BN", "DT", "BT"), ()   # the frame's end sockets; those holding a 6 mm tube (6.2 bore, units_lib.SockDown6)
+END_NODES, SIDE_NODES, TUBE_NODES = ("DN", "BN", "DT", "BT"), ("DS0", "BS0", "DS1", "BS1"), ()   # the frame's end sockets; those holding a 6 mm tube (6.2 bore, units_lib.SockDown6)
 REC_SUPPORT = "insert"                              # 13 Nov round 5 (insert at 170 / 185 / 200: 246.7 / 265.5 / 284.2 g, 0.306 / 0.308 / 0.281)
                                                    # the battery bolts' support: "face" the boss's clamped bottom 1.5; "insert" with the insert's 6 mm
                                                    # bore lining (13 Nov: BT-TB's floor sits 3.6 over the face region's top, by the tail boss)
@@ -228,7 +228,7 @@ def bodies():
     boards.append(("flow MTF-02P", [tuple(lb.mean(0))], [reg], ASM["scout_v4_flow_mtf_02p"]["mass_g"], tuple(lb.mean(0))))
     flow_reg = box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6)   # the whole land
     # ---- the 8 rod sockets (crowns down: the print's up)
-    side = [s for k in ("DS0", "BS0", "DS1", "BS1") for s in socks_of(k, cls=SockDown)]
+    side = [s for k in SIDE_NODES for s in socks_of(k, cls=(SockDown6 if k in TUBE_NODES else SockDown))]
     ends = [s for k in END_NODES for s in socks_of(k, cls=(SockDown6 if k in TUBE_NODES else SockDown))]
     socks = side + ends
     d, c = socket_bodies(side, lambda s: np.array([1.0, 0.0, 0.0]))                      # ports out of the lugs along x (9 Nov: out the side they cut the crown, down in print)

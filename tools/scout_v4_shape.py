@@ -462,7 +462,7 @@ def cage():
     return trimesh.util.concatenate(rods), trimesh.util.concatenate(nodes)
 
 
-def frame_check(core_g, write=True):
+def frame_check(core_g, write=True, core_cg=(0.0, 0.0, 0.0)):
     """the Scout's frame model (tools/scout_cage_loads.py, the standard cases: 35 g crash on the hull face the CG ray leaves through, 14
     directions, landing and rough landing 6 g on the runners) on these tables: the core one rigid body at the origin with the
     sockets printed into the frame and the base and the runner corners stiff to it"""
@@ -471,7 +471,7 @@ def frame_check(core_g, write=True):
     sc.PRINTED = {k: "frame" for k in PRINTED + TIED}
     sc.BASE = {"G0": (CX + SEAT_L / 2, SEAT_W / 2, SEAT_Z), "G1": (CX - SEAT_L / 2, SEAT_W / 2, SEAT_Z), "G2": (CX - SEAT_L / 2, -SEAT_W / 2, SEAT_Z), "G3": (CX + SEAT_L / 2, -SEAT_W / 2, SEAT_Z)}
     sc.BRIDGES = []; sc.GROUPS = sc._groups(); sc.GROUP_OF = {k: g for g in sc.GROUPS for k in g}; sc.RODS_CARBON = list(RODS)
-    sl.core_mass = lambda: (core_g, np.zeros(3))
+    sl.core_mass = lambda: (core_g, np.asarray(core_cg, float))   # 13 Nov (the architecture review): the core's real CG, not the origin
     with contextlib.redirect_stdout(io.StringIO()):
         s_, rec = sl.run(nodes=sc.NODES, rods=sc.RODS, ties=sc.TIES, dry=True, log=lambda *a: print(*a))
     w = max(rec["cases"], key=lambda r: r["deflection_mm"])
@@ -587,6 +587,27 @@ def write():
     return meshes
 
 
+def core_of(frame_g=None):
+    """the frame model's core (13 Nov, the architecture review): every assembly row but the cage's rods and the node parts (the frame model
+    adds its own NODE_G per node: they were counted twice) plus the battery set on its bolts, at its real CG (each row's mesh centre; the
+    frame model had the origin): (g, cg). frame_g: the frame's mass in place of its row (a variant's own setup mass)"""
+    rows = json.load(open(os.path.join(ROOT, "systems", "scout_v4.assembly.json")))["parts"]
+    g, s_ = 0.0, np.zeros(3)
+    for r in rows:
+        if "cage" in r["id"] or r["id"].startswith("scout_v4_node_"):
+            continue
+        mg = frame_g if (frame_g is not None and r["id"] == "scout_v4_frame") else r["mass_g"]
+        f = os.path.join(ROOT, r["mesh"])
+        try:
+            t = trimesh.load(f, force="mesh"); c = t.center_mass if (t.is_watertight and abs(t.volume) > 1e-6) else t.bounds.mean(0)
+        except Exception:
+            c = np.zeros(3)
+        g += mg; s_ += mg * np.asarray(c)
+    bc = np.array(BATTERY_SET[1]) + [BX, 0, 0]
+    g += BATTERY_SET[0]; s_ += BATTERY_SET[0] * bc
+    return g, s_ / g
+
+
 def setup_mass(pid, default):
     """a generated part's mass for the frame model from its SETUP, not its latest result (13 Nov, the PROBE stream: with result masses
     every frame or node result moved cage_loads.json / head_load.json and reran the nodes and the probe behind it): the generated budget
@@ -679,8 +700,8 @@ if __name__ == "__main__":
           f"cage {len(NODES) - len(PRINTED)} nodes + {len(PRINTED)} printed, {len(RODS)} rods {L / 1000:.2f} m")
     for k, (v, why) in checks(M).items():
         print(f"  {k:16} {v}  ({why})")
-    core = sum(r["mass_g"] for r in entries(M) if "cage" not in r["id"]) + BATTERY_SET[0]
-    fc = frame_check(core)
+    core, core_cg = core_of()
+    fc = frame_check(core, core_cg=core_cg)
     print(f"  frame model     first mode {fc['mode_hz']:.0f} Hz, worst {fc['deflection'][0]:.1f} mm ({fc['deflection'][1][:60]}), Euler <= {fc['euler'][0]:.2f} ({fc['euler'][1]}), "
           f"end moment <= {fc['moment'][0]:.0f} N mm ({fc['moment'][1]}; socket cap 2000), pull-out <= {fc['pull']:.0f} N (cap 940)")
     hf = fc["head_first"]
