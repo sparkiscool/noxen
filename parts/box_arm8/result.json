@@ -6,9 +6,9 @@
    "bay": 68.80000000000001,
    "drone": 115.80000000000001,
    "over": 1.5,
-   "lift_on_carriage": 60.0,
-   "carriage": 57.3,
-   "top_wheel_rim_r": 149.3
+   "lift_on_carriage": 54.1,
+   "carriage": 63.2,
+   "top_wheel_rim_r": 154.2
   },
   "push": {
    "insert_N": {
@@ -77,8 +77,8 @@
   },
   "give": {
    "roll_Nm_to_start": {
-    "carrying": 1.08,
-    "inserting_overseer": 0.11
+    "carrying": 0.79,
+    "inserting_overseer": 0.08
    },
    "pitch_Nm_to_start": {
     "carrying": 2.34,
@@ -86,7 +86,7 @@
    },
    "carried_overseer_roll_Nm_1g": 0.44,
    "reach_deg": {
-    "roll": 11.3,
+    "roll": 15.3,
     "pitch": 5.3
    },
    "latch_takes_rigid_deg": {
@@ -101,7 +101,7 @@
  "loads": {
   "cases": [
    {
-    "case": "insert at the drone, overseer, in the receiver's guides: 64.5 N + 2.0 N m",
+    "case": "insert at the drone, overseer, in the receiver's guides: 64.5 N through the float springs",
     "cls": "flight",
     "F_N": [
      0.0,
@@ -110,24 +110,22 @@
     ],
     "at": [
      0.0,
-     198.1,
+     157.7,
      60.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     123.5,
-     123.5,
-     123.5,
-     123.5,
-     123.5,
-     123.5
-    ],
-    "nut_N": -64.5,
-    "wheel_hertz_index": 0.592,
-    "wheel_625zz_axial_index": 0.33
+    "mgn_Nm": {
+     "pitch": -6.14,
+     "yaw": -3.81,
+     "roll": 0.0
+    },
+    "mgn_index": 0.274,
+    "nut_N": 64.5,
+    "wheel_hertz_index": 0.309,
+    "wheel_625zz_axial_index": 0.143
    },
    {
-    "case": "pull-out at the drone, overseer, in the receiver's guides: 64.5 N + 2.0 N m",
+    "case": "pull-out at the drone, overseer, in the receiver's guides: 64.5 N at the blades",
     "cls": "flight",
     "F_N": [
      0.0,
@@ -136,21 +134,19 @@
     ],
     "at": [
      0.0,
-     198.1,
+     167.1,
      60.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     123.5,
-     123.5,
-     123.5,
-     123.5,
-     123.5,
-     123.5
-    ],
-    "nut_N": 64.5,
-    "wheel_hertz_index": 0.592,
-    "wheel_625zz_axial_index": 0.33
+    "mgn_Nm": {
+     "pitch": 6.75,
+     "yaw": 3.81,
+     "roll": 0.0
+    },
+    "mgn_index": 0.291,
+    "nut_N": -64.5,
+    "wheel_hertz_index": 0.317,
+    "wheel_625zz_axial_index": 0.157
    },
    {
     "case": "pull-out, overseer, the cartridge free of the guides (bound): the plug's 57 N at the lead end",
@@ -162,21 +158,19 @@
     ],
     "at": [
      0.0,
-     235.8,
+     98.4,
      60.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     151.0,
-     151.0,
-     151.0,
-     151.0,
-     151.0,
-     151.0
-    ],
-    "nut_N": 64.5,
-    "wheel_hertz_index": 0.642,
-    "wheel_625zz_axial_index": 0.412
+    "mgn_Nm": {
+     "pitch": 2.32,
+     "yaw": 3.81,
+     "roll": 0.0
+    },
+    "mgn_index": 0.169,
+    "nut_N": -64.5,
+    "wheel_hertz_index": 0.247,
+    "wheel_625zz_axial_index": 0.054
    },
    {
     "case": "insert at the float limit, overseer: 118 N, the float pitched to its reach (3.0 N m)",
@@ -192,17 +186,15 @@
      60.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     218.6,
-     218.6,
-     218.6,
-     218.6,
-     218.6,
-     218.6
-    ],
-    "nut_N": -118.0,
-    "wheel_hertz_index": 0.784,
-    "wheel_625zz_axial_index": 0.58
+    "mgn_Nm": {
+     "pitch": -15.34,
+     "yaw": -6.96,
+     "roll": 0.0
+    },
+    "mgn_index": 0.614,
+    "nut_N": 118.0,
+    "wheel_hertz_index": 0.455,
+    "wheel_625zz_axial_index": 0.358
    },
    {
     "case": "insert off square, overseer: the limit + 43.5 N across at the mouth",
@@ -218,17 +210,15 @@
      105.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     129.2,
-     213.8,
-     172.2,
-     169.6,
-     215.8,
-     125.8
-    ],
-    "nut_N": -118.0,
-    "wheel_hertz_index": 0.703,
-    "wheel_625zz_axial_index": 0.555
+    "mgn_Nm": {
+     "pitch": -12.34,
+     "yaw": -3.06,
+     "roll": -3.68
+    },
+    "mgn_index": 0.528,
+    "nut_N": 118.0,
+    "wheel_hertz_index": 0.416,
+    "wheel_625zz_axial_index": 0.364
    },
    {
     "case": "axle stall, head held in a bay: 5.53 N m at the hub = 43 N across at the cartridge",
@@ -244,16 +234,14 @@
      90.0
     ],
     "s": 68.80000000000001,
-    "bearing_N": [
-     55.1,
-     64.7,
-     33.2,
-     47.5,
-     55.1,
-     64.7
-    ],
-    "nut_N": -0.0,
-    "wheel_hertz_index": 0.429,
+    "mgn_Nm": {
+     "pitch": 0.0,
+     "yaw": 3.21,
+     "roll": -3.63
+    },
+    "mgn_index": 0.191,
+    "nut_N": 0.0,
+    "wheel_hertz_index": 0.284,
     "wheel_625zz_axial_index": 0.15
    },
    {
@@ -270,17 +258,15 @@
      60.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     236.2,
-     236.2,
-     236.2,
-     236.2,
-     236.2,
-     236.2
-    ],
-    "nut_N": -150.0,
-    "wheel_hertz_index": 0.826,
-    "wheel_625zz_axial_index": 0.609
+    "mgn_Nm": {
+     "pitch": -15.69,
+     "yaw": -8.85,
+     "roll": 0.0
+    },
+    "mgn_index": 0.676,
+    "nut_N": 150.0,
+    "wheel_hertz_index": 0.476,
+    "wheel_625zz_axial_index": 0.366
    },
    {
     "case": "box handling 3 g down + 2 g side, carrying (v7's case)",
@@ -296,17 +282,15 @@
      88.0
     ],
     "s": 0.0,
-    "bearing_N": [
-     22.8,
-     63.0,
-     42.9,
-     42.6,
-     63.2,
-     22.3
-    ],
-    "nut_N": -29.9,
-    "wheel_hertz_index": 0.404,
-    "wheel_625zz_axial_index": 0.156
+    "mgn_Nm": {
+     "pitch": -3.13,
+     "yaw": -0.31,
+     "roll": -1.68
+    },
+    "mgn_index": 0.142,
+    "nut_N": 29.9,
+    "wheel_hertz_index": 0.244,
+    "wheel_625zz_axial_index": 0.108
    },
    {
     "case": "carrying overseer at full reach, gravity down the bar",
@@ -322,17 +306,15 @@
      88.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     15.7,
-     15.7,
-     15.7,
-     15.7,
-     15.7,
-     15.7
-    ],
-    "nut_N": -10.0,
-    "wheel_hertz_index": 0.236,
-    "wheel_625zz_axial_index": 0.04
+    "mgn_Nm": {
+     "pitch": -1.04,
+     "yaw": -0.59,
+     "roll": 0.0
+    },
+    "mgn_index": 0.045,
+    "nut_N": 10.0,
+    "wheel_hertz_index": 0.143,
+    "wheel_625zz_axial_index": 0.024
    },
    {
     "case": "handling 3 g down the bar",
@@ -348,17 +330,15 @@
      88.0
     ],
     "s": 0.0,
-    "bearing_N": [
-     47.1,
-     47.1,
-     47.1,
-     47.1,
-     47.1,
-     47.1
-    ],
-    "nut_N": -29.9,
-    "wheel_hertz_index": 0.381,
-    "wheel_625zz_axial_index": 0.121
+    "mgn_Nm": {
+     "pitch": -3.13,
+     "yaw": -1.76,
+     "roll": 0.0
+    },
+    "mgn_index": 0.135,
+    "nut_N": 29.9,
+    "wheel_hertz_index": 0.223,
+    "wheel_625zz_axial_index": 0.073
    },
    {
     "case": "carrying overseer at full reach, gravity across",
@@ -374,16 +354,14 @@
      88.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     12.6,
-     14.8,
-     7.5,
-     10.8,
-     12.6,
-     14.8
-    ],
+    "mgn_Nm": {
+     "pitch": 0.0,
+     "yaw": 0.72,
+     "roll": -0.84
+    },
+    "mgn_index": 0.044,
     "nut_N": -0.0,
-    "wheel_hertz_index": 0.225,
+    "wheel_hertz_index": 0.152,
     "wheel_625zz_axial_index": 0.035
    },
    {
@@ -400,16 +378,14 @@
      88.0
     ],
     "s": 0.0,
-    "bearing_N": [
-     37.9,
-     44.5,
-     22.4,
-     32.4,
-     37.9,
-     44.5
-    ],
+    "mgn_Nm": {
+     "pitch": 0.0,
+     "yaw": 2.17,
+     "roll": -2.53
+    },
+    "mgn_index": 0.131,
     "nut_N": -0.0,
-    "wheel_hertz_index": 0.317,
+    "wheel_hertz_index": 0.228,
     "wheel_625zz_axial_index": 0.104
    },
    {
@@ -426,17 +402,15 @@
      88.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     0.6,
-     17.7,
-     7.5,
-     10.8,
-     14.4,
-     3.9
-    ],
+    "mgn_Nm": {
+     "pitch": 0.72,
+     "yaw": 0.0,
+     "roll": 0.44
+    },
+    "mgn_index": 0.033,
     "nut_N": -0.0,
-    "wheel_hertz_index": 0.192,
-    "wheel_625zz_axial_index": 0.034
+    "wheel_hertz_index": 0.126,
+    "wheel_625zz_axial_index": 0.026
    },
    {
     "case": "handling 3 g along the axle",
@@ -452,20 +426,18 @@
      88.0
     ],
     "s": 0.0,
-    "bearing_N": [
-     1.8,
-     53.0,
-     22.4,
-     32.4,
-     43.1,
-     11.8
-    ],
+    "mgn_Nm": {
+     "pitch": 2.17,
+     "yaw": 0.0,
+     "roll": 1.32
+    },
+    "mgn_index": 0.099,
     "nut_N": -0.0,
-    "wheel_hertz_index": 0.206,
-    "wheel_625zz_axial_index": 0.042
+    "wheel_hertz_index": 0.146,
+    "wheel_625zz_axial_index": 0.04
    },
    {
-    "case": "insert at the drone, scout, in the receiver's guides: 59.2 N + 2.0 N m",
+    "case": "insert at the drone, scout, in the receiver's guides: 59.2 N through the float springs",
     "cls": "flight",
     "F_N": [
      0.0,
@@ -474,24 +446,22 @@
     ],
     "at": [
      0.0,
-     200.9,
+     158.0,
      60.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     115.2,
-     115.2,
-     115.2,
-     115.2,
-     115.2,
-     115.2
-    ],
-    "nut_N": -59.2,
-    "wheel_hertz_index": 0.572,
-    "wheel_625zz_axial_index": 0.308
+    "mgn_Nm": {
+     "pitch": -5.65,
+     "yaw": -3.49,
+     "roll": 0.0
+    },
+    "mgn_index": 0.252,
+    "nut_N": 59.2,
+    "wheel_hertz_index": 0.297,
+    "wheel_625zz_axial_index": 0.132
    },
    {
-    "case": "pull-out at the drone, scout, in the receiver's guides: 59.2 N + 2.0 N m",
+    "case": "pull-out at the drone, scout, in the receiver's guides: 59.2 N at the blades",
     "cls": "flight",
     "F_N": [
      0.0,
@@ -500,21 +470,19 @@
     ],
     "at": [
      0.0,
-     200.9,
+     167.1,
      60.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     115.2,
-     115.2,
-     115.2,
-     115.2,
-     115.2,
-     115.2
-    ],
-    "nut_N": 59.2,
-    "wheel_hertz_index": 0.572,
-    "wheel_625zz_axial_index": 0.308
+    "mgn_Nm": {
+     "pitch": 6.19,
+     "yaw": 3.49,
+     "roll": 0.0
+    },
+    "mgn_index": 0.267,
+    "nut_N": -59.2,
+    "wheel_hertz_index": 0.305,
+    "wheel_625zz_axial_index": 0.144
    },
    {
     "case": "pull-out, scout, the cartridge free of the guides (bound): the plug's 57 N at the lead end",
@@ -526,21 +494,19 @@
     ],
     "at": [
      0.0,
-     208.5,
+     125.7,
      60.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     120.2,
-     120.2,
-     120.2,
-     120.2,
-     120.2,
-     120.2
-    ],
-    "nut_N": 59.2,
-    "wheel_hertz_index": 0.581,
-    "wheel_625zz_axial_index": 0.323
+    "mgn_Nm": {
+     "pitch": 3.74,
+     "yaw": 3.49,
+     "roll": 0.0
+    },
+    "mgn_index": 0.199,
+    "nut_N": -59.2,
+    "wheel_hertz_index": 0.266,
+    "wheel_625zz_axial_index": 0.087
    },
    {
     "case": "insert at the float limit, scout: 118 N, the float pitched to its reach (3.0 N m)",
@@ -556,17 +522,15 @@
      60.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     218.6,
-     218.6,
-     218.6,
-     218.6,
-     218.6,
-     218.6
-    ],
-    "nut_N": -118.0,
-    "wheel_hertz_index": 0.784,
-    "wheel_625zz_axial_index": 0.58
+    "mgn_Nm": {
+     "pitch": -15.34,
+     "yaw": -6.96,
+     "roll": 0.0
+    },
+    "mgn_index": 0.614,
+    "nut_N": 118.0,
+    "wheel_hertz_index": 0.455,
+    "wheel_625zz_axial_index": 0.358
    },
    {
     "case": "insert off square, scout: the limit + 43.5 N across at the mouth",
@@ -582,17 +546,15 @@
      105.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     129.2,
-     213.8,
-     172.2,
-     169.6,
-     215.8,
-     125.8
-    ],
-    "nut_N": -118.0,
-    "wheel_hertz_index": 0.703,
-    "wheel_625zz_axial_index": 0.555
+    "mgn_Nm": {
+     "pitch": -12.34,
+     "yaw": -3.06,
+     "roll": -3.68
+    },
+    "mgn_index": 0.528,
+    "nut_N": 118.0,
+    "wheel_hertz_index": 0.416,
+    "wheel_625zz_axial_index": 0.364
    },
    {
     "case": "carrying scout at full reach, gravity down the bar",
@@ -608,17 +570,15 @@
      88.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     7.3,
-     7.3,
-     7.3,
-     7.3,
-     7.3,
-     7.3
-    ],
-    "nut_N": -4.6,
-    "wheel_hertz_index": 0.179,
-    "wheel_625zz_axial_index": 0.019
+    "mgn_Nm": {
+     "pitch": -0.48,
+     "yaw": -0.27,
+     "roll": 0.0
+    },
+    "mgn_index": 0.021,
+    "nut_N": 4.6,
+    "wheel_hertz_index": 0.112,
+    "wheel_625zz_axial_index": 0.011
    },
    {
     "case": "handling 3 g down the bar",
@@ -634,17 +594,15 @@
      88.0
     ],
     "s": 0.0,
-    "bearing_N": [
-     21.9,
-     21.9,
-     21.9,
-     21.9,
-     21.9,
-     21.9
-    ],
-    "nut_N": -13.9,
-    "wheel_hertz_index": 0.271,
-    "wheel_625zz_axial_index": 0.056
+    "mgn_Nm": {
+     "pitch": -1.45,
+     "yaw": -0.82,
+     "roll": 0.0
+    },
+    "mgn_index": 0.063,
+    "nut_N": 13.9,
+    "wheel_hertz_index": 0.162,
+    "wheel_625zz_axial_index": 0.034
    },
    {
     "case": "carrying scout at full reach, gravity across",
@@ -660,16 +618,14 @@
      88.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     5.9,
-     6.9,
-     3.5,
-     5.0,
-     5.9,
-     6.9
-    ],
+    "mgn_Nm": {
+     "pitch": 0.0,
+     "yaw": 0.34,
+     "roll": -0.39
+    },
+    "mgn_index": 0.02,
     "nut_N": -0.0,
-    "wheel_hertz_index": 0.172,
+    "wheel_hertz_index": 0.117,
     "wheel_625zz_axial_index": 0.016
    },
    {
@@ -686,16 +642,14 @@
      88.0
     ],
     "s": 0.0,
-    "bearing_N": [
-     17.6,
-     20.7,
-     10.4,
-     15.0,
-     17.6,
-     20.7
-    ],
+    "mgn_Nm": {
+     "pitch": 0.0,
+     "yaw": 1.01,
+     "roll": -1.17
+    },
+    "mgn_index": 0.061,
     "nut_N": -0.0,
-    "wheel_hertz_index": 0.229,
+    "wheel_hertz_index": 0.165,
     "wheel_625zz_axial_index": 0.049
    },
    {
@@ -712,17 +666,15 @@
      88.0
     ],
     "s": 115.80000000000001,
-    "bearing_N": [
-     0.3,
-     8.2,
-     3.5,
-     5.0,
-     6.7,
-     1.8
-    ],
+    "mgn_Nm": {
+     "pitch": 0.34,
+     "yaw": 0.0,
+     "roll": 0.2
+    },
+    "mgn_index": 0.015,
     "nut_N": -0.0,
-    "wheel_hertz_index": 0.152,
-    "wheel_625zz_axial_index": 0.016
+    "wheel_hertz_index": 0.102,
+    "wheel_625zz_axial_index": 0.012
    },
    {
     "case": "handling 3 g along the axle",
@@ -738,53 +690,61 @@
      88.0
     ],
     "s": 0.0,
-    "bearing_N": [
-     0.8,
-     24.6,
-     10.4,
-     15.0,
-     20.0,
-     5.5
-    ],
+    "mgn_Nm": {
+     "pitch": 1.01,
+     "yaw": 0.0,
+     "roll": 0.61
+    },
+    "mgn_index": 0.046,
     "nut_N": -0.0,
-    "wheel_hertz_index": 0.16,
+    "wheel_hertz_index": 0.114,
     "wheel_625zz_axial_index": 0.019
    }
   ],
   "wheels": {
    "swap": {
-    "hertz": 0.592,
-    "axial_625zz": 0.33
+    "hertz": 0.317,
+    "axial_625zz": 0.157
    },
    "misuse": {
-    "hertz": 0.826,
-    "axial_625zz": 0.609
+    "hertz": 0.476,
+    "axial_625zz": 0.366
    },
    "model": "v7's joint indices (parts/box_arm/ref/swap_system.py: flank Hertz over 1.67 x 55 MPa with 10 N eccentric preload, 625ZZ axial over C0 670 N) on v8's statics: three wheels, each a force across and one along the axle; v7's own frame (beams + contact springs) is not rerun for v8's geometry"
   },
-  "lm6uu": {
-   "worst_swap_N": 123.5,
-   "worst_misuse_N": 236.2,
-   "static_rating_N": 265.0,
-   "index_swap": 0.47,
-   "index_misuse": 0.89
+  "mgn12h": {
+   "index_swap": 0.291,
+   "index_misuse": 0.676,
+   "rating": {
+    "C0_N": 5880.0,
+    "MP_Nm": 36.3,
+    "MY_Nm": 36.3,
+    "MR_Nm": 38.2
+   },
+   "model": "moments about the block's centre over HIWIN's MGN12H static ratings, summed with the cross force over C0 (E: the listing's own make gives none)"
+  },
+  "lever": {
+   "tab_line_from_screw_mm": 104.6,
+   "swap_pitch_Nm": 6.75,
+   "note": "turned pose, 13 Nov: both plugs are on the hub side of the tab line (Overseer 78, Scout 43). The head pulls at the blades (the tab line) and pushes through the float springs (12.5 hub side of it), so in the receiver's guides the lever stays the tab line's; the guides' couple can only shorten it and is not counted. The bound-cartridge case fell from 11.0 to 2.3 N m"
   },
   "rule": "the screw pushes over 30 N only in the last 8 mm of an insert, where the receiver's guides hold the cartridge's pitch; a jam at the plug end before that stops at 30 N (0.4 N m / deg x lever, inside the float)",
   "from_v7": "case list and forces from parts/box_arm/ref (arm_v7_system.json, swap_system.py): insert / pull in the guides and free, stall into a jam (here the float limit), axle stall with the head held in a bay, dropped pack 50 mm, handling 3 g down + 2 g side, hand 50 N on a rail tip (hub setup)",
   "missing": [
    "power cut with a head out: not a case any more (the 2 mm screw holds; v7's worst was 2.80 on the 625ZZ)",
    "the ring belt's tooth shear at the axle stall (E)",
-   "v7's frame model itself is not rerun for v8's geometry: rail bending and hub turn under load are the engine's and hand numbers"
+   "v7's frame model itself is not rerun for v8's geometry: rail bending and hub turn under load are the engine's and hand numbers",
+   "the carriage's return spring and the pick-up at the stop (a few N, E): not a case"
   ]
  },
  "ring": {
-  "R 113: receiver sets, Overseer beside Scout": 896.5,
+  "R 113: receiver sets, Overseer beside Scout": 896.3,
   "R 129: receiver sets, Overseer beside Scout": 0.0,
   "bay sets with saddles, overseer beside scout, no feet": 0.0,
   "bay sets with saddles, scout beside scout, no feet": 0.1,
   "drone (overseer) vs the Scout bays at 60 and 120": 0.0,
   "drone (scout) vs the Scout bays at 60 and 120": 0.0,
-  "an Overseer bay at 60 vs the funnel": 1357.0,
+  "an Overseer bay at 60 vs the funnel": 566.7,
   "a Scout bay at 60 vs the funnel": 0.0
  },
  "bay_mount": {
@@ -794,14 +754,14 @@
     "outer": [
      -32.3,
      32.3,
-     -92.3,
-     82.8
+     -82.8,
+     92.3
     ],
     "open_inside": [
      -21.8,
      21.8,
-     -81.3,
-     71.8
+     -71.8,
+     81.3
     ],
     "thickness": 4.0,
     "note": "a 10.5 / 11 mm band round the bolt pattern; open over the pack"
@@ -847,28 +807,28 @@
    "face": "the receiver's mount plane (its top, 68.6 above its bottom), flat over a 12 mm band inside the bolt pattern",
    "bolts": [
     [
-     27.8,
-     -87.28
-    ],
-    [
-     27.8,
-     77.82
-    ],
-    [
-     27.8,
-     0.09
+     -27.8,
+     87.28
     ],
     [
      -27.8,
-     -87.28
+     -77.82
     ],
     [
      -27.8,
-     77.82
+     -0.09
     ],
     [
-     -27.8,
-     0.09
+     27.8,
+     87.28
+    ],
+    [
+     27.8,
+     -77.82
+    ],
+    [
+     27.8,
+     -0.09
     ]
    ],
    "bolts_frame": "x across, along the pack from the tab line; the receiver's own r['MOUNT']",
@@ -889,14 +849,14 @@
     "outer": [
      -31.1,
      31.1,
-     -48.0,
-     47.9
+     -47.9,
+     48.0
     ],
     "open_inside": [
      -20.6,
      20.6,
-     -37.0,
-     36.9
+     -36.9,
+     37.0
     ],
     "thickness": 4.0,
     "note": "a 10.5 / 11 mm band round the bolt pattern; open over the pack"
@@ -942,20 +902,20 @@
    "face": "the receiver's mount plane (its top, 53.9 above its bottom), flat over a 12 mm band inside the bolt pattern",
    "bolts": [
     [
-     26.55,
-     -42.97
-    ],
-    [
-     26.55,
-     42.93
+     -26.55,
+     42.97
     ],
     [
      -26.55,
-     -42.97
+     -42.93
     ],
     [
-     -26.55,
-     42.93
+     26.55,
+     42.97
+    ],
+    [
+     26.55,
+     -42.93
     ]
    ],
    "bolts_frame": "x across, along the pack from the tab line; the receiver's own r['MOUNT']",
@@ -977,39 +937,26 @@
   ]
  },
  "audit_smoke": {
-  "box_arm8_hub": "audit PASS at h 2.5: room filled solid 0.471 (limit 0.5). At its 170 cm3 budget (32 % of the room) the audit's own estimate is ~1.46: the run is likely to fail strength",
-  "box_arm8_lift": "audit PASS at h 1.8, printed on its side (+x): room filled solid 0.488 (flat, +z, it reads 0.78 across layers). At a 40 cm3 budget the estimate is ~2.1, and even solid it is 0.49: the run is likely to fail strength",
-  "box_arm8_carriage": "FAIL at h 1.6, one check: room filled solid reads 2.15 (limit 0.5) in the plain Overseer pull-out, where the lower rod clamps' load turns into the 9.85 mm wheel plate. Three more layouts tried (thicker plate, wheel on the other side, deeper column): none under 1.7",
-  "cause": "the head pushes at the tab line, 102 mm along the axle from the rods: 6.6 N m in a plain Overseer insert (v7 had 5.5 at 60 N on a hand-section frame model). In PCTG at the swap class's safety of 4 the sections this layout leaves are at or over the limit even solid"
+  "box_arm8_hub": "audit PASS at h 2.5: room filled solid 0.295 (dropped pack); at its 195 cm3 budget (62 % of the room) the audit's estimate is 0.47",
+  "box_arm8_carriage": "audit PASS at h 1.6: room filled solid 0.396 (insert off square); at its 50 cm3 budget (84 % of the room) the estimate is 0.47",
+  "box_arm8_lift": "audit PASS at h 1.8, printed on its end (+x): room filled solid 0.352 (insert off square); at its 82 cm3 budget (77 % of the room) the estimate is 0.46",
+  "cause": "13 Nov: the first v8 layout could not pass in print (carriage 2.15 filled solid). Not the plug's side: pull-out acts at the tab line in either pose. The load went 70 across to three rods beside the hub, back through a 5 mm plate to the wheels, and out along printed booms. Now: the lift's guide is a bought MGN12H rail on the carriage's spine beside the wheel pair, the lever to the tab line is three o 6 carbon rods, and each room is cut to the load's way",
+  "margin": "all three pass by 0.03 to 0.04 on the audit's uniformly-thinned estimate; the runs decide"
  },
  "solid_check": {
-  "pass": [
-   "rail",
-   "unit_body",
-   "blade",
-   "wheels",
-   "pilot",
-   "paddle",
-   "pads",
-   "stub",
-   "post",
-   "detent_arm",
-   "saddle_overseer",
-   "saddle_scout",
-   "link"
-  ],
-  "fail": {}
+  "printed": "all 14 drawn prints PASS tools/solid_check.py (rail, unit body, blade, wheel, pilot, paddle, tie, pad, stub, post, detent arm, both saddles, link)",
+  "generated": "hub, carriage, lift: after their runs"
  },
  "printed": {
   "rail": {
    "part": "box_arm8_rail",
    "material": "PCTG",
    "count": 2,
-   "g_each": 57.5,
+   "g_each": 62.4,
    "box_mm": [
     23.0,
     28.8,
-    126.5
+    144.0
    ],
    "bed": "x up",
    "fits_180": true,
@@ -1053,11 +1000,11 @@
    "part": "box_arm8_wheels",
    "material": "PCTG",
    "count": 6,
-   "g_each": 3.9,
+   "g_each": 4.4,
    "box_mm": [
-    24.0,
+    26.0,
     10.0,
-    24.0
+    26.0
    ],
    "bed": "y up",
    "fits_180": true,
@@ -1094,6 +1041,22 @@
    "bed": "y up",
    "fits_180": true,
    "print_pose": "flat",
+   "watertight": true,
+   "bodies": 1
+  },
+  "tie": {
+   "part": "box_arm8_tie",
+   "material": "PCTG",
+   "count": 4,
+   "g_each": 9.0,
+   "box_mm": [
+    53.0,
+    16.0,
+    12.1
+   ],
+   "bed": "z up",
+   "fits_180": true,
+   "print_pose": "bar down (the cheeks up)",
    "watertight": true,
    "bodies": 1
   },
@@ -1273,16 +1236,25 @@
    "url": "https://www.amazon.com/clp/B0D17CLMJM"
   },
   {
-   "part": "lift bearing",
-   "spec": "LM6UU 6 x 12 x 19, six per head",
-   "n": 12,
-   "url": "https://www.amazon.com/uxcell-LM6UU-Linear-Bearings-Length/dp/B07H95CWTX"
+   "part": "lift rail",
+   "spec": "MGN12 rail 100 long (uncut) with one MGN12H block: the block's four M3 hold the yoke, the rail's four M3 go into the carriage's spine",
+   "n": 2,
+   "url": "https://www.amazon.com/Iverntech-Linear-MGN12H-Carriage-Printer/dp/B086SNDDXH",
+   "check": "block 27 x 45.4, 13 high on the rail; holes 20 x 20; rail holes 25 apart from 12.5 in (M: measure, the setup's seats follow)"
   },
   {
-   "part": "lift rod",
-   "spec": "o 6 x 200 hardened chrome shaft, cut to 120, three per head",
-   "n": 6,
-   "url": "https://www.amazon.com/SUOFEILAIMU-Linear-L200mm-Chrome-Plated/dp/B09KGBCRKR"
+   "part": "carbon rod 6",
+   "spec": "o 6 x 500 solid pultruded carbon: three 117 long per head (the booms)",
+   "n": 2,
+   "url": "https://www.amazon.com/clp/B0DK3LWS3V",
+   "check": "take the round 6 x 500; 6.0 +- 0.1 in the 6.2 sockets"
+  },
+  {
+   "part": "rail and yoke bolts",
+   "spec": "M3 x 12 socket head: rail to spine (8), yoke to block (8)",
+   "n": 16,
+   "url": "https://www.amazon.com/initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR",
+   "check": "CHECK: an M3 x 12 listing; the inserts are this one"
   },
   {
    "part": "wheel bearing",
@@ -1368,8 +1340,8 @@
   },
   {
    "part": "insert M3 / M4",
-   "spec": "heat-set: stepper faces and servo M3 (16); float bolts M4 (8, CHECK: an M4 listing)",
-   "n": 24,
+   "spec": "heat-set: stepper faces and servo M3 (16), MGN rail M3 (8); float bolts M4 (8, CHECK: an M4 listing)",
+   "n": 32,
    "url": "https://www.amazon.com/initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR"
   },
   {
@@ -1389,14 +1361,10 @@
   "states": 551,
   "overlaps": [],
   "zero": true,
-  "ring_vs_box": {
-   "bay -90 (scout) receiver | box_stand_toe": 40.8,
-   "bay 60 (scout) saddle | funnel (overseer walls)": 3.2,
-   "bay 120 (scout) saddle | funnel (overseer walls)": 3.2
-  },
+  "ring_vs_box": {},
   "arm_vs_stand": [],
   "head_vs_funnel_at_the_drone": [],
-  "funnel_note": "funnel v5 as of bdc3210 leaves the head's lane clear to W Z 162.5 over |X| <= 62, Y 58..79 (176.5 beyond): the carriage tops out at 159.3",
+  "funnel_note": "the funnel as of 4bef046 (turned pose) leaves the head's lane clear below W Z 161.5 over Y 58..79: the carriage tops out at 158.3, the yoke at 160.3 with the over-travel (inside |X| 28, Y 80..112)",
   "stand_note": "the stand in systems/box.assembly.json is the built demo v1's (mast, keel, kb, toe, bars), drawn for v4's 8 bays at R 100; whatever it meets here is a box-structure change, not an arm one"
  }
 }

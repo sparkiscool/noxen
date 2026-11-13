@@ -4,13 +4,17 @@ The box's arm for latch v7 and both packs, drawn in this repo (arm v7 was meshes
 What changed from v7 and why (C unless tagged; numbers in result.json):
   1. Reach. The seat is 65 higher than v7 reached (W Z 220.3, 3 Nov) and v7's one-stage head cannot get there: a longer rail hits the
      stand bars (r 165) and the side sheets (206), a longer carriage crosses the hub centre at park. Each head is two stages on one
-     T8 x 2 lead screw: the lift (block on three o 6 steel rods, six LM6UU) is driven; it picks the carriage (v7's V wheels on v7's rail)
-     up for the last part. Grab travel 115.3 + 1.5, lift 60 on the carriage. A return spring keeps the carriage down on the lift's stop.
-     The screw runs under the rods in a slot in the hub's plate, with two F8-16M thrust bearings at a wall on the plate.
+     T8 x 2 lead screw: the lift (a yoke on one MGN12H block, its 100 mm rail bolted along the carriage's spine) is driven; it picks
+     the carriage (three V wheels on v7's rail) up at the rail's top for the last part. Grab travel 115.8 + 1.5, lift 54.1 on the carriage.
+     A return spring keeps the carriage down on the lift's stop. The screw runs in front of the hub's plate beside the spine, with two
+     F8-16M thrust bearings at a wall on the plate. From the yoke three o 6 carbon rods run out under the grab unit (two printed ties
+     on them carry its float bolts): the lever from the tab line is in carbon and in the steel rail, not in print.
+     13 Nov, turned pose and this layout: the first v8 took the load 70 across to three rods, back through a 5 mm plate to the wheels and
+     out along printed booms; none of its three setups could pass. Pull-out acts at the tab line in either pose (6.7 N m about the screw).
   2. Push. v7's pinion stalled at 74 N; the insert is 64.5 N (Overseer): x1.15. The screw gives over 380 N at stall (E), limited by the
      grab unit's float springs to 118 N: x1.83. A 2 mm lead holds the pack with the power off: v7's head brake relay and its bench
      drop gate go.
-  3. Heads 180 apart (v7: 90). Each head's block, rods and screw pass beside the hub centre on their own side; at 90 they cross.
+  3. Heads 180 apart (v7: 90). Each head's spine, rail and screw pass beside the hub centre on their own side; at 90 they cross.
      The arm is balanced; a swap turns 180 between pull and insert.
   4. Axle motor and detent on the stub (fixed), a printed GT2 ring on the hub's sleeve: nothing of the axle drive turns with the arm.
   5. Ring R 129 (v7: 113): latch v7's receivers overlap their neighbours at 113 and 30 deg, and two Scout bays side by side still touch at 127 (ring()).
@@ -88,13 +92,14 @@ def hub_cuts():
     for h in (0, 1):
         f = (lambda m: m) if h == 0 else rot180
         m = L.MOTOR
-        c += [f(box(m["x"][0] - 0.3, m["x"][1] + 0.3, m["y"][0] - 0.3, m["y"][1] + 5, m["u"][0] - 1, m["u"][1])),          # the stepper, through the plate
+        c += [f(box(m["x"][0] - 0.3, m["x"][1] + 0.3, m["y"][0] - 0.3, m["y"][1] + 0.3, m["u"][0] - 1, m["u"][1])),        # the stepper, through the plate
               f(cyl("z", x, y, 11.3, -45.5, -41)), *[f(cyl("z", x + sx * 15.5, y + sy * 15.5, 1.7, -45.5, -41)) for sx in (-1, 1) for sy in (-1, 1)],
-              f(box(x - 9.0, x + 9.0, y - 9.0, y + 9.0, -41.5, -11.5)),                                                    # coupler and the inner thrust bearing
+              f(box(x - 9.0, x + 9.0, y1 + 0.2, y + 9.0, -41.5, -11.5)),                                                   # coupler and the inner thrust bearing, in front of the plate
               f(cyl("z", x, y, 4.3, -12.5, -6.5)),
-              f(box(x - 9.2, x + 9.2, y - 9.5, 56.0, -7.5, 160.0)),                                                        # the slot the screw, the outer bearing, the lock ring and the nut's lug run in
+              f(box(x - 8.2, x + 8.2, y1 + 0.2, y + 9.5, -7.5, 160.0)),                                                    # the lane the screw, the outer bearing, the lock ring and the nut's lug run in
               *[f(cyl("y", 0, u, 3.2, 43, 60)) for u in L.RAIL_BOLTS],                                                      # M5 heat-set inserts
-              f(box(-12.5, 12.5, y1, 80, L.RAIL[0] - 1, 160)), f(box(10.0, 34.5, y1 + 0.5, 70, L.RAIL[0], 160)), f(box(-34.5, -10.0, y1 + 0.5, 70, L.RAIL[0], 160))]   # rail seat, wheel lanes
+              f(box(-12.5, 12.5, y1, 82, L.RAIL[0] - 1, 160)),                                                              # rail seat
+              f(box(9.0, L.SPINE["x"][1] + 0.8, y1 + 0.5, 82, -45, 160)), f(box(-L.WHEEL_R - 22.8, -9.0, y1 + 0.5, 82, 0.0, 160))]   # the lanes of the wheel pair with the carriage's spine, and of the third wheel
     return c
 
 
@@ -107,9 +112,10 @@ def head_parts(state="grip"):
     car = U(L.carriage_env(), *L.carriage_bodies()) - L.carriage_cuts()
     P["carriage"] = (car, "PCTG", "run", "carriage")
     P["wheels"] = (U(*[L.wheel(x, c) for x, c in L.WHEELS]), "PCTG", "print", "carriage")
-    P["rods"] = (L.rods(), None, "bought", "carriage")
+    P["mgn_rail"] = (L.mgn_rail(), None, "bought", "carriage")
     P["lift"] = (L.lift_env() - L.lift_cuts(), "PCTG", "run", "lift")
     for k, m in L.lift_bought().items(): P[k] = (m, None, "bought", "lift")
+    P["ties"] = (U(*L.ties()), "PCTG", "print", "lift")
     T = L.arm_T()
     body, pads = L.unit_body()
     P["unit_body"] = (body.transform(T), "PCTG", "print", "unit")
@@ -148,12 +154,21 @@ def posed(G, phi, sA, sB, packs=()):
 
 
 # ------------------------------------------------------------------ the latch sets, the bays, the box
+def SEAT_TO_ARM(z=None):
+    """the funnel's seat frame -> W (= the arm frame with head A at the drone slot): tools/seat_check.py's SEAT_TO_W, the one definition
+    (turned pose, 13 Nov: W x = seat y, W y = 167.1 - seat x). z: the seat's height instead of the box's 220.3 (44.3 = receiver bottom at radius 0)"""
+    sys.path.insert(0, os.path.join(L.ROOT, "tools")); import seat_check
+    T = np.array(seat_check.SEAT_TO_W, float)
+    if z is not None: T[2, 3] = z
+    return T
+
+
 def sets():
     """per pack, in the arm frame with the receiver's bottom at radius 0 on the grip line: receiver, cartridge (bolts out), cartridge gripped"""
     m7 = L.latch(); m6, bl = m7.m6, m7.bl; out = {}
     for pk, B in L.packs().items():
         g = B["g"]; Ts = m7.to_seat(B)
-        M = np.array([[0, -1.0, 0, 0], [1.0, 0, 0, L.Y_C], [0, 0, 1.0, 44.3]]) @ np.vstack([Ts, [0, 0, 0, 1]])
+        M = (SEAT_TO_ARM(44.3) @ np.vstack([Ts, [0, 0, 0, 1]]))[:3]
         out[pk] = dict(recv=m6.receiver_all(B).transform(M), cart=(m6.cart_all(B) + m6.moving(g, 0, 1) + m6.moving(g, 0, -1) + bl.pack_body(g)).transform(M),
                        held=(m6.cart_all(B) + m6.moving(g, m6.R0, 1) + m6.moving(g, m6.R0, -1) + bl.pack_body(g)).transform(M), top=float(m6.receiver_all(B).transform(M).bounding_box()[5]))
         rb = B["recv_bay"] + (m6.receiver_all(B) - B["recv"]) if "recv_bay" in B else (m6.receiver_all(B) - B["feet"] if "feet" in B else m6.receiver_all(B))   # a bay's receiver carries no landing feet: the latch's own recv_bay where it has one (design chat 13 Nov)
@@ -200,7 +215,7 @@ def box_statics(setting):
     """everything in the box that does not turn, as (name, manifold) in W: the funnel at a wall setting, the stand, the sheets and PSU, both
     drones' watertight parts. Not watertight (cage rods, wires): listed, checked by nobody here."""
     fm = L.latch()._funnel(); F = fm.funnel(setting)
-    Ts = np.array([[0, -1.0, 0, 0], [1.0, 0, 0, L.Y_C], [0, 0, 1.0, 220.3]])
+    Ts = SEAT_TO_ARM()[:3]
     out = [(f"funnel ({setting} walls)", F.transform(Ts))]
     a = json.load(open(os.path.join(ROOT, "systems", "box.assembly.json"))); skipped = []
     for p in a["parts"]:
@@ -306,8 +321,15 @@ def compat(S, fast=False):
     hits = [dict(pair=k, mm3=v, worst_at=lab) for k, (v, lab) in sorted(worst.items(), key=lambda kv: -kv[1][0]) if "box_stand" not in k and not ("funnel" in k and k.split(" | ")[0][:-2] in ("carriage", "lift"))]
     stand = [dict(pair=k, mm3=v, worst_at=lab) for k, (v, lab) in sorted(worst.items(), key=lambda kv: -kv[1][0]) if "box_stand" in k]
     return dict(states=n, overlaps=hits, zero=not hits, ring_vs_box=ringhits, arm_vs_stand=stand, head_vs_funnel_at_the_drone=lane,
-                funnel_note="funnel v5 as of bdc3210 leaves the head's lane clear to W Z 162.5 over |X| <= 62, Y 58..79 (176.5 beyond): the carriage tops out at 159.3",
+                funnel_note="the funnel as of 4bef046 (turned pose) leaves the head's lane clear below W Z 161.5 over Y 58..79: the carriage tops out at 158.3, the yoke at 160.3 with the over-travel (inside |X| 28, Y 80..112)",
                 stand_note="the stand in systems/box.assembly.json is the built demo v1's (mast, keel, kb, toe, bars), drawn for v4's 8 bays at R 100; whatever it meets here is a box-structure change, not an arm one")
+
+
+def funnel_keepout():
+    """(x0, x1, y0, y1, z0, z1) in W: where nothing of the funnel may be, for tools/box_check.py. The lane the funnel already keeps (below W Z 161.5 across the box), from the hub
+    plate's face: V rail (top 154), wheels, spine and carriage (158.3), screw (145). Beyond W Y 79 the head is narrower than one box says and is checked as CAD (compat()):
+    the yoke (X -26.5..27.6, Y 80..112) and its plate and arm (X 27.5..66, Y 71.5..112) top out at 160.3 with the over-travel."""
+    return (-116.0, 116.0, 54.0, 79.0, -1000.0, 161.5)
 
 
 # ------------------------------------------------------------------ numbers the head must meet (E unless tagged)
@@ -321,7 +343,7 @@ def numbers():
     back = 12.0 * lead / (2 * math.pi * 1000)                        # N m to hold 12 N with no friction at all
     out = dict(
         travel_mm=dict(park_pad_plane=L.G_PARK, bay=L.S_BAY, drone=L.S_DRONE, over=L.S_OVER, lift_on_carriage=L.T2, carriage=round(L.S_DRONE + L.S_OVER - L.T2, 1),
-                       top_wheel_rim_r=round(L.Z0 + L.S_DRONE + L.S_OVER - L.T2 + L.WHEELS[1][1] + 12.0, 1)),
+                       top_wheel_rim_r=round(L.Z0 + L.S_DRONE + L.S_OVER - L.T2 + L.WHEELS[1][1] + L.WHEEL_R, 1)),
         push=dict(insert_N=L.F_INSERT, asked_N=round(L.F_NEED, 1), float_preload_N=L.P_FLOAT, float_rate_N_mm=L.K_FLOAT,
                   at_over_travel_N=round(L.P_FLOAT + L.K_FLOAT * L.S_OVER, 1), limit_N=L.F_LIMIT, margin_over_insert="x%.2f" % (L.F_LIMIT / L.F_INSERT["overseer"]),
                   screw_stall_N=round(F_stall), screw="T8 x 2 at 0.59 N m, efficiency 0.25 (E)", v7_stall_N=74.0,
@@ -346,23 +368,29 @@ def numbers():
 
 
 def loads_report():
-    """the head's cases and what they put on the lift's bearings and nut (the carriage and hub setups take the same numbers)"""
+    """the head's cases and what they put on the lift's MGN block, the nut and the wheels (the carriage and hub setups take the same numbers)"""
     out = []
     for pk in ("overseer", "scout"):
         for nm, cls, F, P, s in L.cases(pk):
-            seats, nut = L.lift_reactions(F, P, s)
+            R, M, C, idx = L.mgn_wrench(F, P)
+            wl, hz, ax = L.wheel_loads(F, P, s)
             out.append(dict(case=nm, cls=cls, F_N=[round(float(v), 1) for v in F], at=[round(float(v), 1) for v in P], s=s,
-                            bearing_N=[round(float(np.linalg.norm(f_)), 1) for _, f_ in seats], nut_N=round(float(nut[1][2]), 1)))
-    for r, (nm, cls, F, P, s) in zip(out, [c for pk in ("overseer", "scout") for c in L.cases(pk)]):
-        wl, hz, ax = L.wheel_loads(F, P, s); r["wheel_hertz_index"] = hz; r["wheel_625zz_axial_index"] = ax
+                            mgn_Nm=dict(pitch=round(float(M[0]) / 1000, 2), yaw=round(float(M[1]) / 1000, 2), roll=round(float(M[2]) / 1000, 2)), mgn_index=round(idx, 3), nut_N=round(float(-F[2]), 1),
+                            wheel_hertz_index=hz, wheel_625zz_axial_index=ax))
     wheels = dict(swap=dict(hertz=max(r["wheel_hertz_index"] for r in out if r["cls"] == "flight"), axial_625zz=max(r["wheel_625zz_axial_index"] for r in out if r["cls"] == "flight")),
                   misuse=dict(hertz=max(r["wheel_hertz_index"] for r in out), axial_625zz=max(r["wheel_625zz_axial_index"] for r in out)),
                   model="v7's joint indices (parts/box_arm/ref/swap_system.py: flank Hertz over 1.67 x 55 MPa with 10 N eccentric preload, 625ZZ axial over C0 670 N) on v8's statics: three wheels, each a force across and one along the axle; v7's own frame (beams + contact springs) is not rerun for v8's geometry")
-    wb = max(max(r["bearing_N"]) for r in out if r["cls"] == "flight"); wm = max(max(r["bearing_N"]) for r in out)
-    return dict(cases=out, wheels=wheels, lm6uu=dict(worst_swap_N=wb, worst_misuse_N=wm, static_rating_N=265.0, index_swap=round(wb / 265.0, 2), index_misuse=round(wm / 265.0, 2)),
+    return dict(cases=out, wheels=wheels,
+                mgn12h=dict(index_swap=max(r["mgn_index"] for r in out if r["cls"] == "flight"), index_misuse=max(r["mgn_index"] for r in out),
+                            rating=dict(C0_N=L.MGN["C0"], MP_Nm=L.MGN["MP"], MY_Nm=L.MGN["MY"], MR_Nm=L.MGN["MR"]),
+                            model="moments about the block's centre over HIWIN's MGN12H static ratings, summed with the cross force over C0 (E: the listing's own make gives none)"),
+                lever=dict(tab_line_from_screw_mm=round(L.Y_C - L.SCREW[1], 1), swap_pitch_Nm=round(max(abs(r["mgn_Nm"]["pitch"]) for r in out if r["cls"] == "flight"), 2),
+                           note="turned pose, 13 Nov: both plugs are on the hub side of the tab line (Overseer 78, Scout 43). The head pulls at the blades (the tab line) and pushes through the float springs (12.5 hub side of it), "
+                                "so in the receiver's guides the lever stays the tab line's; the guides' couple can only shorten it and is not counted. The bound-cartridge case fell from 11.0 to 2.3 N m"),
                 rule="the screw pushes over 30 N only in the last 8 mm of an insert, where the receiver's guides hold the cartridge's pitch; a jam at the plug end before that stops at 30 N (0.4 N m / deg x lever, inside the float)",
                 from_v7="case list and forces from parts/box_arm/ref (arm_v7_system.json, swap_system.py): insert / pull in the guides and free, stall into a jam (here the float limit), axle stall with the head held in a bay, dropped pack 50 mm, handling 3 g down + 2 g side, hand 50 N on a rail tip (hub setup)",
-                missing=["power cut with a head out: not a case any more (the 2 mm screw holds; v7's worst was 2.80 on the 625ZZ)", "the ring belt's tooth shear at the axle stall (E)", "v7's frame model itself is not rerun for v8's geometry: rail bending and hub turn under load are the engine's and hand numbers"])
+                missing=["power cut with a head out: not a case any more (the 2 mm screw holds; v7's worst was 2.80 on the 625ZZ)", "the ring belt's tooth shear at the axle stall (E)", "v7's frame model itself is not rerun for v8's geometry: rail bending and hub turn under load are the engine's and hand numbers",
+                         "the carriage's return spring and the pick-up at the stop (a few N, E): not a case"])
 
 
 # ------------------------------------------------------------------ print check
@@ -386,6 +414,7 @@ PRINTED = {  # part folder -> (source key or callable, material, print pose note
     "blade": ("blade_p", "PCTG", "outer face down", 4),
     "pilot": (None, "PCTG", "on its outer side face", 4),
     "paddle": (None, "PCTG", "flat", 2),
+    "tie": (None, "PCTG", "bar down (the cheeks up)", 4),
     "pads": (None, "TPU", "flat, 2.0 thick", 16),
     "stub": (None, "PCTG", "flange down", 1), "post": (None, "PCTG", "flange down", 1), "detent_arm": (None, "PCTG", "flat", 1),
     "saddle_overseer": (None, "PCTG", "flat", 4), "saddle_scout": (None, "PCTG", "flat", 7), "link": (None, "PCTG", "flat", 20)}
@@ -409,7 +438,7 @@ def main():
         pr[name] = dict(part="box_arm8_" + name, material=mat, count=PRINTED[name][3], g_each=round(t.volume / 1000 * RHO[mat], 1), box_mm=[round(float(v), 1) for v in t.extents],
                         bed=bf[0] if bf else None, fits_180=bool(bf), print_pose=PRINTED[name][2], watertight=bool(t.is_watertight), bodies=len(m.decompose()))
     one("rail", H["rail"][0]); one("unit_body", L.unit_body()[0]); one("blade", L.blade(1, L.faces()["grip"]))
-    one("wheels", L.wheel(0, -L.Z0)); one("pilot", L.pilot(1, 1)); one("paddle", L.unit_bought("open")["paddle"]); one("pads", L.unit_body()[1][0])
+    one("wheels", L.wheel(0, -L.Z0)); one("pilot", L.pilot(1, 1)); one("paddle", L.unit_bought("open")["paddle"]); one("tie", L.tie(L.FLOAT_Z[0])); one("pads", L.unit_body()[1][0])
     for k in ("stub", "post", "detent_arm"): one(k, FX[k][0])
     one("saddle_overseer", saddle(S, "overseer")); one("saddle_scout", saddle(S, "scout"))
     one("link", link_bar(S))
@@ -465,8 +494,10 @@ BOUGHT = [
     dict(part="coupler", spec="rigid 5 to 8 mm, L25 x D14", n=2, url=A + "uxcell-Coupling-L25xD14-Coupler-Connector/dp/B07P6X8X7Y"),
     dict(part="thrust bearing", spec="F8-16M, one each side of each screw's thrust wall", n=4, url=A + "Metal-Thrust-Ball-Roller-Bearing/dp/B0177ADHDW"),
     dict(part="screw collar", spec="8 mm lock ring, 13 x 5, outside the outer bearing (the coupler bears on the inner one)", n=2, url=A + "clp/B0D17CLMJM"),
-    dict(part="lift bearing", spec="LM6UU 6 x 12 x 19, six per head", n=12, url=A + "uxcell-LM6UU-Linear-Bearings-Length/dp/B07H95CWTX"),
-    dict(part="lift rod", spec="o 6 x 200 hardened chrome shaft, cut to 120, three per head", n=6, url=A + "SUOFEILAIMU-Linear-L200mm-Chrome-Plated/dp/B09KGBCRKR"),
+    dict(part="lift rail", spec="MGN12 rail 100 long (uncut) with one MGN12H block: the block's four M3 hold the yoke, the rail's four M3 go into the carriage's spine", n=2,
+         url=A + "Iverntech-Linear-MGN12H-Carriage-Printer/dp/B086SNDDXH", check="block 27 x 45.4, 13 high on the rail; holes 20 x 20; rail holes 25 apart from 12.5 in (M: measure, the setup's seats follow)"),
+    dict(part="carbon rod 6", spec="o 6 x 500 solid pultruded carbon: three 117 long per head (the booms)", n=2, url=A + "clp/B0DK3LWS3V", check="take the round 6 x 500; 6.0 +- 0.1 in the 6.2 sockets"),
+    dict(part="rail and yoke bolts", spec="M3 x 12 socket head: rail to spine (8), yoke to block (8)", n=16, url=A + "initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR", check="CHECK: an M3 x 12 listing; the inserts are this one"),
     dict(part="wheel bearing", spec="625ZZ, two per V wheel", n=12, url=A + "Double-Bearings-5x16x5mm-0-2x0-63x0-2-BlueStars/dp/B09XT9TKY8"),
     dict(part="detent roller", spec="623ZZ", n=1, url=A + "uxcell-Groove-Bearings-Metric-Shielded/dp/B085RSRF2F"),
     dict(part="hub bearing", spec="6010-2RS 50 x 80 x 16", n=2, url=A + "uxcell-6010-2RS-Pre-Lubricated-Industrial-Machinery/dp/B0G2QPXVK9"),
@@ -481,7 +512,7 @@ BOUGHT = [
     dict(part="carriage return spring", spec="extension spring, 5 to 10 N over 60 mm, from the kit", n=2, url=A + "Extension-Different-Assortment-Stainless-Individual/dp/B0CFRF42LQ", check="rates not listed: pick on a scale"),
     dict(part="float washer", spec="PTFE washer M5 between each float bolt's head and its tie, with a steel M5 x 15 washer", n=8, url=A + "PATIKIL-Washer-Sealing-Gasket-Flanges/dp/B0H1XBGWPM"),
     dict(part="insert M5", spec="heat-set, rail bolts", n=4, url=A + "Threaded-Inserts-M5xD7xL6-Printing-Components/dp/B0H142Y3BM"),
-    dict(part="insert M3 / M4", spec="heat-set: stepper faces and servo M3 (16); float bolts M4 (8, CHECK: an M4 listing)", n=24, url=A + "initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR"),
+    dict(part="insert M3 / M4", spec="heat-set: stepper faces and servo M3 (16), MGN rail M3 (8); float bolts M4 (8, CHECK: an M4 listing)", n=32, url=A + "initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR"),
     dict(part="wheel axle", spec="M5 x 20 countersunk DIN 7991", n=6, url=A + "Socket-Screws-Countersunk-Stainless-Bright/dp/B0CJV8XJ3Y"),
     dict(part="carbon rod 3", spec="o 3 x 500: blade rods 66 long, four; on hand", n=1, url=A + "Carbon-Fiber-Length-Diameter-Suitable/dp/B09N91J1FC"),
 ]
@@ -504,7 +535,7 @@ def write_assembly(res, S, H, FX, out_dir):
     for k, (m, mat, kind) in FX.items():
         add("box_arm8_fx_" + k, k.replace("_", " "), m, "stub side (fixed)", COL["fixed"] if kind == "print" else COL["bought"], "structure" if kind == "print" else "bought", mat,
             folder=("box_arm8_" + k) if kind == "print" else None)
-    names = dict(carriage="carriage (setup envelope; generated)", lift="lift: block, cross-over, booms (setup envelope; generated)")
+    names = dict(carriage="carriage (setup envelope; generated)", lift="lift: yoke on the MGN block, arm to the nut (setup envelope; generated)", mgn_rail="lift rail MGN12 x 100", mgn_block="MGN12H block", booms="booms: three o 6 carbon rods", ties="ties (printed, on the booms)")
     for hd, f in (("A", lambda q: q), ("B", rot180)):
         for k, (m, mat, kind, grp) in H.items():
             stage = "hub" if grp == "hub" else ("lift" if grp == "unit" else grp)
@@ -519,12 +550,12 @@ def write_assembly(res, S, H, FX, out_dir):
     add("box_arm8_drone_recv", "drone seat: Overseer receiver", at_radius(S["overseer"]["recv"], L.R_DRONE), "drone seat", COL["bay"], "protected", "PCTG", opacity=0.45)
     add("box_arm8_drone_cart", "drone seat: Overseer cartridge (the dead pack)", at_radius(S["overseer"]["cart"], L.R_DRONE), "packs", "#bf4f2f", "protected", None, dict(pack="dead"))
     fm = L.latch()._funnel()
-    add("box_arm8_funnel", "funnel (Overseer walls), from parts/box_funnel", fm.funnel("overseer").transform(np.array([[0, -1.0, 0, 0], [1.0, 0, 0, L.Y_C], [0, 0, 1.0, 220.3]])), "box (context)", COL["box"], "protected", "PCTG", opacity=0.3)
+    add("box_arm8_funnel", "funnel (Overseer walls), from parts/box_funnel", fm.funnel("overseer").transform(SEAT_TO_ARM()[:3]), "box (context)", COL["box"], "protected", "PCTG", opacity=0.3)
     c = res["compat"]; nb = res["numbers"]
     asm = {"name": "swap arm", "title": "Swap Arm v8", "readme_view": "iso", "artifact": old.get("artifact", ARTIFACT), "machine": "box", "order": 80,
            "views": {"iso": {"eye": [330, -260, 250], "target": [0, 120, 30]}, "front": {"eye": [0, 620, 40], "target": [0, 120, 40]}, "side": {"eye": [560, 150, 60], "target": [0, 150, 60]},
                      "head A": {"eye": [150, 330, 150], "target": [10, 150, 60]}, "hub": {"eye": [160, -160, 120], "target": [0, 50, 0]}},
-           "note": f"The box's swap arm, v8, for latch v7 and both packs. Two heads 180 apart; each is a lift on two steel rods driven by a T8 x 2 screw, picking its carriage up for the last "
+           "note": f"The box's swap arm, v8, for latch v7 and both packs. Two heads 180 apart; each is a lift on a bought MGN12H rail driven by a T8 x 2 screw, with three carbon rods out under the grab unit, picking its carriage up for the last "
                    f"{L.T2:g} mm: {nb['travel_mm']['drone']} mm to the drone seat. Push limited by the grab unit's float springs to {L.F_LIMIT:g} N (x{L.F_LIMIT / L.F_INSERT['overseer']:.2f} over the Overseer insert); the screw holds with the power off. "
                    f"Bays at R {L.R_BAY:g}. Swap cycle, both packs, {c['states']} states: {'0 overlaps' if c['zero'] else str(len(c['overlaps'])) + ' overlapping pairs, listed under the viewer'}. "
                    f"Hub, carriage and lift are shown as their setups (drawn attachments and envelope): the engine has not run them yet.",
@@ -548,12 +579,12 @@ def appendix(res):
             td("swap cycle", f"{c['states']} states, both packs, against the latch sets, the funnel at each wall setting, every bay, both drones' solid parts, the stand and sheets: " + ("0 overlaps" if c["zero"] else "<b>" + "; ".join(f"{h['pair']} {h['mm3']} mm&sup3; ({h['worst_at']})" for h in c["overlaps"][:12]) + "</b>"))]
     prn = "".join(td(v["part"], v["material"], v["count"], v["g_each"], " x ".join(str(x) for x in v["box_mm"]), v["print_pose"], "yes" if v["fits_180"] else "<b>no</b>") for v in pr.values())
     bought = "".join(td(b["part"], b["spec"], b["n"], f"<a href='{b['url']}'>listing</a>", b.get("check", "")) for b in res["bought"])
-    ld = "".join(td(r["case"], r["cls"], r["F_N"], max(r["bearing_N"]), r["nut_N"]) for r in res["loads"]["cases"] if "overseer" in r["case"])
+    ld = "".join(td(r["case"], r["cls"], r["F_N"], r["mgn_index"], r["nut_N"]) for r in res["loads"]["cases"] if "overseer" in r["case"])
     return (f"<div class='arm8'><style>.arm8 table{{border-collapse:collapse;font-size:13px;margin:8px 0}}.arm8 td,.arm8 th{{border:1px solid #8884;padding:3px 7px;vertical-align:top}}</style>"
             f"<h3>What the head does</h3><table>{''.join(rows)}</table>"
             f"<h3>Printed pieces (drawn)</h3><table><tr><th>part</th><th>material</th><th>n</th><th>g each</th><th>box mm</th><th>print pose</th><th>fits 180</th></tr>{prn}</table>"
             f"<p>Generated, setups ready and not yet run: hub, carriage, lift (parts/box_arm8_*/part.py).</p>"
-            f"<h3>Load cases at the grab unit (each its own)</h3><table><tr><th>case</th><th>class</th><th>F N</th><th>worst LM6UU N (265 static)</th><th>nut N</th></tr>{ld}</table>"
+            f"<h3>Load cases at the grab unit (each its own)</h3><table><tr><th>case</th><th>class</th><th>F N</th><th>MGN12H block index (static)</th><th>nut N</th></tr>{ld}</table>"
             f"<p>Not modelled: {'; '.join(res['loads']['missing'])}.</p>"
             f"<h3>Bought</h3><table><tr><th>part</th><th>spec</th><th>n</th><th></th><th>check</th></tr>{bought}</table></div>")
 
