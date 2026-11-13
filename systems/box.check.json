@@ -3,7 +3,7 @@
  "overlapping_pairs": [],
  "checked": [
   {
-   "what": "scout_v4: seated and 22 landing states against the funnel (walls at scout), the box and the arm at park",
+   "what": "scout_v4: seated and 65 landing states against the funnel (walls at scout), the box and the arm at park",
    "ok": true
   },
   {
@@ -11,7 +11,7 @@
    "ok": true
   },
   {
-   "what": "overseer: seated and 22 landing states against the funnel (walls at overseer), the box and the arm at park",
+   "what": "overseer: seated and 65 landing states against the funnel (walls at overseer), the box and the arm at park",
    "ok": true
   },
   {
@@ -19,7 +19,7 @@
    "ok": true
   },
   {
-   "what": "the wheel's 45 turning parts, every 6 deg, against the funnel and both seated drones",
+   "what": "the wheel's 45 turning parts, every 3 deg, against the funnel and both seated drones",
    "ok": true
   }
  ],
@@ -38,12 +38,6 @@
   },
   {
    "between": "funnel",
-   "and_": "arm v8 head lane at the drone (keep-out)",
-   "mm": 0.2,
-   "at": "at seat [-95, -56, -59]"
-  },
-  {
-   "between": "funnel",
    "and_": "enclosure: sheet+X",
    "mm": 0.3,
    "at": "at seat [-180, -206, -98]"
@@ -52,7 +46,13 @@
    "between": "funnel",
    "and_": "enclosure: sheet-X",
    "mm": 0.3,
-   "at": "at seat [-156, 206, -108]"
+   "at": "at seat [-182, 206, -98]"
+  },
+  {
+   "between": "funnel",
+   "and_": "arm v8 head lane at the drone (keep-out)",
+   "mm": 0.3,
+   "at": "at seat [-109, -39, -62]"
   },
   {
    "between": "funnel (walls at scout)",
@@ -81,8 +81,8 @@
   {
    "between": "funnel",
    "and_": "dome spokes (6 mm carbon, under the lid)",
-   "mm": 2.2,
-   "at": "at seat [144, -62, -84]"
+   "mm": 2.1,
+   "at": "at seat [144, 63, -82]"
   },
   {
    "between": "funnel (walls at scout)",
@@ -106,7 +106,7 @@
    "between": "funnel",
    "and_": "the wheel turning, closest pass",
    "mm": 4.9,
-   "at": "arm: head A: rail at seat [-129, 51, -86] at 336 deg"
+   "at": "arm: head A: rail at seat [-129, -50, -95] at 21 deg"
   },
   {
    "between": "funnel (walls at scout)",
@@ -123,7 +123,7 @@
  ],
  "arm": "systems/swap_arm.assembly.json",
  "no_mesh_in_the_tree": [],
- "quick": true,
+ "quick": false,
  "counts": {
   "box": 37,
   "arm": 80,
@@ -133,5 +133,5 @@
    "overseer": 59
   }
  },
- "seconds": 104
+ "seconds": 174
 }

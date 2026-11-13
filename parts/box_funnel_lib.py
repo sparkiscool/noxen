@@ -32,7 +32,7 @@ G = 9.81e-3
 OV, SC, LAND = 2200.0 * G, 500.0 * G, 6.0
 S55, C55 = np.sin(np.radians(55.0)), np.cos(np.radians(55.0))
 PULL, STALL, HAND = 50.0, 135.0, 50.0
-SPEC_HALF = dict(h=2.2, gen_cm3=110.0, max_worst=0.5, settings=dict(near_sym=True))
+SPEC_HALF = dict(h=2.2, gen_cm3=140.0, max_worst=0.5, settings=dict(near_sym=True))
 SPEC_ARM = dict(h=1.2, gen_cm3=40.0, max_worst=0.5)
 
 
