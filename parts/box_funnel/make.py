@@ -87,8 +87,9 @@ RING_Y, RING_Z = 166.0, -91.5                     # beyond |y| 166 the arm passe
 SPOKE = (52.0, 72.0, -88.5, 10.0)                 # a dome spoke crosses the arm's outer 10 mm over |y| 56..68 down to z -86: |y|, top there, width
 FLANGE = (200.7, 205.7, -108.0, -91.5, 20.0)      # the arm's end plate on the sheet's inner face (|y| 206): |y|, z, and its reach inboard of the beam
 SHEET_BOLT_Z = -99.0
-RIB_Y = 77.0                                      # the rib's outer face (v5 first 74); the joint's outer bolt stands 6 beyond it, in the open, its flange to |y| 88 (the beam's own width: the half stays 176 wide for the A1 mini's 180)
-JOINT = dict(hi=(53.0, -34.0, 2.2), lo=(47.0, -52.2, 1.7), top=(RIB_Y + 6.0, -24.5, 2.2))   # the low one outside the carried pack's sweep
+RIB_Y = 88.0                                      # the rib's outer face, the beam's own width (v5 first 74, then 77: the run's nose half read 0.545 in the rib's lower outer fibre over the motor); the half stays 176 wide for the A1 mini's 180
+JOINT = dict(hi=(53.0, -34.0, 2.2), lo=(47.0, -52.2, 1.7), top=(68.0, -24.5, 2.2))   # the low one outside the carried pack's sweep; the top one in the rib, 15 of rib left outboard of its pocket
+RIB_X = 50.0                                      # the rib is RIB_Y wide from the joint to here
 ROOT_Z = -41.0                                    # the rib's root and its flange at the joint reach down to here (the rib elsewhere to z -31.7, over the drive)
 ROOM_Y = 59.0                                     # the room behind the side walls ends here (the bays beside the drone, the Overseer's foot nodes); a cut that nears it runs out past it, never short of it
 ARM_LANE = (88.1, 113.1, -116.0, 116.0, -58.8)   # arm v8's carriage and rods at the drone: nothing below W Z 161.5 over W X -28..116, Y 58..79 (turned pose, restated by the arm worker 13 Nov: W Y 54..79, W X +-116 = seat x 88.1..113.1; parts/box_arm8/make.py funnel_keepout() is the source, tools/box_check.py reads it)
@@ -282,12 +283,14 @@ def half_bodies(sx):
         fh = box(0.0, sx * 5.0, *Y(44.0, 60.0), -41.0, -27.0); fl = box(0.0, sx * 5.0, *Y(42.0, 52.0), -56.5, z0 - FLOOR + 0.5)
         # a second M4 outside the rib (13 Nov). The two above hold the joint over |y| 42..60 only: no lever against the ear's landing
         # turning the rail about z, and the rib's corner beside the flange read 0.53 (nose) and 0.42 (tail) filled solid. A bolt IN the
-        # rib necked its outer fibre round the nut's pocket (0.57). So the flange runs out past the rib's outer face (RIB_Y) and the
-        # bolt sits there in the open: head and nut on the flange's back, no pocket, the rib whole behind the flange.
-        yt, zt_, rt = JOINT["top"]; ft = box(0.0, sx * 5.0, *Y(59.0, yt + 5.0), ROOT_Z, z0 + 27.0)
+        # rib 74 wide necked its outer fibre round the nut's pocket (0.57); outside a rib 77 wide it left the rib too narrow over the
+        # motor (the run: 0.545). Now the rib is the beam's width (RIB_Y 88) and the bolt sits in it at |y| 68, its pocket open to the
+        # top, 15 of rib outboard of it.
+        yt, zt_, rt = JOINT["top"]; ft = box(0.0, sx * 5.0, *Y(59.0, RIB_Y), ROOT_Z, z0 + 27.0)
         R[f"joint_top{sy:+d}"] = ft; drawn.append(ft)
-        cuts += [cyl_x(-sx * 1.0, sx * 19.0, sy * yt, zt_, rt), cyl_x(sx * 5.0, sx * 19.0, sy * yt, zt_, 4.8)]
+        cuts += [cyl_x(-sx * 1.0, sx * 19.0, sy * yt, zt_, rt), cyl_x(sx * 5.0, sx * 19.0, sy * yt, zt_, 4.8), box(sx * 5.0, sx * 19.0, *Y(yt - 4.8, yt + 4.8), zt_, z0 + 28.0)]   # the head's and nut's pocket, open to the top
         R[f"joint_hi{sy:+d}"], R[f"joint_lo{sy:+d}"] = fh, fl; drawn += [fh, fl]
+        cuts.append(hull([(x, sy * y, z) for x in (-sx * 1.0, sx * 95.0) for y, z in ((79.0, z0 + 27.5), (RIB_Y + 1.0, z0 + 27.5), (RIB_Y + 1.0, z0 + 16.5))]))   # the rib's and the flange's top outer edge, chamfered: the Overseer's v8 foot nodes pass there landing 20 off centre (59 mm3 into the square edge at x 41)
         cuts.append(box(sx * 5.0, sx * 19.0, *Y(yh, ROOM_Y + 0.5), zh - 4.8, zh + 4.8))                                    # the M4 nut's pocket, open to the side (as a bore it left a 1.2 fin of room to |y| 59)
         cuts += [cyl_x(-sx * 1.0, sx * 19.0, sy * yh, zh, rh), cyl_x(sx * 5.0, sx * 19.0, sy * yh, zh, 4.8),
                  cyl_x(-sx * 1.0, sx * 19.0, sy * yl, zl, rl), cyl_x(sx * 5.0, sx * 19.0, sy * yl, zl, 3.4)]
@@ -316,8 +319,9 @@ def half_bodies(sx):
         env.append(box(0.0, sx * 92.0, *Y(38.0, ROOM_Y), z0 - FLOOR - 0.2, zt))                                               # behind the side wall
         env.append(box(sx * 92.0, sx * 112.0, *Y(38.0, ROOM_Y), z0 - FLOOR - 0.2, -31.0))                                      # behind the ear: full depth under h 13,
         env.append(box(sx * 90.0, sx * (112.0 if sx > 0 else 108.0), *Y(38.0, 56.0), -33.0, zt))                                                    # 5 less above it (the Overseer's foot nodes and tubes pass |y| 59 from z -28)
-        env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 12.6, zt))
-        env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(73.0, RIB_Y), z0 + 12.6, zt))                                # out to RIB_Y from the joint on: at |y| 74 the rib's lower outer fibre over the motor read 0.43, and any step or taper in its width near the joint was a notch (0.46 to 0.64)
+        env.append(box(0.0, sx * (84.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 12.6, zt))
+        env.append(box(0.0, sx * RIB_X, *Y(73.0, RIB_Y), z0 + 12.6, zt))                                                      # out to RIB_Y from the joint to past the motor (at |y| 74 and 77 the rib's lower outer fibre over the motor read 0.43 filled and 0.545 built; a step or taper in its width near the joint was a notch)
+        env.append(box(sx * (RIB_X - 2.0), sx * (84.0 if sx > 0 else 76.0), *Y(73.0, 77.0), z0 + 12.6, zt))                  # and 77 wide from there to its end: the Overseer's foot nodes pass outside it there (v8 nodes, 13 Nov: 1066 mm3 into an 88 rib at x 84)
         env.append(box(0.0, sx * 22.0, *Y(46.0, RIB_Y), ROOT_Z, zt))                                                         # the rib's root at the joint, deeper (inboard of the motors: nothing of the drive there; the bays' saddles reach z -43 under it)
         if sx > 0:
             env.append(box(ARM_LANE[1] + 0.3, 128.0, *Y(26.0, 56.0), -63.0, -50.0))                                         # down behind the arm's lane (the rails' tips pass under at z -68),
