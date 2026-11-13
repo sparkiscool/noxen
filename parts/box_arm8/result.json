@@ -744,7 +744,7 @@
   "bay sets with saddles, scout beside scout, no feet": 0.1,
   "drone (overseer) vs the Scout bays at 60 and 120": 0.0,
   "drone (scout) vs the Scout bays at 60 and 120": 0.0,
-  "an Overseer bay at 60 vs the funnel": 1207.6,
+  "an Overseer bay at 60 vs the funnel": 3205.8,
   "a Scout bay at 60 vs the funnel": 0.0
  },
  "bay_mount": {
@@ -1251,10 +1251,10 @@
   },
   {
    "part": "rail and yoke bolts",
-   "spec": "M3 x 12 socket head: rail to spine (8), yoke to block (8)",
+   "spec": "M3 x 12 socket head, stainless: rail to spine (8), yoke to block (8)",
    "n": 16,
-   "url": "https://www.amazon.com/initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR",
-   "check": "CHECK: an M3 x 12 listing; the inserts are this one"
+   "url": "https://www.amazon.com/Socket-Screws-Available-Stainless-Machine/dp/B08P6DYH7V",
+   "check": "100 in the pack"
   },
   {
    "part": "wheel bearing",
@@ -1301,10 +1301,10 @@
   },
   {
    "part": "float spring",
-   "spec": "o 8 x 1.0 wire x 15, 5 active coils, 5.8 N/mm (E)",
+   "spec": "o 8 x 1.0 wire x 15, 5.8 N/mm (E from wire and coil count)",
    "n": 8,
-   "url": "https://www.amazon.com/uxcell-0-8mmx8mmx20mm-Stainless-Compression-Springs/dp/B076LS5N73",
-   "check": "the listing found is this series' 0.8 x 8 x 20 (1.4 N/mm): the 1.0 x 8 x 15 is what the push needs and is not found yet"
+   "url": "https://www.amazon.com/clp/B0DYJYL4ZG",
+   "check": "8 OD, 1 wire, 15 free, 10 in the pack. On a scale: 18 N at 11.9 long; the push limit follows this rate"
   },
   {
    "part": "blade spring",
@@ -1340,9 +1340,16 @@
   },
   {
    "part": "insert M3 / M4",
-   "spec": "heat-set: stepper faces and servo M3 (16), MGN rail M3 (8); float bolts M4 (8, CHECK: an M4 listing)",
-   "n": 32,
+   "spec": "heat-set: stepper faces and servo M3 (16), MGN rail M3 (8); float bolts M4 (8, the next line)",
+   "n": 24,
    "url": "https://www.amazon.com/initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR"
+  },
+  {
+   "part": "insert M4",
+   "spec": "heat-set M4-0.7, the float bolts screw into the ties",
+   "n": 8,
+   "url": "https://www.amazon.com/clp/B07457F9ST",
+   "check": "20 in the pack; the ties' holes are o 5.6: measure the insert first (M)"
   },
   {
    "part": "wheel axle",
@@ -1357,6 +1364,168 @@
    "url": "https://www.amazon.com/Carbon-Fiber-Length-Diameter-Suitable/dp/B09N91J1FC"
   }
  ],
+ "print_kit": {
+  "hold": "DO NOT PRINT YET: hub, carriage and lift are still running; a failed run can move a joint these pieces share (rail seat, wheel axles, sockets, MGN faces)",
+  "pieces": [
+   {
+    "file": "parts/box_arm8_rail/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 2,
+    "pose": "keel side up (the ridges' flanks at 45 deg, no supports)",
+    "supports": "none",
+    "solid_check": "PASS",
+    "g_each": 62.4,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_unit_body/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 2,
+    "pose": "base plate down",
+    "supports": "yes: under the deck and the cross bars, from the base plate only",
+    "solid_check": "PASS",
+    "g_each": 106.7,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_blade/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 4,
+    "pose": "outer face down",
+    "supports": "none",
+    "solid_check": "PASS",
+    "g_each": 6.9,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_wheels/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 6,
+    "pose": "one V wheel, groove axis up",
+    "supports": "none (bearing pocket up)",
+    "solid_check": "PASS",
+    "g_each": 4.4,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_pilot/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 4,
+    "pose": "on its outer side face",
+    "supports": "none",
+    "solid_check": "PASS",
+    "g_each": 1.0,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_paddle/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 2,
+    "pose": "flat",
+    "supports": "none",
+    "solid_check": "PASS",
+    "g_each": 2.7,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_tie/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 4,
+    "pose": "bar down (the cheeks up)",
+    "supports": "none (the 6.2 bores bridge)",
+    "solid_check": "PASS",
+    "g_each": 9.0,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_pads/part.stl",
+    "material": "TPU 95A",
+    "count": 16,
+    "pose": "flat, 2.0 thick",
+    "supports": "none",
+    "solid_check": "PASS",
+    "g_each": 0.0,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_stub/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 1,
+    "pose": "flange down",
+    "supports": "none",
+    "solid_check": "PASS",
+    "g_each": 126.0,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_post/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 1,
+    "pose": "flange down",
+    "supports": "none",
+    "solid_check": "PASS",
+    "g_each": 16.6,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_detent_arm/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 1,
+    "pose": "flat",
+    "supports": "none (the roller slot bridges 4.2)",
+    "solid_check": "PASS",
+    "g_each": 3.5,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_saddle_overseer/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 4,
+    "pose": "flat",
+    "supports": "none",
+    "solid_check": "PASS",
+    "g_each": 23.6,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_saddle_scout/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 7,
+    "pose": "flat",
+    "supports": "none",
+    "solid_check": "PASS",
+    "g_each": 15.2,
+    "fits_180": true
+   },
+   {
+    "file": "parts/box_arm8_link/part.stl",
+    "material": "PCTG (PETG settings + 10 C)",
+    "count": 20,
+    "pose": "flat",
+    "supports": "none",
+    "solid_check": "PASS",
+    "g_each": 7.5,
+    "fits_180": true
+   }
+  ],
+  "generated_later": [
+   "parts/box_arm8_hub (1)",
+   "parts/box_arm8_carriage (2)",
+   "parts/box_arm8_lift (2): from their runs' print meshes (tools/print_mesh.py fetch), not part.stl"
+  ],
+  "order": [
+   "Stub side: press the two 6010-2RS into the hub's sleeve from the stub end, slide the hub on the stub, screw the post on; axle stepper and 16T pulley on the stub's ear, belt round the hub's ring, detent arm with its 623ZZ on its pivot.",
+   "Each V rail on the hub's plate: two M5 x 10 into the heat-set M5 inserts.",
+   "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench); three V wheels, two 625ZZ in each, on M5 x 20 axles, the third on its eccentric bush; roll it onto the V rail and set the bush until it runs without play.",
+   "Each screw drive: stepper on its face plate (four M3), coupler, inner F8-16M, screw through the thrust wall, outer F8-16M, lock ring; the nut on the screw with its flange's two sides filed to the body.",
+   "Each lift: bond the three o 6 x 117 carbon rods in the yoke's sockets (resin through each port until it shows at the mouth), slide the two ties on and bond them at their stations (float bolt centres 45 hub side and 20 far side of the tab line); four M4 inserts in each pair of ties.",
+   "Yoke on the MGN block with four M3 x 12; the nut into its lug (flange in the slot); the return spring from the carriage to the rail's channel.",
+   "Each grab unit: servo, paddle, blades on their two o 3 carbon rods with the four blade springs, pilots on their springs, an SS49E in each hall post, the eight TPU pads on their M3 jack screws.",
+   "Grab unit on the ties: four M4 shoulder bolts down through the base with a PTFE and a steel washer under each head, a float spring round each bolt between tie and base.",
+   "Ring: each bay's receiver on its saddle by the receiver's own mount bolts, the 20 link bars between neighbouring ears.",
+   "Set up: jack each pad to the pack's bottom with a cartridge gripped; park by the screw's position; check both hall readings with the bolts in and out."
+  ]
+ },
  "compat": {
   "states": 551,
   "overlaps": [],
