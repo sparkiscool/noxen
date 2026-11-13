@@ -299,7 +299,9 @@ def half_bodies(sx):
         env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 12.6, zt))                                 # a rib's room outside the wall, over the drive (the Overseer's foot nodes pass beyond its ends)
         if sx > 0:
             env.append(box(ARM_LANE[1] + 0.3, 128.0, *Y(26.0, 56.0), -63.0, -50.0))                                         # down behind the arm's lane (the rails' tips pass under at z -68),
-            env.append(box(126.0, xout, *Y(20.0, 88.0), -63.0, -55.0))                                                      # and on to the beam under the Overseer's nose (it passes z -50 there)
+            env.append(box(126.0, xout, *Y(20.0, 88.0), -63.0, -55.0))
+            env.append(box(95.5, xout, *Y(70.0, 88.0), -72.0, -57.0))                                                       # outside the arm's head (W X -36..69): a deep run from beside the ear to the beam, over the wheel
+            env.append(box(95.5, 112.0, *Y(54.0, 72.0), ARM_LANE[4] + 1.0, -46.0))                                          # and the ear's way out to it, under the Overseer's foot nodes (z -42)                                                      # and on to the beam under the Overseer's nose (it passes z -50 there)
             env.append(box(92.0, 120.0, *Y(38.0, 56.0), z0 - FLOOR - 0.2, -41.5))                                            # the ear's foot, out to the beam (the Overseer's tubes pass over it from z -38)
             env.append(box(0.0, 126.0, *Y(28.5, 56.0), -56.5, z0 - FLOOR + 0.5))                                            # under the ledge and the motors
             env.append(box(92.0, 126.0, *Y(26.0, 56.0), ARM_LANE[4] + 1.0, z0 - FLOOR + 0.5))                                  # behind the nose wall (the lane's cut takes what is under z -58.8)
@@ -312,6 +314,7 @@ def half_bodies(sx):
     cuts.append(cyl_x(129.1, 260.0, 0.0, -ZW, HUB_R, 96))                                                                  # the wheel's hub side behind the rails
     cuts.append(cyl_x(-52.0, 62.0, 0.0, -ZW, PACK_R, 128))                                                                   # a pack carried round on the wheel
     cuts.append(arm_lane())
+    cuts += [cyl_x(99.1, 113.1, 0.0, -ZW, 162.0, 128), cyl_x(113.1, 129.1, 0.0, -ZW, 158.5, 128)]                           # the arm turning (parts/box_arm8/make.py funnel_sweep: r 158.6 over W Y 54..68, r 155 over 38..54), + 3.4
     y0b, kb, zb, ztop = BAY
     for sy in (-1, 1):                                                                                                       # the bays beside the drone
         poly = [(sy * (y0b - kb * 30.0), zb - 30.0), (sy * 200.0, zb - 30.0), (sy * 200.0, ztop), (sy * (y0b + kb * (ztop - zb)), ztop)]
