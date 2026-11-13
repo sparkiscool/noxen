@@ -123,7 +123,8 @@ def funnel_parts():
                  note="engine part (parts/%s/part.py): the box is its drawn faces' extent until its run commits a mesh" % folder)
         if src:
             e["part"] = src
-        done = os.path.exists(os.path.join(ROOT, "parts", folder, "result.json"))
+        rj = os.path.join(ROOT, "parts", folder, "result.json")
+        done = os.path.exists(rj) and bool(json.load(open(rj)).get("print_stl"))      # a CI run's result (its print mesh published), not a local smoke's
         if done:
             e.pop("opacity"); e["mesh"] = f"parts/{folder}/part.stl"
         out.append(e)
