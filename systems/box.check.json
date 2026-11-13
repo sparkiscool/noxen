@@ -1,39 +1,6 @@
 {
- "ok": false,
- "overlapping_pairs": [
-  {
-   "state": "overseer seated",
-   "a": "latch v7 receiver (overseer)",
-   "b": "funnel nose wall and pins (seated)",
-   "mm3": 15.7,
-   "samples_inside": null,
-   "states": 1
-  },
-  {
-   "state": "overseer seated",
-   "a": "latch v7 receiver (overseer)",
-   "b": "funnel tail wall and pins (seated)",
-   "mm3": 15.7,
-   "samples_inside": null,
-   "states": 1
-  },
-  {
-   "state": "scout_v4 seated",
-   "a": "latch v7 receiver (scout)",
-   "b": "funnel nose wall and pins (seated)",
-   "mm3": 2.7,
-   "samples_inside": null,
-   "states": 1
-  },
-  {
-   "state": "scout_v4 seated",
-   "a": "latch v7 receiver (scout)",
-   "b": "funnel tail wall and pins (seated)",
-   "mm3": 2.7,
-   "samples_inside": null,
-   "states": 1
-  }
- ],
+ "ok": true,
+ "overlapping_pairs": [],
  "checked": [
   {
    "what": "scout_v4: seated (walls seated with the hold-down pins in the notches, parked, open), 22 landing states (walls parked) and leaving (walls open), against the funnel, the box and the arm at park",
@@ -65,13 +32,13 @@
    "between": "funnel (walls at overseer)",
    "and_": "latch receiver (overseer)",
    "mm": 0.1,
-   "at": "latch v7 receiver (overseer) at seat [-23, 33, -44]"
+   "at": "latch v7 receiver (overseer) at seat [25, -33, -44]"
   },
   {
    "between": "funnel (walls at scout)",
    "and_": "latch receiver (scout)",
    "mm": 0.1,
-   "at": "latch v7 receiver (scout) at seat [-55, -34, -44]"
+   "at": "latch v7 receiver (scout) at seat [49, -33, -44]"
   },
   {
    "between": "funnel",
@@ -98,22 +65,10 @@
    "at": "latch v7 cartridge + pack (overseer) at seat [-86, 21, -44]"
   },
   {
-   "between": "funnel",
-   "and_": "arm: bay 60: saddle",
-   "mm": 1.5,
-   "at": "at seat [25, -65, -42]"
-  },
-  {
    "between": "funnel (walls at overseer)",
    "and_": "overseer landing, closest pass",
    "mm": 1.6,
    "at": "overseer: cage shell tubes at seat [-117, -52, -21] at +x+y at h 27"
-  },
-  {
-   "between": "funnel",
-   "and_": "arm: bay 120: saddle",
-   "mm": 1.6,
-   "at": "at seat [-26, 66, -42]"
   },
   {
    "between": "funnel",
@@ -134,6 +89,18 @@
    "at": "scout_v4: frame v4, one body: deck, arms, motor pods, side l at seat [84, -2, -3]"
   },
   {
+   "between": "funnel",
+   "and_": "arm: bay 60: saddle",
+   "mm": 2.4,
+   "at": "at seat [26, -66, -43]"
+  },
+  {
+   "between": "funnel",
+   "and_": "arm: bay 120: saddle",
+   "mm": 2.5,
+   "at": "at seat [-26, 67, -43]"
+  },
+  {
    "between": "funnel (walls at scout)",
    "and_": "scout_v4 landing, closest pass",
    "mm": 3.1,
@@ -149,7 +116,7 @@
    "between": "funnel",
    "and_": "arm: bay 60: scout receiver (latch v7)",
    "mm": 3.8,
-   "at": "at seat [38, -62, -50]"
+   "at": "at seat [48, -62, -50]"
   },
   {
    "between": "funnel",
@@ -200,5 +167,5 @@
    "overseer": 59
   }
  },
- "seconds": 149
+ "seconds": 142
 }
