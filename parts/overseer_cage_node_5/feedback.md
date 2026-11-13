@@ -13,3 +13,4 @@
 ## 13 Nov (Spark) on v8 as printed
 - "the bottom nodes have an empty hole in the middle that shouldnt be the case because support there just rattle around" (sealed cavities: node 3 2.7, node 4 2.4, node 5 8.9 cm3; the engine kept them).
 - "heavier is fine but lets rerun the nodes so they are not just filling the holes and calling that it": the engine worker makes no-sealed-void part of the optimisation and reruns nodes 2-5.
+- 13 Nov, swap chat's full tools/box_check.py on v8 (rerun) + funnel 493e536: PASS in every state; tightest 1.3 mm landing (node 0) and 1.5 mm seated (node 2). The funnel nose half's motor rib is chamfered round these nodes: do not grow the foot nodes outward or down without a box_check rerun (ask the swap design chat, session_01EtHMZPw3VtLv7n2ybfHWpH; an Overseer change does not trigger box.yml).

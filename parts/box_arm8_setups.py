@@ -34,7 +34,7 @@ def lift(h):
     y0, y1 = L.SOCKET[0] - 2.0, L.SOCKET[1]; ym = (y0 + y1) / 2
     halves = [(cyl("y", bx, bu, L.COLLAR_R, ya, yb), np.array([bx, (ya + yb) / 2, bu])) for bx, bu in L.boom_axes() for ya, yb in ((y0, ym), (ym, y1))]
     drawn = U(pad, nut, *L.sockets())
-    p = Part("box_arm8_lift", h, drawn, L.lift_cuts(), env, build="+x", material="PCTG")                      # on its end (the arm's outer face down): the pull on the block's face and the plate's bending are in-layer (+y reads 0.41, +z 0.38)
+    p = Part("box_arm8_lift", h, drawn, L.lift_cuts(), env, build="+z", material="PCTG")                      # upright, the plate's lower end down: the yoke's twist into the plate is in-layer (filled solid +z 0.28, +x 0.31, +y 0.69)
     p.support("default", U(pad, nut))                                                                         # bolted on the MGN block's face; the nut holds the bar direction
     # the grab unit's load reaches the lift through the three boom rods: each rod bears on its socket near the floor and near the mouth (a force each: the rod's shear and its bending)
     for nm, cls, F, P, s in _cases():
