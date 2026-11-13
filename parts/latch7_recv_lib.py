@@ -21,7 +21,7 @@ Drawn (attachments only):
   side pads   the walls' faces the cartridge's rails bear on, at the tab line and at the four corners
   end pads    the end walls' top bands that hold the cartridge along the pack, with their lead-ins (at the corners: the middle is relieved)
 
-Supports: the boss faces on the mount plane (the lead-end pair under the carrier's ears: the same bolts clamp them).
+Supports: the boss faces on the mount plane; at the lead end the wall tops under the carrier's ears (EAR_SEAT), which the lead-end bolts clamp.
 Loads (systems/dimensions.md L, J; make.ARM; each its own case; the swap mass at its CG, the couple about the contact as a rigid
 cartridge on the shelves and the seat strips, E):
   crash 35 g in the 6 face and 8 corner directions; flight 4 g + 2 g lateral (4); catch 6 g; swap insert at the head's limit on the seats (118 N,
@@ -48,6 +48,9 @@ bl, box, cyl, U = mk.bl, mk.box, mk.cyl, mk.U
 SKIN = 3.0                         # pads: 3 thick (the audit's 2.5 floor, the gate's 2.0 erosion)
 WALL_OUT = {"overseer": 34.0}      # the Overseer's side walls' room: 4.9 thick as drawn (27.9..32.8) is under one member (the audit's env_neck: pockets and feet reach
 #                                    the bosses only through it); out to +-34.0, where its pocket blocks already are (the funnel's seat is +-34.4)
+EAR_SEAT = 6.0                     # 13 Nov, run 265: the Overseer read 0.526 (limit 0.5) across the layers in the lead end wall beside the plug slot, landing on the lead wall's two keys.
+#                                    The lead-end support was only what the carrier's notch leaves of each boss (16 cells against 37 at the other bosses), so the landing load went
+#                                    round through the 3 mm end wall. The carrier's ears really sit on 10 x 20 of wall top each side under the same bolts: that seat is the support
 CORNER = 12.0                      # corner side pads run this far in from each end wall
 ALLUP_G = {"scout": 222.0 + 510.0, "overseer": 2200.0}      # the drone with its pack (make.main's 510 g Scout without the pack, E; the Overseer's budget, L, E)
 G = 9.81e-3                        # N per gram per g
@@ -99,6 +102,8 @@ def bodies(pack):
             b_ = U(cyl("y", bx, bz, bl.BOSS_R, bl.HEAD_Y, top), cyl("y", bx, bz, bl.HEAD_R + 3.0, bl.HEAD_Y, bl.HEAD_Y + 3.0))
         else:
             b_ = cyl("y", bx, bz, bl.BOSS_R, r["Y_DK1"] - bl.INS_DEPTH - 2.0, top)
+        if lead:                                               # the carrier's ear sits on the wall's top here and the lead-end bolt clamps it: the seat, 6 deep, is drawn with the boss
+            b_ = b_ + box(*sorted((bx - bl.BOSS_R, bx + bl.BOSS_R)), r["Y_DK0"] - EAR_SEAT, r["Y_DK0"] + 0.01, bz - bl.CARRIER_HZ, bz + bl.CARRIER_HZ)
         D[f"boss {i}"] = b_ ^ recv
     for s, sn in ((1, "+x"), (-1, "-x")):
         X = lambda a, b: sorted((s * a, s * b))
@@ -125,6 +130,7 @@ def setup_for(pack, name):
         p = Part(name, h, T(drawn), T(cuts), T(room), build="+z", material="PCTG")
         R = lambda m: T(m)
         sup = [cyl("y", bx, bz, bl.BOSS_R + 0.5, (r["Y_DK0"] if abs(bz - g["Z_X"]) < 1e-6 else ym) - 1.5, ym + 0.5) for bx, bz in r["MOUNT"]]
+        sup += [box(*sorted((bx - bl.BOSS_R, bx + bl.BOSS_R)), r["Y_DK0"] - 1.5, r["Y_DK0"] + 0.5, bz - bl.CARRIER_HZ, bz + bl.CARRIER_HZ) for bx, bz in r["MOUNT"] if abs(bz - g["Z_X"]) < 1e-6]
         p.support("default", R(U(*sup)))
         W = g["SWAP_M"] * G; cg = np.asarray(g["SWAP_CG"], float)
         y_rail = g["Y_TOP"] - 5.0
