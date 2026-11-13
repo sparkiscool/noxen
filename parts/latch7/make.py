@@ -62,7 +62,9 @@ bl.BOLT_HZ = 11.0                      # bolt bar 22 wide (v6 18): it takes the 
 v5.PIN_L = m6.PIN_L = 20.0
 F_BLADE = 15.0                         # the head's blade spring at the squeeze (heads v7 concept, E); 20 N recommended
 ARM = dict(x_deg_rss=0.30, x_deg_worst=0.55, x_capture_deg=1.20, y_axial_mm=1.8, tilt_x_deg=1.28, tilt_x_float_deg=2.37,
-           roll_z_deg=0.74, roll_z_float_deg=1.06, stall_N=74.0, insert_N=60.0, xt60_pull_N=57.0, across_N=43.5, r_drone_mm=220.3)
+           roll_z_deg=0.74, roll_z_float_deg=1.06, stall_N=118.0, insert_N=60.0, xt60_pull_N=57.0, across_N=43.5, r_drone_mm=220.3)
+#   stall_N: the most the head can push on a cartridge. 13 Nov, arm v8 (parts/box_arm8_lib.py F_LIMIT, E): 118 N, its float springs near solid (72 N preload, 23 N/mm,
+#   106.6 N at the commanded over-travel on every swap); it was the v7 head stepper's 74 N stall
 SERVO = {"DS3218 (on hand)": 20.0, "MG995 (ordered)": 9.2}      # kg cm (listings, dimensions M)
 CAM_KGCM_AT_19p5N = 1.98               # heads v7 concept: cam torque with the blades at 19.5 N open
 DOWEL = dict(part="dowel pin (bolt pins and guide poles)", spec="3 x 20, stainless, DIN 7", per_cartridge=2, per_receiver=2,
@@ -434,6 +436,7 @@ def build(pack="scout"):
     B["recv"] = B["recv"] - grow; B["cap"] = B["cap"] - grow
     if WALL_RELIEF.get(pack):                # the side walls' faces set back above the lead-in: the cartridge rolled the arm's worst still enters
         B["recv"] = B["recv"] - U(*[box(*sorted((s * (r["RF"] - 0.01), s * (r["RF"] + WALL_RELIEF[pack]))), bl.Y_RB + bl.HCAP - 0.01, r["Y_DK0"] + 0.01, r["Z_E0"], r["Z_E1"]) for s in (1, -1)])
+    B["recv_bay"] = B["recv"]                # the receiver in a bay of the arm's ring: no landing feet (two Scout bays 30 deg apart met at their feet, 9.3 mm3, arm v8)
     if pack == "scout":
         B["feet"] = scout_feet(B); B["recv"] = B["recv"] + B["feet"]
     return B
@@ -623,7 +626,7 @@ def error_budget(g, be):
         dict(step="6 XT60 mates", error="carrier floats +-1.0, the poles' cones take 1.5, poles in 11.7 before the seat, plug at 6.0",
              takes="cartridge is inside 0.3 by then", v6="same", ok=True, note="push through the lead pads: Scout's plug is past them (nubs carry the rest)"),
         dict(step="7 release: bolts out", error="head stops on the stall (74 N), not a position; bolts snap out %.1f under the seat (was 0.45)" % v5.SNAP + "",
-             takes="stall 74 N vs 60 N needed: x1.23", v6="same", ok=True, note="the two halls read each bolt; a bolt not out = no release of the drone"),
+             takes="the head pushes up to %.0f N (its float springs) vs %.0f N needed: x%.2f" % (ARM["stall_N"], ARM["insert_N"], ARM["stall_N"] / ARM["insert_N"]), v6="same", ok=True, note="the two halls read each bolt; a bolt not out = no release of the drone"),
     ]
 
 
@@ -788,6 +791,9 @@ def main(pack="scout"):
         lever = 7.5; Z = 6.0 * 7.0 ** 2 / 6                    # pad centre to the anchor, the leg's 6 x 7 root
         res["scout_feet"] = dict(count=4, added_g=round(vol(B["feet"]) / 1000 * 1.23, 1), pad_mm=[4.8, FOOT_PAD["L"]], end_play_mm=FOOT_PLAY,
                                  per_foot_N=round(Ff, 1), root_MPa=round(Ff * lever / Z, 2), index=round(Ff * lever / Z / m6.ALLOW["functional"], 2))
+    A_s = vol(B["strips"]); A_s = A_s / bl.STRIP_T; Et = m6.MATERIALS["TPU95A"].E if hasattr(m6, "MATERIALS") else 9.8      # the head's push on the two TPU seat strips (13 Nov, arm v8: 118 N)
+    res["seat_push"] = {"%.0f N" % F: dict(area_mm2=round(A_s, 1), MPa=round(F / A_s, 3), squash_mm=round(F / A_s / Et * bl.STRIP_T, 3), of_proud_mm=round(bl.STRIP_T - bl.STRIP_REC, 2),
+                                           index=round(F / A_s / (Et * 0.25), 3)) for F in (ARM["insert_N"], 106.6, ARM["stall_N"])}   # index: against 25 % strain (TPU 95A, E)
     paths = save(B)
     res["mass_g"] = {n: round(abs(t.volume) / 1000 * (7.85 if "pin" in n else 1.21 if "strip" in n else 1.23), 2) for n, t in paths.items()}
     res["swap_g"] = round(g["SWAP_M"], 1); res["swap_cg"] = [round(float(v), 2) for v in g["SWAP_CG"]]

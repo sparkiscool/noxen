@@ -1054,7 +1054,7 @@
    },
    "insert": {
     "both_nubs_N": 0.0,
-    "lead_pads_N": 65.5,
+    "lead_pads_N": 87.5,
     "plug_inside_the_pads": true
    }
   },
@@ -1213,7 +1213,7 @@
    {
     "step": "7 release: bolts out",
     "error": "head stops on the stall (74 N), not a position; bolts snap out 1.5 under the seat (was 0.45)",
-    "takes": "stall 74 N vs 60 N needed: x1.23",
+    "takes": "the head pushes up to 118 N (its float springs) vs 60 N needed: x1.97",
     "v6": "same",
     "ok": true,
     "note": "the two halls read each bolt; a bolt not out = no release of the drone"
@@ -1285,11 +1285,11 @@
     "left_for_the_wedge_N": 19.9
    },
    "head stepper (NEMA 17 17HS19, 2 A, r 8 pinion)": {
-    "stall_N": 74.0,
+    "stall_N": 118.0,
     "insert_N": 60.0,
-    "margin": "x1.23",
+    "margin": "x1.97",
     "pull_N": 59.1,
-    "pull_margin": "x1.25"
+    "pull_margin": "x2.00"
    },
    "XT60": "57 N to unmate is the project's own reading (the head research note); the spec sheet says 18 to 44 N"
   }
@@ -1350,10 +1350,10 @@
     -44.3
    ]
   },
-  "pressed_0p3_in_mm3": 316.5,
+  "pressed_0p3_in_mm3": 292.3,
   "landing_mm3": {
    "worst": 0.0,
-   "at": "+y 20 at h 24",
+   "at": null,
    "states": 65
   },
   "swap_path_mm3": {
@@ -1759,6 +1759,29 @@
   "roll_ok_deg": 0.74,
   "pitch_ok_deg": 1.6,
   "arm_worst_both_ok": true
+ },
+ "seat_push": {
+  "60 N": {
+   "area_mm2": 249.6,
+   "MPa": 0.24,
+   "squash_mm": 0.059,
+   "of_proud_mm": 1.5,
+   "index": 0.098
+  },
+  "107 N": {
+   "area_mm2": 249.6,
+   "MPa": 0.427,
+   "squash_mm": 0.105,
+   "of_proud_mm": 1.5,
+   "index": 0.174
+  },
+  "118 N": {
+   "area_mm2": 249.6,
+   "MPa": 0.473,
+   "squash_mm": 0.116,
+   "of_proud_mm": 1.5,
+   "index": 0.193
+  }
  },
  "mass_g": {
   "latch7_ov_carrier": 5.25,

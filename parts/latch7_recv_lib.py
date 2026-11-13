@@ -23,8 +23,9 @@ Drawn (attachments only):
 Supports: the boss faces on the mount plane (the lead-end pair under the carrier's ears: the same bolts clamp them).
 Loads (systems/dimensions.md L, J; make.ARM; each its own case; the swap mass at its CG, the couple about the contact as a rigid
 cartridge on the shelves and the seat strips, E):
-  crash 35 g in the 6 face and 8 corner directions; flight 4 g + 2 g lateral (4); catch 6 g; swap insert 60 N on the seats; swap
-  across 43.5 N on a side pad (2); swap pull 57 N with the bolts in (fault); stall 74 N on one pocket's lead-in (fault, 2);
+  crash 35 g in the 6 face and 8 corner directions; flight 4 g + 2 g lateral (4); catch 6 g; swap insert at the head's limit on the seats (118 N,
+  arm v8's float springs, every swap near it); swap across 43.5 N on a side pad (2); swap pull 57 N with the bolts in (fault); the same 118 N on
+  one pocket's lead-in (a jammed bolt, fault, 2);
   on the feet: 6 g landing in the funnel and the XT60 pull-out (57 N + the drone's weight), on four.
 The XT60's insert and pull-out act on the plug carrier and its cap, which the lead-end bolts clamp on the lead-end bosses: they reach
 this part only as compression under those bosses (supports). Not applied, no number: a foot's sideways stop force in a skewed
@@ -150,10 +151,11 @@ def setup_for(pack, name):
         for nm, n in (("flight 4 g + 2 g +x", (2, -4, 0)), ("flight 4 g + 2 g -x", (-2, -4, 0)), ("flight 4 g + 2 g +z", (0, -4, 2)), ("flight 4 g + 2 g -z", (0, -4, -2)), ("catch 6 g", (0, -6, 0))):
             p.load_multi(nm, inertia(n), cls="flight")
         A = mk.ARM
-        p.load_multi(f"swap insert {A['insert_N']:.0f} N on the seats", [(R(D[f"seat {sn[s]}"]), V((0, A["insert_N"] / 2, 0))) for s in (1, -1)], cls="flight")
+        p.load_multi(f"swap insert, the head at its limit {A['stall_N']:.0f} N on the seats", [(R(D[f"seat {sn[s]}"]), V((0, A["stall_N"] / 2, 0))) for s in (1, -1)], cls="flight")
         for s in (1, -1):
             p.load_multi(f"swap across {A['across_N']} N {sn[s]}", [(R(D[f"side {sn[s]} tab"]), V((s * A["across_N"], 0, 0)))], cls="flight")
-            lead_in = box(*sorted((s * rf, s * (rf + bl.CAP))), bl.Y_RB, bl.Y_RB + bl.HCAP, zt - bl.BOLT_HZ, zt + bl.BOLT_HZ) ^ D[f"pocket {sn[s]}"]
+            # a jammed bolt stands OVERLAP (3.0) out of the cartridge: its tip meets the lead-in's outer, lower half (x rf + 1.5 .. rf + 3), not the thin lip under the pocket's mouth
+            lead_in = box(*sorted((s * (rf + bl.CAP / 2), s * (rf + bl.CAP))), bl.Y_RB, bl.Y_RB + bl.HCAP / 2 + 0.3, zt - bl.BOLT_HZ, zt + bl.BOLT_HZ) ^ D[f"pocket {sn[s]}"]
             p.load_multi(f"stall {A['stall_N']:.0f} N on the {sn[s]} lead-in (fault)", [(R(lead_in), V((0, A["stall_N"], 0)))], cls="misuse")
         p.load_multi(f"swap pull {A['xt60_pull_N']:.0f} N, bolts in (fault)", [(R(shelf[s]), V((0, -A["xt60_pull_N"] / 2, 0))) for s in (1, -1)], cls="misuse")
         feet = [D[k] for k in D if k.startswith("foot")]; Wd = ALLUP_G[pack] * G
