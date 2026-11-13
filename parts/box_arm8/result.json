@@ -866,6 +866,29 @@
    "nothing of the receiver below its bottom plane (the head's pilots and blades pass 0.3 from it)"
   ]
  },
+ "audit_smoke": {
+  "box_arm8_hub": "audit PASS at h 2.5 (room filled solid 0.471, limit 0.5)",
+  "box_arm8_carriage": "FAIL at h 1.6, one check: room filled solid reads 2.15 (limit 0.5) in the plain Overseer pull-out, at the top of the lower clamp's column under the tail plate (13.8, 67.3, 20.6). Every other check passes. Cause: the lower rod clamps' 72 N goes up a tail plate 26 x 9.85 past the lower wheel (the lift's cross-over is over it at 79.2, a carried Overseer starts at 81.1); it read 18 before that path existed.",
+  "box_arm8_lift": "FAIL at h 1.8, one check: room filled solid reads 0.745 (limit 0.5), across layers, in the plain Overseer pull-out, on the cross-over's tapered underside beside the block (38.8, 94.3, 1.8); 0.66 printed on its side (+x). Every other check passes. It read 3.1 before the riser went over the block."
+ },
+ "solid_check": {
+  "pass": [
+   "rail",
+   "unit_body",
+   "blade",
+   "wheels",
+   "pilot",
+   "paddle",
+   "pads",
+   "stub",
+   "post",
+   "detent_arm",
+   "saddle_overseer",
+   "saddle_scout",
+   "link"
+  ],
+  "fail": {}
+ },
  "printed": {
   "rail": {
    "part": "box_arm8_rail",
@@ -1031,10 +1054,10 @@
    "part": "box_arm8_saddle_overseer",
    "material": "PCTG",
    "count": 4,
-   "g_each": 27.2,
+   "g_each": 23.6,
    "box_mm": [
-    67.6,
-    195.1,
+    64.6,
+    188.1,
     4.0
    ],
    "bed": "x up, on the diagonal",
@@ -1047,10 +1070,10 @@
    "part": "box_arm8_saddle_scout",
    "material": "PCTG",
    "count": 7,
-   "g_each": 17.6,
+   "g_each": 15.2,
    "box_mm": [
-    65.1,
-    115.9,
+    62.1,
+    108.9,
     4.0
    ],
    "bed": "z up",
@@ -1063,7 +1086,7 @@
    "part": "box_arm8_link",
    "material": "PCTG",
    "count": 20,
-   "g_each": 7.3,
+   "g_each": 7.5,
    "box_mm": [
     109.7,
     4.0,
@@ -1256,75 +1279,13 @@
   "overlaps": [],
   "zero": true,
   "ring_vs_box": {
-   "bay -90 (scout) receiver | box_stand_cradle_keel": 4131.7,
-   "bay -90 (scout) receiver | box_stand_toe": 536.1,
-   "bay -90 (scout) saddle | box_stand_cradle_keel": 288.0,
-   "bay -90 (scout) saddle | box_stand_toe": 95.9,
-   "bay -90 (scout) cartridge | box_stand_cradle_keel": 8690.1,
-   "bay 60 (scout) saddle | funnel (overseer walls)": 6.7,
-   "bay 120 (scout) saddle | funnel (overseer walls)": 9.3
+   "bay -90 (scout) receiver | box_stand_toe": 40.8,
+   "bay 60 (scout) saddle | funnel (overseer walls)": 3.2,
+   "bay 120 (scout) saddle | funnel (overseer walls)": 3.2
   },
-  "arm_vs_stand": [
-   {
-    "pair": "pack A | box_stand_cradle_keel",
-    "mm3": 8611.2,
-    "worst_at": "scout: head A carrying at bay -90, s 68"
-   }
-  ],
-  "head_vs_funnel_at_the_drone": [
-   {
-    "pair": "carriage A | funnel (overseer walls)",
-    "mm3": 2803.5,
-    "worst_at": "overseer: head A gripped at the drone"
-   },
-   {
-    "pair": "carriage A | funnel (scout walls)",
-    "mm3": 2803.5,
-    "worst_at": "scout: head A gripped at the drone"
-   },
-   {
-    "pair": "carriage B | funnel (overseer walls)",
-    "mm3": 994.5,
-    "worst_at": "overseer: head B carrying at the drone, s 112"
-   },
-   {
-    "pair": "carriage B | funnel (scout walls)",
-    "mm3": 994.5,
-    "worst_at": "scout: head B carrying at the drone, s 112"
-   }
-  ],
-  "funnel_note": "funnel v5 (9edf922) put a cross arm at W Z 153.3 over |X| <= 62, Y 54..79: the head's lane at the drone (v8 rises to 159.8 there; funnel v4 left 162 / 176). Asked of the funnel: nothing under Z 161.5 over X -28..116, Y 58..79",
-  "not_watertight_not_checked": [
-   "box_overseer_camera_left",
-   "box_overseer_camera_right",
-   "box_overseer_overseer_head_mount",
-   "box_scout_scout_cage_v19",
-   "box_scout_scout_nose_unit_room",
-   "box_scout_scout_tail_unit_room"
-  ],
+  "arm_vs_stand": [],
+  "head_vs_funnel_at_the_drone": [],
+  "funnel_note": "funnel v5 as of bdc3210 leaves the head's lane clear to W Z 162.5 over |X| <= 62, Y 58..79 (176.5 beyond): the carriage tops out at 159.3",
   "stand_note": "the stand in systems/box.assembly.json is the built demo v1's (mast, keel, kb, toe, bars), drawn for v4's 8 bays at R 100; whatever it meets here is a box-structure change, not an arm one"
- },
- "audit_smoke": {
-  "box_arm8_hub": "audit PASS at h 2.5 (room filled solid 0.471, limit 0.5; 204,800 cells)",
-  "box_arm8_carriage": "FAIL at h 1.6, one check: room filled solid reads 1.97 (limit 0.5) in the plain Overseer pull-out, at the inside corner where the lower clamp's column meets the tail plate (13.8, 67.3, -15.4). Every other check passes. It read 18 before the lower clamp got its short way to the wheels.",
-  "box_arm8_lift": "FAIL at h 1.8, one check: room filled solid reads 0.74 (limit 0.5) in the plain Overseer pull-out, on the tapered underside of the cross-over beside the block (38.8, 94.3, 1.8). Every other check passes. It read 3.1 before the riser went over the block."
- },
- "solid_check": {
-  "pass": [
-   "rail",
-   "unit_body",
-   "blade",
-   "wheels",
-   "pilot",
-   "paddle",
-   "pads",
-   "stub",
-   "post",
-   "detent_arm",
-   "saddle_overseer",
-   "saddle_scout",
-   "link"
-  ],
-  "fail": {}
  }
 }

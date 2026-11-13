@@ -170,10 +170,10 @@ def saddle(S, pk):
     """how a bay receiver hangs: a 4 mm plate on the receiver's mount plane, on the receiver's own mount bolts (the pattern its drone uses), open over the pack,
     with an ear at each end; link bars join neighbouring ears into the ring"""
     bb = S[pk]["recv_bay"].bounding_box(); mp = S[pk]["mount"]; zt = max(p[2] for p in mp); t = 4.0
-    x0, x1 = min(p[0] for p in mp) - 6.0, max(p[0] for p in mp) + 6.0; y0, y1 = min(p[1] for p in mp) - 6.0, max(p[1] for p in mp) + 6.0
-    plate = box(x0, x1, y0, y1, zt, zt + t) - box(x0 + 12.0, x1 - 12.0, y0 + 12.0, y1 - 12.0, zt - 1, zt + t + 1)
+    x0, x1 = min(p[0] for p in mp) - 4.5, max(p[0] for p in mp) + 4.5; y0, y1 = min(p[1] for p in mp) - 5.0, max(p[1] for p in mp) + 5.0
+    plate = box(x0, x1, y0, y1, zt, zt + t) - box(x0 + 10.5, x1 - 10.5, y0 + 11.0, y1 - 11.0, zt - 1, zt + t + 1)
     plate = plate - U(*[cyl("z", p[0], p[1], 1.7, zt - 1, zt + t + 1) for p in mp])
-    ears = [box(-9.0, 9.0, a_, b_, zt, zt + t) - cyl("z", 0.0, (a_ + b_) / 2, 2.75, zt - 1, zt + t + 1) for a_, b_ in ((y0 - 9.0, y0 + 0.01), (y1 - 0.01, y1 + 9.0))]
+    ears = [box(-9.0, 9.0, a_, b_, zt, zt + t) - cyl("z", 0.0, (a_ + b_) / 2, 1.7, zt - 1, zt + t + 1) for a_, b_ in ((y0 - 6.5, y0 + 0.01), (y1 - 0.01, y1 + 6.5))]   # M3 links
     return U(plate, *ears)
 
 
@@ -205,7 +205,7 @@ def box_statics(setting):
     a = json.load(open(os.path.join(ROOT, "systems", "box.assembly.json"))); skipped = []
     for p in a["parts"]:
         pid = p["id"]
-        if pid.startswith(("box_arm", "box_funnel", "box_dome", "box_ctx")): continue
+        if pid.startswith(("box_arm", "box_swaparm", "box_latch", "box_funnel", "box_dome", "box_ctx")): continue          # box_swaparm_*: this arm, as the box page imports it
         drone = "overseer" if pid.startswith("box_overseer") else "scout" if pid.startswith("box_scout") else None
         if drone and drone != setting: continue
         if drone and any(k in pid for k in ("receiver", "cartridge", "pack", "battery", "latch", "prop")): continue
@@ -306,7 +306,7 @@ def compat(S, fast=False):
     hits = [dict(pair=k, mm3=v, worst_at=lab) for k, (v, lab) in sorted(worst.items(), key=lambda kv: -kv[1][0]) if "box_stand" not in k and not ("funnel" in k and k.split(" | ")[0][:-2] in ("carriage", "lift"))]
     stand = [dict(pair=k, mm3=v, worst_at=lab) for k, (v, lab) in sorted(worst.items(), key=lambda kv: -kv[1][0]) if "box_stand" in k]
     return dict(states=n, overlaps=hits, zero=not hits, ring_vs_box=ringhits, arm_vs_stand=stand, head_vs_funnel_at_the_drone=lane,
-                funnel_note="funnel v5 (9edf922) put a cross arm at W Z 153.3 over |X| <= 62, Y 54..79: the head's lane at the drone (v8 rises to 159.8 there; funnel v4 left 162 / 176). Asked of the funnel: nothing under Z 161.5 over X -28..116, Y 58..79", not_watertight_not_checked=sorted(skipped),
+                funnel_note="funnel v5 as of bdc3210 leaves the head's lane clear to W Z 162.5 over |X| <= 62, Y 58..79 (176.5 beyond): the carriage tops out at 159.3",
                 stand_note="the stand in systems/box.assembly.json is the built demo v1's (mast, keel, kb, toe, bars), drawn for v4's 8 bays at R 100; whatever it meets here is a box-structure change, not an arm one")
 
 
@@ -443,7 +443,7 @@ def link_bar(S):
     """a straight bar between two neighbouring saddles' ears (Overseer and Scout ears are at different radii and stations: one bar length per joint kind is the
     ring's own detail; this is the Overseer-to-Overseer chord at the top ears, the longest)"""
     r = L.R_BAY + max(p[2] for p in S["scout"]["mount"]) + 2.0; c = 2 * r * math.sin(math.radians(15.0))
-    return U(box(-c / 2 - 7, c / 2 + 7, 0, 4.0, -7, 7)) - cyl("y", -c / 2, 0, 2.75, -1, 5) - cyl("y", c / 2, 0, 2.75, -1, 5)
+    return U(box(-c / 2 - 7, c / 2 + 7, 0, 4.0, -7, 7)) - cyl("y", -c / 2, 0, 1.7, -1, 5) - cyl("y", c / 2, 0, 1.7, -1, 5)
 
 
 A = "https://www.amazon.com/"

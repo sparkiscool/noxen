@@ -144,14 +144,13 @@ def carriage_bodies():
     return b
 def carriage_env():
     top = Z0 + CAR_L
-    return U(box(-28.0, 28.0, PLATE_Y[0], 78.6, Z0, top), box(-28.0, 116.0, PLATE_Y[0], PLATE_Y[1], top - 6.0, top),   # the wheel plate 9.85 thick: the lift's cross-over passes at 79.2
+    return U(box(-28.0, 28.0, PLATE_Y[0], 78.6, Z0, top), box(-28.0, 116.0, PLATE_Y[0], PLATE_Y[1], top - 6.0, top),   # the wheel plate 9.85 thick: the lift's cross-over passes at 79.2 (a carried Overseer starts at y 81.1)
              box(28.2, 116.0, 58.4, 73.8, top - 6.0, top),
              box(0.0, 36.3, PLATE_Y[0], 78.6, top - 30.0, top), box(36.3, 62.0, 74.3, 78.6, top - 30.0, top), box(28.0, 62.0, 74.3, 88.0, top - 10.0, top), box(28.0, 62.0, 73.7, 88.0, top - 6.0, top),
-             box(50.0, 108.0, 58.4, 73.8, top - 6.0, top + 8.0),                                           # beyond x 50 the funnel (v4) leaves room over the clamps
              box(102.2, 116.0, 58.4, 73.8, Z0 + C_BOT - 20.0, top),                                         # the outer spine: 14 wide, the lower clamp's way to the wheels
              box(36.5, 116.0, 58.4, 73.8, Z0 + C_BOT - 20.0, Z0 + C_BOT + 6.0),                            # under and round the lower collars, down to the stepper's wall
              box(13.0, 36.6, 54.6, 68.3, Z0 + C_BOT - 6.0, Z0 + C_BOT + 6.0),                               # the lower clamp's short way to the wheels: inward under the lift's neck,
-             box(13.0, 28.0, 54.6, 78.6, Z0 + C_BOT - 6.0, Z0 + C_BOT + 6.0), box(2.0, 28.0, PLATE_Y[0], 78.6, Z0 + C_BOT - 6.0, Z0 + 0.01))   # up, and along a tail plate (this head's half of the centre) to the wheel plate
+             box(13.0, 28.0, 54.6, 78.6, Z0 + C_BOT - 6.0, Z0 - 10.0), box(2.0, 28.0, PLATE_Y[0], 78.6, Z0 + C_BOT - 6.0, Z0 + 0.01))   # up, and along a tail plate (this head's half of the centre) to the wheel plate   # the column 27 deep beside the rail, up to under the lower wheel
 def carriage_cuts():
     c = [cyl("y", x, Z0 + cc, 2.6, 50, 80) for x, cc in WHEELS] + [cyl("z", x, ROD_Y, 3.05, Z0 + C_BOT - 5, Z0 + CAR_L + 0.01) for x in RODS_X]
     return U(*c)
