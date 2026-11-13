@@ -156,7 +156,7 @@ def sets():
         M = np.array([[0, -1.0, 0, 0], [1.0, 0, 0, L.Y_C], [0, 0, 1.0, 44.3]]) @ np.vstack([Ts, [0, 0, 0, 1]])
         out[pk] = dict(recv=m6.receiver_all(B).transform(M), cart=(m6.cart_all(B) + m6.moving(g, 0, 1) + m6.moving(g, 0, -1) + bl.pack_body(g)).transform(M),
                        held=(m6.cart_all(B) + m6.moving(g, m6.R0, 1) + m6.moving(g, m6.R0, -1) + bl.pack_body(g)).transform(M), top=float(m6.receiver_all(B).transform(M).bounding_box()[5]))
-        rb = m6.receiver_all(B) - B["feet"] if "feet" in B else m6.receiver_all(B)             # a bay's receiver carries no landing feet (design chat 13 Nov): the drone's receiver less its four feet
+        rb = B["recv_bay"] + (m6.receiver_all(B) - B["recv"]) if "recv_bay" in B else (m6.receiver_all(B) - B["feet"] if "feet" in B else m6.receiver_all(B))   # a bay's receiver carries no landing feet: the latch's own recv_bay where it has one (design chat 13 Nov)
         out[pk]["recv_bay"] = rb.transform(M)
         r = B["r"]; out[pk]["mount"] = [[float(v) for v in (M @ np.array([bx, r["Y_M"], bz, 1.0]))] for bx, bz in r["MOUNT"]]      # the receiver's mount bolts, arm frame, receiver bottom at radius 0
     return out
@@ -429,7 +429,17 @@ def bay_mount(S):
     out = {}
     for pk in ("overseer", "scout"):
         mp = S[pk]["mount"]; m = dict(overseer=0.766, scout=0.222)[pk]
-        out[pk] = dict(face="the receiver's mount plane (its top, %.1f above its bottom), flat over a 12 mm band inside the bolt pattern" % max(p[2] for p in mp),
+        x0, x1 = min(p[0] for p in mp) - 4.5, max(p[0] for p in mp) + 4.5; y0, y1 = min(p[1] for p in mp) - 5.0 - L.Y_C, max(p[1] for p in mp) + 5.0 - L.Y_C
+        w = 9.81 * m; a_ring = L.AXLE_STALL_NM / 0.0075                      # rad/s2: the axle's stall torque on the turning arm's inertia (v7: 0.0074 kg m2, E); the ring itself is fixed, this is what a head carrying a pack can put on a bay it is seated in
+        out[pk] = dict(contact_outline=dict(frame="mount plane; x across, y along the pack from the tab line", outer=[round(x0, 1), round(x1, 1), round(y0, 1), round(y1, 1)],
+                                            open_inside=[round(x0 + 10.5, 1), round(x1 - 10.5, 1), round(y0 + 11.0, 1), round(y1 - 11.0, 1)], thickness=4.0, note="a 10.5 / 11 mm band round the bolt pattern; open over the pack"),
+                       cases=[dict(case="pack weight, bay at any ring angle (11 bays, 30 deg apart)", cls="sustained", N=round(w, 1), direction="any direction in the ring's plane, at the pack's CG"),
+                              dict(case="insert by the head at the float limit", cls="misuse", N=L.F_LIMIT, direction="into the receiver (radially outward), at the tab line + 3 N m pitch"),
+                              dict(case="insert, plain", cls="flight", N=round(57.0 + w, 1), direction="into the receiver"),
+                              dict(case="pull-out by the head", cls="flight", N=round(57.0 + w, 1), direction="out of the receiver, the plug's 57 N at the lead end"),
+                              dict(case="axle stall with a head seated in this bay (the detent's stop is the same path, smaller: 1.07 N m in v7)", cls="misuse", N=round(1000 * L.AXLE_STALL_NM / (L.R_BAY - L.CART_DROP), 1), direction="across (tangential), at the cartridge's mouth"),
+                              dict(case="box handling 3 g down + 2 g side with a pack seated", cls="misuse", N=round(3.6 * w, 1), direction="worst in the ring's plane")],
+                       face="the receiver's mount plane (its top, %.1f above its bottom), flat over a 12 mm band inside the bolt pattern" % max(p[2] for p in mp),
                        bolts=[[round(p[0], 2), round(p[1] - L.Y_C, 2)] for p in mp], bolts_frame="x across, along the pack from the tab line; the receiver's own r['MOUNT']",
                        bolt="the same screw and insert the drone uses (M3 assumed, o 3.4 clearance in the saddle)", no_feet=True,
                        loads_N=dict(insert_push=L.F_LIMIT, pull_out=round(57.0 + 9.81 * m, 1), across_at_the_mouth=43.5, pack_weight_any_direction=round(9.81 * m, 1)),

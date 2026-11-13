@@ -778,7 +778,7 @@
   ]
  },
  "ring": {
-  "R 113: receiver sets, Overseer beside Scout": 751.5,
+  "R 113: receiver sets, Overseer beside Scout": 896.5,
   "R 129: receiver sets, Overseer beside Scout": 0.0,
   "bay sets with saddles, overseer beside scout, no feet": 0.0,
   "bay sets with saddles, scout beside scout, no feet": 0.1,
@@ -789,6 +789,61 @@
  },
  "bay_mount": {
   "overseer": {
+   "contact_outline": {
+    "frame": "mount plane; x across, y along the pack from the tab line",
+    "outer": [
+     -32.3,
+     32.3,
+     -92.3,
+     82.8
+    ],
+    "open_inside": [
+     -21.8,
+     21.8,
+     -81.3,
+     71.8
+    ],
+    "thickness": 4.0,
+    "note": "a 10.5 / 11 mm band round the bolt pattern; open over the pack"
+   },
+   "cases": [
+    {
+     "case": "pack weight, bay at any ring angle (11 bays, 30 deg apart)",
+     "cls": "sustained",
+     "N": 7.5,
+     "direction": "any direction in the ring's plane, at the pack's CG"
+    },
+    {
+     "case": "insert by the head at the float limit",
+     "cls": "misuse",
+     "N": 118.0,
+     "direction": "into the receiver (radially outward), at the tab line + 3 N m pitch"
+    },
+    {
+     "case": "insert, plain",
+     "cls": "flight",
+     "N": 64.5,
+     "direction": "into the receiver"
+    },
+    {
+     "case": "pull-out by the head",
+     "cls": "flight",
+     "N": 64.5,
+     "direction": "out of the receiver, the plug's 57 N at the lead end"
+    },
+    {
+     "case": "axle stall with a head seated in this bay (the detent's stop is the same path, smaller: 1.07 N m in v7)",
+     "cls": "misuse",
+     "N": 42.9,
+     "direction": "across (tangential), at the cartridge's mouth"
+    },
+    {
+     "case": "box handling 3 g down + 2 g side with a pack seated",
+     "cls": "misuse",
+     "N": 27.1,
+     "direction": "worst in the ring's plane"
+    }
+   ],
    "face": "the receiver's mount plane (its top, 68.6 above its bottom), flat over a 12 mm band inside the bolt pattern",
    "bolts": [
     [
@@ -829,6 +884,61 @@
    "note": "the push limit is 118 N (v7: 74): the receiver takes it on its mount bolts in a bay exactly as on the drone"
   },
   "scout": {
+   "contact_outline": {
+    "frame": "mount plane; x across, y along the pack from the tab line",
+    "outer": [
+     -31.1,
+     31.1,
+     -48.0,
+     47.9
+    ],
+    "open_inside": [
+     -20.6,
+     20.6,
+     -37.0,
+     36.9
+    ],
+    "thickness": 4.0,
+    "note": "a 10.5 / 11 mm band round the bolt pattern; open over the pack"
+   },
+   "cases": [
+    {
+     "case": "pack weight, bay at any ring angle (11 bays, 30 deg apart)",
+     "cls": "sustained",
+     "N": 2.2,
+     "direction": "any direction in the ring's plane, at the pack's CG"
+    },
+    {
+     "case": "insert by the head at the float limit",
+     "cls": "misuse",
+     "N": 118.0,
+     "direction": "into the receiver (radially outward), at the tab line + 3 N m pitch"
+    },
+    {
+     "case": "insert, plain",
+     "cls": "flight",
+     "N": 59.2,
+     "direction": "into the receiver"
+    },
+    {
+     "case": "pull-out by the head",
+     "cls": "flight",
+     "N": 59.2,
+     "direction": "out of the receiver, the plug's 57 N at the lead end"
+    },
+    {
+     "case": "axle stall with a head seated in this bay (the detent's stop is the same path, smaller: 1.07 N m in v7)",
+     "cls": "misuse",
+     "N": 42.9,
+     "direction": "across (tangential), at the cartridge's mouth"
+    },
+    {
+     "case": "box handling 3 g down + 2 g side with a pack seated",
+     "cls": "misuse",
+     "N": 7.8,
+     "direction": "worst in the ring's plane"
+    }
+   ],
    "face": "the receiver's mount plane (its top, 53.9 above its bottom), flat over a 12 mm band inside the bolt pattern",
    "bolts": [
     [
