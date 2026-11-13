@@ -8,7 +8,10 @@ seated (SEAT_TO_W from the catch), so the motion is a seat-frame offset conjugat
 import math
 import numpy as np
 
-SEAT_TO_W = np.array([[0, -1.0, 0, 0], [1.0, 0, 0, 167.1], [0, 0, 1.0, 220.3], [0, 0, 0, 1.0]])   # seat z 0 at W Z 220.3 (3 Nov: +65, the arm's head extends 60 more at the drone slot)
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import seat_check as _sc
+SEAT_TO_W = _sc.SEAT_TO_W   # the seat's place in the box: tools/seat_check.py
 W_TO_SEAT = np.linalg.inv(SEAT_TO_W)
 TAN = math.tan(math.radians(55.0))
 PARK_Z, PARK_X = 560.0, -420.0          # where a drone waits when it is not the one landing (above and behind the box, out of the front view)

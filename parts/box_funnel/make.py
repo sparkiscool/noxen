@@ -51,7 +51,7 @@ TRAVEL = max(SETTINGS.values())
 # under a hung end, which drops at most 9.3), then drives in to "seated"; a drone leaves with the walls at "open".
 POS = {"seated": 0.0, "park": 2.5, "open": 11.0}  # how far out of its seated position each wall stands
 OPEN = POS["open"]
-PIN = dict(y=32.25, z=-36.5, r=1.25, length=16.0, tip=2.3)   # hardened steel dowel O2.5 x 16 along x; its tip this far inside the wall's foot (2.0 into the notch + the 0.3 seated gap)
+PIN = dict(y=32.4, z=-36.5, r=1.5, length=16.0, tip=2.3)     # a 3 x 3 steel square key (DIN 6885 key steel) x 16 along x, flats up and down (the latch worker: a round pin dents the notch, 101 MPa); its tip this far inside the wall's foot (2.0 into the notch + the 0.3 seated gap)
 TAB_H = (3.5, 8.5)                                # each wall reaches its nuts by two tabs, h 3.5..8.5, through a slot in each side wall (h 3..9)
 TAB_BACK = 5.0                                    # the tab runs this far behind the wall's back: 8 x 5 (v5: 3 x 4 was a neck under its nut block, the gate's neck rule)
 STRIP_Y, STRIP_D = (31.2, 34.0), 2.0              # TPU strips flush in the side ledges (both drones land on them); 2.0 thick (1.5 was under the 2 mm floor)
@@ -67,7 +67,7 @@ SW_H = 4.0                                        # the switches' underside over
 SW_Y = 59.0                                       # the switches' inner face, outboard of the nut blocks
 LUG_Y = (SW_Y + SW[1] + 0.2, SW_Y + SW[1] + 3.2)   # the lug the switches screw to (two M2 along y each)
 # ---- the cross beams and the arms out to the side sheets
-BEAM_X = {1: (104.0, 128.0), -1: (-162.0, -138.0)}   # seat x of the nose and the tail beam (W Y 271..295 and 5..29; the tail one 5 behind the arm v8 rails, which reach seat x -133)
+BEAM_X = {1: (138.0, 162.0), -1: (-128.0, -104.0)}   # seat x of the nose and the tail beam (turned pose, 13 Nov: W Y = 167.1 - seat x, so the NOSE beam is on the hub side, W Y 5..29, 5 behind the arm v8 rails; the tail one at W Y 271..295)
 SHEET_TOP = 145.0 - ZW                            # -75.3; the rain lid lies flush with it (W Z 142..145), open within r 160 of the seat
 LID_Z = SHEET_TOP - 3.0 - 2.0                     # everything outside the lid's opening stays under this (2.0 under the lid)
 BAY = (40.2, 0.577, -80.0, -45.0)                 # the two bays beside the drone (60 / 120 deg, seat x -92..92): their inner faces at |y| = 43.1 + 0.577 (z + 80), kept 2.5 off
@@ -84,7 +84,7 @@ SPOKE = (52.0, 72.0, -88.5, 10.0)                 # a dome spoke crosses the arm
 FLANGE = (200.7, 205.7, -108.0, -91.5, 20.0)      # the arm's end plate on the sheet's inner face (|y| 206): |y|, z, and its reach inboard of the beam
 SHEET_BOLT_Z = -99.0
 JOINT = dict(hi=(53.0, -34.0, 2.2), lo=(47.0, -52.2, 1.7))   # the low one outside the carried pack's sweep
-ARM_LANE = (-109.1, -88.1, -116.0, 116.0, -58.8)   # arm v8's carriage and rods at the drone: nothing below W Z 161.5 over W X -28..116, Y 58..79 (seat x -109.1..-88.1, y -116..28; kept on both sides)
+ARM_LANE = (88.1, 109.1, -116.0, 116.0, -58.8)   # arm v8's carriage and rods at the drone: nothing below W Z 161.5 over W X -28..116, Y 58..79 (turned pose: seat x 88.1..109.1, y -28..116; kept on both sides)
 PACK_R = 169.0                                    # a pack carried on the wheel sweeps r 165 about the axle over W Y 114..210 (seat x -53..43), + 4   # the halves' joint at x 0: (|y|, z, hole r) of the M4 and the M3
 
 
@@ -202,13 +202,13 @@ def nuts(sx):
 def pins(sx):
     """the wall's two hold-down pins, at its drawn place"""
     xe = xend(sx)
-    return U([cyl_x(xe - sx * PIN["tip"], xe + sx * (PIN["length"] - PIN["tip"]), sy * PIN["y"], PIN["z"], PIN["r"], 24) for sy in (-1, 1)])
+    return U([box(xe - sx * PIN["tip"], xe + sx * (PIN["length"] - PIN["tip"]), sy * (PIN["y"] - PIN["r"]), sy * (PIN["y"] + PIN["r"]), PIN["z"] - PIN["r"], PIN["z"] + PIN["r"]) for sy in (-1, 1)])
 
 
 def carriage(sx, setting="overseer", pos="seated", with_pins=True):
     """the wall with its tabs, nut blocks and pin bosses (and its two steel pins), at a setting and position"""
     xe = xend(sx)
-    m = carriage_home(sx) + nuts(sx) - U([cyl_x(xe - sx * 6.0, xe + sx * (PIN["length"] - PIN["tip"]), sy * PIN["y"], PIN["z"], PIN["r"] - 0.05, 24) for sy in (-1, 1)])   # the pins' bores: a press fit, blind
+    m = carriage_home(sx) + nuts(sx) - U([box(xe - sx * 6.0, xe + sx * (PIN["length"] - PIN["tip"]), sy * (PIN["y"] - PIN["r"] + 0.03), sy * (PIN["y"] + PIN["r"] - 0.03), PIN["z"] - PIN["r"] + 0.03, PIN["z"] + PIN["r"] - 0.03) for sy in (-1, 1)])   # the keys' square sockets: a press fit, blind
     return (m + pins(sx) if with_pins else m).translate([-sx * shift(setting, pos), 0.0, 0.0])
 
 
@@ -236,7 +236,6 @@ def fixed():
         cuts += [box(lo, hi, sy * 33.0, sy * (SCREW_Y - BLOCK[1] + 0.5), z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5) for sy in (-1, 1)]
     cuts += [box(SEAT[0] + 1.0, SEAT[1] - 1.0, sy * STRIP_Y[0], sy * STRIP_Y[1], z0 - STRIP_D, z0 + 0.01) for sy in (-1, 1)]
     cuts += [cyl_z(z0 - 30.0, z0 + 5.0, x, y, PROBE_R, 16) for x, y in PROBES]
-    cuts.append(box(SEAT[0] - 40.0, HOLE[0] + 0.01, -21.0, 21.0, z0 - 60.0, z0 + 0.02))             # no sill under the tail wall's middle: the swap head rises there (W X +-20, Y 59..74)
     f = f - U(cuts)
     return U([m for m in f.decompose() if m.volume() > 5.0])
 
@@ -303,18 +302,19 @@ def half_bodies(sx):
         env.append(box(l0, l1, *Y(56.0, LUG_Y[1]), z0 + SW_H - 0.5, z0 + SW_H + 12.0))                                       # out to the lug
         env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 15.6, zt))                                 # a rib's room outside the wall, over the drive (the Overseer's foot nodes pass beyond its ends)
         if sx > 0:
+            env.append(box(ARM_LANE[1] + 0.3, 128.0, *Y(26.0, 56.0), -63.0, -50.0))                                         # down behind the arm's lane (the rails' tips pass under at z -68),
+            env.append(box(126.0, xout, *Y(26.0, 56.0), -63.0, -56.0))                                                      # and on to the beam under the Overseer's nose (it passes z -50 there)
             env.append(box(92.0, 120.0, *Y(38.0, 56.0), z0 - FLOOR - 0.2, -41.5))                                            # the ear's foot, out to the beam (the Overseer's tubes pass over it from z -38)
-            env.append(box(0.0, xout, *Y(28.5, 56.0), -56.5, z0 - FLOOR + 0.5))                                             # under the ledge and the motors, to the beam
-            env.append(box(92.0, xout, *Y(26.0, 56.0), MID_Z[1] - 2.0, z0 - FLOOR + 0.5))
+            env.append(box(0.0, 126.0, *Y(28.5, 56.0), -56.5, z0 - FLOOR + 0.5))                                            # under the ledge and the motors
+            env.append(box(92.0, 126.0, *Y(26.0, 56.0), ARM_LANE[4] + 1.0, z0 - FLOOR + 0.5))                                  # behind the nose wall (the lane's cut takes what is under z -58.8)
         else:
             env.append(box(0.0, -112.0, *Y(28.5, 56.0), -56.5, z0 - FLOOR + 0.5))
-            env.append(box(-92.0, -108.0, *Y(26.0, 56.0), ARM_LANE[4] + 1.0, z0 - FLOOR + 0.5))                             # behind the tail wall, over the arm's head lane
-            env.append(box(-92.0, -144.0, *Y(26.0, 44.0), ARM_LANE[4] + 1.0, z0 - FLOOR + 0.5))                             # on aft inside the Overseer's tail tubes (they pass |y| > 46 down to z -52)
-            env.append(box(ARM_LANE[0] - 0.3, -144.0, *Y(26.0, 44.0), -63.0, ARM_LANE[4] + 2.0))                            # and down to the beam behind the lane (the arm v8 rails' tips pass under at z -68)
+            env.append(box(-92.0, -108.0, *Y(26.0, 56.0), -63.0, z0 - FLOOR + 0.5))                                         # behind the tail wall
+            env.append(box(-92.0, xout, *Y(26.0, 44.0), -63.0, z0 - FLOOR + 0.5))                                           # on to the beam inside the Overseer's tail tubes (they pass |y| > 46 down to z -52)
     env.append(box(xin, xout, -MID_Y, MID_Y, MID_Z[0], LID_Z))                                                               # the beam's middle, under the lid's level
-    env.append(box(xin, xout, -MID_Y, MID_Y, LID_Z - 1.0, MID_Z[1]) ^ cyl_z(-200.0, 100.0, 0.0, 0.9, OPEN_R, 96))            # and up through the lid's opening
-    cuts.append(cyl_x(-200.0, -129.0, 0.0, -ZW, HUB_R, 96))                                                                  # the wheel's hub side behind the rails
-    cuts.append(cyl_x(-62.0, 52.0, 0.0, -ZW, PACK_R, 128))                                                                   # a pack carried round on the wheel
+    env.append(box(xin, xout, -MID_Y, MID_Y, LID_Z - 1.0, MID_Z[1]) ^ cyl_z(-200.0, 100.0, 0.0, -0.9, OPEN_R, 96))            # and up through the lid's opening
+    cuts.append(cyl_x(129.1, 260.0, 0.0, -ZW, HUB_R, 96))                                                                  # the wheel's hub side behind the rails
+    cuts.append(cyl_x(-52.0, 62.0, 0.0, -ZW, PACK_R, 128))                                                                   # a pack carried round on the wheel
     cuts.append(arm_lane())
     y0b, kb, zb, ztop = BAY
     for sy in (-1, 1):                                                                                                       # the bays beside the drone
@@ -345,6 +345,7 @@ def arm_bodies(sx=1, sy=1):
     cuts.append(box(-400, 400, *Y(f1, 400.0), -200.0, 20.0))                                                                  # the sheet
     cuts.append(box(-400, 400, *Y(RING_Y, 400.0), RING_Z, 20.0))                                                              # the dome's base ring
     cuts.append(box(a1 - sx * SPOKE[3], a1 + sx * 5.0, *Y(SPOKE[0], SPOKE[1]), SPOKE[2], 20.0))                               # a dome spoke
+    cuts.append(cyl_x(129.1, 260.0, 0.0, -ZW, HUB_R, 96))                                                                     # the wheel's hub side behind the rails
     env = box(a0, a1, *Y(LAP_Y[0], f1), *ARM_Z) + box(a0 - sx * reach, a1, *Y(f0 - 14.0, f1), fz0, fz1)
     return U([lap, flange]), U(cuts), env, dict(lap=lap, foot=flange, sheet_bolts=[(x, sy * f1, SHEET_BOLT_Z) for x in fb])
 

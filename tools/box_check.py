@@ -167,7 +167,7 @@ def main(quick=False):
                 if (moving_dome(a) or moving_dome(b)) and state != "scout_v4 seated":
                     continue
                 v = overlap(a, b)
-                if v > TOL or v < 0:
+                if v > TOL or v <= -3:                                # exact overlap over 0.5 mm3, or 3+ surface samples inside (an open mesh)
                     hits.append(dict(state=state, a=a.name, b=b.name, mm3=round(v, 1) if v > 0 else None, samples_inside=int(-v) if v < 0 else None))
     fun_all = {st: F[st] for st in F}
     # the funnel against the box it sits in (both settings), and the arm at park

@@ -1,6 +1,15 @@
 {
- "ok": true,
- "overlapping_pairs": [],
+ "ok": false,
+ "overlapping_pairs": [
+  {
+   "state": "static, the arm at park",
+   "a": "stand: mast",
+   "b": "arm: stub",
+   "mm3": null,
+   "samples_inside": 0,
+   "states": 1
+  }
+ ],
  "checked": [
   {
    "what": "scout_v4: seated (walls seated with the hold-down pins in the notches, parked, open), 22 landing states (walls parked) and leaving (walls open), against the funnel, the box and the arm at park",
@@ -29,40 +38,40 @@
  ],
  "clearances_mm": [
   {
+   "between": "funnel",
+   "and_": "arm v8 head lane at the drone (keep-out)",
+   "mm": 0.0,
+   "at": "at seat [93, -38, -59]"
+  },
+  {
    "between": "funnel (walls at overseer)",
    "and_": "latch receiver (overseer)",
    "mm": 0.1,
-   "at": "latch v7 receiver (overseer) at seat [25, -33, -44]"
+   "at": "latch v7 receiver (overseer) at seat [-61, -31, -44]"
   },
   {
    "between": "funnel (walls at scout)",
    "and_": "latch receiver (scout)",
    "mm": 0.1,
-   "at": "latch v7 receiver (scout) at seat [49, -33, -44]"
+   "at": "latch v7 receiver (scout) at seat [49, 33, -44]"
   },
   {
    "between": "funnel",
    "and_": "enclosure: sheet+X",
    "mm": 0.3,
-   "at": "at seat [-180, -206, -98]"
+   "at": "at seat [184, 206, -107]"
   },
   {
    "between": "funnel",
    "and_": "enclosure: sheet-X",
    "mm": 0.3,
-   "at": "at seat [-163, 206, -99]"
-  },
-  {
-   "between": "funnel",
-   "and_": "arm v8 head lane at the drone (keep-out)",
-   "mm": 0.3,
-   "at": "at seat [-109, 28, -59]"
+   "at": "at seat [-131, -206, -98]"
   },
   {
    "between": "funnel (walls at overseer)",
    "and_": "latch cartridge (overseer), seated",
    "mm": 1.5,
-   "at": "latch v7 cartridge + pack (overseer) at seat [-86, 21, -44]"
+   "at": "latch v7 cartridge + pack (overseer) at seat [-86, -26, -44]"
   },
   {
    "between": "funnel (walls at overseer)",
@@ -71,88 +80,88 @@
    "at": "overseer: cage shell tubes at seat [-117, -52, -21] at +x+y at h 27"
   },
   {
-   "between": "funnel",
-   "and_": "rain lid (3 mm UV polycarbonate)",
-   "mm": 2.0,
-   "at": "at seat [145, -148, -78]"
+   "between": "funnel (walls at scout)",
+   "and_": "seated scout_v4",
+   "mm": 1.9,
+   "at": "scout_v4: frame v4, one body: deck, arms, motor pods, side l at seat [84, 0, -3]"
   },
   {
    "between": "funnel",
    "and_": "dome spokes (6 mm carbon, under the lid)",
-   "mm": 2.1,
-   "at": "at seat [144, 63, -82]"
+   "mm": 2.0,
+   "at": "at seat [-144, 63, -82]"
   },
   {
-   "between": "funnel (walls at scout)",
-   "and_": "seated scout_v4",
-   "mm": 2.1,
-   "at": "scout_v4: frame v4, one body: deck, arms, motor pods, side l at seat [84, -2, -3]"
+   "between": "funnel",
+   "and_": "rain lid (3 mm UV polycarbonate)",
+   "mm": 2.0,
+   "at": "at seat [178, 51, -78]"
   },
   {
    "between": "funnel",
    "and_": "arm: bay 60: saddle",
    "mm": 2.4,
-   "at": "at seat [26, -66, -43]"
+   "at": "at seat [-26, 66, -43]"
   },
   {
    "between": "funnel",
    "and_": "arm: bay 120: saddle",
-   "mm": 2.5,
-   "at": "at seat [-26, 67, -43]"
+   "mm": 2.4,
+   "at": "at seat [27, -67, -43]"
   },
   {
-   "between": "funnel (walls at scout)",
-   "and_": "scout_v4 landing, closest pass",
-   "mm": 3.1,
-   "at": "scout_v4: frame v4, one body: deck, arms, motor pods, side l at seat [83, -2, -2] at +x 28 at h 3"
+   "between": "funnel (walls at overseer)",
+   "and_": "seated overseer",
+   "mm": 2.7,
+   "at": "overseer: cage node 2 at seat [161, -30, -53]"
   },
   {
    "between": "funnel",
    "and_": "dome base ring (printed segments)",
    "mm": 3.2,
-   "at": "at seat [-186, 193, -88]"
+   "at": "at seat [166, 193, -88]"
+  },
+  {
+   "between": "funnel (walls at scout)",
+   "and_": "scout_v4 landing, closest pass",
+   "mm": 3.2,
+   "at": "scout_v4: frame v4, one body: deck, arms, motor pods, side l at seat [83, 1, -2] at +x 28 at h 3"
   },
   {
    "between": "funnel",
    "and_": "arm: bay 60: scout receiver (latch v7)",
    "mm": 3.8,
-   "at": "at seat [48, -62, -50]"
+   "at": "at seat [-43, 62, -50]"
   },
   {
    "between": "funnel",
    "and_": "arm: bay 120: scout receiver (latch v7)",
    "mm": 3.8,
-   "at": "at seat [-43, 58, -57]"
+   "at": "at seat [-34, -61, -51]"
   },
   {
    "between": "funnel",
    "and_": "the wheel turning, closest pass",
    "mm": 4.4,
-   "at": "arm: head B: motor at seat [-137, 8, -100] at 36 deg"
-  },
-  {
-   "between": "funnel (walls at overseer)",
-   "and_": "seated overseer",
-   "mm": 4.5,
-   "at": "overseer: cage node 3 at seat [113, 85, -54]"
+   "at": "arm: head B: motor at seat [137, 29, -103] at 54 deg"
   },
   {
    "between": "funnel (walls at scout)",
    "and_": "latch cartridge (scout), seated",
    "mm": 5.3,
-   "at": "latch v7 cartridge + pack (scout) at seat [5, 23, -46]"
+   "at": "latch v7 cartridge + pack (scout) at seat [-27, 23, -45]"
   },
   {
    "between": "funnel",
    "and_": "arm: head A: rail",
    "mm": 8.9,
-   "at": "at seat [-129, 6, -70]"
+   "at": "at seat [129, 4, -78]"
   },
   {
    "between": "funnel",
    "and_": "arm: head A: screw",
    "mm": 10.7,
-   "at": "at seat [-124, -56, -96]"
+   "at": "at seat [124, 56, -96]"
   }
  ],
  "arm": "systems/swap_arm.assembly.json",
@@ -167,5 +176,5 @@
    "overseer": 59
   }
  },
- "seconds": 142
+ "seconds": 133
 }
