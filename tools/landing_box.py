@@ -36,7 +36,7 @@ def seat_pose(t, plan, t_total):
     return np.array([ox * k, oy * k, h]), yaw * min(1.0, h / 40.0)
 
 
-WALL_IN = 39.2                           # parts/box_funnel/make.py SETTINGS["scout"]: each end wall moves this far in for the Scout (Spark 9 Nov)
+WALL_IN = 37.2                           # parts/box_funnel/make.py SETTINGS["scout"]: each end wall moves this far in for the Scout (Spark 9 Nov)
 WALL_MOVES = ((11.8, 13.0, 1.0, 0.0), (22.6, 24.0, 0.0, 1.0))   # (t0, t1, from, to) in the "in" fraction: in for the Scout, out for the Overseer once the Scout is up, in again once the Overseer is up
 WALLS = {"box_funnel_wall_nose": 1, "box_funnel_wall_tail": -1}
 DOME = ((5.3, 7.8, True), (8.4, 10.9, False))   # (t0, t1, shutting): hoop 4 sweeps 0 -> 180 (shut) over the seated Scout, then back (2.5 s each here; 5 s at the motors' 6 rpm)

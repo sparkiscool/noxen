@@ -291,5 +291,7 @@ jobs:
           done
           # a push made with the workflow token does not trigger other workflows, so start the site build by hand
           gh workflow run site.yml
+          # and the box's check when one of its streams' parts got a result (box.yml: funnel, latch, arm)
+          echo '${{ needs.find.outputs.parts }}' | grep -Eq '"(box_funnel|latch7|box_arm)' && gh workflow run box.yml || true
         env:
           GH_TOKEN: ${{ github.token }}

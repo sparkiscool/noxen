@@ -303,25 +303,51 @@ def drawn_walls(drawn_m, cuts_m, thin_ok=(), pitch=0.15, erode_mm=0.9, min_core_
     for t in thin_ok:
         body = body - t
     out = []
-    for piece in body.decompose():
-        if float(piece.volume()) < min_mm3:
+    for whole in body.decompose():
+        if float(whole.volume()) < min_mm3:
             continue
-        T = tm(piece)
-        if not len(T.faces):
-            continue
-        ext = T.bounds[1] - T.bounds[0]
-        p = float(pitch)
-        for p in [q for q in WALL_PITCHES if q >= pitch]:                 # pitches a 2.0 wall sits on with a centre 1.0 from its faces
-            if np.prod((ext + 4 * p) / p) <= max_voxels:
-                break
-        lo = T.bounds[0] - 2 * p
-        shape = tuple(int(np.ceil((ext[k] + 4 * p) / p)) for k in range(3))
-        V = SC.voxels(T, p, lo, shape)
-        _, _, thin, _ = SC.thin_walls(V, p, erode_mm, lo)
-        for t in thin:
-            if t["kind"] == "wall" and t["core_mm3"] >= min_core_mm3:
-                out.append(dict(thick_mm=t["thick_mm"], core_mm3=t["core_mm3"], mm3=t["mm3"], at=t["at"], pitch=round(p, 3)))
+        for piece, keep in _wall_tiles(whole, max_voxels):
+            T = tm(piece)
+            if not len(T.faces):
+                continue
+            ext = T.bounds[1] - T.bounds[0]
+            p = float(pitch)
+            for p in [q for q in WALL_PITCHES if q >= pitch]:             # pitches a 2.0 wall sits on with a centre 1.0 from its faces
+                if np.prod((ext + 4 * p) / p) <= max_voxels:
+                    break
+            lo = T.bounds[0] - 2 * p
+            shape = tuple(int(np.ceil((ext[k] + 4 * p) / p)) for k in range(3))
+            V = SC.voxels(T, p, lo, shape)
+            _, _, thin, _ = SC.thin_walls(V, p, erode_mm, lo)
+            for t in thin:
+                if keep is not None and not (keep[1] <= t["at"][keep[0]] < keep[2]):
+                    continue                                              # in a slab's margin: the next slab holds it whole
+                if t["kind"] == "wall" and t["core_mm3"] >= min_core_mm3:
+                    out.append(dict(thick_mm=t["thick_mm"], core_mm3=t["core_mm3"], mm3=t["mm3"], at=t["at"], pitch=round(p, 3)))
     return sorted(out, key=lambda t: -t["core_mm3"])
+
+
+def _wall_tiles(piece, max_voxels, pitch=0.25, margin=4.0):
+    """a drawn body too large for one grid at the gate's 0.25 pitch, as slabs along its longest extent, each with a margin either
+    side: [(slab, (axis, from, to))]; a body that fits: [(body, None)]. 13 Nov, the landing funnel's frame halves: one drawn shell
+    115 x 121 x 40 (two 3.0 walls at 55 deg and their ledges) was coarsened to 0.4, where a sloped 3.0 wall reads 1.1 thick over
+    600 mm3: a refusal for a wall the 0.15 grid finds nowhere. A finding counts in the slab whose own range holds it; a sliver a
+    slab's cut makes lies in a margin and is dropped there."""
+    import manifold3d as mf
+    bb = np.asarray(piece.bounding_box(), float); lo, hi = bb[:3], bb[3:]; ext = hi - lo
+    if np.prod((ext + 4 * pitch) / pitch) <= max_voxels:
+        return [(piece, None)]
+    ax = int(np.argmax(ext)); other = float(np.prod((np.delete(ext, ax) + 4 * pitch) / pitch))
+    length = max_voxels / other * pitch - 2 * margin - 4 * pitch
+    if length < 2 * margin:                                               # too large across as well: the coarser grid, as before
+        return [(piece, None)]
+    edges = np.linspace(lo[ax], hi[ax], int(np.ceil(ext[ax] / length)) + 1)
+    out = []
+    for a, b in zip(edges[:-1], edges[1:]):
+        blo, bhi = lo - 1.0, hi + 1.0
+        blo[ax], bhi[ax] = a - margin, b + margin
+        out.append((piece ^ mf.Manifold.cube([float(v) for v in bhi - blo]).translate([float(v) for v in blo]), (ax, float(a), float(b) + (1e-6 if b == edges[-1] else 0.0))))
+    return out
 
 
 def parity_columns(mesh, xs, ys, chunk=20000):

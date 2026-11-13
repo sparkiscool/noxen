@@ -598,6 +598,27 @@ def t_organic_drawn_walls():
         check("organic drawn walls", False, str(e))
 
 
+def t_audit_drawn_wall_large():
+    """drawn_walls on a drawn body too large for one grid at the gate's pitch (13 Nov, the landing funnel's frame halves): two 3.0
+    walls leaning at 55 deg on a ledge, 120 x 110 x 36, must read no thin wall (coarsened to 0.4 they read 1.1 over 600 mm3), and
+    the same body with a 1.4 mm fin on it must still be refused for the fin."""
+    import manifold3d as mf, trimesh
+    from .audit import drawn_walls
+    def slab(sy, t=3.0):
+        w = t / np.sin(np.radians(55.0)); g = 30.0 / np.tan(np.radians(55.0))
+        pts = [(x, sy * y, z) for x in (0.0, 120.0) for y, z in ((34.0, 0.0), (34.0 + w, 0.0), (34.0 + g, 30.0), (34.0 + g + w, 30.0))]
+        h = trimesh.convex.convex_hull(np.array(pts, float))
+        return mf.Manifold(mf.Mesh(np.asarray(h.vertices, np.float32), np.asarray(h.faces, np.uint32)))
+    base = mf.Manifold.cube([120.0, 80.0, 4.0]).translate([0.0, -40.0, -3.5]) - mf.Manifold.cube([110.0, 56.0, 6.0]).translate([5.0, -28.0, -4.5])
+    body = base + slab(1) + slab(-1)
+    fin = mf.Manifold.cube([40.0, 1.4, 10.0]).translate([40.0, 30.0, 0.0])
+    a = drawn_walls(body, mf.Manifold())
+    b = drawn_walls(body + fin, mf.Manifold())
+    good = not a and len(b) >= 1 and all(1.0 <= w["thick_mm"] <= 1.8 for w in b) and all(w["pitch"] <= 0.25 for w in b)
+    print(f"  audit drawn wall, large body: plain {a}; with a 1.4 fin {[(w['thick_mm'], w['at'], w['pitch']) for w in b]}")
+    return good
+
+
 def t_gate_drawn_body():
     """gate, drawn bodies (tools/solid_check.py): (a) a 2.5 mm drawn plate on a 3.6 mm wall passes though a 4 mm generated block
     wraps its far end (the old measure took the body's thickness from the part round it, eroded 2.0 and asked for a 4 mm joint:
@@ -1595,7 +1616,7 @@ ARMS_GEN = 14.0
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_no_cavity):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_no_cavity):
         t()
     if not quick:
         t_end_to_end()

@@ -1,57 +1,80 @@
-"""The shared landing funnel, drawn (3 Nov; v3 after the seat-envelope study and the exact clearance check, tools/seat_envelope.py
-and tools/seat_check.py, both drones seated with their real meshes).
-Both drones land at one height with the battery over the box's hole, centred by shape (Spark 3 Nov). The one feature both carry
-at the same place is the latch receiver, but the two differ in length: Scout v3 105.6 x 65.5, Overseer v2 about 184 x 67 (the
-swap arm's bay envelope, E). So the seat is the OVERSEER receiver's outline and the Scout carries a belly skirt of that outline round
-its own receiver (parts/scout_belly_skirt). Both are 66 wide with their bottoms at seat z -44.3.
-Seat frame = drone coordinates of the seated Scout (x nose, y left, z up); the box's SEAT_TO_W puts it in W.
-What the Overseer allows with no change to it (seat_check): its base's side rails fill |y| 60..80 from h 31 up, and its flow clip
-hangs under the nose at x 110..138 from h 42 up. So the two y faces stop at h 28 (y capture +-20) and the two x faces at h 40
-(x capture +-28), all at 55 deg from the seat ledge; the mouth is 240 x 106 at the top of the y faces. The base passes 2.7 over the
-y walls, the flow clip 2 over the x walls' rim. With base v8 chamfered to |y| <= 33.4 + h / 1.428 - 2 for h 31..50 and the flow
-clip 17 aft, the faces could all rise to h 50 and capture +-35 (the alternative, not drawn).
-Legs: four 12 square under the x walls' ends (x -115 / +118, y +-40) down to the deck (W Z 66 = seat z -89.3), merging into the
-walls' tops; the Overseer's loop diagonals and bay ties pass 15 clear of them at its capture limits and the Scout cage keeps
-every member above the wall tops (tools/seat_check.py --descent: 0 crossings in every state for both drones). Wall 3.0, PCTG (Spark 8 Nov, was PETG). Not drawn: the hold-down against the 60 N insert, UHMW tape on the faces.
-Moving end walls (9 Nov, Spark: the Scout carries as little as possible, the box takes the rest): the nose and tail walls are two
-carriages, cut from the funnel along its corner hips and between the side walls' faces, that slide along x on the side ledges. Setting
-"overseer" = the 184 seat as above; "scout" = each wall 39.2 in, the seat is the Scout receiver v3's own 105.6 x 65.5 outline (x -51.35
-..54.25), so the Scout needs no runners. The frame (side walls, ledges, skirt, beams, buttress, legs) stays. funnel(setting) is the
-frame plus both carriages at that setting; part.stl is the frame, the carriages are parts/box_funnel_wall_nose and _tail at the
-Overseer setting. Drive (drawn as placeholders): one Tr8 lead screw per side under the side walls' overhang, opposite-hand halves so
-one turn moves both walls; each wall reaches the two screws by tabs through slots low in the side walls; a NEMA 8 per side geared to
-the screw's middle; a switch at each wall's two positions. The box lands a drone only with its setting confirmed, and falls back to the
-Overseer setting, where a Scout seats loose in x and nothing collides. Both drones land on TPU strips flush in the side ledges, and
-seat sense and keep-alive come through four spring probes in the ledges at (1.5 +- 30, +-29.5): each drone carries a bare pad at each.
-Run: python parts/box_funnel/make.py
+"""The shared landing funnel (v5, 13 Nov; v3 3 Nov after the seat-envelope study, v4 9 Nov the sliding end walls).
+Both drones land at one height with the battery over the box's hole, centred by shape (Spark 3 Nov). Seat frame = drone coordinates
+of the seated Scout (x nose, y left, z up); the box's SEAT_TO_W puts it in W. Faces 55 deg, wall 3.0, the two y faces to h 28 (y
+capture +-20), the two x faces to h 40 (x capture Scout +-28, Overseer +-18); seat = the Overseer latch v7 receiver's outline, hole
+177 x 57 for its cartridge; the nose and tail walls slide 37.2 in for the Scout (SETTINGS).
+
+v5 (13 Nov, Spark: a full run over the whole design, ready to print). v4 was one drawn body 245 x 418: it fits no bed, its cross
+beams (12 x 12 and 12 x 8 PCTG over the 418 between the side sheets) read 11 and 25 MPa under a 65 N share of the Overseer's 6 g
+landing and sagged over 10 mm, and its wall drive was a placeholder. Now:
+  half_nose, half_tail  the frame in two pieces bolted at seat x 0 (one M4 high behind each side wall, one M3 under each ledge):
+                        side walls, ledges, the corner ears, the middle of that end's cross beam. Through the engine
+                        (parts/box_funnel_half_nose|tail/part.py): drawn = the faces a drone or a wall touches, the lap plates, the
+                        joint flanges, the motor seats and stops, the switch lugs; the rest is generated in the room this file gives.
+                        Each prints upside down, the walls' top edges on the bed (layers level: the rails and the beam bend in
+                        the layers), with supports under the ledges and the beam's wings.
+  arm (4)               the cross beam's outer 162 mm each side, under the rain lid (the lid is open only within r 160 of the seat):
+                        lapped on the half's beam end with four M4, out to the side sheet's inner face (two M4 through the
+                        acrylic, W Z 121.3). One setup (parts/box_funnel_arm), printed twice as drawn (nose +y, tail -y) and
+                        twice mirrored. The beams are 24 wide and 29 to 42 deep (v4: 12 x 12 and 12 x 8); the tail one moved from
+                        seat x -121..-109 to -158..-134, behind the rails' disc (r 151 over W Y 38..73) and over the hub (r 115).
+  wall_nose, wall_tail  the sliding end walls: two tabs each out through slots in the side walls to an M4 nut block per side.
+  drive                 per tab one N20 gearmotor with an M4 x 55 screw shaft (4 in all, self-locking: the walls hold a landing
+                        with no power), seated on the half under the side wall's overhang; a roller switch at each wall's two
+                        positions (+y side) pressed by a dog on the nut block; hard stops at "out". No opposite-hand screw, no gears.
+  strips                TPU, flush in the ledges; four spring probes through them (seat sense, keep-alive).
+Not drawn (named, not guessed): the hold-down. The swap's insert (60 N, stall 74 N, up) is more than either drone weighs (Overseer
+21.6 N, Scout 4.9 N) and nothing on the funnel or the drones holds them down, so the insert case has no path through the seat.
+Run: python parts/box_funnel/make.py [--gate]   (writes the drawn pieces' meshes, checks the walls' travel; --gate: tools/solid_check.py
+     on every drawn printed piece)
 """
-import os, numpy as np, trimesh, manifold3d as mf
+import os, sys, numpy as np, trimesh, manifold3d as mf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SEAT_Z, FACE_DEG, WALL = -44.3, 55.0, 3.0            # seat frame; the seat's z 0 is W Z 215.3 (3 Nov: +60, the head extends 60 more at the drone slot)
+SEAT_Z, FACE_DEG, WALL = -44.3, 55.0, 3.0            # seat frame; seat z 0 is W Z 220.3
+FLOOR = 4.5                                       # the ledge under the seat plane (v5: 3.0 left 1.5 under the strips' pockets, under the 2 mm floor; now 2.5)
 H_X, H_Y = 40.0, 28.0                             # the x (nose / tail) faces and the y faces end here, above the seat
-CX = -0.48                                        # the Overseer receiver's centre x in the seat frame (10 Nov, Spark: was 1.5; 1.98 toward the tail so its tab line
-                                                  # sits at seat x 0, on the Scout's and on the arm's grip line; parts/latch7/make.py funnel_fit tab_line_at_seat_x)
-SEAT = (CX - 92.0, CX + 92.0, -34.4, 34.4)        # the Overseer receiver's bottom (latch v7 CAD: 183.6 x 68.0, C) + 0.2 / 0.4 a side (10 Nov; was +-33.4 from an estimate)
-HOLE = (CX - 87.0, CX + 90.0, -28.5, 28.5)        # the Overseer cartridge (latch v7 CAD: x -84.0..90.0, +-27.5 at its rails) + 1.5 / 1.0 (10 Nov; was 170 x 50: it did not pass)
-# The Scout's receiver is a +-25.5 keel, narrower than the hole: it hangs in the hole and the Scout lands on the low ends of its four
-# TPU skid bars (o 3.5 at y +-34), which wedge between the side walls' feet about 1.9 under its drawn height (parts/latch7/make.py
-# funnel_fit finds the height); the nose and tail walls, moved in, hold it along x. The Overseer's flat feet (+-30.8..34.0) sit on the ledge.
-RIM, LEG, SKIRT = 0.0, 12.0, 8.0
-ZW = 220.3                                        # seat z 0 in W (the catch's 155.3 + 65, 3 Nov)
-BEAM_Y = 209.0                                    # the beams reach the side sheets (W X +-206..209)
-NOSE_BEAM = (112.0, 124.0, 150.0 - ZW, 162.0 - ZW)   # seat x, W Z 150..162: 8 under the Overseer's nose diagonals (bottom 170), outside the pack sweep (Y 279..291)
-TAIL_BEAM = (-121.0, -109.0, 155.0 - ZW, 163.0 - ZW)  # seat x, W Z 155..163 in the rails' band (tips 151): 4 over them, 7 under the Overseer's tail diagonals
-END_PAD_Y = 200.0                                 # the beam ends drop to the sheet tops (W Z 145) over |y| 200..209
-BUTTRESS_TOP, BUTTRESS_Y = -20.0, 40.0            # the slab from the tail beam up behind the tail wall, top at h 24.3 where the wall's inner face is at seat x -107.5 (at -14 its inner edge x -109 stood 2.5 inside the wall at h 30 and the Scout's skirt grazed it between the descent check's states), |y| 40: at 48 an Overseer tube grazed its top corner (23 mm3) at the +x+y capture limit, h 30
-END_CUT_X, END_CUT_Y, END_CUT_H = 100.0, 50.0, 24.0   # the y walls' ends (|x| > 100) stop at h 24 outside |y| 50: the Overseer's loop corner grazed the tail end's top (h 25..28, 20 mm3) at the diagonal capture limit at h 30
-CORNER_Y = 45.0                                   # the x walls' top corners (h 28..40) stop at |y| 45 (at 48 an Overseer tube grazed the tail corner 1 mm3 at the diagonal capture limit, h 40) at its capture limits; the receiver still bears on them over |y| <= 48
-LEG_Y = 40.0                                       # the nose legs stand on the nose beam under the nose wall's end (|y| 40)      # no rim on the x walls (3 Nov: the compact Scout cage's nose rods pass 3 over them)
+CX = -0.48                                        # the Overseer receiver's centre x in the seat frame (10 Nov: its tab line at seat x 0, on the Scout's and the arm's grip line)
+SEAT = (CX - 92.0, CX + 92.0, -34.4, 34.4)        # the Overseer receiver's bottom (latch v7 CAD: 183.6 x 68.0, C) + 0.2 / 0.4 a side
+HOLE = (CX - 87.0, CX + 90.0, -28.5, 28.5)        # the Overseer cartridge (latch v7 CAD: x -84.0..90.0, +-27.5 at its rails) + 1.5 / 1.0
+ZW = 220.3                                        # seat z 0 in W
+END_CUT_X, END_CUT_Y, END_CUT_H = 100.0, 50.0, 24.0   # the y walls' ends (|x| > 100) stop at h 24 outside |y| 50 (the Overseer's loop corner at its diagonal capture limit)
+CORNER_Y = 45.0                                   # the x walls' top corners (h 28..40) stop at |y| 45 (an Overseer tube at the diagonal capture limit)
 TAN = np.tan(np.radians(FACE_DEG))
-SETTINGS = {"overseer": 0.0, "scout": 37.2}           # how far each end wall moves in from the 184 seat (37.2 since the seat moved 1.98 to the tail: the nose wall's foot stays at x 54.3, 1.3 clear of the Scout cartridge's x 53)
-# The Scout's receiver carries four landing feet (parts/latch7/make.py scout_feet, 10 Nov): pads on the side ledges, their outer ends 0.3 from these walls' feet.
-# Without them its clipped ends never reached the walls (11 mm of play each way).
+W_H = WALL / np.sin(np.radians(FACE_DEG))         # the wall's thickness measured level: 3.66
+SETTINGS = {"overseer": 0.0, "scout": 37.2}       # how far each end wall moves in from the 184 seat (the nose wall's foot at x 54.3, 1.3 clear of the Scout cartridge's x 53)
 TRAVEL = max(SETTINGS.values())
+TAB_H = (3.5, 8.5)                                # each wall reaches its nuts by two tabs, h 3.5..8.5, through a slot in each side wall (h 3..9)
+TAB_BACK = 5.0                                    # the tab runs this far behind the wall's back: 8 x 5 (v5: 3 x 4 was a neck under its nut block, the gate's neck rule)
+STRIP_Y, STRIP_D = (31.2, 34.0), 2.0              # TPU strips flush in the side ledges (both drones land on them); 2.0 thick (1.5 was under the 2 mm floor)
+PROBE_R = 1.55                                    # bore for an R156 sleeve (O2.89)
+PROBES = [(1.5 + dx, sy * 32.6) for dx in (-30.0, 30.0) for sy in (-1, 1)]   # seat-sense / keep-alive spring probes in the ledges
+# ---- the drive: per tab an N20 gearmotor with an M4 x 55 screw shaft (dimensions E from the listings: body 12 x 10 x 25 with its gearbox)
+SCREW_Y, SCREW_H = 52.0, 6.0                      # the screws' axes: |y|, h (under the side walls' overhang; the wall's back is at |y| 38.1 + 0.7 h)
+BLOCK = (6.0, 5.5, 5.5)                           # the nut block's half sizes x, y, z round the screw (M4 nut 7.0 AF x 3.2 in a slot from above)
+GEAR_FACE, MOTOR_L, SCREW_L = 41.5, 25.0, 55.0    # the gearbox face this far inboard of the seat end; body length; screw length
+SW = (19.8, 6.4, 10.2)                            # KW12-3 roller switch body (x, y, z as mounted), E
+SW_Y = 59.0                                       # the switches' inner face, outboard of the nut blocks
+LUG_Y = (SW_Y + SW[1] + 0.2, SW_Y + SW[1] + 3.2)   # the lug the switches screw to (two M2 along y each)
+# ---- the cross beams and the arms out to the side sheets
+BEAM_X = {1: (104.0, 128.0), -1: (-158.0, -134.0)}   # seat x of the nose and the tail beam (W Y 271..295 and 9..33; the tail one 4.9 behind the rails' disc, W Y 38)
+SHEET_TOP = 145.0 - ZW                            # -75.3; the rain lid lies flush with it (W Z 142..145), open within r 160 of the seat
+LID_Z = SHEET_TOP - 3.0 - 2.0                     # everything outside the lid's opening stays under this (2.0 under the lid)
+BAY = (40.2, 0.577, -80.0, -45.0)                 # the two bays beside the drone (60 / 120 deg, seat x -92..92): their inner faces at |y| = 43.1 + 0.577 (z + 80), kept 2.5 off
+OPEN_R = 155.0                                    # the lid's opening about seat (0, 0.9), 5 inside its edge
+MID_Z = (-99.5, -58.0)                            # the beam's middle: up to 4+ under both drones' lowest pass, inside the opening only
+ARM_Z = (-108.0, LID_Z)                           # the arms, under the lid
+MID_Y, LAP_Y = 88.0, (44.0, 88.0)                 # the half carries the beam to |y| 88; the arm laps it over |y| 44..88
+LAP_BOLTS = [(y, z) for y in (52.0, 80.0) for z in (-95.0, -84.5)]   # four M4 along x through each lap
+LAP_PAD_R = 6.0                                   # the pad round each lap bolt (washer 9)
+HUB_R = 119.0                                     # the wheel's hub side (r 115 over W Y 0..36) + 4, about the axle
+ARM_W = 24.0                                      # the arm lies beside the beam's outer face, as wide as the beam (each alone carries the lap's moment)
+RING_Y, RING_Z = 174.0, -91.5                     # beyond |y| 174 the arm passes under the dome's base ring (W Z 132..142, r 255 about the seat)
+SPOKE = (52.0, 72.0, -88.5, 10.0)                 # a dome spoke crosses the arm's outer 10 mm over |y| 56..68 down to z -86: |y|, top there, width
+FLANGE = (200.7, 205.7, -108.0, -91.5, 20.0)      # the arm's end plate on the sheet's inner face (|y| 206): |y|, z, and its reach inboard of the beam
+SHEET_BOLT_Z = -99.0
+JOINT = dict(hi=(53.0, -34.0, 2.2), lo=(47.0, -52.2, 1.7))   # the low one outside the carried pack's sweep
+PACK_R = 169.0                                    # a pack carried on the wheel sweeps r 165 about the axle over W Y 114..210 (seat x -53..43), + 4   # the halves' joint at x 0: (|y|, z, hole r) of the M4 and the M3
 
 
 def man(tri):
@@ -62,112 +85,97 @@ def frustum(x0, x1, y0, y1, z0, z1, grow):
     return hull([(x0, y0, z0), (x1, y0, z0), (x1, y1, z0), (x0, y1, z0),
                  (x0 - grow, y0 - grow, z1), (x1 + grow, y0 - grow, z1), (x1 + grow, y1 + grow, z1), (x0 - grow, y1 + grow, z1)])
 def box(x0, x1, y0, y1, z0, z1):
+    x0, x1 = sorted((x0, x1)); y0, y1 = sorted((y0, y1)); z0, z1 = sorted((z0, z1))
     return mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+def cyl_x(x0, x1, y, z, r, n=32):
+    x0, x1 = sorted((x0, x1)); return mf.Manifold.cylinder(x1 - x0, r, r, n).rotate([0, 90, 0]).translate([x0, y, z])
+def cyl_y(y0, y1, x, z, r, n=32):
+    y0, y1 = sorted((y0, y1)); return mf.Manifold.cylinder(y1 - y0, r, r, n).rotate([-90, 0, 0]).translate([x, y0, z])
+def cyl_z(z0, z1, x, y, r, n=32):
+    z0, z1 = sorted((z0, z1)); return mf.Manifold.cylinder(z1 - z0, r, r, n).translate([x, y, z0])
+def U(ms):
+    return mf.Manifold.batch_boolean(list(ms), mf.OpType.Add)
 
 
-def body():
+def square_cut(sx, sy, edge, h):
+    """the half space beyond the plane square to a 55 deg face through its inner edge at height h (the face on the +-x or +-y side, its
+    foot at |x| or |y| = edge)"""
+    c = mf.Manifold.cube([1000.0, 1000.0, 500.0]).translate([-500.0, -500.0, 0.0]); a = 90.0 - FACE_DEG
+    c = c.rotate([-sy * a, 0, 0]) if sy else c.rotate([0, sx * a, 0])
+    return c.translate([sx * (edge + h / TAN), sy * (edge + h / TAN), SEAT_Z + h])
+
+
+def inner():
     x0, x1, y0, y1 = SEAT; z0 = SEAT_Z
-    gx, gy = H_X / TAN, H_Y / TAN                                                      # 28.0 and 19.6
-    w = WALL / np.sin(np.radians(FACE_DEG))
-    inner = frustum(x0, x1, y0, y1, z0, z0 + H_X + 1, (H_X + 1) / TAN)
-    outer = frustum(x0 - w, x1 + w, y0 - w, y1 + w, z0 - WALL, z0 + H_X, gx)
-    yw = SEAT[3] + gy + w                                                                  # the y walls' outer face at h 28
-    top_cut = box(x0 - gy + 0.5, x1 + gy - 0.5, -200, 200, z0 + H_Y, z0 + H_X + 2)        # the y walls above h 28 go; the x walls (beyond the inner x at h 28) stay
-    ox0, ox1 = x0 - gx - w, x1 + gx + w                                                 # the x walls' outer faces at h 40
-    rim = [box(ox0 - RIM, ox0 + 2.0, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X), box(ox1 - 2.0, ox1 + RIM, -yw - 4.0, yw + 4.0, z0 + H_X - 4.0, z0 + H_X)] if RIM else []
-    skirt = box(HOLE[0] - WALL, HOLE[1] + WALL, HOLE[2] - WALL, HOLE[3] + WALL, z0 - SKIRT, z0)
-    legs = [box(ox1 - LEG - 1.0, ox1 - 1.0, cy - LEG / 2, cy + LEG / 2, NOSE_BEAM[3], z0 + H_X) for cy in (-LEG_Y, LEG_Y)]   # nose legs, inside the nose wall's footprint at the top
-    legs.append(box(NOSE_BEAM[0], NOSE_BEAM[1], -BEAM_Y, BEAM_Y, NOSE_BEAM[2], NOSE_BEAM[3]))                                 # the nose beam across the box
-    legs.append(box(TAIL_BEAM[0], TAIL_BEAM[1], -BEAM_Y, BEAM_Y, TAIL_BEAM[2], TAIL_BEAM[3]))                                 # the tail beam across the box
-    for b in (NOSE_BEAM, TAIL_BEAM):                                                                                           # the beam ends sit on the sheet tops
-        for sy in (-1, 1):
-            legs.append(box(b[0], b[1], min(sy * END_PAD_Y, sy * BEAM_Y), max(sy * END_PAD_Y, sy * BEAM_Y), 145.0 - ZW, b[2]))
-    legs.append(box(TAIL_BEAM[0], TAIL_BEAM[1], -BUTTRESS_Y, BUTTRESS_Y, TAIL_BEAM[3], BUTTRESS_TOP))                                     # the buttress from the tail beam up behind the tail wall
-    hole = box(*HOLE, z0 - SKIRT - 8.0, z0 + H_X + 2.0)
-    end_cut = [box(min(sx * END_CUT_X, sx * 300), max(sx * END_CUT_X, sx * 300), min(sy * END_CUT_Y, sy * 300), max(sy * END_CUT_Y, sy * 300), z0 + END_CUT_H, z0 + H_X + 2) for sx in (-1, 1) for sy in (-1, 1)]   # the y walls' top ends
-    corner_cut = [box(x0 - 200, x1 + 200, s_ * CORNER_Y, s_ * 300, z0 + H_Y, z0 + H_X + 2) if s_ > 0 else box(x0 - 200, x1 + 200, -300, -CORNER_Y, z0 + H_Y, z0 + H_X + 2) for s_ in (-1, 1)]
-    body = (outer - top_cut - mf.Manifold.batch_boolean(corner_cut + end_cut, mf.OpType.Add)) + mf.Manifold.batch_boolean(rim + [skirt] + legs, mf.OpType.Add)
-    return body - inner - hole
+    return frustum(x0, x1, y0, y1, z0, z0 + H_X + 1, (H_X + 1) / TAN)
 
 
-def carriage_home(sx):
-    """the nose (sx +1) or tail (sx -1) wall as drawn in body(), at the Overseer setting: the shell beyond the corner hips
-    (|x - xend| >= |y| - 33.4), between the side walls' inner faces, from the seat up"""
-    x0, x1, y0, y1 = SEAT; z0 = SEAT_Z + 0.01; xe = x1 if sx > 0 else x0; zt = SEAT_Z + H_X + 2.0; X = 120.0   # 0.01 over the seat plane: no coplanar slivers
+def shell():
+    """the four 55 deg faces and the ledge round the hole, as one shell (no beams, no drive)"""
+    x0, x1, y0, y1 = SEAT; z0 = SEAT_Z
+    gx, gy = H_X / TAN, H_Y / TAN
+    outer = frustum(x0 - W_H, x1 + W_H, y0 - W_H, y1 + W_H, z0, z0 + H_X, gx)               # the outer faces parallel to the inner ones, 3.0 apart
+    outer = outer + box(x0 - W_H, x1 + W_H, y0 - W_H, y1 + W_H, z0 - FLOOR, z0 + 0.5)       # the ledge, square-edged under the walls' feet
+    top_cut = box(x0 - gy + 0.5, x1 + gy - 0.5, -200, 200, z0 + H_Y, z0 + H_X + 2)        # the y walls above h 28 go
+    hole = box(*HOLE, z0 - 60.0, z0 + H_X + 2.0)
+    end_cut = [box(sx * END_CUT_X, sx * 300, sy * END_CUT_Y, sy * 300, z0 + END_CUT_H, z0 + H_X + 2) for sx in (-1, 1) for sy in (-1, 1)]
+    corner_cut = [box(x0 - 200, x1 + 200, s_ * CORNER_Y, s_ * 300, z0 + H_Y, z0 + H_X + 2) for s_ in (-1, 1)]
+    # every top edge square to its face (v5: a level cut left a 55 deg knife edge, under 2 mm for its last 2.9: the gate's thin rule)
+    sq = [square_cut(0, sy, y1, H_Y) for sy in (-1, 1)] + [square_cut(sx, 0, x1 if sx > 0 else -x0, H_X) for sx in (-1, 1)]
+    sq += [square_cut(0, sy, y1, END_CUT_H) ^ box(sx * END_CUT_X, sx * 300, sy * END_CUT_Y, sy * 300, -100, 100) for sx in (-1, 1) for sy in (-1, 1)]
+    sq += [square_cut(sx, 0, x1 if sx > 0 else -x0, H_Y) ^ box(sx * 50.0, sx * 300, s_ * CORNER_Y, s_ * 300, -100, 100) for sx in (-1, 1) for s_ in (-1, 1)]
+    return outer - top_cut - U(corner_cut + end_cut + sq) - inner() - hole
+
+
+def carriage_zone(sx):
+    """the space the nose (sx +1) or tail (sx -1) wall is cut from: beyond the corner hips (|x - xend| >= |y| - 33.4), between the side
+    walls' inner faces, from the seat up"""
+    x0, x1, y0, y1 = SEAT; z0 = SEAT_Z + 0.01; xe = x1 if sx > 0 else x0; zt = SEAT_Z + H_X + 2.0; X = 120.0
     wedge = hull([(xe - sx * y1, 0.0, z0), (xe - sx * y1, 0.0, zt), (xe + sx * X, X + y1, z0), (xe + sx * X, -X - y1, z0),
                   (xe + sx * X, X + y1, zt), (xe + sx * X, -X - y1, zt)])
     g = (zt - z0) / TAN
     trough = hull([(xe - sx * 40, y0, z0), (xe - sx * 40, y1, z0), (xe + sx * X, y0, z0), (xe + sx * X, y1, z0),
                    (xe - sx * 40, y0 - g, zt), (xe - sx * 40, y1 + g, zt), (xe + sx * X, y0 - g, zt), (xe + sx * X, y1 + g, zt)])
-    return body() ^ wedge ^ trough
+    return wedge ^ trough
 
 
-TAB_H = (4.0, 8.0)                                # each wall reaches its nuts by two tabs, h 4..8 over the seat, through a slot in each side wall (h 3.5..8.5)
-SCREW_Y, SCREW_H, SCREW_R = 54.0, 6.0, 4.0        # one Tr8 lead screw per side, under the side walls' overhang, opposite-hand halves: one turn moves both walls in or out
-NUT_Y = (49.0, 59.0)                              # the nut blocks, outside the side walls' outer faces
-MOTOR = (-15.0, 15.0, 62.0, 82.0, 6.0, 26.0)      # x, |y|, h: a NEMA 8 per side beside the screw's middle, geared to it; under the Overseer base's side rails (h 31) and over the 60 / 120 deg bays
-STRIP_Y, STRIP_D = (31.2, 34.0), 1.5              # TPU strips flush in the side ledges, for the landing impact (both drones land on them)
-PROBES = [(1.5 + dx, sy * 32.6) for dx in (-30.0, 30.0) for sy in (-1, 1)]   # keep-alive and seat-sense spring probes in the ledges: both drones carry a bare pad at each
-BRACKET_Y = (26.0, 46.0)                          # the frame's ties from the ledges out to the beams, |y| 26..46 (the swap head rises at the tail end within |y| 20), under the seat plane
+def carriage_home(sx):
+    """the nose or tail wall at the Overseer setting"""
+    return shell() ^ carriage_zone(sx)
 
 
-def frame():
-    """the funnel without its end walls: the side walls, ledges and skirt tied to the nose and tail beams by four brackets under the
-    seat plane (the walls slide over them); the nose legs, which only held the nose wall, go"""
-    x0, x1 = SEAT[0], SEAT[1]; z0 = SEAT_Z; w = WALL / np.sin(np.radians(FACE_DEG))
-    f = body() - carriage_home(1) - carriage_home(-1)
-    f = f - box(x0 - 40.0, x0 - 15.0, -46.0, 46.0, z0 + H_Y + 0.05, z0 + H_X + 2.0)                                      # a zero-volume fin the tail wall's cut leaves over the buttress (10 Nov, after the seat moved 1.98)
-    f = f - box(NOSE_BEAM[0] - 3.5, NOSE_BEAM[1] + 2.0, -LEG_Y - LEG, LEG_Y + LEG, NOSE_BEAM[3], z0 + H_X + 1)        # the nose legs' remains
-    ties = []
-    for sy in (-1, 1):
-        ya, yb = sorted((sy * BRACKET_Y[0], sy * BRACKET_Y[1]))
-        ties.append(box(x1 + w - 4.0, NOSE_BEAM[1], ya, yb, NOSE_BEAM[3] - 1.0, z0 - 1.5))
-        ties.append(box(TAIL_BEAM[0], x0 - w + 4.0, ya, yb, TAIL_BEAM[3] - 1.0, z0 - 1.5))
-    xs = [tab_x(1), tab_x(-1)]
-    for sy in (-1, 1):                                                                              # bearing blocks at the screws' ends, on the side walls' outer faces
-        ya, yb = sorted((sy * 44.0, sy * (SCREW_Y + 4.5)))                                          # 9 Nov: to |y| 58.5 and 3 inboard (at |y| 60, x -119.5 an Overseer tube grazed the tail block, 2 mm3, at the +x+y capture limit, h 16)
-        ties.append(box(xs[0][1] + 11.5, xs[0][1] + 17.0, ya, yb, NOSE_BEAM[3] - 1.0, z0 + SCREW_H + 6.0))     # down to the nose beam
-        ties.append(box(xs[1][0] - 17.0, xs[1][0] - 11.5, ya, yb, TAIL_BEAM[3] - 1.0, z0 + SCREW_H + 6.0))     # down to the tail beam
-    f = f + mf.Manifold.batch_boolean(ties, mf.OpType.Add)
-    cuts = []
-    for sx in (1, -1):                                                                              # the tabs' slots through the side walls, over the whole travel
-        xa, xb = tab_x(sx); lo, hi = (xa - TRAVEL - 1.0, xb + 1.0) if sx > 0 else (xa - 1.0, xb + TRAVEL + 1.0)
-        for sy in (-1, 1):
-            ya, yb = sorted((sy * 33.0, sy * (NUT_Y[0] - 0.5)))
-            cuts.append(box(lo, hi, ya, yb, z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5))
-    for sy in (-1, 1):                                                                              # the strips' pockets
-        ya, yb = sorted((sy * STRIP_Y[0], sy * STRIP_Y[1])); cuts.append(box(SEAT[0] + 1.0, SEAT[1] - 1.0, ya, yb, z0 - STRIP_D, z0 + 0.01))
-    cuts += [mf.Manifold.cylinder(30.0, 1.7, 1.7, 16).translate([x, y, z0 - 20.0]) for x, y in PROBES]
-    f = f - mf.Manifold.batch_boolean(cuts, mf.OpType.Add)
-    keep = [m for m in f.decompose() if m.volume() > 1.0]
-    return mf.Manifold.batch_boolean(keep, mf.OpType.Add)
+def xend(sx):
+    return SEAT[1] if sx > 0 else SEAT[0]
 
 
 def tab_x(sx):
     """the x span the wall's tabs cover at the Overseer setting: the wall's face at h 4 to its back at h 8 (the tab leans with the wall)"""
-    xe = SEAT[1] if sx > 0 else SEAT[0]; w = WALL / np.sin(np.radians(FACE_DEG))
-    a, b = xe + sx * (TAB_H[0] / TAN + 0.3), xe + sx * (TAB_H[1] / TAN + w - 0.3)
+    xe = xend(sx)
+    a, b = xe + sx * (TAB_H[0] / TAN + 0.3), xe + sx * (TAB_H[1] / TAN + W_H - 0.3 + TAB_BACK)
     return min(a, b), max(a, b)
 
 
+def block_x(sx, setting="overseer"):
+    """the nut block's centre x at a setting"""
+    xa, xb = tab_x(sx); return (xa + xb) / 2 - sx * SETTINGS[setting]
+
+
 def nuts(sx):
-    """the wall's two tabs, leaning with the wall, out through the side walls, and its two nut blocks bored for the screws (they move
-    with the wall)"""
-    z0 = SEAT_Z; xe = SEAT[1] if sx > 0 else SEAT[0]; w = WALL / np.sin(np.radians(FACE_DEG)); out = []
-    xa, xb = tab_x(sx); xm = (xa + xb) / 2
+    """the wall's two tabs out through the side walls and its two nut blocks (an M4 nut dropped in a slot from above, the screw through
+    it); on the +y block the dog that rolls over the two switches"""
+    z0 = SEAT_Z; xe = xend(sx); out = []; xm = block_x(sx); zc = z0 + SCREW_H; bx, by, bz = BLOCK
     for sy in (-1, 1):
-        y0_, y1_ = sorted((sy * 34.0, sy * (NUT_Y[0] + 1.0)))
         pts = []
         for h in TAB_H:
-            f, b = xe + sx * (h / TAN + 0.3), xe + sx * (h / TAN + w - 0.3)
-            for x in (f, b):
-                for y in (y0_, y1_):
-                    pts.append((x, y, z0 + h))
+            f, b = xe + sx * (h / TAN + 0.3), xe + sx * (h / TAN + W_H - 0.3 + TAB_BACK)
+            pts += [(x, y, z0 + h) for x in (f, b) for y in (sy * 34.0, sy * (SCREW_Y - by + 1.0))]
         out.append(hull(pts))
-        ya, yb = sorted((sy * NUT_Y[0], sy * NUT_Y[1]))
-        out.append(box(xm - 6.0, xm + 6.0, ya, yb, z0 + SCREW_H - 5.5, z0 + SCREW_H + 5.5))
-    bore = [mf.Manifold.cylinder(40.0, SCREW_R + 0.2, SCREW_R + 0.2, 24).rotate([0, 90, 0]).translate([xm - 20.0, sy * SCREW_Y, z0 + SCREW_H]) for sy in (-1, 1)]
-    return mf.Manifold.batch_boolean(out, mf.OpType.Add) - mf.Manifold.batch_boolean(bore, mf.OpType.Add)
+        out.append(box(xm - bx, xm + bx, sy * (SCREW_Y - by), sy * (SCREW_Y + by), zc - bz, zc + bz))
+    out.append(box(xm - 2.5, xm + 2.5, SCREW_Y + 1.0, SCREW_Y + by, zc + bz - 1.0, zc + bz + 3.0))          # the dog: an arm from the block's top
+    out.append(box(xm - 2.5, xm + 2.5, SCREW_Y + by - 1.0, SW_Y + 4.5, zc + bz + 0.3, zc + bz + 3.0))      # out over the switches' rollers (body top h 11.2)
+    cut = [cyl_x(xm - 20.0, xm + 20.0, sy * SCREW_Y, zc, 2.2) for sy in (-1, 1)]
+    cut += [box(xm - 1.7, xm + 1.7, sy * (SCREW_Y - 3.6), sy * (SCREW_Y + 3.6), zc - 3.6, zc + bz + 1.0) for sy in (-1, 1)]   # the nut's slot
+    return U(out) - U(cut)
 
 
 def carriage(sx, setting="overseer"):
@@ -175,37 +183,185 @@ def carriage(sx, setting="overseer"):
     return (carriage_home(sx) + nuts(sx)).translate([-sx * SETTINGS[setting], 0.0, 0.0])
 
 
-def drive():
-    """the fixed, bought side of the drive, as solids the drones must clear: both screws, both motors with their gears, the four
-    position switches (each wall in / out), the probes' bodies under the ledges"""
-    z0 = SEAT_Z; out = []
-    xs = [tab_x(1), tab_x(-1)]; x_lo = xs[1][0] - 14.0; x_hi = xs[0][1] + 14.0
+def motor_x(sx):
+    """the gearmotor along x: (rear end, gearbox face, screw tip)"""
+    f = xend(sx) - sx * GEAR_FACE
+    return f - sx * MOTOR_L, f, f + sx * SCREW_L
+
+
+def switch_x(sx):
+    """the two switches' body centres along x (+y side): the roller, 7 from the body's centre, is at the dog's x at the wall's out
+    and in positions; the bodies lie inboard of their rollers (the Overseer's foot nodes pass beyond seat x 102 outside the ears)"""
+    return block_x(sx, "overseer") - sx * 7.0, block_x(sx, "scout") - sx * 7.0
+
+
+def fixed():
+    """the shell without the two sliding walls: side walls, ledges, the corner ears, the sills under the walls' feet; with the tabs'
+    slots, the strips' pockets and the probes' bores"""
+    z0 = SEAT_Z
+    f = shell() - carriage_zone(1) - carriage_zone(-1)                                           # the zones, not the walls: no coplanar faces left as fins
+    cuts = []
+    for sx in (1, -1):
+        xa, xb = tab_x(sx); lo, hi = (xa - TRAVEL - 1.0, xb + 1.0) if sx > 0 else (xa - 1.0, xb + TRAVEL + 1.0)
+        cuts += [box(lo, hi, sy * 33.0, sy * (SCREW_Y - BLOCK[1] + 0.5), z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5) for sy in (-1, 1)]
+    cuts += [box(SEAT[0] + 1.0, SEAT[1] - 1.0, sy * STRIP_Y[0], sy * STRIP_Y[1], z0 - STRIP_D, z0 + 0.01) for sy in (-1, 1)]
+    cuts += [cyl_z(z0 - 30.0, z0 + 5.0, x, y, PROBE_R, 16) for x, y in PROBES]
+    cuts.append(box(SEAT[0] - 40.0, HOLE[0] + 0.01, -21.0, 21.0, z0 - 60.0, z0 + 0.02))             # no sill under the tail wall's middle: the swap head rises there (W X +-20, Y 59..74)
+    f = f - U(cuts)
+    return U([m for m in f.decompose() if m.volume() > 5.0])
+
+
+def wall_sweep(sx):
+    """everything the wall, its tabs, blocks and dog pass through between its two settings, 0.4 clear"""
+    c = carriage(sx); bb = c.bounding_box(); m = U([c.translate([-sx * d, 0, 0]) for d in np.linspace(0.0, TRAVEL, 20)])
+    z0 = SEAT_Z; xm0, xm1 = block_x(sx, "overseer"), block_x(sx, "scout"); bx, by, bz = BLOCK; zc = z0 + SCREW_H
+    lo, hi = min(xm0, xm1) - bx - 0.8, max(xm0, xm1) + bx + 0.6
+    b = [box(lo, hi, sy * (SCREW_Y - by - 0.5), sy * (SCREW_Y + by + 0.6), zc - bz - 0.5, zc + bz + 0.6) for sy in (-1, 1)]
+    b.append(box(lo + bx - 3.5, hi - bx + 3.5, SCREW_Y + 0.5, SW_Y + 5.0, zc + bz - 0.2, zc + bz + 3.6))
+    xa, xb = tab_x(sx); tl, th = (xa - TRAVEL - 1.0, xb + 1.0) if sx > 0 else (xa - 1.0, xb + TRAVEL + 1.0)
+    b += [box(tl, th, sy * 33.0, sy * (SCREW_Y - by + 0.5), z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5) for sy in (-1, 1)]
+    return m + U(b)
+
+
+def half_bodies(sx):
+    """one half of the frame for the engine: (drawn, cuts, env, regions). regions: named bodies for the supports and loads."""
+    z0 = SEAT_Z; xe = xend(sx); bxa, bxb = BEAM_X[sx]; xin, xout = (bxa, bxb) if sx > 0 else (bxb, bxa)   # the beam's inner and outer face
+    xmid = (bxa + bxb) / 2; side = box(0.0, sx * 400.0, -400, 400, -400, 400)
+    S = fixed() ^ side
+    R = dict(shell=S); drawn = [S]; cuts = []; env = []
+    mr, mf_, tip = motor_x(sx); zc = z0 + SCREW_H; bx, by, bz = BLOCK
     for sy in (-1, 1):
-        out.append(mf.Manifold.cylinder(x_hi - x_lo, SCREW_R, SCREW_R, 24).rotate([0, 90, 0]).translate([x_lo, sy * SCREW_Y, z0 + SCREW_H]))
-        ya, yb = sorted((sy * MOTOR[2], sy * MOTOR[3])); out.append(box(MOTOR[0], MOTOR[1], ya, yb, z0 + MOTOR[4], z0 + MOTOR[5]))
-        ya, yb = sorted((sy * (SCREW_Y - 4.0), sy * MOTOR[3])); out.append(box(-6.0, 6.0, ya, yb, z0 + SCREW_H - 4.0, z0 + MOTOR[5] - 2.0))   # the gear pair
-    for sx in (1, -1):                                                                                     # switches at each nut's two ends, on the +y screw
-        xa, xb = tab_x(sx)
-        for dx in (0.0, -sx * TRAVEL):
-            xm = (xa + xb) / 2; xc = xm + sx * 10.0 + dx if dx == 0.0 else xm - sx * 10.0 + dx       # just beyond the nut block (xm +- 6) at each end of its travel
-            out.append(box(xc - 3.0, xc + 3.0, SCREW_Y + 5.0, SCREW_Y + 15.0, z0 + SCREW_H - 6.0, z0 + SCREW_H + 6.0))
+        Y = lambda a, b: (sy * a, sy * b)
+        # the lap under the arm: the half's side of the beam over |y| 44..88
+        lap = U([cyl_x(xin, xout, sy * y, z, LAP_PAD_R) for y, z in LAP_BOLTS]) ^ box(-400, 400, -400, 400, MID_Z[0], LID_Z)   # a pad round each bolt; the lap between them is generated
+        R[f"lap{sy:+d}"] = lap; drawn.append(lap)
+        cuts += [cyl_x(xin - sx * 14.0, xout + sx * 40.0, sy * y, z, 2.2) for y, z in LAP_BOLTS]                           # M4 x 60 through both
+        cuts += [cyl_x(xin, xin - sx * 14.0, sy * y, z, 4.8) for y, z in LAP_BOLTS]                                        # the nut and washer inboard
+        cuts.append(box(xout, xout + sx * 40.0, *Y(0.0, 400.0), -200.0, LID_Z + 0.3))                                      # the arm, beside the beam's outer face
+        # the joint at x 0: a flange high behind the wall (M4) and one under the ledge (M3)
+        (yh, zh, rh), (yl, zl, rl) = JOINT["hi"], JOINT["lo"]
+        fh = box(0.0, sx * 5.0, *Y(44.0, 60.0), -41.0, -27.0); fl = box(0.0, sx * 5.0, *Y(42.0, 52.0), -56.5, z0 - FLOOR + 0.5)
+        R[f"joint_hi{sy:+d}"], R[f"joint_lo{sy:+d}"] = fh, fl; drawn += [fh, fl]
+        cuts += [cyl_x(-sx * 1.0, sx * 19.0, sy * yh, zh, rh), cyl_x(sx * 5.0, sx * 19.0, sy * yh, zh, 4.8),
+                 cyl_x(-sx * 1.0, sx * 19.0, sy * yl, zl, rl), cyl_x(sx * 5.0, sx * 19.0, sy * yl, zl, 3.4)]
+        # the motor's seat: a floor under it, a plate its gearbox face pulls on (slot for the screw), a stop behind it
+        y0m, y1m = SCREW_Y - 6.5, SCREW_Y + 6.5
+        floor = box(mr - sx * 4.0, mf_ + sx * 3.5, *Y(y0m, y1m), z0 - 3.5, z0 + SCREW_H - 5.1)
+        front = box(mf_, mf_ + sx * 3.5, *Y(y0m, y1m), z0 - 3.5, z0 + SCREW_H + 6.0)
+        rear = box(mr, mr - sx * 4.0, *Y(y0m, y1m), z0 - 3.5, z0 + SCREW_H + 2.0)
+        R[f"motor_front{sy:+d}"], R[f"motor_rear{sy:+d}"] = front, rear; drawn += [floor, front, rear]
+        cuts.append(cyl_x(mf_ - sx * 1.0, tip + sx * 6.0, sy * SCREW_Y, zc, 2.3))                                           # the screw, through the plate and the stop
+        cuts.append(box(mf_ - sx * 1.0, mf_ + sx * 4.5, *Y(SCREW_Y - 2.3, SCREW_Y + 2.3), zc, zc + 12.0))                   # the plate's slot: the screw drops in
+        cuts.append(box(mr, mf_, *Y(SCREW_Y - 6.1, SCREW_Y + 6.1), z0 + SCREW_H - 5.1, z0 + SCREW_H + 5.2))                # the motor body
+        cuts.append(box(mr, mf_, *Y(SCREW_Y, 75.0), z0 + SCREW_H - 5.1, z0 + SCREW_H + 6.5))          # its way in from the side
+        xt = (mr + mf_) / 2
+        cuts.append(box(xt - 2.0, xt + 2.0, *Y(y0m - 3.0, y1m + 3.0), z0 - 5.6, z0 - 3.5))                                  # the cable tie's tunnel under the floor
+        # the wall's hard stop at "out": a boss beyond the block, bored for the screw's tip
+        xb0 = block_x(sx) + sx * (bx + 0.6)
+        stop = box(xb0, xb0 + sx * 5.0, *Y(SCREW_Y - by, SCREW_Y + by), zc - bz, zc + bz); R[f"stop{sy:+d}"] = stop; drawn.append(stop)
+        # the switch lug, outboard of the blocks (switches on the +y side; the lug on both keeps the half mirrored)
+        so, si = switch_x(sx); l0, l1 = min(so, si) - SW[0] / 2 - 1.0, max(so, si) + SW[0] / 2 + 1.0
+        lug = box(l0, l1, *Y(*LUG_Y), z0 + 0.5, z0 + 12.5); drawn.append(lug)
+        for xs in (so, si):
+            cuts.append(box(xs - SW[0] / 2 - 0.3, xs + SW[0] / 2 + 0.3, *Y(SW_Y - 0.3, LUG_Y[0]), z0 + 0.5, z0 + 16.0))     # the switch and its roller
+            cuts += [cyl_y(sy * (SW_Y - 1.0), sy * (LUG_Y[1] + 1.0), xs + d, z0 + 4.4, 0.85, 12) for d in (-4.75, 4.75)]    # M2 self-tapping
+        # ---- room
+        zt = z0 + 27.0
+        env.append(box(0.0, sx * 92.0, *Y(38.0, 59.0), z0 - FLOOR - 0.2, zt))                                               # behind the side wall
+        env.append(box(sx * 92.0, sx * 112.0, *Y(38.0, 59.0), z0 - FLOOR - 0.2, -31.0))                                      # behind the ear: full depth under h 13,
+        env.append(box(sx * 90.0, sx * (112.0 if sx > 0 else 108.0), *Y(38.0, 54.0), -33.0, zt))                                                    # 5 less above it (the Overseer's foot nodes and tubes pass |y| 59 from z -28)
+        env.append(box(l0, l1, *Y(56.0, LUG_Y[1]), z0 + 0.5, z0 + 12.5))                                                     # out to the lug
+        env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 70.0), z0 + 16.5, zt))                                 # a rib's room outside the wall, over the drive (the Overseer's foot nodes pass beyond its ends)
+        if sx > 0:
+            env.append(box(92.0, 120.0, *Y(38.0, 56.0), z0 - FLOOR - 0.2, -41.5))                                            # the ear's foot, out to the beam (the Overseer's tubes pass over it from z -38)
+            env.append(box(0.0, xout, *Y(28.5, 56.0), -56.5, z0 - FLOOR + 0.5))                                             # under the ledge and the motors, to the beam
+            env.append(box(92.0, xout, *Y(26.0, 56.0), MID_Z[1] - 2.0, z0 - FLOOR + 0.5))
+        else:
+            env.append(box(0.0, -112.0, *Y(28.5, 56.0), -56.5, z0 - FLOOR + 0.5))
+            env.append(box(-92.0, -112.0, *Y(26.0, 56.0), -67.0, z0 - FLOOR + 0.5))                                         # down behind the tail wall (the rails' tips pass 4.5 under at |y| 26)
+            env.append(box(-110.0, xout, *Y(26.0, 56.0), -67.0, -57.0))                                                     # under the Overseer's tail tubes (z -52), to the beam
+    env.append(box(xin, xout, -MID_Y, MID_Y, MID_Z[0], LID_Z))                                                               # the beam's middle, under the lid's level
+    env.append(box(xin, xout, -MID_Y, MID_Y, LID_Z - 1.0, MID_Z[1]) ^ cyl_z(-200.0, 100.0, 0.0, 0.9, OPEN_R, 96))            # and up through the lid's opening
+    cuts.append(cyl_x(-200.0, -129.0, 0.0, -ZW, HUB_R, 96))                                                                  # the wheel's hub side behind the rails
+    cuts.append(cyl_x(-62.0, 52.0, 0.0, -ZW, PACK_R, 128))                                                                   # a pack carried round on the wheel
+    y0b, kb, zb, ztop = BAY
+    for sy in (-1, 1):                                                                                                       # the bays beside the drone
+        poly = [(sy * (y0b - kb * 30.0), zb - 30.0), (sy * 200.0, zb - 30.0), (sy * 200.0, ztop), (sy * (y0b + kb * (ztop - zb)), ztop)]
+        pr = mf.Manifold.extrude(mf.CrossSection([poly if sy > 0 else poly[::-1]]), 190.0).transform([[0, 0, 1, -95.0], [1, 0, 0, 0], [0, 1, 0, 0]])
+        cuts.append(pr)
     for x, y in PROBES:
-        out.append(mf.Manifold.cylinder(14.0, 1.5, 1.5, 16).translate([x, y, z0 - 14.0]))
-    return mf.Manifold.batch_boolean(out, mf.OpType.Add)
+        cuts.append(cyl_z(-90.0, z0 + 5.0, x, y, PROBE_R, 16))
+    cuts.append(inner()); cuts.append(box(*HOLE, -120.0, 20.0))                                                               # the drones' space and the cartridge's hole
+    cuts.append(wall_sweep(sx))
+    cuts.append(box(-sx * 0.0, -sx * 400.0, -400, 400, -400, 400))                                                           # the other half
+    return U(drawn), U(cuts), U(env), R
+
+
+def arm_bodies(sx=1, sy=1):
+    """one cross arm for the engine, in the seat frame at the corner (sx, sy): (drawn, cuts, env, regions). Under the rain lid, beside
+    the beam's outer face over the lap (|y| 44..88), out to the side sheet's inner face."""
+    bxa, bxb = BEAM_X[sx]; xin, a0 = (bxa, bxb) if sx > 0 else (bxb, bxa); a1 = a0 + sx * ARM_W
+    Y = lambda a, b: (sy * a, sy * b); f0, f1, fz0, fz1, reach = FLANGE
+    lap = U([cyl_x(a0, a1, sy * y, z, LAP_PAD_R) for y, z in LAP_BOLTS]) ^ box(-400, 400, -400, 400, MID_Z[0], LID_Z)
+    flange = box(a0 - sx * reach, a1, *Y(f0, f1), fz0, fz1)
+    fb = [a0 - sx * (reach - 8.0), a1 - sx * 8.0]                                                                             # two M4 through the sheet
+    cuts = [cyl_x(xin - sx * 14.0, a1 + sx * 14.0, sy * y, z, 2.2) for y, z in LAP_BOLTS]
+    cuts += [cyl_x(a1, a1 + sx * 14.0, sy * y, z, 4.8) for y, z in LAP_BOLTS]                                                 # the heads and washers outboard
+    cuts += [cyl_y(sy * (f0 - 30.0), sy * (f1 + 10.0), x, SHEET_BOLT_Z, 2.2) for x in fb]
+    cuts += [cyl_y(sy * (f0 - 30.0), sy * f0, x, SHEET_BOLT_Z, 4.8) for x in fb]                                              # the nuts and washers inboard of the plate
+    cuts.append(box(a0 - sx * 100.0, a0, *Y(0.0, f0 - 14.5), -200.0, 20.0))                                                   # the half's beam, inboard of the arm
+    cuts.append(box(-400, 400, *Y(f1, 400.0), -200.0, 20.0))                                                                  # the sheet
+    cuts.append(box(-400, 400, *Y(RING_Y, 400.0), RING_Z, 20.0))                                                              # the dome's base ring
+    cuts.append(box(a1 - sx * SPOKE[3], a1 + sx * 5.0, *Y(SPOKE[0], SPOKE[1]), SPOKE[2], 20.0))                               # a dome spoke
+    env = box(a0, a1, *Y(LAP_Y[0], f1), *ARM_Z) + box(a0 - sx * reach, a1, *Y(f0 - 14.0, f1), fz0, fz1)
+    return U([lap, flange]), U(cuts), env, dict(lap=lap, foot=flange, sheet_bolts=[(x, sy * f1, SHEET_BOLT_Z) for x in fb])
+
+
+def room(drawn, cuts, env):
+    """the most a generated piece can be: its room and drawn bodies less its cuts (what every clearance check uses, so a run's result
+    is clear whatever it generates)"""
+    return (env + drawn) - cuts
+
+
+def frame():
+    """the fixed funnel as the clearance checks see it: both halves and the four arms, each at its full room"""
+    out = [room(*half_bodies(sx)[:3]) for sx in (1, -1)] + [room(*arm_bodies(sx, sy)[:3]) for sx in (1, -1) for sy in (1, -1)]
+    return U(out)
+
+
+def drive():
+    """the bought side of the drive, as solids everything must clear: four gearmotors with their screws, the four switches (+y), the
+    probes' bodies under the ledges, the lap, joint and foot bolts"""
+    z0 = SEAT_Z; zc = z0 + SCREW_H; out = []
+    for sx in (1, -1):
+        mr, mf_, tip = motor_x(sx)
+        for sy in (-1, 1):
+            out.append(box(mr, mf_, sy * (SCREW_Y - 6.0), sy * (SCREW_Y + 6.0), zc - 5.0, zc + 5.0))
+            out.append(cyl_x(mf_, tip, sy * SCREW_Y, zc, 2.0, 16))
+        for xs in switch_x(sx):
+            out.append(box(xs - SW[0] / 2, xs + SW[0] / 2, SW_Y, SW_Y + SW[1], z0 + 1.0, z0 + 1.0 + SW[2]))
+        for sy in (-1, 1):
+            bxa, bxb = BEAM_X[sx]
+            out += [cyl_x(min(bxa, bxb + sx * ARM_W) - 4.0, max(bxb, bxa + sx * ARM_W) + 4.0, sy * y, z, 2.0, 12) for y, z in LAP_BOLTS]
+            out += [cyl_y(y - sy * 9.0, y - sy * 0.05, x, z, 2.0, 12) for x, y, z in arm_bodies(sx, sy)[3]["sheet_bolts"]]   # to the sheet's face (through it and its nut outside: the sheet's)
+    for sy in (-1, 1):
+        (yh, zh, rh), (yl, zl, rl) = JOINT["hi"], JOINT["lo"]
+        out += [cyl_x(-8.5, 8.5, sy * yh, zh, 2.0, 12), cyl_x(-8.0, 8.0, sy * yl, zl, 1.5, 12)]
+    for x, y in PROBES:
+        out.append(cyl_z(z0 - 14.0, z0, x, y, 1.5, 16))
+    return U(out)
 
 
 def strips():
     """the two TPU strips, flush in the ledges, with the probes' holes"""
-    z0 = SEAT_Z; out = []
-    for sy in (-1, 1):
-        ya, yb = sorted((sy * STRIP_Y[0], sy * STRIP_Y[1])); out.append(box(SEAT[0] + 1.0, SEAT[1] - 1.0, ya, yb, z0 - STRIP_D, z0))
-    holes = [mf.Manifold.cylinder(20.0, 1.7, 1.7, 16).translate([x, y, z0 - 10.0]) for x, y in PROBES]
-    return mf.Manifold.batch_boolean(out, mf.OpType.Add) - mf.Manifold.batch_boolean(holes, mf.OpType.Add)
+    z0 = SEAT_Z
+    out = [box(SEAT[0] + 1.0, SEAT[1] - 1.0, sy * STRIP_Y[0], sy * STRIP_Y[1], z0 - STRIP_D, z0) for sy in (-1, 1)]
+    return U(out) - U([cyl_z(z0 - 10.0, z0 + 10.0, x, y, PROBE_R, 16) for x, y in PROBES])
 
 
 def funnel(setting="overseer"):
-    """everything the drones must clear, at a setting ("overseer" = the 184 seat, "scout" = the walls 39.2 in): the frame, both
-    walls with their nuts, the strips, the drive"""
+    """everything the drones, the latch sets and the arm must clear, at a setting ("overseer" = the 184 seat, "scout" = the walls
+    37.2 in): the frame at its full room, both walls with their nut blocks, the strips, the drive"""
     return frame() + carriage(1, setting) + carriage(-1, setting) + strips() + drive()
 
 
@@ -214,17 +370,31 @@ def stl(m, path):
     os.makedirs(os.path.dirname(path), exist_ok=True); t.export(path); return t
 
 
+PIECES = {"box_funnel_wall_nose": lambda: carriage(1), "box_funnel_wall_tail": lambda: carriage(-1), "box_funnel_strips": strips,
+          "box_funnel_drive": drive}
+ROOMS = {"box_funnel_half_nose": lambda: room(*half_bodies(1)[:3]), "box_funnel_half_tail": lambda: room(*half_bodies(-1)[:3]),
+         "box_funnel_arm": lambda: U([room(*arm_bodies(sx, sy)[:3]) for sx in (1, -1) for sy in (1, -1)])}
+
+
 if __name__ == "__main__":
     PARTS = os.path.dirname(HERE)
-    stl(carriage(1), os.path.join(PARTS, "box_funnel_wall_nose", "part.stl"))
-    stl(carriage(-1), os.path.join(PARTS, "box_funnel_wall_tail", "part.stl"))
-    stl(strips(), os.path.join(PARTS, "box_funnel_strips", "part.stl"))
-    stl(drive(), os.path.join(PARTS, "box_funnel_drive", "part.stl"))
-    for st in SETTINGS:                                                                             # the walls never touch the frame or the drive
+    for pid, fn in PIECES.items():
+        t = stl(fn(), os.path.join(PARTS, pid, "part.stl")); print(f"{pid}: {t.volume / 1000:.1f} cm3, extents {t.extents.round(1).tolist()}, {len(fn().decompose())} body(ies)")
+    for pid, fn in ROOMS.items():
+        m = fn(); bb = m.bounding_box(); print(f"{pid} room: {m.volume() / 1000:.1f} cm3, extents {[round(bb[k + 3] - bb[k], 1) for k in range(3)]}")
+    fr = frame() + drive()
+    for st in SETTINGS:                                           # the walls never touch the frame's room or the drive, at either setting or between
         for sx in (1, -1):
-            v = (carriage(sx, st) ^ (frame() + drive())).volume()
-            assert v < 1.0, f"the {'nose' if sx > 0 else 'tail'} wall at the {st} setting crosses the frame or drive by {v:.0f} mm3"
-    t = stl(frame(), os.path.join(HERE, "part.stl"))
-    print(f"frame {t.volume * 1.23e-3:.0f} g PCTG in {len(frame().decompose())} piece(s), walls with their nuts {carriage(1).volume() * 1.27e-3:.1f} + {carriage(-1).volume() * 1.27e-3:.1f} g, strips {strips().volume() * 1.21e-3:.1f} g TPU; walls in for the Scout by {SETTINGS['scout']}")
-    print(f"funnel v3: x faces to h {H_X:.0f} (capture +-{H_X / TAN:.0f}), y faces to h {H_Y:.0f} (+-{H_Y / TAN:.0f}); extents {t.extents.round(1).tolist()}, "
-          f"min {t.bounds[0].round(1).tolist()} max {t.bounds[1].round(1).tolist()}, {t.volume * 1.23e-3:.0f} g PCTG, watertight {t.is_watertight}")
+            for d in np.linspace(0.0, SETTINGS[st], 6) if SETTINGS[st] else [0.0]:
+                v = (carriage(sx).translate([-sx * d, 0, 0]) ^ fr).volume()
+                assert v < 1.0, f"the {'nose' if sx > 0 else 'tail'} wall {d:.1f} in crosses the frame or the drive by {v:.0f} mm3"
+    print(f"walls clear of the frame's room and the drive over the whole travel ({TRAVEL} mm)")
+    if "--gate" in sys.argv:                                       # the solid gate on every drawn printed piece, body by body (the strips are six loose pieces)
+        sys.path.insert(0, os.path.join(os.path.dirname(PARTS), "tools")); from solid_check import solid_check
+        bad = 0
+        for pid in ("box_funnel_wall_nose", "box_funnel_wall_tail", "box_funnel_strips"):
+            for k, body in enumerate(PIECES[pid]().decompose()):
+                mm = body.to_mesh(); t = trimesh.Trimesh(np.asarray(mm.vert_properties)[:, :3], np.asarray(mm.tri_verts), process=True)
+                ok, info = solid_check(t); bad += not ok
+                print(f"gate {pid}[{k}] {t.extents.round(1).tolist()}: {'PASS' if ok else 'FAIL'}" + ("" if ok else f" necks {info['necks']} thin {info['thin_walls']} eroded bodies {info['bodies_eroded']}"))
+        sys.exit(1 if bad else 0)

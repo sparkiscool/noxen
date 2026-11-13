@@ -1,17 +1,15 @@
-"""The box (Nox Ground Unit) as a system of this repo, from the nox repo's assembly files (3 Nov, Spark: the funnel with the most
-up-to-date box mechanism CAD, as real as it gets, one artifact other sessions can reach). Copies the real meshes into
-parts/box_<slug>/part.stl (a folder belongs to one system) and writes systems/box.assembly.json in the box W frame:
-  swap arm v7      nox/box/box_swap_arm.assembly.json (hub, stub, rails, heads, grabbers, detent, drives, the bay receivers and two
-                   packs; meshes runs/arm/v7/asm), poses as in the file (cycle t 0, park); all 9 bays (the two nearest the top, 30 and -210 deg,
-                   dropped 3 Nov when they rose through the deck, are back 8 Nov: the seat is 65 higher and there is no deck), plus
-                   two Overseer bays at 60 and 120 deg beside the drone (8 Nov): 11 bays, every slot of the 30 deg ring but the drone's
-  stand            nox/box/box_structure.assembly.json: mast, cradle keel, kb, toe, the two cross bars (the built demo v1); the v1
-                   ring frames, posts, brackets and v4i bay modules are left out: the v2 layout superseded them with the 9 bays
-                   the arm file carries, and nothing of v2's bodies is drawn yet
-  enclosure        box_structure_v2.assembly.json: the four sheets and the PSU, as boxes
-  funnel           parts/box_funnel (drawn here, 3 Nov), posed with the catch's SEAT_TO_W (nox/box/catch_system.py)
-  seated Scout     the receiver v3 and cartridge v6 (copies of this repo's latch meshes) at the seat, as context
-Run: python tools/import_box.py <path to a nox checkout>
+"""The box (Nox Ground Unit) as a system of this repo: one page of everything round the landing funnel, and the one check between its
+streams (tools/box_check.py). Writes systems/box.assembly.json (box W frame), systems/box.check.json and systems/box.appendix.html.
+  swap arm         systems/swap_arm.assembly.json once the arm stream has pushed it; until then the arm v7 meshes imported from the
+                   nox repo on 3 Nov (hub, stub, rails, heads, grabbers, detent, drives, 11 bay receivers, two packs), marked superseded
+  stand, enclosure the built demo's mast, cradle keel, kb, toe and cross bars; the v2 sheets and PSU as boxes (from the nox repo, 3 Nov)
+  funnel           parts/box_funnel/make.py v5: the two frame halves and the cross arm (engine parts: their result once run, a
+                   placeholder and their drawn faces and room until then), the two end walls, strips, drive
+  dome             parts/box_dome (its entries are kept as they stand in the file)
+  latch            latch v7, both packs, seated: receiver and cartridge with its pack (parts/latch7/make.py build, in the seat frame)
+  drones           the Scout v4 and the Overseer as their own systems stand today, seated (their meshes in place, no copies)
+Run: python tools/import_box.py            everything but the 3 Nov import is rebuilt; the arm, stand and enclosure lines are kept
+     python tools/import_box.py <nox>      also re-imports the arm v7, stand and enclosure from a checkout of sparkiscool/nox
 """
 import json, os, re, shutil, sys
 import numpy as np, trimesh
@@ -40,61 +38,8 @@ def copy_mesh(src, pid):
     return f"parts/{pid}/part.stl", len(m.faces)
 
 
-def box_check(parts):
-    """every box part with a mesh against the deck and the funnel (W frame): the Overseer's descent check covers the drones, this covers the box"""
-    sys.path.insert(0, os.path.join(ROOT, "tools")); import seat_check as sc
-    S = [(f"{nm} ({st} walls)", mm, tt) for st in ("overseer", "scout") for nm, mm, tt in sc.solids(st)]; T = np.array(SEAT_TO_W)   # the box parts against the funnel at both wall settings
-    sol = [(nm, m.transform(T[:3, :])) for nm, m, _ in S]                                   # seat frame -> W
-    sol_t = [(nm, sc.to_tri(mm)) for nm, mm in sol]
-    hits = []
-    for p in parts:
-        if not p.get("mesh") or p.get("group", "").startswith("landing") or p["id"].startswith(("box_funnel", "box_deck", "box_dome")):
-            continue
-        m = trimesh.load(os.path.join(ROOT, p["mesh"]), force="mesh"); m.apply_transform(np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4))
-        for (nm, mm), (_, st) in zip(sol, sol_t):
-            if not ((m.bounds[0] <= st.bounds[1]).all() and (m.bounds[1] >= st.bounds[0]).all()):
-                continue
-            mp = sc.man(m)
-            if mp is None:
-                continue
-            v = sc.volume(mp ^ mm)
-            if v > 0.5:
-                hits.append((p["name"], nm, v, sc.to_tri(mp ^ mm).bounds.round(0).tolist()))
-    print(f"box parts vs deck / funnel: {len(hits)} crossings" + "".join(f"\n  {a} x {b}: {v:.0f} mm3 at W {bb}" for a, b, v, bb in hits))
-    land = landing_check(parts)
-    if hits or land:
-        sys.exit("import_box: a box part crosses the funnel or a landing path (above); move or drop it")
-
-
-def landing_check(parts):
-    """every box part with a mesh against both drones seated and at each descent state (seat_check.descent_states, the capture
-    limits): a bay or arm part may not cross a landing path (8 Nov: the bays nearest the top came back after the seat rose 65)"""
-    import seat_check as sc, seat_envelope as se
-    W2S = np.linalg.inv(np.array(SEAT_TO_W))
-    box = []
-    for p in parts:
-        if not p.get("mesh") or p.get("group", "").startswith("landing") or p["id"].startswith(("box_funnel", "box_deck", "box_dome")):   # the funnel's own parts: seat_check, with each drone's wall setting
-            continue
-        m = trimesh.load(os.path.join(ROOT, p["mesh"]), force="mesh")
-        m.apply_transform(W2S @ (np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4)))
-        box.append((p["name"], m, sc.man(m)))
-    hits = []
-    for drone in [d for d in ("scout", "scout_v4", "overseer") if os.path.exists(os.path.join(ROOT, "systems", f"{d}.assembly.json"))]:   # every drone that seats in the funnel
-        dparts = [(nm, m, sc.man(m) or sc.man(m.convex_hull)) for nm, m in se.parts_of(drone)]
-        for lab, ox, oy, h in sc.descent_states(drone):
-            off = np.array([ox, oy, h])
-            for bn, bm, bmm in box:
-                for dn, dm, dmm in dparts:
-                    if bmm is None or dmm is None or not ((bm.bounds[0] <= dm.bounds[1] + off).all() and (bm.bounds[1] >= dm.bounds[0] + off).all()):
-                        continue
-                    v = sc.volume(bmm ^ dmm.translate(off.tolist()))
-                    if v > 0.5:
-                        hits.append((bn, f"{drone} {dn}", lab, v))
-    print(f"box parts vs the drones landing: {len(hits)} crossings" + "".join(f"\n  {a} x {b} at {l}: {v:.0f} mm3" for a, b, l, v in hits))
-    return hits
-
-
-def main(nox):
+def imported(nox):
+    """the arm v7, the stand and the enclosure from a checkout of sparkiscool/nox (3 Nov)"""
     parts = []
     arm = json.load(open(os.path.join(nox, "nox", "box", "box_swap_arm.assembly.json")))
     for p in arm["parts"]:
@@ -144,69 +89,168 @@ def main(nox):
     parts.append(dict(id="box_arm_grip_at_drone", name="arm: grip at the drone cartridge (placeholder)", role="structure", group="swap arm", color="#d08a3a",
                       box=[-15.5, 15.5, 149.0, 214.0, 167.0, 186.0], material="PETG", tag="E", owner="box swap arm", version="concept 3 Nov",
                       source="tools/import_box.py", note="the grabber at the cartridge tabs, W Z 176..183, inside the funnel's hole"))
-    parts.append(dict(id="box_funnel", name="funnel v4 frame (side walls, ledges, beams; the end walls slide)", role="structure", group="funnel", color="#e07020", mesh="parts/box_funnel/part.stl",
-                      pose=SEAT_TO_W, material="PCTG", tag="C", owner="box catch", version="v4 drawn 9 Nov", source="parts/box_funnel/make.py",
-                      note="v4 9 Nov: the fixed frame (side walls, ledges, skirt, beams, buttress, four brackets under the seat); the nose and tail walls slide (box_funnel_wall_*): 184 x 66.8 seat for the Overseer, the Scout receiver's own 105.6 x 65.5 with the walls 39.2 in (Spark 9 Nov: the Scout seats on its receiver alone)"))
-    for q in [{"id": "box_funnel_wall_nose", "name": "funnel nose wall (slides 39.2 in for the Scout)", "role": "structure", "group": "funnel", "color": "#e07020", "mesh": "parts/box_funnel_wall_nose/part.stl", "material": "PCTG", "tag": "C", "owner": "box catch", "version": "v1 drawn 9 Nov", "source": "parts/box_funnel/make.py", "note": "the 55 deg nose face with two tabs out through slots in the side walls to nuts on the lead screws; at the Overseer setting as drawn"}, {"id": "box_funnel_wall_tail", "name": "funnel tail wall (slides 39.2 in for the Scout)", "role": "structure", "group": "funnel", "color": "#e07020", "mesh": "parts/box_funnel_wall_tail/part.stl", "material": "PCTG", "tag": "C", "owner": "box catch", "version": "v1 drawn 9 Nov", "source": "parts/box_funnel/make.py", "note": "the 55 deg tail face with two tabs out through slots in the side walls to nuts on the lead screws; at the Overseer setting as drawn"}, {"id": "box_funnel_strips", "name": "funnel ledge strips (TPU, landing impact)", "role": "structure", "group": "funnel", "color": "#3a3a3a", "mesh": "parts/box_funnel_strips/part.stl", "material": "TPU", "tag": "C", "owner": "box catch", "version": "v1 drawn 9 Nov", "source": "parts/box_funnel/make.py", "note": "flush in the side ledges, |y| 25.5..33; both drones land on them; holes for the four probes"}, {"id": "box_funnel_drive", "name": "funnel wall drive (lead screws, motors, switches, probes)", "role": "bought", "group": "funnel", "color": "#555555", "mesh": "parts/box_funnel_drive/part.stl", "tag": "E", "owner": "box catch", "version": "placeholder 9 Nov", "source": "parts/box_funnel/make.py", "note": "two Tr8 lead screws with opposite-hand halves under the side walls' overhang, a NEMA 8 per side geared to each, a switch at each wall position; four spring probes in the ledges at (1.5 +- 30, +-29.5) for seat sense and keep-alive; sizes E, Amazon listings to pick"}]:
-        parts.append(dict(q, pose=SEAT_TO_W))                    # the sliding end walls, the ledge strips and the wall drive (parts/box_funnel/make.py writes them)
-    for q in [{"id": "box_dome_hoop_1", "name": "dome hoop 1 (3 mm carbon, r 272) and its hub plates", "role": "structure", "group": "dome", "color": "#3a3f46", "mesh": "parts/box_dome/gore_meshes/hoop_1.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "material": "PCTG", "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "shut at 45 deg; its plates turn on the hub bolts, picked up / pulled out by hoop 2 through the pin in a 45 deg slot"}, {"id": "box_dome_hoop_2", "name": "dome hoop 2 (3 mm carbon, r 281) and its hub plates", "role": "structure", "group": "dome", "color": "#3a3f46", "mesh": "parts/box_dome/gore_meshes/hoop_2.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "material": "PCTG", "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "shut at 90 deg; its plates turn on the hub bolts, picked up / pulled out by hoop 3 through the pin in a 45 deg slot"}, {"id": "box_dome_hoop_3", "name": "dome hoop 3 (3 mm carbon, r 290) and its hub plates", "role": "structure", "group": "dome", "color": "#3a3f46", "mesh": "parts/box_dome/gore_meshes/hoop_3.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "material": "PCTG", "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "shut at 135 deg; its plates turn on the hub bolts, picked up / pulled out by hoop 4 through the pin in a 45 deg slot"}, {"id": "box_dome_hoop_4", "name": "dome hoop 4 (3 mm carbon, r 299) and its hub plates", "role": "structure", "group": "dome", "color": "#3a3f46", "mesh": "parts/box_dome/gore_meshes/hoop_4.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "material": "PCTG", "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "shut at 180 deg; its plates turn on the hub bolts, driven by the motors (the free edge)"}, {"id": "box_dome_fabric_00", "name": "dome fabric, panel 0 strip 0", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_00.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 0 and 1, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_01", "name": "dome fabric, panel 0 strip 1", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_01.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 0 and 1, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_02", "name": "dome fabric, panel 0 strip 2", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_02.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 0 and 1, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_03", "name": "dome fabric, panel 0 strip 3", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_03.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 0 and 1, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_10", "name": "dome fabric, panel 1 strip 0", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_10.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 1 and 2, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_11", "name": "dome fabric, panel 1 strip 1", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_11.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 1 and 2, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_12", "name": "dome fabric, panel 1 strip 2", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_12.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 1 and 2, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_13", "name": "dome fabric, panel 1 strip 3", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_13.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 1 and 2, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_20", "name": "dome fabric, panel 2 strip 0", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_20.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 2 and 3, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_21", "name": "dome fabric, panel 2 strip 1", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_21.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 2 and 3, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_22", "name": "dome fabric, panel 2 strip 2", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_22.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 2 and 3, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_23", "name": "dome fabric, panel 2 strip 3", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_23.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 2 and 3, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_30", "name": "dome fabric, panel 3 strip 0", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_30.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 3 and 4, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_31", "name": "dome fabric, panel 3 strip 1", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_31.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 3 and 4, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_32", "name": "dome fabric, panel 3 strip 2", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_32.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 3 and 4, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_fabric_33", "name": "dome fabric, panel 3 strip 3", "role": "bought", "group": "dome", "color": "#dfe7ee", "mesh": "parts/box_dome/gore_meshes/fabric_33.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "opacity": 0.35, "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "silnylon between hoops 3 and 4, drawn as 4 strips that follow them (the real skin is one sheet sewn to the hoops)"}, {"id": "box_dome_hoop_0", "name": "dome hoop 0 (3 mm carbon, r 263, fixed at the base, rear)", "role": "structure", "group": "dome", "color": "#3a3f46", "mesh": "parts/box_dome/gore_meshes/hoop_0.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "fixed: its plates are the hub brackets"}, {"id": "box_dome_hubs", "name": "dome hub brackets and bolts (printed)", "role": "structure", "group": "dome", "color": "#c9d2d9", "mesh": "parts/box_dome/gore_meshes/hubs.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "left and right on the hinge axis (W X): a block through the lid's edge onto the ring, plate 0 with its slot, the cheeks, a 6 mm shoulder bolt", "material": "PCTG"}, {"id": "box_dome_drive", "name": "dome drive: 2 worm motors, cams, 4 limit switches", "role": "bought", "group": "dome", "color": "#555555", "mesh": "parts/box_dome/gore_meshes/drive.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "JGY-370 12 V 6 rpm double shaft, self-locking, one per hub on plate 4; a cam on the outer shaft between two KW11 switches (open, shut)"}, {"id": "box_dome_ring", "name": "dome base ring (printed segments)", "role": "structure", "group": "dome", "color": "#c9d2d9", "mesh": "parts/box_dome/gore_meshes/ring.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "r 255..297 at W Z 132..142, the lid's edge on its inner lip, segments pinned with 3 mm carbon rods", "material": "PCTG"}, {"id": "box_dome_spokes", "name": "dome spokes (6 mm carbon, under the lid)", "role": "bought", "group": "dome", "color": "#2b2b2b", "mesh": "parts/box_dome/gore_meshes/spokes.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "eight, from the sheets' tops out to the ring"}, {"id": "box_dome_lid", "name": "rain lid (3 mm UV polycarbonate)", "role": "bought", "group": "dome", "color": "#c9d6e2", "mesh": "parts/box_dome/gore_meshes/lid.stl", "pose": [[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], "tag": "C", "owner": "box dome", "version": "v3 mechanism 9 Nov", "source": "parts/box_dome/make.py", "note": "at the sheets' top (W Z 142..145), flush between them and out to the ring; open within r 160 of the seat (the funnel, the 60 / 120 deg bays, the swap head)", "opacity": 0.5}]:
-        parts.append(q)                                              # the Scout's rain and dust dome, its mechanism, and the box's rain lid (parts/box_dome/make.py writes the meshes in W and checks them against both drones and itself)
-    # the two drones for the landing timeline (tools/landing_box.py): rigid copies of their current pages, posed seated
-    scout = json.load(open(os.path.join(ROOT, "systems", "scout.assembly.json")))
-    for p in scout["parts"]:
-        if p["id"] not in ("frame_plate_bee35_carbon", "fc", "pack_4s_1500", "camera", "scout_nose_unit", "scout_tail_unit", "scout_nose_unit_room", "scout_tail_unit_room", "scout_cage_v19") and not p["id"].startswith(("scout_motor", "scout_prop")):
-            continue
-        pid = slug("scout " + p["id"])
-        if os.path.exists(os.path.join(ROOT, p["mesh"])):
-            mesh, nf = copy_mesh(os.path.join(ROOT, p["mesh"]), pid)
-        else:                                                  # Scout v3 archived (9 Nov): its folders are in archive/, the box keeps its own seated copy
-            mesh = f"parts/{pid}/part.stl"
-        parts.append(dict(id=pid, name=f"Scout: {p['name']}", role=p.get("role", "bought"), group="landing: Scout", color=p.get("color"), mesh=mesh,
-                          pose=(np.array(SEAT_TO_W) @ np.array(p["pose"], float)).tolist() if p.get("pose") else SEAT_TO_W,
-                          material=p.get("material"), tag=p.get("tag", "E"), owner="scout v3", version=p.get("version"), source="systems/scout.assembly.json, seated"))
-    for src, nm in (("receiver_v3_latch", "Scout: receiver v3"), ("cartridge_v6_latch", "Scout: cartridge v6")):
-        pid = slug("ctx " + nm.replace(":", "")); mesh, nf = copy_mesh(os.path.join(ROOT, "parts", src, "part.stl"), pid)
-        parts.append(dict(id=pid, name=nm, role="protected", group="landing: Scout", color="#8899aa", mesh=mesh, pose=SEAT_TO_W,
-                          material="PETG", tag="M", owner="battery latch", version="v3 / v6", source=f"parts/{src} (this repo), at the seat",
-                          note="the latch set every drone carries: what the funnel seats"))
-    T_OV = np.array([[1, 0, 0, 29.52], [0, 1, 0, 0], [0, 0, 1, 32.4], [0, 0, 0, 1.0]])     # Overseer drone frame -> seat frame: its catch centre (x -30)
-    ov = json.load(open(os.path.join(ROOT, "systems", "overseer.assembly.json")))         # and cartridge bottom (z -76.9: cage v5, the loop 3 under it; an earlier -54 was v3's) onto the Scout's (1.5, -44.5)
-    keep = {"cage_shell_tubes", "cage_shell_nodes", "spokes_ties_head_rods", "overseer_base", "top_plate", "bottom_plate", "overseer_head_mount",
-            "unitree_l2", "camera_left", "camera_right", "motor_1", "motor_2", "motor_3", "motor_4", "prop_1", "prop_2", "prop_3", "prop_4", "overseer_battery_holder"}
-    for p in ov["parts"]:
-        if p["id"] not in keep:
-            continue
-        pid = slug("overseer " + p["id"]); P = np.array(SEAT_TO_W) @ T_OV @ (np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4))
-        e = dict(id=pid, name=f"Overseer: {p['name']}", role=p.get("role", "bought"), group="landing: Overseer", color=p.get("color"), pose=P.tolist(),
-                 material=p.get("material"), tag=p.get("tag", "E"), owner="overseer", version=p.get("version"), source="systems/overseer.assembly.json, seated")
-        srcd = p.get("part", p["id"]); cand = os.path.join(ROOT, "parts", srcd, "part.stl")
-        if os.path.exists(cand):
-            e["mesh"], nf = copy_mesh(cand, pid)
-        elif "box" in p:
-            e["box"] = p["box"]
-        else:
-            continue
-        parts.append(e)
-    for pid, nm, bx in (("box_ctx_overseer_receiver", "Overseer: receiver v2 (E box)", [-0.48 - 91.8, -0.48 + 91.8, -34.0, 34.0, -44.3, 27.7]),
-                        ("box_ctx_overseer_cartridge", "Overseer: cartridge (E box)", [1.5 - 80, 1.5 + 80, -25, 25, -44.5, 0.5])):
-        parts.append(dict(id=pid, name=nm, role="protected", group="landing: Overseer", color="#8899aa", box=bx, pose=SEAT_TO_W,
-                          material="PETG", tag="E", owner="battery latch", version="v2 (bay envelope)", source="the swap arm's bay receiver envelope, at the seat",
-                          note="the Overseer latch set back in its base slot (out since 29 Oct): 184 x 67 x 72 from the arm's bay envelope; the cartridge width is a CHECK"))
-    a = dict(name="Nox Ground Unit", title="Nox Ground Unit", readme_view="iso", artifact=None, machine="box",
-             note=("Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3): "
-                   "the catch's SEAT_TO_W raised 65, the arm's head extending 65 more at the drone slot, Spark 3 Nov). In: the swap arm v7 at park with 11 bay receivers, every slot of the ring but the drone's (8 Nov) and two packs, "
-                   "a placeholder extended head at the drone, the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the funnel on its nose and tail beams across the side sheets, both drones seated in it. "
-                   "Out: the v1 ring frames, posts, brackets and bay modules (superseded by the v2 layout, whose bodies are not drawn), the hold-down, "
-                   "the electronics. The nox repo's own master page of the box: https://claude.ai/artifact/RX2CexkfhB5UoQHnGTVgCC (27 Oct). "
-                   "Imported by tools/import_box.py from sparkiscool/nox."),
-             cg_ref=None, timeline="tools/landing_box.py:timeline", parts=parts)
-    box_check(parts)
-    out = os.path.join(ROOT, "systems", "box.assembly.json")
-    if os.path.exists(out):
-        old = json.load(open(out)); a["artifact"] = old.get("artifact")
+    return parts
+
+
+def view(m, pid, name):
+    """a mesh this tool makes (seat frame) into parts/<pid>/part.stl"""
+    d = os.path.join(ROOT, "parts", pid); os.makedirs(d, exist_ok=True)
+    mm = m.to_mesh(); t = trimesh.Trimesh(np.asarray(mm.vert_properties)[:, :3], np.asarray(mm.tri_verts), process=False)
+    if len(t.faces) > 60000:
+        t = t.simplify_quadric_decimation(face_count=40000)
+    t.export(os.path.join(d, "part.stl")); return f"parts/{pid}/part.stl"
+
+
+def funnel_parts():
+    """the funnel v5 (parts/box_funnel/make.py): engine pieces by their folder (the page shows their result once it exists), plus,
+    until then, their drawn faces and their room"""
+    import box_check as bc
+    fm = bc.load("parts/box_funnel/make.py", "box_funnel_make"); T = np.array(SEAT_TO_W); out = []
+    base = dict(role="structure", group="funnel", material="PCTG", tag="C", owner="box funnel", source="parts/box_funnel/make.py")
+    def placing(sx, sy):                                         # the one arm (drawn at nose +y) at each corner, seat frame
+        P = np.eye(4); P[0, 0], P[1, 1] = sx, sy
+        if sx < 0:
+            P[0, 3] = fm.BEAM_X[-1][0] + fm.BEAM_X[1][1]         # x -> (tail beam's outer face + nose beam's outer face) - x
+        return P
+    eng = [("box_funnel_half_nose", "funnel frame, nose half (generated)", fm.half_bodies(1), np.eye(4), None),
+           ("box_funnel_half_tail", "funnel frame, tail half (generated)", fm.half_bodies(-1), np.eye(4), None)]
+    eng += [(f"box_funnel_arm{'' if (sx, sy) == (1, 1) else '_' + 'nt'[sx < 0] + 'pm'[sy < 0]}", f"funnel cross arm, {'nose' if sx > 0 else 'tail'} {'+y' if sy > 0 else '-y'}"
+             f"{'' if sx * sy > 0 else ' (mirrored print)'} (generated)", fm.arm_bodies(1, 1), placing(sx, sy), "box_funnel_arm") for sx in (1, -1) for sy in (1, -1)]
+    for pid, name, (drawn, cuts, env, R), P, src in eng:
+        folder = src or pid; bb = np.asarray(drawn.bounding_box(), float)
+        e = dict(base, id=pid, name=name, color="#e07020", pose=(T @ P).tolist(), version="v5 setup 13 Nov",
+                 box=[float(bb[0]), float(bb[3]), float(bb[1]), float(bb[4]), float(bb[2]), float(bb[5])], opacity=0.15,
+                 note="engine part (parts/%s/part.py): the box is its drawn faces' extent until its run commits a mesh" % folder)
+        if src:
+            e["part"] = src
+        done = os.path.exists(os.path.join(ROOT, "parts", folder, "result.json"))
+        if done:
+            e.pop("opacity"); e["mesh"] = f"parts/{folder}/part.stl"
+        out.append(e)
+        if not done and (pid == folder):                         # one drawing of the drawn faces and the room per folder
+            for suf, m, col, op, what in (("drawn", drawn - cuts, "#e07020", None, "drawn faces (what a drone, a wall, a bolt or a motor touches)"),
+                                          ("room", fm.room(drawn, cuts, env), "#f2c9a0", 0.25, "room the engine may fill (what every clearance check uses)")):
+                for k, (qid, qname, _, QP, qsrc) in enumerate([q for q in eng if (q[4] or q[0]) == folder]):
+                    vid = f"{qid}_{suf}"
+                    mesh = view(m, f"{folder}_{suf}", vid) if k == 0 else f"parts/{folder}_{suf}/part.stl"
+                    out.append(dict(base, id=vid, name=f"{qname.replace(' (generated)', '')}: {what}", color=col, opacity=op, mesh=mesh, pose=(T @ QP).tolist(),
+                                    part=f"{folder}_{suf}", version="v5 13 Nov", note="shown until the run's mesh is in"))
+    for pid, name, col, mat, role, note in (
+            ("box_funnel_wall_nose", f"funnel nose wall (slides {fm.TRAVEL} in for the Scout)", "#3070e0", "PCTG", "structure", "two tabs out through the side walls to an M4 nut block each; the +y block carries the switch dog"),
+            ("box_funnel_wall_tail", f"funnel tail wall (slides {fm.TRAVEL} in for the Scout)", "#3070e0", "PCTG", "structure", "as the nose wall"),
+            ("box_funnel_strips", "funnel ledge strips (TPU 95A, landing impact)", "#3a3a3a", "TPU", "structure", "flush in the side ledges; holes for the four probes"),
+            ("box_funnel_drive", "funnel wall drive and fasteners (bought)", "#555555", None, "bought",
+             "4 N20 gearmotors with an M4 x 55 screw shaft, 4 KW12-3 roller switches (+y), 4 P156 spring probes in R156 sleeves, 16 M4 x 60 lap bolts, 8 M4 x 16 sheet bolts, 2 M4 x 16 and 2 M3 x 16 joint bolts")):
+        out.append(dict(base, id=pid, name=name, role=role, color=col, material=mat, mesh=f"parts/{pid}/part.stl", pose=SEAT_TO_W, version="v5 drawn 13 Nov", note=note))
+    return out
+
+
+def latch_parts():
+    """latch v7, both packs, at the seat (as tools/box_check.py poses them): receiver, cartridge with its pack"""
+    import box_check as bc
+    out = []
+    for drone, (R, C) in bc.latch_bodies().items():
+        pack = bc.PACK[drone]; grp = "landing: Scout" if pack == "scout" else "landing: Overseer"
+        for body, kind in ((R, "receiver"), (C, "cartridge")):
+            pid = f"box_latch7_{pack}_{kind}"
+            out.append(dict(id=pid, name=f"{'Scout' if pack == 'scout' else 'Overseer'}: latch v7 {kind}" + (" and pack" if kind == "cartridge" else ""), role="protected", group=grp,
+                            color="#8899aa" if kind == "receiver" else "#2f4fbf", mesh=view(body.man, pid, pid), pose=SEAT_TO_W, material="PCTG", tag="C", owner="battery latch",
+                            version="v7", source=f"parts/latch7/make.py build({pack!r}), seated", note="the latch set the funnel seats"))
+    return out
+
+
+def drone_parts():
+    """both drones as their systems stand, seated (tools/seat_envelope.py's seating), their own meshes in place"""
+    import seat_envelope as se
+    from build_site import pose_matrix
+    out = []
+    for sysname, label, TD in (("scout_v4", "Scout", np.eye(4)), ("overseer", "Overseer", se.T_OV)):
+        a = json.load(open(os.path.join(ROOT, "systems", f"{sysname}.assembly.json")))
+        for p in a["parts"]:
+            if any(k in p["name"].lower() for k in se.SKIP):
+                continue
+            src = p.get("part", p.get("id")); cand = f"parts/{src}/part.stl"
+            e = dict(id=f"box_{sysname}_{p['id']}", name=f"{label}: {p['name']}", role=p.get("role", "bought"), group=f"landing: {label}", color=p.get("color"),
+                     pose=(np.array(SEAT_TO_W) @ TD @ pose_matrix(p.get("pose"))).tolist(), material=p.get("material"), tag=p.get("tag", "E"), owner=sysname,
+                     version=p.get("version"), source=f"systems/{sysname}.assembly.json, seated")
+            if os.path.exists(os.path.join(ROOT, cand)):
+                e["mesh"] = cand; e["part"] = f"box_{sysname}_{p['id']}"          # no folder of that name: the page takes the mesh as placed
+            elif p.get("mesh") and os.path.exists(os.path.join(ROOT, p["mesh"])):
+                e["mesh"] = p["mesh"]; e["part"] = f"box_{sysname}_{p['id']}"
+            else:
+                e.update({k: p[k] for k in ("box", "cylinder", "sphere") if k in p})
+                if not any(k in e for k in ("box", "cylinder", "sphere")):
+                    continue
+            if p.get("opacity") is not None:
+                e["opacity"] = p["opacity"]
+            out.append(e)
+    return out
+
+
+BOUGHT_LIST = [
+    ("N20 gearmotor, M4 x 55 screw shaft, 6 V 100 rpm (12 x 10 x 25 body)", 4, "https://www.amazon.com/BRINGSMART-Threaded-Electric-Reducer-100rpm/dp/B0DGSYFD2Y",
+     "one per wall tab; pick the 6 V 100 rpm option (alt B093GRCQLS); 37.2 mm at 0.7 mm a turn = 32 s"),
+    ("KW12-3 roller lever micro switch, 10 pack", 4, "https://www.amazon.com/SDTC-Tech-Momentary-Microswitch-Normally/dp/B0CPYNDYPP", "each wall's in and out position, on the +y side"),
+    ("P156-E spring probe, 100 pack", 4, "https://www.amazon.com/Spring-Probes-Accuracy-Testing-Contact/dp/B0CC2GQKL1", "seat sense and keep-alive, in the ledges"),
+    ("R156-4S probe sleeve, 100 pack", 4, "https://www.amazon.com/100Pcs-Spring-Sleeve-R156-4S-Welding/dp/B0CPWSZN8L", "glued in the ledge bores"),
+]
+FASTENERS = "16 M4 x 60 with nuts and washers (the four laps), 8 M4 x 16 with nuts and washers (arms to the side sheets: 8 holes O4.5 in the acrylic, 99 under the seat plane's W Z 220.3 = W Z 121.3), 2 M4 x 16 and 2 M3 x 16 with nuts (the halves' joint), 4 M4 nuts (the walls' blocks), 8 M2 x 10 self-tapping (switches), 4 cable ties (motors)"
+PRINT = [("box_funnel_half_nose", "frame, nose half", "128 x 176 x 84", "upside down: the side walls' top edges on the bed; supports under the ledges and the beam's wings", "PCTG"),
+         ("box_funnel_half_tail", "frame, tail half", "158 x 176 x 84", "as the nose half", "PCTG"),
+         ("box_funnel_arm", "cross arm, 2 as drawn + 2 mirrored", "44 x 162 x 29", "on its outer face (the beam's 29 deep side flat on the bed)", "PCTG"),
+         ("box_funnel_wall_nose", "nose wall", "35 x 121 x 40", "on its 55 deg face (the face the drone slides on, up off the bed side: face down)", "PCTG"),
+         ("box_funnel_wall_tail", "tail wall", "35 x 121 x 40", "as the nose wall", "PCTG"),
+         ("box_funnel_strips", "ledge strips, 2", "182 x 2.8 x 1.5 each", "flat, along the bed's diagonal (182 long)", "TPU 95A")]
+
+
+def appendix(chk):
+    """systems/box.appendix.html: the check's result, the funnel's print list and bought parts"""
+    import html
+    e = html.escape
+    rows = "".join(f"<tr><td>{e(c['what'])}</td><td>{'clear' if c['ok'] else 'OVERLAP'}</td></tr>" for c in chk["checked"])
+    pairs = "".join(f"<tr><td>{e(p['a'])}</td><td>{e(p['b'])}</td><td>{p['mm3'] if p['mm3'] is not None else str(p['samples_inside']) + ' samples'}</td><td>{p['states']}: {e(p['state'])}</td></tr>" for p in chk["overlapping_pairs"])
+    clr = "".join(f"<tr><td>{c['mm']:.1f}</td><td>{e(c['between'])}</td><td>{e(c['and_'])}</td><td>{e(str(c['at']))}</td></tr>" for c in chk["clearances_mm"])
+    prt = "".join(f"<tr><td>{e(n)}</td><td>{e(sz)}</td><td>{e(pose)}</td><td>{e(mat)}</td></tr>" for _, n, sz, pose, mat in PRINT)
+    bought = "".join(f"<tr><td><a href=\"{u}\">{e(n)}</a></td><td>{q}</td><td>{e(note)}</td></tr>" for n, q, u, note in BOUGHT_LIST)
+    return f"""<h2>Compatibility check (tools/box_check.py)</h2>
+<p><b>{'PASS: 0 overlaps' if chk['ok'] else 'FAIL: ' + str(len(chk['overlapping_pairs'])) + ' overlapping pairs'}</b>. Every pair of pieces from different streams (funnel, latch v7, drones, arm, box), seated, landing and on the swap path. Arm: {e(chk['arm'])}.{' Not checked, no mesh in the tree: ' + e(', '.join(chk['no_mesh_in_the_tree'])) + '.' if chk['no_mesh_in_the_tree'] else ''}</p>
+<table><tr><th>checked</th><th>result</th></tr>{rows}</table>
+{'<table><tr><th>piece</th><th>piece</th><th>mm3</th><th>states, worst</th></tr>' + pairs + '</table>' if pairs else ''}
+<h3>Clearances (mm, sampled to about 1)</h3><table><tr><th>mm</th><th>between</th><th>and</th><th>where</th></tr>{clr}</table>
+<h2>Funnel v5: printed pieces (A1 mini, 180 bed)</h2><table><tr><th>piece</th><th>size</th><th>pose on the bed</th><th>material</th></tr>{prt}</table>
+<h3>Bought</h3><table><tr><th>part</th><th>qty</th><th>note</th></tr>{bought}</table><p>Fasteners: {e(FASTENERS)}.</p>
+<p>Not drawn: the hold-down. The swap's insert (60 N, the head's stall 74 N, up) is more than either drone weighs (Overseer 21.6 N, Scout 4.9 N); nothing on the funnel or the drones holds them on the seat, so that case has no load path yet.</p>"""
+
+
+def main(nox=None):
+    out = os.path.join(ROOT, "systems", "box.assembly.json"); old = json.load(open(out))
+    kept = lambda pre: [p for p in old["parts"] if p["id"].startswith(pre)]
+    parts = imported(nox) if nox else kept(("box_arm_", "box_stand_", "box_enclosure_"))
+    new_arm = os.path.join(ROOT, "systems", "swap_arm.assembly.json")
+    if os.path.exists(new_arm):                                  # the arm stream's system replaces the 3 Nov import (bays and packs with it)
+        parts = [p for p in parts if not p["id"].startswith("box_arm_")]
+        for p in json.load(open(new_arm))["parts"]:
+            parts.append(dict(p, id="box_swaparm_" + p["id"], name="arm: " + p["name"], part=p.get("part", p["id"]), owner="swap arm", source="systems/swap_arm.assembly.json"))
+    else:
+        for p in parts:
+            if p["id"].startswith("box_arm_"):
+                p["version"] = "v7, superseded (the arm stream's systems/swap_arm.assembly.json replaces it when pushed)"
+    parts += funnel_parts() + kept("box_dome_") + latch_parts() + drone_parts()
+    a = dict(old, parts=parts, appendix="systems/box.appendix.html",
+             note=("Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). "
+                   "In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are "
+                   "engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, "
+                   + ("the swap arm from systems/swap_arm.assembly.json, " if os.path.exists(new_arm) else "the swap arm v7 at park with 11 bay receivers and two packs (3 Nov import, SUPERSEDED: the arm stream's new arm replaces it when pushed), ")
+                   + "the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the hold-down (not designed), the electronics. "
+                   "Compatibility between the streams: tools/box_check.py, its result under the viewer."))
+    import box_check
     json.dump(a, open(out, "w"), indent=0, ensure_ascii=False)
+    chk = box_check.main(quick="--quick" in sys.argv)
+    open(os.path.join(ROOT, "systems", "box.appendix.html"), "w").write(appendix(chk))
     print(f"box: {len(parts)} parts -> {out}")
+    return chk["ok"]
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    args = [x for x in sys.argv[1:] if not x.startswith("--")]
+    sys.exit(0 if main(args[0] if args else None) else 1)

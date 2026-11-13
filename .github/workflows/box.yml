@@ -1,0 +1,51 @@
+# The box page's own step (13 Nov, Spark: "make sure things all are compatable"): rebuilds systems/box.assembly.json from the tree and
+# runs the one check between the box's streams (tools/box_check.py: funnel, latch v7, both drones, swap arm, bays, stand, dome;
+# seated, landing, swap path, the wheel turning) whenever one of them changes. Commits the result, starts the page build, and fails
+# on any overlap. parts.yml starts it after a results commit that touches one of those parts. Nothing here involves Claude.
+name: box
+on:
+  push:
+    branches: [main]
+    paths: ['parts/box_funnel/**', 'parts/box_funnel_lib.py', 'parts/latch7/**', 'parts/latch7_overseer/**', 'parts/box_arm*/**', 'parts/box_dome/**',
+            'systems/swap_arm.assembly.json', 'systems/scout_v4.assembly.json', 'systems/overseer.assembly.json',
+            'tools/box_check.py', 'tools/import_box.py', 'tools/seat_check.py', 'tools/seat_envelope.py']
+  workflow_dispatch:
+
+permissions: { contents: write, actions: write }
+concurrency: { group: box, cancel-in-progress: true }
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip }
+      - run: pip install -r requirements.txt
+      - name: rebuild the box system and check it
+        id: c
+        shell: bash
+        run: |
+          if python tools/import_box.py; then echo "ok=1" >> "$GITHUB_OUTPUT"; else echo "ok=0" >> "$GITHUB_OUTPUT"; fi
+      - name: commit and push (retry on race)
+        shell: bash
+        run: |
+          git config user.name nox-ci
+          git config user.email ci@users.noreply.github.com
+          git add systems/box.assembly.json systems/box.check.json systems/box.appendix.html parts/box_latch7_* parts/box_funnel_*_drawn parts/box_funnel_*_room 2>/dev/null || true
+          git diff --cached --quiet && { echo "nothing to commit"; exit 0; }
+          git commit -m "box: check $([ '${{ steps.c.outputs.ok }}' = 1 ] && echo PASS || echo FAIL) [skip ci]"
+          for i in 1 2 3 4 5; do
+            git push && break
+            git pull --rebase origin main || exit 1
+          done
+          gh workflow run site.yml        # a push made with the workflow token starts no other workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: an overlap fails the run
+        if: steps.c.outputs.ok != '1'
+        run: |
+          python3 -c "import json; [print(p) for p in json.load(open('systems/box.check.json'))['overlapping_pairs']]"
+          exit 1
