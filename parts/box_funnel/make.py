@@ -243,6 +243,8 @@ def wall_sweep(sx):
     c = carriage(sx); m = U([c.translate([-sx * d, 0, 0]) for d in np.linspace(-OPEN, TRAVEL, 26)])
     z0 = SEAT_Z; xm0, xm1 = block_x(sx, "overseer", "open"), block_x(sx, "scout"); bx, by, bz = BLOCK; zc = z0 + SCREW_H
     lo, hi = min(xm0, xm1) - bx - 0.8, max(xm0, xm1) + bx + 0.8
+    pf = motor_x(sx)[1] + sx * 3.5                                # the blocks' lane runs flush to the motor's front plate (a 0.6 mm fin of room stood between them: one hot cell at h 2.2 in the nose half's audit)
+    lo, hi = (min(lo, pf), hi) if sx > 0 else (lo, max(hi, pf))
     b = [box(lo, hi, sy * (SCREW_Y - by - 0.5), sy * (SCREW_Y + by + 0.6), zc - bz - 0.5, zc + bz + 0.6) for sy in (-1, 1)]
     b.append(box(min(lo, xm1 - sx * (DOG + 1.0)), max(hi, xm1 - sx * (DOG + 1.0)), SCREW_Y + 6.9, SW_Y - 1.0, z0 + SW_H + 0.5, z0 + SW_H + SW[2] + 0.1))      # the dog
     xa, xb = tab_x(sx); tl, th = (xa - TRAVEL - 1.0, xb + OPEN + 1.0) if sx > 0 else (xa - OPEN - 1.0, xb + TRAVEL + 1.0)

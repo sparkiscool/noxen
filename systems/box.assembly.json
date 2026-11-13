@@ -86,7 +86,7 @@
 "mass_g": null,
 "tag": "M",
 "owner": "box structure",
-"version": "v6; recut 13 Nov round the arm v8 bay -90 (0.8 cm3 off, 2.5 clear; strength not rechecked)",
+"version": "v6; recut 13 Nov round the arm v8 bay -90 (0.3 cm3 off, 2.5 clear; strength not rechecked)",
 "source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
 "note": "print/box_cradle_keel_v6.stl"
 },
@@ -665,13 +665,13 @@
 "max_faces": 4000
 },
 {
-"id": "box_swaparm_box_arm8_a_rods",
-"name": "arm: head A: rods",
+"id": "box_swaparm_box_arm8_a_mgn_rail",
+"name": "arm: head A: lift rail MGN12 x 100",
 "role": "bought",
 "group": "head A",
 "color": "#8a8f96",
 "opacity": null,
-"mesh": "parts/box_arm8/view/box_arm8_a_rods.stl",
+"mesh": "parts/box_arm8/view/box_arm8_a_mgn_rail.stl",
 "pose": null,
 "material": null,
 "tag": "C",
@@ -683,12 +683,12 @@
 "head": "A",
 "blade": 0
 },
-"part": "box_arm8_a_rods",
+"part": "box_arm8_a_mgn_rail",
 "max_faces": 4000
 },
 {
 "id": "box_swaparm_box_arm8_a_lift",
-"name": "arm: head A: lift: block, cross-over, booms (setup envelope; generated)",
+"name": "arm: head A: lift: yoke on the MGN block, arm to the nut (setup envelope; generated)",
 "role": "structure",
 "group": "head A",
 "color": "#5f9ed1",
@@ -709,13 +709,13 @@
 "max_faces": 4000
 },
 {
-"id": "box_swaparm_box_arm8_a_lm6uu",
-"name": "arm: head A: lm6uu",
+"id": "box_swaparm_box_arm8_a_mgn_block",
+"name": "arm: head A: MGN12H block",
 "role": "bought",
 "group": "head A",
 "color": "#8a8f96",
 "opacity": null,
-"mesh": "parts/box_arm8/view/box_arm8_a_lm6uu.stl",
+"mesh": "parts/box_arm8/view/box_arm8_a_mgn_block.stl",
 "pose": null,
 "material": null,
 "tag": "C",
@@ -727,7 +727,7 @@
 "head": "A",
 "blade": 0
 },
-"part": "box_arm8_a_lm6uu",
+"part": "box_arm8_a_mgn_block",
 "max_faces": 4000
 },
 {
@@ -750,6 +750,50 @@
 "blade": 0
 },
 "part": "box_arm8_a_nut",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_a_booms",
+"name": "arm: head A: booms: three o 6 carbon rods",
+"role": "bought",
+"group": "head A",
+"color": "#8a8f96",
+"opacity": null,
+"mesh": "parts/box_arm8/view/box_arm8_a_booms.stl",
+"pose": null,
+"material": null,
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": {
+"stage": "lift",
+"head": "A",
+"blade": 0
+},
+"part": "box_arm8_a_booms",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_a_ties",
+"name": "arm: head A: ties (printed, on the booms)",
+"role": "structure",
+"group": "head A",
+"color": "#5f9ed1",
+"opacity": null,
+"mesh": "parts/box_arm8/view/box_arm8_a_ties.stl",
+"pose": null,
+"material": "PCTG",
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": {
+"stage": "lift",
+"head": "A",
+"blade": 0
+},
+"part": "box_arm8_a_ties",
 "max_faces": 4000
 },
 {
@@ -1171,13 +1215,13 @@
 "max_faces": 4000
 },
 {
-"id": "box_swaparm_box_arm8_b_rods",
-"name": "arm: head B: rods",
+"id": "box_swaparm_box_arm8_b_mgn_rail",
+"name": "arm: head B: lift rail MGN12 x 100",
 "role": "bought",
 "group": "head B",
 "color": "#8a8f96",
 "opacity": null,
-"mesh": "parts/box_arm8/view/box_arm8_b_rods.stl",
+"mesh": "parts/box_arm8/view/box_arm8_b_mgn_rail.stl",
 "pose": null,
 "material": null,
 "tag": "C",
@@ -1189,12 +1233,12 @@
 "head": "B",
 "blade": 0
 },
-"part": "box_arm8_b_rods",
+"part": "box_arm8_b_mgn_rail",
 "max_faces": 4000
 },
 {
 "id": "box_swaparm_box_arm8_b_lift",
-"name": "arm: head B: lift: block, cross-over, booms (setup envelope; generated)",
+"name": "arm: head B: lift: yoke on the MGN block, arm to the nut (setup envelope; generated)",
 "role": "structure",
 "group": "head B",
 "color": "#5f9ed1",
@@ -1215,13 +1259,13 @@
 "max_faces": 4000
 },
 {
-"id": "box_swaparm_box_arm8_b_lm6uu",
-"name": "arm: head B: lm6uu",
+"id": "box_swaparm_box_arm8_b_mgn_block",
+"name": "arm: head B: MGN12H block",
 "role": "bought",
 "group": "head B",
 "color": "#8a8f96",
 "opacity": null,
-"mesh": "parts/box_arm8/view/box_arm8_b_lm6uu.stl",
+"mesh": "parts/box_arm8/view/box_arm8_b_mgn_block.stl",
 "pose": null,
 "material": null,
 "tag": "C",
@@ -1233,7 +1277,7 @@
 "head": "B",
 "blade": 0
 },
-"part": "box_arm8_b_lm6uu",
+"part": "box_arm8_b_mgn_block",
 "max_faces": 4000
 },
 {
@@ -1256,6 +1300,50 @@
 "blade": 0
 },
 "part": "box_arm8_b_nut",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_b_booms",
+"name": "arm: head B: booms: three o 6 carbon rods",
+"role": "bought",
+"group": "head B",
+"color": "#8a8f96",
+"opacity": null,
+"mesh": "parts/box_arm8/view/box_arm8_b_booms.stl",
+"pose": null,
+"material": null,
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": {
+"stage": "lift",
+"head": "B",
+"blade": 0
+},
+"part": "box_arm8_b_booms",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_b_ties",
+"name": "arm: head B: ties (printed, on the booms)",
+"role": "structure",
+"group": "head B",
+"color": "#5f9ed1",
+"opacity": null,
+"mesh": "parts/box_arm8/view/box_arm8_b_ties.stl",
+"pose": null,
+"material": "PCTG",
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": {
+"stage": "lift",
+"head": "B",
+"blade": 0
+},
+"part": "box_arm8_b_ties",
 "max_faces": 4000
 },
 {
