@@ -1373,7 +1373,7 @@
    "receiver": {
     "down": "+y",
     "bed_mm2": 1337.0,
-    "support_mm2": 4288.0,
+    "support_mm2": 4276.0,
     "size_mm": [
      68.0,
      53.9,
@@ -1796,25 +1796,29 @@
   }
  },
  "hold_down": {
-  "what": "four notches in the receiver's outer side faces; a pin from each funnel side wall enters one and bears DOWN on its lower face when the arm pushes the drone up",
+  "what": "a notch in the receiver's end face at each of its four corners; a tongue on each of the funnel's sliding end walls enters one and bears DOWN on its lower face when the arm pushes the drone up",
   "frame": "cartridge coords (x across, y up from the flat bottom, z along the pack); seat_frame gives the same boxes in the funnel's seat frame (x nose, y left, z up)",
   "notches": [
    {
-    "side": "+x",
-    "outer_face_x": 34.0,
-    "floor_x": 31.5,
+    "corner": "+x lead",
+    "end_face_z": 96.89,
+    "x": [
+     29.2,
+     34.0
+    ],
     "y": [
      6.0,
      10.0
     ],
     "z": [
-     90.89,
+     94.39,
      96.89
     ],
+    "end_face_seat_x": 54.02,
     "seat_frame": {
      "lo": [
-      48.02,
-      31.5,
+      51.52,
+      29.2,
       -38.5
      ],
      "hi": [
@@ -1825,67 +1829,79 @@
     }
    },
    {
-    "side": "+x",
-    "outer_face_x": 34.0,
-    "floor_x": 31.5,
+    "corner": "+x tail",
+    "end_face_z": -12.11,
+    "x": [
+     29.2,
+     34.0
+    ],
     "y": [
      6.0,
      10.0
     ],
     "z": [
      -12.11,
-     -6.11
+     -9.61
     ],
+    "end_face_seat_x": -54.98,
     "seat_frame": {
      "lo": [
       -54.98,
-      31.5,
+      29.2,
       -38.5
      ],
      "hi": [
-      -48.98,
+      -52.48,
       34.0,
       -34.5
      ]
     }
    },
    {
-    "side": "-x",
-    "outer_face_x": -34.0,
-    "floor_x": -31.5,
+    "corner": "-x lead",
+    "end_face_z": 96.89,
+    "x": [
+     -29.2,
+     -34.0
+    ],
     "y": [
      6.0,
      10.0
     ],
     "z": [
-     90.89,
+     94.39,
      96.89
     ],
+    "end_face_seat_x": 54.02,
     "seat_frame": {
      "lo": [
-      48.02,
+      51.52,
       -34.0,
       -38.5
      ],
      "hi": [
       54.02,
-      -31.5,
+      -29.2,
       -34.5
      ]
     }
    },
    {
-    "side": "-x",
-    "outer_face_x": -34.0,
-    "floor_x": -31.5,
+    "corner": "-x tail",
+    "end_face_z": -12.11,
+    "x": [
+     -29.2,
+     -34.0
+    ],
     "y": [
      6.0,
      10.0
     ],
     "z": [
      -12.11,
-     -6.11
+     -9.61
     ],
+    "end_face_seat_x": -54.98,
     "seat_frame": {
      "lo": [
       -54.98,
@@ -1893,8 +1909,8 @@
       -38.5
      ],
      "hi": [
-      -48.98,
-      -31.5,
+      -52.48,
+      -29.2,
       -34.5
      ]
     }
@@ -1904,23 +1920,27 @@
    5.8,
    9.8
   ],
-  "depth_mm": 2.5,
-  "length_mm": 6.0,
-  "bearing_face": "the notch's lower face (y 6.0), 2.5 deep; 5.8 of drawn PCTG under it",
-  "pin": {
+  "depth_from_the_end_face_mm": 2.5,
+  "bearing_face": "the notch's lower face (y 6.0); 5.8 of drawn PCTG under it",
+  "tongue": {
+   "lane_abs_y_seat_mm": [
+    31.1,
+    33.4
+   ],
+   "width_mm": 2.3,
    "max_height_mm": 3.0,
-   "enters_mm": 2.0,
-   "max_width_along_the_pack_mm": 5.0,
-   "note": "3.0 high in the 4.0 notch: 0.5 over and under (the drone may lift 0.5 before the pins bear); 2.0 of the 2.5 depth; flat underside, steel or PCTG"
+   "proud_of_the_wall_face_mm": 2.0,
+   "side_clearance_in_the_notch_mm": 1.9,
+   "note": "the same lane and height on both drones; 3.0 high in the 4.0 notch (0.5 over and under: the drone may lift 0.5 before the tongues bear); flat underside; 2.0 of the 2.5 depth"
   },
   "load": {
    "head_push_N": 118.0,
    "drone_weight_N": 7.2,
-   "per_pin_N": 27.7,
-   "bearing_MPa": 2.77,
-   "index": 0.283
+   "per_tongue_N": 27.7,
+   "bearing_MPa": 6.02,
+   "index": 0.616
   },
-  "clearances_at_landing": "the notches are inside the receiver's outline (nothing proud of |x| 34.0): the funnel fit, its 65 landing states and the free play are unchanged, so the pins must be withdrawn flush with the seat's side walls (|y| 34.4) while the drone lands and leaves; seated, the receiver's side faces are 0.4 from those walls and it can slide 0.63 along / 0.7 across"
+  "clearances_at_landing": "the notches are inside the receiver's outline: the funnel fit, its 65 landing states and the free play are unchanged. The end walls must park at least 2.5 mm further out than their seated gap while the drone lands and leaves (tongue 2.0 + 0.5), then drive in; seated, the receiver can sit 0.63 to the nose, 0.63 to the tail, 0.7 across before the funnel stops it"
  },
  "mass_g": {
   "latch7_carrier": 5.07,

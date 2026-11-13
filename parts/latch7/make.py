@@ -409,24 +409,28 @@ def scout_feet(B):
 
 
 # ---- hold-down (13 Nov, from the funnel stream): the arm pushes up to 118 N through a seated drone that weighs 5 N (Scout) / 22 N (Overseer), and nothing held the
-#      receiver down in the funnel. Four notches in the receiver's outer side faces at |x| 34.0 (the line the Scout's foot pads and the Overseer's pocket blocks already
-#      reach: the funnel's seat is +-34.4), 6..10 above its underside, 2.5 deep: a pin from each funnel side wall enters one and bears on its lower face. Scout: in a block
-#      standing on each foot pad. Overseer: in a block the wall's thickness at each end of each side wall (not at the tab line: the bolt pockets are behind the wall there)
-HOLD = dict(x=34.0, y=(6.0, 10.0), depth=2.5, top=13.0, ov_z=((2.0, 14.0), (18.0, 30.0)), pin=dict(h_mm=3.0, reach_mm=2.0))     # ov_z: from the tail end face; from the lead end face (clear of the lead-end mount bolts at 7.5)
+#      receiver down in the funnel. A tongue at each corner of the funnel's two sliding end walls enters a notch in the receiver's END face and bears on its lower face
+#      (the walls park out for the landing and drive in once the drone is seated; they also centre it along the pack). The funnel has nothing free behind its side walls
+#      (gearmotors, tab slots: the side notches of 800061d could not be reached). The end faces carry only at their four corners: between them the end walls are 3 thick
+#      below the rail band, the lead end has the plug slot, the Scout's ends are clipped. Scout: in the end face of a block standing on each foot pad. Overseer: in the end
+#      face where the side wall runs out, outboard of the mount bolts (3.3 behind the end face at |x| 27.8: the notch starts at 30.5, 2.0 of wall to the bore)
+HOLD = dict(x1=34.0, ov_x0=30.5, y=(6.0, 10.0), depth=2.5, top=13.0, ov_len=12.0, tongue=dict(x=(31.1, 33.4), h_mm=3.0, proud_mm=2.0))
 
 
 def hold_down(B):
     """(blocks, notches, where): drawn blocks (one per notch, the notch not yet cut), the notches, and their boxes for the funnel stream (cartridge coords)"""
-    g, r = B["g"], B["r"]; blocks, notches, where = [], [], []
-    if g["pack"] == "scout":
-        spans = [(1 if p_.bounding_box()[0] > 0 else -1, p_.bounding_box()[2], p_.bounding_box()[5], FOOT_PAD["x"][0]) for p_ in B["foot_pads"]]
-    else:
-        spans = [(sx, za, zb, r["RF"] + WALL_RELIEF.get("overseer", 0.0)) for sx in (1, -1) for za, zb in ((r["Z_E0"] + HOLD["ov_z"][0][0], r["Z_E0"] + HOLD["ov_z"][0][1]), (r["Z_E1"] - HOLD["ov_z"][1][1], r["Z_E1"] - HOLD["ov_z"][1][0]))]
+    g, r = B["g"], B["r"]; blocks, notches, where = [], [], []; zt = g["Z_T"]
     bolts = U(*[cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, 100.0) for bx, bz in r["MOUNT"]])
-    for sx, za, zb, x0 in spans:
-        blocks.append(box(*sorted((sx * x0, sx * HOLD["x"])), bl.Y_RB, HOLD["top"], za, zb) - bl.cart_path(r) - bolts)
-        notches.append(box(*sorted((sx * (HOLD["x"] - HOLD["depth"]), sx * (HOLD["x"] + 1.0))), HOLD["y"][0], HOLD["y"][1], za - 0.01, zb + 0.01))
-        where.append(dict(side="+x" if sx > 0 else "-x", outer_face_x=sx * HOLD["x"], floor_x=sx * (HOLD["x"] - HOLD["depth"]), y=list(HOLD["y"]), z=[round(za, 2), round(zb, 2)]))
+    if g["pack"] == "scout":
+        spans = [(1 if p_.bounding_box()[0] > 0 else -1, p_.bounding_box()[2], p_.bounding_box()[5], FOOT_PAD["x"][0], FOOT_PAD["x"][0]) for p_ in B["foot_pads"]]
+    else:
+        z0, z1 = r["Z_E0"] - r["END_T"], r["Z_E1"] + r["END_T"]
+        spans = [(sx, za, zb, r["RF"] + WALL_RELIEF.get("overseer", 0.0), HOLD["ov_x0"]) for sx in (1, -1) for za, zb in ((z0, z0 + HOLD["ov_len"]), (z1 - HOLD["ov_len"], z1))]
+    for sx, za, zb, xb, xn in spans:
+        lead = (za + zb) / 2 > zt; zf = zb if lead else za; zn = sorted((zf, zf + (-1 if lead else 1) * HOLD["depth"]))      # the end face, and the notch in from it
+        blocks.append(box(*sorted((sx * xb, sx * HOLD["x1"])), bl.Y_RB, HOLD["top"], za, zb) - bl.cart_path(r) - bolts)
+        notches.append(box(*sorted((sx * xn - sx * 0.01 * (xn == xb), sx * (HOLD["x1"] + 1.0))), HOLD["y"][0], HOLD["y"][1], zn[0] - 0.01 * (not lead), zn[1] + 0.01 * lead))
+        where.append(dict(corner=("+x" if sx > 0 else "-x") + (" lead" if lead else " tail"), end_face_z=round(zf, 2), x=[round(sx * xn, 2), sx * HOLD["x1"]], y=list(HOLD["y"]), z=[round(v, 2) for v in zn]))
     return blocks, notches, where
 
 
@@ -823,20 +827,23 @@ def main(pack="scout"):
     A_s = vol(B["strips"]); A_s = A_s / bl.STRIP_T; Et = m6.MATERIALS["TPU95A"].E if hasattr(m6, "MATERIALS") else 9.8      # the head's push on the two TPU seat strips (13 Nov, arm v8: 118 N)
     res["seat_push"] = {"%.0f N" % F: dict(area_mm2=round(A_s, 1), MPa=round(F / A_s, 3), squash_mm=round(F / A_s / Et * bl.STRIP_T, 3), of_proud_mm=round(bl.STRIP_T - bl.STRIP_REC, 2),
                                            index=round(F / A_s / (Et * 0.25), 3)) for F in (ARM["insert_N"], 106.6, ARM["stall_N"])}   # index: against 25 % strain (TPU 95A, E)
-    Wd = (g["SWAP_M"] + 510.0 if pack == "scout" else 2200.0) / 1000 * 9.81; Fp = (ARM["stall_N"] - Wd) / 4; zl = B["hold_where"][0]["z"]; a_pin = HOLD["pin"]["reach_mm"] * (zl[1] - zl[0] - 1.0)
+    Wd = (g["SWAP_M"] + 510.0 if pack == "scout" else 2200.0) / 1000 * 9.81; Fp = (ARM["stall_N"] - Wd) / 4; tg = HOLD["tongue"]; a_t = (tg["x"][1] - tg["x"][0]) * tg["proud_mm"]
     T = to_seat(B); to_s = lambda x, y, z: [round(float(v), 2) for v in T @ np.array([x, y, z, 1.0])]
+    def seat_box(w):
+        a, b = to_s(w["x"][0], w["y"][0], w["z"][0]), to_s(w["x"][1], w["y"][1], w["z"][1]); return dict(lo=[min(p_, q_) for p_, q_ in zip(a, b)], hi=[max(p_, q_) for p_, q_ in zip(a, b)])
+    side = min(abs(abs(w["x"][0]) - tg["x"][0]) for w in B["hold_where"])
     res["hold_down"] = dict(
-        what="four notches in the receiver's outer side faces; a pin from each funnel side wall enters one and bears DOWN on its lower face when the arm pushes the drone up",
+        what="a notch in the receiver's end face at each of its four corners; a tongue on each of the funnel's sliding end walls enters one and bears DOWN on its lower face when the arm pushes the drone up",
         frame="cartridge coords (x across, y up from the flat bottom, z along the pack); seat_frame gives the same boxes in the funnel's seat frame (x nose, y left, z up)",
-        notches=[dict(w, seat_frame=dict(lo=to_s(min(w["outer_face_x"], w["floor_x"]), w["y"][0], w["z"][0]), hi=to_s(max(w["outer_face_x"], w["floor_x"]), w["y"][1], w["z"][1]))) for w in B["hold_where"]],
-        height_above_receiver_underside_mm=[round(HOLD["y"][0] - bl.Y_RB, 2), round(HOLD["y"][1] - bl.Y_RB, 2)], depth_mm=HOLD["depth"], length_mm=round(zl[1] - zl[0], 2),
-        bearing_face="the notch's lower face (y %.1f), 2.5 deep; %.1f of drawn PCTG under it" % (HOLD["y"][0], HOLD["y"][0] - bl.Y_RB),
-        pin=dict(max_height_mm=HOLD["pin"]["h_mm"], enters_mm=HOLD["pin"]["reach_mm"], max_width_along_the_pack_mm=round(zl[1] - zl[0] - 1.0, 1),
-                 note="3.0 high in the 4.0 notch: 0.5 over and under (the drone may lift 0.5 before the pins bear); 2.0 of the 2.5 depth; flat underside, steel or PCTG"),
-        load=dict(head_push_N=ARM["stall_N"], drone_weight_N=round(Wd, 1), per_pin_N=round(Fp, 1), bearing_MPa=round(Fp / a_pin, 2), index=round(Fp / a_pin / m6.ALLOW["functional"], 3)),
-        clearances_at_landing="the notches are inside the receiver's outline (nothing proud of |x| %.1f): the funnel fit, its 65 landing states and the free play are unchanged, so the pins must be "
-                              "withdrawn flush with the seat's side walls (|y| 34.4) while the drone lands and leaves; seated, the receiver's side faces are %.1f from those walls and it can slide "
-                              "%s along / %s across" % (HOLD["x"], 34.4 - HOLD["x"], res["funnel"]["free_play_mm"]["to_nose"], res["funnel"]["free_play_mm"]["across"]))
+        notches=[dict(w, end_face_seat_x=to_s(0, 0, w["end_face_z"])[0], seat_frame=seat_box(w)) for w in B["hold_where"]],
+        height_above_receiver_underside_mm=[round(HOLD["y"][0] - bl.Y_RB, 2), round(HOLD["y"][1] - bl.Y_RB, 2)], depth_from_the_end_face_mm=HOLD["depth"],
+        bearing_face="the notch's lower face (y %.1f); %.1f of drawn PCTG under it" % (HOLD["y"][0], HOLD["y"][0] - bl.Y_RB),
+        tongue=dict(lane_abs_y_seat_mm=list(tg["x"]), width_mm=round(tg["x"][1] - tg["x"][0], 1), max_height_mm=tg["h_mm"], proud_of_the_wall_face_mm=tg["proud_mm"], side_clearance_in_the_notch_mm=round(side, 2),
+                    note="the same lane and height on both drones; 3.0 high in the 4.0 notch (0.5 over and under: the drone may lift 0.5 before the tongues bear); flat underside; 2.0 of the 2.5 depth"),
+        load=dict(head_push_N=ARM["stall_N"], drone_weight_N=round(Wd, 1), per_tongue_N=round(Fp, 1), bearing_MPa=round(Fp / a_t, 2), index=round(Fp / a_t / m6.ALLOW["functional"], 3)),
+        clearances_at_landing="the notches are inside the receiver's outline: the funnel fit, its 65 landing states and the free play are unchanged. The end walls must park at least %.1f mm further out than "
+                              "their seated gap while the drone lands and leaves (tongue %.1f + 0.5), then drive in; seated, the receiver can sit %s to the nose, %s to the tail, %s across before the funnel stops it" % (
+                                  tg["proud_mm"] + 0.5, tg["proud_mm"], res["funnel"]["free_play_mm"]["to_nose"], res["funnel"]["free_play_mm"]["to_tail"], res["funnel"]["free_play_mm"]["across"]))
     paths = save(B)
     res["mass_g"] = {n: round(abs(t.volume) / 1000 * (7.85 if "pin" in n else 1.21 if "strip" in n else 1.23), 2) for n, t in paths.items()}
     res["swap_g"] = round(g["SWAP_M"], 1); res["swap_cg"] = [round(float(v), 2) for v in g["SWAP_CG"]]
