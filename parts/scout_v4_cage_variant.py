@@ -18,8 +18,23 @@ PULL_CAP = {3: 940.0, 6: 1880.0}                         # N: the 3.2 socket's p
 def cage(line, gen_cm3, drawn_g=33.0):
     """the line's cage patched into tools/scout_v4_shape and solved on the frame's own mass: (node loads, tube members, report)"""
     N0 = dict(S.NODES)
-    S.NODES["DN"], S.NODES["DT"] = (76.0, 0, 18.4), (-76.0, 0, 18.4)
-    tubes = {"DN-NB", "DT-TB"}
+    if line == "fork":                                   # 13 Nov, the architecture review's "bolt forks": the bottom nodes down to z 2.7, each on a
+        old = ("DN", "BN", "DT", "BT", "DS0", "BS0", "DS1", "BS1")   # horizontal fork of two 3.0 rods to sockets at z 11 beside the receiver's bolts
+        for k in old:
+            del S.NODES[k]
+        for k, x, y, z in (("NB", 155.0, 0.0, 2.7), ("TB", -155.0, 0.0, 2.7), ("S0", 0.0, 155.0, 2.7), ("S1", 0.0, -155.0, 2.7)):
+            S.NODES[k] = (x, y, z)
+        xa, xb = UL.REC_BOLTS[0][0], UL.REC_BOLTS[2][0]
+        new = {"BN0": (75.5, 23.0, 11.0), "BN1": (75.5, -23.0, 11.0), "BT0": (-75.5, 23.0, 11.0), "BT1": (-75.5, -23.0, 11.0),
+               "SA0": (xa, 40.0, 11.0), "SA1": (xa, -40.0, 11.0), "SB0": (xb, 40.0, 11.0), "SB1": (xb, -40.0, 11.0)}
+        S.NODES.update(new)
+        S.RODS[:] = [r for r in S.RODS if not set(r) & set(old)] + [("BN0", "NB"), ("BN1", "NB"), ("BT0", "TB"), ("BT1", "TB"),
+                                                                    ("SA0", "S0"), ("SB0", "S0"), ("SA1", "S1"), ("SB1", "S1")]
+        S.PRINTED = tuple(k for k in S.PRINTED if k not in old) + tuple(new)
+        tubes = set()
+    else:
+        S.NODES["DN"], S.NODES["DT"] = (76.0, 0, 18.4), (-76.0, 0, 18.4)
+        tubes = {"DN-NB", "DT-TB"}
     if line == "tube2":                                  # the side rods too (13 Nov: BS / DS 0.92-0.96 x Euler at gen 230 / 260 as 3.0)
         tubes |= {"DS0-S0", "DS1-S1", "BS0-S0", "BS1-S1"}
         S.NODES["DS0"], S.NODES["DS1"] = (0.0, 40.0, 18.4), (0.0, -40.0, 18.4)
@@ -30,10 +45,10 @@ def cage(line, gen_cm3, drawn_g=33.0):
         S.PRINTED = tuple(k for k in S.PRINTED if k != "BT") + ("BT0", "BT1")
     A = {p["id"]: p["mass_g"] for p in json.load(open(os.path.join(S.ROOT, "systems", "scout_v4.assembly.json")))["parts"]}
     frame_g = gen_cm3 * 1.23 + drawn_g
-    core = sum(v for k, v in A.items() if "cage" not in k) - A["scout_v4_frame"] + frame_g + S.BATTERY_SET[0]
-    o = S.frame_check(core, write=False)
+    core, cg = S.core_of(frame_g)                         # the model fix (the review): the core without the node parts, at its real CG
+    o = S.frame_check(core, write=False, core_cg=cg)
     if line == "split" and o["rods"].get("DN-NB", {}).get("compression", 0) / o["rods"]["DN-NB"]["Pcr"] <= 0.8:
-        tubes.discard("DN-NB"); S.NODES["DN"] = N0["DN"]; o = S.frame_check(core, write=False)
+        tubes.discard("DN-NB"); S.NODES["DN"] = N0["DN"]; o = S.frame_check(core, write=False, core_cg=cg)
     rep = []
     for k, v in sorted(o["rods"].items(), key=lambda kv: -kv[1]["compression"] / kv[1]["Pcr"]):
         tube = k in tubes
@@ -57,6 +72,8 @@ def apply(line, gen_cm3, drawn_g=33.0):
     F.TUBE_NODES = tuple(n for k in tubes for n in k.split("-") if n in S.PRINTED)
     if line == "split":
         F.END_NODES = ("DN", "BN", "DT", "BT0", "BT1")
+    if line == "fork":
+        F.END_NODES, F.SIDE_NODES = ("BN0", "BN1", "BT0", "BT1"), ("SA0", "SB0", "SA1", "SB1")
     drone_g = sum(A.values()) - A["scout_v4_frame"] + frame_g + S.BATTERY_SET[0]
     F.HIT_N = round(2 * drone_g * UL.G * 600.0 / 15.0, -1); F.DRONE_G = drone_g
     return F
