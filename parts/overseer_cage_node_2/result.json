@@ -7,8 +7,10 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   31766.4
+   31761.9
   ],
+  "sealed_voids": [],
+  "inner_shells": [],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
@@ -29,7 +31,7 @@
     "case": "frame tube 1-2 axial 285 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.073,
-    "across": 0.047,
+    "across": 0.046,
     "at": [
      140.2,
      -13.8,
@@ -51,7 +53,7 @@
     "case": "frame tube 2-3 axial 266 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.068,
-    "across": 0.044,
+    "across": 0.043,
     "at": [
      140.2,
      13.8,
@@ -72,7 +74,7 @@
    {
     "case": "frame spoke 1.1 axial 238 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.069,
+    "inlayer": 0.065,
     "across": 0.064,
     "at": [
      161.8,
@@ -94,7 +96,7 @@
    {
     "case": "frame spoke 4.1 axial 233 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.068,
+    "inlayer": 0.064,
     "across": 0.062,
     "at": [
      161.8,
@@ -116,39 +118,39 @@
    {
     "case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
     "cls": "flight",
-    "inlayer": 0.035,
-    "across": 0.036,
+    "inlayer": 0.033,
+    "across": 0.034,
     "at": [
-     167.8,
-     -6.6,
+     166.6,
+     6.6,
      -80.2
     ]
    },
    {
     "case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
     "cls": "crash",
-    "inlayer": 0.189,
-    "across": 0.193,
+    "inlayer": 0.179,
+    "across": 0.182,
     "at": [
-     167.8,
-     -6.6,
+     166.6,
+     6.6,
      -80.2
     ]
    }
   ],
-  "worst": 0.193,
+  "worst": 0.182,
   "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
   "worst_at": [
-   167.8,
-   -6.6,
+   166.6,
+   6.6,
    -80.2
   ],
   "ok": true
  },
- "mass_g": 51.29,
+ "mass_g": 51.25,
  "watertight": true,
  "export": {
-  "faces_in": 196072,
+  "faces_in": 194764,
   "degenerate": 0,
   "folded": 2,
   "caps_split": 2,
@@ -158,7 +160,7 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 196070,
+  "faces": 194762,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -169,12 +171,12 @@
    "caps_split": 51,
    "caps_left": 0,
    "watertight": true,
-   "faces": 322094,
+   "faces": 321166,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 41698.9,
-  "exact_mm3": 41699.7
+  "volume_mm3": 41668.3,
+  "exact_mm3": 41669.0
  },
  "bodies": {
   "bodies_raw": 1,
@@ -182,7 +184,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 41699.7,
+ "volume_mm3": 41669.0,
  "drawn_g": 13.77,
  "export_cleanup": {
   "pitch": 0.25,
@@ -195,11 +197,11 @@
  },
  "memory_build": [
   {
-   "estimate_gb": 3.46,
+   "estimate_gb": 3.5,
    "parts": {
-    "held": 0.87,
+    "held": 0.92,
     "gate": 0.47,
-    "mesh": 2.12
+    "mesh": 2.11
    },
    "limit_gb": 14.0,
    "gate_cells": 11234292,
@@ -208,13 +210,13 @@
     77.4,
     32.4
    ],
-   "faces": 379132,
+   "faces": 378172,
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 1.39,
+   "estimate_gb": 1.44,
    "parts": {
-    "held": 0.92,
+    "held": 0.97,
     "gate": 0.47,
     "mesh": 0.0
    },
@@ -282,6 +284,17 @@
    "backend": "auto",
    "early_beta": 4,
    "early_k": 3.0,
+   "nominal_hold": true,
+   "hold_beta": 4.0,
+   "hold_proj_beta": 32.0,
+   "hold_tol": 0.05,
+   "hold_eroded": true,
+   "hold_stage": 50,
+   "no_cavity": true,
+   "cavity_ratio": 5.0,
+   "cavity_ks": 0.0001,
+   "cavity_p": 8.0,
+   "cavity_on": 0.5,
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
    "mem_limit_gb": 14.0,
@@ -305,8 +318,39 @@
   "n_real": 10,
   "n_ties": 66,
   "backend": "direct",
-  "iterations": 69,
-  "stopped": "max_stage"
+  "iterations": 83,
+  "stopped": "max_stage",
+  "checks": [
+   {
+    "it": 13,
+    "beta": 4.0,
+    "worst": 0.241,
+    "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)"
+   },
+   {
+    "it": 23,
+    "beta": 8.0,
+    "worst": 0.215,
+    "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)"
+   },
+   {
+    "it": 33,
+    "beta": 16.0,
+    "worst": 0.202,
+    "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)"
+   }
+  ],
+  "hold": {
+   "started_it": 13,
+   "beta": 4.0,
+   "index": 0.241
+  },
+  "cavity": {
+   "last": 2.877146963976251,
+   "ratio": 5.0,
+   "T0": 72.96470550636127,
+   "row": true
+  }
  },
  "grid": {
   "name": "overseer_cage_node_2",
@@ -341,17 +385,17 @@
    "sockets"
   ]
  },
- "build_s": 90.7,
- "layout_s": 3206,
- "peak_gb": 3.9627,
+ "build_s": 150.0,
+ "layout_s": 7308,
+ "peak_gb": 4.333644,
  "memory": {
   "estimate_gb": 4.67,
   "parts": {
-   "held": 0.88,
+   "held": 0.86,
    "factor": 2.26,
    "assembly": 0.6,
    "block": 0.8,
-   "energies": 0.13
+   "energies": 0.15
   },
   "limit_gb": 14.0,
   "cases": 76,
@@ -359,9 +403,9 @@
   "backend": "direct",
   "block": 46,
   "build": {
-   "estimate_gb": 1.61,
+   "estimate_gb": 1.59,
    "parts": {
-    "held": 0.88,
+    "held": 0.86,
     "gate": 0.73,
     "mesh": 0.0
    },
@@ -375,7 +419,144 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 3.72
+  "peak_it1_gb": 3.73
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "frame tube 1-2 axial 285 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.063,
+    "across": 0.052,
+    "at": [
+     140.2,
+     -13.8,
+     -80.2
+    ]
+   },
+   {
+    "case": "frame tube 1-2 side 11.3 N",
+    "cls": "crash",
+    "inlayer": 0.005,
+    "across": 0.002,
+    "at": [
+     142.6,
+     -30.6,
+     -79.0
+    ]
+   },
+   {
+    "case": "frame tube 2-3 axial 266 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.059,
+    "across": 0.049,
+    "at": [
+     140.2,
+     13.8,
+     -80.2
+    ]
+   },
+   {
+    "case": "frame tube 2-3 side 11.9 N",
+    "cls": "crash",
+    "inlayer": 0.005,
+    "across": 0.002,
+    "at": [
+     142.6,
+     30.6,
+     -79.0
+    ]
+   },
+   {
+    "case": "frame spoke 1.1 axial 238 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.096,
+    "across": 0.084,
+    "at": [
+     161.8,
+     17.4,
+     -64.6
+    ]
+   },
+   {
+    "case": "frame spoke 1.1 side 2.1 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.001,
+    "at": [
+     178.6,
+     23.4,
+     -67.0
+    ]
+   },
+   {
+    "case": "frame spoke 4.1 axial 233 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.094,
+    "across": 0.082,
+    "at": [
+     161.8,
+     -17.4,
+     -64.6
+    ]
+   },
+   {
+    "case": "frame spoke 4.1 side 2.1 N",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.001,
+    "at": [
+     178.6,
+     -19.8,
+     -68.2
+    ]
+   },
+   {
+    "case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
+    "cls": "flight",
+    "inlayer": 0.043,
+    "across": 0.045,
+    "at": [
+     169.0,
+     -7.8,
+     -80.2
+    ]
+   },
+   {
+    "case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
+    "cls": "crash",
+    "inlayer": 0.233,
+    "across": 0.241,
+    "at": [
+     169.0,
+     -7.8,
+     -80.2
+    ]
+   }
+  ],
+  "worst": 0.241,
+  "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
+  "worst_at": [
+   169.0,
+   -7.8,
+   -80.2
+  ],
+  "ok": true,
+  "beta": 4.0,
+  "iteration": 13,
+  "max_worst": 0.3,
+  "k": 3.0
+ },
+ "field": {
+  "worst": 0.184,
+  "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
+  "worst_at": [
+   166.6,
+   -6.6,
+   -80.2
+  ],
+  "beta": 32.0,
+  "iteration": 83
  },
  "gen_cm3": 30.0,
  "h": 1.2,
@@ -531,134 +712,8 @@
    "max_worst": 0.3
   }
  },
- "early": {
-  "rows": [
-   {
-    "case": "frame tube 1-2 axial 285 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.062,
-    "across": 0.053,
-    "at": [
-     140.2,
-     -13.8,
-     -80.2
-    ]
-   },
-   {
-    "case": "frame tube 1-2 side 11.3 N",
-    "cls": "crash",
-    "inlayer": 0.005,
-    "across": 0.002,
-    "at": [
-     143.8,
-     -28.2,
-     -82.6
-    ]
-   },
-   {
-    "case": "frame tube 2-3 axial 266 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.058,
-    "across": 0.05,
-    "at": [
-     140.2,
-     13.8,
-     -80.2
-    ]
-   },
-   {
-    "case": "frame tube 2-3 side 11.9 N",
-    "cls": "crash",
-    "inlayer": 0.005,
-    "across": 0.002,
-    "at": [
-     143.8,
-     28.2,
-     -82.6
-    ]
-   },
-   {
-    "case": "frame spoke 1.1 axial 238 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.096,
-    "across": 0.083,
-    "at": [
-     161.8,
-     17.4,
-     -64.6
-    ]
-   },
-   {
-    "case": "frame spoke 1.1 side 2.1 N",
-    "cls": "crash",
-    "inlayer": 0.001,
-    "across": 0.001,
-    "at": [
-     178.6,
-     23.4,
-     -67.0
-    ]
-   },
-   {
-    "case": "frame spoke 4.1 axial 233 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.093,
-    "across": 0.082,
-    "at": [
-     161.8,
-     -17.4,
-     -64.6
-    ]
-   },
-   {
-    "case": "frame spoke 4.1 side 2.1 N",
-    "cls": "crash",
-    "inlayer": 0.001,
-    "across": 0.001,
-    "at": [
-     178.6,
-     -19.8,
-     -68.2
-    ]
-   },
-   {
-    "case": "landing 6 g on the foot (67 N up, 3 of 6 feet)",
-    "cls": "flight",
-    "inlayer": 0.041,
-    "across": 0.043,
-    "at": [
-     171.4,
-     -7.8,
-     -79.0
-    ]
-   },
-   {
-    "case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
-    "cls": "crash",
-    "inlayer": 0.22,
-    "across": 0.228,
-    "at": [
-     171.4,
-     -7.8,
-     -79.0
-    ]
-   }
-  ],
-  "worst": 0.228,
-  "worst_case": "ground hit 1300 N on the foot (a 0.6 m drop onto this node alone, 8 Nov)",
-  "worst_at": [
-   171.4,
-   -7.8,
-   -79.0
-  ],
-  "ok": true,
-  "beta": 4.0,
-  "iteration": 14,
-  "max_worst": 0.3,
-  "k": 3.0
- },
  "baseline": null,
- "total_s": 3296,
+ "total_s": 7458,
  "part_sha": "6d9fa1c5c172",
  "lib_sha": "9cb5498854de",
  "setup_sha": "4ae8801dd71f3265",
@@ -666,11 +721,11 @@
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/overseer_cage_node_2.stl",
-  "sha256": "dc246282ab48cd2c76605c0379d53360cad157386257b06a5fa00c63b95019ac",
-  "bytes": 9803584,
-  "faces": 196070,
+  "sha256": "a0cb28d07946114374643d3928e1e7bd86121033475eba4eff42f513f8952490",
+  "bytes": 9738184,
+  "faces": 194762,
   "view_faces": 60000,
-  "view_sha256": "1f204f60628fda485b45e45fbcd3c3590c6423a7e21d9be83e8f0f46344e0517",
-  "at": "2026-11-12 00:40"
+  "view_sha256": "cd5a9338a6778778f1a6d082d4fab4ff96d3fb127b2665a837fa920b85b7d922",
+  "at": "2026-11-13 04:55"
  }
 }
