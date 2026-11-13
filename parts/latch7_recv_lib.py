@@ -28,7 +28,8 @@ cartridge on the shelves and the seat strips, E):
   arm v8's float springs, every swap near it); swap across 43.5 N on a side pad (2); swap pull 57 N with the bolts in (fault); the same 118 N on
   one pocket's lead-in (a jammed bolt, fault, 2);
   on the feet: 6 g landing in the funnel and the XT60 pull-out (57 N + the drone's weight), on four; hold-down: the head's 118 N on the seats
-  against the four tongues of the funnel's end walls in the corner notches (118 N less the drone's weight, down on the notches' lower faces).
+  against the four tongues of the funnel's end walls in the corner notches (118 N less the drone's weight, down on the notches' lower faces);
+  6 g landing with one end on its wall's two tongues (nose pair, tail pair).
 The XT60's insert and pull-out act on the plug carrier and its cap, which the lead-end bolts clamp on the lead-end bosses: they reach
 this part only as compression under those bosses (supports). Not applied, no number: a foot's sideways stop force in a skewed
 landing; handling (L's 50 N is for cage members; the 35 g side hit on the same wall is 76 N Scout, 263 N Overseer)."""
@@ -161,6 +162,10 @@ def setup_for(pack, name):
         Fh = (A["stall_N"] - Wd) / len(feet)                   # the head's push less the drone's weight comes back down through the four end-wall tongues
         hy = mk.HOLD["y"][0]
         floors = [D[f"foot {i}"] ^ box(*sorted(w["x"]), hy - 2.0, hy, *w["z"]) for i, w in enumerate(B["hold_where"])]       # under each notch's lower face
+        tx = mk.HOLD["tongue"]["x"]                              # a drone that slid down an end wall lands that end on the wall's two tongues (the funnel's sequence): 6 g on two
+        for en in ("tail", "lead"):
+            under = [D[f"foot {i}"] ^ box(*sorted((sg_ * tx[0], sg_ * tx[1])), bl.Y_RB - 1.0, bl.Y_RB + 2.0, -500, 500) for i, w in enumerate(B["hold_where"]) if w["corner"].endswith(en) for sg_ in ((1 if w["x"][0] > 0 else -1),)]
+            p.load_multi(f"landing 6 g on the {en} wall's two tongues", [(R(u_), V((0, 6 * Wd / 2, 0))) for u_ in under], cls="flight")
         p.load_multi(f"hold-down: the head's {A['stall_N']:.0f} N up on the seats, held by the funnel's four end-wall tongues",
                      [(R(D[f"seat {sn[s]}"]), V((0, A["stall_N"] / 2, 0))) for s in (1, -1)] + [(R(f_), V((0, -Fh, 0))) for f_ in floors], cls="flight")
         pad = lambda f_: f_ ^ box(-200, 200, bl.Y_RB - 1, bl.Y_RB + 4.0, -500, 500)

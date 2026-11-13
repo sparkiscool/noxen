@@ -414,7 +414,8 @@ def scout_feet(B):
 #      (gearmotors, tab slots: the side notches of 800061d could not be reached). The end faces carry only at their four corners: between them the end walls are 3 thick
 #      below the rail band, the lead end has the plug slot, the Scout's ends are clipped. Scout: in the end face of a block standing on each foot pad. Overseer: in the end
 #      face where the side wall runs out, outboard of the mount bolts (3.3 behind the end face at |x| 27.8: the notch starts at 30.5, 2.0 of wall to the bore)
-HOLD = dict(x1=34.0, ov_x0=30.5, y=(6.0, 10.0), depth=2.5, top=13.0, ov_len=12.0, tongue=dict(x=(31.1, 33.4), h_mm=3.0, proud_mm=2.0))
+HOLD = dict(x1=34.0, ov_x0=30.5, y=(6.0, 10.0), depth=2.5, top=13.0, ov_len=12.0, tongue=dict(x=(30.9, 33.9), h_mm=3.0, proud_mm=2.0))
+#      tongue: a 3 x 3 steel square key (agreed with the funnel stream 13 Nov), flats up and down. A round O2.5 dowel was refused: a line on PCTG, 101 MPa Hertz at 27.7 N on 2.0 (PCTG 46)
 
 
 def hold_down(B):
@@ -838,9 +839,16 @@ def main(pack="scout"):
         notches=[dict(w, end_face_seat_x=to_s(0, 0, w["end_face_z"])[0], seat_frame=seat_box(w)) for w in B["hold_where"]],
         height_above_receiver_underside_mm=[round(HOLD["y"][0] - bl.Y_RB, 2), round(HOLD["y"][1] - bl.Y_RB, 2)], depth_from_the_end_face_mm=HOLD["depth"],
         bearing_face="the notch's lower face (y %.1f); %.1f of drawn PCTG under it" % (HOLD["y"][0], HOLD["y"][0] - bl.Y_RB),
-        tongue=dict(lane_abs_y_seat_mm=list(tg["x"]), width_mm=round(tg["x"][1] - tg["x"][0], 1), max_height_mm=tg["h_mm"], proud_of_the_wall_face_mm=tg["proud_mm"], side_clearance_in_the_notch_mm=round(side, 2),
-                    note="the same lane and height on both drones; 3.0 high in the 4.0 notch (0.5 over and under: the drone may lift 0.5 before the tongues bear); flat underside; 2.0 of the 2.5 depth"),
-        load=dict(head_push_N=ARM["stall_N"], drone_weight_N=round(Wd, 1), per_tongue_N=round(Fp, 1), bearing_MPa=round(Fp / a_t, 2), index=round(Fp / a_t / m6.ALLOW["functional"], 3)),
+        tongue=dict(section="3 x 3 steel square key (DIN 6885 key steel), flats up and down, along the seat's x", lane_abs_y_seat_mm=list(tg["x"]), width_mm=round(tg["x"][1] - tg["x"][0], 1),
+                    max_height_mm=tg["h_mm"], enters_mm=tg["proud_mm"], side_clearance_in_the_notch_mm=round(side, 2),
+                    note="the same lane and height on both drones; 3.0 high in the 4.0 notch (0.5 over and under: the drone may lift 0.5 before the tongues bear); 2.0 of the 2.5 depth; a 0.5 chamfer on the tip's inboard side",
+                    round_pin_refused=dict(d_mm=2.5, hertz_peak_MPa=round(math.sqrt(Fp / tg["proud_mm"] * m6.PCTG.E / (1 - 0.38 ** 2) / (math.pi * 1.25)), 0), pctg_MPa=round(m6.PCTG.Xt, 0),
+                                           why="a round on the notch's flat face is a line contact")),
+        load=dict(head_push_N=ARM["stall_N"], drone_weight_N=round(Wd, 1), per_tongue_N=round(Fp, 1), bearing_MPa=round(Fp / a_t, 2), index=round(Fp / a_t / m6.ALLOW["functional"], 3),
+                  allowable="10.8 MPa functional (SF 4 on PCTG), flat steel on the flat PCTG face"),
+        landing_on_two_tongues=dict(per_tongue_N=round(6 * Wd / 2, 1), on="the corner block's flat underside in the tongue's lane, at one end (the funnel's sequence: land parked, back off, drive in)",
+                                    bearing_MPa=round(6 * Wd / 2 / ((tg["x"][1] - tg["x"][0]) * 6.7), 2), index=round(6 * Wd / 2 / ((tg["x"][1] - tg["x"][0]) * 6.7) / m6.ALLOW["functional"], 3),
+                                    note="6 g of the drone on two; the key stands at least 6.7 out of the wall's 55 deg face (funnel stream)"),
         clearances_at_landing="the notches are inside the receiver's outline: the funnel fit, its 65 landing states and the free play are unchanged. The end walls must park at least %.1f mm further out than "
                               "their seated gap while the drone lands and leaves (tongue %.1f + 0.5), then drive in; seated, the receiver can sit %s to the nose, %s to the tail, %s across before the funnel stops it" % (
                                   tg["proud_mm"] + 0.5, tg["proud_mm"], res["funnel"]["free_play_mm"]["to_nose"], res["funnel"]["free_play_mm"]["to_tail"], res["funnel"]["free_play_mm"]["across"]))

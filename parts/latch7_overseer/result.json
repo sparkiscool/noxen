@@ -1911,22 +1911,37 @@
   "depth_from_the_end_face_mm": 2.5,
   "bearing_face": "the notch's lower face (y 6.0); 5.8 of drawn PCTG under it",
   "tongue": {
+   "section": "3 x 3 steel square key (DIN 6885 key steel), flats up and down, along the seat's x",
    "lane_abs_y_seat_mm": [
-    31.1,
-    33.4
+    30.9,
+    33.9
    ],
-   "width_mm": 2.3,
+   "width_mm": 3.0,
    "max_height_mm": 3.0,
-   "proud_of_the_wall_face_mm": 2.0,
-   "side_clearance_in_the_notch_mm": 0.6,
-   "note": "the same lane and height on both drones; 3.0 high in the 4.0 notch (0.5 over and under: the drone may lift 0.5 before the tongues bear); flat underside; 2.0 of the 2.5 depth"
+   "enters_mm": 2.0,
+   "side_clearance_in_the_notch_mm": 0.4,
+   "note": "the same lane and height on both drones; 3.0 high in the 4.0 notch (0.5 over and under: the drone may lift 0.5 before the tongues bear); 2.0 of the 2.5 depth; a 0.5 chamfer on the tip's inboard side",
+   "round_pin_refused": {
+    "d_mm": 2.5,
+    "hertz_peak_MPa": 95.0,
+    "pctg_MPa": 46.0,
+    "why": "a round on the notch's flat face is a line contact"
+   }
   },
   "load": {
    "head_push_N": 118.0,
    "drone_weight_N": 21.6,
    "per_tongue_N": 24.1,
-   "bearing_MPa": 5.24,
-   "index": 0.536
+   "bearing_MPa": 4.02,
+   "index": 0.411,
+   "allowable": "10.8 MPa functional (SF 4 on PCTG), flat steel on the flat PCTG face"
+  },
+  "landing_on_two_tongues": {
+   "per_tongue_N": 64.7,
+   "on": "the corner block's flat underside in the tongue's lane, at one end (the funnel's sequence: land parked, back off, drive in)",
+   "bearing_MPa": 3.22,
+   "index": 0.33,
+   "note": "6 g of the drone on two; the key stands at least 6.7 out of the wall's 55 deg face (funnel stream)"
   },
   "clearances_at_landing": "the notches are inside the receiver's outline: the funnel fit, its 65 landing states and the free play are unchanged. The end walls must park at least 2.5 mm further out than their seated gap while the drone lands and leaves (tongue 2.0 + 0.5), then drive in; seated, the receiver can sit 0.38 to the nose, 0.35 to the tail, 0.56 across before the funnel stops it"
  },
