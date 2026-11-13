@@ -742,10 +742,15 @@ def funnel_fit(B, step=4.0):
                rests_at_mm=rest, tab_line_at_seat_x=round(float(T[0, 3] + g["Z_T"]), 2), touches_at=dict(x=[round(tb[0], 1), round(tb[3], 1)], y_abs=[round(min(abs(tb[1]), abs(tb[4])), 1), round(max(abs(tb[1]), abs(tb[4])), 1)], z=[round(tb[2], 1), round(tb[5], 1)]),
                pressed_0p3_in_mm3=round(vol(touch), 1))
     worst = (0.0, None)
+    # 13 Nov: the end walls carry the hold-down keys. A drone lands with the walls parked (funnel(setting, "park")); a drone that slides down an end wall comes to
+    # rest with that end ON the wall's two keys (9.3 over the seat) until the walls back off: those states are counted as on the keys, not swept below them
+    Fp = fm.funnel(setting, "park") if "pos" in fm.funnel.__code__.co_varnames else F; on_keys = 0
     for lab, ox, oy, h in seat_check.descent_states("scout_v4" if pack == "scout" else "overseer")[1:]:
-        v = vol((R + Cs).translate([ox, oy, h]) ^ F)
+        if abs(ox) > 1e-9 and h < 9.5 and Fp is not F: on_keys += 1; continue
+        v = vol((R + Cs).translate([ox, oy, h]) ^ Fp)
         if v > worst[0]: worst = (v, lab)
-    out["landing_mm3"] = dict(worst=round(worst[0], 2), at=worst[1], states=len(seat_check.descent_states("overseer")) - 1)
+    out["landing_mm3"] = dict(worst=round(worst[0], 2), at=worst[1], states=len(seat_check.descent_states("overseer")) - 1, walls="parked 2.5 out" if Fp is not F else "seated",
+                              ends_on_the_keys=on_keys)
     wc = wh = 0.0; atc = None
     for k in np.arange(0.0, 160.01, step):
         v = vol(up(Cr).translate([0, 0, -k]) ^ F)
