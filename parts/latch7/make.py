@@ -1115,11 +1115,10 @@ def appendix_overseer(ro, rs):
 BED = 180.0                            # Bambu A1 mini
 
 
-def printability(m, near=0.0):
-    """the best of the six flat-down poses on the A1 mini: least area that overhangs past 45 deg (needs support), then most bed contact.
-    near > 0 (the print kit): among the poses within near mm2 (or 10 %) of the least support, the one with the largest face on the bed (CLAUDE.md: largest flat face down)."""
+def printability(m):
+    """the best of the six flat-down poses on the A1 mini: least area that overhangs past 45 deg (needs support), then most bed contact."""
     t = bl.tm(m); n = t.face_normals; ar = t.area_faces; c = t.triangles_center
-    best = None; rows = []
+    best = None
     for ax in range(3):
         for sg in (1, -1):
             down = np.zeros(3); down[ax] = sg                     # this direction of the part goes onto the bed
@@ -1133,11 +1132,7 @@ def printability(m, near=0.0):
             row = dict(down="%s%s" % ("+" if sg > 0 else "-", "xyz"[ax]), bed_mm2=round(float(ar[on_bed].sum()), 0), support_mm2=round(float(ar[over].sum()), 0),
                        size_mm=[round(float(v), 1) for v in ext], fits_bed=fits, on_the_diagonal=bool(diag))
             row["diag_spare_mm"] = round(BED - (a_ + b_) / math.sqrt(2), 1) if diag else None
-            rows.append(row)
             if best is None or (not row["fits_bed"], row["support_mm2"], -row["bed_mm2"]) < (not best["fits_bed"], best["support_mm2"], -best["bed_mm2"]): best = row
-    if near > 0:
-        ok = [r_ for r_ in rows if r_["fits_bed"] == best["fits_bed"] and r_["support_mm2"] <= best["support_mm2"] + max(near, 0.1 * best["support_mm2"])]
-        best = max(ok, key=lambda r_: r_["bed_mm2"])
     return best
 
 
@@ -1213,68 +1208,8 @@ def write_both():
     json.dump(asm, open(os.path.join(ROOT, "systems", "latch7_both.assembly.json"), "w"), indent=1)
     print("latch7_both:", len(parts), "parts")
 
-# ------------------------------------------------------------------ the print kit (13 Nov, Spark: "i want to start printing soon")
-def _on_bed(m, down):
-    """the piece turned so its `down` face (printability's pose, e.g. "+y") lies on the bed at z 0, centred on the plate"""
-    ax = "xyz".index(down[1]); sg = 1.0 if down[0] == "+" else -1.0; d = np.zeros(3); d[ax] = sg
-    a = np.cross(d, [0, 0, -1.0]); c = float(d @ [0, 0, -1.0])
-    if np.linalg.norm(a) < 1e-9: R = np.eye(3) if c > 0 else np.diag([1.0, -1.0, -1.0])
-    else:
-        K = np.array([[0, -a[2], a[1]], [a[2], 0, -a[0]], [-a[1], a[0], 0]]); R = np.eye(3) + K + K @ K / (1 + c)
-    t = bl.tm(m); T = np.eye(4); T[:3, :3] = R; t.apply_transform(T)
-    lo, hi = t.bounds; t.apply_translation([-(lo[0] + hi[0]) / 2, -(lo[1] + hi[1]) / 2, -lo[2]])
-    return t
-
-
-def kit():
-    """print/latch7_*.stl: every drawn, final piece of both sets in its print pose (meshes.yml publishes print/*.stl as print-<name>.stl on a push to main), each solid-checked
-    as exported, with a picture on its bed (parts/latch7/kit/) and parts/latch7/kit.json: file, pose, supports, material, count, and the assembly order. The receivers are
-    engine parts: they join when their runs pass."""
-    sys.path.insert(0, os.path.join(ROOT, "tools")); import solid_check as sc
-    from topo.build import render
-    pd, kd = os.path.join(ROOT, "print"), os.path.join(HERE, "kit"); os.makedirs(pd, exist_ok=True); os.makedirs(kd, exist_ok=True)
-    out = dict(note="Scout first, then Overseer. Bambu A1 mini, PCTG (PETG settings + 10 C) unless TPU. Counts are for one drone set (receiver side) and one cartridge.", files=[], waiting=[], assembly={})
-    done = {}
-    for pack in ("scout", "overseer"):
-        B = build(pack); g = B["g"]; pre = "latch7_" if pack == "scout" else "latch7_ov_"
-        pin = cyl("y", 0.0, 0.0, GUIDE_PIN[0] / 2, 0.0, GUIDE_PIN[1], 24)
-        pieces = [("cartridge", B["cart"], pre + "cartridge", "PCTG", 1, "on the pack"), ("bolt", slider(g, 0, 1), pre + "bolt", "PCTG", 2, "both bolts are this one file (the second is turned half round)"),
-                  ("stop bar", B["stop"], "latch7_stop_bar", "PCTG", 1, "the same file for both packs"), ("spring guide pin", pin, "latch7_spring_pin", "PCTG", 4, "o 2.0 x 7, standing; the same file for both packs; print a few spare"),
-                  ("plug carrier", B["carrier"], pre + "plug_carrier", "PCTG", 1, "with its two guide pegs"), ("plug carrier cap", B["cap"], pre + "plug_carrier_cap", "PCTG", 1, ""),
-                  ("seat strip", sorted(B["strips"].decompose(), key=lambda m: m.bounding_box()[0])[0], "latch7_seat_strip", "TPU 95A", 2, "the same file for both packs, two per receiver"),
-                  ("plug collar", B["collar"], "latch7_plug_collar", "PCTG", 1, "WAITING on Spark's XT60W-M measurement (body 15.5 x 8.1 and its length without tabs, E from the Amass sheet): do not print yet")]
-        for nm, m, fn, mat, n, note in pieces:
-            if fn not in done:
-                pr = printability(m, near=30.0); t = _on_bed(m, pr["down"]); f = os.path.join(pd, fn + ".stl"); t.export(f)
-                ok, info = sc.solid_check(bl.tm_load(f) if hasattr(bl, "tm_load") else __import__("trimesh").load(f, force="mesh"))
-                png = os.path.join(kd, fn + ".png")
-                render(t, png, title=f"{fn}.stl on its bed ({pr['down']} face down)", info=f"{mat} | {t.extents[0]:.1f} x {t.extents[1]:.1f} x {t.extents[2]:.1f} mm | solid check {'PASS' if ok else 'FAIL'}")
-                ext = [round(float(v), 1) for v in t.extents]
-                done[fn] = dict(file=f"print/{fn}.stl", release=f"https://github.com/sparkiscool/noxen/releases/download/meshes/print-{fn}.stl", picture=os.path.relpath(png, ROOT), solid_check="PASS" if ok else "FAIL",
-                                thin_walls=len(info.get("thin_walls", [])), pose=f"the part's {pr['down']} face on the bed", size_on_bed_mm=ext, fits_bed=bool(max(ext[:2]) <= BED and ext[2] <= BED),
-                                supports=("none" if pr["support_mm2"] < 5.0 else "yes: %d mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)" % pr["support_mm2"]),
-                                material=mat, grams_each=round(abs(t.volume) / 1000 * (1.21 if mat.startswith("TPU") else 1.23), 2), note=note, used_by={})
-            done[fn]["used_by"][pack] = n
-            if "WAITING" in note and fn not in out["waiting"]: out["waiting"].append(fn)
-        mg = next(b_ for b_ in m6.BOUGHT if b_["part"] == "tab magnet"); spg = next(b_ for b_ in m6.BOUGHT if b_["part"].startswith("latch spring")); xt = next(b_ for b_ in m6.BOUGHT if b_["part"].startswith("XT60"))
-        out["assembly"][pack] = dict(
-            bought=[dict(part="latch spring", n=4, spec=spg["spec"], url=spg["url"], check=spg["check"]), dict(part="magnet", n=2, spec=mg["spec"], url=mg["url"]),
-                    dict(part="XT60W pair", n=1, spec=xt["spec"], url=xt["url"], note="female on the pack's lead, male in the collar and carrier")],
-            cartridge=["1 press a magnet into each bolt's underside", "2 push each bolt in through its wall hole from outside (the second turned half round)", "3 drop the stop bar down across the rib into both bolts",
-                       "4 four springs, a guide pin inside each, squeezed and dropped into the bolts' slots from above", "5 pack down into the cartridge over them (the keeper lips snap over it); its XT60W-F into the keyed pocket at the lead end, two M3 set screws"],
-            receiver=["6 (when the receiver's run has passed) the two TPU seat strips into their recesses under the deck, between their keys", "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier, cap on",
-                      "8 carrier and cap onto the lead-end bosses; the receiver's M3 mount bolts from below clamp them"],
-            checked="parts/%s/result.json build.install: every step swept, 0 mm3" % OUT[pack][0])
-    out["files"] = list(done.values())
-    json.dump(out, open(os.path.join(HERE, "kit.json"), "w"), indent=1)
-    for f_ in out["files"]: print(f_["file"], f_["solid_check"], f_["pose"], f_["size_on_bed_mm"], f_["supports"][:14], f_["material"], f_["used_by"], f_["grams_each"], "thin", f_["thin_walls"])
-    return out
-
-
 if __name__ == "__main__":
     pk = "overseer" if "--overseer" in sys.argv else "scout"
-    if "--kit" in sys.argv:
-        kit(); sys.exit(0)
     if "--fit" in sys.argv:
         for q in ("scout", "overseer"):
             print(q, json.dumps(funnel_fit(build(q)), indent=1))
