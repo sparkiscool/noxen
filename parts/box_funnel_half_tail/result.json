@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   155433.5
+   156021.6
   ],
   "sealed_voids": [],
   "inner_shells": [],
@@ -22,7 +22,7 @@
   "skin_mm3": 39456.3,
   "skin_missing_mm3": 0.0,
   "in_cuts_mm3": -0.0,
-  "outside_env_mm3": 0.0,
+  "outside_env_mm3": -0.0,
   "ok": true
  },
  "strength": {
@@ -30,19 +30,19 @@
    {
     "case": "Overseer seated, 6 g on its four feet",
     "cls": "flight",
-    "inlayer": 0.048,
+    "inlayer": 0.042,
     "across": 0.031,
     "at": [
      -7.9,
-     -40.7,
+     40.7,
      -54.6
     ]
    },
    {
     "case": "Overseer one side first, 6 g on the +y ledge",
     "cls": "flight",
-    "inlayer": 0.096,
-    "across": 0.062,
+    "inlayer": 0.083,
+    "across": 0.063,
     "at": [
      -7.9,
      40.7,
@@ -74,7 +74,7 @@
    {
     "case": "Overseer off centre onto the +y face, at its ear",
     "cls": "flight",
-    "inlayer": 0.468,
+    "inlayer": 0.467,
     "across": 0.228,
     "at": [
      -25.5,
@@ -89,7 +89,7 @@
     "across": 0.077,
     "at": [
      -56.3,
-     -40.7,
+     40.7,
      -37.0
     ]
    },
@@ -118,8 +118,8 @@
    {
     "case": "Scout seated, 6 g on its two feet of this end (walls in)",
     "cls": "flight",
-    "inlayer": 0.013,
-    "across": 0.013,
+    "inlayer": 0.011,
+    "across": 0.014,
     "at": [
      -47.5,
      38.5,
@@ -133,18 +133,18 @@
     "across": 0.018,
     "at": [
      -51.9,
-     -38.5,
+     38.5,
      -41.4
     ]
    },
    {
     "case": "swap pull-out 50 N, the Overseer seated",
     "cls": "flight",
-    "inlayer": 0.027,
+    "inlayer": 0.023,
     "across": 0.017,
     "at": [
      -7.9,
-     -40.7,
+     40.7,
      -54.6
     ]
    },
@@ -204,7 +204,7 @@
     ]
    }
   ],
-  "worst": 0.468,
+  "worst": 0.467,
   "worst_case": "Overseer off centre onto the +y face, at its ear",
   "worst_at": [
    -25.5,
@@ -213,10 +213,10 @@
   ],
   "ok": true
  },
- "mass_g": 245.72,
+ "mass_g": 246.5,
  "watertight": true,
  "export": {
-  "faces_in": 331752,
+  "faces_in": 332432,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -226,23 +226,23 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 331752,
+  "faces": 332432,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 8,
+   "degenerate": 12,
    "folded": 4,
    "caps_split": 2,
    "caps_left": 0,
    "watertight": true,
-   "faces": 661794,
+   "faces": 663270,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 199771.8,
-  "exact_mm3": 199773.8
+  "volume_mm3": 200399.7,
+  "exact_mm3": 200402.9
  },
  "bodies": {
   "bodies_raw": 1,
@@ -250,7 +250,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 199773.8,
+ "volume_mm3": 200402.9,
  "drawn_g": 74.1,
  "export_cleanup": {
   "pitch": 0.25,
@@ -263,11 +263,11 @@
  },
  "memory_build": [
   {
-   "estimate_gb": 12.04,
+   "estimate_gb": 12.05,
    "parts": {
     "held": 0.77,
     "gate": 5.16,
-    "mesh": 6.12
+    "mesh": 6.13
    },
    "limit_gb": 14.0,
    "gate_cells": 123115536,
@@ -276,7 +276,7 @@
     176.0,
     83.2
    ],
-   "faces": 1094492,
+   "faces": 1096396,
    "when": "before the export cleanup"
   },
   {
@@ -384,8 +384,8 @@
   "n_real": 16,
   "n_ties": 60,
   "backend": "direct",
-  "iterations": 86,
-  "stopped": "max_stage",
+  "iterations": 77,
+  "stopped": "grey",
   "checks": [
    {
     "it": 12,
@@ -412,7 +412,7 @@
    "index": 0.565
   },
   "cavity": {
-   "last": 1.201583140421864,
+   "last": 1.2194399276764059,
    "ratio": 5.0,
    "T0": 43.98518485404792,
    "row": true
@@ -456,11 +456,11 @@
    "default"
   ]
  },
- "build_s": 360.2,
- "layout_s": 1257,
- "peak_gb": 2.360344,
+ "build_s": 400.5,
+ "layout_s": 1160,
+ "peak_gb": 2.36182,
  "memory": {
-  "estimate_gb": 2.83,
+  "estimate_gb": 2.82,
   "parts": {
    "held": 0.56,
    "factor": 1.1,
@@ -490,7 +490,7 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 2.15
+  "peak_it1_gb": 2.16
  },
  "early": {
   "rows": [
@@ -693,7 +693,7 @@
    -30.4
   ],
   "beta": 32.0,
-  "iteration": 86
+  "iteration": 77
  },
  "gen_cm3": 140.0,
  "h": 2.2,
@@ -886,7 +886,7 @@
   }
  },
  "baseline": null,
- "total_s": 1618,
+ "total_s": 1561,
  "part_sha": "01d883ace587",
  "lib_sha": "d423d150a3f0",
  "setup_sha": "8dc7fc8f19d01849",
@@ -894,11 +894,11 @@
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/box_funnel_half_tail.stl",
-  "sha256": "a6448e2686113a95334e05156af30886119634f4dcd88b728eb091edee5130e3",
-  "bytes": 16587684,
-  "faces": 331752,
+  "sha256": "e39a98ece32b27d8cf819c650117d5ebd3f21afd835e90ec941f3b8c3d2528b5",
+  "bytes": 16621684,
+  "faces": 332432,
   "view_faces": 60000,
-  "view_sha256": "184010e92ddae0773a312a921189e671a3eac1371f682b3043ea3787393f8463",
-  "at": "2026-11-13 21:41"
+  "view_sha256": "813b94c800e30d595b18aae4853eafcb5b1f2c99bba51840851b12ca92407495",
+  "at": "2026-11-13 22:13"
  }
 }
