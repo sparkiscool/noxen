@@ -1540,7 +1540,7 @@ def t_no_cavity():
         # the layout's row, through the build projection
         p = _mini_part()
         L = Layout(p, volfrac=0.3, settings=Settings(min_member_mm=3.2, backend="direct", reach_check="off", auto_sym=False, finish="drawn",
-                                                     hold_proj_beta=4.0), log=lambda s_: None)
+                                                     hold_proj_beta=4.0, cavity_on=0.0), log=lambda s_: None)
         x = rng.uniform(0.3, 0.7, L.nd)
         fv, dg = L._cavity_constraint(L.fields(x, 2.0), 2.0)
         lerr = []

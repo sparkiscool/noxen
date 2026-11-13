@@ -121,6 +121,7 @@ class Settings:
     cavity_ratio: float = 5.0           # open voids read 1-2 x the all-void room, a sealed one 25-600 (test_topo t_no_cavity)
     cavity_ks: float = 1e-4             # solid's conductivity (void 1)
     cavity_p: float = 8.0               # p-mean over the design cells
+    cavity_on: float = 0.5              # the row is inert (-1, no gradient) while the measure is under cavity_on x cavity_ratio
     mg_tol: float = 1e-5
     time_limit_s: float = 5.5 * 3600
     mem_limit_gb: float = 14.0         # memory gate (topo/audit.py memory_fit, build_fit: the solve and the build / gate): the GitHub runner has 16 GB and kills a run over it silently
@@ -1229,6 +1230,10 @@ class Layout:
         rho, dHb = self.cavity_view(f["xt"], beta)
         val, d = self.cavity.measure(rho, need_grad=True)
         self.cavity_last = float(val)
+        if val < self.s.cavity_on * self.s.cavity_ratio:
+            # inert until a void starts to close (13 Nov: the row's sharp gradients, live but far from binding, still bent MMA's
+            # moves: the slender-arm test built 1.04 against 0.94 without it, at the same mass, with nothing sealed)
+            return -1.0, np.zeros(self.nd)
         return float(val / self.s.cavity_ratio - 1.0), self._back(np.where(self.design, d * dHb, 0.0)) / self.s.cavity_ratio
 
     def _renorm(self, comp):
