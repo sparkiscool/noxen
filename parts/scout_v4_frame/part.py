@@ -63,6 +63,8 @@ POD_Z0 = DZ1 - 12.0                                 # 12 Nov (the design chat: <
 ARM_Z0 = POD_Z0 = DZ1 - 16.0                        # 13 Nov (variant vb of the round va / vb / vc): a flat 16 deep band, root to pod: 159.0 g, solid PASS, worst 0.59
                                                    # (BS0 compression across), every motor case <= 0.44, the engine's hold kept; the 12 band (va) 0.81 and the haunch at
                                                    # gen 130 (vc) 0.46 at 196 g. Was a haunch to z 6 at the root (0.83 across where its bottom chord met the body)
+REC_SUPPORT = "face"                                # the battery bolts' support: "face" the boss's clamped bottom 1.5; "insert" with the insert's 6 mm
+                                                   # bore lining (13 Nov: BT-TB's floor sits 3.6 over the face region's top, by the tail boss)
 SIDE_Y1, FRONT_Z0 = 40.0, None                      # the rooms beside the receiver: out to |y| SIDE_Y1 (within the funnel's 55 deg profile); FRONT_Z0: their front
                                                    # part (x 20 to the nose block) down to that z (None: not)
                                                    # (12 Nov smoke: room filled solid 0.185 at motor 4's root with the 12 band)
@@ -158,7 +160,11 @@ def bodies():
     # ---- the battery mechanism's 4 bolts: M3 up from below into inserts in O10 bosses on the receiver's top (the support)
     rec_regs = []
     for x, y in REC_BOLTS:
-        drawn.append(cyl(x, y, S.REC_TOP, DZ0, BOSS_R)); rec_regs.append(region_bot(x, y, S.REC_TOP))
+        drawn.append(cyl(x, y, S.REC_TOP, DZ0, BOSS_R))
+        reg = region_bot(x, y, S.REC_TOP)                                             # the clamped face (the boss's bottom 1.5 on the receiver's top)
+        if REC_SUPPORT == "insert":                                                   # and the insert's length: the M3's shear goes in along its 6 mm
+            reg = U([reg, cyl(x, y, S.REC_TOP, S.REC_TOP + M3_INS[1], M3_INS[0] + 1.5) - cyl(x, y, S.REC_TOP - 1, S.REC_TOP + M3_INS[1] + 1, M3_INS[0])])
+        rec_regs.append(reg)
         cuts.append(cyl(x, y, S.REC_TOP - 1, S.REC_TOP + M3_INS[1], M3_INS[0]))
     # ---- the turret's bosses: M3 x 5.7 inserts from the top (PROBE's interface)
     tur, tur_regs = [], []
