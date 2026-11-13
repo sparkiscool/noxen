@@ -61,11 +61,12 @@ PROBES = [(1.5 + dx, sy * 32.6) for dx in (-30.0, 30.0) for sy in (-1, 1)]   # s
 SCREW_Y, SCREW_H = 52.0, 6.0                      # the screws' axes: |y|, h (under the side walls' overhang; the wall's back is at |y| 38.1 + 0.7 h)
 BLOCK = (6.0, 5.5, 5.5)                           # the nut block's half sizes x, y, z round the screw (M4 nut 7.0 AF x 3.2 in a slot from above)
 GEAR_FACE, MOTOR_L, SCREW_L = 39.5, 25.0, 62.0    # the gearbox face this far inboard of the seat end; body length; screw length (the M4 x 100 shaft cut to 62: 48.2 of travel)
-SW = (19.8, 6.4, 10.2)                            # KW12-3 roller switch body (x, y, z as mounted), E
-DOG = 20.0                                        # the dog's tip this far inboard of the block's centre
+SW = (19.8, 10.2, 6.4)                            # KW12-3 roller switch body (x, y, z as mounted: lying flat, its roller toward the block), E
+DOG = 4.0                                         # the dog (a tab on the +y block's outer face) this far inboard of the block's centre
 SW_H = 4.0                                        # the switches' underside over the seat plane (the 60 / 120 deg bays' saddles reach z -43 under them)
-SW_Y = 59.0                                       # the switches' inner face, outboard of the nut blocks
-LUG_Y = (SW_Y + SW[1] + 0.2, SW_Y + SW[1] + 3.2)   # the lug the switches screw to (two M2 along y each)
+SW_Y = 61.5                                       # the switches' inner face, outboard of the nut blocks
+LUG_Y = (SW_Y - 0.5, SW_Y + SW[1] + 1.0)           # the lug over the switches (two M2 up through each), hanging from the rib's room
+LUG_H = (SW_H + SW[2] + 0.2, SW_H + SW[2] + 3.2)
 # ---- the cross beams and the arms out to the side sheets
 BEAM_X = {1: (138.0, 162.0), -1: (-128.0, -104.0)}   # seat x of the nose and the tail beam (turned pose, 13 Nov: W Y = 167.1 - seat x, so the NOSE beam is on the hub side, W Y 5..29, 5 behind the arm v8 rails; the tail one at W Y 271..295)
 SHEET_TOP = 145.0 - ZW                            # -75.3; the rain lid lies flush with it (W Z 142..145), open within r 160 of the seat
@@ -187,11 +188,8 @@ def nuts(sx):
             pts += [(x, y, z0 + h) for x in (f, b) for y in (sy * 34.0, sy * (SCREW_Y - by + 1.0))]
         out.append(hull(pts))
         out.append(box(xm - bx, xm + bx, sy * (SCREW_Y - by), sy * (SCREW_Y + by), zc - bz, zc + bz))
-    xd = xm - sx * DOG                                                                                   # the dog: a finger from the +y block's top, inboard, its tip out over the switches' rollers
-    zd = z0 + SW_H + SW[2] + 0.6                                                                           # the dog's underside: over the switch bodies, on their rollers
-    out.append(box(xm - sx * (bx - 4.0), xm - sx * bx, SCREW_Y + 1.0, SCREW_Y + by, zc + bz - 1.0, zd + 2.7))           # a riser on the block's inboard end
-    out.append(box(xm - sx * (bx - 2.0), xd - sx * 2.5, SCREW_Y + 1.0, SCREW_Y + by, zd, zd + 2.7))                     # the finger, over the motor's front plate (top h 12)
-    out.append(box(xd - 2.5, xd + 2.5, SCREW_Y + by - 1.0, SW_Y + 4.5, zd, zd + 2.7))
+    xd = xm - sx * DOG                                                                                   # the dog: a tab on the +y block's outer face, against the switches' rollers
+    out.append(box(xd - 2.0, xd + 2.0, SCREW_Y + by - 1.0, SW_Y - 1.5, z0 + SW_H + 1.0, z0 + SW_H + SW[2] - 0.4))
     for sy in (-1, 1):                                                                                   # a boss on the wall's back at each corner for its hold-down pin
         out.append(box(xe + sx * 7.5, xe + sx * (PIN["length"] - PIN["tip"] + 1.0), sy * 28.5, sy * 36.0, PIN["z"] - 4.0, PIN["z"] + 4.0))
     cut = [cyl_x(xm - 20.0, xm + 20.0, sy * SCREW_Y, zc, 2.2) for sy in (-1, 1)]
@@ -219,10 +217,10 @@ def motor_x(sx):
 
 
 def switch_x(sx):
-    """the two switches' body centres along x (+y side): the roller, 7 from the body's centre, is at the dog's tip at the wall's
-    outmost (Overseer, open) and inmost (Scout, seated) positions; the bodies lie inboard of their rollers (the Overseer's foot nodes
-    pass beyond seat x 102 outside the ears). Every position between is timed from the outmost switch (0.7 mm a turn)."""
-    return block_x(sx, "overseer", "open") - sx * (DOG + 7.0), block_x(sx, "scout") - sx * (DOG + 7.0)
+    """the two switches' body centres along x (+y side): their rollers at the dog's x at the wall's outmost (Overseer, open) and
+    inmost (Scout, seated) positions, the outer one's body inboard of its roller (the Overseer's foot nodes pass beyond seat x 102
+    outside the ears), the inner one's outboard of it (the motor is inboard). Every position between is timed from the outer switch."""
+    return block_x(sx, "overseer", "open") - sx * (DOG + 7.0), block_x(sx, "scout") - sx * (DOG - 7.0)
 
 
 def fixed():
@@ -246,8 +244,7 @@ def wall_sweep(sx):
     z0 = SEAT_Z; xm0, xm1 = block_x(sx, "overseer", "open"), block_x(sx, "scout"); bx, by, bz = BLOCK; zc = z0 + SCREW_H
     lo, hi = min(xm0, xm1) - bx - 0.8, max(xm0, xm1) + bx + 0.8
     b = [box(lo, hi, sy * (SCREW_Y - by - 0.5), sy * (SCREW_Y + by + 0.6), zc - bz - 0.5, zc + bz + 0.6) for sy in (-1, 1)]
-    d0, d1 = sorted((xm0 - sx * (DOG + 3.5), xm1 - sx * (DOG + 3.5))); d1 = max(d1, max(xm0, xm1)); d0 = min(d0, min(xm0, xm1))
-    b.append(box(d0, d1, SCREW_Y + 0.5, SW_Y + 5.0, zc + bz - 0.2, z0 + SW_H + SW[2] + 3.9))
+    b.append(box(lo, hi, SCREW_Y + by - 1.0, SW_Y - 1.0, z0 + SW_H + 0.5, z0 + SW_H + SW[2] + 0.1))      # the dog
     xa, xb = tab_x(sx); tl, th = (xa - TRAVEL - 1.0, xb + OPEN + 1.0) if sx > 0 else (xa - OPEN - 1.0, xb + TRAVEL + 1.0)
     b += [box(tl, th, sy * 33.0, sy * (SCREW_Y - by + 0.5), z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5) for sy in (-1, 1)]
     return m + U(b)
@@ -290,17 +287,16 @@ def half_bodies(sx):
         R[f"roof_overseer{sy:+d}"], R[f"roof_scout{sy:+d}"] = roof("overseer"), roof("scout")                               # over the nut block, seated: where the hold-down's pull comes up into the frame
         # the switch lug, outboard of the blocks (switches on the +y side; the lug on both keeps the half mirrored)
         so, si = switch_x(sx); l0, l1 = min(so, si) - SW[0] / 2 - 1.0, max(so, si) + SW[0] / 2 + 1.0
-        lug = box(l0, l1, *Y(*LUG_Y), z0 + SW_H - 0.5, z0 + SW_H + 12.0); drawn.append(lug)
+        lug = box(l0, l1, *Y(*LUG_Y), z0 + LUG_H[0], z0 + LUG_H[1]); drawn.append(lug)
         for xs in (so, si):
-            cuts.append(box(xs - SW[0] / 2 - 0.3, xs + SW[0] / 2 + 0.3, *Y(SW_Y - 0.3, LUG_Y[0]), z0 + SW_H - 0.5, z0 + SW_H + 15.5))     # the switch and its roller
-            cuts += [cyl_y(sy * (SW_Y - 1.0), sy * (LUG_Y[1] + 1.0), xs + d, z0 + SW_H + 3.4, 0.85, 12) for d in (-4.75, 4.75)]    # M2 self-tapping
+            cuts.append(box(xs - SW[0] / 2 - 0.3, xs + SW[0] / 2 + 0.3, *Y(SW_Y - 3.5, LUG_Y[1] + 0.3), z0 + SW_H - 0.4, z0 + LUG_H[0]))     # the switch and its roller
+            cuts += [cyl_z(z0 + SW_H - 1.0, z0 + LUG_H[1] + 1.0, xs + d, sy * (SW_Y + 7.3), 0.85, 12) for d in (-4.75, 4.75)]                # M2 self-tapping, up into the lug
         # ---- room
         zt = z0 + 27.0
         env.append(box(0.0, sx * 92.0, *Y(38.0, 59.0), z0 - FLOOR - 0.2, zt))                                               # behind the side wall
         env.append(box(sx * 92.0, sx * 112.0, *Y(38.0, 59.0), z0 - FLOOR - 0.2, -31.0))                                      # behind the ear: full depth under h 13,
         env.append(box(sx * 90.0, sx * (112.0 if sx > 0 else 108.0), *Y(38.0, 56.0), -33.0, zt))                                                    # 5 less above it (the Overseer's foot nodes and tubes pass |y| 59 from z -28)
-        env.append(box(l0, l1, *Y(56.0, LUG_Y[1]), z0 + SW_H - 0.5, z0 + SW_H + 12.0))                                       # out to the lug
-        env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 15.6, zt))                                 # a rib's room outside the wall, over the drive (the Overseer's foot nodes pass beyond its ends)
+        env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 12.6, zt))                                 # a rib's room outside the wall, over the drive (the Overseer's foot nodes pass beyond its ends)
         if sx > 0:
             env.append(box(ARM_LANE[1] + 0.3, 128.0, *Y(26.0, 56.0), -63.0, -50.0))                                         # down behind the arm's lane (the rails' tips pass under at z -68),
             env.append(box(126.0, xout, *Y(26.0, 56.0), -63.0, -56.0))                                                      # and on to the beam under the Overseer's nose (it passes z -50 there)
@@ -379,6 +375,7 @@ def drive():
             out.append(cyl_x(mf_, tip, sy * SCREW_Y, zc, 2.0, 16))
         for xs in switch_x(sx):
             out.append(box(xs - SW[0] / 2, xs + SW[0] / 2, SW_Y, SW_Y + SW[1], z0 + SW_H, z0 + SW_H + SW[2]))
+            out.append(box(xs - 1.5, xs + 1.5, SW_Y - 1.4, SW_Y, z0 + SW_H + 1.5, z0 + SW_H + SW[2] - 1.5))                  # its roller, pressed in by the dog
         for sy in (-1, 1):
             bxa, bxb = BEAM_X[sx]
             out += [cyl_x(min(bxa, bxb + sx * ARM_W) - 4.0, max(bxb, bxa + sx * ARM_W) + 4.0, sy * y, z, 2.0, 12) for y, z in LAP_BOLTS]

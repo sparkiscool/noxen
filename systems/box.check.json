@@ -1,18 +1,9 @@
 {
- "ok": false,
- "overlapping_pairs": [
-  {
-   "state": "static, the arm at park",
-   "a": "stand: mast",
-   "b": "arm: stub",
-   "mm3": null,
-   "samples_inside": 0,
-   "states": 1
-  }
- ],
+ "ok": true,
+ "overlapping_pairs": [],
  "checked": [
   {
-   "what": "scout_v4: seated (walls seated with the hold-down pins in the notches, parked, open), 22 landing states (walls parked) and leaving (walls open), against the funnel, the box and the arm at park",
+   "what": "scout_v4: seated (walls seated with the hold-down pins in the notches, parked, open), 65 landing states (walls parked) and leaving (walls open), against the funnel, the box and the arm at park",
    "ok": true
   },
   {
@@ -20,7 +11,7 @@
    "ok": true
   },
   {
-   "what": "overseer: seated (walls seated with the hold-down pins in the notches, parked, open), 22 landing states (walls parked) and leaving (walls open), against the funnel, the box and the arm at park",
+   "what": "overseer: seated (walls seated with the hold-down pins in the notches, parked, open), 65 landing states (walls parked) and leaving (walls open), against the funnel, the box and the arm at park",
    "ok": true
   },
   {
@@ -28,26 +19,20 @@
    "ok": true
   },
   {
-   "what": "landing states under 9.5 where a receiver's end rests on an end wall's hold-down pins instead of sliding on (6: resolved by the walls' back-off to open)",
+   "what": "landing states under 9.5 where a receiver's end rests on an end wall's hold-down pins instead of sliding on (18: resolved by the walls' back-off to open)",
    "ok": true
   },
   {
-   "what": "the wheel's 47 turning parts, every 6 deg, against the funnel and both seated drones",
+   "what": "the wheel's 47 turning parts, every 3 deg, against the funnel and both seated drones",
    "ok": true
   }
  ],
  "clearances_mm": [
   {
-   "between": "funnel",
-   "and_": "arm v8 head lane at the drone (keep-out)",
-   "mm": 0.0,
-   "at": "at seat [93, -38, -59]"
-  },
-  {
    "between": "funnel (walls at overseer)",
    "and_": "latch receiver (overseer)",
    "mm": 0.1,
-   "at": "latch v7 receiver (overseer) at seat [-61, -31, -44]"
+   "at": "latch v7 receiver (overseer) at seat [-59, -32, -44]"
   },
   {
    "between": "funnel (walls at scout)",
@@ -65,7 +50,13 @@
    "between": "funnel",
    "and_": "enclosure: sheet-X",
    "mm": 0.3,
-   "at": "at seat [-131, -206, -98]"
+   "at": "at seat [176, -206, -94]"
+  },
+  {
+   "between": "funnel",
+   "and_": "arm v8 head lane at the drone (keep-out)",
+   "mm": 0.3,
+   "at": "at seat [109, -48, -60]"
   },
   {
    "between": "funnel (walls at overseer)",
@@ -95,7 +86,7 @@
    "between": "funnel",
    "and_": "rain lid (3 mm UV polycarbonate)",
    "mm": 2.0,
-   "at": "at seat [178, 51, -78]"
+   "at": "at seat [169, -88, -78]"
   },
   {
    "between": "funnel",
@@ -107,7 +98,7 @@
    "between": "funnel",
    "and_": "arm: bay 120: saddle",
    "mm": 2.4,
-   "at": "at seat [27, -67, -43]"
+   "at": "at seat [26, -67, -43]"
   },
   {
    "between": "funnel (walls at overseer)",
@@ -131,13 +122,13 @@
    "between": "funnel",
    "and_": "arm: bay 60: scout receiver (latch v7)",
    "mm": 3.8,
-   "at": "at seat [-43, 62, -50]"
+   "at": "at seat [-49, 61, -51]"
   },
   {
    "between": "funnel",
    "and_": "arm: bay 120: scout receiver (latch v7)",
    "mm": 3.8,
-   "at": "at seat [-34, -61, -51]"
+   "at": "at seat [-53, -62, -50]"
   },
   {
    "between": "funnel",
@@ -155,7 +146,7 @@
    "between": "funnel",
    "and_": "arm: head A: rail",
    "mm": 8.9,
-   "at": "at seat [129, 4, -78]"
+   "at": "at seat [129, 0, -80]"
   },
   {
    "between": "funnel",
@@ -166,7 +157,7 @@
  ],
  "arm": "systems/swap_arm.assembly.json",
  "no_mesh_in_the_tree": [],
- "quick": true,
+ "quick": false,
  "counts": {
   "box": 37,
   "arm": 88,
@@ -176,5 +167,5 @@
    "overseer": 59
   }
  },
- "seconds": 133
+ "seconds": 230
 }
