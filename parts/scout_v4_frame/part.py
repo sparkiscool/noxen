@@ -63,7 +63,8 @@ POD_Z0 = DZ1 - 12.0                                 # 12 Nov (the design chat: <
 ARM_Z0 = POD_Z0 = DZ1 - 16.0                        # 13 Nov (variant vb of the round va / vb / vc): a flat 16 deep band, root to pod: 159.0 g, solid PASS, worst 0.59
                                                    # (BS0 compression across), every motor case <= 0.44, the engine's hold kept; the 12 band (va) 0.81 and the haunch at
                                                    # gen 130 (vc) 0.46 at 196 g. Was a haunch to z 6 at the root (0.83 across where its bottom chord met the body)
-REC_SUPPORT = "face"                                # the battery bolts' support: "face" the boss's clamped bottom 1.5; "insert" with the insert's 6 mm
+REC_SUPPORT = "insert"                              # 13 Nov round 5 (insert at 170 / 185 / 200: 246.7 / 265.5 / 284.2 g, 0.306 / 0.308 / 0.281)
+                                                   # the battery bolts' support: "face" the boss's clamped bottom 1.5; "insert" with the insert's 6 mm
                                                    # bore lining (13 Nov: BT-TB's floor sits 3.6 over the face region's top, by the tail boss)
 SIDE_Y1, FRONT_Z0 = 40.0, None                      # the rooms beside the receiver: out to |y| SIDE_Y1 (within the funnel's 55 deg profile); FRONT_Z0: their front
                                                    # part (x 20 to the nose block) down to that z (None: not)
@@ -202,7 +203,8 @@ def bodies():
             posts.append(cyl(rx + dx, ry + dy, rtop, DZ1, 3.75)); pts.append((rx + dx, ry + dy, rtop)); regs.append(region_bot(rx + dx, ry + dy, rtop, 3.75))   # 3.75: 2.0 round the insert
             cuts.append(cyl(rx + dx, ry + dy, rtop - 0.1, rtop + M25_INS[1], M25_INS[0]))
     drawn += posts
-    cuts.append(box(rb[0][0] - 0.2, rb[1][0] + 0.2, rb[0][1] - 0.5, rb[1][1] + 0.5, rb[0][2] - 0.5, rb[1][2] + 0.5) - U(posts))   # 0.2 at its ends: 65 long between the turret's N20 cheeks and DT's collar
+    cuts.append(box(rb[0][0] - 0.2, rb[1][0] + 2.4, rb[0][1] - 0.5, rb[1][1] + 0.5, rb[0][2] - 0.5, rb[1][2] + 0.5) - U(posts))   # 0.2 at its tail end (DT's collar); its front end
+    # 2.4 on, into the turret's cut (13 Nov round 5: at gen 185 / 200 the engine filled the 1.9 gap between the two cuts, a 1.5-1.7 wall the gate refused)
     for xa, xb in ((rb[1][0] - 46.0, rb[1][0] - 37.1),):                         # one USB-C plug out the -y edge, the camera's (12 Nov: the board runs on the UBEC
         # through its 5 V pins, so the other port's cut, x -67..-58 across motor 4's arm root, went: room filled solid 0.270 there; it flashes on this one)
         cuts.append(box(xa - 1.0, xb + 1.0, -41.0, rb[0][1] + 1.0, rb[0][2] - 0.5, rb[0][2] + 7.0))
