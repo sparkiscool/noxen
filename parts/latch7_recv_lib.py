@@ -29,7 +29,9 @@ cartridge on the shelves and the seat strips, E):
   one pocket's lead-in (a jammed bolt, fault, 2);
   on the feet: 6 g landing in the funnel and the XT60 pull-out (57 N + the drone's weight), on four; hold-down: the head's 118 N on the seats
   against the four tongues of the funnel's end walls in the corner notches (118 N less the drone's weight, down on the notches' lower faces);
-  6 g landing with one end on its wall's two tongues (nose pair, tail pair).
+  6 g landing with one end on its wall's two tongues (nose pair, tail pair); in a bay of the arm's ring (bay_mount in parts/box_arm8/result.json: the
+  saddle bolts to the same bosses): the pack's weight in the other five directions, the bay's pull-out with the bolts in; its 118 N push and
+  43.5 N across are the cases above.
 The XT60's insert and pull-out act on the plug carrier and its cap, which the lead-end bolts clamp on the lead-end bosses: they reach
 this part only as compression under those bosses (supports). Not applied, no number: a foot's sideways stop force in a skewed
 landing; handling (L's 50 N is for cage members; the 35 g side hit on the same wall is 76 N Scout, 263 N Overseer)."""
@@ -51,6 +53,13 @@ ALLUP_G = {"scout": 222.0 + 510.0, "overseer": 2200.0}      # the drone with its
 G = 9.81e-3                        # N per gram per g
 S3 = 1 / math.sqrt(3)
 DIRS14 = [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)] + [(a * S3, b * S3, c * S3) for a in (1, -1) for b in (1, -1) for c in (1, -1)]
+
+
+try:
+    import json as _json
+    BAY = _json.load(open(os.path.join(ROOT, "parts", "box_arm8", "result.json"))).get("bay_mount", {})
+except (OSError, ValueError):
+    BAY = {}
 
 
 def frame(pack):
@@ -157,7 +166,11 @@ def setup_for(pack, name):
             # a jammed bolt stands OVERLAP (3.0) out of the cartridge: its tip meets the lead-in's outer, lower half (x rf + 1.5 .. rf + 3), not the thin lip under the pocket's mouth
             lead_in = box(*sorted((s * (rf + bl.CAP / 2), s * (rf + bl.CAP))), bl.Y_RB, bl.Y_RB + bl.HCAP / 2 + 0.3, zt - bl.BOLT_HZ, zt + bl.BOLT_HZ) ^ D[f"pocket {sn[s]}"]
             p.load_multi(f"stall {A['stall_N']:.0f} N on the {sn[s]} lead-in (fault)", [(R(lead_in), V((0, A["stall_N"], 0)))], cls="misuse")
-        p.load_multi(f"swap pull {A['xt60_pull_N']:.0f} N, bolts in (fault)", [(R(shelf[s]), V((0, -A["xt60_pull_N"] / 2, 0))) for s in (1, -1)], cls="misuse")
+        bay = BAY.get(pack, {}).get("loads_N", {})               # the same part hangs in the arm's bays by the same bosses (parts/box_arm8/result.json bay_mount)
+        pull = max(A["xt60_pull_N"], bay.get("pull_out", 0.0))
+        p.load_multi(f"swap pull {pull:.1f} N, bolts in (fault)", [(R(shelf[s]), V((0, -pull / 2, 0))) for s in (1, -1)], cls="misuse")
+        for nm, d in (("+x", (1, 0, 0)), ("-x", (-1, 0, 0)), ("+y", (0, 1, 0)), ("+z", (0, 0, 1)), ("-z", (0, 0, -1))):       # a bay on the ring holds the pack sideways and upside
+            p.load_multi(f"bay: the pack's weight 1 g {nm}", inertia(d), cls="flight")                                           # down (-y is in flight 4 g and catch 6 g)
         feet = [D[k] for k in D if k.startswith("foot")]; Wd = ALLUP_G[pack] * G
         Fh = (A["stall_N"] - Wd) / len(feet)                   # the head's push less the drone's weight comes back down through the four end-wall tongues
         hy = mk.HOLD["y"][0]
