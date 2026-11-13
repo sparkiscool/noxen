@@ -85,7 +85,7 @@ SPOKE = (52.0, 72.0, -88.5, 10.0)                 # a dome spoke crosses the arm
 FLANGE = (200.7, 205.7, -108.0, -91.5, 20.0)      # the arm's end plate on the sheet's inner face (|y| 206): |y|, z, and its reach inboard of the beam
 SHEET_BOLT_Z = -99.0
 JOINT = dict(hi=(53.0, -34.0, 2.2), lo=(47.0, -52.2, 1.7))   # the low one outside the carried pack's sweep
-ARM_LANE = (88.1, 109.1, -116.0, 116.0, -58.8)   # arm v8's carriage and rods at the drone: nothing below W Z 161.5 over W X -28..116, Y 58..79 (turned pose: seat x 88.1..109.1, y -28..116; kept on both sides)
+ARM_LANE = (88.1, 113.1, -116.0, 116.0, -58.8)   # arm v8's carriage and rods at the drone: nothing below W Z 161.5 over W X -28..116, Y 58..79 (turned pose, restated by the arm worker 13 Nov: W Y 54..79, W X +-116 = seat x 88.1..113.1; parts/box_arm8/make.py funnel_keepout() is the source, tools/box_check.py reads it)
 PACK_R = 169.0                                    # a pack carried on the wheel sweeps r 165 about the axle over W Y 114..210 (seat x -53..43), + 4   # the halves' joint at x 0: (|y|, z, hole r) of the M4 and the M3
 
 
