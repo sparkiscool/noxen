@@ -38,7 +38,7 @@ import numpy as np, trimesh
 from topo import Part
 from topo.part import man
 from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of, socket_cases, socket_bodies, disc_cuts, region_top, region_bot,
-                                      check_collars, rigid_split, SockDown, SockDown6, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
+                                      check_collars, rigid_split, SockDown, SockDown6, BraceSock, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
                                       M25_INS, BOSS_R, DIRS14, FLIGHT)
 
 SPEC = dict(h=2.0, gen_cm3=100.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
@@ -63,6 +63,8 @@ POD_Z0 = DZ1 - 12.0                                 # 12 Nov (the design chat: <
 ARM_Z0 = POD_Z0 = DZ1 - 16.0                        # 13 Nov (variant vb of the round va / vb / vc): a flat 16 deep band, root to pod: 159.0 g, solid PASS, worst 0.59
                                                    # (BS0 compression across), every motor case <= 0.44, the engine's hold kept; the 12 band (va) 0.81 and the haunch at
                                                    # gen 130 (vc) 0.46 at 196 g. Was a haunch to z 6 at the root (0.83 across where its bottom chord met the body)
+BRACES, BRACE_IN, BRACE_LO, BRACE_ROOM = False, 20.0, (42.0, 42.0, -8.0), 9.6   # the under-arm braces (off by default): the upper socket BRACE_IN
+                                                   # inboard of the motor along the arm at the room's bottom, the lower at (+-x, +-y, z); room r round the rod
 END_NODES, SIDE_NODES, TUBE_NODES = ("DN", "BN", "DT", "BT"), ("DS0", "BS0", "DS1", "BS1"), ()   # the frame's end sockets; those holding a 6 mm tube (6.2 bore, units_lib.SockDown6)
 REC_SUPPORT = "insert"                              # 13 Nov round 5 (insert at 170 / 185 / 200: 246.7 / 265.5 / 284.2 g, 0.306 / 0.308 / 0.281)
                                                    # the battery bolts' support: "face" the boss's clamped bottom 1.5; "insert" with the insert's 6 mm
@@ -239,10 +241,26 @@ def bodies():
     env += [along(s.pt(-8.0), s.pt(s.t_mouth), getattr(s, "R", _BR) + _W + 5.0) for s in ends]       # room round each end socket and back into the body
     env += [along(s.pt(-8.0), s.pt(s.t_mouth), _BR + _W + 5.0) ^ side_clip for s in side]   # and round each side socket (DS in the deck, BS in the nose block)
     env += [along(s.pt(-8.0), np.array([s.c[0] - np.sign(s.c[0]) * 25.0, 0.0, 10.0]), 7.0) for s in ends]
+    braces = []
+    if BRACES:                                                                        # 13 Nov (Spark: "if adding a rod to the bottom of the motors can
+        for i, (mx, my) in enumerate(S.MOTORS):                                       # prevent snapping we should do that"): per arm a 3.0 carbon rod from
+            sx, sy = np.sign(mx), np.sign(my)                                         # a socket under the arm 20 inboard of the motor (clear of its 4 M2
+            a = np.array([mx - sx * BRACE_IN / np.sqrt(2), my - sy * BRACE_IN / np.sqrt(2), POD_Z0])   # drivers and its O8 centre) down and in to a
+            b = np.array([sx * BRACE_LO[0], sy * BRACE_LO[1], BRACE_LO[2]])          # socket beside the receiver: the arm a triangle, thrust in the rod
+            up, lo = BraceSock(f"brace {i + 1}a", a, b), BraceSock(f"brace {i + 1}b", b, a)
+            drawn += [up.collar(), lo.collar()]
+            for s_ in (up, lo):
+                cuts.append(s_.port(np.array([0.0, 0.0, -1.0]) if s_ is up else np.array([sx, sy, 0.0]) / np.sqrt(2), [lo if s_ is up else up]))
+                cuts += s_.bores()
+            env.append(along(up.pt(-6.0), lo.pt(-6.0), BRACE_ROOM))
+            env.append(along(lo.pt(-6.0), np.array([sx * 40.0, sy * 35.0, 0.0]), 7.0))   # and from the lower socket into the room beside the receiver
+            p0, p1 = up.pt(up.t_floor + 2.0), lo.pt(lo.t_floor + 2.0)                 # the rod as an insert, 2 short of each floor (a pin: the voxel rod's
+            braces.append((f"brace {i + 1}", along(p0, p1, 2.0), float(np.linalg.norm(p1 - p0))))   # bending stiffness is overstated)
+            socks += [up, lo]
     env = U(env) ^ box(-S.BED, S.BED, -S.BED, S.BED, -60.0, DZ1) ^ funnel_room()     # the A1 mini's 180; nothing below the walls-in funnel's line
     check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
     return dict(drawn=U(drawn) ^ box(-S.BED - 5, S.BED + 5, -S.BED - 5, S.BED + 5, -60.0, DZ1), cuts=U(cuts), env=env, flow_reg=flow_reg,   # the bed: DN / DT's deeper collars rise to 24.8 at their back (10 Nov)
-                pod_regs=pod_regs, rec_regs=rec_regs, tur_regs=tur_regs, socks=socks, boards=boards)
+                pod_regs=pod_regs, rec_regs=rec_regs, tur_regs=tur_regs, socks=[s_ for s_ in socks if not isinstance(s_, BraceSock)], boards=boards, braces=braces)
 
 
 def whole_drone(p, masses, name, a, cls, accel=None):
@@ -275,6 +293,8 @@ def setup(h):
     B = bodies()
     p = Part("scout_v4_frame", h, B["drawn"], B["cuts"], B["env"], build="-z", material="PCTG")
     p.support("default", U(B["rec_regs"]))
+    for nm, reg, L in B["braces"]:                                                    # carbon 110 GPa / PCTG 2.5 = 44, the 3.0 rod's 7.07 mm2
+        p.insert(nm, reg, 110000.0 / 2500.0, area_mm2=np.pi * 1.5 ** 2, length_mm=L)
     zp = S.Z_PROP
     T = T_MAX * DYN
     for i, (mx, my) in enumerate(S.MOTORS):

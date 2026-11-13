@@ -187,3 +187,13 @@ class SockDown6(SockDown):
 
     def clear(self, length=300.0):
         return along(self.pt(self.t_mouth + 0.5), self.pt(self.t_mouth + length), self.R + 0.9)
+
+
+class BraceSock(SockDown):
+    """a 3.0 rod socket of an under-arm brace (both ends on the frame, 13 Nov): 7 deep (its axial load is the arm's thrust over the brace's
+    sine, ~40 N: far under the 7 mm bore's 280 N by the G/flex rule), no frame-model row"""
+    def __init__(self, name, c, far):
+        Sock.__init__(self, name, c, far)
+        self.depth = 7.0
+        self.t_floor = FLOOR
+        self.t_mouth = self.t_floor + self.depth
