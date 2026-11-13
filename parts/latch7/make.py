@@ -378,6 +378,10 @@ FOOT_PAD = dict(x=(29.2, 34.0), y1=4.0, L=6.0)      # foot pads on the funnel's 
 FOOT_ANCHOR = dict(x=(26.0, 32.0), y=(13.5, 19.0), z=((84.5, 91.5), (-5.5, 1.5)))   # in the receiver's four corner bosses (nose, tail)
 
 
+FOOT_ROOT = 8.0                        # the leg's room round the corner bolt (was the head bore's 6.2 ring up to y 22): the hold-down's 28 N a foot read 0.52 at the leg's root with
+#                                        the room filled solid (audit room_full, flight class); out to the pads' +-34.0, up to the drawn boss
+
+
 def scout_feet(B):
     """four landing feet on the Scout receiver (10 Nov, Spark: the battery must fit the funnel). Its keel hangs in the funnel's
     hole and its clipped ends never reach the end walls, so nothing held it along x. Each foot is a pad on a side ledge, its outer
@@ -391,17 +395,39 @@ def scout_feet(B):
             pts = [[sx * x, y, z] for x in FOOT_PAD["x"] for y in (bl.Y_RB, FOOT_PAD["y1"]) for z in zp] + \
                   [[sx * x, y, z] for x in FOOT_ANCHOR["x"] for y in FOOT_ANCHOR["y"] for z in za]
             bz = min((z for _, z in B["r"]["MOUNT"]), key=lambda z: abs(z - sum(za) / 2))            # this corner's mount bolt
-            ring = [[sx * B["r"]["BX"] + (bl.HEAD_R + 3.0) * math.cos(a), y, bz + (bl.HEAD_R + 3.0) * math.sin(a)] for a in np.linspace(0, 2 * math.pi, 24, endpoint=False) for y in (10.0, bl.HEAD_Y - 2.5)]
+            ring = [[sx * min(abs(sx * B["r"]["BX"] + FOOT_ROOT * math.cos(a)), FOOT_PAD["x"][1]), y, bz + FOOT_ROOT * math.sin(a)] for a in np.linspace(0, 2 * math.pi, 24, endpoint=False) for y in (8.0, bl.HEAD_Y + 3.0)]
             legs.append(hullp(pts) + hullp(pts[:8] + ring))                         # 13 Nov: the leg's room goes round the bolt's head bore, not through it
             pads.append(hullp(pts[:8]))
     legs = U(*legs)
     # 13 Nov: the legs filled the mount bolts' head counterbores (131 mm3 of 945 each) and bores: the receiver could not be bolted on. Bolt and driver sweep cut through
-    legs = legs - U(*[c for bx, bz in B["r"]["MOUNT"] for c in (cyl("y", bx, bz, bl.HEAD_R, -60.0, bl.HEAD_Y), cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, 100.0))])
+    legs = legs - U(*[c for bx, bz in B["r"]["MOUNT"] for c in (cyl("y", bx, bz, bl.HEAD_R, -60.0, bl.HEAD_Y), cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, 100.0))]) - bl.cart_path(B["r"])
     B["foot_pads"] = pads
     for sk in B.get("rskids", []):                                   # 0.4 clear of the TPU skids
         for dx, dy in ((0.4, 0), (-0.4, 0), (0, 0.4), (0, -0.4), (0, 0)):
             legs = legs - sk.translate([dx, dy, 0])
     return legs
+
+
+# ---- hold-down (13 Nov, from the funnel stream): the arm pushes up to 118 N through a seated drone that weighs 5 N (Scout) / 22 N (Overseer), and nothing held the
+#      receiver down in the funnel. Four notches in the receiver's outer side faces at |x| 34.0 (the line the Scout's foot pads and the Overseer's pocket blocks already
+#      reach: the funnel's seat is +-34.4), 6..10 above its underside, 2.5 deep: a pin from each funnel side wall enters one and bears on its lower face. Scout: in a block
+#      standing on each foot pad. Overseer: in a block the wall's thickness at each end of each side wall (not at the tab line: the bolt pockets are behind the wall there)
+HOLD = dict(x=34.0, y=(6.0, 10.0), depth=2.5, top=13.0, ov_z=((2.0, 14.0), (18.0, 30.0)), pin=dict(h_mm=3.0, reach_mm=2.0))     # ov_z: from the tail end face; from the lead end face (clear of the lead-end mount bolts at 7.5)
+
+
+def hold_down(B):
+    """(blocks, notches, where): drawn blocks (one per notch, the notch not yet cut), the notches, and their boxes for the funnel stream (cartridge coords)"""
+    g, r = B["g"], B["r"]; blocks, notches, where = [], [], []
+    if g["pack"] == "scout":
+        spans = [(1 if p_.bounding_box()[0] > 0 else -1, p_.bounding_box()[2], p_.bounding_box()[5], FOOT_PAD["x"][0]) for p_ in B["foot_pads"]]
+    else:
+        spans = [(sx, za, zb, r["RF"] + WALL_RELIEF.get("overseer", 0.0)) for sx in (1, -1) for za, zb in ((r["Z_E0"] + HOLD["ov_z"][0][0], r["Z_E0"] + HOLD["ov_z"][0][1]), (r["Z_E1"] - HOLD["ov_z"][1][1], r["Z_E1"] - HOLD["ov_z"][1][0]))]
+    bolts = U(*[cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, 100.0) for bx, bz in r["MOUNT"]])
+    for sx, za, zb, x0 in spans:
+        blocks.append(box(*sorted((sx * x0, sx * HOLD["x"])), bl.Y_RB, HOLD["top"], za, zb) - bl.cart_path(r) - bolts)
+        notches.append(box(*sorted((sx * (HOLD["x"] - HOLD["depth"]), sx * (HOLD["x"] + 1.0))), HOLD["y"][0], HOLD["y"][1], za - 0.01, zb + 0.01))
+        where.append(dict(side="+x" if sx > 0 else "-x", outer_face_x=sx * HOLD["x"], floor_x=sx * (HOLD["x"] - HOLD["depth"]), y=list(HOLD["y"]), z=[round(za, 2), round(zb, 2)]))
+    return blocks, notches, where
 
 
 def seat_strips(r):
@@ -439,6 +465,9 @@ def build(pack="scout"):
     B["recv_bay"] = B["recv"]                # the receiver in a bay of the arm's ring: no landing feet (two Scout bays 30 deg apart met at their feet, 9.3 mm3, arm v8)
     if pack == "scout":
         B["feet"] = scout_feet(B); B["recv"] = B["recv"] + B["feet"]
+    hb, hn, B["hold_where"] = hold_down(B); B["hold_notch"] = U(*hn)
+    B["hold_blocks"] = [b_ - B["hold_notch"] for b_ in hb]
+    B["recv"] = B["recv"] + U(*hb) - B["hold_notch"]
     return B
 
 
@@ -794,6 +823,20 @@ def main(pack="scout"):
     A_s = vol(B["strips"]); A_s = A_s / bl.STRIP_T; Et = m6.MATERIALS["TPU95A"].E if hasattr(m6, "MATERIALS") else 9.8      # the head's push on the two TPU seat strips (13 Nov, arm v8: 118 N)
     res["seat_push"] = {"%.0f N" % F: dict(area_mm2=round(A_s, 1), MPa=round(F / A_s, 3), squash_mm=round(F / A_s / Et * bl.STRIP_T, 3), of_proud_mm=round(bl.STRIP_T - bl.STRIP_REC, 2),
                                            index=round(F / A_s / (Et * 0.25), 3)) for F in (ARM["insert_N"], 106.6, ARM["stall_N"])}   # index: against 25 % strain (TPU 95A, E)
+    Wd = (g["SWAP_M"] + 510.0 if pack == "scout" else 2200.0) / 1000 * 9.81; Fp = (ARM["stall_N"] - Wd) / 4; zl = B["hold_where"][0]["z"]; a_pin = HOLD["pin"]["reach_mm"] * (zl[1] - zl[0] - 1.0)
+    T = to_seat(B); to_s = lambda x, y, z: [round(float(v), 2) for v in T @ np.array([x, y, z, 1.0])]
+    res["hold_down"] = dict(
+        what="four notches in the receiver's outer side faces; a pin from each funnel side wall enters one and bears DOWN on its lower face when the arm pushes the drone up",
+        frame="cartridge coords (x across, y up from the flat bottom, z along the pack); seat_frame gives the same boxes in the funnel's seat frame (x nose, y left, z up)",
+        notches=[dict(w, seat_frame=dict(lo=to_s(min(w["outer_face_x"], w["floor_x"]), w["y"][0], w["z"][0]), hi=to_s(max(w["outer_face_x"], w["floor_x"]), w["y"][1], w["z"][1]))) for w in B["hold_where"]],
+        height_above_receiver_underside_mm=[round(HOLD["y"][0] - bl.Y_RB, 2), round(HOLD["y"][1] - bl.Y_RB, 2)], depth_mm=HOLD["depth"], length_mm=round(zl[1] - zl[0], 2),
+        bearing_face="the notch's lower face (y %.1f), 2.5 deep; %.1f of drawn PCTG under it" % (HOLD["y"][0], HOLD["y"][0] - bl.Y_RB),
+        pin=dict(max_height_mm=HOLD["pin"]["h_mm"], enters_mm=HOLD["pin"]["reach_mm"], max_width_along_the_pack_mm=round(zl[1] - zl[0] - 1.0, 1),
+                 note="3.0 high in the 4.0 notch: 0.5 over and under (the drone may lift 0.5 before the pins bear); 2.0 of the 2.5 depth; flat underside, steel or PCTG"),
+        load=dict(head_push_N=ARM["stall_N"], drone_weight_N=round(Wd, 1), per_pin_N=round(Fp, 1), bearing_MPa=round(Fp / a_pin, 2), index=round(Fp / a_pin / m6.ALLOW["functional"], 3)),
+        clearances_at_landing="the notches are inside the receiver's outline (nothing proud of |x| %.1f): the funnel fit, its 65 landing states and the free play are unchanged, so the pins must be "
+                              "withdrawn flush with the seat's side walls (|y| 34.4) while the drone lands and leaves; seated, the receiver's side faces are %.1f from those walls and it can slide "
+                              "%s along / %s across" % (HOLD["x"], 34.4 - HOLD["x"], res["funnel"]["free_play_mm"]["to_nose"], res["funnel"]["free_play_mm"]["across"]))
     paths = save(B)
     res["mass_g"] = {n: round(abs(t.volume) / 1000 * (7.85 if "pin" in n else 1.21 if "strip" in n else 1.23), 2) for n, t in paths.items()}
     res["swap_g"] = round(g["SWAP_M"], 1); res["swap_cg"] = [round(float(v), 2) for v in g["SWAP_CG"]]

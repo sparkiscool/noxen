@@ -14,7 +14,8 @@ bolt pockets, through the whole room.
 Drawn (attachments only):
   bosses      the mount bolts' lining and top faces (frozen: other streams bolt to them); the Scout's from its head seat up
   feet        the pads of the Scout's four landing feet (frozen, make.scout_feet; their legs are generated in the room make.py draws for them, round
-              the mount bolts' head bores); the Overseer's four landing pads on the funnel's ledges
+              the mount bolts' head bores), each with its hold-down block and notch on it (make.hold_down); the Overseer's four wall-thick blocks at
+              the side walls' ends: landing face underneath, hold-down notch in the outer face
   pockets     3 mm round each bolt pocket: the 20 deg shelf the bolt lands on, the back wall, the ceiling, the lead-in under it
   seat pads   the deck's underside where the two TPU seat strips and their keys sit
   side pads   the walls' faces the cartridge's rails bear on, at the tab line and at the four corners
@@ -26,7 +27,8 @@ cartridge on the shelves and the seat strips, E):
   crash 35 g in the 6 face and 8 corner directions; flight 4 g + 2 g lateral (4); catch 6 g; swap insert at the head's limit on the seats (118 N,
   arm v8's float springs, every swap near it); swap across 43.5 N on a side pad (2); swap pull 57 N with the bolts in (fault); the same 118 N on
   one pocket's lead-in (a jammed bolt, fault, 2);
-  on the feet: 6 g landing in the funnel and the XT60 pull-out (57 N + the drone's weight), on four.
+  on the feet: 6 g landing in the funnel and the XT60 pull-out (57 N + the drone's weight), on four; hold-down: the head's 118 N on the seats
+  against the four funnel pins in the notches (118 N less the drone's weight, down on the notches' lower faces).
 The XT60's insert and pull-out act on the plug carrier and its cap, which the lead-end bolts clamp on the lead-end bosses: they reach
 this part only as compression under those bosses (supports). Not applied, no number: a foot's sideways stop force in a skewed
 landing; handling (L's 50 N is for cage members; the 35 g side hit on the same wall is 76 N Scout, 263 N Overseer)."""
@@ -99,12 +101,9 @@ def bodies(pack):
             zz = sorted((zf + sg * r["END_T"], zf - sg * CORNER))
             D[f"corner {sn} {en}"] = U(box(*X(rf, rf + SKIN), *yb, *zz),
                                        box(*X(r["X_IN"] - 1.0, rf + SKIN), r["RAIL_Y0"], r["Y_DK0"] + 0.01, *sorted((zf - sg * 0.5, zf + sg * r["END_T"])))) ^ recv
-    if "feet" in B:
-        for i, f_ in enumerate(B["foot_pads"]): D[f"foot {i}"] = f_ ^ recv      # the pads on the funnel's ledges are the interface; the legs up to the corner bosses are generated
-    else:                                                      # the Overseer rests on the funnel's side ledges on its walls' undersides: four pads
-        for s in (1, -1):
-            for za, zb in ((r["Z_E0"] + 2.0, r["Z_E0"] + 14.0), (r["Z_E1"] - 14.0, r["Z_E1"] - 2.0)):
-                D[f"foot {len([k for k in D if k.startswith('foot')])}"] = box(*sorted((s * rf, s * 40.0)), bl.Y_RB, bl.Y_RB + bl.HCAP + 2.0, za, zb) ^ recv
+    for i, (hb, w) in enumerate(zip(B["hold_blocks"], B["hold_where"])):       # foot + hold-down, one drawn body each: the Scout's pad with the block on it, the Overseer's wall-thick block
+        D[f"foot {i}"] = (hb + B["foot_pads"][i] if "foot_pads" in B else hb) ^ recv
+    cuts = cuts + (B["hold_notch"] ^ big); room = room - B["hold_notch"]
     return B, D, cuts, room
 
 
@@ -159,6 +158,11 @@ def setup_for(pack, name):
             p.load_multi(f"stall {A['stall_N']:.0f} N on the {sn[s]} lead-in (fault)", [(R(lead_in), V((0, A["stall_N"], 0)))], cls="misuse")
         p.load_multi(f"swap pull {A['xt60_pull_N']:.0f} N, bolts in (fault)", [(R(shelf[s]), V((0, -A["xt60_pull_N"] / 2, 0))) for s in (1, -1)], cls="misuse")
         feet = [D[k] for k in D if k.startswith("foot")]; Wd = ALLUP_G[pack] * G
+        Fh = (A["stall_N"] - Wd) / len(feet)                   # the head's push less the drone's weight comes back down through the four hold-down pins
+        hy = mk.HOLD["y"][0]
+        floors = [f_ ^ box(*sorted((sg_ * (mk.HOLD["x"] - mk.HOLD["depth"]), sg_ * mk.HOLD["x"])), hy - 2.0, hy, -500, 500) for f_ in feet for sg_ in ((1 if f_.bounding_box()[0] > 0 else -1),)]
+        p.load_multi(f"hold-down: the head's {A['stall_N']:.0f} N up on the seats, held by the four funnel pins",
+                     [(R(D[f"seat {sn[s]}"]), V((0, A["stall_N"] / 2, 0))) for s in (1, -1)] + [(R(f_), V((0, -Fh, 0))) for f_ in floors], cls="flight")
         pad = lambda f_: f_ ^ box(-200, 200, bl.Y_RB - 1, bl.Y_RB + 4.0, -500, 500)
         p.load_multi("landing 6 g on the four feet (funnel)", [(R(pad(f_)), V((0, 6 * Wd / 4, 0))) for f_ in feet], cls="flight")
         p.load_multi(f"XT60 pull-out {A['xt60_pull_N']:.0f} N + 1 g on the four feet", [(R(pad(f_)), V((0, (A["xt60_pull_N"] + Wd) / 4, 0))) for f_ in feet], cls="flight")
