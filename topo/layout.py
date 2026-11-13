@@ -115,6 +115,12 @@ class Settings:
     hold_eroded: bool = True            # ... and on the gate's view of it (eta_e, same projection): the hold cannot be met by thin walls
     hold_stage: int = 50                # the last beta stage's limit with the hold on (max_stage without): a held run needs ~15 more
     #   iterations there to rejoin the eroded design (frame-lite gen 14: 35 left the pads' cores off and the gate failed, 50 passed)
+    # no sealed void (Spark 13 Nov, foot nodes v8: the build kept 2.4-8.9 cm3 sealed cavities, the slicer filled them with supports that
+    # rattle inside for good): one MMA row holds the virtual-temperature measure of the design as built under cavity_ratio (topo/cavity.py)
+    no_cavity: bool = True
+    cavity_ratio: float = 5.0           # open voids read 1-2 x the all-void room, a sealed one 25-600 (test_topo t_no_cavity)
+    cavity_ks: float = 1e-4             # solid's conductivity (void 1)
+    cavity_p: float = 8.0               # p-mean over the design cells
     mg_tol: float = 1e-5
     time_limit_s: float = 5.5 * 3600
     mem_limit_gb: float = 14.0         # memory gate (topo/audit.py memory_fit, build_fit: the solve and the build / gate): the GitHub runner has 16 GB and kills a run over it silently
@@ -415,7 +421,11 @@ class Layout:
         self.scale = None
         self.vlim = self.volfrac
         self.x = np.full(self.nd, self.volfrac)
-        self.mma = MMA(self.nd, 3 + self._hold_rows(), move=s.move)       # volume, 2 geometric, the built hold
+        self.cavity, self.cavity_last = None, None
+        if s.no_cavity:
+            from .cavity import Cavity
+            self.cavity = Cavity(shape, h, solid, void, design, ks=s.cavity_ks, p=s.cavity_p, log=log)
+        self.mma = MMA(self.nd, 3 + self._hold_rows() + (1 if self.cavity else 0), move=s.move)   # volume, 2 geometric, the built hold, no cavity
 
     # ------------------------------------------------------------------------------------------ anchors
     def _anchors(self):
@@ -1024,6 +1034,7 @@ class Layout:
             g_rho = self._grad_rho_e(f["rho_e"], U, dJdc, rho_g=f["rho_g"])
             hold = self._hold_constraints(f, comp, U)
             del U
+            cav = self._cavity_constraint(f, beta)
             if len(self.hist) == 0:
                 from .audit import memory_measured
                 memory_measured(self, s.mem_limit_gb, log=log, hard=s.audit != "off")
@@ -1043,6 +1054,9 @@ class Layout:
             if hold[0]:
                 fval += hold[0]
                 dfdx += hold[1]
+            if cav is not None:
+                fval.append(cav[0])
+                dfdx.append(cav[1])
             df0 = self.symmetrise_design(df0)
             dfdx = [self.symmetrise_design(d) for d in dfdx]
             xnew = self.mma.step(x, self.scale * J, df0, np.array(fval), np.array(dfdx))
@@ -1059,6 +1073,7 @@ class Layout:
                     f"grey {grey:5.1%} ch {ch:.3f} worst {self.cases[worst].name[:28]} {r[worst]:.3g}"
                     + (f" hold {max(hold[0]) + 1:.3f}" if hold[0] and self.hold is not None else "")
                     + (f" geo {fval[1]:+.2f}/{fval[2]:+.2f}" if geo else "")
+                    + (f" cav {self.cavity_last:.2f}" if cav is not None else "")
                     + (f" cg {st[1]}" if st else "") + f" {dt:.1f}s")
             if it % 5 == 0 and vn > 0:
                 new = self.volfrac * vd / vn
@@ -1202,6 +1217,20 @@ class Layout:
             dg.append(gx / lim[k])
         return fv, dg
 
+    def cavity_view(self, xt, beta):
+        """the design as the build thresholds it (x_tilde projected at eta_n, beta max(beta, hold_proj_beta)) and its projection slope"""
+        Hb, dHb = project(xt, max(beta, self.s.hold_proj_beta), self.s.eta[1])
+        return np.where(self.solid, 1.0, np.where(self.void, 0.0, Hb)), dHb
+
+    def _cavity_constraint(self, f, beta):
+        """(fval, dfdx) of the no-sealed-void row: measure / cavity_ratio - 1 <= 0 on the design as built (topo/cavity.py); None when off"""
+        if self.cavity is None:
+            return None
+        rho, dHb = self.cavity_view(f["xt"], beta)
+        val, d = self.cavity.measure(rho, need_grad=True)
+        self.cavity_last = float(val)
+        return float(val / self.s.cavity_ratio - 1.0), self._back(np.where(self.design, d * dHb, 0.0)) / self.s.cavity_ratio
+
     def _renorm(self, comp):
         """case_norm "frame": every case from now on counts by its compliance over its value on this design."""
         r = comp / self.c_ref
@@ -1266,7 +1295,8 @@ class Layout:
                     volfrac=self.volfrac, nd=self.nd, sym_axes=self.sym_axes, n_real=self.n_real,
                     n_ties=len(self.cases) - self.n_real, backend=self.fe_solver.backend,
                     iterations=len(self.hist), stopped=getattr(self, "stopped", None), checks=self.checks,
-                    hold=self.hold_info or None)
+                    hold=self.hold_info or None, cavity=None if self.cavity is None else dict(
+                        last=self.cavity_last, ratio=self.s.cavity_ratio, T0=self.cavity.T0))
 
 
 class _Energies:
