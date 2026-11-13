@@ -1,9 +1,10 @@
-"""TEMPORARY variant of parts/scout_v4_frame (13 Nov, the design chat: three frame variants per round, the best folded into the frame, these
-folders deleted after). One change from the frame's setup: the arms' room a flat 12 deep band in the deck's layers, root to pod (no haunch: the run of 57802c8 on the built-hold engine read 0.834 ACROSS where the haunch's bottom chord met the body at z 9.7)."""
+"""TEMPORARY variant of parts/scout_v4_frame (13 Nov round 2, the design chat: three frame variants per round, the best folded into the frame,
+these folders deleted after). From the frame as folded (round 1's vb: 159.0 g, worst 0.59 BS0 compression across at (53, 39, -0.3), BT-TB
+0.51 at the receiver's tail corner (-47, -35, 7.7)): the rooms beside the receiver out to |y| 46 (was 40; inside the funnel's 55 deg profile): room round the receiver's tail corner for BT's 551 N."""
 import parts.scout_v4_frame.part as F
 
-F.ARM_Z0 = F.POD_Z0                                  # 12.5 at the root and the pod
-SPEC = dict(F.SPEC, gen_cm3=100.0)
+F.SIDE_Y1 = 46.0
+SPEC = dict(F.SPEC)
 
 
 def setup(h):

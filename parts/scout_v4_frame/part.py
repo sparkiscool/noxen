@@ -60,7 +60,11 @@ ARM_W0, ARM_W1 = 48.0, 30.0                         # the arms' room across, at 
 POD_Z0 = DZ1 - 12.0                                 # 12 Nov (the design chat: <= 160 g, every fail by geometry): the arms' room a 12 deep band in the deck's layers,
                                                    # root to pod (was down to z 2 / 8): thrust bends a plate in its layers (a 10 x 34 section reads ~0.1 by hand), no
                                                    # web hung under the pad (run of 4b95423: motor 3 0.386 ACROSS at z 13.7 under its pad)
-ARM_Z0 = 6.0                                        # the arm's room deeper at the root only: a haunch ~8 deg off the layers from the pod's 12.5 to 6 at the deck's corner
+ARM_Z0 = POD_Z0 = DZ1 - 16.0                        # 13 Nov (variant vb of the round va / vb / vc): a flat 16 deep band, root to pod: 159.0 g, solid PASS, worst 0.59
+                                                   # (BS0 compression across), every motor case <= 0.44, the engine's hold kept; the 12 band (va) 0.81 and the haunch at
+                                                   # gen 130 (vc) 0.46 at 196 g. Was a haunch to z 6 at the root (0.83 across where its bottom chord met the body)
+SIDE_Y1, FRONT_Z0 = 40.0, None                      # the rooms beside the receiver: out to |y| SIDE_Y1 (within the funnel's 55 deg profile); FRONT_Z0: their front
+                                                   # part (x 20 to the nose block) down to that z (None: not)
                                                    # (12 Nov smoke: room filled solid 0.185 at motor 4's root with the 12 band)
 PAD_T = 2.5                                         # the drawn motor seat: the pad's top skin (the motor's base on it); the 4 screw bosses the pad's depth
 LUG_Y1 = 64.0                                      # the lugs' room: out to y 64 at the deck (9 Nov), along the receiver's whole length (11 Nov)
@@ -106,6 +110,11 @@ def screw_pts(mx, my, z):
 def bodies():
     x0, x1, yb = S.DECK
     rx0, rx1 = -51.3 + S.BX, 54.3 + S.BX                                             # the receiver v3 (C), not drawn: it bolts up under the yokes
+    lx, ly0, ly1, lz = S.LUG
+    yz = [(-ly0, lz), (ly0, lz), (ly1, lz), (ly1, lz + 1.2), (LUG_Y1, lz + 1.2 + 1.43 * (LUG_Y1 - ly1)), (LUG_Y1, DZ1), (-ly0, DZ1)]
+    side_clip = U([hull_pts([(x, s_ * y, z) for x in (-S.BED, S.BED) for y, z in yz]) for s_ in (1, -1)])   # the side sockets' rooms stay inside the
+    # lugs' old profile: under the discs' keep-out, the outer face up the funnel's 55 deg (12 Nov: the lug wedges and the belt along the receiver went
+    # with BS moving to the nose block's corners, tools/scout_v4_shape.BS_X)
     env = [box(x0, x1, -yb, yb, S.REC_TOP, DZ1),                                      # the deck and the yokes over the receiver, one room
            box(-S.BED, rx0, -40.0, 40.0, -2.3, DZ1),                                  # the tail tray (DT / BT)
            box(-S.BED, rx0 + 0.5, -40.0, 40.0, -12.0, -2.0), box(rx1 - 0.5, 78.0, -40.0, 40.0, -12.0, -2.0),   # 12 Nov: the nose and tail blocks down to
@@ -114,7 +123,7 @@ def bodies():
            box(rx1, S.BED, -40.0, 40.0, -2.3, DZ1), box(rx1, 78.0, -34.0, 34.0, -10.5, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod (-10.5: into the flow land, not flush on it)
            box(rx1, 71.8, -12.0, 12.0, -19.1, -2.0),                                 # the flow sensor's pod (its bottom on the walls-in rule + 2)
            box(S.UBEC_LO[0] - 2.5, S.UBEC_LO[0] + 19.5, -33.0, 33.0, S.UBEC_LO[1], -2.0),   # 11 Nov: the UBEC's pod under the tail tray (S.UBEC_LO: off BT's path)
-           box(rx0 - 0.5, rx1 + 0.5, 33.8, 40.0, -2.3, S.REC_TOP + 0.5), box(rx0 - 0.5, rx1 + 0.5, -40.0, -33.8, -2.3, S.REC_TOP + 0.5)]   # 10 Nov: beside the receiver, so the end
+           (box(rx0 - 0.5, rx1 + 0.5, 33.8, SIDE_Y1, -2.3, S.REC_TOP + 0.5) ^ side_clip), (box(rx0 - 0.5, rx1 + 0.5, -SIDE_Y1, -33.8, -2.3, S.REC_TOP + 0.5) ^ side_clip)]   # 10 Nov: beside the receiver, so the end
     # sockets' loads climb to the battery bolts (z 9.6) on shallow in-layer diagonals; run 187 stopped early at 1.064 ACROSS the layers
     # (BT-TB 527 N at (-51, -33, 3.7)): with room only over the receiver and behind it, the path had to rise as a wall at its tail end.
     # 11 Nov (run of 0dd1778, the audit's parity check since): these rooms' tops flush under the deck's room (z 9.6) and the flow land
@@ -125,11 +134,8 @@ def bodies():
         u = unit(b - a); n = np.array([-u[1], u[0], 0])
         env.append(hull_pts([p + s * n * w / 2 + [0, 0, z] for p, z0, w in ((a, ARM_Z0, ARM_W0), (b, POD_Z0, ARM_W1)) for s in (-1, 1) for z in (z0, DZ1)]))
         env.append(cyl(mx, my, POD_Z0, DZ1, POD_ROOM))
-    lx, ly0, ly1, lz = S.LUG
-    yz = [(-ly0, lz), (ly0, lz), (ly1, lz), (ly1, lz + 1.2), (LUG_Y1, lz + 1.2 + 1.43 * (LUG_Y1 - ly1)), (LUG_Y1, DZ1), (-ly0, DZ1)]
-    side_clip = U([hull_pts([(x, s_ * y, z) for x in (-S.BED, S.BED) for y, z in yz]) for s_ in (1, -1)])   # the side sockets' rooms stay inside the
-    # lugs' old profile: under the discs' keep-out, the outer face up the funnel's 55 deg (12 Nov: the lug wedges and the belt along the receiver went
-    # with BS moving to the nose block's corners, tools/scout_v4_shape.BS_X)
+    if FRONT_Z0 is not None:
+        env += [box(20.0, rx1 + 0.5, a_, b_, FRONT_Z0, -2.0) ^ side_clip for a_, b_ in ((33.8, SIDE_Y1), (-SIDE_Y1, -33.8))]
     drawn, cuts = [], []
     cuts.append(box(rx0 - 0.1, rx1, -33.3, 33.3, -60.0, -2.6))                       # the battery mechanism (the receiver's box) under the yokes; above
     rr = 5.0                                                                          # z -2.6 its vertical corners round r 5 (10 Nov, run 188: 0.785 at the box's
