@@ -184,6 +184,7 @@ def drone_parts():
                     continue
             if p.get("opacity") is not None:
                 e["opacity"] = p["opacity"]
+            e["max_faces"] = 8000 if any(k in p["name"].lower() for k in ("rods", "tubes")) else 1200      # context on this page: 113 drone parts must fit the 16 MB artifact
             out.append(e)
     return out
 
@@ -196,12 +197,12 @@ BOUGHT_LIST = [
     ("R156-4S probe sleeve, 100 pack", 4, "https://www.amazon.com/100Pcs-Spring-Sleeve-R156-4S-Welding/dp/B0CPWSZN8L", "glued in the ledge bores"),
 ]
 FASTENERS = "16 M4 x 60 with nuts and washers (the four laps), 8 M4 x 16 with nuts and washers (arms to the side sheets: 8 holes O4.5 in the acrylic, 99 under the seat plane's W Z 220.3 = W Z 121.3), 2 M4 x 16 and 2 M3 x 16 with nuts (the halves' joint), 4 M4 nuts (the walls' blocks), 8 M2 x 10 self-tapping (switches), 4 cable ties (motors)"
-PRINT = [("box_funnel_half_nose", "frame, nose half", "128 x 176 x 84", "upside down: the side walls' top edges on the bed; supports under the ledges and the beam's wings", "PCTG"),
-         ("box_funnel_half_tail", "frame, tail half", "158 x 176 x 84", "as the nose half", "PCTG"),
-         ("box_funnel_arm", "cross arm, 2 as drawn + 2 mirrored", "44 x 162 x 29", "on its outer face (the beam's 29 deep side flat on the bed)", "PCTG"),
-         ("box_funnel_wall_nose", "nose wall", "35 x 121 x 40", "on its 55 deg face (the face the drone slides on, up off the bed side: face down)", "PCTG"),
-         ("box_funnel_wall_tail", "tail wall", "35 x 121 x 40", "as the nose wall", "PCTG"),
-         ("box_funnel_strips", "ledge strips, 2", "182 x 2.8 x 1.5 each", "flat, along the bed's diagonal (182 long)", "TPU 95A")]
+PRINT = [("box_funnel_half_nose", "frame, nose half", "128 x 176 x 83", "upside down: the side walls' top edges on the bed; supports under the ledges and the beam's wings", "PCTG"),
+         ("box_funnel_half_tail", "frame, tail half", "162 x 176 x 83", "as the nose half", "PCTG"),
+         ("box_funnel_arm", "cross arm, 2 as drawn + 2 mirrored", "44 x 162 x 28", "on its outer face (the beam's 29 deep side flat on the bed)", "PCTG"),
+         ("box_funnel_wall_nose", "nose wall", "31 x 121 x 40", "on its back, the 55 deg sliding face up", "PCTG"),
+         ("box_funnel_wall_tail", "tail wall", "31 x 121 x 40", "as the nose wall", "PCTG"),
+         ("box_funnel_strips", "ledge strips, 6 pieces (three a side, between the probes)", "58 to 62 x 2.8 x 2.0", "flat", "TPU 95A")]
 
 
 def appendix(chk):
@@ -223,6 +224,47 @@ def appendix(chk):
 <p>Not drawn: the hold-down. The swap's insert (60 N; the arm v8 head pushes up to 118 N) is more than either drone weighs (Overseer 21.6 N, Scout 4.9 N); nothing on the funnel or the drones holds them on the seat, so that case has no load path yet. Neither latch v7 receiver has a shoulder to hook (the Overseer's end faces are flat, the Scout's clipped), and a lip on a sliding 55 degree face would stop a drone above the seat: it needs a hook feature on both receivers and a part that enters from the side walls after seating.</p>"""
 
 
+def recut_stand(parts, arm_parts, clear=2.5):
+    """the stand's pieces cut back from the arm's bays where they cross (13 Nov: the arm v8 ring is R 127, was 113, and its -90 deg
+    bay sits in the built demo's cradle keel, 8.5 cm3): the bays' hull, grown by `clear`, out of the stand piece's mesh. Geometry
+    only: the keel's strength with that pocket is not checked here, and the printed demo keel needs the same pocket or a new keel."""
+    import manifold3d as mf
+    def load_w(p):
+        m = trimesh.load(os.path.join(ROOT, p["mesh"]), force="mesh"); m.apply_transform(np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4)); return m
+    bays = {}
+    for p in arm_parts:
+        if p.get("group") == "bays" or (p.get("kin") or {}).get("bay") is not None:
+            if p.get("mesh") and os.path.exists(os.path.join(ROOT, p["mesh"])):
+                bays.setdefault(p["name"].split(":")[0].strip(), []).append(load_w(p))          # "bay -90": its receiver, cartridge, pack and saddle together
+    done = []
+    for p in parts:
+        if not p["id"].startswith("box_stand_") or not p.get("mesh"):
+            continue
+        sm = load_w(p); cut = []
+        for key, ms in bays.items():
+            V = np.vstack([m.vertices for m in ms])
+            if (V.min(0) > sm.bounds[1]).any() or (V.max(0) < sm.bounds[0]).any():
+                continue
+            h = trimesh.convex.convex_hull(V); h = trimesh.convex.convex_hull(h.vertices + clear * h.vertex_normals)
+            cut.append((key, mf.Manifold(mf.Mesh(np.asarray(h.vertices, np.float32), np.asarray(h.faces, np.uint32)))))
+        if not cut:
+            continue
+        S = mf.Manifold(mf.Mesh(np.asarray(sm.vertices, np.float32), np.asarray(sm.faces, np.uint32)))
+        if S.is_empty():
+            print(f"recut_stand: {p['id']} is not a solid mesh, left as it is"); continue
+        v0 = S.volume(); keys = []
+        for key, c in cut:
+            if (S ^ c).volume() > 0.5:
+                S = S - c; keys.append(key)
+        if not keys:
+            continue
+        mm = S.to_mesh(); t = trimesh.Trimesh(np.asarray(mm.vert_properties)[:, :3], np.asarray(mm.tri_verts), process=False)
+        t.apply_transform(np.linalg.inv(np.array(p["pose"], float)) if isinstance(p.get("pose"), list) else np.eye(4)); t.export(os.path.join(ROOT, p["mesh"]))
+        p["version"] = f"{str(p.get('version') or '').split('; recut')[0]}; recut 13 Nov round the arm v8 {', '.join(keys)} ({(v0 - S.volume()) / 1000:.1f} cm3 off, {clear} clear; strength not rechecked)"
+        done.append((p["id"], keys, round((v0 - S.volume()) / 1000, 1)))
+    print(f"recut_stand: {done or 'nothing crosses a bay'}")
+
+
 def main(nox=None):
     out = os.path.join(ROOT, "systems", "box.assembly.json"); old = json.load(open(out))
     kept = lambda pre: [p for p in old["parts"] if p["id"].startswith(pre)]
@@ -231,13 +273,17 @@ def main(nox=None):
     if os.path.exists(new_arm):                                  # the arm stream's system replaces the 3 Nov import (bays and packs with it)
         parts = [p for p in parts if not p["id"].startswith("box_arm_")]
         for p in json.load(open(new_arm))["parts"]:
-            parts.append(dict(p, id="box_swaparm_" + p["id"], name="arm: " + p["name"], part=p.get("part", p["id"]), owner="swap arm", source="systems/swap_arm.assembly.json"))
+            if p.get("group") in ("drone seat", "box (context)") or (p.get("kin") or {}).get("pack") == "dead":      # its own copies of the seat's latch set and the funnel
+                continue
+            parts.append(dict(p, id="box_swaparm_" + p["id"], name="arm: " + p["name"], part=p.get("part", p["id"]), owner="swap arm", source="systems/swap_arm.assembly.json", max_faces=4000))
     else:
         for p in parts:
             if p["id"].startswith("box_arm_"):
                 p["version"] = "v7, superseded (the arm stream's systems/swap_arm.assembly.json replaces it when pushed)"
+    if os.path.exists(new_arm):
+        recut_stand(parts, json.load(open(new_arm))["parts"])
     parts += funnel_parts() + kept("box_dome_") + latch_parts() + drone_parts()
-    a = dict(old, parts=parts, appendix="systems/box.appendix.html",
+    a = dict(old, parts=parts, appendix="systems/box.appendix.html", fps=8,
              note=("Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). "
                    "In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are "
                    "engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, "

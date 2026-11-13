@@ -115,7 +115,8 @@ def box_bodies():
     if os.path.exists(new_arm):
         parts = [p for p in parts if not p["name"].startswith("arm: ")]
         b = json.load(open(new_arm)); src = "systems/swap_arm.assembly.json"
-        parts += [dict(p, name="arm: " + p["name"], _new=True) for p in b["parts"]]
+        ctx = lambda p: p.get("group") in ("drone seat", "box (context)") or (p.get("kin") or {}).get("pack") == "dead"   # its copies of the seat's latch set and of the funnel
+        parts += [dict(p, name="arm: " + p["name"], _new=True) for p in b["parts"] if not ctx(p)]
     static, arm, turning, missing = [], [], [], []
     for p in parts:
         if p.get("mesh"):
@@ -129,14 +130,12 @@ def box_bodies():
             continue
         P = np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4)
         nm = p["name"].replace("arm: ", "")
-        is_arm = p["name"].startswith("arm: ") and not nm.startswith("rec")
-        turns = p.get("turns", is_arm and nm.startswith(ws.TURN) and "placeholder" not in nm)
+        is_arm = p["name"].startswith("arm: ") and (p.get("_new") or not nm.startswith("rec"))
+        turns = bool((p.get("kin") or {}).get("stage")) if p.get("_new") else (is_arm and nm.startswith(ws.TURN) and "placeholder" not in nm)   # v8: hub, carriage and lift stages turn with the wheel
         if turns:
             mw = m.copy(); mw.apply_transform(P); q, _ = trimesh.sample.sample_surface(mw, int(min(20000, max(1500, mw.area / 4.0))), seed=1)
             turning.append((p["name"], np.vstack([q, mw.vertices])))
         m.apply_transform(W2S @ P)
-        if m.bounds[1][2] < -140.0:                                   # more than 140 under the seat: nothing of the funnel, a drone or the swap path reaches it
-            continue
         (arm if is_arm else static).append(Body(p["name"], "arm" if is_arm else "box", tri=m))
     lane = None                                                       # the arm's head lane under the tail wall: the arm's own (parts/box_arm8/make.py funnel_keepout() -> W box), else the funnel's copy
     a8 = os.path.join(ROOT, "parts", "box_arm8", "make.py")
@@ -174,6 +173,7 @@ def main(quick=False):
     # the funnel against the box it sits in (both settings), and the arm at park
     for st in F:
         test(f"static, walls at {st}", F[st], static + arm)
+    test("static, the arm at park", [b for b in static if not moving_dome(b)], [b for b in arm if "keep-out" not in b.name])   # the stand, the enclosure and the dome against the arm and its bays
     for d in PACK:
         st = sc.walls_for(d); R, C = LB[d]; states = sc.descent_states(d)
         if quick:

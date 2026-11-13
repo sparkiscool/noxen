@@ -25,12 +25,13 @@ import numpy as np, trimesh
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = os.path.join(ROOT, "site")
-def view_mesh(m, pid=""):
+def view_mesh(m, pid="", max_faces=None):
     """the page's copy of a part: stray faces and shells dropped, then decimated. An exported STL carries a few loose
     triangles and 1-3 face shells beside the part (the manifold -> STL export, 29 Oct: node 21 had 126 of them); the
     quadric decimation of a mesh holding them tears the part open (node 5 on the page lost a quarter of its volume and
     its faces, Spark 29 Oct: "looks weird and unrendered"), so only the closed shells of at least 1 mm3 are kept. A
     part whose main shell itself is open (a recut export) still decimates, and the volume lost is printed."""
+    MAX_FACES = int(max_faces or globals()["MAX_FACES"])     # a part's own `max_faces` in its assembly line (13 Nov: the box page seats both whole drones, 36 MB at 20k a part)
     if len(m.faces) <= 200:
         return m
     if m.is_watertight and all(b.is_watertight and abs(b.volume) >= 1.0 for b in m.split(only_watertight=False)):
@@ -181,7 +182,7 @@ def artifact_page(a, S, meshes, commit, path):
         mod, fn = a["timeline"].rsplit(":", 1)
         sp = importlib.util.spec_from_file_location("tl_" + os.path.basename(mod)[:-3], os.path.join(ROOT, mod)); tm = importlib.util.module_from_spec(sp); sp.loader.exec_module(tm)
         poses, dur, series = getattr(tm, fn)(a)
-        s.timeline(poses, duration_s=dur, fps=24)
+        s.timeline(poses, duration_s=dur, fps=a.get("fps", 24))
         for nm, vals, unit, *kw in series:                                          # an optional dict: bad_below / bad_above
             s.series(nm, vals, unit, **(kw[0] if kw else {}))
     else:
@@ -285,7 +286,7 @@ def build(inline=False, offline=False):
                 sys.exit(f"build_site: parts/{src} is placed by both {owners[src]} and {sysname}: a folder belongs to one drone "
                          f"(3 Nov: the Scout page drew the Overseer's cage, motors and props from shared folders). Give each its own folder.")
             if mesh:
-                m = view_mesh(trimesh.load(mesh, force="mesh"), pid)
+                m = view_mesh(trimesh.load(mesh, force="mesh"), pid, p.get("max_faces"))
                 kind = "mesh"
             else:
                 m = placeholder(p)

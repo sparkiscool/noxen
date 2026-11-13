@@ -93,7 +93,7 @@ def timeline(a):
                 out[n] = P[pid]
         return out
 
-    n = int(t_total * 24)
+    n = int(t_total * a.get("fps", 24))                # the page's frame rate (systems/box.assembly.json "fps": 251 parts x 576 frames was 12 MB of poses)
     series = []
     for g, plan in PLAN.items():
         series.append((g.split(": ")[1] + " height over the seat", [seat_pose(i * t_total / n, plan, t_total)[0][2] if plan[0] <= i * t_total / n < plan[3] else None

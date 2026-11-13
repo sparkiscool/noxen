@@ -57,7 +57,7 @@ SW = (19.8, 6.4, 10.2)                            # KW12-3 roller switch body (x
 SW_Y = 59.0                                       # the switches' inner face, outboard of the nut blocks
 LUG_Y = (SW_Y + SW[1] + 0.2, SW_Y + SW[1] + 3.2)   # the lug the switches screw to (two M2 along y each)
 # ---- the cross beams and the arms out to the side sheets
-BEAM_X = {1: (104.0, 128.0), -1: (-158.0, -134.0)}   # seat x of the nose and the tail beam (W Y 271..295 and 9..33; the tail one 4.9 behind the rails' disc, W Y 38)
+BEAM_X = {1: (104.0, 128.0), -1: (-162.0, -138.0)}   # seat x of the nose and the tail beam (W Y 271..295 and 5..29; the tail one 5 behind the arm v8 rails, which reach seat x -133)
 SHEET_TOP = 145.0 - ZW                            # -75.3; the rain lid lies flush with it (W Z 142..145), open within r 160 of the seat
 LID_Z = SHEET_TOP - 3.0 - 2.0                     # everything outside the lid's opening stays under this (2.0 under the lid)
 BAY = (40.2, 0.577, -80.0, -45.0)                 # the two bays beside the drone (60 / 120 deg, seat x -92..92): their inner faces at |y| = 43.1 + 0.577 (z + 80), kept 2.5 off
@@ -69,7 +69,7 @@ LAP_BOLTS = [(y, z) for y in (52.0, 80.0) for z in (-95.0, -84.5)]   # four M4 a
 LAP_PAD_R = 6.0                                   # the pad round each lap bolt (washer 9)
 HUB_R = 119.0                                     # the wheel's hub side (r 115 over W Y 0..36) + 4, about the axle
 ARM_W = 24.0                                      # the arm lies beside the beam's outer face, as wide as the beam (each alone carries the lap's moment)
-RING_Y, RING_Z = 174.0, -91.5                     # beyond |y| 174 the arm passes under the dome's base ring (W Z 132..142, r 255 about the seat)
+RING_Y, RING_Z = 166.0, -91.5                     # beyond |y| 166 the arm passes under the dome's base ring (W Z 132..142, r 255 about the seat)
 SPOKE = (52.0, 72.0, -88.5, 10.0)                 # a dome spoke crosses the arm's outer 10 mm over |y| 56..68 down to z -86: |y|, top there, width
 FLANGE = (200.7, 205.7, -108.0, -91.5, 20.0)      # the arm's end plate on the sheet's inner face (|y| 206): |y|, z, and its reach inboard of the beam
 SHEET_BOLT_Z = -99.0
@@ -270,18 +270,18 @@ def half_bodies(sx):
         zt = z0 + 27.0
         env.append(box(0.0, sx * 92.0, *Y(38.0, 59.0), z0 - FLOOR - 0.2, zt))                                               # behind the side wall
         env.append(box(sx * 92.0, sx * 112.0, *Y(38.0, 59.0), z0 - FLOOR - 0.2, -31.0))                                      # behind the ear: full depth under h 13,
-        env.append(box(sx * 90.0, sx * (112.0 if sx > 0 else 108.0), *Y(38.0, 54.0), -33.0, zt))                                                    # 5 less above it (the Overseer's foot nodes and tubes pass |y| 59 from z -28)
+        env.append(box(sx * 90.0, sx * (112.0 if sx > 0 else 108.0), *Y(38.0, 56.0), -33.0, zt))                                                    # 5 less above it (the Overseer's foot nodes and tubes pass |y| 59 from z -28)
         env.append(box(l0, l1, *Y(56.0, LUG_Y[1]), z0 + 0.5, z0 + 12.5))                                                     # out to the lug
-        env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 70.0), z0 + 16.5, zt))                                 # a rib's room outside the wall, over the drive (the Overseer's foot nodes pass beyond its ends)
+        env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 15.6, zt))                                 # a rib's room outside the wall, over the drive (the Overseer's foot nodes pass beyond its ends)
         if sx > 0:
             env.append(box(92.0, 120.0, *Y(38.0, 56.0), z0 - FLOOR - 0.2, -41.5))                                            # the ear's foot, out to the beam (the Overseer's tubes pass over it from z -38)
             env.append(box(0.0, xout, *Y(28.5, 56.0), -56.5, z0 - FLOOR + 0.5))                                             # under the ledge and the motors, to the beam
             env.append(box(92.0, xout, *Y(26.0, 56.0), MID_Z[1] - 2.0, z0 - FLOOR + 0.5))
         else:
             env.append(box(0.0, -112.0, *Y(28.5, 56.0), -56.5, z0 - FLOOR + 0.5))
-            env.append(box(-92.0, -108.0, *Y(26.0, 56.0), ARM_LANE[4] + 0.2, z0 - FLOOR + 0.5))                             # behind the tail wall, over the arm's head lane
-            env.append(box(-92.0, -140.0, *Y(26.0, 44.0), ARM_LANE[4] + 0.2, z0 - FLOOR + 0.5))                             # on aft inside the Overseer's tail tubes (they pass |y| > 46 down to z -52)
-            env.append(box(ARM_LANE[0] - 0.3, -140.0, *Y(26.0, 44.0), -67.0, ARM_LANE[4] + 1.0))                            # and down to the beam behind the lane (the rails' tips pass 4.5 under at |y| 26)
+            env.append(box(-92.0, -108.0, *Y(26.0, 56.0), ARM_LANE[4] + 1.0, z0 - FLOOR + 0.5))                             # behind the tail wall, over the arm's head lane
+            env.append(box(-92.0, -144.0, *Y(26.0, 44.0), ARM_LANE[4] + 1.0, z0 - FLOOR + 0.5))                             # on aft inside the Overseer's tail tubes (they pass |y| > 46 down to z -52)
+            env.append(box(ARM_LANE[0] - 0.3, -144.0, *Y(26.0, 44.0), -63.0, ARM_LANE[4] + 2.0))                            # and down to the beam behind the lane (the arm v8 rails' tips pass under at z -68)
     env.append(box(xin, xout, -MID_Y, MID_Y, MID_Z[0], LID_Z))                                                               # the beam's middle, under the lid's level
     env.append(box(xin, xout, -MID_Y, MID_Y, LID_Z - 1.0, MID_Z[1]) ^ cyl_z(-200.0, 100.0, 0.0, 0.9, OPEN_R, 96))            # and up through the lid's opening
     cuts.append(cyl_x(-200.0, -129.0, 0.0, -ZW, HUB_R, 96))                                                                  # the wheel's hub side behind the rails
