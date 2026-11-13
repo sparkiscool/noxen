@@ -228,7 +228,7 @@ def bodies():
     boards.append(("flow MTF-02P", [tuple(lb.mean(0))], [reg], ASM["scout_v4_flow_mtf_02p"]["mass_g"], tuple(lb.mean(0))))
     flow_reg = box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6)   # the whole land
     # ---- the 8 rod sockets (crowns down: the print's up)
-    side = [s for k in ("DS0", "BS0", "DS1", "BS1") for s in socks_of(k, cls=SockDown)]
+    side = [s for k in ("DS0", "BS0", "DS1", "BS1") for s in socks_of(k, cls=(SockDown6 if k in TUBE_NODES else SockDown))]
     ends = [s for k in END_NODES for s in socks_of(k, cls=(SockDown6 if k in TUBE_NODES else SockDown))]
     socks = side + ends
     d, c = socket_bodies(side, lambda s: np.array([1.0, 0.0, 0.0]))                      # ports out of the lugs along x (9 Nov: out the side they cut the crown, down in print)

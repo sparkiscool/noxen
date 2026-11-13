@@ -20,6 +20,9 @@ def cage(line, gen_cm3, drawn_g=33.0):
     N0 = dict(S.NODES)
     S.NODES["DN"], S.NODES["DT"] = (76.0, 0, 18.4), (-76.0, 0, 18.4)
     tubes = {"DN-NB", "DT-TB"}
+    if line == "tube2":                                  # the side rods too (13 Nov: BS / DS 0.92-0.96 x Euler at gen 230 / 260 as 3.0)
+        tubes |= {"DS0-S0", "DS1-S1", "BS0-S0", "BS1-S1"}
+        S.NODES["DS0"], S.NODES["DS1"] = (0.0, 40.0, 18.4), (0.0, -40.0, 18.4)
     if line == "split":
         del S.NODES["BT"]
         S.NODES["BT0"], S.NODES["BT1"] = (-75.5, 23.0, 11.0), (-75.5, -23.0, 11.0)
