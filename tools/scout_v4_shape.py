@@ -462,7 +462,7 @@ def cage():
     return trimesh.util.concatenate(rods), trimesh.util.concatenate(nodes)
 
 
-def frame_check(core_g):
+def frame_check(core_g, write=True):
     """the Scout's frame model (tools/scout_cage_loads.py, the standard cases: 35 g crash on the hull face the CG ray leaves through, 14
     directions, landing and rough landing 6 g on the runners) on these tables: the core one rigid body at the origin with the
     sockets printed into the frame and the base and the runner corners stiff to it"""
@@ -492,6 +492,9 @@ def frame_check(core_g):
                 o = nl.setdefault(k, {}).get(nm)
                 if o is None or v["axial"] > o["axial"] or v["side"] > o["side"]:
                     nl[k][nm] = dict(axial=max(v["axial"], o["axial"] if o else 0), side=max(v["side"], o["side"] if o else 0), N=v["N"], case=v["case"], tag="F")
+    out["node_loads"] = nl                                                          # write=False (13 Nov): a frame variant's own cage, in memory only
+    if not write:
+        return out
     json.dump(dict(note="Scout v4 frame model (tools/scout_v4_shape.py frame_check): per node and member the worse of the standard cases and the head-first crash", node_loads=nl),
               open(os.path.join(ROOT, "systems", "scout_v4.cage_loads.json"), "w"), indent=1)
     hn = int(math.ceil(out["head_first"]["head_N"] / 10.0) * 10)                    # the probe's setups read the head-first load from here (9 Nov: it was 230 by hand, the model gives ~250)
