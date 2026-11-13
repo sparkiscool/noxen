@@ -194,7 +194,7 @@ def drone_parts():
 BOUGHT_LIST = [
     ("N20 gearmotor, M4 x 55 screw shaft, 6 V 100 rpm (12 x 10 x 25 body)", 4, "https://www.amazon.com/BRINGSMART-Threaded-Electric-Reducer-100rpm/dp/B0DGSYFD2Y",
      "one per wall tab; pick the 6 V 100 rpm option (alt B093GRCQLS); 37.2 mm at 0.7 mm a turn = 32 s"),
-    ("KW12-3 roller lever micro switch, 10 pack", 4, "https://www.amazon.com/SDTC-Tech-Momentary-Microswitch-Normally/dp/B0CPYNDYPP", "each wall's in and out position, on the +y side"),
+    ("KW12-3 roller lever micro switch, 10 pack", 2, "https://www.amazon.com/SDTC-Tech-Momentary-Microswitch-Normally/dp/B0CPYNDYPP", "one home switch a wall (outmost), on the +y side; every other position is timed from it"),
     ("P156-E spring probe, 100 pack", 4, "https://www.amazon.com/Spring-Probes-Accuracy-Testing-Contact/dp/B0CC2GQKL1", "seat sense and keep-alive, in the ledges"),
     ("R156-4S probe sleeve, 100 pack", 4, "https://www.amazon.com/100Pcs-Spring-Sleeve-R156-4S-Welding/dp/B0CPWSZN8L", "glued in the ledge bores"),
 ]
