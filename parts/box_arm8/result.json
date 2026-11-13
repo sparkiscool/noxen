@@ -937,11 +937,11 @@
   ]
  },
  "audit_smoke": {
-  "box_arm8_hub": "audit PASS at h 2.5: room filled solid 0.295 (dropped pack); at its 195 cm3 budget (62 % of the room) the audit's estimate is 0.47",
-  "box_arm8_carriage": "audit PASS at h 1.6: room filled solid 0.396 (insert off square); at its 50 cm3 budget (84 % of the room) the estimate is 0.47",
-  "box_arm8_lift": "audit PASS at h 1.8, printed on its end (+x): room filled solid 0.352 (insert off square); at its 82 cm3 budget (77 % of the room) the estimate is 0.46",
-  "cause": "13 Nov: the first v8 layout could not pass in print (carriage 2.15 filled solid). Not the plug's side: pull-out acts at the tab line in either pose. The load went 70 across to three rods beside the hub, back through a 5 mm plate to the wheels, and out along printed booms. Now: the lift's guide is a bought MGN12H rail on the carriage's spine beside the wheel pair, the lever to the tab line is three o 6 carbon rods, and each room is cut to the load's way",
-  "margin": "all three pass by 0.03 to 0.04 on the audit's uniformly-thinned estimate; the runs decide"
+  "box_arm8_hub": "run 13 Nov: PASS, worst 0.353 (float limit), solid check PASS, 349.6 g",
+  "box_arm8_carriage": "run 13 Nov: FAIL strength 0.528 (insert off square) where the 9.85 plate bends between the low wheel's axle and the spine; solid check PASS. Fixed: plate 12.25 thick from the wheel pair to the rail's side, budget 63 cm3 (94 % of the room). Audit PASS, 0.361 solid, estimate 0.38; rerunning",
+  "box_arm8_lift": "run 13 Nov: FAIL strength 0.532 (dropped pack) at the yoke's neck beside the MGN block; solid check PASS. Fixed: plate on down to 43 below the axle line, budget 104 cm3 (91 % of the room). Audit PASS, 0.349 solid, estimate 0.38; rerunning",
+  "cause": "both first runs came 12 to 15 % over the audit's estimate at budget (0.47, 0.46 -> 0.53): an estimate within 15 % of the limit is not a setup with margin",
+  "layout": "13 Nov: the first v8 layout could not pass in print (carriage 2.15 filled solid). Not the plug's side: pull-out acts at the tab line in either pose. The load went 70 across to three rods beside the hub, back through a 5 mm plate to the wheels, and out along printed booms. Now: the lift's guide is a bought MGN12H rail on the carriage's spine beside the wheel pair, the lever to the tab line is three o 6 carbon rods, and each room is cut to the load's way"
  },
  "solid_check": {
   "printed": "all 14 drawn prints PASS tools/solid_check.py (rail, unit body, blade, wheel, pilot, paddle, tie, pad, stub, post, detent arm, both saddles, link)",
@@ -1177,17 +1177,17 @@
   "hub": {
    "part": "box_arm8_hub",
    "setup": "parts/box_arm8_hub/part.py",
-   "state": "setup ready, not run"
+   "state": "run PASS (0.353, 349.6 g)"
   },
   "carriage": {
    "part": "box_arm8_carriage",
    "setup": "parts/box_arm8_carriage/part.py",
-   "state": "setup ready, not run"
+   "state": "setup changed after a failed run; rerunning"
   },
   "lift": {
    "part": "box_arm8_lift",
    "setup": "parts/box_arm8_lift/part.py",
-   "state": "setup ready, not run"
+   "state": "setup changed after a failed run; rerunning"
   }
  },
  "bought": [
