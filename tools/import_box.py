@@ -220,7 +220,7 @@ def appendix(chk):
 <h3>Clearances (mm, sampled to about 1)</h3><table><tr><th>mm</th><th>between</th><th>and</th><th>where</th></tr>{clr}</table>
 <h2>Funnel v5: printed pieces (A1 mini, 180 bed)</h2><table><tr><th>piece</th><th>size</th><th>pose on the bed</th><th>material</th></tr>{prt}</table>
 <h3>Bought</h3><table><tr><th>part</th><th>qty</th><th>note</th></tr>{bought}</table><p>Fasteners: {e(FASTENERS)}.</p>
-<p>Not drawn: the hold-down. The swap's insert (60 N, the head's stall 74 N, up) is more than either drone weighs (Overseer 21.6 N, Scout 4.9 N); nothing on the funnel or the drones holds them on the seat, so that case has no load path yet.</p>"""
+<p>Not drawn: the hold-down. The swap's insert (60 N; the arm v8 head pushes up to 118 N) is more than either drone weighs (Overseer 21.6 N, Scout 4.9 N); nothing on the funnel or the drones holds them on the seat, so that case has no load path yet. Neither latch v7 receiver has a shoulder to hook (the Overseer's end faces are flat, the Scout's clipped), and a lip on a sliding 55 degree face would stop a drone above the seat: it needs a hook feature on both receivers and a part that enters from the side walls after seating.</p>"""
 
 
 def main(nox=None):

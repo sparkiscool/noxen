@@ -138,6 +138,19 @@ def box_bodies():
         if m.bounds[1][2] < -140.0:                                   # more than 140 under the seat: nothing of the funnel, a drone or the swap path reaches it
             continue
         (arm if is_arm else static).append(Body(p["name"], "arm" if is_arm else "box", tri=m))
+    lane = None                                                       # the arm's head lane under the tail wall: the arm's own (parts/box_arm8/make.py funnel_keepout() -> W box), else the funnel's copy
+    a8 = os.path.join(ROOT, "parts", "box_arm8", "make.py")
+    if os.path.exists(a8):
+        try:
+            lane = getattr(load("parts/box_arm8/make.py", "box_arm8_make"), "funnel_keepout")()
+        except Exception:
+            lane = None
+    if lane is None:
+        x0, x1, y0, y1, zt = load("parts/box_funnel/make.py", "box_funnel_make").ARM_LANE
+        m = trimesh.creation.box(extents=[x1 - x0, 144.0, 60.0]); m.apply_translation([(x0 + x1) / 2, -44.0, zt - 30.0])     # seat frame: y -116..28 (W X -28..116), 60 down
+    else:
+        x0, x1, y0, y1, z0, z1 = lane; m = trimesh.creation.box(extents=[x1 - x0, y1 - y0, z1 - z0]); m.apply_translation([(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2]); m.apply_transform(W2S)
+    arm.append(Body("arm v8 head lane at the drone (keep-out)", "arm", tri=m))
     return static, arm, turning, src, missing
 
 

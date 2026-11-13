@@ -8,7 +8,7 @@ Loads (systems/dimensions.md L and System Box catch; E unless tagged), each its 
   off centre  the 6 g reaction normal to the 55 deg face it strikes (level 106.1 N, down 74.3 N for the Overseer): on a side wall at
               its middle, at the joint and at the ear; on an end wall, where the level part goes through the tabs and nut blocks into
               the hard stops (walls out, Overseer) or through the screws onto the motors' front plates (walls in, Scout: 24.1 N)
-  swap        pull-out 50 N down on the seat, the Overseer seated. Insert 60 N and the head's stall 74 N act up: more than either drone
+  swap        pull-out 50 N down on the seat, the Overseer seated. Insert 60 N and the arm v8 head's push, up to 118 N, act up: more than either drone
               weighs and there is no hold-down, so that case has no path through the funnel and is NOT applied (named in make.py)
   walls       a gearmotor stalled on its M4 screw, 135 N (E: N20 100:1 at 6 V, 0.55 kg cm stall, M4 x 0.7, 25 % screw efficiency):
               the nut block on its hard stop with the motor's rear on its stop; and the screw pulling on the front plate (a jam going in)

@@ -23,7 +23,7 @@ landing and sagged over 10 mm, and its wall drive was a placeholder. Now:
                         with no power), seated on the half under the side wall's overhang; a roller switch at each wall's two
                         positions (+y side) pressed by a dog on the nut block; hard stops at "out". No opposite-hand screw, no gears.
   strips                TPU, flush in the ledges; four spring probes through them (seat sense, keep-alive).
-Not drawn (named, not guessed): the hold-down. The swap's insert (60 N, stall 74 N, up) is more than either drone weighs (Overseer
+Not drawn (named, not guessed): the hold-down. The swap's insert (60 N; the arm v8 head pushes up to 118 N, design chat 13 Nov) is more than either drone weighs (Overseer
 21.6 N, Scout 4.9 N) and nothing on the funnel or the drones holds them down, so the insert case has no path through the seat.
 Run: python parts/box_funnel/make.py [--gate]   (writes the drawn pieces' meshes, checks the walls' travel; --gate: tools/solid_check.py
      on every drawn printed piece)
@@ -74,6 +74,7 @@ SPOKE = (52.0, 72.0, -88.5, 10.0)                 # a dome spoke crosses the arm
 FLANGE = (200.7, 205.7, -108.0, -91.5, 20.0)      # the arm's end plate on the sheet's inner face (|y| 206): |y|, z, and its reach inboard of the beam
 SHEET_BOLT_Z = -99.0
 JOINT = dict(hi=(53.0, -34.0, 2.2), lo=(47.0, -52.2, 1.7))   # the low one outside the carried pack's sweep
+ARM_LANE = (-109.1, -88.1, -116.0, 116.0, -58.8)   # arm v8's carriage and rods at the drone: nothing below W Z 161.5 over W X -28..116, Y 58..79 (seat x -109.1..-88.1, y -116..28; kept on both sides)
 PACK_R = 169.0                                    # a pack carried on the wheel sweeps r 165 about the axle over W Y 114..210 (seat x -53..43), + 4   # the halves' joint at x 0: (|y|, z, hole r) of the M4 and the M3
 
 
@@ -278,12 +279,14 @@ def half_bodies(sx):
             env.append(box(92.0, xout, *Y(26.0, 56.0), MID_Z[1] - 2.0, z0 - FLOOR + 0.5))
         else:
             env.append(box(0.0, -112.0, *Y(28.5, 56.0), -56.5, z0 - FLOOR + 0.5))
-            env.append(box(-92.0, -112.0, *Y(26.0, 56.0), -67.0, z0 - FLOOR + 0.5))                                         # down behind the tail wall (the rails' tips pass 4.5 under at |y| 26)
-            env.append(box(-110.0, xout, *Y(26.0, 56.0), -67.0, -57.0))                                                     # under the Overseer's tail tubes (z -52), to the beam
+            env.append(box(-92.0, -108.0, *Y(26.0, 56.0), ARM_LANE[4] + 0.2, z0 - FLOOR + 0.5))                             # behind the tail wall, over the arm's head lane
+            env.append(box(-92.0, -140.0, *Y(26.0, 44.0), ARM_LANE[4] + 0.2, z0 - FLOOR + 0.5))                             # on aft inside the Overseer's tail tubes (they pass |y| > 46 down to z -52)
+            env.append(box(ARM_LANE[0] - 0.3, -140.0, *Y(26.0, 44.0), -67.0, ARM_LANE[4] + 1.0))                            # and down to the beam behind the lane (the rails' tips pass 4.5 under at |y| 26)
     env.append(box(xin, xout, -MID_Y, MID_Y, MID_Z[0], LID_Z))                                                               # the beam's middle, under the lid's level
     env.append(box(xin, xout, -MID_Y, MID_Y, LID_Z - 1.0, MID_Z[1]) ^ cyl_z(-200.0, 100.0, 0.0, 0.9, OPEN_R, 96))            # and up through the lid's opening
     cuts.append(cyl_x(-200.0, -129.0, 0.0, -ZW, HUB_R, 96))                                                                  # the wheel's hub side behind the rails
     cuts.append(cyl_x(-62.0, 52.0, 0.0, -ZW, PACK_R, 128))                                                                   # a pack carried round on the wheel
+    cuts.append(arm_lane())
     y0b, kb, zb, ztop = BAY
     for sy in (-1, 1):                                                                                                       # the bays beside the drone
         poly = [(sy * (y0b - kb * 30.0), zb - 30.0), (sy * 200.0, zb - 30.0), (sy * 200.0, ztop), (sy * (y0b + kb * (ztop - zb)), ztop)]
@@ -315,6 +318,12 @@ def arm_bodies(sx=1, sy=1):
     cuts.append(box(a1 - sx * SPOKE[3], a1 + sx * 5.0, *Y(SPOKE[0], SPOKE[1]), SPOKE[2], 20.0))                               # a dome spoke
     env = box(a0, a1, *Y(LAP_Y[0], f1), *ARM_Z) + box(a0 - sx * reach, a1, *Y(f0 - 14.0, f1), fz0, fz1)
     return U([lap, flange]), U(cuts), env, dict(lap=lap, foot=flange, sheet_bolts=[(x, sy * f1, SHEET_BOLT_Z) for x in fb])
+
+
+def arm_lane():
+    """the swap arm v8's head lane under the tail wall (design chat 13 Nov, decided for the arm): nothing of the funnel in it"""
+    x0, x1, y0, y1, zt = ARM_LANE
+    return box(x0, x1, y0, y1, -300.0, zt)
 
 
 def room(drawn, cuts, env):
