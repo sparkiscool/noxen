@@ -43,7 +43,7 @@ def rot180(m): return m.rotate([0, 180, 0])                     # head B from he
 
 # ------------------------------------------------------------------ the layout (C unless tagged)
 Y_C = 167.1                    # grip line = each cartridge's tab line = the funnel centre (box frame)
-R_BAY = 127.0                  # bay receivers' bottom radius. v7's 113 does not take latch v7's receivers: neighbours at 30 deg overlap 623 mm3 (make.py ring())
+R_BAY = 129.0                  # bay receivers' bottom radius. v7's 113 does not take latch v7's receivers: neighbours at 30 deg overlap 623 mm3 (make.py ring())
 R_DRONE = 176.0                # the seated drone's receiver bottom (seat z -44.3 at W Z 220.3)
 CART_DROP = 0.2                # a seated cartridge's bottom is 0.2 under its receiver's
 G_PARK = 60.0                  # pad plane (= a carried cartridge's bottom) at park: a carried Overseer's top at 118.6, 8.4 under the bay packs
@@ -58,15 +58,18 @@ WHEELS = [(22.3, 4.0), (22.3, 48.0), (-22.3, 26.0)]     # x, carriage coordinate
 RAIL = (27.5, 154.0)
 RODS_X, ROD_Y = (44.0, 69.0, 94.0), 64.9                     # the lift's three o 6 rods (two leave the LM6UU at 0.63 of their static rating in a plain insert), side by side beside the rail: over the funnel's tail beam (y 58.1), under the bays' closed ends (74.8)
 BLOCK = dict(x=(36.5, 101.5), y=(56.0, 73.8), u=(-14.0, 36.0))      # the lift block at park: 50 long, two LM6UU on each rod (29 between the rows), the nut between the rods
-SCREW = (56.5, 64.9)           # screw axis (x, y), between the rods; T8 x 2, the catch's screw
-MOTOR = dict(x=(35.35, 77.65), y=(43.75, 86.05), u=(-95.0, -47.0))  # the head stepper lying on the plate, 9 into it (far corner r 122.7 before its chamfer: 4 inside the bays)
-NUT_U = (6.0, 21.0)            # the nut in the block, between the rods (flange 3.5 over it, filed to 15 x 18)
+SCREW = (56.5, 47.5)           # screw axis (x, y): under the rods, in a slot in the hub's plate (between the rods it cut both rod clamps off from the wheels); T8 x 2, the catch's screw
+MOTOR = dict(x=(35.35, 77.65), y=(26.35, 68.65), u=(-92.5, -44.5))    # the head stepper lying through the plate's plane; far corner r 120.7: inside funnel v5's tail arms (r 123.6 at y 20..36)
+NUT_U = (6.0, 21.0)            # the nut in a lug under the block (through the plate's slot); flange 3.5 over it, filed to 15 x 18
+LUG = dict(x=(48.3, 64.7), y=(39.5, 58.0), u=(3.0, 27.5))
 NECK = dict(x=(29.3, 36.6), y=(68.5, 73.8), u=(-14.0, 11.0))        # block to the wall, between the wheel rims and the bays' closed ends
 WALL = dict(x=(29.3, 45.0), y=(68.5, 75.0), u=(-14.0, 11.0))        # up past the carriage plate's edge (x 28) and over the block
-WALL2 = dict(x=(29.3, 45.0), y=(74.9, 96.0), u=(-1.0, 11.0))
-XARM = dict(x=(-33.5, 45.0), y=(80.0, 96.0), u=(3.0, 33.0))          # the cross-over, above the carriage plate (73.8)
-BOOMS = [dict(x=(sx * 26.3, sx * 33.5) if sx > 0 else (sx * 33.5, sx * 26.3), y=(80.0, Y_C + 27.0), u=(3.0, 33.0)) for sx in (-1, 1)]   # one each side of the grab unit; plain PCTG: the head's pitch give (about 3 N m / deg, E) is wanted
-TIE_U = (3.0, 9.6)             # two ties across the booms under the grab unit: the float bolts pass up through them, heads in their undersides
+WALL2 = dict(x=(29.3, 70.0), y=(79.1, 96.0), u=(-1.0, 11.0))         # past y 79.5 the other head's cross-over is 2 below
+RISER = dict(x=(29.3, 70.0), y=(73.7, 79.2), u=(-14.0, 11.0))
+DEEP = dict(x=(34.6, 70.0), y=(74.0, 96.0), u=(-27.0, 11.0))            # beyond the other head's reach (x 33.5) the riser and cross-over run 27 below the axle line: the joint's section         # up over the block's whole inner width: the section the 6.6 N m lever needs (it read 3.1 through a 16 x 12 wall)
+XARM = dict(x=(-33.5, 70.0), y=(79.2, 96.0), u=(3.0, 31.0))         # 29 x 28: the far boom's moment crosses it in torsion          # the cross-over, above the carriage plate (73.8)
+BOOMS = [dict(x=(sx * 26.3, sx * 33.5) if sx > 0 else (sx * 33.5, sx * 26.3), y=(80.0, Y_C + 27.0), u=(3.0, 31.0)) for sx in (-1, 1)]   # one each side of the grab unit; plain PCTG: the head's pitch give (about 3 N m / deg, E) is wanted
+TIE_U = (1.0, 9.6)             # two ties across the booms under the grab unit: the float bolts pass up through them, heads in their undersides
 FLOAT_Z = (-45.0, 20.0)        # the float bolts' stations along the pack, from the tab line
 FLOAT_X = 15.0
 PLATE = (50.0, 54.0, 88.0)     # hub plate y0, y1, radius
@@ -74,7 +77,8 @@ F_INSERT = dict(scout=57.0 + 2.2, overseer=57.0 + 7.5)             # plug (E) + 
 F_NEED = 1.5 * F_INSERT["overseer"]                                 # 96.8 N: what the latch asks of the head
 F_LIMIT = 118.0                # the float springs solid-ish at S_OVER + 1: the most the head can put on a cartridge (E)
 F_PULL = 57.0 + 7.5
-M_GUIDED = 4.0                 # N m: head pitch stiffness about 10 N m / deg (E, booms 7 x 30 PCTG) x the receiver's 0.4 deg of gap
+M_GUIDED = 2.0                 # N m: v7's frame model: the arm's pitch stiffness at the pack 4.51 N m / deg x the guides' 0.38 (Overseer) .. 0.47 deg (Scout) (parts/box_arm/ref/arm_v7_system.json xt60_mate, xt60_guided); v8's own is not modelled
+AXLE_STALL_NM = 0.59 * 150 / 16     # the axle stepper's stall through the 150T ring and its 16T (v7: 2.95 at 5:1)
 M_FLOAT = 3.0                  # N m: the float's pitch rate (4 x 5.76 N/mm x 32.5^2 = 24 N m / rad) over its 5.3 deg reach + the preload's 0.7
 
 
@@ -103,7 +107,7 @@ def rail():
     body = U(box(-9, 9, 54, 66.75, u0, u1), hullp([[9, 59.75, z] for z in (u0, u1)] + [[11.5, yy, z] for z in (u0 + 2.5, u1 - 2.5) for yy in (62.25, 63.25)] + [[9, 65.75, z] for z in (u0, u1)]),
              hullp([[-9, 59.75, z] for z in (u0, u1)] + [[-11.5, yy, z] for z in (u0 + 2.5, u1 - 2.5) for yy in (62.25, 63.25)] + [[-9, 65.75, z] for z in (u0, u1)]),
              box(-9, 9, 38, 54.01, PLATE[2] + 1.0, u1),                                       # the keel beyond the plate
-             box(-6, 6, 66.74, 72.0, u0, u0 + 3.5))                                           # park stop
+             )                                                                                # no park stop on the rail: the screw sets park, and the carriage's tail plate passes over the rail's end
     for u in RAIL_BOLTS:
         body = body - cyl("y", 0, u, 2.75, 50, 70) - cyl("y", 0, u, 4.6, 61.0, 70)            # M5 x 10 socket head into the hub's insert
     return body - box(-2.5, 2.5, 62.75, 67, u0 + 3.5, u1 + 1)                                 # the lift's return spring lies in the channel
@@ -111,13 +115,18 @@ RAIL_BOLTS = (40.0, 78.0)
 
 
 def screw_drive():
-    """bought: stepper, rigid coupler, T8 x 2 screw. No thrust bearing: the stepper's own bearings take the screw's thrust (115 N at the float limit, E);
-    a thrust wall needs 8 mm more tail than the bay ring leaves."""
+    """bought: stepper, rigid coupler, T8 x 2 screw, and two F8-16M thrust bearings either side of a wall on the plate, a set collar outside them:
+    push and pull both go into the hub, not the stepper"""
     x, y = SCREW; m = MOTOR
-    return dict(motor=U(box(m["x"][0], m["x"][1], m["y"][0], m["y"][1], m["u"][0], m["u"][1]), cyl("z", x, y, 11.0, m["u"][1], m["u"][1] + 2.0), cyl("z", x, y, 2.5, m["u"][1], m["u"][1] + 24.0)),
-                coupler=cyl("z", x, y, 7.0, -43.0, -18.5),
-                screw=cyl("z", x, y, 4.0, -31.0, 141.0))
-MOTOR_WALL = dict(x=(35.35, 77.65), y=(54.0, 86.05), u=(-47.0, -43.5))   # the stepper's face plate (31 mm pattern) standing on the hub plate
+    ch = 4.0                                                                    # the 17HS19's body corners are chamfered (about 4.5; drawn 4.0)
+    body = hullp([[xx, yy, uu] for uu in m["u"] for (xx, yy) in ((m["x"][0] + ch, m["y"][0]), (m["x"][1] - ch, m["y"][0]), (m["x"][1], m["y"][0] + ch), (m["x"][1], m["y"][1] - ch),
+                                                                  (m["x"][1] - ch, m["y"][1]), (m["x"][0] + ch, m["y"][1]), (m["x"][0], m["y"][1] - ch), (m["x"][0], m["y"][0] + ch))])
+    return dict(motor=U(body, cyl("z", x, y, 11.0, m["u"][1], m["u"][1] + 2.0), cyl("z", x, y, 2.5, m["u"][1], m["u"][1] + 24.0)),
+                coupler=cyl("z", x, y, 7.0, -41.3, -16.7),
+                thrust=U(cyl("z", x, y, 8.0, -16.5, -11.5), cyl("z", x, y, 8.0, -7.5, -2.5), cyl("z", x, y, 6.5, -2.5, 2.5)) - cyl("z", x, y, 4.0, -18, 3),
+                screw=cyl("z", x, y, 4.0, -30.0, 141.0))
+MOTOR_WALL = dict(x=(35.35, 77.65), y=(26.0, 69.0), u=(-44.5, -41.5))    # the stepper's face plate (31 mm pattern), through the plate's plane
+THRUST_WALL = dict(x=(46.5, 66.5), y=(36.0, 55.6), u=(-11.5, -7.5))      # the screw through it between the two F8-16M; a 5 mm lock ring outside the outer one, the coupler inside the inner
 
 
 # ------------------------------------------------------------------ carriage (park)
@@ -126,19 +135,25 @@ def wheel(x, c):
     cone = lambda t0, r0, r1: mf.Manifold.cylinder(1.75, r0, r1, 48).rotate([-90, 0, 0]).translate([x, t0, Z0 + c])
     w = U(cyl("y", x, Z0 + c, 12.0, 57.75, 61.01, 48), cone(61.0, 12.0, 10.25), cone(62.75, 10.25, 12.0), cyl("y", x, Z0 + c, 12.0, 64.49, 67.75, 48))
     return w - cyl("y", x, Z0 + c, 8.0, 57, 62.75) - cyl("y", x, Z0 + c, 2.6, 57, 68)        # two 625ZZ (o 16 x 5) from one side, a 5 mm web behind them
-C_BOT = -50.0                  # the rods' lower end, carriage coordinate
+C_BOT = -52.0                  # the rods' lower end, carriage coordinate
 def carriage_bodies():
-    """the drawn attachments: wheel bosses and the two rod clamps"""
-    b = [cyl("y", x, Z0 + c, 6.5, 67.75 + 1.0, PLATE_Y[1]) for x, c in WHEELS]
-    b += [box(36.5, 108.0, 58.4, 73.8, Z0 + CAR_L - 6.0, Z0 + CAR_L), box(36.5, 108.0, 58.4, 73.8, Z0 + C_BOT, Z0 + C_BOT + 4.0)]
+    """the drawn attachments: three wheel bosses, then a collar round each rod's end (top three, bottom three)"""
+    b = [cyl("y", x, Z0 + c, 6.8, 67.75 + 1.0, 78.6) for x, c in WHEELS]                 # M5 axle bosses, the plate's full 9.85
+    b += [box(x - 6.0, x + 6.0, 58.4, 73.8, Z0 + CAR_L - 6.0, Z0 + CAR_L) for x in RODS_X]
+    b += [box(x - 6.0, x + 6.0, 58.4, 73.8, Z0 + C_BOT, Z0 + C_BOT + 6.0) for x in RODS_X]
     return b
 def carriage_env():
-    return U(box(-28.0, 28.0, PLATE_Y[0], PLATE_Y[1], Z0, Z0 + CAR_L), box(-28.0, 108.0, PLATE_Y[0], PLATE_Y[1], Z0 + CAR_L - 6.0, Z0 + CAR_L), box(34.8, 108.0, 58.4, 73.8, Z0 + CAR_L - 6.0, Z0 + CAR_L),
-             box(0.0, 36.3, PLATE_Y[0], 79.0, Z0 + CAR_L - 30.0, Z0 + CAR_L), box(36.3, 60.0, 74.3, 79.0, Z0 + CAR_L - 30.0, Z0 + CAR_L),
-             box(36.5, 108.0, 58.4, 73.8, Z0 + C_BOT, Z0 + C_BOT + 4.0))
+    top = Z0 + CAR_L
+    return U(box(-28.0, 28.0, PLATE_Y[0], 78.6, Z0, top), box(-28.0, 116.0, PLATE_Y[0], PLATE_Y[1], top - 6.0, top),   # the wheel plate 9.85 thick: the lift's cross-over passes at 79.2
+             box(28.2, 116.0, 58.4, 73.8, top - 6.0, top),
+             box(0.0, 36.3, PLATE_Y[0], 78.6, top - 30.0, top), box(36.3, 62.0, 74.3, 78.6, top - 30.0, top), box(28.0, 62.0, 74.3, 88.0, top - 10.0, top), box(28.0, 62.0, 73.7, 88.0, top - 6.0, top),
+             box(50.0, 108.0, 58.4, 73.8, top - 6.0, top + 8.0),                                           # beyond x 50 the funnel (v4) leaves room over the clamps
+             box(102.2, 116.0, 58.4, 73.8, Z0 + C_BOT - 20.0, top),                                         # the outer spine: 14 wide, the lower clamp's way to the wheels
+             box(36.5, 116.0, 58.4, 73.8, Z0 + C_BOT - 20.0, Z0 + C_BOT + 6.0),                            # under and round the lower collars, down to the stepper's wall
+             box(13.0, 36.6, 54.6, 68.3, Z0 + C_BOT - 6.0, Z0 + C_BOT + 6.0),                               # the lower clamp's short way to the wheels: inward under the lift's neck,
+             box(13.0, 28.0, 54.6, 78.6, Z0 + C_BOT - 6.0, Z0 + C_BOT + 6.0), box(2.0, 28.0, PLATE_Y[0], 78.6, Z0 + C_BOT - 6.0, Z0 + 0.01))   # up, and along a tail plate (this head's half of the centre) to the wheel plate
 def carriage_cuts():
-    c = [cyl("y", x, Z0 + cc, 2.6, 50, 80) for x, cc in WHEELS] + [cyl("z", x, ROD_Y, 3.05, Z0 + C_BOT - 5, Z0 + CAR_L + 5) for x in RODS_X]
-    c.append(cyl("z", SCREW[0], SCREW[1], 5.0, Z0 + C_BOT - 5, Z0 + CAR_L + 5))
+    c = [cyl("y", x, Z0 + cc, 2.6, 50, 80) for x, cc in WHEELS] + [cyl("z", x, ROD_Y, 3.05, Z0 + C_BOT - 5, Z0 + CAR_L + 0.01) for x in RODS_X]
     return U(*c)
 def rods():
     return U(*[cyl("z", x, ROD_Y, 3.0, Z0 + C_BOT, Z0 + CAR_L) for x in RODS_X])
@@ -150,7 +165,7 @@ def lm_seats():
     u0 = BLOCK["u"][0]
     return [(x, u0 + a, u0 + a + 19.0) for x in RODS_X for a in (1.5, 29.5)]
 def _b(d): return box(d["x"][0], d["x"][1], d["y"][0], d["y"][1], d["u"][0], d["u"][1])
-def lift_block(): return _b(BLOCK)
+def lift_block(): return U(_b(BLOCK), _b(LUG))
 def float_pts():
     return [(sx * FLOAT_X, Y_C + z) for sx in (-1, 1) for z in FLOAT_Z]
 def ties():
@@ -158,11 +173,17 @@ def ties():
 def lift_cuts():
     b = BLOCK; x, y = SCREW
     c = [cyl("z", xx, ROD_Y, 6.05, a, e) for xx, a, e in lm_seats()] + [cyl("z", xx, ROD_Y, 3.6, b["u"][0] - 1, b["u"][1] + 1) for xx in RODS_X]
-    c += [cyl("z", x, y, 5.2, b["u"][0] - 1, b["u"][1] + 1), box(x - 9.2, x + 9.2, b["y"][0] - 1, b["y"][1] + 1, NUT_U[1], NUT_U[1] + 3.7)]   # the nut's body and its flange slot
+    c += [cyl("z", x, y, 5.2, LUG["u"][0] - 1, LUG["u"][1] + 1), box(x - 9.2, x + 9.2, LUG["y"][0] - 1, y + 7.6, NUT_U[1], NUT_U[1] + 3.7)]   # the nut's body and its flange slot, in the lug
     c += [U(cyl("z", px, py, 5.0, TIE_U[0] - 1, 30), cyl("z", px, py, 7.6, TIE_U[0] - 1, TIE_U[0] + 3.0)) for px, py in float_pts()]         # o 10 round each o 5 shoulder (+-2.5 of float), head and washer 3 into the underside
     return U(*c)
+def deep_wedge():
+    """DEEP, tapered: its depth grows from the cross-over's own at the boom side to the full 27 below the axle line by x 58, and runs out toward the booms along y"""
+    d = DEEP; pts = [[d["x"][0], y, u] for y in (d["y"][0], XARM["y"][1]) for u in (-1.0, d["u"][1])]
+    pts += [[x, y, u] for x in (58.0, d["x"][1]) for y in (d["y"][0], 92.0) for u in d["u"]] + [[x, XARM["y"][1], u] for x in (58.0, d["x"][1]) for u in (3.0, d["u"][1])]
+    return hullp(pts)
 def lift_env():
-    return U(lift_block(), _b(NECK), _b(WALL), _b(WALL2), _b(XARM), *[_b(o) for o in BOOMS], *ties())
+    return U(lift_block(), _b(NECK), _b(WALL), _b(RISER), deep_wedge(), _b(WALL2), _b(XARM), box(-33.5, 33.5, XARM["y"][1] - 0.01, Y_C + FLOAT_Z[0] - 6.9, XARM["u"][0], XARM["u"][1]),
+             hullp([[x, y, u] for (x, y) in ((33.4, XARM["y"][1] - 0.01), (XARM["x"][1], XARM["y"][1] - 0.01), (33.4, Y_C + FLOAT_Z[0] - 6.9)) for u in XARM["u"]]), *[_b(o) for o in BOOMS], *ties())   # no step from the cross-over to the boom plate: a taper
 def lift_bought():
     x, y = SCREW
     return dict(lm6uu=U(*[cyl("z", xx, ROD_Y, 6.0, a, e) - cyl("z", xx, ROD_Y, 3.1, a - 1, e + 1) for xx, a, e in lm_seats()]),
@@ -210,7 +231,7 @@ def pilot(sx, sz, ext=0.0):
     if sx < 0: m = m.mirror([1, 0, 0])
     if sz < 0: m = m.mirror([0, 0, 1])
     return m
-STEM_Z = (19.5, 25.5)
+STEM_Z = (19.5, 24.0)
 PILOTS = ((1, -1), (-1, 1))    # the hall posts stand in the other two corners
 def unit_body():
     """the printed housing: deck (both packs' pad seats, the hall posts), side walls with the blade rods and spring seats over the booms,
@@ -219,9 +240,9 @@ def unit_body():
     walls = [U(box(*sorted((sx * SEAT_X, sx * 33.5)), -26.0, -14.5, -28.0, 27.0), box(*sorted((sx * 23.0, sx * 33.5)), -15.9, -13.9, -28.0, 27.0),
                box(*sorted((sx * 23.0, sx * 25.7)), -14.0, -5.9, -20.0, 20.0), box(*sorted((sx * 23.0, sx * 25.8)), y1, -24.0, -28.0, 27.0),
                *[box(*sorted((sx * 23.0, sx * 33.5)), -26.0, -14.5, z0, z1) for z0, z1 in ((-28.0, -25.0), (23.0, 27.0))]) for sx in (-1, 1)]
-    base = box(-25.8, 25.8, y0, y1, -47.0, 87.0)
+    base = box(-25.8, 25.8, y0, y1, -47.0, 71.5)
     cross = [U(box(-25.8, 25.8, y1 - 0.01, -14.5, z0, z1), box(-25.7, 25.7, -14.6, -5.9, z0, z1)) for z0, z1 in ((-28.0, -25.0), (23.0, 27.0), (68.5, 71.5))]
-    blocks = [box(-25.8, 25.8, y1 - 0.01, -19.0, -47.0, -28.0), box(-25.8, 25.8, y1 - 0.01, -19.0, 71.5, 87.0), box(-25.8, -23.0, y1 - 0.01, -14.5, 20.0, 71.5)]
+    blocks = [box(-25.8, 25.8, y1 - 0.01, -19.0, -47.0, -28.0), box(-25.8, -23.0, y1 - 0.01, -14.5, 20.0, 71.5)]
     guides = []
     for sx, sz in PILOTS:
         gd = box(8.2, 19.1, -22.0, -5.9, 17.3, 27.9)
@@ -283,6 +304,12 @@ def cases(pack="overseer"):
            ("pull-out, %s, the cartridge free of the guides (bound): the plug's 57 N at the lead end" % pack, "misuse", [0, 0, Fi], (pp * 57.0 + pc * w) / Fi, S_DRONE),
            ("insert at the float limit, %s: %.0f N, the float pitched to its reach (%.1f N m)" % (pack, F_LIMIT, M_FLOAT), "misuse", [0, 0, -F_LIMIT], pc + [0, 1000.0 * M_FLOAT / F_LIMIT, 0], S_DRONE),
            ("insert off square, %s: the limit + 43.5 N across at the mouth" % pack, "misuse", [43.5, 0, -F_LIMIT], pc + [0, 0, 45.0], S_DRONE)]
+    if pack == "overseer":
+        Fax = 1000.0 * AXLE_STALL_NM / (R_BAY - CART_DROP)
+        out.append(("axle stall, head held in a bay: %.2f N m at the hub = %.0f N across at the cartridge" % (AXLE_STALL_NM, Fax), "misuse", [Fax, 0, 0], pc + [0, 0, 30.0], S_BAY))
+        Ed = (m - 0.25) * 9.81 * 0.050; Fd = min((P_FLOAT ** 2 + 2 * K_FLOAT * 1000 * Ed) ** 0.5, 2 * F_LIMIT)
+        out.append(("dropped pack: an Overseer falls 50 onto the head (float springs take %.2f J)" % Ed, "misuse", [0, 0, -Fd], pc, S_DRONE))
+        out.append(("box handling 3 g down + 2 g side, carrying (v7's case)", "misuse", list(9.81 * m * np.array([2.0, 0, -3.0])), cg, 0.0))
     for nm, d in (("down the bar", [0, 0, -1]), ("across", [1, 0, 0]), ("along the axle", [0, -1, 0])):
         out.append(("carrying %s at full reach, gravity %s" % (pack, nm), "flight", list(9.81 * m * np.array(d, float)), cg, S_DRONE))
         out.append(("handling 3 g %s" % nm, "misuse", list(3 * 9.81 * m * np.array(d, float)), cg, 0.0))
@@ -303,3 +330,22 @@ def distribute(F, P, pts):
 def plug_point(pack):
     """where the XT60's force acts on the head (arm frame, park): the plug is at the pack's lead end, the far end from the rail"""
     g = packs()[pack]["g"]; return np.array([0.0, Y_C + g["Z_X"] - g["Z_T"], G_PARK])
+
+
+def wheel_loads(F, P, s):
+    """a head load -> the three V wheels (v7's joint model: each wheel takes a force across the rail and one along the axle; the screw takes the bar direction).
+    Returns [(across N, axial N)] and v7's two indices: flank Hertz over 1.67 x 55 MPa (E_PCTG for E_PETG), 625ZZ axial over C0 670 N."""
+    F = np.asarray(F, float); P = np.asarray(P, float) + [0, 0, s]; z0 = Z0 + carriage_s(s)
+    pts = [np.array([x, 62.75, z0 + c]) for x, c in WHEELS]; scr = np.array([SCREW[0], SCREW[1], P[2]])
+    A = np.zeros((6, 7)); b = np.concatenate([F, np.cross(P, F)])
+    for i, q in enumerate(pts):
+        for j, e in enumerate((np.array([1.0, 0, 0]), np.array([0, 1.0, 0]))):
+            A[:3, 2 * i + j] = e; A[3:, 2 * i + j] = np.cross(q, e)
+    e = np.array([0, 0, 1.0]); A[:3, 6] = e; A[3:, 6] = np.cross(scr, e)
+    x = np.linalg.lstsq(A, b, rcond=None)[0]
+    out = [(float(x[2 * i]), float(x[2 * i + 1])) for i in range(3)]
+    E = 1900.0; Es = E / (2 * (1 - 0.4 ** 2)); band = (12.0 - (22.3 - 11.5)) * 2 ** 0.5; Rw = (12.0 + 10.5) / 2 * 2 ** 0.5; pre = 10.0
+    hz = 0.0
+    for fx, fy in out:
+        Fn = (abs(fx) + pre + abs(fy)) / 2 ** 0.5; a_ = (4 * Fn * Rw / (np.pi * band * Es)) ** 0.5; hz = max(hz, 2 * Fn / (np.pi * a_ * band) / (1.67 * 55.0))
+    return out, round(float(hz), 3), round(max(abs(fy) for _, fy in out) / 670.0, 3)

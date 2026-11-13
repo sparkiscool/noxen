@@ -67,7 +67,7 @@
    ]
   }
  },
- "note": "The box's swap arm, v8, for latch v7 and both packs. Two heads 180 apart; each is a lift on two steel rods driven by a T8 x 2 screw, picking its carriage up for the last 60 mm: 115.80000000000001 mm to the drone seat. Push limited by the grab unit's float springs to 118 N (x1.83 over the Overseer insert); the screw holds with the power off. Bays at R 127. Swap cycle, both packs, 502 states: 0 overlaps. Hub, carriage and lift are shown as their setups (drawn attachments and envelope): the engine has not run them yet.",
+ "note": "The box's swap arm, v8, for latch v7 and both packs. Two heads 180 apart; each is a lift on two steel rods driven by a T8 x 2 screw, picking its carriage up for the last 60 mm: 115.80000000000001 mm to the drone seat. Push limited by the grab unit's float springs to 118 N (x1.83 over the Overseer insert); the screw holds with the power off. Bays at R 129. Swap cycle, both packs, 551 states: 0 overlaps. Hub, carriage and lift are shown as their setups (drawn attachments and envelope): the engine has not run them yet.",
  "cg_ref": null,
  "timeline": "tools/swap_arm_motion.py:timeline",
  "appendix": "systems/swap_arm.appendix.html",
@@ -250,6 +250,26 @@
    "color": "#8a8f96",
    "opacity": null,
    "mesh": "parts/box_arm8/view/box_arm8_a_coupler.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "owner": "swap arm",
+   "version": "arm v8 (13 Nov)",
+   "source": "parts/box_arm8/make.py",
+   "kin": {
+    "stage": "hub",
+    "head": "A",
+    "blade": 0
+   }
+  },
+  {
+   "id": "box_arm8_a_thrust",
+   "name": "head A: thrust",
+   "role": "bought",
+   "group": "head A",
+   "color": "#8a8f96",
+   "opacity": null,
+   "mesh": "parts/box_arm8/view/box_arm8_a_thrust.stl",
    "pose": null,
    "material": null,
    "tag": "C",
@@ -690,6 +710,26 @@
    "color": "#8a8f96",
    "opacity": null,
    "mesh": "parts/box_arm8/view/box_arm8_b_coupler.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "owner": "swap arm",
+   "version": "arm v8 (13 Nov)",
+   "source": "parts/box_arm8/make.py",
+   "kin": {
+    "stage": "hub",
+    "head": "B",
+    "blade": 0
+   }
+  },
+  {
+   "id": "box_arm8_b_thrust",
+   "name": "head B: thrust",
+   "role": "bought",
+   "group": "head B",
+   "color": "#8a8f96",
+   "opacity": null,
+   "mesh": "parts/box_arm8/view/box_arm8_b_thrust.stl",
    "pose": null,
    "material": null,
    "tag": "C",
@@ -1530,6 +1570,106 @@
    "source": "parts/box_arm8/make.py",
    "kin": {
     "bay": -210
+   }
+  },
+  {
+   "id": "box_arm8_bay_60_recv",
+   "name": "bay 60: scout receiver (latch v7)",
+   "role": "protected",
+   "group": "bays",
+   "color": "#8a94a6",
+   "opacity": 0.55,
+   "mesh": "parts/box_arm8/view/box_arm8_bay_60_recv.stl",
+   "pose": null,
+   "material": "PCTG",
+   "tag": "C",
+   "owner": "swap arm",
+   "version": "arm v8 (13 Nov)",
+   "source": "parts/box_arm8/make.py",
+   "kin": null
+  },
+  {
+   "id": "box_arm8_bay_60_saddle",
+   "name": "bay 60: saddle",
+   "role": "structure",
+   "group": "bays",
+   "color": "#6f7c91",
+   "opacity": null,
+   "mesh": "parts/box_arm8/view/box_arm8_bay_60_saddle.stl",
+   "pose": null,
+   "material": "PCTG",
+   "tag": "C",
+   "owner": "swap arm",
+   "version": "arm v8 (13 Nov)",
+   "source": "parts/box_arm8/make.py",
+   "kin": null
+  },
+  {
+   "id": "box_arm8_bay_60_cart",
+   "name": "bay 60: scout cartridge",
+   "role": "protected",
+   "group": "packs",
+   "color": "#2f4fbf",
+   "opacity": null,
+   "mesh": "parts/box_arm8/view/box_arm8_bay_60_cart.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "owner": "swap arm",
+   "version": "arm v8 (13 Nov)",
+   "source": "parts/box_arm8/make.py",
+   "kin": {
+    "bay": 60
+   }
+  },
+  {
+   "id": "box_arm8_bay_120_recv",
+   "name": "bay 120: scout receiver (latch v7)",
+   "role": "protected",
+   "group": "bays",
+   "color": "#8a94a6",
+   "opacity": 0.55,
+   "mesh": "parts/box_arm8/view/box_arm8_bay_120_recv.stl",
+   "pose": null,
+   "material": "PCTG",
+   "tag": "C",
+   "owner": "swap arm",
+   "version": "arm v8 (13 Nov)",
+   "source": "parts/box_arm8/make.py",
+   "kin": null
+  },
+  {
+   "id": "box_arm8_bay_120_saddle",
+   "name": "bay 120: saddle",
+   "role": "structure",
+   "group": "bays",
+   "color": "#6f7c91",
+   "opacity": null,
+   "mesh": "parts/box_arm8/view/box_arm8_bay_120_saddle.stl",
+   "pose": null,
+   "material": "PCTG",
+   "tag": "C",
+   "owner": "swap arm",
+   "version": "arm v8 (13 Nov)",
+   "source": "parts/box_arm8/make.py",
+   "kin": null
+  },
+  {
+   "id": "box_arm8_bay_120_cart",
+   "name": "bay 120: scout cartridge",
+   "role": "protected",
+   "group": "packs",
+   "color": "#2f4fbf",
+   "opacity": null,
+   "mesh": "parts/box_arm8/view/box_arm8_bay_120_cart.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "owner": "swap arm",
+   "version": "arm v8 (13 Nov)",
+   "source": "parts/box_arm8/make.py",
+   "kin": {
+    "bay": 120
    }
   },
   {

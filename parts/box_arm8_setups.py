@@ -31,7 +31,7 @@ def _pad(p, r=3.5, t=3.0, ax="z"):
 def lift(h):
     env = L.lift_env(); b = L.BLOCK; x, y = L.SCREW
     housings = [box(xx - 8.0, xx + 8.0, b["y"][0], b["y"][1], a, e) for xx, a, e in L.lm_seats()]
-    nut = box(x - 4.4, x + 4.4, b["y"][0], b["y"][1], L.NUT_U[0], L.NUT_U[1] + 6.2)
+    nut = L._b(L.LUG)
     bosses = [box(px - 9.0, px + 9.0, py - 7.0, py + 7.0, L.TIE_U[0], L.TIE_U[1]) for px, py in L.float_pts()]
     drawn = U(*housings, nut, *bosses)
     p = Part("box_arm8_lift", h, drawn, L.lift_cuts(), env, build="+z", material="PCTG")
@@ -60,7 +60,7 @@ def carriage(h):
             for j, e in enumerate((np.array([1.0, 0, 0]), np.array([0, 1.0, 0]))):
                 A[:3, 2 * i + j] = e; A[3:, 2 * i + j] = np.cross(q, e)
         xs = np.linalg.lstsq(A, rhs, rcond=None)[0]
-        p.load_multi(nm, [(_pad(pts[i], 5.0, 2.0), [xs[2 * i], xs[2 * i + 1], 0.0]) for i in range(n)], cls=cls)
+        p.load_multi(nm, [(bodies[3 + i], [xs[2 * i], xs[2 * i + 1], 0.0]) for i in range(n)], cls=cls)        # on the whole collar, as the rod bears in it
     return p
 
 
@@ -68,10 +68,13 @@ def carriage(h):
 def hub(h):
     y0, y1, R = L.PLATE
     bodies = M.hub_drawn(); drawn = U(*bodies)
-    env = cyl("y", 0, 0, R, 8.0, y1, 96)
+    w0, t0 = L.MOTOR_WALL, L.THRUST_WALL
+    room = [box(w0["x"][0], w0["x"][1], 26.5, 69.0, w0["u"][0] - 0.01, w0["u"][1] + 12.0),                    # round each stepper wall, down to the body under the plate
+            box(t0["x"][0] - 8.0, t0["x"][1] + 8.0, 28.0, 55.6, t0["u"][0] - 8.0, t0["u"][1] + 6.0)]           # and round each thrust wall, under the lift's block
+    env = U(cyl("y", 0, 0, R, 8.0, y1, 96), *room, *[L.rot180(g_) for g_ in room])
     p = Part("box_arm8_hub", h, drawn, U(*M.hub_cuts()), env, build="+y", material="PCTG")
     p.support("default", cyl("y", 0, 0, 42.5, 8.0, 40.0, 96) - cyl("y", 0, 0, 39.5, 7, 41, 96))
-    x, y = L.SCREW; w = L.MOTOR_WALL
+    x, y = L.SCREW; w = L.THRUST_WALL                         # the screw's force enters the hub at its thrust wall
     for hd, sg in (("A", 1.0), ("B", -1.0)):
         wall = box(w["x"][0], w["x"][1], w["y"][0], w["y"][1], w["u"][0], w["u"][1]); wall = wall if sg > 0 else L.rot180(wall)
         pads = [np.array([sg * px, y1 - 2.0, sg * u]) for u in L.RAIL_BOLTS for px in (-5.0, 5.0)]
@@ -91,6 +94,6 @@ def hub(h):
     ring = cyl("y", 0, 0, M.RING_R + 1.5, 9.5, 19.5, 96) - cyl("y", 0, 0, 45.0, 9, 20, 96)
     p.load("axle belt at the stepper's stall: 2.95 N m at the ring, 62 N across the sleeve", ring, [62.0, 0, 0], cls="misuse")
     for nm, g in (("handling 3 g along the axle", [0, -3, 0]), ("handling 3 g across", [3, 0, 0])):
-        mw = [box(w["x"][0], w["x"][1], w["y"][0], w["y"][1], w["u"][0], w["u"][1])]; mw.append(L.rot180(mw[0]))
+        w = L.MOTOR_WALL; mw = [box(w["x"][0], w["x"][1], w["y"][0], w["y"][1], w["u"][0], w["u"][1])]; mw.append(L.rot180(mw[0]))
         p.load_multi(nm, [(m_, np.array(g, float) * 9.81 * 0.40) for m_ in mw], cls="misuse", accel=np.array(g, float))
     return p

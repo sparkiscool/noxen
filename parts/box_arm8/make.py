@@ -4,15 +4,16 @@ The box's arm for latch v7 and both packs, drawn in this repo (arm v7 was meshes
 What changed from v7 and why (C unless tagged; numbers in result.json):
   1. Reach. The seat is 65 higher than v7 reached (W Z 220.3, 3 Nov) and v7's one-stage head cannot get there: a longer rail hits the
      stand bars (r 165) and the side sheets (206), a longer carriage crosses the hub centre at park. Each head is two stages on one
-     T8 x 2 lead screw: the lift (block on two o 6 steel rods, four LM6UU) is driven; it picks the carriage (v7's V wheels on v7's rail)
-     up for the last 58. Grab travel 117.8, carriage 59.8. A return spring keeps the carriage down on the lift's stop.
+     T8 x 2 lead screw: the lift (block on three o 6 steel rods, six LM6UU) is driven; it picks the carriage (v7's V wheels on v7's rail)
+     up for the last part. Grab travel 115.3 + 1.5, lift 60 on the carriage. A return spring keeps the carriage down on the lift's stop.
+     The screw runs under the rods in a slot in the hub's plate, with two F8-16M thrust bearings at a wall on the plate.
   2. Push. v7's pinion stalled at 74 N; the insert is 64.5 N (Overseer): x1.15. The screw gives over 380 N at stall (E), limited by the
-     grab unit's float springs to 115 N: x1.78. A 2 mm lead holds the pack with the power off: v7's head brake relay and its bench
+     grab unit's float springs to 118 N: x1.83. A 2 mm lead holds the pack with the power off: v7's head brake relay and its bench
      drop gate go.
   3. Heads 180 apart (v7: 90). Each head's block, rods and screw pass beside the hub centre on their own side; at 90 they cross.
      The arm is balanced; a swap turns 180 between pull and insert.
   4. Axle motor and detent on the stub (fixed), a printed GT2 ring on the hub's sleeve: nothing of the axle drive turns with the arm.
-  5. Ring R 127 (v7: 113): latch v7's receivers overlap their neighbours by 623 mm3 at 113 and 30 deg (ring()).
+  5. Ring R 129 (v7: 113): latch v7's receivers overlap their neighbours at 113 and 30 deg, and two Scout bays side by side still touch at 127 (ring()).
   6. Grab unit for latch v7 (parts/latch7/make.py blade, heel, pads_of, F_BLADE: built to them): two sprung pilots enter the free
      corners of the recess 5 mm before the blades and take 3.0 across and along; the unit floats on four preloaded springs
      (+-2.5 across and along, tilt and roll give once the push passes the preload share); each heel pad on an M3 jack screw;
@@ -32,7 +33,7 @@ from box_arm8_lib import box, cyl, hullp, U, vol, rot180
 ARTIFACT = None        # the first publish writes it into systems/swap_arm.assembly.json; kept from there on a rerun
 BED = 180.0
 RHO = {"PCTG": 1.23, "TPU": 1.21}
-BAYS = {"overseer": (0, -60, -120, -180), "scout": (30, -30, -90, -150, -210)}       # 9 bays, the drone at 90. box.assembly.json's two more (Overseer at 60 / 120, 8 Nov) do not fit at R 127: ring()
+BAYS = {"overseer": (0, -60, -120, -180), "scout": (30, -30, -90, -150, -210, 60, 120)}       # 11 bays, the drone at 90. The two beside the drone are Scout bays: an Overseer one meets the funnel at this radius (ring())
 
 
 def tm(m):
@@ -53,13 +54,13 @@ def fixed_parts():
     stub = stub - U(*[cyl("y", 38 * math.cos(a), 38 * math.sin(a), 2.75, -1, 7) for a in np.radians([45, 135, 225, 315])])
     stub = stub - U(*[cyl("y", AXLE_M[0] + sx * 15.5, AXLE_M[1] + sz * 15.5, 1.7, -1, 7) for sx in (-1, 1) for sz in (-1, 1)])
     piv = (52.0, 40.0)                                                                                                         # detent arm pivot (an M3 shoulder in the ear)
-    stub = stub + cyl("y", *piv, 5.0, 6.0, 20.0) - cyl("y", *piv, 1.5, -1, 21)
+    stub = stub + cyl("y", *piv, 5.0, 6.0, 17.2) - cyl("y", *piv, 1.5, -1, 18)
     post = U(cyl("y", 0, 0, 28.5, 40.0, 44.0), cyl("y", 0, 0, 9.0, 44.0, 62.0)) - cyl("y", 0, 0, 4.25, 39, 63)
     rc = (RING_R + 1.5 + 5.0) / math.sqrt(2)                                                                                   # roller centre on the notch ring, at 45 deg
-    arm = U(hullp([[x, y, z] for y in (19.0, 27.0) for x, z in ((piv[0] - 5, piv[1] - 5), (piv[0] + 5, piv[1] + 5), (rc + 6, rc + 9), (rc - 2, rc + 9))]),
-            cyl("y", *piv, 6.0, 19.0, 27.0), box(rc - 2.5, rc + 6.5, 19.0, 27.0, rc + 5.8, rc + 12.0)) - cyl("y", *piv, 1.6, 18, 28) - box(rc - 8, rc + 8, 20.9, 25.1, rc - 8, rc + 5.7) - cyl("y", rc, rc, 1.5, 18, 28)
+    arm = U(hullp([[x, y, z] for y in (17.4, 26.0) for x, z in ((piv[0] - 6, piv[1] - 6), (piv[0] + 6, piv[1] + 6), (rc + 7, rc + 13), (rc - 7, rc + 13), (rc - 7, rc - 2), (rc + 7, rc - 2))]),
+            cyl("y", *piv, 7.0, 17.4, 26.0)) - cyl("y", *piv, 1.6, 16, 27) - box(rc - 8, rc + 8, 19.6, 23.8, rc - 8, rc + 6.5) - cyl("y", rc, rc, 1.5, 16, 27) - cyl("y", 0, 0, RING_R + 3.0, 16, 27, 96)   # 8.6 thick: 2.2 cheeks either side of the 623ZZ
     return dict(stub=(stub, "PCTG", "print"), post=(post, "PCTG", "print"), detent_arm=(arm, "PCTG", "print"),
-                detent_roller=(cyl("y", rc, rc, 5.0, 21.0, 25.0) - cyl("y", rc, rc, 1.5, 20, 26), None, "bought"),
+                detent_roller=(cyl("y", rc, rc, 5.0, 19.7, 23.7) - cyl("y", rc, rc, 1.5, 20, 26), None, "bought"),
                 axle_motor=(U(box(AXLE_M[0] - 21.15, AXLE_M[0] + 21.15, -48.0, 0.0, AXLE_M[1] - 21.15, AXLE_M[1] + 21.15), cyl("y", *AXLE_M, 2.5, 0.0, 24.0)), None, "bought"),
                 axle_pulley=(cyl("y", *AXLE_M, 5.1, 9.0, 19.0) + cyl("y", *AXLE_M, 6.5, 19.0, 24.0), None, "bought"),
                 bearings=(cyl("y", 0, 0, 39.98, 8.0, 40.0) - cyl("y", 0, 0, 25.0, 7, 41), None, "bought"))
@@ -69,28 +70,29 @@ def fixed_parts():
 def hub_drawn():
     """what parts/box_arm8_hub/part.py draws (attachments only); the generated body joins them"""
     y0, y1, R = L.PLATE
-    sleeve = cyl("y", 0, 0, RING_R + 1.5, 8.0, 45.0, 96)                          # the bearings go in from the stub end; a 3 mm shoulder over the outer race at the plate end
+    sleeve = U(cyl("y", 0, 0, 43.0, 8.0, 45.0, 96), cyl("y", 0, 0, RING_R + 1.5, 9.5, 25.5, 96))     # a 3 mm seat round the bearings; the body round it is generated                          # the bearings go in from the stub end; a 3 mm shoulder over the outer race at the plate end
     ring = cyl("y", 0, 0, RING_R + 1.5, 9.5, 25.5, 96)   # flush with the sleeve: no step                    # one band: GT2 teeth (150T) over y 9.5..19.5 and the detent's twelve notches over 20.5..25.5 are cut in it (not modelled)
     notch = ring
-    plate = cyl("y", 0, 0, R, y0, y1, 96) - cyl("y", 0, 0, 15.0, y0 - 1, y1 + 1)
-    bodies = [sleeve, ring, notch, plate]
+    bodies = [sleeve]                                                     # no drawn plate: only the rails' seats (below); the plate between them is generated
     for h in (0, 1):
         f = (lambda m: m) if h == 0 else rot180
-        w = L.MOTOR_WALL
-        bodies += [f(box(w["x"][0], w["x"][1], w["y"][0], w["y"][1], w["u"][0], w["u"][1]))]
-        bodies += [f(cyl("y", 0, u, 7.0, 44.0, y0 + 0.01)) for u in L.RAIL_BOLTS]
+        for w in (L.MOTOR_WALL, L.THRUST_WALL):
+            bodies += [f(box(w["x"][0], w["x"][1], w["y"][0], w["y"][1], w["u"][0], w["u"][1]))]
+        bodies += [f(cyl("y", 0, u, 7.0, 44.0, y0 + 0.01)) for u in L.RAIL_BOLTS] + [f(box(-9.5, 9.5, y1 - 3.0, y1, L.RAIL[0], R - 0.5))]
     return bodies
 def hub_cuts():
     y0, y1, R = L.PLATE
     c = [cyl("y", 0, 0, 40.0, 6.0, 40.0, 96), cyl("y", 0, 0, 30.0, 39.9, y0 + 0.01), cyl("y", 0, 0, 15.0, y0, y1 + 1),
-         cyl("y", 0, 0, 78.0, 6.0, 28.0, 96) - cyl("y", 0, 0, RING_R + 2.5, 5, 29, 96)]            # the fixed motor's pulley, the belt and the detent roller pass under the plate
+         cyl("y", 0, 0, 78.0, 6.0, 26.2, 96) - cyl("y", 0, 0, RING_R + 2.5, 5, 27, 96)]            # the fixed motor's pulley, the belt and the detent roller pass under the plate
     x, y = L.SCREW
     for h in (0, 1):
         f = (lambda m: m) if h == 0 else rot180
         m = L.MOTOR
-        c += [f(box(m["x"][0] - 0.3, m["x"][1] + 0.3, m["y"][0], m["y"][1] + 5, m["u"][0] - 1, m["u"][1])),              # the stepper, 5 into the plate
-              f(cyl("z", x, y, 11.3, -48, -42)),
-              *[f(cyl("z", x + sx * 15.5, y + sy * 15.5, 1.7, -48, -42)) for sx in (-1, 1) for sy in (-1, 1)],
+        c += [f(box(m["x"][0] - 0.3, m["x"][1] + 0.3, m["y"][0] - 0.3, m["y"][1] + 5, m["u"][0] - 1, m["u"][1])),          # the stepper, through the plate
+              f(cyl("z", x, y, 11.3, -45.5, -41)), *[f(cyl("z", x + sx * 15.5, y + sy * 15.5, 1.7, -45.5, -41)) for sx in (-1, 1) for sy in (-1, 1)],
+              f(box(x - 9.0, x + 9.0, y - 9.0, y + 9.0, -41.5, -11.5)),                                                    # coupler and the inner thrust bearing
+              f(cyl("z", x, y, 4.3, -12.5, -6.5)),
+              f(box(x - 9.2, x + 9.2, y - 9.5, 56.0, -7.5, 160.0)),                                                        # the slot the screw, the outer bearing, the lock ring and the nut's lug run in
               *[f(cyl("y", 0, u, 3.2, 43, 60)) for u in L.RAIL_BOLTS],                                                      # M5 heat-set inserts
               f(box(-12.5, 12.5, y1, 80, L.RAIL[0] - 1, 160)), f(box(10.0, 34.5, y1 + 0.5, 70, L.RAIL[0], 160)), f(box(-34.5, -10.0, y1 + 0.5, 70, L.RAIL[0], 160))]   # rail seat, wheel lanes
     return c
@@ -154,6 +156,9 @@ def sets():
         M = np.array([[0, -1.0, 0, 0], [1.0, 0, 0, L.Y_C], [0, 0, 1.0, 44.3]]) @ np.vstack([Ts, [0, 0, 0, 1]])
         out[pk] = dict(recv=m6.receiver_all(B).transform(M), cart=(m6.cart_all(B) + m6.moving(g, 0, 1) + m6.moving(g, 0, -1) + bl.pack_body(g)).transform(M),
                        held=(m6.cart_all(B) + m6.moving(g, m6.R0, 1) + m6.moving(g, m6.R0, -1) + bl.pack_body(g)).transform(M), top=float(m6.receiver_all(B).transform(M).bounding_box()[5]))
+        rb = m6.receiver_all(B) - B["feet"] if "feet" in B else m6.receiver_all(B)             # a bay's receiver carries no landing feet (design chat 13 Nov): the drone's receiver less its four feet
+        out[pk]["recv_bay"] = rb.transform(M)
+        r = B["r"]; out[pk]["mount"] = [[float(v) for v in (M @ np.array([bx, r["Y_M"], bz, 1.0]))] for bx, bz in r["MOUNT"]]      # the receiver's mount bolts, arm frame, receiver bottom at radius 0
     return out
 
 
@@ -162,12 +167,14 @@ def at_radius(m, r, ang=90.0):
 
 
 def saddle(S, pk):
-    """how a bay receiver hangs: a cap over the receiver's top 14 mm with an ear at each end; link bars join neighbouring ears into the ring"""
-    bb = S[pk]["recv"].bounding_box(); t = 3.0
-    cap = box(bb[0] - t, bb[3] + t, bb[1] - t, bb[4] + t, bb[5] - 14.0, bb[5] + t) - box(bb[0] - 0.25, bb[3] + 0.25, bb[1] - 0.25, bb[4] + 0.25, bb[5] - 15.0, bb[5] + 0.25)
-    cap = cap - box(bb[0] + 8, bb[3] - 8, bb[1] + 8, bb[4] - 8, bb[5] - 1, bb[5] + t + 1)                 # open over the pack
-    ears = [box(-9.0, 9.0, y0, y1, bb[5] - 14.0, bb[5] + t) - cyl("y", 0.0, bb[5] - 6.0, 2.75, y0 - 1, y1 + 1) for y0, y1 in ((bb[1] - t - 5.0, bb[1] - t + 0.01), (bb[4] + t - 0.01, bb[4] + t + 5.0))]
-    return U(cap, *ears)
+    """how a bay receiver hangs: a 4 mm plate on the receiver's mount plane, on the receiver's own mount bolts (the pattern its drone uses), open over the pack,
+    with an ear at each end; link bars join neighbouring ears into the ring"""
+    bb = S[pk]["recv_bay"].bounding_box(); mp = S[pk]["mount"]; zt = max(p[2] for p in mp); t = 4.0
+    x0, x1 = min(p[0] for p in mp) - 6.0, max(p[0] for p in mp) + 6.0; y0, y1 = min(p[1] for p in mp) - 6.0, max(p[1] for p in mp) + 6.0
+    plate = box(x0, x1, y0, y1, zt, zt + t) - box(x0 + 12.0, x1 - 12.0, y0 + 12.0, y1 - 12.0, zt - 1, zt + t + 1)
+    plate = plate - U(*[cyl("z", p[0], p[1], 1.7, zt - 1, zt + t + 1) for p in mp])
+    ears = [box(-9.0, 9.0, a_, b_, zt, zt + t) - cyl("z", 0.0, (a_ + b_) / 2, 2.75, zt - 1, zt + t + 1) for a_, b_ in ((y0 - 9.0, y0 + 0.01), (y1 - 0.01, y1 + 9.0))]
+    return U(plate, *ears)
 
 
 def ring(S, R=None):
@@ -176,15 +183,16 @@ def ring(S, R=None):
     for r in (113.0, L.R_BAY):
         a = at_radius(S["overseer"]["recv"] + S["overseer"]["cart"], r, 90); b = at_radius(S["scout"]["recv"] + S["scout"]["cart"], r, 120)
         out[f"R {r:g}: receiver sets, Overseer beside Scout"] = round(vol(a ^ b), 1)
-    a = at_radius(saddle(S, "overseer"), L.R_BAY, 90); b = at_radius(saddle(S, "scout"), L.R_BAY, 120)
-    out["saddles Overseer beside Scout"] = round(vol(a ^ (b + at_radius(S["scout"]["recv"], L.R_BAY, 120))), 1)
+    for a_k, b_k in (("overseer", "scout"), ("scout", "scout")):
+        a = at_radius(saddle(S, a_k) + S[a_k]["recv_bay"], L.R_BAY, 90); b = at_radius(saddle(S, b_k) + S[b_k]["recv_bay"] + S[b_k]["cart"], L.R_BAY, 120)
+        out[f"bay sets with saddles, {a_k} beside {b_k}, no feet"] = round(vol(a ^ b), 1)
     for pk in ("overseer", "scout"):
         d = at_radius(S[pk]["recv"] + S[pk]["cart"], L.R_DRONE, 90)
-        out[f"drone ({pk}) vs the bays at 30 and 150"] = round(sum(vol(d ^ at_radius(S["scout"]["recv"] + saddle(S, "scout"), L.R_BAY, a_)) for a_ in (30, 150)), 1)
+        out[f"drone ({pk}) vs the Scout bays at 60 and 120"] = round(sum(vol(d ^ at_radius(S["scout"]["recv_bay"] + saddle(S, "scout"), L.R_BAY, a_)) for a_ in (60, 120)), 1)
     fz = dict(box_statics("overseer")[0])["funnel (overseer walls)"]
     out["an Overseer bay at 60 vs the funnel"] = round(vol(at_radius(S["overseer"]["recv"], L.R_BAY, 60) ^ fz), 1)
     out["a Scout bay at 60 vs the funnel"] = round(vol(at_radius(S["scout"]["recv"], L.R_BAY, 60) ^ fz), 1)
-    out["a Scout bay at 60 vs the Scout bay at 30 (their landing feet)"] = round(vol(at_radius(S["scout"]["recv"], L.R_BAY, 60) ^ at_radius(S["scout"]["recv"], L.R_BAY, 30)), 1)
+
     return out
 
 
@@ -255,7 +263,7 @@ def compat(S, fast=False):
         bays = []
         for kind, angs in BAYS.items():
             for a_ in angs:
-                bays.append((f"bay {a_} ({kind}) receiver", at_radius(S[kind]["recv"], L.R_BAY, a_), a_, kind))
+                bays.append((f"bay {a_} ({kind}) receiver", at_radius(S[kind]["recv_bay"], L.R_BAY, a_), a_, kind))
                 bays.append((f"bay {a_} ({kind}) saddle", at_radius(saddle(S, kind), L.R_BAY, a_), a_, kind))
                 bays.append((f"bay {a_} ({kind}) cartridge", at_radius(S[kind]["cart"], L.R_BAY, a_), a_, kind))
         drone = [(f"drone receiver ({pk})", at_radius(S[pk]["recv"], L.R_DRONE)), (f"drone cartridge ({pk})", at_radius(S[pk]["cart"], L.R_DRONE))]
@@ -273,7 +281,7 @@ def compat(S, fast=False):
             test(f"{pk}: head A carrying at the drone, s {s:g}", P, st_nc + drone[:1]); internal(f"{pk}: A carrying at the drone s {s:g}", P)
         P = posed(G["grip"], 90.0, L.S_DRONE, 0, [("B", held)]); test(f"{pk}: head A gripped at the drone", P, st_nc + [drone[0], (drone[1][0], at_radius(S[pk]["held"], L.R_DRONE))])
         # 3. head A at one bay of this pack's kind, and at the bays next to the drone
-        for a_ in ([0, -60, -180] if pk == "overseer" else [30, -90, -210]):
+        for a_ in ([0, -60, -180] if pk == "overseer" else [30, 60, 120, -90]):
             others = box_s + fixed + [(n_, m) for n_, m, aa, _ in bays if aa != a_] + drone
             own = [(n_, m) for n_, m, aa, _ in bays if aa == a_]
             for s in np.arange(0, L.S_BAY + 0.01, step):
@@ -294,9 +302,11 @@ def compat(S, fast=False):
             if bb_hit(m, sm):
                 v = vol(m ^ sm)
                 if v > 0.5: ringhits[f"{nm_} | {sk}"] = round(v, 1)
-    hits = [dict(pair=k, mm3=v, worst_at=lab) for k, (v, lab) in sorted(worst.items(), key=lambda kv: -kv[1][0]) if "box_stand" not in k]
+    lane = [dict(pair=k, mm3=v, worst_at=lab) for k, (v, lab) in sorted(worst.items(), key=lambda kv: -kv[1][0]) if "funnel" in k and k.split(" | ")[0][:-2] in ("carriage", "lift")]
+    hits = [dict(pair=k, mm3=v, worst_at=lab) for k, (v, lab) in sorted(worst.items(), key=lambda kv: -kv[1][0]) if "box_stand" not in k and not ("funnel" in k and k.split(" | ")[0][:-2] in ("carriage", "lift"))]
     stand = [dict(pair=k, mm3=v, worst_at=lab) for k, (v, lab) in sorted(worst.items(), key=lambda kv: -kv[1][0]) if "box_stand" in k]
-    return dict(states=n, overlaps=hits, zero=not hits, ring_vs_box=ringhits, arm_vs_stand=stand, not_watertight_not_checked=sorted(skipped),
+    return dict(states=n, overlaps=hits, zero=not hits, ring_vs_box=ringhits, arm_vs_stand=stand, head_vs_funnel_at_the_drone=lane,
+                funnel_note="funnel v5 (9edf922) put a cross arm at W Z 153.3 over |X| <= 62, Y 54..79: the head's lane at the drone (v8 rises to 159.8 there; funnel v4 left 162 / 176). Asked of the funnel: nothing under Z 161.5 over X -28..116, Y 58..79", not_watertight_not_checked=sorted(skipped),
                 stand_note="the stand in systems/box.assembly.json is the built demo v1's (mast, keel, kb, toe, bars), drawn for v4's 8 bays at R 100; whatever it meets here is a box-structure change, not an arm one")
 
 
@@ -343,11 +353,16 @@ def loads_report():
             seats, nut = L.lift_reactions(F, P, s)
             out.append(dict(case=nm, cls=cls, F_N=[round(float(v), 1) for v in F], at=[round(float(v), 1) for v in P], s=s,
                             bearing_N=[round(float(np.linalg.norm(f_)), 1) for _, f_ in seats], nut_N=round(float(nut[1][2]), 1)))
+    for r, (nm, cls, F, P, s) in zip(out, [c for pk in ("overseer", "scout") for c in L.cases(pk)]):
+        wl, hz, ax = L.wheel_loads(F, P, s); r["wheel_hertz_index"] = hz; r["wheel_625zz_axial_index"] = ax
+    wheels = dict(swap=dict(hertz=max(r["wheel_hertz_index"] for r in out if r["cls"] == "flight"), axial_625zz=max(r["wheel_625zz_axial_index"] for r in out if r["cls"] == "flight")),
+                  misuse=dict(hertz=max(r["wheel_hertz_index"] for r in out), axial_625zz=max(r["wheel_625zz_axial_index"] for r in out)),
+                  model="v7's joint indices (parts/box_arm/ref/swap_system.py: flank Hertz over 1.67 x 55 MPa with 10 N eccentric preload, 625ZZ axial over C0 670 N) on v8's statics: three wheels, each a force across and one along the axle; v7's own frame (beams + contact springs) is not rerun for v8's geometry")
     wb = max(max(r["bearing_N"]) for r in out if r["cls"] == "flight"); wm = max(max(r["bearing_N"]) for r in out)
-    return dict(cases=out, lm6uu=dict(worst_swap_N=wb, worst_misuse_N=wm, static_rating_N=265.0, index_swap=round(wb / 265.0, 2), index_misuse=round(wm / 265.0, 2)),
+    return dict(cases=out, wheels=wheels, lm6uu=dict(worst_swap_N=wb, worst_misuse_N=wm, static_rating_N=265.0, index_swap=round(wb / 265.0, 2), index_misuse=round(wm / 265.0, 2)),
                 rule="the screw pushes over 30 N only in the last 8 mm of an insert, where the receiver's guides hold the cartridge's pitch; a jam at the plug end before that stops at 30 N (0.4 N m / deg x lever, inside the float)",
-                missing=["a stall of the axle motor against a jammed head (needs the ring belt's tooth shear, E)", "a dropped pack onto a parked head (v7: 50 N, not rerun)",
-                         "the rail and V wheels at the new lever: v7's frame model is in the old repo, not rerun here (hand: wheel pair 9.5 N m / 50 mm = 190 N on two 625ZZ, static 660 N each)"])
+                from_v7="case list and forces from parts/box_arm/ref (arm_v7_system.json, swap_system.py): insert / pull in the guides and free, stall into a jam (here the float limit), axle stall with the head held in a bay, dropped pack 50 mm, handling 3 g down + 2 g side, hand 50 N on a rail tip (hub setup)",
+                missing=["power cut with a head out: not a case any more (the 2 mm screw holds; v7's worst was 2.80 on the 625ZZ)", "the ring belt's tooth shear at the axle stall (E)", "v7's frame model itself is not rerun for v8's geometry: rail bending and hub turn under load are the engine's and hand numbers"])
 
 
 # ------------------------------------------------------------------ print check
@@ -373,14 +388,17 @@ PRINTED = {  # part folder -> (source key or callable, material, print pose note
     "paddle": (None, "PCTG", "flat", 2),
     "pads": (None, "TPU", "flat, 2.0 thick", 16),
     "stub": (None, "PCTG", "flange down", 1), "post": (None, "PCTG", "flange down", 1), "detent_arm": (None, "PCTG", "flat", 1),
-    "saddle_overseer": (None, "PCTG", "top down", 4), "saddle_scout": (None, "PCTG", "top down", 5), "link": (None, "PCTG", "flat", 16)}
+    "saddle_overseer": (None, "PCTG", "flat", 4), "saddle_scout": (None, "PCTG", "flat", 7), "link": (None, "PCTG", "flat", 20)}
 
 
 def main():
     fast = "--fast" in sys.argv
     out_dir = os.path.join(HERE, "view"); os.makedirs(out_dir, exist_ok=True)
     S = sets(); H = head_parts("grip"); FX = fixed_parts()
-    res = dict(version="arm v8 (13 Nov 2026)", numbers=numbers(), loads=loads_report(), ring=ring(S))
+    old = json.load(open(os.path.join(HERE, "result.json"))) if os.path.exists(os.path.join(HERE, "result.json")) else {}
+    res = dict(version="arm v8 (13 Nov 2026)", numbers=numbers(), loads=loads_report(), ring=ring(S), bay_mount=bay_mount(S))
+    for k in ("audit_smoke", "solid_check"):
+        if k in old: res[k] = old[k]
     print("ring", res["ring"])
     # ---- printed pieces
     pr = {}
@@ -400,16 +418,31 @@ def main():
     res["bought"] = BOUGHT
     res["compat"] = compat(S, fast)
     print("compat states", res["compat"]["states"], "overlaps", len(res["compat"]["overlaps"]))
-    print("ring vs box", res["compat"]["ring_vs_box"]); print("arm vs stand", res["compat"]["arm_vs_stand"])
+    print("ring vs box", res["compat"]["ring_vs_box"]); print("arm vs stand", res["compat"]["arm_vs_stand"]); print("head vs funnel lane", res["compat"]["head_vs_funnel_at_the_drone"])
     for h in res["compat"]["overlaps"][:40]: print("  ", h)
     write_assembly(res, S, H, FX, out_dir)
     json.dump(res, open(os.path.join(HERE, "result.json"), "w"), indent=1)
 
 
+def bay_mount(S):
+    """what a bay saddle needs from a receiver: for the latch worker. A bay's receiver is the drone's receiver without landing feet, hung by its own mount bolts."""
+    out = {}
+    for pk in ("overseer", "scout"):
+        mp = S[pk]["mount"]; m = dict(overseer=0.766, scout=0.222)[pk]
+        out[pk] = dict(face="the receiver's mount plane (its top, %.1f above its bottom), flat over a 12 mm band inside the bolt pattern" % max(p[2] for p in mp),
+                       bolts=[[round(p[0], 2), round(p[1] - L.Y_C, 2)] for p in mp], bolts_frame="x across, along the pack from the tab line; the receiver's own r['MOUNT']",
+                       bolt="the same screw and insert the drone uses (M3 assumed, o 3.4 clearance in the saddle)", no_feet=True,
+                       loads_N=dict(insert_push=L.F_LIMIT, pull_out=round(57.0 + 9.81 * m, 1), across_at_the_mouth=43.5, pack_weight_any_direction=round(9.81 * m, 1)),
+                       per_bolt_N=round(L.F_LIMIT / len(mp) * 1.5, 1), note="the push limit is 118 N (v7: 74): the receiver takes it on its mount bolts in a bay exactly as on the drone")
+    out["asks"] = ["a receiver variant without landing feet for the 7 Scout bays (neighbouring Scout bays at 30 deg clear by under 1 mm3 at R 129 only without them)",
+                   "the mount bolts reachable from above with the saddle's 4 mm plate on (head counterbores open upward)", "nothing of the receiver below its bottom plane (the head's pilots and blades pass 0.3 from it)"]
+    return out
+
+
 def link_bar(S):
     """a straight bar between two neighbouring saddles' ears (Overseer and Scout ears are at different radii and stations: one bar length per joint kind is the
     ring's own detail; this is the Overseer-to-Overseer chord at the top ears, the longest)"""
-    r = L.R_BAY + S["scout"]["top"] - 6.0; c = 2 * r * math.sin(math.radians(15.0))
+    r = L.R_BAY + max(p[2] for p in S["scout"]["mount"]) + 2.0; c = 2 * r * math.sin(math.radians(15.0))
     return U(box(-c / 2 - 7, c / 2 + 7, 0, 4.0, -7, 7)) - cyl("y", -c / 2, 0, 2.75, -1, 5) - cyl("y", c / 2, 0, 2.75, -1, 5)
 
 
@@ -420,8 +453,8 @@ BOUGHT = [
     dict(part="grab servo", spec="DS3218 20 kg cm (on hand); MG995 9.2 (ordered) also clears the cam", n=2, url=A + "DS3218-Digital-Servo-Torque-Waterproof/dp/B07TKTQ2NZ", check="take the 180 deg version"),
     dict(part="lead screw + nut", spec="Tr8 x 2 (2 mm lead, one start), 200 long, cut to 160, with its brass flange nut: the catch's screw", n=2, url=A + "YEJMKJ-200mm-Tr8x2-Screw-Brass/dp/B0GZZCF2XN", check="2 in the pack"),
     dict(part="coupler", spec="rigid 5 to 8 mm, L25 x D14", n=2, url=A + "uxcell-Coupling-L25xD14-Coupler-Connector/dp/B07P6X8X7Y"),
-    dict(part="thrust bearing", spec="F8-16M, one each side of the thrust wall", n=4, url=A + "Metal-Thrust-Ball-Roller-Bearing/dp/B0177ADHDW"),
-    dict(part="screw collar", spec="8 mm set screw collar, 14 x 7", n=4, url=A + "uxcell-Collars-Landing-Stopper-Collar/dp/B0CQ2S44S4"),
+    dict(part="thrust bearing", spec="F8-16M, one each side of each screw's thrust wall", n=4, url=A + "Metal-Thrust-Ball-Roller-Bearing/dp/B0177ADHDW"),
+    dict(part="screw collar", spec="8 mm lock ring, 13 x 5, outside the outer bearing (the coupler bears on the inner one)", n=2, url=A + "clp/B0D17CLMJM"),
     dict(part="lift bearing", spec="LM6UU 6 x 12 x 19, six per head", n=12, url=A + "uxcell-LM6UU-Linear-Bearings-Length/dp/B07H95CWTX"),
     dict(part="lift rod", spec="o 6 x 200 hardened chrome shaft, cut to 120, three per head", n=6, url=A + "SUOFEILAIMU-Linear-L200mm-Chrome-Plated/dp/B09KGBCRKR"),
     dict(part="wheel bearing", spec="625ZZ, two per V wheel", n=12, url=A + "Double-Bearings-5x16x5mm-0-2x0-63x0-2-BlueStars/dp/B09XT9TKY8"),
@@ -470,7 +503,7 @@ def write_assembly(res, S, H, FX, out_dir):
                 dict(stage=stage, head=hd, blade=(1 if k == "blade_p" else -1 if k == "blade_n" else 0) * (1 if hd == "A" else -1)), version="setup, not run" if kind == "run" else "arm v8 (13 Nov)")
     for kind, angs in BAYS.items():
         for a_ in angs:
-            add(f"box_arm8_bay_{a_}_recv".replace("-", "m"), f"bay {a_}: {kind} receiver (latch v7)", at_radius(S[kind]["recv"], L.R_BAY, a_), "bays", COL["bay"], "protected", "PCTG", opacity=0.55)
+            add(f"box_arm8_bay_{a_}_recv".replace("-", "m"), f"bay {a_}: {kind} receiver (latch v7)", at_radius(S[kind]["recv_bay"], L.R_BAY, a_), "bays", COL["bay"], "protected", "PCTG", opacity=0.55)
             add(f"box_arm8_bay_{a_}_saddle".replace("-", "m"), f"bay {a_}: saddle", at_radius(saddle(S, kind), L.R_BAY, a_), "bays", "#6f7c91", "structure", "PCTG")
             add(f"box_arm8_bay_{a_}_cart".replace("-", "m"), f"bay {a_}: {kind} cartridge", at_radius(S[kind]["cart"], L.R_BAY, a_), "packs", COL["pack"], "protected", None, dict(bay=a_))
     add("box_arm8_drone_recv", "drone seat: Overseer receiver", at_radius(S["overseer"]["recv"], L.R_DRONE), "drone seat", COL["bay"], "protected", "PCTG", opacity=0.45)

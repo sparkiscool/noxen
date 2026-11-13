@@ -2,4 +2,4 @@
 import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from box_arm8_setups import carriage as setup   # noqa: F401  (setup(h) -> Part)
-SPEC = dict(h=1.5, gen_cm3=22.0, max_worst=0.5)
+SPEC = dict(h=1.6, gen_cm3=22.0, max_worst=0.5)

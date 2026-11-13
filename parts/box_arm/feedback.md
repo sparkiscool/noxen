@@ -14,11 +14,9 @@
 - Clear of the funnel on the whole swap path, both packs (parts/latch7/make.py `funnel_fit`), and of every bay on the ring (systems/box.assembly.json).
 
 ## Arm worker (13 Nov), its reading, not Spark's words
-- Arm v8 is drawn in parts/box_arm8/make.py (shared geometry parts/box_arm8_lib.py, setups parts/box_arm8_setups.py), system file systems/swap_arm.assembly.json, numbers parts/box_arm8/result.json. The v7 scripts repo (jy202108g-bot/repo1) could not be added to the session (refused): v8 is built from the v7 meshes and dimensions.md, not from the v7 scripts.
-- State: swap cycle 502 states, both packs, 0 overlaps. Not ready to print: the hub, carriage and lift setups fail the setup audit (result.json audit_smoke) and two drawn pieces fail the solid check (solid_check).
-- Open, not the arm's to decide: the plug is at the pack's far end from the rail (latch v7 to_seat: lead end = nose); the 60 / 120 deg bays; the stand's keel under the -90 deg bay; the receivers have no mounting features for a bay; a hold-down in the funnel for the 118 N push limit (v7: 74).
-
-## Design chat, 13 Nov, on the arm worker's first report (v8 drawn, 1e4e329)
+- Arm v8 is drawn in parts/box_arm8/make.py (shared geometry parts/box_arm8_lib.py, setups parts/box_arm8_setups.py), system file systems/swap_arm.assembly.json, numbers parts/box_arm8/result.json.
+- State after the second pass: swap cycle 551 states, both packs, against the latch at 1c5f9a1: 0 overlaps. All 13 drawn prints pass the solid check. Hub setup passes its audit. Carriage and lift each fail one audit check (room filled solid, result.json audit_smoke): not ready to run.
+- Open across streams: funnel v5's tail cross arm (Z 153.3 over |X| <= 62, Y 54..79) is in the head's lane at the drone (result.json compat.funnel_note); the plug at the pack's far end from the rail; the stand's keel under the -90 deg bay; what a bay saddle needs of a receiver is result.json bay_mount.
 - The v7 system pass's loads and scripts are now in parts/box_arm/ref/ (the repo could not be added from the worker): the rail, V-wheel and hub frame loads come from arm_v7_system.json, not hand numbers; the missing cases (axle stall, dropped pack, indexing) are in swap_system.py.
 - Bay receivers carry no landing feet (the feet are for the drone's receiver in the funnel). With that, the two slots beside the drone (60 and 120 deg) take Scout bays: 11 bays, every slot but the drone's (Spark 8 Nov: fill the wheel without getting in the way of the landing), at least 4 of them Overseer.
 - A screw that takes 118 N gets a thrust bearing, not the stepper's own bearings.
