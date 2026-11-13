@@ -326,10 +326,17 @@ def compat(S, fast=False):
 
 
 def funnel_keepout():
-    """(x0, x1, y0, y1, z0, z1) in W: where nothing of the funnel may be, for tools/box_check.py. The lane the funnel already keeps (below W Z 161.5 across the box), from the hub
-    plate's face: V rail (top 154), wheels, spine and carriage (158.3), screw (145). Beyond W Y 79 the head is narrower than one box says and is checked as CAD (compat()):
-    the yoke (X -26.5..27.6, Y 80..112) and its plate and arm (X 27.5..66, Y 71.5..112) top out at 160.3 with the over-travel."""
-    return (-116.0, 116.0, 54.0, 79.0, -1000.0, 161.5)
+    """(x0, x1, y0, y1, z0, z1) in W: where nothing of the funnel may be, for tools/box_check.py. The head standing at the drone slot, one-sided as it is
+    (measured on the posed CAD with the over-travel: everything of it over W Z 140 is inside X -33.5..66.7): V rail (top 154), wheels, spine and carriage (158.3),
+    screw (145), from the hub plate's face. Beyond W Y 79 the head is narrower still and is checked as CAD (compat()): the yoke (X -26.5..27.6, Y 80..112) and its
+    plate and arm (X 27.5..66, Y 71.5..112) top out at 160.3. The turning arm's sweep is funnel_sweep(), not this box."""
+    return (-36.0, 69.0, 54.0, 79.0, -1000.0, 161.5)
+
+
+def funnel_sweep():
+    """[(y0, y1, r)]: the turning arm at park, radius about the axle by band along it (measured on the posed CAD, + 0.5): the screw's top and the V rail's
+    tip in the first two, the head stepper's corner and a carried Overseer in the third, the booms and grab unit beyond"""
+    return [(38.0, 54.0, 155.0), (54.0, 68.0, 158.6), (68.0, 100.0, 123.0), (100.0, 260.0, 123.0)]
 
 
 # ------------------------------------------------------------------ numbers the head must meet (E unless tagged)
