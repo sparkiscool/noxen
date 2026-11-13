@@ -493,6 +493,12 @@ def frame_check(core_g, write=True):
                 if o is None or v["axial"] > o["axial"] or v["side"] > o["side"]:
                     nl[k][nm] = dict(axial=max(v["axial"], o["axial"] if o else 0), side=max(v["side"], o["side"] if o else 0), N=v["N"], case=v["case"], tag="F")
     out["node_loads"] = nl                                                          # write=False (13 Nov): a frame variant's own cage, in memory only
+    rods = {}                                                                       # per rod: the worse of the two runs (L, Pcr with the 3.0 rod, compression, tension)
+    for r in (rec, rh):
+        for k, v in r["rods"].items():
+            o = rods.setdefault(k, dict(L=v["L"], Pcr=v["Pcr"], compression=0.0, tension=0.0, moment=0.0))
+            o["compression"] = max(o["compression"], v["compression"]); o["tension"] = max(o["tension"], v["tension"]); o["moment"] = max(o["moment"], v["moment"])
+    out["rods"] = rods
     if not write:
         return out
     json.dump(dict(note="Scout v4 frame model (tools/scout_v4_shape.py frame_check): per node and member the worse of the standard cases and the head-first crash", node_loads=nl),

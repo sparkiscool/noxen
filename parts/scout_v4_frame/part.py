@@ -38,7 +38,7 @@ import numpy as np, trimesh
 from topo import Part
 from topo.part import man
 from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of, socket_cases, socket_bodies, disc_cuts, region_top, region_bot,
-                                      check_collars, rigid_split, SockDown, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
+                                      check_collars, rigid_split, SockDown, SockDown6, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
                                       M25_INS, BOSS_R, DIRS14, FLIGHT)
 
 SPEC = dict(h=2.0, gen_cm3=100.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
@@ -63,6 +63,7 @@ POD_Z0 = DZ1 - 12.0                                 # 12 Nov (the design chat: <
 ARM_Z0 = POD_Z0 = DZ1 - 16.0                        # 13 Nov (variant vb of the round va / vb / vc): a flat 16 deep band, root to pod: 159.0 g, solid PASS, worst 0.59
                                                    # (BS0 compression across), every motor case <= 0.44, the engine's hold kept; the 12 band (va) 0.81 and the haunch at
                                                    # gen 130 (vc) 0.46 at 196 g. Was a haunch to z 6 at the root (0.83 across where its bottom chord met the body)
+END_NODES, TUBE_NODES = ("DN", "BN", "DT", "BT"), ()   # the frame's end sockets; those holding a 6 mm tube (6.2 bore, units_lib.SockDown6)
 REC_SUPPORT = "insert"                              # 13 Nov round 5 (insert at 170 / 185 / 200: 246.7 / 265.5 / 284.2 g, 0.306 / 0.308 / 0.281)
                                                    # the battery bolts' support: "face" the boss's clamped bottom 1.5; "insert" with the insert's 6 mm
                                                    # bore lining (13 Nov: BT-TB's floor sits 3.6 over the face region's top, by the tail boss)
@@ -228,14 +229,14 @@ def bodies():
     flow_reg = box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6)   # the whole land
     # ---- the 8 rod sockets (crowns down: the print's up)
     side = [s for k in ("DS0", "BS0", "DS1", "BS1") for s in socks_of(k, cls=SockDown)]
-    ends = [s for k in ("DN", "BN", "DT", "BT") for s in socks_of(k, cls=SockDown)]
+    ends = [s for k in END_NODES for s in socks_of(k, cls=(SockDown6 if k in TUBE_NODES else SockDown))]
     socks = side + ends
     d, c = socket_bodies(side, lambda s: np.array([1.0, 0.0, 0.0]))                      # ports out of the lugs along x (9 Nov: out the side they cut the crown, down in print)
     drawn += d; cuts += c
-    d, c = socket_bodies(ends, lambda s: np.array([0.0, 1.0 if s.c[2] > 10 else -1.0, 0.0]))
+    d, c = socket_bodies(ends, lambda s: np.array([0.0, (np.sign(s.c[1]) if abs(s.c[1]) > 1.0 else (1.0 if s.c[2] > 10 else -1.0)), 0.0]))   # off the centre line: out its own side
     drawn += d; cuts += c
     from parts.scout_units_lib import BORE_R as _BR, WALL as _W
-    env += [along(s.pt(-8.0), s.pt(s.t_mouth), _BR + _W + 5.0) for s in ends]       # room round each end socket and back into the body
+    env += [along(s.pt(-8.0), s.pt(s.t_mouth), getattr(s, "R", _BR) + _W + 5.0) for s in ends]       # room round each end socket and back into the body
     env += [along(s.pt(-8.0), s.pt(s.t_mouth), _BR + _W + 5.0) ^ side_clip for s in side]   # and round each side socket (DS in the deck, BS in the nose block)
     env += [along(s.pt(-8.0), np.array([s.c[0] - np.sign(s.c[0]) * 25.0, 0.0, 10.0]), 7.0) for s in ends]
     env = U(env) ^ box(-S.BED, S.BED, -S.BED, S.BED, -60.0, DZ1) ^ funnel_room()     # the A1 mini's 180; nothing below the walls-in funnel's line
