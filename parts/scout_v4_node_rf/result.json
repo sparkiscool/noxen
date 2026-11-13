@@ -9,6 +9,8 @@
   "eroded_volumes_mm3": [
    385.1
   ],
+  "sealed_voids": [],
+  "inner_shells": [],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
@@ -37,7 +39,7 @@
     ]
    },
    {
-    "case": "frame RF-RM side 12.0 N",
+    "case": "frame RF-RM side 12.1 N",
     "cls": "crash",
     "inlayer": 0.019,
     "across": 0.007,
@@ -71,7 +73,7 @@
  "mass_g": 1.64,
  "watertight": true,
  "export": {
-  "faces_in": 21476,
+  "faces_in": 21498,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -81,7 +83,7 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 21476,
+  "faces": 21498,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -118,9 +120,9 @@
  },
  "memory_build": [
   {
-   "estimate_gb": 0.48,
+   "estimate_gb": 0.49,
    "parts": {
-    "held": 0.3,
+    "held": 0.31,
     "gate": 0.01,
     "mesh": 0.16
    },
@@ -135,9 +137,9 @@
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 0.32,
+   "estimate_gb": 0.33,
    "parts": {
-    "held": 0.3,
+    "held": 0.31,
     "gate": 0.01,
     "mesh": 0.0
    },
@@ -154,7 +156,7 @@
  ],
  "stl": "scout_v4_node_rf.stl",
  "view_stl": "scout_v4_node_rf_view.stl",
- "view_faces": 21476,
+ "view_faces": 21498,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -205,6 +207,17 @@
    "backend": "auto",
    "early_beta": 4,
    "early_k": 3.0,
+   "nominal_hold": true,
+   "hold_beta": 4.0,
+   "hold_proj_beta": 32.0,
+   "hold_tol": 0.05,
+   "hold_eroded": true,
+   "hold_stage": 50,
+   "no_cavity": true,
+   "cavity_ratio": 5.0,
+   "cavity_ks": 0.0001,
+   "cavity_p": 8.0,
+   "cavity_on": 0.5,
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
    "mem_limit_gb": 14.0,
@@ -228,8 +241,39 @@
   "n_real": 3,
   "n_ties": 0,
   "backend": "direct",
-  "iterations": 115,
-  "stopped": "grey"
+  "iterations": 130,
+  "stopped": "grey",
+  "checks": [
+   {
+    "it": 10,
+    "beta": 4.0,
+    "worst": 0.005,
+    "worst_case": "frame RF-RM side 12.1 N"
+   },
+   {
+    "it": 45,
+    "beta": 8.0,
+    "worst": 0.005,
+    "worst_case": "frame RF-RM side 12.1 N"
+   },
+   {
+    "it": 80,
+    "beta": 16.0,
+    "worst": 0.005,
+    "worst_case": "frame RF-RM side 12.1 N"
+   }
+  ],
+  "hold": {
+   "started_it": 10,
+   "beta": 4.0,
+   "index": 0.005
+  },
+  "cavity": {
+   "last": 1.5952369879576522,
+   "ratio": 5.0,
+   "T0": 13.463925197105542,
+   "row": false
+  }
  },
  "grid": {
   "name": "scout_v4_node_rf",
@@ -249,18 +293,18 @@
   "drawn": 1318,
   "cases": [
    "frame RF-RM axial 8 N (pull-out)",
-   "frame RF-RM side 12.0 N",
+   "frame RF-RM side 12.1 N",
    "crash 35 g through the longest rod RF-RM (130 mm), axial + side"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 11.3,
- "layout_s": 88,
- "peak_gb": 0.56524,
+ "build_s": 8.2,
+ "layout_s": 208,
+ "peak_gb": 0.578908,
  "memory": {
-  "estimate_gb": 0.81,
+  "estimate_gb": 0.82,
   "parts": {
    "held": 0.39,
    "factor": 0.16,
@@ -290,7 +334,67 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 0.54
+  "peak_it1_gb": 0.55
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "frame RF-RM axial 8 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.0,
+    "across": 0.0,
+    "at": [
+     119.5,
+     0.5,
+     65.5
+    ]
+   },
+   {
+    "case": "frame RF-RM side 12.1 N",
+    "cls": "crash",
+    "inlayer": 0.005,
+    "across": 0.004,
+    "at": [
+     122.5,
+     -0.5,
+     65.5
+    ]
+   },
+   {
+    "case": "crash 35 g through the longest rod RF-RM (130 mm), axial + side",
+    "cls": "crash",
+    "inlayer": 0.005,
+    "across": 0.004,
+    "at": [
+     122.5,
+     0.5,
+     65.5
+    ]
+   }
+  ],
+  "worst": 0.005,
+  "worst_case": "frame RF-RM side 12.1 N",
+  "worst_at": [
+   122.5,
+   -0.5,
+   65.5
+  ],
+  "ok": true,
+  "beta": 4.0,
+  "iteration": 10,
+  "max_worst": 0.3,
+  "k": 3.0
+ },
+ "field": {
+  "worst": 0.005,
+  "worst_case": "frame RF-RM side 12.1 N",
+  "worst_at": [
+   122.5,
+   -0.5,
+   65.5
+  ],
+  "beta": 32.0,
+  "iteration": 130
  },
  "gen_cm3": 0.3,
  "h": 1.0,
@@ -333,10 +437,10 @@
   "fails": [],
   "room_full": {
    "worst": 0.003,
-   "worst_case": "frame RF-RM side 12.0 N",
+   "worst_case": "frame RF-RM side 12.1 N",
    "worst_at": [
     126.5,
-    4.5,
+    -4.5,
     60.5
    ],
    "budget_share": 0.045,
@@ -344,69 +448,20 @@
    "max_worst": 0.3
   }
  },
- "early": {
-  "rows": [
-   {
-    "case": "frame RF-RM axial 8 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.0,
-    "across": 0.0,
-    "at": [
-     119.5,
-     -0.5,
-     65.5
-    ]
-   },
-   {
-    "case": "frame RF-RM side 12.0 N",
-    "cls": "crash",
-    "inlayer": 0.005,
-    "across": 0.004,
-    "at": [
-     122.5,
-     0.5,
-     65.5
-    ]
-   },
-   {
-    "case": "crash 35 g through the longest rod RF-RM (130 mm), axial + side",
-    "cls": "crash",
-    "inlayer": 0.005,
-    "across": 0.004,
-    "at": [
-     122.5,
-     0.5,
-     65.5
-    ]
-   }
-  ],
-  "worst": 0.005,
-  "worst_case": "frame RF-RM side 12.0 N",
-  "worst_at": [
-   122.5,
-   0.5,
-   65.5
-  ],
-  "ok": true,
-  "beta": 4.0,
-  "iteration": 10,
-  "max_worst": 0.3,
-  "k": 3.0
- },
  "baseline": null,
- "total_s": 100,
+ "total_s": 216,
  "part_sha": "26f6d0a0b3ef",
- "lib_sha": "183b1c1fc75e",
- "setup_sha": "d2783a3095fd2f04",
+ "lib_sha": "9cf07e0a66f6",
+ "setup_sha": "d3c7f0b04a21584c",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_rf.stl",
-  "sha256": "dfad444a74a019071148081e4402f25f10d684745970430a04988ddd80ef973f",
-  "bytes": 1073884,
-  "faces": 21476,
-  "view_faces": 21476,
-  "view_sha256": "dfad444a74a019071148081e4402f25f10d684745970430a04988ddd80ef973f",
-  "at": "2026-11-12 10:20"
+  "sha256": "463b207ae285f957db1f95c9e0f76d2a93ba9e3d54bbe527d0784eba65d6ade3",
+  "bytes": 1074984,
+  "faces": 21498,
+  "view_faces": 21498,
+  "view_sha256": "463b207ae285f957db1f95c9e0f76d2a93ba9e3d54bbe527d0784eba65d6ade3",
+  "at": "2026-11-13 04:17"
  }
 }

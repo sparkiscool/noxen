@@ -39,7 +39,7 @@ from parts.socket_inject import injectable_socket_cuts
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.cage.json")))
-SPEC = dict(h=2.0, gen_cm3=80.0, max_worst=0.3, settings=dict(near_sym=True))     # v12: 80 (compact: every socket within 70 of the L2 base, no reach up to the bar); v10 (8 Nov): the node rules (limit 0.3, budget x 1.4: 60 -> 84); 9 Nov: 84 gave 0.305 (core tie tension 425 N) -> 100      # v8 (30 Oct 11 pm): L2 keys removed (Spark); v9 (1 Nov): L2 bolts a diamond, fully mirrored   # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB
+SPEC = dict(h=2.0, gen_cm3=110.0, max_worst=0.3, settings=dict(near_sym=True))     # v12: 80 FAILED 0.411 across the layers (tube 17-18 compression 229 N, under the 15-17 collar at (352, 41, 51): the lower socket's push goes up a short strut to the upper socket on its side, across the layers, in a 4 mm band of room) -> the room round the tube collars opened 4 -> 12 and 110 (index ~ V^-1.25); v10 (8 Nov): the node rules (limit 0.3, budget x 1.4: 60 -> 84); 9 Nov: 84 gave 0.305 (core tie tension 425 N) -> 100      # v8 (30 Oct 11 pm): L2 keys removed (Spark); v9 (1 Nov): L2 bolts a diamond, fully mirrored   # h 2.5: 184k cells (h 1.5 was 917k and killed the 7 GB
 #   runner); refine once the shape is accepted. near_sym (29 Oct, Spark: the camera arms came out different left and right): the part
 #   mirrors about y but for the L2's key slot, so the design is held symmetric away from it
 
@@ -264,7 +264,7 @@ def bodies():
     cuts.append(fbox(B, A, np.cross(A, dn), -dn, (-60.0, 1.0), (-7.0, 7.0), (-55.0, -32.5)))   # 9 Nov: a notch past the flange (was to -120: with the L2 60 up it cut 120 down through the mount's right side and left members ending at its wall)
     # --- envelope: slab behind the base (O80 x 34), camera blocks behind the boards, a seat round every collar (+4), one hull over all
     slab = along(B - A * 34.0, B, 40.0, 48)                    # v12: 34 deep (46 put the grid over the 300k limit)
-    seats = [along(s.pt(s.t_floor - 4.0), s.pt(s.t_mouth), s.collar_r + 4.0) for s in S.values()]
+    seats = [along(s.pt(s.t_floor - 4.0), s.pt(s.t_mouth), s.collar_r + (12.0 if s.kind == "tube" else 4.0)) for s in S.values()]   # 13 Nov: 12 round the tube collars (was 4: the strut between a side's two sockets had no room to thicken)
     pts = []
     for m in [slab] + envs_cam + seats:
         pts.append(np.asarray(m.to_mesh().vert_properties)[:, :3])
@@ -272,6 +272,7 @@ def bodies():
     env = U([slab, bridge] + envs_cam + seats)
     # the 180 mm plate: the envelope is clipped to |y| <= 89.9 so the generated part cannot outgrow it (the audit's plate check)
     env = env ^ mf.Manifold.cube([600.0, 2 * 89.9, 400.0]).translate([100.0, -89.9, -100.0])
+    env = env ^ mf.Manifold.cube([267.0, 139.0, 400.0]).translate([100.0, -69.5, -100.0])   # 13 Nov: the wider seats stay inside the 48 x 72 x 80 grid (x <= 367, |y| <= 69.5)
     return U(drawn), U(cuts), env, dict(S=S, cs=cs, bolts=bolts, posts=posts)
 
 

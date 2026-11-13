@@ -19,6 +19,12 @@ class MMA:
         self.d = np.ones(m)
         self.reset()
 
+    def add_rows(self, k=1):
+        """k more constraints from now on (the state is per variable, so the history carries over)"""
+        self.m += k
+        self.c = np.r_[self.c, np.full(k, self.c[0] if len(self.c) else 1000.0)]
+        self.d = np.r_[self.d, np.ones(k)]
+
     def reset(self):
         """forget the history (asymptotes restart wide): call after a continuation step."""
         self.xold1 = None

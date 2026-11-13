@@ -9,6 +9,8 @@
   "eroded_volumes_mm3": [
    761.5
   ],
+  "sealed_voids": [],
+  "inner_shells": [],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
@@ -28,8 +30,8 @@
    {
     "case": "frame RF-R7 axial 19 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.011,
-    "across": 0.009,
+    "inlayer": 0.012,
+    "across": 0.01,
     "at": [
      151.5,
      -99.0,
@@ -37,7 +39,7 @@
     ]
    },
    {
-    "case": "frame RF-R7 side 12.3 N",
+    "case": "frame RF-R7 side 12.5 N",
     "cls": "crash",
     "inlayer": 0.013,
     "across": 0.013,
@@ -49,7 +51,7 @@
    }
   ],
   "worst": 0.013,
-  "worst_case": "frame RF-R7 side 12.3 N",
+  "worst_case": "frame RF-R7 side 12.5 N",
   "worst_at": [
    151.5,
    -91.0,
@@ -197,6 +199,17 @@
    "backend": "auto",
    "early_beta": 4,
    "early_k": 3.0,
+   "nominal_hold": true,
+   "hold_beta": 4.0,
+   "hold_proj_beta": 32.0,
+   "hold_tol": 0.05,
+   "hold_eroded": true,
+   "hold_stage": 50,
+   "no_cavity": true,
+   "cavity_ratio": 5.0,
+   "cavity_ks": 0.0001,
+   "cavity_p": 8.0,
+   "cavity_on": 0.5,
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
    "mem_limit_gb": 14.0,
@@ -219,7 +232,38 @@
   "n_ties": 6,
   "backend": "direct",
   "iterations": 67,
-  "stopped": "grey"
+  "stopped": "grey",
+  "checks": [
+   {
+    "it": 26,
+    "beta": 4.0,
+    "worst": 0.019,
+    "worst_case": "frame RF-R7 side 12.5 N"
+   },
+   {
+    "it": 45,
+    "beta": 8.0,
+    "worst": 0.017,
+    "worst_case": "frame RF-R7 side 12.5 N"
+   },
+   {
+    "it": 57,
+    "beta": 16.0,
+    "worst": 0.016,
+    "worst_case": "frame RF-R7 side 12.5 N"
+   }
+  ],
+  "hold": {
+   "started_it": 26,
+   "beta": 4.0,
+   "index": 0.019
+  },
+  "cavity": {
+   "last": 1.2847756505214452,
+   "ratio": 5.0,
+   "T0": 16.714282783055083,
+   "row": false
+  }
  },
  "grid": {
   "name": "scout_v4_node_r7",
@@ -239,19 +283,19 @@
   "drawn": 1256,
   "cases": [
    "frame RF-R7 axial 19 N (pull-out)",
-   "frame RF-R7 side 12.3 N"
+   "frame RF-R7 side 12.5 N"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 10.3,
- "layout_s": 135,
- "peak_gb": 0.708964,
+ "build_s": 13.0,
+ "layout_s": 260,
+ "peak_gb": 0.716908,
  "memory": {
   "estimate_gb": 0.9,
   "parts": {
-   "held": 0.33,
+   "held": 0.32,
    "factor": 0.24,
    "assembly": 0.11,
    "block": 0.23,
@@ -263,9 +307,9 @@
   "backend": "direct",
   "block": 64,
   "build": {
-   "estimate_gb": 0.43,
+   "estimate_gb": 0.42,
    "parts": {
-    "held": 0.33,
+    "held": 0.32,
     "gate": 0.1,
     "mesh": 0.0
    },
@@ -280,6 +324,55 @@
    "when": "from the envelope"
   },
   "peak_it1_gb": 0.68
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "frame RF-R7 axial 19 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.013,
+    "across": 0.013,
+    "at": [
+     155.5,
+     -93.0,
+     59.8
+    ]
+   },
+   {
+    "case": "frame RF-R7 side 12.5 N",
+    "cls": "crash",
+    "inlayer": 0.017,
+    "across": 0.019,
+    "at": [
+     150.5,
+     -96.0,
+     56.8
+    ]
+   }
+  ],
+  "worst": 0.019,
+  "worst_case": "frame RF-R7 side 12.5 N",
+  "worst_at": [
+   150.5,
+   -96.0,
+   56.8
+  ],
+  "ok": true,
+  "beta": 4.0,
+  "iteration": 26,
+  "max_worst": 0.3,
+  "k": 3.0
+ },
+ "field": {
+  "worst": 0.016,
+  "worst_case": "frame RF-R7 side 12.5 N",
+  "worst_at": [
+   154.5,
+   -90.0,
+   57.8
+  ],
+  "beta": 32.0,
+  "iteration": 67
  },
  "gen_cm3": 0.6,
  "h": 1.0,
@@ -338,7 +431,7 @@
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.004,
+   "worst": 0.005,
    "worst_case": "frame RF-R7 axial 19 N (pull-out)",
    "worst_at": [
     155.5,
@@ -346,53 +439,15 @@
     60.8
    ],
    "budget_share": 0.062,
-   "thinned": 0.06,
+   "thinned": 0.08,
    "max_worst": 0.3
   }
  },
- "early": {
-  "rows": [
-   {
-    "case": "frame RF-R7 axial 19 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.013,
-    "across": 0.012,
-    "at": [
-     155.5,
-     -93.0,
-     59.8
-    ]
-   },
-   {
-    "case": "frame RF-R7 side 12.3 N",
-    "cls": "crash",
-    "inlayer": 0.017,
-    "across": 0.019,
-    "at": [
-     150.5,
-     -96.0,
-     56.8
-    ]
-   }
-  ],
-  "worst": 0.019,
-  "worst_case": "frame RF-R7 side 12.3 N",
-  "worst_at": [
-   150.5,
-   -96.0,
-   56.8
-  ],
-  "ok": true,
-  "beta": 4.0,
-  "iteration": 26,
-  "max_worst": 0.3,
-  "k": 3.0
- },
  "baseline": null,
- "total_s": 146,
+ "total_s": 273,
  "part_sha": "2d8055676d11",
- "lib_sha": "183b1c1fc75e",
- "setup_sha": "2669d78390f01832",
+ "lib_sha": "9cf07e0a66f6",
+ "setup_sha": "e0c66ab98f3fdc3a",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
@@ -402,6 +457,6 @@
   "faces": 26020,
   "view_faces": 26020,
   "view_sha256": "26226625f3720b82bf6558816a76854bfc8466bceb7644b67119c497f1747836",
-  "at": "2026-11-12 10:19"
+  "at": "2026-11-13 04:18"
  }
 }

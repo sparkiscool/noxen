@@ -462,7 +462,7 @@ def cage():
     return trimesh.util.concatenate(rods), trimesh.util.concatenate(nodes)
 
 
-def frame_check(core_g):
+def frame_check(core_g, write=True):
     """the Scout's frame model (tools/scout_cage_loads.py, the standard cases: 35 g crash on the hull face the CG ray leaves through, 14
     directions, landing and rough landing 6 g on the runners) on these tables: the core one rigid body at the origin with the
     sockets printed into the frame and the base and the runner corners stiff to it"""
@@ -492,6 +492,15 @@ def frame_check(core_g):
                 o = nl.setdefault(k, {}).get(nm)
                 if o is None or v["axial"] > o["axial"] or v["side"] > o["side"]:
                     nl[k][nm] = dict(axial=max(v["axial"], o["axial"] if o else 0), side=max(v["side"], o["side"] if o else 0), N=v["N"], case=v["case"], tag="F")
+    out["node_loads"] = nl                                                          # write=False (13 Nov): a frame variant's own cage, in memory only
+    rods = {}                                                                       # per rod: the worse of the two runs (L, Pcr with the 3.0 rod, compression, tension)
+    for r in (rec, rh):
+        for k, v in r["rods"].items():
+            o = rods.setdefault(k, dict(L=v["L"], Pcr=v["Pcr"], compression=0.0, tension=0.0, moment=0.0))
+            o["compression"] = max(o["compression"], v["compression"]); o["tension"] = max(o["tension"], v["tension"]); o["moment"] = max(o["moment"], v["moment"])
+    out["rods"] = rods
+    if not write:
+        return out
     json.dump(dict(note="Scout v4 frame model (tools/scout_v4_shape.py frame_check): per node and member the worse of the standard cases and the head-first crash", node_loads=nl),
               open(os.path.join(ROOT, "systems", "scout_v4.cage_loads.json"), "w"), indent=1)
     hn = int(math.ceil(out["head_first"]["head_N"] / 10.0) * 10)                    # the probe's setups read the head-first load from here (9 Nov: it was 230 by hand, the model gives ~250)
@@ -578,6 +587,28 @@ def write():
     return meshes
 
 
+def setup_mass(pid, default):
+    """a generated part's mass for the frame model from its SETUP, not its latest result (13 Nov, the PROBE stream: with result masses
+    every frame or node result moved cage_loads.json / head_load.json and reran the nodes and the probe behind it): the generated budget
+    (SPEC gen_cm3, read from the part's file or the node lib's BUDGET_CM3) at PCTG's 1.23 g / cm3 plus its drawn mass (result.json
+    drawn_g: fixed by the drawn bodies, so it moves only with the setup). The default until a budget is found."""
+    import re
+    d = os.path.join(ROOT, "parts", pid)
+    gen = None
+    m = re.search(r"gen_cm3\s*=\s*([0-9.]+)", open(os.path.join(d, "part.py")).read()) if os.path.exists(os.path.join(d, "part.py")) else None
+    if m:
+        gen = float(m.group(1))
+    elif pid.startswith("scout_v4_node_"):
+        k = pid[len("scout_v4_node_"):].upper()
+        m = re.search(r'"%s":\s*([0-9.]+)' % k, open(os.path.join(ROOT, "parts", "scout_v4_node_lib.py")).read().split("BUDGET_CM3 = {", 1)[1].split("}", 1)[0])
+        gen = float(m.group(1)) if m else None
+    if gen is None:
+        return default
+    rj = os.path.join(d, "result.json")
+    drawn = json.load(open(rj)).get("drawn_g", 0.0) if os.path.exists(rj) else 0.0
+    return gen * 1.23 + (drawn or 0.0)
+
+
 def entries(meshes):
     fid = lambda nm: f"scout_v4_{nm.replace('box_ctx_scout_', '').replace('scout_', '')}"
     rows = []
@@ -589,7 +620,7 @@ def entries(meshes):
             e["opacity"] = opacity
         rows.append(e)
     fv = abs(meshes["frame"].volume)
-    add("frame", "frame v4, one body: deck, arms, motor pods, side lugs and the base (yokes, nose block, flow pod, tail tray) (generated, parts/scout_v4_frame)", "structure", "frame", "#d9d2c3", (json.load(open(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json"))).get("mass_g") if os.path.exists(os.path.join(ROOT, "parts", "scout_v4_frame", "result.json")) else None) or 190.0, "E",
+    add("frame", "frame v4, one body: deck, arms, motor pods, side lugs and the base (yokes, nose block, flow pod, tail tray) (generated, parts/scout_v4_frame)", "structure", "frame", "#d9d2c3", setup_mass("scout_v4_frame", 190.0), "E",
         f"one print inside |x|, |y| {BED} (the A1 mini's 180), deck-top down on the bed: deck z {DECK_Z0}..{DECK_TOP} and the yokes over the receiver down to its top 9.6, arms to O28 motor pads at (+-{HUB}, +-{HUB}), "
         "the battery mechanism's 4 M3 inserts, the FC's and the Radxa's posts, the XR2's, DRV8833's, UBEC's and flow sensor's lands, the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1), the turret's four insert bosses; the room until the run lands; PCTG", "PCTG", 0.85)
     for k in range(1, 5):
@@ -636,7 +667,7 @@ def entries(meshes):
         f"{len(RODS)} rods, {L / 1000:.2f} m, every one 12 from the swept discs and none over or under a disc: ring at z {ZR:.0f} with flats at {FLAT:.0f} (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)")
     for k in NODE_PARTS:
         rj = os.path.join(ROOT, "parts", f"scout_v4_node_{k.lower()}", "result.json")
-        add(f"node_{k.lower()}", f"cage node {k} (generated, parts/scout_v4_node_{k.lower()})", "structure", "cage", "#eef2f5", 5.0 if not os.path.exists(rj) else json.load(open(rj))["mass_g"], "E",
+        add(f"node_{k.lower()}", f"cage node {k} (generated, parts/scout_v4_node_{k.lower()})", "structure", "cage", "#eef2f5", setup_mass(f"scout_v4_node_{k.lower()}", 5.0), "E",
             "the socket collars of every rod that ends here, the rest generated (parts/scout_v4_node_lib.py); a sphere until the run lands; PCTG", "PCTG", 0.9)
     return rows
 

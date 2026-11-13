@@ -1,9 +1,10 @@
-"""TEMPORARY variant of parts/scout_v4_frame (13 Nov, the design chat: three frame variants per round, the best folded into the frame, these
-folders deleted after). One change from the frame's setup: the arms' room a flat 16 deep band (z 8.5..24.5), root to pod: deeper chords, no haunch."""
-import parts.scout_v4_frame.part as F
+"""TEMPORARY variant of parts/scout_v4_frame (13 Nov round 6, the design chat: both cage lines at once, the lighter frame passing every case
+(< 0.3 both ways, the solid check, the frame model on the frame's own mass) is folded into the frame, the shape tool and the nodes; these
+folders and parts/scout_v4_cage_variant.py deleted after). This one: line "tube" (parts/scout_v4_cage_variant.py) at gen 200.0."""
+import parts.scout_v4_cage_variant as V
 
-F.ARM_Z0 = F.POD_Z0 = F.DZ1 - 16.0
-SPEC = dict(F.SPEC, gen_cm3=100.0)
+F = V.apply("tube", 200.0)
+SPEC = dict(F.SPEC, gen_cm3=200.0)
 
 
 def setup(h):

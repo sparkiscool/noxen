@@ -9,6 +9,8 @@
   "eroded_volumes_mm3": [
    385.4
   ],
+  "sealed_voids": [],
+  "inner_shells": [],
   "necks": [],
   "drawn_not_in_main": [],
   "thin_walls": [],
@@ -26,7 +28,7 @@
  "strength": {
   "rows": [
    {
-    "case": "frame RM-RS0 axial 17 N (pull-out)",
+    "case": "frame RM-RS0 axial 18 N (pull-out)",
     "cls": "crash",
     "inlayer": 0.006,
     "across": 0.001,
@@ -37,9 +39,9 @@
     ]
    },
    {
-    "case": "frame RM-RS0 side 17.1 N",
+    "case": "frame RM-RS0 side 17.3 N",
     "cls": "crash",
-    "inlayer": 0.027,
+    "inlayer": 0.028,
     "across": 0.01,
     "at": [
      -4.5,
@@ -71,7 +73,7 @@
  "mass_g": 1.64,
  "watertight": true,
  "export": {
-  "faces_in": 21472,
+  "faces_in": 21484,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -81,7 +83,7 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 21472,
+  "faces": 21484,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -118,9 +120,9 @@
  },
  "memory_build": [
   {
-   "estimate_gb": 0.5,
+   "estimate_gb": 0.51,
    "parts": {
-    "held": 0.32,
+    "held": 0.33,
     "gate": 0.01,
     "mesh": 0.16
    },
@@ -135,9 +137,9 @@
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 0.34,
+   "estimate_gb": 0.35,
    "parts": {
-    "held": 0.33,
+    "held": 0.34,
     "gate": 0.01,
     "mesh": 0.0
    },
@@ -154,7 +156,7 @@
  ],
  "stl": "scout_v4_node_rs0.stl",
  "view_stl": "scout_v4_node_rs0_view.stl",
- "view_faces": 21472,
+ "view_faces": 21484,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -205,6 +207,17 @@
    "backend": "auto",
    "early_beta": 4,
    "early_k": 3.0,
+   "nominal_hold": true,
+   "hold_beta": 4.0,
+   "hold_proj_beta": 32.0,
+   "hold_tol": 0.05,
+   "hold_eroded": true,
+   "hold_stage": 50,
+   "no_cavity": true,
+   "cavity_ratio": 5.0,
+   "cavity_ks": 0.0001,
+   "cavity_p": 8.0,
+   "cavity_on": 0.5,
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
    "mem_limit_gb": 14.0,
@@ -228,8 +241,39 @@
   "n_real": 3,
   "n_ties": 0,
   "backend": "direct",
-  "iterations": 115,
-  "stopped": "grey"
+  "iterations": 130,
+  "stopped": "grey",
+  "checks": [
+   {
+    "it": 10,
+    "beta": 4.0,
+    "worst": 0.007,
+    "worst_case": "frame RM-RS0 side 17.3 N"
+   },
+   {
+    "it": 45,
+    "beta": 8.0,
+    "worst": 0.007,
+    "worst_case": "frame RM-RS0 side 17.3 N"
+   },
+   {
+    "it": 80,
+    "beta": 16.0,
+    "worst": 0.007,
+    "worst_case": "frame RM-RS0 side 17.3 N"
+   }
+  ],
+  "hold": {
+   "started_it": 10,
+   "beta": 4.0,
+   "index": 0.007
+  },
+  "cavity": {
+   "last": 1.5952373429299156,
+   "ratio": 5.0,
+   "T0": 13.463925197105535,
+   "row": false
+  }
  },
  "grid": {
   "name": "scout_v4_node_rs0",
@@ -248,17 +292,17 @@
   "design": 6660,
   "drawn": 1318,
   "cases": [
-   "frame RM-RS0 axial 17 N (pull-out)",
-   "frame RM-RS0 side 17.1 N",
+   "frame RM-RS0 axial 18 N (pull-out)",
+   "frame RM-RS0 side 17.3 N",
    "crash 35 g through the longest rod RM-RS0 (130 mm), axial + side"
   ],
   "supports": [
    "default"
   ]
  },
- "build_s": 10.1,
- "layout_s": 70,
- "peak_gb": 0.597272,
+ "build_s": 9.2,
+ "layout_s": 163,
+ "peak_gb": 0.60812,
  "memory": {
   "estimate_gb": 0.84,
   "parts": {
@@ -290,7 +334,67 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 0.57
+  "peak_it1_gb": 0.58
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "frame RM-RS0 axial 18 N (pull-out)",
+    "cls": "crash",
+    "inlayer": 0.001,
+    "across": 0.0,
+    "at": [
+     -0.5,
+     119.5,
+     65.5
+    ]
+   },
+   {
+    "case": "frame RM-RS0 side 17.3 N",
+    "cls": "crash",
+    "inlayer": 0.007,
+    "across": 0.006,
+    "at": [
+     -0.5,
+     122.5,
+     65.5
+    ]
+   },
+   {
+    "case": "crash 35 g through the longest rod RM-RS0 (130 mm), axial + side",
+    "cls": "crash",
+    "inlayer": 0.007,
+    "across": 0.006,
+    "at": [
+     -0.5,
+     122.5,
+     65.5
+    ]
+   }
+  ],
+  "worst": 0.007,
+  "worst_case": "frame RM-RS0 side 17.3 N",
+  "worst_at": [
+   -0.5,
+   122.5,
+   65.5
+  ],
+  "ok": true,
+  "beta": 4.0,
+  "iteration": 10,
+  "max_worst": 0.3,
+  "k": 3.0
+ },
+ "field": {
+  "worst": 0.007,
+  "worst_case": "frame RM-RS0 side 17.3 N",
+  "worst_at": [
+   -0.5,
+   122.5,
+   65.5
+  ],
+  "beta": 32.0,
+  "iteration": 130
  },
  "gen_cm3": 0.3,
  "h": 1.0,
@@ -344,69 +448,20 @@
    "max_worst": 0.3
   }
  },
- "early": {
-  "rows": [
-   {
-    "case": "frame RM-RS0 axial 17 N (pull-out)",
-    "cls": "crash",
-    "inlayer": 0.001,
-    "across": 0.0,
-    "at": [
-     -0.5,
-     119.5,
-     65.5
-    ]
-   },
-   {
-    "case": "frame RM-RS0 side 17.1 N",
-    "cls": "crash",
-    "inlayer": 0.007,
-    "across": 0.006,
-    "at": [
-     -0.5,
-     122.5,
-     65.5
-    ]
-   },
-   {
-    "case": "crash 35 g through the longest rod RM-RS0 (130 mm), axial + side",
-    "cls": "crash",
-    "inlayer": 0.007,
-    "across": 0.006,
-    "at": [
-     -0.5,
-     122.5,
-     65.5
-    ]
-   }
-  ],
-  "worst": 0.007,
-  "worst_case": "frame RM-RS0 side 17.1 N",
-  "worst_at": [
-   -0.5,
-   122.5,
-   65.5
-  ],
-  "ok": true,
-  "beta": 4.0,
-  "iteration": 10,
-  "max_worst": 0.3,
-  "k": 3.0
- },
  "baseline": null,
- "total_s": 80,
+ "total_s": 172,
  "part_sha": "653d130aae3c",
- "lib_sha": "183b1c1fc75e",
- "setup_sha": "c93f08f17e098831",
+ "lib_sha": "9cf07e0a66f6",
+ "setup_sha": "2f042ff6e2d412a1",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_rs0.stl",
-  "sha256": "ea181fb8252b84f4b970d3929204474b1056be340205cc0616e2070c1d9a5651",
-  "bytes": 1073684,
-  "faces": 21472,
-  "view_faces": 21472,
-  "view_sha256": "ea181fb8252b84f4b970d3929204474b1056be340205cc0616e2070c1d9a5651",
-  "at": "2026-11-12 10:18"
+  "sha256": "39c827e5a78a38200e08bba4d5fe51097cbc8dcca6985e2d7dc5f1d7885a50a6",
+  "bytes": 1074284,
+  "faces": 21484,
+  "view_faces": 21484,
+  "view_sha256": "39c827e5a78a38200e08bba4d5fe51097cbc8dcca6985e2d7dc5f1d7885a50a6",
+  "at": "2026-11-13 04:21"
  }
 }
