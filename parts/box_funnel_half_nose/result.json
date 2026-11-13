@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   152800.4
+   152794.8
   ],
   "sealed_voids": [],
   "inner_shells": [],
@@ -74,7 +74,7 @@
    {
     "case": "Overseer off centre onto the +y face, at its ear",
     "cls": "flight",
-    "inlayer": 0.544,
+    "inlayer": 0.545,
     "across": 0.385,
     "at": [
      24.9,
@@ -111,7 +111,7 @@
     "across": 0.205,
     "at": [
      55.7,
-     -42.9,
+     42.9,
      -37.0
     ]
    },
@@ -204,7 +204,7 @@
     ]
    }
   ],
-  "worst": 0.544,
+  "worst": 0.545,
   "worst_case": "Overseer off centre onto the +y face, at its ear",
   "worst_at": [
    24.9,
@@ -216,7 +216,7 @@
  "mass_g": 244.86,
  "watertight": true,
  "export": {
-  "faces_in": 295596,
+  "faces_in": 296226,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 1,
@@ -226,23 +226,23 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 295596,
+  "faces": 296226,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 6,
+   "degenerate": 8,
    "folded": 4,
-   "caps_split": 6,
+   "caps_split": 5,
    "caps_left": 0,
    "watertight": true,
-   "faces": 505502,
+   "faces": 505780,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 199068.0,
-  "exact_mm3": 199071.0
+  "volume_mm3": 199067.7,
+  "exact_mm3": 199071.4
  },
  "bodies": {
   "bodies_raw": 3,
@@ -253,7 +253,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 199071.0,
+ "volume_mm3": 199071.4,
  "drawn_g": 72.86,
  "export_cleanup": {
   "pitch": 0.25,
@@ -266,9 +266,9 @@
  },
  "memory_build": [
   {
-   "estimate_gb": 11.75,
+   "estimate_gb": 11.77,
    "parts": {
-    "held": 0.74,
+    "held": 0.77,
     "gate": 6.52,
     "mesh": 4.49
    },
@@ -279,13 +279,13 @@
     176.0,
     83.2
    ],
-   "faces": 802984,
+   "faces": 803212,
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 7.34,
+   "estimate_gb": 7.36,
    "parts": {
-    "held": 0.82,
+    "held": 0.84,
     "gate": 6.52,
     "mesh": 0.0
    },
@@ -415,7 +415,7 @@
    "index": 0.752
   },
   "cavity": {
-   "last": 1.9683419616510558,
+   "last": 1.9870327896142814,
    "ratio": 5.0,
    "T0": 23.131076082108535,
    "row": true
@@ -459,13 +459,13 @@
    "default"
   ]
  },
- "build_s": 406.6,
- "layout_s": 1197,
- "peak_gb": 2.351644,
+ "build_s": 442.0,
+ "layout_s": 1204,
+ "peak_gb": 2.38346,
  "memory": {
-  "estimate_gb": 2.88,
+  "estimate_gb": 2.92,
   "parts": {
-   "held": 0.57,
+   "held": 0.61,
    "factor": 1.15,
    "assembly": 0.33,
    "block": 0.63,
@@ -477,9 +477,9 @@
   "backend": "direct",
   "block": 37,
   "build": {
-   "estimate_gb": 7.09,
+   "estimate_gb": 7.13,
    "parts": {
-    "held": 0.57,
+    "held": 0.61,
     "gate": 6.52,
     "mesh": 0.0
    },
@@ -493,7 +493,7 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 2.14
+  "peak_it1_gb": 2.17
  },
  "early": {
   "rows": [
@@ -889,7 +889,7 @@
   }
  },
  "baseline": null,
- "total_s": 1604,
+ "total_s": 1646,
  "part_sha": "d1f8a8b3ab2d",
  "lib_sha": "d423d150a3f0",
  "setup_sha": "c7d61daaf493e331",
@@ -897,11 +897,11 @@
  "strength_ok": false,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/box_funnel_half_nose.stl",
-  "sha256": "6770bfebeb8025df75d2d7e15d5fb8d0a39d21f3d530b4586bea96447b84f6b4",
-  "bytes": 14779884,
-  "faces": 295596,
+  "sha256": "d9dea2486a9944838ba42e8d43d1a52f6746e99175838137db17b92292185c4c",
+  "bytes": 14811384,
+  "faces": 296226,
   "view_faces": 60000,
-  "view_sha256": "58a7fc89047cee2948d5a637da3f0990b60e457345a8761a2b498ad322415108",
-  "at": "2026-11-13 21:41"
+  "view_sha256": "afaeb20b53c1bb17eef0f54e1f4b1f5920f3293278ebdc2d28d8365b3302a098",
+  "at": "2026-11-13 22:14"
  }
 }
