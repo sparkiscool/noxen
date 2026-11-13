@@ -4,7 +4,7 @@
 "readme_view": "iso",
 "artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
 "machine": "box",
-"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, the swap arm from systems/swap_arm.assembly.json, the stand of the built demo, the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the hold-down (not designed), the electronics. Compatibility between the streams: tools/box_check.py, its result under the viewer.",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, the swap arm from systems/swap_arm.assembly.json, the stand of the built demo with its keel and toe cut back from the arm v8 bays (they FAIL strength as cut: the note under the viewer), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. Compatibility between the streams: tools/box_check.py, its result under the viewer.",
 "cg_ref": null,
 "timeline": "tools/landing_box.py:timeline",
 "parts": [
@@ -86,7 +86,7 @@
 "mass_g": null,
 "tag": "M",
 "owner": "box structure",
-"version": "v6; recut 13 Nov round the arm v8 bay -90 (0.3 cm3 off, 2.5 clear; strength not rechecked)",
+"version": "v6; recut round the arm v8 bay -90: 30.0 of 55.2 cm3 left, 2.5 clear. FAILS strength as cut (the page's stand note): not to print",
 "source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
 "note": "print/box_cradle_keel_v6.stl"
 },
@@ -168,7 +168,7 @@
 "mass_g": null,
 "tag": "M",
 "owner": "box structure",
-"version": "v7b; recut 13 Nov round the arm v8 bay -90 (1.7 cm3 off, 2.5 clear; strength not rechecked)",
+"version": "v7b; recut round the arm v8 bay -90: 37.7 of 41.5 cm3 left, 2.5 clear. FAILS strength as cut (the page's stand note): not to print",
 "source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
 "note": "print/box_toe_v7b.stl"
 },
@@ -2266,8 +2266,8 @@
 "box": [
 0.0,
 162.0,
--86.0,
-86.0,
+-88.0,
+88.0,
 -99.5,
 -16.300000136097008
 ],
@@ -2398,8 +2398,8 @@
 "box": [
 -128.0,
 0.0,
--86.0,
-86.0,
+-88.0,
+88.0,
 -99.5,
 -16.300000136097008
 ],
@@ -3180,7 +3180,7 @@
 ]
 ],
 "version": "v5 drawn 13 Nov",
-"note": "4 N20 gearmotors with an M4 x 55 screw shaft, 4 KW12-3 roller switches (+y), 4 P156 spring probes in R156 sleeves, 16 M4 x 60 lap bolts, 8 M4 x 16 sheet bolts, 2 M4 x 16 and 2 M3 x 16 joint bolts"
+"note": "4 N20 gearmotors with an M4 x 100 screw shaft cut to 62, 4 KW12-3 roller switches (+y), 4 P156 spring probes in R156 sleeves, 16 M4 x 60 lap bolts, 8 M4 x 16 sheet bolts, 4 M4 x 16 and 2 M3 x 16 joint bolts"
 },
 {
 "id": "box_dome_hoop_1",
