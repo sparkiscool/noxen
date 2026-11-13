@@ -85,46 +85,6 @@
  "appendix": "systems/latch7.appendix.html",
  "parts": [
   {
-   "id": "latch7_view_receiver_both",
-   "name": "scout: receiver",
-   "role": "structure",
-   "group": "Scout: receiver (on the drone), cut away",
-   "color": "#9fb4cc",
-   "opacity": null,
-   "mesh": "parts/latch7/view/receiver.stl",
-   "pose": [
-    [
-     1.0,
-     0.0,
-     0.0,
-     45.0
-    ],
-    [
-     0.0,
-     1.0,
-     0.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     1.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     0.0,
-     1.0
-    ]
-   ],
-   "material": "PCTG",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
-  {
    "id": "latch7_view_receiver_strips_both",
    "name": "scout: receiver strips",
    "role": "TPU",
@@ -1208,10 +1168,10 @@
    "id": "latch7_receiver",
    "name": "scout: receiver (generated)",
    "role": "structure",
-   "group": "Scout: receiver (on the drone), cut away",
+   "group": "Scout: receiver (on the drone)",
    "color": "#9fb4cc",
-   "opacity": 0.12,
-   "printed": false,
+   "opacity": null,
+   "printed": true,
    "box": [
     -34.0,
     34.0,
@@ -1250,46 +1210,6 @@
    "tag": "C",
    "version": "latch v7 receiver, engine part (13 Nov)",
    "source": "parts/latch7_receiver/part.py"
-  },
-  {
-   "id": "latch7_overseer_view_receiver_both",
-   "name": "overseer: receiver",
-   "role": "structure",
-   "group": "Overseer: receiver (on the drone), cut away",
-   "color": "#9fb4cc",
-   "opacity": null,
-   "mesh": "parts/latch7_overseer/view/receiver.stl",
-   "pose": [
-    [
-     1.0,
-     0.0,
-     0.0,
-     -45.0
-    ],
-    [
-     0.0,
-     1.0,
-     0.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     1.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     0.0,
-     1.0
-    ]
-   ],
-   "material": "PCTG",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
   },
   {
    "id": "latch7_overseer_view_receiver_strips_both",
@@ -2255,10 +2175,10 @@
    "id": "latch7_ov_receiver",
    "name": "overseer: receiver (generated)",
    "role": "structure",
-   "group": "Overseer: receiver (on the drone), cut away",
+   "group": "Overseer: receiver (on the drone)",
    "color": "#9fb4cc",
-   "opacity": 0.12,
-   "printed": false,
+   "opacity": null,
+   "printed": true,
    "box": [
     -34.0,
     34.0,

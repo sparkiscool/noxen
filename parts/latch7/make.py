@@ -382,6 +382,11 @@ FOOT_ROOT = 8.0                        # the leg's room round the corner bolt (w
 #                                        the room filled solid (audit room_full, flight class); out to the pads' +-34.0, up to the drawn boss
 
 
+FOOT_WEB_X0 = 25.3                     # run 265 (13 Nov): the Scout receiver failed both gates at its tail feet: each foot block hung on a neck under 3 mm (290 mm3 blobs) and the hold-down's
+#                                        28 N a foot read 1.08 across the layers at the leg's root (0.61 already at beta 4: the hull-shaped leg room could not carry it at any budget).
+#                                        The room is now a web from the side wall's outer face (25.3) out to the pads' 34.0, from the pad's top up to the drawn boss, over the foot's length
+
+
 def scout_feet(B):
     """four landing feet on the Scout receiver (10 Nov, Spark: the battery must fit the funnel). Its keel hangs in the funnel's
     hole and its clipped ends never reach the end walls, so nothing held it along x. Each foot is a pad on a side ledge, its outer
@@ -397,6 +402,8 @@ def scout_feet(B):
             bz = min((z for _, z in B["r"]["MOUNT"]), key=lambda z: abs(z - sum(za) / 2))            # this corner's mount bolt
             ring = [[sx * min(abs(sx * B["r"]["BX"] + FOOT_ROOT * math.cos(a)), FOOT_PAD["x"][1]), y, bz + FOOT_ROOT * math.sin(a)] for a in np.linspace(0, 2 * math.pi, 24, endpoint=False) for y in (8.0, bl.HEAD_Y + 3.0)]
             legs.append(hullp(pts) + hullp(pts[:8] + ring))                         # 13 Nov: the leg's room goes round the bolt's head bore, not through it
+            zw = sorted((zp[0] if abs(zp[0] - zt) > abs(zp[1] - zt) else zp[1], bz + math.copysign(FOOT_ROOT, zt - bz)))        # from the pad's outer end to FOOT_ROOT past the bolt
+            legs.append(box(*sorted((sx * FOOT_WEB_X0, sx * FOOT_PAD["x"][1])), FOOT_PAD["y1"], bl.HEAD_Y + 3.0, *zw))         # run 265: a web's room, wall to pad line, pad top to the drawn boss
             pads.append(hullp(pts[:8]))
     legs = U(*legs)
     # 13 Nov: the legs filled the mount bolts' head counterbores (131 mm3 of 945 each) and bores: the receiver could not be bolted on. Bolt and driver sweep cut through
