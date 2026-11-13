@@ -738,7 +738,7 @@
   ]
  },
  "ring": {
-  "R 113: receiver sets, Overseer beside Scout": 896.3,
+  "R 113: receiver sets, Overseer beside Scout": 1007.3,
   "R 129: receiver sets, Overseer beside Scout": 0.0,
   "bay sets with saddles, overseer beside scout, no feet": 0.0,
   "bay sets with saddles, scout beside scout, no feet": 0.1,
@@ -938,8 +938,8 @@
  },
  "audit_smoke": {
   "box_arm8_hub": "run 13 Nov: PASS, worst 0.353 (float limit), solid check PASS, 349.6 g",
-  "box_arm8_carriage": "run 13 Nov: FAIL strength 0.528 (insert off square) where the 9.85 plate bends between the low wheel's axle and the spine; solid check PASS. Fixed: plate 12.25 thick from the wheel pair to the rail's side, budget 63 cm3 (94 % of the room). Audit PASS, 0.361 solid, estimate 0.38; rerunning",
-  "box_arm8_lift": "run 13 Nov: FAIL strength 0.532 (dropped pack) at the yoke's neck beside the MGN block; solid check PASS. Fixed: plate on down to 43 below the axle line, budget 104 cm3 (91 % of the room). Audit PASS, 0.349 solid, estimate 0.38; rerunning",
+  "box_arm8_carriage": "rerun 13 Nov: PASS, worst 0.434 (insert off square), solid check PASS, 87.8 g (first run 0.528: the plate between the low wheel's axle and the spine, now 12.25 thick)",
+  "box_arm8_lift": "first run 0.532, rerun at 91 % of the room 0.510, both at the inside corner where the 30 deep yoke met the 20 deep plate beside the MGN block: budget was not the cause. Fixed: the yoke's back tapers out to the plate's back face over its last 12, printed upright (+z). Audit PASS, 0.284 solid, estimate 0.31; rerunning",
   "cause": "both first runs came 12 to 15 % over the audit's estimate at budget (0.47, 0.46 -> 0.53): an estimate within 15 % of the limit is not a setup with margin",
   "layout": "13 Nov: the first v8 layout could not pass in print (carriage 2.15 filled solid). Not the plug's side: pull-out acts at the tab line in either pose. The load went 70 across to three rods beside the hub, back through a 5 mm plate to the wheels, and out along printed booms. Now: the lift's guide is a bought MGN12H rail on the carriage's spine beside the wheel pair, the lever to the tab line is three o 6 carbon rods, and each room is cut to the load's way"
  },
@@ -1177,17 +1177,17 @@
   "hub": {
    "part": "box_arm8_hub",
    "setup": "parts/box_arm8_hub/part.py",
-   "state": "run PASS (0.353, 349.6 g)"
+   "state": "setup ready, not run"
   },
   "carriage": {
    "part": "box_arm8_carriage",
    "setup": "parts/box_arm8_carriage/part.py",
-   "state": "setup changed after a failed run; rerunning"
+   "state": "run PASS (0.434, 87.8 g)"
   },
   "lift": {
    "part": "box_arm8_lift",
    "setup": "parts/box_arm8_lift/part.py",
-   "state": "setup changed after a failed run; rerunning"
+   "state": "setup changed after two failed runs; rerunning"
   }
  },
  "bought": [

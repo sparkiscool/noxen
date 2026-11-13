@@ -208,12 +208,14 @@ def lift_cuts():
     c = [cyl("z", x, y, 5.2, LUG["u"][0] - 1, LUG["u"][1] + 1), box(x - 5.2, x + 5.2, LUG["y"][0] - 1, y + 7.7, NUT_U[1], NUT_U[1] + 3.7)]   # the nut's body and its flange slot, in the lug
     c += [U(cyl("y", bx, bu, 1.7, PLATE_L["y"][0] - 5.0, 120), cyl("y", bx, bu, 3.2, PLATE_L["y"][0] + 6.0, 120)) for bx, bu in mount_bolts()]                # four M3 into the MGN block, heads sunk to 6 from the block
     for bx, bu in boom_axes():                                                                              # house sockets: bore 6.2, three resin pockets, the port out of the collar's underside
-        c += cn.socket_cuts([bx, SOCKET[0], bu], [0, 1.0, 0], 0.0, SOCKET[1] - SOCKET[0], 3.1, build=(1.0, 0.0, 0.0), pockets=3, pocket_dir=[0, 0, -1.0]) + [cn.port_cut([bx, SOCKET[0], bu], [0, 1.0, 0], 0.0, [0, 0, -1.0], length=8.0)]
+        c += cn.socket_cuts([bx, SOCKET[0], bu], [0, 1.0, 0], 0.0, SOCKET[1] - SOCKET[0], 3.1, build=(0.0, 0.0, 1.0), pockets=3, pocket_dir=[0, 0, -1.0]) + [cn.port_cut([bx, SOCKET[0], bu], [0, 1.0, 0], 0.0, [0, 0, -1.0], length=8.0)]
     return U(*c)
 def lift_env():
     k = PLATE_L
     plate = U(_b(k), box(k["x"][0], 35.4, k["y"][1] - 0.01, YOKE["y"][1], k["u"][0], k["u"][1]))            # inside x 35.5 (the Scout bays beside the drone start there) the plate is 20.4 thick, as the yoke
-    return U(_b(YOKE), plate - box(0, 27.51 + 2.0, 0, 200, -100, 0.0) - box(RAIL_X + 13.6, 100, 0, 200, ARM["u"][1], 100), _b(ARM), _b(LUG), *sockets())      # below the axle line the plate starts at x 29.5: the other head's yoke ends at 26.5
+    y = YOKE; bk = hullp([[x_, y_, u_] for (x_, y_) in ((BOOMS[2][0] - COLLAR_R, y["y"][0] - 0.01), (y["x"][1] + 0.01, y["y"][0] - 0.01), (y["x"][1] + 0.01, k["y"][0])) for u_ in (-100.0, 100.0)])
+    # the yoke's back runs out to the plate's back face over its last 12: no inside corner where the 30 deep yoke meets the 20 deep plate beside the MGN block (two runs peaked there)
+    return U(_b(YOKE) - bk, plate - box(0, 27.51 + 2.0, 0, 200, -100, 0.0) - box(RAIL_X + 13.6, 100, 0, 200, ARM["u"][1], 100), _b(ARM), _b(LUG), *sockets())      # below the axle line the plate starts at x 29.5: the other head's yoke ends at 26.5
 def lift_bought():
     x, y = SCREW
     return dict(mgn_block=mgn_block(),
