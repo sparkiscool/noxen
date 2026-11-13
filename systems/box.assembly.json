@@ -86,7 +86,7 @@
 "mass_g": null,
 "tag": "M",
 "owner": "box structure",
-"version": "v6; recut 13 Nov round the arm v8 bay -90 (24.1 cm3 off, 2.5 clear; strength not rechecked)",
+"version": "v6; recut 13 Nov round the arm v8 bay -90 (0.8 cm3 off, 2.5 clear; strength not rechecked)",
 "source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
 "note": "print/box_cradle_keel_v6.stl"
 },
@@ -168,7 +168,7 @@
 "mass_g": null,
 "tag": "M",
 "owner": "box structure",
-"version": "v7b; recut 13 Nov round the arm v8 bay -90 (2.1 cm3 off, 2.5 clear; strength not rechecked)",
+"version": "v7b; recut 13 Nov round the arm v8 bay -90 (1.7 cm3 off, 2.5 clear; strength not rechecked)",
 "source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
 "note": "print/box_toe_v7b.stl"
 },
@@ -574,6 +574,28 @@
 "blade": 0
 },
 "part": "box_arm8_a_coupler",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_a_thrust",
+"name": "arm: head A: thrust",
+"role": "bought",
+"group": "head A",
+"color": "#8a8f96",
+"opacity": null,
+"mesh": "parts/box_arm8/view/box_arm8_a_thrust.stl",
+"pose": null,
+"material": null,
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": {
+"stage": "hub",
+"head": "A",
+"blade": 0
+},
+"part": "box_arm8_a_thrust",
 "max_faces": 4000
 },
 {
@@ -1058,6 +1080,28 @@
 "blade": 0
 },
 "part": "box_arm8_b_coupler",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_b_thrust",
+"name": "arm: head B: thrust",
+"role": "bought",
+"group": "head B",
+"color": "#8a8f96",
+"opacity": null,
+"mesh": "parts/box_arm8/view/box_arm8_b_thrust.stl",
+"pose": null,
+"material": null,
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": {
+"stage": "hub",
+"head": "B",
+"blade": 0
+},
+"part": "box_arm8_b_thrust",
 "max_faces": 4000
 },
 {
@@ -1980,6 +2024,118 @@
 "bay": -210
 },
 "part": "box_arm8_bay_m210_cart",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_bay_60_recv",
+"name": "arm: bay 60: scout receiver (latch v7)",
+"role": "protected",
+"group": "bays",
+"color": "#8a94a6",
+"opacity": 0.55,
+"mesh": "parts/box_arm8/view/box_arm8_bay_60_recv.stl",
+"pose": null,
+"material": "PCTG",
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": null,
+"part": "box_arm8_bay_60_recv",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_bay_60_saddle",
+"name": "arm: bay 60: saddle",
+"role": "structure",
+"group": "bays",
+"color": "#6f7c91",
+"opacity": null,
+"mesh": "parts/box_arm8/view/box_arm8_bay_60_saddle.stl",
+"pose": null,
+"material": "PCTG",
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": null,
+"part": "box_arm8_bay_60_saddle",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_bay_60_cart",
+"name": "arm: bay 60: scout cartridge",
+"role": "protected",
+"group": "packs",
+"color": "#2f4fbf",
+"opacity": null,
+"mesh": "parts/box_arm8/view/box_arm8_bay_60_cart.stl",
+"pose": null,
+"material": null,
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": {
+"bay": 60
+},
+"part": "box_arm8_bay_60_cart",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_bay_120_recv",
+"name": "arm: bay 120: scout receiver (latch v7)",
+"role": "protected",
+"group": "bays",
+"color": "#8a94a6",
+"opacity": 0.55,
+"mesh": "parts/box_arm8/view/box_arm8_bay_120_recv.stl",
+"pose": null,
+"material": "PCTG",
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": null,
+"part": "box_arm8_bay_120_recv",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_bay_120_saddle",
+"name": "arm: bay 120: saddle",
+"role": "structure",
+"group": "bays",
+"color": "#6f7c91",
+"opacity": null,
+"mesh": "parts/box_arm8/view/box_arm8_bay_120_saddle.stl",
+"pose": null,
+"material": "PCTG",
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": null,
+"part": "box_arm8_bay_120_saddle",
+"max_faces": 4000
+},
+{
+"id": "box_swaparm_box_arm8_bay_120_cart",
+"name": "arm: bay 120: scout cartridge",
+"role": "protected",
+"group": "packs",
+"color": "#2f4fbf",
+"opacity": null,
+"mesh": "parts/box_arm8/view/box_arm8_bay_120_cart.stl",
+"pose": null,
+"material": null,
+"tag": "C",
+"owner": "swap arm",
+"version": "arm v8 (13 Nov)",
+"source": "systems/swap_arm.assembly.json",
+"kin": {
+"bay": 120
+},
+"part": "box_arm8_bay_120_cart",
 "max_faces": 4000
 },
 {

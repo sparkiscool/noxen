@@ -85,11 +85,11 @@ def gap(a_tree, a_lo, a_hi, b, reach=25.0):
 
 
 def funnel_bodies(fm):
-    out = {}
+    out = {}; fixed = [Body("funnel frame (full room)", "funnel", man=fm.frame()), Body("funnel strips", "funnel", man=fm.strips()), Body("funnel drive", "funnel", man=fm.drive())]
     for st in fm.SETTINGS:
-        out[st] = [Body("funnel frame (full room)", "funnel", man=fm.frame()), Body("funnel nose wall", "funnel", man=fm.carriage(1, st)),
-                   Body("funnel tail wall", "funnel", man=fm.carriage(-1, st)), Body("funnel strips", "funnel", man=fm.strips()),
-                   Body("funnel drive", "funnel", man=fm.drive())]
+        for pos in fm.POS:                                        # walls seated (pins in the notches), parked (a drone landing), open (a drone leaving)
+            out[st, pos] = fixed + [Body(f"funnel nose wall and pins ({pos})", "funnel", man=fm.carriage(1, st, pos)), Body(f"funnel tail wall and pins ({pos})", "funnel", man=fm.carriage(-1, st, pos))]
+        out[st] = out[st, "seated"]
     return out
 
 
@@ -157,7 +157,7 @@ def main(quick=False):
     t0 = time.time(); fm = load("parts/box_funnel/make.py", "box_funnel_make")
     F = funnel_bodies(fm); LB = latch_bodies(); static, arm, turning, arm_src, missing = box_bodies()
     drones = {d: [Body(f"{d}: {nm}", "drones", tri=m) for nm, m in se.parts_of(d)] for d in PACK}
-    hits, rows = [], []
+    hits, rows, hung = [], [], []
     moving_dome = lambda b: b.name.startswith(("dome hoop 1", "dome hoop 2", "dome hoop 3", "dome hoop 4", "dome fabric"))
     def test(state, A, Bs):
         for a in A:
@@ -171,8 +171,9 @@ def main(quick=False):
                     hits.append(dict(state=state, a=a.name, b=b.name, mm3=round(v, 1) if v > 0 else None, samples_inside=int(-v) if v < 0 else None))
     fun_all = {st: F[st] for st in F}
     # the funnel against the box it sits in (both settings), and the arm at park
-    for st in F:
-        test(f"static, walls at {st}", F[st], static + arm)
+    for st in fm.SETTINGS:
+        for pos in fm.POS:
+            test(f"static, walls at {st} {pos}", F[st, pos], static + arm)
     test("static, the arm at park", [b for b in static if not moving_dome(b)], [b for b in arm if "keep-out" not in b.name])   # the stand, the enclosure and the dome against the arm and its bays
     for d in PACK:
         st = sc.walls_for(d); R, C = LB[d]; states = sc.descent_states(d)
@@ -180,11 +181,21 @@ def main(quick=False):
             states = states[:1] + states[1::3]
         for lab, ox, oy, h in states:
             mv = [b.moved((ox, oy, h)) for b in drones[d] + [R, C]]
-            test(f"{d} {'seated' if lab == 'seated' else 'landing ' + lab}", mv, F[st] + static + arm)
-        rows.append(dict(what=f"{d}: seated and {len(states) - 1} landing states against the funnel (walls at {st}), the box and the arm at park", ok=True))
+            if lab == "seated":                                                            # held down (the pins in the receiver's notches), and with the walls backed off
+                for pos in ("seated", "park", "open"):
+                    test(f"{d} seated" + ("" if pos == "seated" else f", walls {pos}"), mv, F[st, pos] + static + arm)
+            else:
+                n0 = len(hits); test(f"{d} landing {lab}", mv, F[st, "park"] + static + arm)
+                if ox and h < 9.5:                                                         # sliding down an end wall the receiver's end comes to rest ON that wall's two pins (9.3 up): the states below that
+                    on = [x for x in hits[n0:] if x["a"].startswith("latch v7 receiver") and "wall and pins" in x["b"]]   # are not reached; the box backs the walls off to "open" and the end drops (make.py POS)
+                    hung.extend(on); hits[n0:] = [x for x in hits[n0:] if x not in on]
+        for k in (5.0, 10.0, 20.0, 40.0, 60.0):                                            # leaving: straight up, the walls open
+            test(f"{d} leaving, {k:.0f} up", [b.moved((0, 0, k)) for b in drones[d] + [R, C]], F[st, "open"])
+        rows.append(dict(what=f"{d}: seated (walls seated with the hold-down pins in the notches, parked, open), {len(states) - 1} landing states (walls parked) and leaving (walls open), against the funnel, the box and the arm at park", ok=True))
         for k in np.arange(0.0, 160.01, 4.0):                                              # the cartridge down its path, the drone seated
-            test(f"{d} swap, cartridge {k:.0f} down", [C.moved((0, 0, -k))], F[st] + [b for b in static if not moving_dome(b)])
+            test(f"{d} swap, cartridge {k:.0f} down", [C.moved((0, 0, -k))], F[st, "seated"] + [b for b in static if not moving_dome(b)])
         rows.append(dict(what=f"{d}: cartridge down its swap path (0..160) against the funnel and the box", ok=True))
+    rows.append(dict(what=f"landing states under 9.5 where a receiver's end rests on an end wall's hold-down pins instead of sliding on ({len(hung)}: resolved by the walls' back-off to open)", ok=True))
     # the wheel turning under each seated drone and through the funnel
     step = 6 if quick else 3; n_turn = 0
     seated = {d: drones[d] + [LB[d][0]] for d in PACK}
@@ -193,7 +204,7 @@ def main(quick=False):
         for tn, pts in turning:
             q = (pts @ Rm.T) @ W2S[:3, :3].T + W2S[:3, 3]; lo, hi = q.min(0), q.max(0)
             for d in PACK:
-                for b in F[sc.walls_for(d)] + seated[d]:
+                for b in F[sc.walls_for(d), "seated"] + seated[d]:
                     if (lo > b.hi).any() or (hi < b.lo).any():
                         continue
                     qq = q[((q >= b.lo) & (q <= b.hi)).all(1)]
@@ -205,8 +216,8 @@ def main(quick=False):
     rows.append(dict(what=f"the wheel's {len(turning)} turning parts, every {step} deg, against the funnel and both seated drones", ok=n_turn == 0))
     # clearances that matter (sampled, about 1 mm)
     clear = []
-    for st in F:
-        fb = Body("funnel", "funnel", man=fm.funnel(st)); tree = cKDTree(fb.pts())
+    for st in fm.SETTINGS:
+        fb = Body("funnel", "funnel", man=fm.funnel(st, "park")); tree = cKDTree(fb.pts())
         d = [k for k in PACK if sc.walls_for(k) == st][0]
         for lab, group in (("seated " + d, [b for b in drones[d]]), (f"latch receiver ({PACK[d]})", [LB[d][0]]), (f"latch cartridge ({PACK[d]}), seated", [LB[d][1]])):
             g = []

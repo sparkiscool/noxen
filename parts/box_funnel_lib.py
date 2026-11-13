@@ -7,11 +7,12 @@ Loads (systems/dimensions.md L and System Box catch; E unless tagged), each its 
   one side    the Overseer rolled, both feet of one side first: the 6 g on one ledge
   off centre  the 6 g reaction normal to the 55 deg face it strikes (level 106.1 N, down 74.3 N for the Overseer): on a side wall at
               its middle, at the joint and at the ear; on an end wall, where the level part goes through the tabs and nut blocks into
-              the hard stops (walls out, Overseer) or through the screws onto the motors' front plates (walls in, Scout: 24.1 N)
-  swap        pull-out 50 N down on the seat, the Overseer seated. Insert 60 N and the arm v8 head's push, up to 118 N, act up: more than either drone
-              weighs and there is no hold-down, so that case has no path through the funnel and is NOT applied (named in make.py)
+              the screws onto the motors' front plates (106.1 N Overseer, 24.1 N Scout)
+  swap        pull-out 50 N down on the seat, the Overseer seated. The arm v8 head pushes up to 118 N (design chat 13 Nov): less the
+              drone's weight it goes through the four hold-down pins into the end walls, their tabs and nut blocks, and up under the
+              frame over each block (24.1 N a block Overseer, 28.3 N Scout)
   walls       a gearmotor stalled on its M4 screw, 135 N (E: N20 100:1 at 6 V, 0.55 kg cm stall, M4 x 0.7, 25 % screw efficiency):
-              the nut block on its hard stop with the motor's rear on its stop; and the screw pulling on the front plate (a jam going in)
+              the motor's rear on its stop (a jam going out), and the screw pulling on the front plate (a jam going in)
   handling    50 N on a wall's top edge (out, down) and on an ear (misuse)
 Supports: the faces a piece bolts to. A half: its two laps under the arms and its four joint flanges at x 0. An arm: its lap; the
 sheet's reactions come in at its end plate as loads (shares of the cases above by the levers between the four plates).
@@ -31,7 +32,7 @@ fm = importlib.util.module_from_spec(_sp); sys.modules[_sp.name] = fm; _sp.loade
 G = 9.81e-3
 OV, SC, LAND = 2200.0 * G, 500.0 * G, 6.0
 S55, C55 = np.sin(np.radians(55.0)), np.cos(np.radians(55.0))
-PULL, STALL, HAND = 50.0, 135.0, 50.0
+PULL, STALL, HAND, PUSH = 50.0, 135.0, 50.0, 118.0
 SPEC_HALF = dict(h=2.2, gen_cm3=140.0, max_worst=0.5, settings=dict(near_sym=True))
 SPEC_ARM = dict(h=1.2, gen_cm3=40.0, max_worst=0.5)
 
@@ -50,15 +51,17 @@ def half_setup(sx, h):
     p.load("Overseer one side first, 6 g on the +y ledge", ledge(1, 5, 88), (0, 0, -ovl / 2), cls="flight")
     for nm, a, b in (("middle", 32, 58), ("joint", 2, 24), ("ear", 66, 90)):
         p.load(f"Overseer off centre onto the +y face, at its {nm}", face(1, a, b), ovl * n, cls="flight")
-    p.load_multi("Overseer off centre onto this end wall (walls out): the nut blocks on their stops, the wall's foot on the ledges",
-                 [(R[f"stop{sy:+d}"], (sx * ovl * S55 / 2, 0, 0)) for sy in (1, -1)] + [(ledge(sy, 72, 91), (0, 0, -ovl * C55 / 2)) for sy in (1, -1)], cls="flight")
+    p.load_multi("Overseer off centre onto this end wall (walls parked): the screws pull the gearboxes onto their front plates, the wall's foot on the ledges",
+                 [(R[f"motor_front{sy:+d}"], (sx * ovl * S55 / 2, 0, 0)) for sy in (1, -1)] + [(ledge(sy, 72, 91), (0, 0, -ovl * C55 / 2)) for sy in (1, -1)], cls="flight")
+    for nm, w in (("Overseer", OV), ("Scout", SC)):                                        # the hold-down: pins -> wall -> tabs -> nut blocks -> up under the frame over each block
+        p.load_multi(f"arm head push {PUSH:.0f} N, the {nm} held down by this wall's two pins",
+                     [(R[f"roof_{nm.lower()}{sy:+d}"], (0, 0, (PUSH - w) / 4)) for sy in (1, -1)], cls="flight")
     scl = SC * LAND
     p.load_multi("Scout seated, 6 g on its two feet of this end (walls in)", [(ledge(sy, 40, 56), (0, 0, -scl / 4)) for sy in (1, -1)], cls="flight")
     p.load_multi("Scout off centre onto this end wall (walls in): the screws pull the gearboxes onto their front plates",
                  [(R[f"motor_front{sy:+d}"], (sx * scl * S55 / 2, 0, 0)) for sy in (1, -1)] + [(ledge(sy, 44, 58), (0, 0, -scl * C55 / 2)) for sy in (1, -1)], cls="flight")
     p.load_multi("swap pull-out 50 N, the Overseer seated", [(ledge(sy, 5, 88), (0, 0, -(PULL + OV) / 4)) for sy in (1, -1)], cls="flight")
-    p.load_multi("wall driven out onto its stop, the +y gearmotor stalled (135 N)",
-                 [(R["stop+1"], (sx * STALL, 0, 0)), (R["motor_rear+1"], (-sx * STALL, 0, 0))], cls="flight")
+    p.load("wall driven out against a jam, the +y gearmotor stalled (135 N)", R["motor_rear+1"], (-sx * STALL, 0, 0), cls="flight")
     p.load("wall driven in against a jam, the +y gearmotor stalled (135 N)", R["motor_front+1"], (sx * STALL, 0, 0), cls="flight")
     p.load("handling 50 N out on the +y wall's top edge", face(1, 32, 58), (0, HAND, 0), cls="misuse")
     p.load("handling 50 N down on the +y wall's top edge", face(1, 32, 58), (0, 0, -HAND), cls="misuse")
@@ -76,6 +79,7 @@ def foot_shares():
             ("Overseer off centre onto the +y face at the nose ear", (0, -ovl * S55 * kx(78.0) / 2, ovl * C55 * ky(46.0) * kx(78.0)), "flight"),
             ("Overseer off centre onto the nose wall", (-ovl * S55 / 4, 0, ovl * C55 * kx(100.0) / 2), "flight"),
             ("swap pull-out 50 N, the Overseer seated", (0, 0, (PULL + OV) / 4), "flight"),
+            ("arm head push 118 N, the Overseer held down by the pins", (0, 0, -(PUSH - OV) / 4), "flight"),
             ("handling 50 N along the box on the arm", (HAND, 0, 0), "misuse"),
             ("handling 50 N down on the arm", (0, 0, -HAND), "misuse")]
 

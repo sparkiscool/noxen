@@ -1,9 +1,42 @@
 {
- "ok": true,
- "overlapping_pairs": [],
+ "ok": false,
+ "overlapping_pairs": [
+  {
+   "state": "overseer seated",
+   "a": "latch v7 receiver (overseer)",
+   "b": "funnel nose wall and pins (seated)",
+   "mm3": 15.7,
+   "samples_inside": null,
+   "states": 1
+  },
+  {
+   "state": "overseer seated",
+   "a": "latch v7 receiver (overseer)",
+   "b": "funnel tail wall and pins (seated)",
+   "mm3": 15.7,
+   "samples_inside": null,
+   "states": 1
+  },
+  {
+   "state": "scout_v4 seated",
+   "a": "latch v7 receiver (scout)",
+   "b": "funnel nose wall and pins (seated)",
+   "mm3": 2.7,
+   "samples_inside": null,
+   "states": 1
+  },
+  {
+   "state": "scout_v4 seated",
+   "a": "latch v7 receiver (scout)",
+   "b": "funnel tail wall and pins (seated)",
+   "mm3": 2.7,
+   "samples_inside": null,
+   "states": 1
+  }
+ ],
  "checked": [
   {
-   "what": "scout_v4: seated and 65 landing states against the funnel (walls at scout), the box and the arm at park",
+   "what": "scout_v4: seated (walls seated with the hold-down pins in the notches, parked, open), 22 landing states (walls parked) and leaving (walls open), against the funnel, the box and the arm at park",
    "ok": true
   },
   {
@@ -11,7 +44,7 @@
    "ok": true
   },
   {
-   "what": "overseer: seated and 65 landing states against the funnel (walls at overseer), the box and the arm at park",
+   "what": "overseer: seated (walls seated with the hold-down pins in the notches, parked, open), 22 landing states (walls parked) and leaving (walls open), against the funnel, the box and the arm at park",
    "ok": true
   },
   {
@@ -19,7 +52,11 @@
    "ok": true
   },
   {
-   "what": "the wheel's 45 turning parts, every 3 deg, against the funnel and both seated drones",
+   "what": "landing states under 9.5 where a receiver's end rests on an end wall's hold-down pins instead of sliding on (6: resolved by the walls' back-off to open)",
+   "ok": true
+  },
+  {
+   "what": "the wheel's 47 turning parts, every 6 deg, against the funnel and both seated drones",
    "ok": true
   }
  ],
@@ -28,13 +65,13 @@
    "between": "funnel (walls at overseer)",
    "and_": "latch receiver (overseer)",
    "mm": 0.1,
-   "at": "latch v7 receiver (overseer) at seat [31, -31, -44]"
+   "at": "latch v7 receiver (overseer) at seat [-23, 33, -44]"
   },
   {
    "between": "funnel (walls at scout)",
    "and_": "latch receiver (scout)",
    "mm": 0.1,
-   "at": "latch v7 receiver (scout) at seat [-55, 29, -44]"
+   "at": "latch v7 receiver (scout) at seat [-55, -34, -44]"
   },
   {
    "between": "funnel",
@@ -46,19 +83,13 @@
    "between": "funnel",
    "and_": "enclosure: sheet-X",
    "mm": 0.3,
-   "at": "at seat [-182, 206, -98]"
+   "at": "at seat [-163, 206, -99]"
   },
   {
    "between": "funnel",
    "and_": "arm v8 head lane at the drone (keep-out)",
    "mm": 0.3,
-   "at": "at seat [-109, -39, -62]"
-  },
-  {
-   "between": "funnel (walls at scout)",
-   "and_": "seated scout_v4",
-   "mm": 0.6,
-   "at": "scout_v4: frame v4, one body: deck, arms, motor pods, side l at seat [82, -3, -4]"
+   "at": "at seat [-109, 28, -59]"
   },
   {
    "between": "funnel (walls at overseer)",
@@ -68,15 +99,27 @@
   },
   {
    "between": "funnel",
-   "and_": "rain lid (3 mm UV polycarbonate)",
-   "mm": 2.0,
-   "at": "at seat [144, 104, -78]"
+   "and_": "arm: bay 60: saddle",
+   "mm": 1.5,
+   "at": "at seat [25, -65, -42]"
   },
   {
    "between": "funnel (walls at overseer)",
    "and_": "overseer landing, closest pass",
-   "mm": 2.1,
-   "at": "overseer: cage shell tubes at seat [-113, -55, -21] at +x+y at h 27"
+   "mm": 1.6,
+   "at": "overseer: cage shell tubes at seat [-117, -52, -21] at +x+y at h 27"
+  },
+  {
+   "between": "funnel",
+   "and_": "arm: bay 120: saddle",
+   "mm": 1.6,
+   "at": "at seat [-26, 66, -42]"
+  },
+  {
+   "between": "funnel",
+   "and_": "rain lid (3 mm UV polycarbonate)",
+   "mm": 2.0,
+   "at": "at seat [145, -148, -78]"
   },
   {
    "between": "funnel",
@@ -86,52 +129,76 @@
   },
   {
    "between": "funnel (walls at scout)",
+   "and_": "seated scout_v4",
+   "mm": 2.1,
+   "at": "scout_v4: frame v4, one body: deck, arms, motor pods, side l at seat [84, -2, -3]"
+  },
+  {
+   "between": "funnel (walls at scout)",
    "and_": "scout_v4 landing, closest pass",
-   "mm": 2.4,
-   "at": "scout_v4: frame v4, one body: deck, arms, motor pods, side l at seat [78, -5, -6] at +x 28 at h 6"
+   "mm": 3.1,
+   "at": "scout_v4: frame v4, one body: deck, arms, motor pods, side l at seat [83, -2, -2] at +x 28 at h 3"
   },
   {
    "between": "funnel",
    "and_": "dome base ring (printed segments)",
    "mm": 3.2,
-   "at": "at seat [-166, 198, -88]"
+   "at": "at seat [-186, 193, -88]"
+  },
+  {
+   "between": "funnel",
+   "and_": "arm: bay 60: scout receiver (latch v7)",
+   "mm": 3.8,
+   "at": "at seat [38, -62, -50]"
+  },
+  {
+   "between": "funnel",
+   "and_": "arm: bay 120: scout receiver (latch v7)",
+   "mm": 3.8,
+   "at": "at seat [-43, 58, -57]"
+  },
+  {
+   "between": "funnel",
+   "and_": "the wheel turning, closest pass",
+   "mm": 4.4,
+   "at": "arm: head B: motor at seat [-137, 8, -100] at 36 deg"
   },
   {
    "between": "funnel (walls at overseer)",
    "and_": "seated overseer",
    "mm": 4.5,
-   "at": "overseer: cage node 3 at seat [114, 86, -54]"
-  },
-  {
-   "between": "funnel",
-   "and_": "the wheel turning, closest pass",
-   "mm": 4.9,
-   "at": "arm: head A: rail at seat [-129, -50, -95] at 21 deg"
+   "at": "overseer: cage node 3 at seat [113, 85, -54]"
   },
   {
    "between": "funnel (walls at scout)",
    "and_": "latch cartridge (scout), seated",
    "mm": 5.3,
-   "at": "latch v7 cartridge + pack (scout) at seat [32, -23, -46]"
+   "at": "latch v7 cartridge + pack (scout) at seat [5, 23, -46]"
   },
   {
    "between": "funnel",
    "and_": "arm: head A: rail",
    "mm": 8.9,
-   "at": "at seat [-129, -3, -71]"
+   "at": "at seat [-129, 6, -70]"
+  },
+  {
+   "between": "funnel",
+   "and_": "arm: head A: screw",
+   "mm": 10.7,
+   "at": "at seat [-124, -56, -96]"
   }
  ],
  "arm": "systems/swap_arm.assembly.json",
  "no_mesh_in_the_tree": [],
- "quick": false,
+ "quick": true,
  "counts": {
   "box": 37,
-  "arm": 80,
-  "turning": 45,
+  "arm": 88,
+  "turning": 47,
   "drone_parts": {
    "scout_v4": 50,
    "overseer": 59
   }
  },
- "seconds": 174
+ "seconds": 149
 }

@@ -39,11 +39,19 @@ SEAT = (CX - 92.0, CX + 92.0, -34.4, 34.4)        # the Overseer receiver's bott
 HOLE = (CX - 87.0, CX + 90.0, -28.5, 28.5)        # the Overseer cartridge (latch v7 CAD: x -84.0..90.0, +-27.5 at its rails) + 1.5 / 1.0
 ZW = 220.3                                        # seat z 0 in W
 END_CUT_X, END_CUT_Y, END_CUT_H = 100.0, 50.0, 24.0   # the y walls' ends (|x| > 100) stop at h 24 outside |y| 50 (the Overseer's loop corner at its diagonal capture limit)
-CORNER_Y = 45.0                                   # the x walls' top corners (h 28..40) stop at |y| 45 (an Overseer tube at the diagonal capture limit)
+CORNER_Y = 42.0                                   # the x walls' top corners (h 28..40) stop at |y| 45 (an Overseer tube at the diagonal capture limit)
 TAN = np.tan(np.radians(FACE_DEG))
 W_H = WALL / np.sin(np.radians(FACE_DEG))         # the wall's thickness measured level: 3.66
 SETTINGS = {"overseer": 0.0, "scout": 37.2}       # how far each end wall moves in from the 184 seat (the nose wall's foot at x 54.3, 1.3 clear of the Scout cartridge's x 53)
 TRAVEL = max(SETTINGS.values())
+# The hold-down (13 Nov, with the latch worker): the swap arm pushes up to 118 N, more than either drone weighs. Each end wall carries
+# two steel pins at its corners that enter notches in the receiver's end faces and bear down on their lower faces. SETTINGS are the
+# SEATED positions (walls driven in, pins 2.0 in the notches). The pins stand out past the walls' feet, so a drone that slides down an
+# end wall lands that end on two pins: the box lands a drone with the walls at "park", backs them off to "open" (the pins leave from
+# under a hung end, which drops at most 9.3), then drives in to "seated"; a drone leaves with the walls at "open".
+POS = {"seated": 0.0, "park": 2.5, "open": 11.0}  # how far out of its seated position each wall stands
+OPEN = POS["open"]
+PIN = dict(y=32.25, z=-36.5, r=1.25, length=16.0, tip=2.3)   # hardened steel dowel O2.5 x 16 along x; its tip this far inside the wall's foot (2.0 into the notch + the 0.3 seated gap)
 TAB_H = (3.5, 8.5)                                # each wall reaches its nuts by two tabs, h 3.5..8.5, through a slot in each side wall (h 3..9)
 TAB_BACK = 5.0                                    # the tab runs this far behind the wall's back: 8 x 5 (v5: 3 x 4 was a neck under its nut block, the gate's neck rule)
 STRIP_Y, STRIP_D = (31.2, 34.0), 2.0              # TPU strips flush in the side ledges (both drones land on them); 2.0 thick (1.5 was under the 2 mm floor)
@@ -52,8 +60,10 @@ PROBES = [(1.5 + dx, sy * 32.6) for dx in (-30.0, 30.0) for sy in (-1, 1)]   # s
 # ---- the drive: per tab an N20 gearmotor with an M4 x 55 screw shaft (dimensions E from the listings: body 12 x 10 x 25 with its gearbox)
 SCREW_Y, SCREW_H = 52.0, 6.0                      # the screws' axes: |y|, h (under the side walls' overhang; the wall's back is at |y| 38.1 + 0.7 h)
 BLOCK = (6.0, 5.5, 5.5)                           # the nut block's half sizes x, y, z round the screw (M4 nut 7.0 AF x 3.2 in a slot from above)
-GEAR_FACE, MOTOR_L, SCREW_L = 41.5, 25.0, 55.0    # the gearbox face this far inboard of the seat end; body length; screw length
+GEAR_FACE, MOTOR_L, SCREW_L = 39.5, 25.0, 62.0    # the gearbox face this far inboard of the seat end; body length; screw length (the M4 x 100 shaft cut to 62: 48.2 of travel)
 SW = (19.8, 6.4, 10.2)                            # KW12-3 roller switch body (x, y, z as mounted), E
+DOG = 20.0                                        # the dog's tip this far inboard of the block's centre
+SW_H = 4.0                                        # the switches' underside over the seat plane (the 60 / 120 deg bays' saddles reach z -43 under them)
 SW_Y = 59.0                                       # the switches' inner face, outboard of the nut blocks
 LUG_Y = (SW_Y + SW[1] + 0.2, SW_Y + SW[1] + 3.2)   # the lug the switches screw to (two M2 along y each)
 # ---- the cross beams and the arms out to the side sheets
@@ -67,7 +77,7 @@ ARM_Z = (-108.0, LID_Z)                           # the arms, under the lid
 MID_Y, LAP_Y = 88.0, (44.0, 88.0)                 # the half carries the beam to |y| 88; the arm laps it over |y| 44..88
 LAP_BOLTS = [(y, z) for y in (52.0, 80.0) for z in (-95.0, -84.5)]   # four M4 along x through each lap
 LAP_PAD_R = 6.0                                   # the pad round each lap bolt (washer 9)
-HUB_R = 119.0                                     # the wheel's hub side (r 115 over W Y 0..36) + 4, about the axle
+HUB_R = 125.0                                     # the arm v8 head motors sweep r 120 behind the rails (seat x < -129), + 5, about the axle
 ARM_W = 24.0                                      # the arm lies beside the beam's outer face, as wide as the beam (each alone carries the lap's moment)
 RING_Y, RING_Z = 166.0, -91.5                     # beyond |y| 166 the arm passes under the dome's base ring (W Z 132..142, r 255 about the seat)
 SPOKE = (52.0, 72.0, -88.5, 10.0)                 # a dome spoke crosses the arm's outer 10 mm over |y| 56..68 down to z -86: |y|, top there, width
@@ -156,9 +166,14 @@ def tab_x(sx):
     return min(a, b), max(a, b)
 
 
-def block_x(sx, setting="overseer"):
-    """the nut block's centre x at a setting"""
-    xa, xb = tab_x(sx); return (xa + xb) / 2 - sx * SETTINGS[setting]
+def shift(setting="overseer", pos="seated"):
+    """how far in from its drawn place (the Overseer's seated position) a wall stands"""
+    return SETTINGS[setting] - POS[pos]
+
+
+def block_x(sx, setting="overseer", pos="seated"):
+    """the nut block's centre x at a setting and position"""
+    xa, xb = tab_x(sx); return (xa + xb) / 2 - sx * shift(setting, pos)
 
 
 def nuts(sx):
@@ -172,16 +187,29 @@ def nuts(sx):
             pts += [(x, y, z0 + h) for x in (f, b) for y in (sy * 34.0, sy * (SCREW_Y - by + 1.0))]
         out.append(hull(pts))
         out.append(box(xm - bx, xm + bx, sy * (SCREW_Y - by), sy * (SCREW_Y + by), zc - bz, zc + bz))
-    out.append(box(xm - 2.5, xm + 2.5, SCREW_Y + 1.0, SCREW_Y + by, zc + bz - 1.0, zc + bz + 3.0))          # the dog: an arm from the block's top
-    out.append(box(xm - 2.5, xm + 2.5, SCREW_Y + by - 1.0, SW_Y + 4.5, zc + bz + 0.3, zc + bz + 3.0))      # out over the switches' rollers (body top h 11.2)
+    xd = xm - sx * DOG                                                                                   # the dog: a finger from the +y block's top, inboard, its tip out over the switches' rollers
+    zd = z0 + SW_H + SW[2] + 0.6                                                                           # the dog's underside: over the switch bodies, on their rollers
+    out.append(box(xm - sx * (bx - 4.0), xm - sx * bx, SCREW_Y + 1.0, SCREW_Y + by, zc + bz - 1.0, zd + 2.7))           # a riser on the block's inboard end
+    out.append(box(xm - sx * (bx - 2.0), xd - sx * 2.5, SCREW_Y + 1.0, SCREW_Y + by, zd, zd + 2.7))                     # the finger, over the motor's front plate (top h 12)
+    out.append(box(xd - 2.5, xd + 2.5, SCREW_Y + by - 1.0, SW_Y + 4.5, zd, zd + 2.7))
+    for sy in (-1, 1):                                                                                   # a boss on the wall's back at each corner for its hold-down pin
+        out.append(box(xe + sx * 7.5, xe + sx * (PIN["length"] - PIN["tip"] + 1.0), sy * 28.5, sy * 36.0, PIN["z"] - 4.0, PIN["z"] + 4.0))
     cut = [cyl_x(xm - 20.0, xm + 20.0, sy * SCREW_Y, zc, 2.2) for sy in (-1, 1)]
     cut += [box(xm - 1.7, xm + 1.7, sy * (SCREW_Y - 3.6), sy * (SCREW_Y + 3.6), zc - 3.6, zc + bz + 1.0) for sy in (-1, 1)]   # the nut's slot
     return U(out) - U(cut)
 
 
-def carriage(sx, setting="overseer"):
-    """the wall with its tabs and nut blocks, at a setting"""
-    return (carriage_home(sx) + nuts(sx)).translate([-sx * SETTINGS[setting], 0.0, 0.0])
+def pins(sx):
+    """the wall's two hold-down pins, at its drawn place"""
+    xe = xend(sx)
+    return U([cyl_x(xe - sx * PIN["tip"], xe + sx * (PIN["length"] - PIN["tip"]), sy * PIN["y"], PIN["z"], PIN["r"], 24) for sy in (-1, 1)])
+
+
+def carriage(sx, setting="overseer", pos="seated", with_pins=True):
+    """the wall with its tabs, nut blocks and pin bosses (and its two steel pins), at a setting and position"""
+    xe = xend(sx)
+    m = carriage_home(sx) + nuts(sx) - U([cyl_x(xe - sx * 6.0, xe + sx * (PIN["length"] - PIN["tip"]), sy * PIN["y"], PIN["z"], PIN["r"] - 0.05, 24) for sy in (-1, 1)])   # the pins' bores: a press fit, blind
+    return (m + pins(sx) if with_pins else m).translate([-sx * shift(setting, pos), 0.0, 0.0])
 
 
 def motor_x(sx):
@@ -191,9 +219,10 @@ def motor_x(sx):
 
 
 def switch_x(sx):
-    """the two switches' body centres along x (+y side): the roller, 7 from the body's centre, is at the dog's x at the wall's out
-    and in positions; the bodies lie inboard of their rollers (the Overseer's foot nodes pass beyond seat x 102 outside the ears)"""
-    return block_x(sx, "overseer") - sx * 7.0, block_x(sx, "scout") - sx * 7.0
+    """the two switches' body centres along x (+y side): the roller, 7 from the body's centre, is at the dog's tip at the wall's
+    outmost (Overseer, open) and inmost (Scout, seated) positions; the bodies lie inboard of their rollers (the Overseer's foot nodes
+    pass beyond seat x 102 outside the ears). Every position between is timed from the outmost switch (0.7 mm a turn)."""
+    return block_x(sx, "overseer", "open") - sx * (DOG + 7.0), block_x(sx, "scout") - sx * (DOG + 7.0)
 
 
 def fixed():
@@ -203,7 +232,7 @@ def fixed():
     f = shell() - carriage_zone(1) - carriage_zone(-1)                                           # the zones, not the walls: no coplanar faces left as fins
     cuts = []
     for sx in (1, -1):
-        xa, xb = tab_x(sx); lo, hi = (xa - TRAVEL - 1.0, xb + 1.0) if sx > 0 else (xa - 1.0, xb + TRAVEL + 1.0)
+        xa, xb = tab_x(sx); lo, hi = (xa - TRAVEL - 1.0, xb + OPEN + 1.0) if sx > 0 else (xa - OPEN - 1.0, xb + TRAVEL + 1.0)
         cuts += [box(lo, hi, sy * 33.0, sy * (SCREW_Y - BLOCK[1] + 0.5), z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5) for sy in (-1, 1)]
     cuts += [box(SEAT[0] + 1.0, SEAT[1] - 1.0, sy * STRIP_Y[0], sy * STRIP_Y[1], z0 - STRIP_D, z0 + 0.01) for sy in (-1, 1)]
     cuts += [cyl_z(z0 - 30.0, z0 + 5.0, x, y, PROBE_R, 16) for x, y in PROBES]
@@ -213,13 +242,14 @@ def fixed():
 
 
 def wall_sweep(sx):
-    """everything the wall, its tabs, blocks and dog pass through between its two settings, 0.4 clear"""
-    c = carriage(sx); bb = c.bounding_box(); m = U([c.translate([-sx * d, 0, 0]) for d in np.linspace(0.0, TRAVEL, 20)])
-    z0 = SEAT_Z; xm0, xm1 = block_x(sx, "overseer"), block_x(sx, "scout"); bx, by, bz = BLOCK; zc = z0 + SCREW_H
-    lo, hi = min(xm0, xm1) - bx - 0.8, max(xm0, xm1) + bx + 0.6
+    """everything the wall, its tabs, blocks, dog, bosses and pins pass through between its outmost and inmost positions, 0.4 clear"""
+    c = carriage(sx); m = U([c.translate([-sx * d, 0, 0]) for d in np.linspace(-OPEN, TRAVEL, 26)])
+    z0 = SEAT_Z; xm0, xm1 = block_x(sx, "overseer", "open"), block_x(sx, "scout"); bx, by, bz = BLOCK; zc = z0 + SCREW_H
+    lo, hi = min(xm0, xm1) - bx - 0.8, max(xm0, xm1) + bx + 0.8
     b = [box(lo, hi, sy * (SCREW_Y - by - 0.5), sy * (SCREW_Y + by + 0.6), zc - bz - 0.5, zc + bz + 0.6) for sy in (-1, 1)]
-    b.append(box(lo + bx - 3.5, hi - bx + 3.5, SCREW_Y + 0.5, SW_Y + 5.0, zc + bz - 0.2, zc + bz + 3.6))
-    xa, xb = tab_x(sx); tl, th = (xa - TRAVEL - 1.0, xb + 1.0) if sx > 0 else (xa - 1.0, xb + TRAVEL + 1.0)
+    d0, d1 = sorted((xm0 - sx * (DOG + 3.5), xm1 - sx * (DOG + 3.5))); d1 = max(d1, max(xm0, xm1)); d0 = min(d0, min(xm0, xm1))
+    b.append(box(d0, d1, SCREW_Y + 0.5, SW_Y + 5.0, zc + bz - 0.2, z0 + SW_H + SW[2] + 3.9))
+    xa, xb = tab_x(sx); tl, th = (xa - TRAVEL - 1.0, xb + OPEN + 1.0) if sx > 0 else (xa - OPEN - 1.0, xb + TRAVEL + 1.0)
     b += [box(tl, th, sy * 33.0, sy * (SCREW_Y - by + 0.5), z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5) for sy in (-1, 1)]
     return m + U(b)
 
@@ -257,21 +287,20 @@ def half_bodies(sx):
         cuts.append(box(mr, mf_, *Y(SCREW_Y, 75.0), z0 + SCREW_H - 5.1, z0 + SCREW_H + 6.5))          # its way in from the side
         xt = (mr + mf_) / 2
         cuts.append(box(xt - 2.0, xt + 2.0, *Y(y0m - 3.0, y1m + 3.0), z0 - 5.6, z0 - 3.5))                                  # the cable tie's tunnel under the floor
-        # the wall's hard stop at "out": a boss beyond the block, bored for the screw's tip
-        xb0 = block_x(sx) + sx * (bx + 0.6)
-        stop = box(xb0, xb0 + sx * 5.0, *Y(SCREW_Y - by, SCREW_Y + by), zc - bz, zc + bz); R[f"stop{sy:+d}"] = stop; drawn.append(stop)
+        roof = lambda setting: box(block_x(sx, setting) - bx, block_x(sx, setting) + bx, *Y(SCREW_Y - by, SCREW_Y + 0.4), zc + bz + 0.6, zc + bz + 4.0)
+        R[f"roof_overseer{sy:+d}"], R[f"roof_scout{sy:+d}"] = roof("overseer"), roof("scout")                               # over the nut block, seated: where the hold-down's pull comes up into the frame
         # the switch lug, outboard of the blocks (switches on the +y side; the lug on both keeps the half mirrored)
         so, si = switch_x(sx); l0, l1 = min(so, si) - SW[0] / 2 - 1.0, max(so, si) + SW[0] / 2 + 1.0
-        lug = box(l0, l1, *Y(*LUG_Y), z0 + 0.5, z0 + 12.5); drawn.append(lug)
+        lug = box(l0, l1, *Y(*LUG_Y), z0 + SW_H - 0.5, z0 + SW_H + 12.0); drawn.append(lug)
         for xs in (so, si):
-            cuts.append(box(xs - SW[0] / 2 - 0.3, xs + SW[0] / 2 + 0.3, *Y(SW_Y - 0.3, LUG_Y[0]), z0 + 0.5, z0 + 16.0))     # the switch and its roller
-            cuts += [cyl_y(sy * (SW_Y - 1.0), sy * (LUG_Y[1] + 1.0), xs + d, z0 + 4.4, 0.85, 12) for d in (-4.75, 4.75)]    # M2 self-tapping
+            cuts.append(box(xs - SW[0] / 2 - 0.3, xs + SW[0] / 2 + 0.3, *Y(SW_Y - 0.3, LUG_Y[0]), z0 + SW_H - 0.5, z0 + SW_H + 15.5))     # the switch and its roller
+            cuts += [cyl_y(sy * (SW_Y - 1.0), sy * (LUG_Y[1] + 1.0), xs + d, z0 + SW_H + 3.4, 0.85, 12) for d in (-4.75, 4.75)]    # M2 self-tapping
         # ---- room
         zt = z0 + 27.0
         env.append(box(0.0, sx * 92.0, *Y(38.0, 59.0), z0 - FLOOR - 0.2, zt))                                               # behind the side wall
         env.append(box(sx * 92.0, sx * 112.0, *Y(38.0, 59.0), z0 - FLOOR - 0.2, -31.0))                                      # behind the ear: full depth under h 13,
         env.append(box(sx * 90.0, sx * (112.0 if sx > 0 else 108.0), *Y(38.0, 56.0), -33.0, zt))                                                    # 5 less above it (the Overseer's foot nodes and tubes pass |y| 59 from z -28)
-        env.append(box(l0, l1, *Y(56.0, LUG_Y[1]), z0 + 0.5, z0 + 12.5))                                                     # out to the lug
+        env.append(box(l0, l1, *Y(56.0, LUG_Y[1]), z0 + SW_H - 0.5, z0 + SW_H + 12.0))                                       # out to the lug
         env.append(box(0.0, sx * (88.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 15.6, zt))                                 # a rib's room outside the wall, over the drive (the Overseer's foot nodes pass beyond its ends)
         if sx > 0:
             env.append(box(92.0, 120.0, *Y(38.0, 56.0), z0 - FLOOR - 0.2, -41.5))                                            # the ear's foot, out to the beam (the Overseer's tubes pass over it from z -38)
@@ -348,7 +377,7 @@ def drive():
             out.append(box(mr, mf_, sy * (SCREW_Y - 6.0), sy * (SCREW_Y + 6.0), zc - 5.0, zc + 5.0))
             out.append(cyl_x(mf_, tip, sy * SCREW_Y, zc, 2.0, 16))
         for xs in switch_x(sx):
-            out.append(box(xs - SW[0] / 2, xs + SW[0] / 2, SW_Y, SW_Y + SW[1], z0 + 1.0, z0 + 1.0 + SW[2]))
+            out.append(box(xs - SW[0] / 2, xs + SW[0] / 2, SW_Y, SW_Y + SW[1], z0 + SW_H, z0 + SW_H + SW[2]))
         for sy in (-1, 1):
             bxa, bxb = BEAM_X[sx]
             out += [cyl_x(min(bxa, bxb + sx * ARM_W) - 4.0, max(bxb, bxa + sx * ARM_W) + 4.0, sy * y, z, 2.0, 12) for y, z in LAP_BOLTS]
@@ -368,10 +397,10 @@ def strips():
     return U(out) - U([cyl_z(z0 - 10.0, z0 + 10.0, x, y, PROBE_R, 16) for x, y in PROBES])
 
 
-def funnel(setting="overseer"):
+def funnel(setting="overseer", pos="seated"):
     """everything the drones, the latch sets and the arm must clear, at a setting ("overseer" = the 184 seat, "scout" = the walls
-    37.2 in): the frame at its full room, both walls with their nut blocks, the strips, the drive"""
-    return frame() + carriage(1, setting) + carriage(-1, setting) + strips() + drive()
+    37.2 in) and wall position (POS): the frame at its full room, both walls with their nut blocks and pins, the strips, the drive"""
+    return frame() + carriage(1, setting, pos) + carriage(-1, setting, pos) + strips() + drive()
 
 
 def stl(m, path):
@@ -379,7 +408,7 @@ def stl(m, path):
     os.makedirs(os.path.dirname(path), exist_ok=True); t.export(path); return t
 
 
-PIECES = {"box_funnel_wall_nose": lambda: carriage(1), "box_funnel_wall_tail": lambda: carriage(-1), "box_funnel_strips": strips,
+PIECES = {"box_funnel_wall_nose": lambda: carriage(1, with_pins=False), "box_funnel_wall_tail": lambda: carriage(-1, with_pins=False), "box_funnel_strips": strips,
           "box_funnel_drive": drive}
 ROOMS = {"box_funnel_half_nose": lambda: room(*half_bodies(1)[:3]), "box_funnel_half_tail": lambda: room(*half_bodies(-1)[:3]),
          "box_funnel_arm": lambda: U([room(*arm_bodies(sx, sy)[:3]) for sx in (1, -1) for sy in (1, -1)])}
@@ -392,12 +421,11 @@ if __name__ == "__main__":
     for pid, fn in ROOMS.items():
         m = fn(); bb = m.bounding_box(); print(f"{pid} room: {m.volume() / 1000:.1f} cm3, extents {[round(bb[k + 3] - bb[k], 1) for k in range(3)]}")
     fr = frame() + drive()
-    for st in SETTINGS:                                           # the walls never touch the frame's room or the drive, at either setting or between
-        for sx in (1, -1):
-            for d in np.linspace(0.0, SETTINGS[st], 6) if SETTINGS[st] else [0.0]:
-                v = (carriage(sx).translate([-sx * d, 0, 0]) ^ fr).volume()
-                assert v < 1.0, f"the {'nose' if sx > 0 else 'tail'} wall {d:.1f} in crosses the frame or the drive by {v:.0f} mm3"
-    print(f"walls clear of the frame's room and the drive over the whole travel ({TRAVEL} mm)")
+    for sx in (1, -1):                                            # the walls never touch the frame's room or the drive, from outmost to inmost
+        for d in np.linspace(-OPEN, TRAVEL, 14):
+            v = (carriage(sx).translate([-sx * d, 0, 0]) ^ fr).volume()
+            assert v < 1.0, f"the {'nose' if sx > 0 else 'tail'} wall {d:.1f} in crosses the frame or the drive by {v:.0f} mm3"
+    print(f"walls clear of the frame's room and the drive from {OPEN} out to {TRAVEL} in")
     if "--gate" in sys.argv:                                       # the solid gate on every drawn printed piece, body by body (the strips are six loose pieces)
         sys.path.insert(0, os.path.join(os.path.dirname(PARTS), "tools")); from solid_check import solid_check
         bad = 0
