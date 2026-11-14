@@ -9,8 +9,9 @@ rail about Z, and a lap split in X leaves the root half its width). Now every ra
                   inner face at |X| 120, where 6 M5 x 60 come in from the rail's outer face (heads outboard) into heat-set inserts in the yoke.
   rear_r / _l     the rail from Y -64 to its splice plate at Y 110 (|X| 120..177.5), with the rear foot at (+-149, -44).
   rail_r / _l     the rail from its splice plate at Y 110 to the front foot at (+-149, 232).
-The splice: a butt joint, 4 M5 x 30 hex bolts along Y at the section's corners; the nut and the head sit in pockets behind the
-plates and are turned with an 8 mm spanner through windows to the rail's side faces (no tool sweep along the rail).
+The splice: a butt joint, 4 M5 x 16 hex bolts along Y at the section's corners, from heads in pockets behind the front rail's plate
+(turned with an 8 mm spanner through windows to the rail's side faces, no tool sweep along the rail) into heat-set inserts in the
+rear rail's plate.
 Supports are the joint toward the mast (the yoke: the mast's foot; the rear rail: its face on the yoke; the front rail: its splice
 plate); loads the floor at the feet, carried through the joints rigidly; own weight as body forces.
 """
@@ -48,16 +49,20 @@ def _joint_cuts():
              *[cyl("x", y, z, 3.2, X_IN - 9.0, X_IN + 0.5) for y, z in JOINT])
 
 
-def _splice_cuts():
-    """the splice bolts, their pockets either side of the two plates, and the spanner windows to the nearer side face"""
-    y0, y1 = Y_SPLICE - PLATE - POCKET, Y_SPLICE + PLATE + POCKET
+def _splice_cuts(rear=False):
+    """the splice: the rear rail's side takes M5 heat-set inserts in its bosses (a nut pocket and window behind its outboard boss left
+    it backed on two sides: room_full 1.48); the front rail's side has the bolt, the hex head in a pocket behind its plate, turned with
+    an 8 mm spanner through a window to the nearer side face"""
     out = []
+    y1 = Y_SPLICE + PLATE + POCKET
     for x, z in SPLICE:
-        out.append(cyl("y", x, z, 2.75, y0 - 1.0, y1 + 1.0))
-        for ya, yb in ((y0, Y_SPLICE - PLATE), (Y_SPLICE + PLATE, y1)):
-            xa, xb = (X_IN - 5.0, x + 6.5) if x < 150 else (x - 6.5, RAIL_X[1] + 5.0)
-            za = z - 6.5 if z - 6.5 > BED + 6.0 else BED - 1.0         # a lower pocket opens through the floor face (it left a 1.5 fin over the bed: room_full 0.65 in it)
-            out.append(box(xa, xb, ya, yb, za, z + 6.5))
+        if rear:
+            out.append(cyl("y", x, z, 3.2, Y_SPLICE - 9.0, Y_SPLICE + 1.0))
+            continue
+        out.append(cyl("y", x, z, 2.75, Y_SPLICE - 1.0, y1 + 1.0))
+        xa, xb = (X_IN - 5.0, x + 6.5) if x < 150 else (x - 6.5, RAIL_X[1] + 5.0)
+        za = z - 6.5 if z - 6.5 > BED + 6.0 else BED - 1.0         # a lower pocket opens through the floor face (no fin over the bed)
+        out.append(box(xa, xb, Y_SPLICE + PLATE, y1, za, z + 6.5))
     return U(*out)
 
 
@@ -116,7 +121,7 @@ def rear_setup(h, s):
     outer = [cyl("x", y, z, 8.5, RAIL_X[1] - 10.0, RAIL_X[1]) for y, z in JOINT]                # the heads' seats (r 7 left 1.5 round the Ø11 counterbore: drawn_wall)
     plate = [_splice_boss(x, z, Y_SPLICE - PLATE, Y_SPLICE - 0.25) for x, z in SPLICE]
     drawn = U(pad, *inner, *outer, *plate)
-    cuts = U(sweep(), _joint_cuts(), _splice_cuts(), stud)
+    cuts = U(sweep(), _joint_cuts(), _splice_cuts(rear=True), stud)
     if s > 0:
         cuts = cuts + box(*PSU)
     env = _rail_room(-64.0, Y_SPLICE - 0.25)
