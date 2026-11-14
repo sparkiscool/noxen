@@ -257,7 +257,7 @@ def stand_rows():
                  f"<td>{e(str(sc if sc is not None else ''))}</td><td>{('<a href=' + chr(34) + rel + chr(34) + '>' + e(pid) + '.stl</a>') if rel else ''}</td></tr>")
     bought = "".join(f"<tr><td><a href=\"{u}\">{e(n)}</a></td><td>{q}</td></tr>" for n, q, u in STAND_BOUGHT)
     return ("<table><tr><th>piece</th><th>run</th><th>g</th><th>worst</th><th>solid check</th><th>print file</th></tr>" + rows + "</table>"
-            "<p>Also: four TPU 95A feet (parts/box_stand2_foot, Ø36 x 5 with a Ø8 x 4 stud).</p>"
+            "<p>Also: four TPU 95A feet (parts/box_stand2_foot, Ø36 x 5 with a Ø8 x 2.8 stud).</p>"
             "<h3>Stand bought</h3><table><tr><th>part</th><th>qty</th></tr>" + bought + "</table>")
 
 
@@ -289,7 +289,7 @@ def stand_parts():
             P = np.eye(4); P[:3, 3] = [s * L.FOOT_X, y, L.FLOOR]
             out.append(dict(base, id=f"box_stand2_foot_{'r' if s > 0 else 'l'}_{k}", name=f"stand v2: TPU 95A foot, {'right' if s > 0 else 'left'} {k}", color="#3a3a3a",
                             material="TPU", mesh=fv, part="box_stand2_foot", pose=P.tolist(), version="v2 14 Nov",
-                            note="Ø36 x 5 pad, its Ø8 x 4 stud pressed into the piece's foot pad"))
+                            note="Ø36 x 5 pad, its Ø8 x 2.8 stud pressed into the piece's foot pad"))
     return out
 
 
