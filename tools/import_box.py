@@ -224,21 +224,25 @@ def appendix(chk):
 {'<table><tr><th>piece</th><th>piece</th><th>mm3</th><th>states, worst</th></tr>' + pairs + '</table>' if pairs else ''}
 <h3>Clearances (mm, sampled to about 1)</h3><table><tr><th>mm</th><th>between</th><th>and</th><th>where</th></tr>{clr}</table>
 <h2>Funnel v5: print kit (A1 mini, 180 bed; parts/box_funnel/kit.json)</h2>
-<p><b>{'Every file is ready: in its print pose, on the plate, solid check PASS on that file.' if kit['ok'] else 'NOT ready to print: ' + e(', '.join(kit['not_ready']) or 'pieces missing') + ' (the halves and arms are written from their runs; a piece is ready when its file lies over its bed minimum, fits the plate and passes the solid check).'}</b> The 15 longer mast is not in this kit: the stand note below.</p>
+<p><b>{'Every file is ready: in its print pose, on the plate, solid check PASS on that file.' if kit['ok'] else 'NOT ready to print: ' + e(', '.join(kit['not_ready']) or 'pieces missing') + ' (the halves and arms are written from their runs; a piece is ready when its file lies over its bed minimum, fits the plate and passes the solid check).'}</b> The stand is not in this kit: the stand note below.</p>
 <table><tr><th>file</th><th>count</th><th>on the bed (x, y, z)</th><th>pose</th><th>flat on the bed</th><th>supports</th><th>material</th><th>solid check</th><th>print file</th></tr>{prt}</table>
 <h3>Bought</h3><table><tr><th>part</th><th>qty</th><th>note</th></tr>{bought}</table><p>Fasteners: {e(FASTENERS)}.</p>
 <p>Hold-down: each end wall carries two 3 x 3 x 16 steel keys that enter the notches in the receiver's end faces; the walls land a drone at park, back off to open and drive in to seated (the arm v8 head pushes up to 118 N; the Overseer weighs 21.6 N, the Scout 4.9 N).</p>
-<p><b>Stand: mast to reprint, strength open.</b> {e(STAND_NOTE)}</p>"""
+<p><b>Stand: FAILS with the arm v8; do not print the 15 longer mast.</b> {e(STAND_NOTE)}</p>"""
 
 
-STAND_V = {"box_stand_cradle_keel": "v6 as printed (git 33cd639) with its cradle upstand sawn off at the bar top (W Z -181 as printed): 36.7 of 55.2 cm3; 15 lower for the hub 15 higher (Spark 13 Nov). Strength with arm v8 not checked",
-           "box_stand_toe": "v7b as printed, uncut; 15 lower for the hub 15 higher (Spark 13 Nov). Strength with arm v8 not checked"}
-STAND_NOTE = ("Spark 13 Nov: the hub stands 15 higher over the floor so the arm v8 wheel (seat faces at R 127, was 113) clears the built demo's stand. "
-              "Reprint the mast 15 longer (187, a prism of its own section let in at W Z -49; prints on its side along the bed diagonal); saw the "
-              "printed keel's cradle upstand off at its bar top (W Z -181 as printed, 36.7 of 55.2 cm3 left); the toe, kb and both bars stay as "
-              "printed, all 15 lower (the floor at W Z -216). The -90 bay's lowest point (W Z -192.9) is 3.1 over the keel bar and 23.1 over the "
-              "floor (tools/box_check.py PASS). NOT checked yet: the stand's strength with the arm v8 on it (the arm, its 11 bays with packs, the "
-              "118 N push at W Y 192); the keel bar keeps the 580 mm3 section it had over W Y 107..137. Print the mast; do not call the stand done.")
+STAND_V = {"box_stand_cradle_keel": "v6 as printed (git 33cd639) with its cradle upstand sawn off at the bar top (W Z -181 as printed): 36.7 of 55.2 cm3; 15 lower for the hub 15 higher (Spark 13 Nov). FAILS with the arm v8 (parts/box_stand_mast/check.py)",
+           "box_stand_toe": "v7b as printed, uncut; 15 lower for the hub 15 higher (Spark 13 Nov). FAILS with the arm v8 on an uneven floor (parts/box_stand_mast/check.py)"}
+STAND_NOTE = ("Checked 14 Nov with the arm v8 on it (parts/box_stand_mast/check.py, hand beam checks, PCTG, gate 0.5 in every class): the stand FAILS and "
+              "the 15 longer mast is NOT to be printed. The arm v8 with its 11 bays and packs is 9.7 kg with its CG at W Y 129 (the v1 stand was "
+              "sized for 2.9 kg at Y 60): 15.2 N m standing on the mast's foot, 38.9 N m with the 106.6 N insert at the drone. Mast tube 0.77 "
+              "standing (sustained), 0.86 box handling; kb's tenon in the mast 1.12 / 1.27; the sawn keel at least 1.75 standing even on a "
+              "perfectly flat floor (the floor's reaction has to come up at Y 128..163, in front of the bars at Y 62, through a 20 x 40 bar); bars "
+              "1.22 and the toe 2.11 on an uneven floor. The mast also does not take the v8 stub: its flange's 4 M5 at r 38 on 45 deg sit at X "
+              "+-26.9, off the mast's 40 wide face (holes at X +-10, Z +-30 for stub v3). The cradle held the v1 demo's -90 bay module; in v8 "
+              "every bay is on the arm's ring, so that load is in the arm's 9.7 kg through the stub. Needed: a new stand (mast with the v8 stub's "
+              "face, a base bearing on the floor forward to about Y 250 as two rails at |X| 100 or more, where the ring leaves 37 to 76 mm over the "
+              "floor; no centre keel has the depth), engine parts from the loads in parts/box_stand_mast/feedback.md.")
 
 
 def stand_versions(parts):

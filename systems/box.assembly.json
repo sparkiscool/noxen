@@ -4,7 +4,7 @@
 "readme_view": "iso",
 "artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
 "machine": "box",
-"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, the swap arm from systems/swap_arm.assembly.json, the stand of the built demo with its keel and toe cut back from the arm v8 bays (they FAIL strength as cut: the note under the viewer), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. Compatibility between the streams: tools/box_check.py, its result under the viewer.",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, the swap arm from systems/swap_arm.assembly.json, the stand of the built demo with its keel and toe cut back from the arm v8 bays (it FAILS strength with the arm v8: the note under the viewer), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. Compatibility between the streams: tools/box_check.py, its result under the viewer.",
 "cg_ref": null,
 "timeline": "tools/landing_box.py:timeline",
 "parts": [
@@ -86,7 +86,7 @@
 "mass_g": null,
 "tag": "M",
 "owner": "box structure",
-"version": "v6 as printed (git 33cd639) with its cradle upstand sawn off at the bar top (W Z -181 as printed): 36.7 of 55.2 cm3; 15 lower for the hub 15 higher (Spark 13 Nov). Strength with arm v8 not checked",
+"version": "v6 as printed (git 33cd639) with its cradle upstand sawn off at the bar top (W Z -181 as printed): 36.7 of 55.2 cm3; 15 lower for the hub 15 higher (Spark 13 Nov). FAILS with the arm v8 (parts/box_stand_mast/check.py)",
 "source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
 "note": "print/box_cradle_keel_v6.stl"
 },
@@ -168,7 +168,7 @@
 "mass_g": null,
 "tag": "M",
 "owner": "box structure",
-"version": "v7b as printed, uncut; 15 lower for the hub 15 higher (Spark 13 Nov). Strength with arm v8 not checked",
+"version": "v7b as printed, uncut; 15 lower for the hub 15 higher (Spark 13 Nov). FAILS with the arm v8 on an uneven floor (parts/box_stand_mast/check.py)",
 "source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
 "note": "print/box_toe_v7b.stl"
 },
