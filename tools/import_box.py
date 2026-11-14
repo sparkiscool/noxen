@@ -224,33 +224,28 @@ def appendix(chk):
 {'<table><tr><th>piece</th><th>piece</th><th>mm3</th><th>states, worst</th></tr>' + pairs + '</table>' if pairs else ''}
 <h3>Clearances (mm, sampled to about 1)</h3><table><tr><th>mm</th><th>between</th><th>and</th><th>where</th></tr>{clr}</table>
 <h2>Funnel v5: print kit (A1 mini, 180 bed; parts/box_funnel/kit.json)</h2>
-<p><b>{'Every file is ready: in its print pose, on the plate, solid check PASS on that file.' if kit['ok'] else 'NOT ready to print: ' + e(', '.join(kit['not_ready']) or 'pieces missing') + ' (the halves and arms are written from their runs; a piece is ready when its file lies over its bed minimum, fits the plate and passes the solid check).'}</b> The mast is not in the kit: the stand is not redrawn (the note below).</p>
+<p><b>{'Every file is ready: in its print pose, on the plate, solid check PASS on that file.' if kit['ok'] else 'NOT ready to print: ' + e(', '.join(kit['not_ready']) or 'pieces missing') + ' (the halves and arms are written from their runs; a piece is ready when its file lies over its bed minimum, fits the plate and passes the solid check).'}</b> The 15 longer mast is not in this kit: the stand note below.</p>
 <table><tr><th>file</th><th>count</th><th>on the bed (x, y, z)</th><th>pose</th><th>flat on the bed</th><th>supports</th><th>material</th><th>solid check</th><th>print file</th></tr>{prt}</table>
 <h3>Bought</h3><table><tr><th>part</th><th>qty</th><th>note</th></tr>{bought}</table><p>Fasteners: {e(FASTENERS)}.</p>
 <p>Hold-down: each end wall carries two 3 x 3 x 16 steel keys that enter the notches in the receiver's end faces; the walls land a drone at park, back off to open and drive in to seated (the arm v8 head pushes up to 118 N; the Overseer weighs 21.6 N, the Scout 4.9 N).</p>
-<p><b>Stand: not ready to print.</b> {e(STAND_NOTE)}</p>"""
+<p><b>Stand: mast to reprint, strength open.</b> {e(STAND_NOTE)}</p>"""
 
 
-UNCUT_CM3 = {"box_stand_cradle_keel": 55.2, "box_stand_toe": 41.5}     # the built demo's pieces before any cut (git 33cd639)
-STAND_NOTE = ("The arm v8 wheel (seat faces at R 127, was 113) swings its bays to within 8.1 mm of the floor (the -90 bay's lowest point W Z -192.9, "
-              "its corners r 195.4 over W Y 108..222; the floor is W Z -201), through the built demo's cradle keel and toe. Cut back 2.5 clear of that bay "
-              "(what the page shows) the keel keeps 30.0 of 55.2 cm3: its cradle (W Z -181..-153 over W Y 143..197) is gone and its 20 mm bar is 9.2 high "
-              "over W Y 107..197, section modulus 89 mm3 where it was 5637 (W Y 143..197) and about 105 where it was 580 (W Y 107..137); the toe keeps 37.7 "
-              "of 41.5 cm3, 95 to 241 mm3 at its root (W Y 200..212) where it was 354 to 2657. In PETG at index 0.5 (flight class, 10.8 MPa in the layers) "
-              "the cut keel carries 3 N at the toe's front edge (uncut 193 N); a 50 N hand there reads 5.1 against the misuse limit of 1.0. FAIL: the cut "
-              "pieces must not be printed or the demo's keel cut to match. Nothing thicker than 3 mm fits under the wheel on the centre line; the room "
-              "is at the sides (the swept circle is 15 above the floor at |X| 70, 28 at |X| 100), so the spine from the cross bars to the front sheet has "
-              "to become two rails outside |X| 70, or the hub has to stand 15 higher over the floor (mast, sheets and funnel with it). That is a change "
-              "to the box structure with the arm, not a recut.")
+STAND_V = {"box_stand_cradle_keel": "v6 as printed (git 33cd639) with its cradle upstand sawn off at the bar top (W Z -181 as printed): 36.7 of 55.2 cm3; 15 lower for the hub 15 higher (Spark 13 Nov). Strength with arm v8 not checked",
+           "box_stand_toe": "v7b as printed, uncut; 15 lower for the hub 15 higher (Spark 13 Nov). Strength with arm v8 not checked"}
+STAND_NOTE = ("Spark 13 Nov: the hub stands 15 higher over the floor so the arm v8 wheel (seat faces at R 127, was 113) clears the built demo's stand. "
+              "Reprint the mast 15 longer (187, a prism of its own section let in at W Z -49; prints on its side along the bed diagonal); saw the "
+              "printed keel's cradle upstand off at its bar top (W Z -181 as printed, 36.7 of 55.2 cm3 left); the toe, kb and both bars stay as "
+              "printed, all 15 lower (the floor at W Z -216). The -90 bay's lowest point (W Z -192.9) is 3.1 over the keel bar and 23.1 over the "
+              "floor (tools/box_check.py PASS). NOT checked yet: the stand's strength with the arm v8 on it (the arm, its 11 bays with packs, the "
+              "118 N push at W Y 192); the keel bar keeps the 580 mm3 section it had over W Y 107..137. Print the mast; do not call the stand done.")
 
 
 def stand_versions(parts):
-    """the cut stand pieces say what is left of them and that they fail (recut_stand only knows its own last cut)"""
+    """the stand pieces as the hub-15-higher stand uses them (13 Nov)"""
     for p in parts:
-        if p["id"] in UNCUT_CM3 and p.get("mesh"):
-            v = trimesh.load(os.path.join(ROOT, p["mesh"]), force="mesh").volume / 1000
-            if v < UNCUT_CM3[p["id"]] - 0.2:
-                p["version"] = f"{str(p.get('version') or '').split('; recut')[0]}; recut round the arm v8 bay -90: {v:.1f} of {UNCUT_CM3[p['id']]} cm3 left, 2.5 clear. FAILS strength as cut (the page's stand note): not to print"
+        if p["id"] in STAND_V:
+            p["version"] = STAND_V[p["id"]]
 
 
 def recut_stand(parts, arm_parts, clear=2.5):

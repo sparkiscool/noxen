@@ -4,7 +4,7 @@
 "readme_view": "iso",
 "artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
 "machine": "box",
-"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, the swap arm from systems/swap_arm.assembly.json, the stand of the built demo with its keel and toe cut back from the arm v8 bays (they FAIL strength as cut: the note under the viewer), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. Compatibility between the streams: tools/box_check.py, its result under the viewer.",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, the swap arm from systems/swap_arm.assembly.json, the stand of the built demo with the hub 15 higher over the floor (Spark 13 Nov: mast reprinted 15 longer, the keel's cradle upstand sawn off, kb, bars, keel and toe 15 lower; strength with arm v8 not yet checked: the note under the viewer), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. Compatibility between the streams: tools/box_check.py, its result under the viewer.",
 "cg_ref": null,
 "timeline": "tools/landing_box.py:timeline",
 "parts": [
@@ -45,7 +45,7 @@
 "mass_g": null,
 "tag": "M",
 "owner": "box structure",
-"version": "v6",
+"version": "v6; 15 longer (187, Spark 13 Nov: the hub 15 higher over the floor): reprint",
 "source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
 "note": "print/box_mast_v6.stl"
 },
@@ -73,7 +73,7 @@
 -0.0,
 0.0,
 1.0,
--9e-06
+-15.000009
 ],
 [
 0.0,
@@ -86,7 +86,7 @@
 "mass_g": null,
 "tag": "M",
 "owner": "box structure",
-"version": "v6; recut round the arm v8 bay -90: 30.0 of 55.2 cm3 left, 2.5 clear. FAILS strength as cut (the page's stand note): not to print",
+"version": "v6 as printed (git 33cd639) with its cradle upstand sawn off at the bar top (W Z -181 as printed): 36.7 of 55.2 cm3; 15 lower for the hub 15 higher (Spark 13 Nov). Strength with arm v8 not checked",
 "source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
 "note": "print/box_cradle_keel_v6.stl"
 },
@@ -114,7 +114,7 @@
 -0.0,
 -0.0,
 1.0,
-7e-06
+-14.999993
 ],
 [
 0.0,
@@ -155,7 +155,7 @@
 -0.0,
 -0.0,
 1.0,
-1.1e-05
+-14.999989
 ],
 [
 0.0,
@@ -168,7 +168,7 @@
 "mass_g": null,
 "tag": "M",
 "owner": "box structure",
-"version": "v7b; recut round the arm v8 bay -90: 37.7 of 41.5 cm3 left, 2.5 clear. FAILS strength as cut (the page's stand note): not to print",
+"version": "v7b as printed, uncut; 15 lower for the hub 15 higher (Spark 13 Nov). Strength with arm v8 not checked",
 "source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
 "note": "print/box_toe_v7b.stl"
 },
@@ -196,7 +196,7 @@
 0.0,
 -0.0,
 1.0,
-8e-06
+-14.999992
 ],
 [
 0.0,
@@ -237,7 +237,7 @@
 -0.0,
 -0.0,
 1.0,
-1.3e-05
+-14.999987
 ],
 [
 0.0,
