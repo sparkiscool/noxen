@@ -1,459 +1,364 @@
 {
  "name": "scout_v4_cradle",
  "engine": "nox/topo",
- "status": "early_fail",
- "solid_ok": false,
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   4860.1
+  ],
+  "sealed_voids": [],
+  "inner_shells": [],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 1,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 2225.5,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.02,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
  "strength": {
   "rows": [
    {
     "case": "camera and LED bars crash 0 (35 g [1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.073,
-    "across": 0.035,
+    "inlayer": 0.025,
+    "across": 0.025,
     "at": [
-     20.2,
-     -22.2,
-     102.1
+     18.6,
+     -23.0,
+     101.3
     ]
    },
    {
     "case": "camera and LED bars crash 1 (35 g [-1.0, 0.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.073,
-    "across": 0.08,
+    "inlayer": 0.025,
+    "across": 0.031,
     "at": [
-     17.0,
+     17.8,
      16.2,
-     114.9
+     110.1
     ]
    },
    {
     "case": "camera and LED bars crash 2 (35 g [0.0, 1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.082,
-    "across": 0.07,
+    "inlayer": 0.043,
+    "across": 0.035,
     "at": [
      14.6,
-     15.3,
-     121.3
+     -26.2,
+     115.7
     ]
    },
    {
     "case": "camera and LED bars crash 3 (35 g [0.0, -1.0, 0.0])",
     "cls": "crash",
-    "inlayer": 0.082,
-    "across": 0.089,
+    "inlayer": 0.043,
+    "across": 0.043,
     "at": [
      14.6,
-     15.3,
-     121.3
+     -26.2,
+     115.7
     ]
    },
    {
     "case": "camera and LED bars crash 4 (35 g [0.0, 0.0, 1.0])",
     "cls": "crash",
-    "inlayer": 0.08,
-    "across": 0.088,
+    "inlayer": 0.031,
+    "across": 0.037,
     "at": [
-     14.6,
-     16.2,
-     121.3
+     21.0,
+     15.3,
+     103.7
     ]
    },
    {
     "case": "camera and LED bars crash 5 (35 g [0.0, 0.0, -1.0])",
     "cls": "crash",
-    "inlayer": 0.08,
-    "across": 0.099,
-    "at": [
-     14.6,
-     16.2,
-     121.3
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 6 (35 g [0.58, 0.58, 0.58])",
-    "cls": "crash",
-    "inlayer": 0.094,
-    "across": 0.083,
-    "at": [
-     14.6,
-     15.3,
-     121.3
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 7 (35 g [0.58, 0.58, -0.58])",
-    "cls": "crash",
-    "inlayer": 0.086,
-    "across": 0.073,
-    "at": [
-     20.2,
-     -22.2,
-     102.1
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 8 (35 g [0.58, -0.58, 0.58])",
-    "cls": "crash",
-    "inlayer": 0.052,
-    "across": 0.053,
-    "at": [
-     28.2,
-     16.2,
-     121.3
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 9 (35 g [0.58, -0.58, -0.58])",
-    "cls": "crash",
-    "inlayer": 0.072,
-    "across": 0.082,
-    "at": [
-     14.6,
-     15.3,
-     121.3
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 10 (35 g [-0.58, 0.58, 0.58])",
-    "cls": "crash",
-    "inlayer": 0.072,
-    "across": 0.104,
-    "at": [
-     17.0,
-     16.2,
-     114.9
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 11 (35 g [-0.58, 0.58, -0.58])",
-    "cls": "crash",
-    "inlayer": 0.052,
-    "across": 0.078,
-    "at": [
-     13.8,
-     16.2,
-     126.1
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 12 (35 g [-0.58, -0.58, 0.58])",
-    "cls": "crash",
-    "inlayer": 0.086,
-    "across": 0.064,
-    "at": [
-     20.2,
-     -22.2,
-     102.1
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 13 (35 g [-0.58, -0.58, -0.58])",
-    "cls": "crash",
-    "inlayer": 0.094,
-    "across": 0.111,
-    "at": [
-     14.6,
-     15.3,
-     121.3
-    ]
-   },
-   {
-    "case": "camera and LED bars flight 4 g",
-    "cls": "flight",
-    "inlayer": 0.033,
-    "across": 0.037,
-    "at": [
-     14.6,
-     16.2,
-     121.3
-    ]
-   },
-   {
-    "case": "camera and LED bars flight 2 g x",
-    "cls": "flight",
-    "inlayer": 0.013,
-    "across": 0.008,
-    "at": [
-     20.2,
-     -22.2,
-     102.1
-    ]
-   },
-   {
-    "case": "camera and LED bars flight 2 g y",
-    "cls": "flight",
-    "inlayer": 0.023,
-    "across": 0.022,
-    "at": [
-     14.6,
-     15.3,
-     121.3
-    ]
-   },
-   {
-    "case": "camera and LED bars landing 6 g",
-    "cls": "flight",
-    "inlayer": 0.05,
-    "across": 0.055,
-    "at": [
-     14.6,
-     16.2,
-     121.3
-    ]
-   },
-   {
-    "case": "head-first crash: 280 N down onto the case's top",
-    "cls": "crash",
-    "inlayer": 1.349,
-    "across": 1.55,
-    "at": [
-     20.2,
-     15.3,
-     102.9
-    ]
-   }
-  ],
-  "worst": 1.55,
-  "worst_case": "head-first crash: 280 N down onto the case's top",
-  "worst_at": [
-   20.2,
-   15.3,
-   102.9
-  ],
-  "ok": true,
-  "beta": 4.0,
-  "iteration": 14,
-  "max_worst": 0.3,
-  "k": 3.0
- },
- "early": {
-  "rows": [
-   {
-    "case": "camera and LED bars crash 0 (35 g [1.0, 0.0, 0.0])",
-    "cls": "crash",
-    "inlayer": 0.073,
+    "inlayer": 0.031,
     "across": 0.035,
     "at": [
      20.2,
-     -22.2,
-     102.1
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 1 (35 g [-1.0, 0.0, 0.0])",
-    "cls": "crash",
-    "inlayer": 0.073,
-    "across": 0.08,
-    "at": [
-     17.0,
      16.2,
-     114.9
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 2 (35 g [0.0, 1.0, 0.0])",
-    "cls": "crash",
-    "inlayer": 0.082,
-    "across": 0.07,
-    "at": [
-     14.6,
-     15.3,
-     121.3
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 3 (35 g [0.0, -1.0, 0.0])",
-    "cls": "crash",
-    "inlayer": 0.082,
-    "across": 0.089,
-    "at": [
-     14.6,
-     15.3,
-     121.3
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 4 (35 g [0.0, 0.0, 1.0])",
-    "cls": "crash",
-    "inlayer": 0.08,
-    "across": 0.088,
-    "at": [
-     14.6,
-     16.2,
-     121.3
-    ]
-   },
-   {
-    "case": "camera and LED bars crash 5 (35 g [0.0, 0.0, -1.0])",
-    "cls": "crash",
-    "inlayer": 0.08,
-    "across": 0.099,
-    "at": [
-     14.6,
-     16.2,
-     121.3
+     102.9
     ]
    },
    {
     "case": "camera and LED bars crash 6 (35 g [0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.094,
-    "across": 0.083,
+    "inlayer": 0.039,
+    "across": 0.023,
     "at": [
-     14.6,
+     17.0,
      15.3,
-     121.3
+     110.9
     ]
    },
    {
     "case": "camera and LED bars crash 7 (35 g [0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.086,
-    "across": 0.073,
+    "inlayer": 0.031,
+    "across": 0.031,
     "at": [
-     20.2,
-     -22.2,
-     102.1
+     21.8,
+     -0.7,
+     100.5
     ]
    },
    {
     "case": "camera and LED bars crash 8 (35 g [0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.052,
-    "across": 0.053,
+    "inlayer": 0.035,
+    "across": 0.039,
     "at": [
-     28.2,
-     16.2,
-     121.3
+     13.8,
+     -26.2,
+     114.9
     ]
    },
    {
     "case": "camera and LED bars crash 9 (35 g [0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.072,
-    "across": 0.082,
+    "inlayer": 0.032,
+    "across": 0.049,
     "at": [
-     14.6,
-     15.3,
-     121.3
+     20.2,
+     16.2,
+     102.9
     ]
    },
    {
     "case": "camera and LED bars crash 10 (35 g [-0.58, 0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.072,
-    "across": 0.104,
+    "inlayer": 0.032,
+    "across": 0.04,
     "at": [
-     17.0,
+     17.8,
      16.2,
-     114.9
+     110.1
     ]
    },
    {
     "case": "camera and LED bars crash 11 (35 g [-0.58, 0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.052,
-    "across": 0.078,
+    "inlayer": 0.035,
+    "across": 0.04,
     "at": [
-     13.8,
-     16.2,
-     126.1
+     12.2,
+     15.3,
+     130.1
     ]
    },
    {
     "case": "camera and LED bars crash 12 (35 g [-0.58, -0.58, 0.58])",
     "cls": "crash",
-    "inlayer": 0.086,
-    "across": 0.064,
+    "inlayer": 0.031,
+    "across": 0.035,
     "at": [
-     20.2,
-     -22.2,
-     102.1
+     13.8,
+     -26.2,
+     114.9
     ]
    },
    {
     "case": "camera and LED bars crash 13 (35 g [-0.58, -0.58, -0.58])",
     "cls": "crash",
-    "inlayer": 0.094,
-    "across": 0.111,
+    "inlayer": 0.039,
+    "across": 0.03,
     "at": [
-     14.6,
+     17.0,
      15.3,
-     121.3
+     110.9
     ]
    },
    {
     "case": "camera and LED bars flight 4 g",
     "cls": "flight",
-    "inlayer": 0.033,
-    "across": 0.037,
+    "inlayer": 0.013,
+    "across": 0.016,
     "at": [
-     14.6,
-     16.2,
-     121.3
+     21.0,
+     15.3,
+     103.7
     ]
    },
    {
     "case": "camera and LED bars flight 2 g x",
     "cls": "flight",
-    "inlayer": 0.013,
-    "across": 0.008,
+    "inlayer": 0.007,
+    "across": 0.005,
     "at": [
      20.2,
-     -22.2,
-     102.1
+     0.9,
+     100.5
     ]
    },
    {
     "case": "camera and LED bars flight 2 g y",
     "cls": "flight",
-    "inlayer": 0.023,
-    "across": 0.022,
+    "inlayer": 0.009,
+    "across": 0.008,
     "at": [
-     14.6,
-     15.3,
-     121.3
+     17.0,
+     16.2,
+     115.7
     ]
    },
    {
     "case": "camera and LED bars landing 6 g",
     "cls": "flight",
-    "inlayer": 0.05,
-    "across": 0.055,
+    "inlayer": 0.019,
+    "across": 0.023,
     "at": [
-     14.6,
-     16.2,
-     121.3
+     21.0,
+     15.3,
+     103.7
     ]
    },
    {
-    "case": "head-first crash: 280 N down onto the case's top",
+    "case": "head-first crash: 250 N, the case landed on the crash stop through the sleeve's bottom",
     "cls": "crash",
-    "inlayer": 1.349,
-    "across": 1.55,
+    "inlayer": 0.122,
+    "across": 0.133,
     "at": [
-     20.2,
-     15.3,
+     29.0,
+     9.8,
      102.9
+    ]
+   },
+   {
+    "case": "head-first crash: the pivots until the SG90 slips (18 N)",
+    "cls": "crash",
+    "inlayer": 0.039,
+    "across": 0.046,
+    "at": [
+     21.0,
+     15.3,
+     103.7
     ]
    }
   ],
-  "worst": 1.55,
-  "worst_case": "head-first crash: 280 N down onto the case's top",
+  "worst": 0.133,
+  "worst_case": "head-first crash: 250 N, the case landed on the crash stop through the sleeve's bottom",
   "worst_at": [
-   20.2,
-   15.3,
+   29.0,
+   9.8,
    102.9
   ],
-  "ok": true,
-  "beta": 4.0,
-  "iteration": 14,
-  "max_worst": 0.3,
-  "k": 3.0
+  "ok": true
  },
- "mass_g": null,
+ "mass_g": 12.72,
+ "watertight": true,
+ "export": {
+  "faces_in": 101210,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "pinch_vertices": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "open_kept": [],
+  "faces": 101210,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 4,
+   "folded": 0,
+   "caps_split": 2,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 174608,
+   "n_dropped_shells": 0,
+   "dropped_shells": []
+  },
+  "volume_mm3": 10342.6,
+  "exact_mm3": 10342.2
+ },
+ "bodies": {
+  "bodies_raw": 9,
+  "dropped_specks_mm3": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "cavities_mm3": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "bodies": 1
+ },
+ "volume_mm3": 10342.2,
+ "drawn_g": 6.21,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [
+   0.859,
+   0.172
+  ],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0,
+  "specks": 2
+ },
+ "memory_build": [
+  {
+   "estimate_gb": 2.55,
+   "parts": {
+    "held": 0.76,
+    "gate": 0.19,
+    "mesh": 1.59
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 4627866,
+   "bounds_mm": [
+    33.6,
+    45.5,
+    43.5
+   ],
+   "faces": 284592,
+   "when": "before the export cleanup"
+  },
+  {
+   "estimate_gb": 0.99,
+   "parts": {
+    "held": 0.8,
+    "gate": 0.19,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 4627866,
+   "bounds_mm": [
+    33.6,
+    45.5,
+    43.5
+   ],
+   "faces": 0,
+   "when": "before the solid check"
+  }
+ ],
+ "stl": "scout_v4_cradle.stl",
+ "view_stl": "scout_v4_cradle_view.stl",
+ "view_faces": 101210,
+ "preview": "preview.png",
  "layout": {
   "settings": {
    "min_member_mm": 6.25,
@@ -529,31 +434,43 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.2813220184367197,
-  "nd": 41656,
+  "volfrac": 0.2866341356031699,
+  "nd": 40884,
   "sym_axes": [],
-  "n_real": 19,
-  "n_ties": 6,
+  "n_real": 20,
+  "n_ties": 0,
   "backend": "direct",
-  "iterations": 14,
-  "stopped": "maxit",
+  "iterations": 84,
+  "stopped": "max_stage",
   "checks": [
    {
     "it": 14,
     "beta": 4.0,
-    "worst": 1.55,
-    "worst_case": "head-first crash: 280 N down onto the case's top"
+    "worst": 0.133,
+    "worst_case": "head-first crash: 250 N, the case landed on the crash stop through the sleeve's bottom"
+   },
+   {
+    "it": 24,
+    "beta": 8.0,
+    "worst": 0.133,
+    "worst_case": "head-first crash: 250 N, the case landed on the crash stop through the sleeve's bottom"
+   },
+   {
+    "it": 34,
+    "beta": 16.0,
+    "worst": 0.133,
+    "worst_case": "head-first crash: 250 N, the case landed on the crash stop through the sleeve's bottom"
    }
   ],
   "hold": {
    "started_it": 14,
    "beta": 4.0,
-   "index": 1.55
+   "index": 0.133
   },
   "cavity": {
-   "last": 5.181642737563768,
+   "last": 5.00041590559783,
    "ratio": 5.0,
-   "T0": 4.375576798980442,
+   "T0": 4.385103224940589,
    "row": true
   }
  },
@@ -571,8 +488,8 @@
    92.9136
   ],
   "cells": 258048,
-  "design": 41656,
-  "drawn": 7513,
+  "design": 40884,
+  "drawn": 8285,
   "cases": [
    "camera and LED bars crash 0 (35 g [1.0, 0.0, 0.0])",
    "camera and LED bars crash 1 (35 g [-1.0, 0.0, 0.0])",
@@ -592,53 +509,321 @@
    "camera and LED bars flight 2 g x",
    "camera and LED bars flight 2 g y",
    "camera and LED bars landing 6 g",
-   "head-first crash: 280 N down onto the case's top"
+   "head-first crash: 250 N, the case landed on the crash stop through the sleeve's bottom",
+   "head-first crash: the pivots until the SG90 slips (18 N)"
   ],
   "supports": [
-   "default"
+   "default",
+   "landed"
   ]
+ },
+ "build_s": 52.4,
+ "layout_s": 3161,
+ "peak_gb": 2.950596,
+ "memory": {
+  "estimate_gb": 3.81,
+  "parts": {
+   "held": 0.66,
+   "factor": 1.81,
+   "assembly": 0.48,
+   "block": 0.72,
+   "energies": 0.15
+  },
+  "limit_gb": 14.0,
+  "cases": 20,
+  "active_dofs": 182817,
+  "backend": "direct",
+  "block": 41,
+  "build": {
+   "estimate_gb": 0.92,
+   "parts": {
+    "held": 0.66,
+    "gate": 0.26,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 6092244,
+   "bounds_mm": [
+    38.6,
+    45.5,
+    50.4
+   ],
+   "faces": 0,
+   "when": "from the envelope"
+  },
+  "peak_it1_gb": 2.81
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "camera and LED bars crash 0 (35 g [1.0, 0.0, 0.0])",
+    "cls": "crash",
+    "inlayer": 0.025,
+    "across": 0.026,
+    "at": [
+     20.2,
+     16.2,
+     102.9
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 1 (35 g [-1.0, 0.0, 0.0])",
+    "cls": "crash",
+    "inlayer": 0.025,
+    "across": 0.035,
+    "at": [
+     17.8,
+     16.2,
+     110.1
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 2 (35 g [0.0, 1.0, 0.0])",
+    "cls": "crash",
+    "inlayer": 0.043,
+    "across": 0.029,
+    "at": [
+     13.8,
+     -27.0,
+     114.1
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 3 (35 g [0.0, -1.0, 0.0])",
+    "cls": "crash",
+    "inlayer": 0.043,
+    "across": 0.039,
+    "at": [
+     13.8,
+     -27.0,
+     114.1
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 4 (35 g [0.0, 0.0, 1.0])",
+    "cls": "crash",
+    "inlayer": 0.032,
+    "across": 0.038,
+    "at": [
+     21.0,
+     15.3,
+     103.7
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 5 (35 g [0.0, 0.0, -1.0])",
+    "cls": "crash",
+    "inlayer": 0.032,
+    "across": 0.037,
+    "at": [
+     20.2,
+     16.2,
+     102.9
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 6 (35 g [0.58, 0.58, 0.58])",
+    "cls": "crash",
+    "inlayer": 0.038,
+    "across": 0.021,
+    "at": [
+     17.0,
+     15.3,
+     110.9
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 7 (35 g [0.58, 0.58, -0.58])",
+    "cls": "crash",
+    "inlayer": 0.032,
+    "across": 0.029,
+    "at": [
+     21.8,
+     -0.7,
+     100.5
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 8 (35 g [0.58, -0.58, 0.58])",
+    "cls": "crash",
+    "inlayer": 0.033,
+    "across": 0.035,
+    "at": [
+     25.8,
+     16.2,
+     122.1
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 9 (35 g [0.58, -0.58, -0.58])",
+    "cls": "crash",
+    "inlayer": 0.033,
+    "across": 0.05,
+    "at": [
+     20.2,
+     16.2,
+     102.9
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 10 (35 g [-0.58, 0.58, 0.58])",
+    "cls": "crash",
+    "inlayer": 0.033,
+    "across": 0.045,
+    "at": [
+     17.8,
+     16.2,
+     110.1
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 11 (35 g [-0.58, 0.58, -0.58])",
+    "cls": "crash",
+    "inlayer": 0.033,
+    "across": 0.033,
+    "at": [
+     12.2,
+     16.2,
+     130.1
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 12 (35 g [-0.58, -0.58, 0.58])",
+    "cls": "crash",
+    "inlayer": 0.032,
+    "across": 0.028,
+    "at": [
+     21.8,
+     -0.7,
+     100.5
+    ]
+   },
+   {
+    "case": "camera and LED bars crash 13 (35 g [-0.58, -0.58, -0.58])",
+    "cls": "crash",
+    "inlayer": 0.038,
+    "across": 0.03,
+    "at": [
+     17.0,
+     15.3,
+     110.9
+    ]
+   },
+   {
+    "case": "camera and LED bars flight 4 g",
+    "cls": "flight",
+    "inlayer": 0.013,
+    "across": 0.016,
+    "at": [
+     21.0,
+     15.3,
+     103.7
+    ]
+   },
+   {
+    "case": "camera and LED bars flight 2 g x",
+    "cls": "flight",
+    "inlayer": 0.007,
+    "across": 0.005,
+    "at": [
+     20.2,
+     0.1,
+     100.5
+    ]
+   },
+   {
+    "case": "camera and LED bars flight 2 g y",
+    "cls": "flight",
+    "inlayer": 0.009,
+    "across": 0.007,
+    "at": [
+     13.8,
+     -27.0,
+     114.1
+    ]
+   },
+   {
+    "case": "camera and LED bars landing 6 g",
+    "cls": "flight",
+    "inlayer": 0.02,
+    "across": 0.024,
+    "at": [
+     21.0,
+     15.3,
+     103.7
+    ]
+   },
+   {
+    "case": "head-first crash: 250 N, the case landed on the crash stop through the sleeve's bottom",
+    "cls": "crash",
+    "inlayer": 0.121,
+    "across": 0.133,
+    "at": [
+     29.0,
+     9.8,
+     102.9
+    ]
+   },
+   {
+    "case": "head-first crash: the pivots until the SG90 slips (18 N)",
+    "cls": "crash",
+    "inlayer": 0.04,
+    "across": 0.047,
+    "at": [
+     21.0,
+     15.3,
+     103.7
+    ]
+   }
+  ],
+  "worst": 0.133,
+  "worst_case": "head-first crash: 250 N, the case landed on the crash stop through the sleeve's bottom",
+  "worst_at": [
+   29.0,
+   9.8,
+   102.9
+  ],
+  "ok": true,
+  "beta": 4.0,
+  "iteration": 14,
+  "max_worst": 0.3,
+  "k": 3.0
+ },
+ "field": {
+  "worst": 0.133,
+  "worst_case": "head-first crash: 250 N, the case landed on the crash stop through the sleeve's bottom",
+  "worst_at": [
+   29.0,
+   9.8,
+   102.9
+  ],
+  "beta": 32.0,
+  "iteration": 84
  },
  "gen_cm3": 6.0,
  "h": 0.8,
  "audit": {
   "solid_ok": [],
-  "drawn_share": 0.153,
+  "drawn_share": 0.169,
   "load_room": [],
   "bodies": [
    {
     "id": 1,
-    "cells": 7113,
-    "inscribed_mm": 2.4,
-    "touches_cut": true,
-    "touches_support": true,
-    "loaded": true,
-    "room": 0.36,
-    "room_depth_mm": 44.0,
-    "at": [
-     20.3,
-     -2.2,
-     122.6
-    ],
-    "core_mm": 2.0,
-    "free_cells": 7113,
-    "share_of_drawn": 0.95
-   },
-   {
-    "id": 2,
-    "cells": 400,
+    "cells": 8285,
     "inscribed_mm": 2.8,
     "touches_cut": true,
     "touches_support": true,
-    "loaded": false,
-    "room": 0.64,
-    "room_depth_mm": 28.0,
+    "loaded": true,
+    "room": 0.39,
+    "room_depth_mm": 44.0,
     "at": [
-     7.6,
-     -25.5,
-     118.0
+     18.8,
+     -4.0,
+     122.0
     ],
-    "core_mm": 1.5,
-    "free_cells": 400
+    "core_mm": 2.0,
+    "free_cells": 8285,
+    "share_of_drawn": 1.0
    }
   ],
   "envelope_waste": 0.0,
@@ -657,38 +842,38 @@
    "min_mm2": null
   },
   "parity": [],
-  "cases": 19,
-  "supports": 1,
+  "cases": 20,
+  "supports": 2,
   "fails": [],
   "room_full": {
-   "worst": 0.226,
-   "worst_case": "head-first crash: 280 N down onto the case's top",
+   "worst": 0.129,
+   "worst_case": "head-first crash: 250 N, the case landed on the crash stop through the sleeve's bottom",
    "worst_at": [
-    15.4,
-    -3.9,
-    100.5
+    29.0,
+    9.8,
+    102.9
    ],
-   "budget_share": 0.281,
-   "thinned": 0.8,
+   "budget_share": 0.287,
+   "thinned": 0.45,
    "max_worst": 0.3,
-   "fin_cells": 1020,
+   "fin_cells": 1105,
    "worst_in_fin": false
   }
  },
- "total_s": 262,
  "baseline": null,
- "part_sha": "d3031db0c181",
+ "total_s": 3213,
+ "part_sha": "bbf753738fb9",
  "lib_sha": "75bc9ff30b85",
- "setup_sha": "0526f8e08abfc434",
+ "setup_sha": "4b8a1ec242518d60",
  "max_worst": 0.3,
- "strength_ok": false,
+ "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_cradle.stl",
-  "sha256": "a537833d18d1b2119f1b8216bf835ae28e53a47ef24ed8a2f35c87ad55876645",
-  "bytes": 3000084,
-  "faces": 60000,
+  "sha256": "f133f712decfe25a7037a9c87130690c38a73e1e745d93becd9540125892ab83",
+  "bytes": 5060584,
+  "faces": 101210,
   "view_faces": 60000,
-  "view_sha256": "a537833d18d1b2119f1b8216bf835ae28e53a47ef24ed8a2f35c87ad55876645",
-  "at": "2026-11-14 04:54"
+  "view_sha256": "5768097bc9627461590db0b2aee832612100ad7e43e7452461c2692742f9895e",
+  "at": "2026-11-14 07:34"
  }
 }
