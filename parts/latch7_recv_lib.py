@@ -48,6 +48,7 @@ mk = importlib.util.module_from_spec(_s); sys.modules.setdefault("latch7_make", 
 bl, box, cyl, U = mk.bl, mk.box, mk.cyl, mk.U
 
 SKIN = 3.0                         # pads: 3 thick (the audit's 2.5 floor, the gate's 2.0 erosion)
+WIN_HAUNCH = {"overseer": 7.0}     # room for a 7.0 haunch in each top corner of the lead end wall's window (see bodies)
 WALL_OUT = {"overseer": 34.0}      # the Overseer's side walls' room: 4.9 thick as drawn (27.9..32.8) is under one member (the audit's env_neck: pockets and feet reach
 #                                    the bosses only through it); out to +-34.0, where its pocket blocks already are (the funnel's seat is +-34.4)
 EAR_SEAT = 6.0                     # 13 Nov, run 265: the Overseer read 0.526 (limit 0.5) across the layers in the lead end wall beside the plug slot, landing on the lead wall's two keys.
@@ -93,6 +94,13 @@ def bodies(pack):
         room = room + (wo - bl.carrier_zone(r, bl.FIT) - U(*bolts))
     if B.get("drone_pos"):                                     # the Overseer's four deck bosses into the base's inserts, their bolts and heads; the leads' channel
         room = room + B["drone_boss"] - B["drone_cuts"] - B["wire_cut"]
+    if pack in WIN_HAUNCH:
+        # 14 Nov, runs at 76 and 92 cm3: 0.565 and 0.574 across the layers at the same spot, the square top corner of the lead end wall's window (|x| 9.25, y to 44.35 in a
+        # 3.0 wall), landing on the lead keys: the wall is a portal between the two key corners and the budget does not reach a corner that is drawn square. A haunch's room
+        # in each top corner (nothing passes there: cartridge, pack, plug and their path all end short of the wall)
+        zw = [z1 - 3.0, z1]; hole = box(-14.0, 14.0, bl.Y_RB + 12.0, ym - 18.0, zw[0] + 1.0, zw[1] - 1.0) - recv; hb = hole.bounding_box(); hz = WIN_HAUNCH[pack]
+        assert hole.volume() > 100 and abs(hb[0] + hb[3]) < 0.1, hb                # the window, centred
+        room = room + U(*[U(box(*sorted((s * hb[3], s * (hb[3] - 0.02))), hb[4] - hz, hb[4] + 0.5, *zw), box(*sorted((s * hb[3], s * (hb[3] - hz))), hb[4] - 0.02, hb[4] + 0.5, *zw)).hull() for s in (1, -1)])
     # cuts: the holes inside drawn material (mount bolts, head counterbores, bolt pockets, through the whole room). The cartridge's path, the carrier's
     # notch and the plug path are the room's own faces: the build cuts the part to the room exactly, with no 0.5 stand-off (a 5 mm wall stays 5)
     cuts = list(bolts) + [cyl("y", bx, bz, bl.HEAD_R, -5.0, bl.HEAD_Y) for bx, bz in r["MOUNT"] if abs(bx) > rf]
