@@ -51,13 +51,22 @@ def socks_of(node, ring_r=None, cls=None):
 
 
 def socket_cases(p, socks, support="default"):
-    """the v4 frame model's member forces at each socket: tension and compression along it, plus the side force across it"""
+    """the v4 frame model's member forces at each socket: tension and compression along it, plus the side force across it and (14 Nov)
+    the rod's end moment as a couple across the bore: the bore in thirds, the axial and side force a third on each, the couple +Fc on
+    the mouth third and -Fc on the floor third (Fc = M x d / lever, the lever the thirds' centres apart: a rigid pin's linear bearing),
+    the side force in the moment's plane so the two add at the mouth; the compression case the same with every sign reversed"""
     for s in socks:
         node, mem = s.name.split()
         ld = NL4[node][mem]
+        t0, t1 = getattr(s, "t_floor", FLOOR), s.t_mouth - 1.0; L3 = (t1 - t0) / 3.0; r = getattr(s, "R", BORE_R) + WALL + 0.4
+        thirds = [along(s.pt(t0 + i * L3), s.pt(t0 + (i + 1) * L3), r) for i in range(3)]
+        Mv = ld.get("moment", 0.0) * np.asarray(ld.get("moment_axis", (0.0, 0.0, 0.0)), float)
+        Fc = np.cross(Mv, s.d) / (2.0 * L3)
+        w = unit(Fc) if np.linalg.norm(Fc) > 1e-6 else s.side()
         for sgn, lab in ((1, "tension"), (-1, "compression")):
-            F = sgn * ld["axial"] * s.d + ld["side"] * s.side()
-            p.load_multi(f"{mem} {lab} {ld['axial']:.0f} N + side {ld['side']:.0f} N", [(s.region(), F)], cls="crash", support=support)
+            F = sgn * (ld["axial"] * s.d + ld["side"] * w)
+            p.load_multi(f"{mem} {lab} {ld['axial']:.0f} N + side {ld['side']:.0f} N + end moment {ld.get('moment', 0.0):.0f} N mm",
+                         [(thirds[0], F / 3 - sgn * Fc), (thirds[1], F / 3), (thirds[2], F / 3 + sgn * Fc)], cls="crash", support=support)
 
 
 def socket_bodies(socks, prefer_out):
@@ -111,10 +120,22 @@ TURRET_BOLTS = [(S.SPOOL["c"][0] + dx, dy) for dx in (-13.0, 13.0) for dy in (-2
 REC_BOLTS = [(x + S.BX, y) for x, y in S.REC_BOLTS]           # the battery mechanism's 4 M3, up into inserts in the frame's yokes (9 Nov: one body)
 
 
-def socket_depth(axial, side):
+RESIN_BEAR_MPA = 36.3                                         # G/flex 650 compression yield 5,270 psi (ASTM D-695, West System G/flex TDS)
+
+
+def moment_depth(moment, side, D):
+    """the bore depth at which the rod's end moment M and side force V bear on the resin sleeve at no more than its compression yield:
+    a rigid pin's linear bearing, peak 6 M / (D d^2) + 4 V / (D d) (the old 2000 N mm cap was this at 40 MPa over 10 deep), D the rod
+    (14 Nov; parts/scout_v4_node_lib.socket_depth the same)"""
+    s, M, V = RESIN_BEAR_MPA * D, abs(moment), abs(side)
+    return (4 * V + np.sqrt(16 * V * V + 24 * s * M)) / (2 * s)
+
+
+def socket_depth(axial, side, moment=0.0):
     """the bore depth a socket's frame-model load needs (parts/scout_v4_node_lib.socket_depth, the NODES stream's rule of 10 Nov:
-    G/flex 650 bond 56.5 N per mm past the 2.0 lip, mouth bearing 4 V / (D d) at 5.3 MPa, 7.0 the injection pattern's least)"""
-    d = max(7.0, 2.0 + abs(axial) / (12.0 * np.pi * 3.0 / 2.0), 4.0 * abs(side) / (2 * BORE_R * (0.3 * 23.0 * 0.85 / 1.1)))
+    G/flex 650 bond 56.5 N per mm past the 2.0 lip, mouth bearing 4 V / (D d) at 5.3 MPa, 7.0 the injection pattern's least; the end
+    moment's bearing, moment_depth, 14 Nov)"""
+    d = max(7.0, 2.0 + abs(axial) / (12.0 * np.pi * 3.0 / 2.0), 4.0 * abs(side) / (2 * BORE_R * (0.3 * 23.0 * 0.85 / 1.1)), moment_depth(moment, side, 3.0))
     return float(np.ceil(d * 2.0) / 2.0)
 
 
@@ -129,7 +150,7 @@ class SockDown(Sock):
         super().__init__(name, c, far)
         node, mem = name.split()
         ld = NL4[node][mem]
-        self.depth = socket_depth(ld["axial"], ld["side"])
+        self.depth = socket_depth(ld["axial"], ld["side"], ld.get("moment", 0.0))
         self.t_floor = FLOOR - max(0.0, self.depth - DEPTH)
         self.t_mouth = self.t_floor + self.depth
 
@@ -155,10 +176,10 @@ class SockDown(Sock):
 TUBE_BORE_R, TUBE_DEPTH_MIN = 3.1, 15.0                       # a 6 mm (6/4) carbon tube: 6.2 bore, 15 deep at least (13 Nov, the design chat)
 
 
-def socket_depth6(axial, side):
+def socket_depth6(axial, side, moment=0.0):
     """socket_depth for a 6.2 bore: G/flex 650 at the nodes' 12 MPa over pi x 6 / 2 = 113 N per mm past the 2.0 lip; mouth bearing
     4 V / (D d) at 5.3 MPa; 15.0 at least"""
-    d = max(TUBE_DEPTH_MIN, 2.0 + abs(axial) / (12.0 * np.pi * 6.0 / 2.0), 4.0 * abs(side) / (2 * TUBE_BORE_R * (0.3 * 23.0 * 0.85 / 1.1)))
+    d = max(TUBE_DEPTH_MIN, 2.0 + abs(axial) / (12.0 * np.pi * 6.0 / 2.0), 4.0 * abs(side) / (2 * TUBE_BORE_R * (0.3 * 23.0 * 0.85 / 1.1)), moment_depth(moment, side, 6.0))
     return float(np.ceil(d * 2.0) / 2.0)
 
 
@@ -170,7 +191,7 @@ class SockDown6(SockDown):
         Sock.__init__(self, name, c, far)
         node, mem = name.split()
         ld = NL4[node][mem]
-        self.depth = socket_depth6(ld["axial"], ld["side"])
+        self.depth = socket_depth6(ld["axial"], ld["side"], ld.get("moment", 0.0))
         self.t_floor = FLOOR - max(0.0, self.depth - DEPTH)
         self.t_mouth = self.t_floor + self.depth
 

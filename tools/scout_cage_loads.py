@@ -161,7 +161,8 @@ def run(nodes=None, rods=None, ties=None, dry=False, log=print):
         results.append(dict(name=c["name"], d=np.round(c["d"], 4).tolist(), g=c["g"], touch=[ckeys[i] for i in touch], reactions={ckeys[i]: v for i, v in reac.items()},
                             deflection_mm=round(rel, 2), worst_node=max(disp, key=disp.get),
                             members={m["name"]: dict(N=round(r["N"], 1), shear_i=round(r["shear_i"], 1), shear_j=round(r["shear_j"], 1),
-                                                     M_i=round(r["M_i"], 0), M_j=round(r["M_j"], 0)) for m, r in zip(fr.members, mem) if m["kind"] != "stiff"}))
+                                                     M_i=round(r["M_i"], 0), M_j=round(r["M_j"], 0), Mv_i=np.round(r["Mv_i"], 1).tolist(), Mv_j=np.round(r["Mv_j"], 1).tolist())
+                                     for m, r in zip(fr.members, mem) if m["kind"] != "stiff"}))
     # per rod: Euler, extremes over the cases
     P = {**nodes, **sc.TIE_ROOTS}
     rodrep = {}
@@ -198,7 +199,12 @@ def run(nodes=None, rods=None, ties=None, dry=False, log=print):
             best = max(results, key=lambda r: abs(r["members"][m["name"]]["N"]))
             side = max(r["members"][m["name"]][f"shear_{end}"] for r in results)
             Nmax = best["members"][m["name"]]["N"]
-            node_loads.setdefault(k, {})[m["name"]] = dict(axial=round(abs(Nmax), 1), side=round(side, 1), N=round(Nmax, 1), case=best["name"], tag="F")
+            bm = max(results, key=lambda r: r["members"][m["name"]][f"M_{end}"]); Mv = np.asarray(bm["members"][m["name"]][f"Mv_{end}"], float)
+            # 14 Nov: the rod's bending moment on its socket at this end (the largest over the cases, N mm) and its axis (unit, global, the
+            # rod's moment on the node): the sockets carry it as a couple across the bore (Spark: end moments were checked nowhere)
+            node_loads.setdefault(k, {})[m["name"]] = dict(axial=round(abs(Nmax), 1), side=round(side, 1), N=round(Nmax, 1), case=best["name"], tag="F",
+                                                           moment=round(float(np.linalg.norm(Mv)), 0), moment_axis=np.round(Mv / max(np.linalg.norm(Mv), 1e-9), 4).tolist(),
+                                                           moment_case=bm["name"])
     worst_case = max(results, key=lambda r: r["deflection_mm"])
     log(f"softest case: {worst_case['name']}: {worst_case['deflection_mm']} mm at {worst_case['worst_node']}")
     record = dict(note=__doc__.strip().split("\n")[0], engine="tools/scout_cage_loads.py",

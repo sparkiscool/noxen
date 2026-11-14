@@ -109,6 +109,7 @@ def members(k):
         m["s0"] = SOCKET_START[(k, m["name"])]
         m["s0_far"] = SOCKET_START.get((m["other"], m["name"]), NODE_R) if m["other"] else NODE_R
         m["axial"] = loads.get(m["name"], {}).get("axial"); m["side"] = loads.get(m["name"], {}).get("side")
+        m["moment"] = loads.get(m["name"], {}).get("moment", 0.0); m["moment_axis"] = loads.get(m["name"], {}).get("moment_axis", (0.0, 0.0, 0.0))
     return out
 
 
@@ -242,7 +243,19 @@ def build(group, h, log=print):
             continue
         p.load_multi(f"frame {m['name']} axial {m['axial']:.0f} N (pull-out)", [(lining(m), m["axial"] * m["u"])], cls="crash")
         side = np.cross(m["u"], [0, 0, 1.0] if abs(m["u"][2]) < 0.9 else [1.0, 0, 0]); side /= np.linalg.norm(side)
-        p.load_multi(f"frame {m['name']} side {m['side']:.1f} N", [(lining(m), m["side"] * side)], cls="crash")
+        if not m.get("moment"):
+            p.load_multi(f"frame {m['name']} side {m['side']:.1f} N", [(lining(m), m["side"] * side)], cls="crash")
+            continue
+        # 14 Nov: the rod's end moment (frame model, N mm) as a couple across the bore: the lining in thirds, the side force a third on each
+        # and in the moment's plane, +Fc on the mouth third, -Fc on the floor third (Fc = M x u / lever, the thirds' centres apart); both signs
+        a0, a1 = m["s0"] - LINING_BACK, m["s_end"]; L3 = (a1 - a0) / 3.0
+        th = [along(m["c"], m["u"], a0 + i * L3, a0 + (i + 1) * L3, m["bore_r"] + 1.0) for i in range(3)]
+        Fc = np.cross(m["moment"] * np.asarray(m["moment_axis"], float), m["u"]) / (2.0 * L3)
+        w = Fc / np.linalg.norm(Fc) if np.linalg.norm(Fc) > 1e-6 else side
+        for sg, lab in ((1, "+"), (-1, "-")):
+            F = sg * m["side"] * w; c_ = sg * Fc
+            p.load_multi(f"frame {m['name']} side {m['side']:.1f} N + end moment {m['moment']:.0f} N mm ({lab})",
+                         [(th[0], F / 3 - c_), (th[1], F / 3), (th[2], F / 3 + c_)], cls="crash")
     L = max(allm, key=lambda m: m["len"])
     if (L["node"], L["name"]) not in held:
         sd = np.cross(L["u"], [0, 0, 1.0] if abs(L["u"][2]) < 0.9 else [1.0, 0, 0]); sd /= np.linalg.norm(sd)

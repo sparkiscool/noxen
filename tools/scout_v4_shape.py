@@ -521,8 +521,10 @@ def frame_check(core_g, write=True, core_cg=(0.0, 0.0, 0.0)):
         for k, mm in r["node_loads"].items():
             for nm, v in mm.items():
                 o = nl.setdefault(k, {}).get(nm)
-                if o is None or v["axial"] > o["axial"] or v["side"] > o["side"]:
-                    nl[k][nm] = dict(axial=max(v["axial"], o["axial"] if o else 0), side=max(v["side"], o["side"] if o else 0), N=v["N"], case=v["case"], tag="F")
+                if o is None or v["axial"] > o["axial"] or v["side"] > o["side"] or v["moment"] > o["moment"]:
+                    mo = v if o is None or v["moment"] >= o["moment"] else o                  # 14 Nov: the end moment and its axis from the run where it is larger
+                    nl[k][nm] = dict(axial=max(v["axial"], o["axial"] if o else 0), side=max(v["side"], o["side"] if o else 0), N=v["N"], case=v["case"], tag="F",
+                                     moment=mo["moment"], moment_axis=mo["moment_axis"], moment_case=mo["moment_case"])
     out["node_loads"] = nl                                                          # write=False (13 Nov): a frame variant's own cage, in memory only
     rods = {}                                                                       # per rod: the worse of the two runs (L, Pcr with the 3.0 rod, compression, tension)
     for r in (rec, rh):
@@ -736,7 +738,7 @@ if __name__ == "__main__":
     core, core_cg = core_of()
     fc = frame_check(core, core_cg=core_cg)
     print(f"  frame model     first mode {fc['mode_hz']:.0f} Hz, worst {fc['deflection'][0]:.1f} mm ({fc['deflection'][1][:60]}), Euler <= {fc['euler'][0]:.2f} ({fc['euler'][1]}), "
-          f"end moment <= {fc['moment'][0]:.0f} N mm ({fc['moment'][1]}; socket cap 2000), pull-out <= {fc['pull']:.0f} N (cap 940)")
+          f"end moment <= {fc['moment'][0]:.0f} N mm ({fc['moment'][1]}; rod 4850 at its 1.83 GPa flexural; every socket deep enough for its own, units_lib.moment_depth), pull-out <= {fc['pull']:.0f} N (cap 940)")
     hf = fc["head_first"]
     print(f"  head-first      the parked head as a contact (35 g onto it at an angle): worst {hf['deflection']:.1f} mm, Euler <= {hf['euler'][0]:.2f} ({hf['euler'][1]}), "
           f"end moment <= {hf['moment'][0]:.0f} N mm ({hf['moment'][1]}), up to {hf['head_N']:.0f} N into the head, throat and turret")

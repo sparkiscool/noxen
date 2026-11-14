@@ -60,8 +60,16 @@ BOND_N_PER_MM = 12.0 * np.pi * 3.0 / 2.0
 LIP_MM, BEAR_MPA, DEPTH_MIN = 2.0, 0.3 * 23.0 * 0.85 / 1.1, 7.0
 
 
-def socket_depth(axial, side):
-    d = max(DEPTH_MIN, LIP_MM + abs(axial) / BOND_N_PER_MM, 4.0 * abs(side) / (2 * L.BORE_R * BEAR_MPA))
+#   End moment (14 Nov: the frame model's rod end moments, checked nowhere before): the moment M with the side force V bears on the resin
+#   sleeve at peak 6 M / (D d^2) + 4 V / (D d) (the same rigid pin; the old 2000 N mm cap was this at 40 MPa over 10 deep), held to the
+#   G/flex 650 compression yield 5,270 psi = 36.3 MPa (ASTM D-695, West System G/flex TDS) on the rod's D 3.0: parts/scout_v4_units_lib.
+#   moment_depth. The printed collar behind it is the engine's: every socket's side case carries the moment as a couple across the bore.
+RESIN_BEAR_MPA = 36.3
+
+
+def socket_depth(axial, side, moment=0.0):
+    sD = RESIN_BEAR_MPA * 3.0; dm = (4 * abs(side) + np.sqrt(16 * side * side + 24 * sD * abs(moment))) / (2 * sD)
+    d = max(DEPTH_MIN, LIP_MM + abs(axial) / BOND_N_PER_MM, 4.0 * abs(side) / (2 * L.BORE_R * BEAR_MPA), dm)
     return float(np.ceil(d * 2.0) / 2.0)
 
 
@@ -72,7 +80,7 @@ def _raw_members(k, bridges=False):
     out = _raw0(k, bridges)
     for m in out:
         f = L.LOADS.get(k, {}).get(m["name"]) or {}
-        m["depth"] = socket_depth(f.get("axial", 0.0), f.get("side", 0.0)) if f else L.DEPTH
+        m["depth"] = socket_depth(f.get("axial", 0.0), f.get("side", 0.0), f.get("moment", 0.0)) if f else L.DEPTH
     return out
 
 
@@ -160,8 +168,10 @@ L.SOCKET_START = _socket_starts()
 # Run 200 (round 2, 10 Nov): all 16 pass. P / R at 0.9: 0.018-0.027, P3 / P4 at 1.0: 0.091, RF / RB / RS at 0.4: 0.030-0.043, S0 / S1
 # at 3.6: 0.209 / 0.210, NB at 4.9: 0.220, TB at 5.5: 0.210. Round 3: the Ys toward 0.25 (index ~ V^-1.25: x0.87), P3 / P4 0.7
 # (~0.14), P / R 0.6 (two 6.25 members from the hub collar to the paired collars' floors are ~0.6 cm3), RF / RB / RS 0.3.
-BUDGET_CM3 = {"P3": 0.7, "P4": 0.7, "P1": 0.6, "P2": 0.6, "P5": 0.6, "P6": 0.6, "R0": 0.6, "R7": 0.6,
-              "RF": 0.3, "RB": 0.3, "RS0": 0.3, "RS1": 0.3, "S0": 1.2, "S1": 1.2, "NB": 1.8, "TB": 2.4}   # 14 Nov, the bolt forks: their runs read NB / TB 0.051 / 0.052 at 4.0, S0 / S1 0.032 at 3.1; on the fold's loads (core_of) TB-P3 154 N (was 99), S0-P2 109 (was 78): toward ~0.15 by index ~ V^-1.25.   # 13 Nov: NB 5.7 -> 6.9, 0.314 at 5.7 (index ~ V^-1.25 toward 0.25). 12 Nov: NB 4.3 -> 5.7, 0.354 at 4.3 once BS moved to the nose block (NB-R7 pull-out 126 N; index ~ V^-1.25 toward 0.25)   # 12 Nov: TB 4.8 -> 5.6, 0.301 at 4.8 under the heavier frame's TB-P3 108 N (index ~ V^-1.25 toward 0.25)
+# 14 Nov, the end moments (each socket's side case carries its rod's end moment as a couple; RS0-P2 / RS1-P5 1.2-1.4 N m): the audit
+# refused P2 / P5 at 0.6 (room thinned 1.92) and RS0 / RS1 at 0.3 (2.16), RB read 1.66 at 0.3: P2 / P5 1.0, RS0 / RS1 0.6, RB 0.5 (~0.9-1.0 by V^-1.25).
+BUDGET_CM3 = {"P3": 0.7, "P4": 0.7, "P1": 0.6, "P2": 1.0, "P5": 1.0, "P6": 0.6, "R0": 0.6, "R7": 0.6,
+              "RF": 0.3, "RB": 0.5, "RS0": 0.6, "RS1": 0.6, "S0": 1.2, "S1": 1.2, "NB": 1.8, "TB": 2.4}   # 14 Nov, the bolt forks: their runs read NB / TB 0.051 / 0.052 at 4.0, S0 / S1 0.032 at 3.1; on the fold's loads (core_of) TB-P3 154 N (was 99), S0-P2 109 (was 78): toward ~0.15 by index ~ V^-1.25.   # 13 Nov: NB 5.7 -> 6.9, 0.314 at 5.7 (index ~ V^-1.25 toward 0.25). 12 Nov: NB 4.3 -> 5.7, 0.354 at 4.3 once BS moved to the nose block (NB-R7 pull-out 126 N; index ~ V^-1.25 toward 0.25)   # 12 Nov: TB 4.8 -> 5.6, 0.301 at 4.8 under the heavier frame's TB-P3 108 N (index ~ V^-1.25 toward 0.25)
 
 
 def spec_for(group):

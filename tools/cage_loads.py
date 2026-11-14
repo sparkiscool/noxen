@@ -152,8 +152,10 @@ class Frame:
         out = []
         for m, (kl, T, idx) in zip(self.members, cache):
             f = kl @ (T @ u[idx])
-            out.append(dict(N=float(f[6]), shear_i=float(np.hypot(f[1], f[2])), shear_j=float(np.hypot(f[7], f[8])),
-                            M_i=float(np.hypot(f[4], f[5])), M_j=float(np.hypot(f[10], f[11]))))
+            R = T[:3, :3]                                        # 14 Nov: the bending moment at each end as a global vector, the member's
+            out.append(dict(N=float(f[6]), shear_i=float(np.hypot(f[1], f[2])), shear_j=float(np.hypot(f[7], f[8])),   # action ON the joint
+                            M_i=float(np.hypot(f[4], f[5])), M_j=float(np.hypot(f[10], f[11])),                        # (minus the joint's on it)
+                            Mv_i=(-R.T @ np.r_[0.0, f[4], f[5]]).tolist(), Mv_j=(-R.T @ np.r_[0.0, f[10], f[11]]).tolist()))
         return u.reshape(n, 6), out, -lam                        # -lam: the surface's force on the node along d
 
 
