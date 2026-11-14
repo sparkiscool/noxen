@@ -63,6 +63,11 @@ POD_Z0 = DZ1 - 12.0                                 # 12 Nov (the design chat: <
 ARM_Z0 = POD_Z0 = DZ1 - 16.0                        # 13 Nov (variant vb of the round va / vb / vc): a flat 16 deep band, root to pod: 159.0 g, solid PASS, worst 0.59
                                                    # (BS0 compression across), every motor case <= 0.44, the engine's hold kept; the 12 band (va) 0.81 and the haunch at
                                                    # gen 130 (vc) 0.46 at 196 g. Was a haunch to z 6 at the root (0.83 across where its bottom chord met the body)
+LATCH_V7 = False                                   # 14 Nov (the swap design chat): latch v7's Scout set (parts/latch7/result.json "scout_keepout": its receiver
+                                                   # room, carrier and cap, the cartridge's path down, the lowered plug's tabs and its leads out the lead end) as
+                                                   # the frame's keep-out in place of the receiver v3 box; the receiver's room x -48.3..63.1
+FLOW_LO = None                                     # the flow sensor's low corner (x, z) when moved (it is 16 x 22.6 x 6.5 turned): None = its placed mesh
+LANDING_ONE_END = False                            # the box's keys can hold one end only while a Scout slides down an end wall: 6 g on the nose bolts / the tail bolts
 BRACES, BRACE_IN, BRACE_LO, BRACE_ROOM = False, 20.0, (42.0, 42.0, -8.0), 9.6   # the under-arm braces (off by default): the upper socket BRACE_IN
                                                    # inboard of the motor along the arm at the room's bottom, the lower at (+-x, +-y, z); room r round the rod
 END_NODES, SIDE_NODES, TUBE_NODES = ("DN", "BN", "DT", "BT"), ("DS0", "BS0", "DS1", "BS1"), ()   # the frame's end sockets; those holding a 6 mm tube (6.2 bore, units_lib.SockDown6)
@@ -109,6 +114,30 @@ def funnel_room():
     return U([box(x, x + 1.0, -S.BED - 1, S.BED + 1, min(S.zmin_walls_in(x), S.zmin_walls_in(x + 1.0)) + 2.0, DZ1 + 1.0) for x in xs])
 
 
+def latch_keepout():
+    """latch v7's Scout keep-out meshes (drone frame) and its receiver room's bounds"""
+    k = __import__("json").load(open(os.path.join(ROOT, "parts", "latch7", "result.json")))["scout_keepout"]
+    ms = [man(trimesh.load(os.path.join(ROOT, v["mesh"]), force="mesh")) for n, v in k["items"].items()]
+    return U(ms), k["items"]["receiver_room"]["lo"], k["items"]["receiver_room"]["hi"], k["items"]["leads_out_E"]
+
+
+def flow_bounds():
+    if FLOW_LO is None:
+        return bounds("scout_v4_flow_mtf_02p")
+    x, z = FLOW_LO
+    return np.array([[x, -11.3, z], [x + 16.0, 11.3, z + 6.5]])
+
+
+def grid_snap(lo, hi, bb, h):
+    """[lo, hi] grown out to the run's cell boundaries (topo.Part's grid: pad 1, a multiple of 8 cells, centred on the room's box), per axis
+    (14 Nov: a cut face part-way into a cell leaves the layout's last cell and the exact cut 0.3-1.7 apart, a stair-stepped torn web at the
+    window over the boards, the design chat on vh)"""
+    blo, bhi = np.asarray(bb[:3], float), np.asarray(bb[3:], float)
+    n = np.ceil((bhi - blo) / h).astype(int) + 2; n = (np.ceil(n / 8) * 8).astype(int)
+    o = 0.5 * (blo + bhi) - n * h / 2.0
+    return o + np.floor((np.asarray(lo) - o) / h) * h, o + np.ceil((np.asarray(hi) - o) / h) * h
+
+
 def screw_pts(mx, my, z):
     return [(mx + dx, my + dy, z) for dx in (-M2_PATTERN, M2_PATTERN) for dy in (-M2_PATTERN, M2_PATTERN)]
 
@@ -116,6 +145,9 @@ def screw_pts(mx, my, z):
 def bodies():
     x0, x1, yb = S.DECK
     rx0, rx1 = -51.3 + S.BX, 54.3 + S.BX                                             # the receiver v3 (C), not drawn: it bolts up under the yokes
+    if LATCH_V7:
+        ko, klo, khi, leads = latch_keepout(); rx0, rx1 = klo[0], khi[0]
+    lb = flow_bounds()
     lx, ly0, ly1, lz = S.LUG
     yz = [(-ly0, lz), (ly0, lz), (ly1, lz), (ly1, lz + 1.2), (LUG_Y1, lz + 1.2 + 1.43 * (LUG_Y1 - ly1)), (LUG_Y1, DZ1), (-ly0, DZ1)]
     side_clip = U([hull_pts([(x, s_ * y, z) for x in (-S.BED, S.BED) for y, z in yz]) for s_ in (1, -1)])   # the side sockets' rooms stay inside the
@@ -127,7 +159,7 @@ def bodies():
            # -12 across |y| 40: BS0 / BS1 now sit in the nose block's corners (x 60, z -8.8) and pull in its layers; BT / BN turn the receiver's corners
            # in the same layers (run of 4b95423: BS1-S1 0.458 ACROSS, the lug hung from the deck mid-way along the receiver)
            box(rx1, S.BED, -40.0, 40.0, -2.3, DZ1), box(rx1, 78.0, -34.0, 34.0, -10.5, -2.0),   # the nose block (DN / BN) and its lower part to the flow pod (-10.5: into the flow land, not flush on it)
-           box(rx1, 71.8, -12.0, 12.0, -19.1, -2.0),                                 # the flow sensor's pod (its bottom on the walls-in rule + 2)
+           box(rx1, lb[1][0] + 2.5, lb[0][1] - 2.5, lb[1][1] + 2.5, lb[0][2], -2.0),        # the flow sensor's pod (its bottom on the walls-in rule + 2)
            box(S.UBEC_LO[0] - 2.5, S.UBEC_LO[0] + 19.5, -33.0, 33.0, S.UBEC_LO[1], -2.0),   # 11 Nov: the UBEC's pod under the tail tray (S.UBEC_LO: off BT's path)
            (box(rx0 - 0.5, rx1 + 0.5, 33.8, SIDE_Y1, -2.3, S.REC_TOP + 0.5) ^ side_clip), (box(rx0 - 0.5, rx1 + 0.5, -SIDE_Y1, -33.8, -2.3, S.REC_TOP + 0.5) ^ side_clip)]   # 10 Nov: beside the receiver, so the end
     # sockets' loads climb to the battery bolts (z 9.6) on shallow in-layer diagonals; run 187 stopped early at 1.064 ACROSS the layers
@@ -143,11 +175,16 @@ def bodies():
     if FRONT_Z0 is not None:
         env += [box(20.0, rx1 + 0.5, a_, b_, FRONT_Z0, -2.0) ^ side_clip for a_, b_ in ((33.8, SIDE_Y1), (-SIDE_Y1, -33.8))]
     drawn, cuts = [], []
-    cuts.append(box(rx0 - 0.1, rx1, -33.3, 33.3, -60.0, -2.6))                       # the battery mechanism (the receiver's box) under the yokes; above
-    rr = 5.0                                                                          # z -2.6 its vertical corners round r 5 (10 Nov, run 188: 0.785 at the box's
-    cuts.append(hull_pts([(x, y, z) for x in (rx0 - 0.1 + rr, rx1 - rr) for y in (-33.3 + rr, 33.3 - rr) for z in (-2.7, S.REC_TOP)]))   # tail corner; the
-    cuts += [cyl(x, y, -2.7, S.REC_TOP, rr) for x in (rx0 - 0.1 + rr, rx1 - rr) for y in (-33.3 + rr, 33.3 - rr)]   # receiver v3 mesh is empty there, checked)
-    cuts += [box(rx0 - 0.1 + rr, rx1 - rr, -33.3, 33.3, -2.7, S.REC_TOP), box(rx0 - 0.1, rx1, -33.3 + rr, 33.3 - rr, -2.7, S.REC_TOP)]
+    if LATCH_V7:                                                                      # latch v7's whole Scout set and the paths it needs
+        cuts.append(ko)
+        lx1, lz0, lz1 = leads["hi"][0], leads["lo"][2], leads["hi"][2]               # its 12 AWG pair leaves at x 75 (leads_out_E's end): forward,
+        cuts += [box(lx1 - 6.0, lx1 + 0.5, -6.0, 6.0, lz0, 18.0), box(rx1 - 9.0, lx1 + 0.5, -6.0, 6.0, 13.0, 18.0)]   # up and back over the receiver's top to the FC stack, unclamped
+    else:
+        cuts.append(box(rx0 - 0.1, rx1, -33.3, 33.3, -60.0, -2.6))                   # the battery mechanism (the receiver's box) under the yokes; above
+        rr = 5.0                                                                      # z -2.6 its vertical corners round r 5 (10 Nov, run 188: 0.785 at the box's
+        cuts.append(hull_pts([(x, y, z) for x in (rx0 - 0.1 + rr, rx1 - rr) for y in (-33.3 + rr, 33.3 - rr) for z in (-2.7, S.REC_TOP)]))   # tail corner; the
+        cuts += [cyl(x, y, -2.7, S.REC_TOP, rr) for x in (rx0 - 0.1 + rr, rx1 - rr) for y in (-33.3 + rr, 33.3 - rr)]   # receiver v3 mesh is empty there, checked)
+        cuts += [box(rx0 - 0.1 + rr, rx1 - rr, -33.3, 33.3, -2.7, S.REC_TOP), box(rx0 - 0.1, rx1, -33.3 + rr, 33.3 - rr, -2.7, S.REC_TOP)]
     # ---- the motor pods: the pad in the deck's layers, 4 x M2 up from below (the heads under the pad), the bell over it
     pods, pod_regs = [], []
     for mx, my in S.MOTORS:
@@ -195,9 +232,10 @@ def bodies():
             posts.append(cyl(fx + dx, fy + dy, ftop, DZ1, 4.0)); pts.append((fx + dx, fy + dy, ftop)); regs.append(region_bot(fx + dx, fy + dy, ftop, 4.0))
             cuts.append(cyl(fx + dx, fy + dy, ftop - 0.1, ftop + M3_INS[1], M3_INS[0]))
     drawn += posts
-    cuts.append(box(fb[0][0] - 0.5, fb[1][0] + 0.5, fb[0][1] - 0.5, fb[1][1] + 0.5, fb[0][2] - 0.5, ftop))   # the board, under it and its grommets
-    cuts.append(box(fb[0][0] - 0.5, fb[1][0] + 0.5, fb[0][1] - 0.5, fb[1][1] + 0.5, ftop, fb[1][2] + 0.5)      # its top components, but not within 6.5 of
-                - U([cyl(x, y, ftop - 1, DZ1 + 1, 7.5) for x, y, _ in pts]))                                        # a hole (E: the grommets' zone): each post's room runs out past the board's edge
+    fc_rings = U([cyl(x, y, ftop - 1, DZ1 + 1, 7.5) for x, y, _ in pts])
+    board_cuts = [((fb[0][0] - 0.5, fb[0][1] - 0.5, fb[0][2] - 0.5), (fb[1][0] + 0.5, fb[1][1] + 0.5, ftop), None),   # the FC, under it and its grommets,
+                  ((fb[0][0] - 0.5, fb[0][1] - 0.5, ftop), (fb[1][0] + 0.5, fb[1][1] + 0.5, fb[1][2] + 0.5), fc_rings)]   # its top components but not within 6.5
+    # of a hole (E: the grommets' zone): each post's room runs out past the board's edge; their y faces on the grid (grid_snap, at the end)
     boards.append(("FC MicoAir743", pts, regs, ASM["scout_v4_fc"]["mass_g"], tuple(fb.mean(0))))
     rb = bounds("scout_v4_radxa_zero_3w"); rx, ry = rb[:, 0].mean(), rb[:, 1].mean(); rtop = rb[0][2] + 3.2   # its PCB's top (1.55 under it, 1.6 board)
     posts, pts, regs = [], [], []
@@ -206,7 +244,7 @@ def bodies():
             posts.append(cyl(rx + dx, ry + dy, rtop, DZ1, 3.75)); pts.append((rx + dx, ry + dy, rtop)); regs.append(region_bot(rx + dx, ry + dy, rtop, 3.75))   # 3.75: 2.0 round the insert
             cuts.append(cyl(rx + dx, ry + dy, rtop - 0.1, rtop + M25_INS[1], M25_INS[0]))
     drawn += posts
-    cuts.append(box(rb[0][0] - 0.2, rb[1][0] + 2.4, rb[0][1] - 0.5, rb[1][1] + 0.5, rb[0][2] - 0.5, rb[1][2] + 0.5) - U(posts))   # 0.2 at its tail end (DT's collar); its front end
+    board_cuts.append(((rb[0][0] - 0.2, rb[0][1] - 0.5, rb[0][2] - 0.5), (rb[1][0] + 2.4, rb[1][1] + 0.5, rb[1][2] + 0.5), U(posts)))   # 0.2 at its tail end (DT's collar); its front end
     # 2.4 on, into the turret's cut (13 Nov round 5: at gen 185 / 200 the engine filled the 1.9 gap between the two cuts, a 1.5-1.7 wall the gate refused)
     for xa, xb in ((rb[1][0] - 46.0, rb[1][0] - 37.1),):                         # one USB-C plug out the -y edge, the camera's (12 Nov: the board runs on the UBEC
         # through its 5 V pins, so the other port's cut, x -67..-58 across motor 4's arm root, went: room filled solid 0.270 there; it flashes on this one)
@@ -222,7 +260,6 @@ def bodies():
         boards.append((nm, [tuple(b.mean(0))], [reg], ASM[pid]["mass_g"], tuple(b.mean(0))))
     ub = bounds("scout_v4_ubec")
     cuts += [box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[0][1] - 4, ub[0][1], ub[0][2] - 0.5, ub[1][2]), box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[1][1], ub[1][1] + 3, ub[0][2] - 0.5, ub[1][2])]   # its leads out its ends, in the pod's height only (11 Nov: up to the deck they cut the tray's sides through BT's path)
-    lb = bounds("scout_v4_flow_mtf_02p")
     drawn.append(box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6))   # the flow sensor's tape land over it
     cuts.append(box(lb[0][0] - 0.3, lb[1][0] + 0.3, lb[0][1] - 0.3, lb[1][1] + 0.3, lb[0][2] - 5, lb[1][2]))      # its body and window, open below
     cuts.append(box(lb[0][0] - 0.3, lb[0][0] + 4, -3, 3, lb[1][2] - 3, S.REC_TOP + 0.3))                          # its cable up the receiver's nose face
@@ -258,18 +295,22 @@ def bodies():
             braces.append((f"brace {i + 1}", along(p0, p1, 2.0), float(np.linalg.norm(p1 - p0))))   # bending stiffness is overstated)
             socks += [up, lo]
     env = U(env) ^ box(-S.BED, S.BED, -S.BED, S.BED, -60.0, DZ1) ^ funnel_room()     # the A1 mini's 180; nothing below the walls-in funnel's line
+    bb = np.asarray((env + U(drawn)).bounding_box(), float)                          # the boards' cuts with their long (y) faces on the run's grid
+    for lo, hi, minus in board_cuts:
+        (sl, sh) = grid_snap(lo, hi, bb, SPEC["h"]); lo2 = (lo[0], sl[1], lo[2]); hi2 = (hi[0], sh[1], hi[2])
+        c_ = box(lo2[0], hi2[0], lo2[1], hi2[1], lo2[2], hi2[2]); cuts.append(c_ - minus if minus is not None else c_)
     check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
     return dict(drawn=U(drawn) ^ box(-S.BED - 5, S.BED + 5, -S.BED - 5, S.BED + 5, -60.0, DZ1), cuts=U(cuts), env=env, flow_reg=flow_reg,   # the bed: DN / DT's deeper collars rise to 24.8 at their back (10 Nov)
                 pod_regs=pod_regs, rec_regs=rec_regs, tur_regs=tur_regs, socks=[s_ for s_ in socks if not isinstance(s_, BraceSock)], boards=boards, braces=braces)
 
 
-def whole_drone(p, masses, name, a, cls, accel=None):
+def whole_drone(p, masses, name, a, cls, accel=None, support="default"):
     """every carried mass at acceleration a (g, the drone's frame) on its own attachments, one case"""
     parts = []
     for nm, pts, regs, mg, cg in masses:
         f = rigid_split(pts, -mg * G * np.asarray(a, float), cg)
         parts += [(regs[i], f[i]) for i in range(len(pts))]
-    p.load_multi(name, parts, cls=cls, accel=-np.asarray(a, float) if accel is None else accel)
+    p.load_multi(name, parts, cls=cls, accel=-np.asarray(a, float) if accel is None else accel, support=support)
 
 
 def motor_parts(regs, mx, my, F, at, Q=0.0):
@@ -317,6 +358,10 @@ def setup(h):
         whole_drone(p, masses, f"crash {k} (35 g {np.round(d, 2).tolist()}): every carried mass", 35.0 * d, "crash")
     for nm, a in FLIGHT.items():
         whole_drone(p, masses, f"{nm}: every carried mass", a, "flight")
+    if LANDING_ONE_END:                                                               # 14 Nov (the swap design chat): sliding down an end wall a Scout
+        for lab, regs_ in (("nose", B["rec_regs"][:2]), ("tail", B["rec_regs"][2:])):  # rests one end on two of the box's keys until the walls back off
+            p.support(lab, U(regs_))                                                  # (21.5 N a key at 6 g, through the receiver's foot blocks into the bolts)
+            whole_drone(p, masses, f"landing 6 g on the {lab} bolts only (one end on the box's keys): every carried mass", FLIGHT["landing 6 g"], "flight", support=lab)
     a_hit = HIT_N / (DRONE_G * G)
     whole_drone(p, masses, f"ground hit on the receiver's feet ({a_hit:.0f} g on all the bolts carry)", (0, 0, a_hit), "crash")
     f = rigid_split(tpts, np.array([0, 0, -261.0]), np.array([S.AXIS[0], 0.0, 130.0]))

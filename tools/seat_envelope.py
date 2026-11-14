@@ -13,6 +13,18 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 from build_site import pose_matrix, placeholder
 SEAT_Z, RX = -44.3, 1.5
 T_OV = np.array([[1, 0, 0, 29.52], [0, 1, 0, 0], [0, 0, 1, 32.4], [0, 0, 0, 1.0]])   # its cartridge bottom z -76.9 (cage v5) onto the Scout's -44.5
+def _t_scout():
+    """the Scout v4's drone frame -> the seat frame (14 Nov, the swap design chat): the seat frame is latch v7's tab line, at drone x = latch7's
+    own "tab_line_x" (its boss offsets from the Scout's receiver bolts, parts/latch7/result.json scout_keepout), so seat x = drone x - tab"""
+    T = np.eye(4)
+    try:
+        T[0, 3] = -float(json.load(open(os.path.join(ROOT, "parts", "latch7", "result.json")))["scout_keepout"]["tab_line_x"])
+    except Exception:
+        pass
+    return T
+
+
+T_SCOUT = _t_scout()
 SKIP = ("receiver", "cartridge", "slider", "latch", "pack", "battery holder", "wires", "cables", "props (swept)", "ghost", "view")
 
 
@@ -38,6 +50,8 @@ def parts_of(sysname):
         m.apply_transform(pose_matrix(p.get("pose")))
         if sysname == "overseer":
             m.apply_transform(T_OV)
+        elif sysname == "scout_v4":
+            m.apply_transform(T_SCOUT)
         out.append((nm, m))
     return out
 
