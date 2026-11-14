@@ -455,9 +455,6 @@ def scout_feet(B):
     legs = legs - U(*[c for bx, bz in B["r"]["MOUNT"] for c in (cyl("y", bx, bz, bl.HEAD_R, -60.0, bl.HEAD_Y), cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, 100.0))]) - bl.cart_path(B["r"])
     bores = U(*[c for bx, bz in B["r"]["MOUNT"] for c in (cyl("y", bx, bz, bl.HEAD_R, -60.0, bl.HEAD_Y), cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, 100.0))])
     B["foot_pads"] = pads; B["foot_gussets"] = [g_ - bores - bl.cart_path(B["r"]) for g_ in gus]; legs = legs + U(*B["foot_gussets"])
-    for sk in B.get("rskids", []):                                   # 0.4 clear of the TPU skids
-        for dx, dy in ((0.4, 0), (-0.4, 0), (0, 0.4), (0, -0.4), (0, 0)):
-            legs = legs - sk.translate([dx, dy, 0])
     return legs
 
 
@@ -509,6 +506,8 @@ def build(pack="scout"):
     bl._CACHE.clear()
     B = m6.build(pack); set_pack(B["g"])
     r = B["r"]
+    B["rskids"] = []; B["cstrips"] = []        # the Scout's TPU edge skids and cartridge side strips go (Scout v4 design chat 14 Nov: v4 stands on four TPU feet
+    #                                            on the receiver's bottom corners, the box does not need them either); the cartridge's two TPU end skids stay (its outline)
     B["strips"] = seat_strips(r)
     B["recv"] = (B["recv"] + seat_keys(r)) - box(-r["RF"], r["RF"], r["Y_DK0"] - 0.01, r["Y_DK0"] + bl.STRIP_REC, r["Z_E0"], r["Z_P0"] - 0.99)   # closed end relief
     B["stop"] = stop_bar(B["g"]); B["collar"] = plug_collar(B["g"])
@@ -761,7 +760,7 @@ def audit(B):
 # ------------------------------------------------------------------ fit in the landing funnel (parts/box_funnel/make.py, seat frame)
 def to_seat(B):
     """cartridge coords -> the funnel's seat frame (x nose = the lead end, y left, z up): the receiver's bottom at seat z -44.3
-    and the receiver (with its skids) centred on the catch centre x, as the funnel's seat is drawn for each drone."""
+    and the receiver centred on the catch centre x, as the funnel's seat is drawn for each drone."""
     fm = _funnel()
     if B["g"]["pack"] == "scout":                         # the seat frame is the seated Scout's drone frame: the tab line at x 0
         return np.array([[0, 0, 1, -B["g"]["Z_T"]], [1, 0, 0, 0], [0, 1, 0, fm.SEAT_Z - bl.Y_RB]])
@@ -841,8 +840,8 @@ SCOUT_V4 = dict(lead_bolt_x=49.58, path_down=150.0, lead_room=12.0)   # tools/sc
 
 
 def scout_keepout(B):
-    """What the Scout v4 frame, flow sensor and skid room must clear: each item a mesh in the DRONE frame (x nose = the lead end, y left, z up, the receiver's
-    top = the mount plane at z 9.6) under parts/latch7/view/keepout/, with its box. The skids are their own item (droppable)."""
+    """What the Scout v4 frame and flow sensor must clear: each item a mesh in the DRONE frame (x nose = the lead end, y left, z up, the receiver's
+    top = the mount plane at z 9.6) under parts/latch7/view/keepout/, with its box."""
     from parts.latch7_recv_lib import bodies                         # the receiver's whole room (what its run may fill), not the drawn attachments
     Bq, D, cuts, room = bodies("scout"); g, r = B["g"], B["r"]
     T = to_seat(B).copy(); T[0, 3] += SCOUT_V4["lead_bolt_x"] - (max(z for x, z in r["MOUNT"]) + T[0, 3])
@@ -852,7 +851,6 @@ def scout_keepout(B):
                  cartridge_path_down=U(cart, cart.translate([0.0, -SCOUT_V4["path_down"], 0.0])).hull(),
                  plug_tabs=B["male"], leads_E=box(xb[0], xb[3], top, top + SCOUT_V4["lead_room"], xb[2], xb[5]),
                  seat_strips=B["strips"])
-    if B.get("rskids"): items["tpu_skids"] = U(*B["rskids"])
     d = os.path.join(HERE, "view", "keepout"); os.makedirs(d, exist_ok=True); out = {}
     for k, m in items.items():
         m = m.transform(T); bb = [round(float(v), 2) for v in m.bounding_box()]
@@ -863,8 +861,7 @@ def scout_keepout(B):
                 notes=dict(receiver_room="everything the receiver's run may fill (drawn + generated), bolt and pocket cuts out",
                            cartridge_path_down=f"the cartridge with its two bolts out, swept {SCOUT_V4['path_down']:g} straight down (hull): the swap path",
                            plug_tabs="the XT60W male in its collar with its solder tabs (E, Amass sheet): the tabs stand over the mount plane",
-                           leads_E=f"{SCOUT_V4['lead_room']:g} over the tabs for the 12 AWG pair to turn (E, not drawn anywhere else)",
-                           tpu_skids="the receiver's TPU edge skids: their own item, drop it if they go"),
+                           leads_E=f"{SCOUT_V4['lead_room']:g} over the tabs for the 12 AWG pair to turn (E, not drawn anywhere else)"),
                 items=out)
 
 
@@ -1170,7 +1167,7 @@ def fit_section(rs, ro):
 {td("verdict", ok(fs), ok(fo))}
 </table></div>
 <p>The funnel was drawn round estimated outlines. Against the real latch sets its hole (170 x 50) was too small for the Overseer cartridge (174 x 55) and its seat (66.8 wide) too narrow for the Overseer receiver (68.0). Now: hole 177 x 57, seat 68.8 wide. The whole Scout v4 and Overseer still clear it: 0 crossings seated and in all 65 landing states each (tools/seat_check.py).</p>
-<p>The Scout's receiver is a 51 mm wide keel with ends clipped at 45 degrees: it hung in the hole and nothing held it along its length (over 6 mm of play each way). It now has four landing feet, one on a leg down from each corner boss: pads {sf['pad_mm'][0]} x {sf['pad_mm'][1]} mm on the funnel's side ledges, their outer ends {sf['end_play_mm']} mm from the end walls' feet, the same 68 mm across as the Overseer's. {sf['added_g']} g in all, part of the receiver print. At {sf['per_foot_N']} N a foot (the XT60 pull-out on four feet, or a 3 g landing on two) a leg's root is at index {sf['index']}. They clear the Scout v4's own parts, its TPU skids, the cartridge's path and the grabber. Both tab lines sit at the same place along the arm's axis ({abs(fo['tab_line_at_seat_x'] - fs['tab_line_at_seat_x']):.1f} mm apart).</p>
+<p>The Scout's receiver is a 51 mm wide keel with ends clipped at 45 degrees: it hung in the hole and nothing held it along its length (over 6 mm of play each way). It now has four landing feet, one on a leg down from each corner boss: pads {sf['pad_mm'][0]} x {sf['pad_mm'][1]} mm on the funnel's side ledges, their outer ends {sf['end_play_mm']} mm from the end walls' feet, the same 68 mm across as the Overseer's. {sf['added_g']} g in all, part of the receiver print. At {sf['per_foot_N']} N a foot (the XT60 pull-out on four feet, or a 3 g landing on two) a leg's root is at index {sf['index']}. They clear the Scout v4's own parts, the cartridge's path and the grabber (the receiver's TPU edge skids are gone, 14 Nov: v4 stands on its own feet). Both tab lines sit at the same place along the arm's axis ({abs(fo['tab_line_at_seat_x'] - fs['tab_line_at_seat_x']):.1f} mm apart).</p>
 """
 
 

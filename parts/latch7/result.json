@@ -1298,9 +1298,9 @@
   "setting": "scout",
   "receiver_box": [
    -54.98,
-   58.63,
-   -35.75,
-   35.75
+   56.43,
+   -34.0,
+   34.0
   ],
   "seat_opening": [
    -55.28,
@@ -1309,15 +1309,15 @@
    34.4
   ],
   "seat_gap_mm": {
-   "nose": -4.31,
+   "nose": -2.11,
    "tail": 0.3,
-   "side": -1.35
+   "side": 0.4
   },
   "cartridge_box": [
    -42.87,
    53.13,
-   -23.2,
-   23.2
+   -20.0,
+   20.0
   ],
   "hole": [
    -87.48,
@@ -1328,7 +1328,7 @@
   "hole_gap_mm": {
    "nose": 36.39,
    "tail": 44.61,
-   "side": 5.3
+   "side": 8.5
   },
   "seated_mm3": {
    "receiver": 0.0,
@@ -1373,9 +1373,9 @@
  "build": {
   "printed": {
    "receiver": {
-    "down": "+y",
-    "bed_mm2": 1337.0,
-    "support_mm2": 4438.0,
+    "down": "+z",
+    "bed_mm2": 1206.0,
+    "support_mm2": 4332.0,
     "size_mm": [
      68.0,
      53.9,
@@ -1695,7 +1695,7 @@
     "roll_deg": 0.0,
     "pitch_deg": 2.0,
     "enters": true,
-    "stops_short_mm": 0.39,
+    "stops_short_mm": 0.38,
     "bolt_held_in_mm": [
      0.0,
      0.0
@@ -1706,7 +1706,7 @@
     "roll_deg": 0.0,
     "pitch_deg": -2.0,
     "enters": true,
-    "stops_short_mm": 0.39,
+    "stops_short_mm": 0.38,
     "bolt_held_in_mm": [
      0.0,
      0.0
@@ -1717,7 +1717,7 @@
     "roll_deg": 0.5,
     "pitch_deg": 1.28,
     "enters": true,
-    "stops_short_mm": 0.38,
+    "stops_short_mm": 0.36,
     "bolt_held_in_mm": [
      0.0,
      0.0
@@ -1728,7 +1728,7 @@
     "roll_deg": 0.5,
     "pitch_deg": -1.28,
     "enters": true,
-    "stops_short_mm": 0.38,
+    "stops_short_mm": 0.36,
     "bolt_held_in_mm": [
      0.0,
      0.0
@@ -1739,7 +1739,7 @@
     "roll_deg": 0.74,
     "pitch_deg": 1.28,
     "enters": true,
-    "stops_short_mm": 0.49,
+    "stops_short_mm": 0.43,
     "bolt_held_in_mm": [
      0.25,
      0.0
@@ -1750,7 +1750,7 @@
     "roll_deg": 0.74,
     "pitch_deg": -1.28,
     "enters": true,
-    "stops_short_mm": 0.49,
+    "stops_short_mm": 0.43,
     "bolt_held_in_mm": [
      0.25,
      0.0
@@ -1764,7 +1764,7 @@
  },
  "scout_feet": {
   "count": 4,
-  "added_g": 23.4,
+  "added_g": 24.9,
   "pad_mm": [
    4.8,
    6.0
@@ -2720,21 +2720,6 @@
    "source": "parts/latch7/make.py"
   },
   {
-   "id": "latch7_view_receiver_skid_nose",
-   "name": "receiver skid nose",
-   "role": "TPU",
-   "group": "receiver (on the drone), cut away",
-   "color": "#3a3a3a",
-   "opacity": null,
-   "mesh": "parts/latch7/view/receiver_skid_nose.stl",
-   "pose": null,
-   "material": "TPU",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
-  {
    "id": "latch7_view_carrier",
    "name": "carrier",
    "role": "structure",
@@ -2819,36 +2804,6 @@
    "mesh": "parts/latch7/view/cartridge.stl",
    "pose": null,
    "material": "PCTG",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
-  {
-   "id": "latch7_view_cartridge_strip_px",
-   "name": "cartridge strip px",
-   "role": "TPU",
-   "group": "cartridge (on the pack), cut away",
-   "color": "#3a3a3a",
-   "opacity": null,
-   "mesh": "parts/latch7/view/cartridge_strip_px.stl",
-   "pose": null,
-   "material": "TPU",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
-  {
-   "id": "latch7_view_cartridge_strip_nx",
-   "name": "cartridge strip nx",
-   "role": "TPU",
-   "group": "cartridge (on the pack), cut away",
-   "color": "#3a3a3a",
-   "opacity": null,
-   "mesh": "parts/latch7/view/cartridge_strip_nx.stl",
-   "pose": null,
-   "material": "TPU",
    "tag": "C",
    "mass_g": null,
    "version": "latch v7 (10 Nov)",
@@ -3156,8 +3111,7 @@
    "receiver_room": "everything the receiver's run may fill (drawn + generated), bolt and pocket cuts out",
    "cartridge_path_down": "the cartridge with its two bolts out, swept 150 straight down (hull): the swap path",
    "plug_tabs": "the XT60W male in its collar with its solder tabs (E, Amass sheet): the tabs stand over the mount plane",
-   "leads_E": "12 over the tabs for the 12 AWG pair to turn (E, not drawn anywhere else)",
-   "tpu_skids": "the receiver's TPU edge skids: their own item, drop it if they go"
+   "leads_E": "12 over the tabs for the 12 AWG pair to turn (E, not drawn anywhere else)"
   },
   "items": {
    "receiver_room": {
@@ -3172,7 +3126,7 @@
      34.0,
      9.6
     ],
-    "mm3": 96971.4
+    "mm3": 98233.7
    },
    "carrier_cap": {
     "mesh": "parts/latch7/view/keepout/carrier_cap.stl",
@@ -3243,20 +3197,6 @@
      3.5
     ],
     "mm3": 599.0
-   },
-   "tpu_skids": {
-    "mesh": "parts/latch7/view/keepout/tpu_skids.stl",
-    "lo": [
-     -44.72,
-     -35.75,
-     -41.75
-    ],
-    "hi": [
-     65.28,
-     35.75,
-     -6.0
-    ],
-    "mm3": 6808.2
    }
   }
  },
@@ -3474,5 +3414,35 @@
     "pack_top_mm": 0.174
    }
   ]
+ },
+ "motion_collision": {
+  "frames": 787,
+  "duration_s": 32.8,
+  "fps": 24,
+  "limit_mm3": 0.05,
+  "worst_mm3": {
+   "cartridge / receiver": 0.0,
+   "slider p / receiver": 0.0,
+   "slider n / receiver": 0.0,
+   "blade p / receiver": 0.0,
+   "blade n / receiver": 0.0,
+   "heel deck / receiver": 0.0,
+   "cartridge / slider p": 0.0,
+   "cartridge / slider n": 0.0,
+   "slider p / slider n": 0.0,
+   "cartridge / blade p": 0.0,
+   "cartridge / blade n": 0.0,
+   "slider p / blade p": 0.0,
+   "slider n / blade n": 0.0,
+   "slider p / blade n": 0.0,
+   "slider n / blade p": 0.0,
+   "blade p / blade n": 0.0,
+   "cartridge / heel deck": 0.0,
+   "slider p / heel deck": 0.0,
+   "slider n / heel deck": 0.0
+  },
+  "at_s": {},
+  "max_mm3": 0.0,
+  "ok": true
  }
 }
