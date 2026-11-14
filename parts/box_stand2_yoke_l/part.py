@@ -6,4 +6,4 @@ def setup(h):
     return yoke_setup(h, -1)
 
 
-SPEC = dict(h=1.8, gen_cm3=160.0, max_worst=0.5)
+SPEC = dict(h=2.0, gen_cm3=160.0, max_worst=0.5)

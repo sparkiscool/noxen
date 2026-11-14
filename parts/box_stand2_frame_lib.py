@@ -56,7 +56,8 @@ def _splice_cuts():
         out.append(cyl("y", x, z, 2.75, y0 - 1.0, y1 + 1.0))
         for ya, yb in ((y0, Y_SPLICE - PLATE), (Y_SPLICE + PLATE, y1)):
             xa, xb = (X_IN - 5.0, x + 6.5) if x < 150 else (x - 6.5, RAIL_X[1] + 5.0)
-            out.append(box(xa, xb, ya, yb, z - 6.5, z + 6.5))
+            za = z - 6.5 if z - 6.5 > BED + 6.0 else BED - 1.0         # a lower pocket opens through the floor face (it left a 1.5 fin over the bed: room_full 0.65 in it)
+            out.append(box(xa, xb, ya, yb, za, z + 6.5))
     return U(*out)
 
 
