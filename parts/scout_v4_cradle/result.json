@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   4860.1
+   4860.2
   ],
   "sealed_voids": [],
   "inner_shells": [],
@@ -20,7 +20,7 @@
  },
  "function_check": {
   "skin_mm3": 2225.5,
-  "skin_missing_mm3": 0.0,
+  "skin_missing_mm3": 0.02,
   "in_cuts_mm3": 0.02,
   "outside_env_mm3": 0.0,
   "ok": true
@@ -260,7 +260,7 @@
  "mass_g": 12.72,
  "watertight": true,
  "export": {
-  "faces_in": 101210,
+  "faces_in": 101214,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -270,7 +270,7 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 101210,
+  "faces": 101214,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -286,7 +286,7 @@
    "dropped_shells": []
   },
   "volume_mm3": 10342.6,
-  "exact_mm3": 10342.2
+  "exact_mm3": 10342.3
  },
  "bodies": {
   "bodies_raw": 9,
@@ -304,7 +304,7 @@
   ],
   "bodies": 1
  },
- "volume_mm3": 10342.2,
+ "volume_mm3": 10342.3,
  "drawn_g": 6.21,
  "export_cleanup": {
   "pitch": 0.25,
@@ -316,7 +316,7 @@
   ],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.0,
+  "removed_mm3": -0.0,
   "specks": 2
  },
  "memory_build": [
@@ -338,9 +338,9 @@
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 0.99,
+   "estimate_gb": 1.0,
    "parts": {
-    "held": 0.8,
+    "held": 0.81,
     "gate": 0.19,
     "mesh": 0.0
    },
@@ -357,7 +357,7 @@
  ],
  "stl": "scout_v4_cradle.stl",
  "view_stl": "scout_v4_cradle_view.stl",
- "view_faces": 101210,
+ "view_faces": 101214,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -468,7 +468,7 @@
    "index": 0.133
   },
   "cavity": {
-   "last": 5.00041590559783,
+   "last": 5.0004158568050645,
    "ratio": 5.0,
    "T0": 4.385103224940589,
    "row": true
@@ -517,9 +517,9 @@
    "landed"
   ]
  },
- "build_s": 52.4,
- "layout_s": 3161,
- "peak_gb": 2.950596,
+ "build_s": 53.5,
+ "layout_s": 3188,
+ "peak_gb": 2.950752,
  "memory": {
   "estimate_gb": 3.81,
   "parts": {
@@ -551,7 +551,7 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 2.81
+  "peak_it1_gb": 2.8
  },
  "early": {
   "rows": [
@@ -861,19 +861,19 @@
   }
  },
  "baseline": null,
- "total_s": 3213,
+ "total_s": 3242,
  "part_sha": "bbf753738fb9",
- "lib_sha": "75bc9ff30b85",
+ "lib_sha": "265dd11f384f",
  "setup_sha": "4b8a1ec242518d60",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_cradle.stl",
-  "sha256": "f133f712decfe25a7037a9c87130690c38a73e1e745d93becd9540125892ab83",
-  "bytes": 5060584,
-  "faces": 101210,
+  "sha256": "8a4236bddf67324335e66a5e9795360c30cd042afe02954281a2d46e13ff2249",
+  "bytes": 5060784,
+  "faces": 101214,
   "view_faces": 60000,
-  "view_sha256": "5768097bc9627461590db0b2aee832612100ad7e43e7452461c2692742f9895e",
-  "at": "2026-11-14 07:34"
+  "view_sha256": "6dbe1b46b35b99be3518ae5674d0a4747f0429de3729a6bed956ff7cc1ff21a0",
+  "at": "2026-11-14 11:18"
  }
 }
