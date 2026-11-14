@@ -79,51 +79,11 @@
    ]
   }
  },
- "note": "The press-two-tabs latch, v7, on both packs, side by side: the Scout's on the left, the Overseer's on the right. One latch module: the same slider, springs, 3 x 20 dowels, magnets and grabber blades; only the cartridge and the receiver are sized to the pack. Each is cut at its tab line. Made stronger on 10 Nov: bolts 42 wide on two steel pins each, blades 34 wide with two hooks each, four springs. Scout 222.0 g with its cartridge, Overseer 765.8 g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; the Scout receiver stands on four landing feet. Worst strength index 0.483 (Scout), 0.361 (Overseer). Numbers under the viewer.",
+ "note": "The press-two-tabs latch, v7, on both packs, side by side: the Scout's on the left, the Overseer's on the right. One latch module: the same slider, springs, 3 x 20 dowels, magnets and grabber blades; only the cartridge and the receiver are sized to the pack. Each is cut at its tab line. Made stronger on 10 Nov: bolts 42 wide on two steel pins each, blades 34 wide with two hooks each, four springs. Scout 222.0 g with its cartridge, Overseer 766.5 g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; the Scout receiver stands on four landing feet. Worst strength index 0.483 (Scout), 0.361 (Overseer). Numbers under the viewer.",
  "cg_ref": null,
  "timeline": "tools/latch7_both_motion.py:timeline",
  "appendix": "systems/latch7.appendix.html",
  "parts": [
-  {
-   "id": "latch7_view_receiver_both",
-   "name": "scout: receiver",
-   "role": "structure",
-   "group": "Scout: receiver (on the drone), cut away",
-   "color": "#9fb4cc",
-   "opacity": null,
-   "mesh": "parts/latch7/view/receiver.stl",
-   "pose": [
-    [
-     1.0,
-     0.0,
-     0.0,
-     45.0
-    ],
-    [
-     0.0,
-     1.0,
-     0.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     1.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     0.0,
-     1.0
-    ]
-   ],
-   "material": "PCTG",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
   {
    "id": "latch7_view_receiver_strips_both",
    "name": "scout: receiver strips",
@@ -132,46 +92,6 @@
    "color": "#3a3a3a",
    "opacity": null,
    "mesh": "parts/latch7/view/receiver_strips.stl",
-   "pose": [
-    [
-     1.0,
-     0.0,
-     0.0,
-     45.0
-    ],
-    [
-     0.0,
-     1.0,
-     0.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     1.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     0.0,
-     1.0
-    ]
-   ],
-   "material": "TPU",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
-  {
-   "id": "latch7_view_receiver_skid_nose_both",
-   "name": "scout: receiver skid nose",
-   "role": "TPU",
-   "group": "Scout: receiver (on the drone), cut away",
-   "color": "#3a3a3a",
-   "opacity": null,
-   "mesh": "parts/latch7/view/receiver_skid_nose.stl",
    "pose": [
     [
      1.0,
@@ -439,86 +359,6 @@
     ]
    ],
    "material": "PCTG",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
-  {
-   "id": "latch7_view_cartridge_strip_px_both",
-   "name": "scout: cartridge strip px",
-   "role": "TPU",
-   "group": "Scout: cartridge (on the pack), cut away",
-   "color": "#3a3a3a",
-   "opacity": null,
-   "mesh": "parts/latch7/view/cartridge_strip_px.stl",
-   "pose": [
-    [
-     1.0,
-     0.0,
-     0.0,
-     45.0
-    ],
-    [
-     0.0,
-     1.0,
-     0.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     1.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     0.0,
-     1.0
-    ]
-   ],
-   "material": "TPU",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
-  {
-   "id": "latch7_view_cartridge_strip_nx_both",
-   "name": "scout: cartridge strip nx",
-   "role": "TPU",
-   "group": "Scout: cartridge (on the pack), cut away",
-   "color": "#3a3a3a",
-   "opacity": null,
-   "mesh": "parts/latch7/view/cartridge_strip_nx.stl",
-   "pose": [
-    [
-     1.0,
-     0.0,
-     0.0,
-     45.0
-    ],
-    [
-     0.0,
-     1.0,
-     0.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     1.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     0.0,
-     1.0
-    ]
-   ],
-   "material": "TPU",
    "tag": "C",
    "mass_g": null,
    "version": "latch v7 (10 Nov)",
@@ -1208,10 +1048,10 @@
    "id": "latch7_receiver",
    "name": "scout: receiver (generated)",
    "role": "structure",
-   "group": "Scout: receiver (on the drone), cut away",
+   "group": "Scout: receiver (on the drone)",
    "color": "#9fb4cc",
-   "opacity": 0.12,
-   "printed": false,
+   "opacity": null,
+   "printed": true,
    "box": [
     -34.0,
     34.0,
@@ -1250,46 +1090,6 @@
    "tag": "C",
    "version": "latch v7 receiver, engine part (13 Nov)",
    "source": "parts/latch7_receiver/part.py"
-  },
-  {
-   "id": "latch7_overseer_view_receiver_both",
-   "name": "overseer: receiver",
-   "role": "structure",
-   "group": "Overseer: receiver (on the drone), cut away",
-   "color": "#9fb4cc",
-   "opacity": null,
-   "mesh": "parts/latch7_overseer/view/receiver.stl",
-   "pose": [
-    [
-     1.0,
-     0.0,
-     0.0,
-     -45.0
-    ],
-    [
-     0.0,
-     1.0,
-     0.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     1.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     0.0,
-     1.0
-    ]
-   ],
-   "material": "PCTG",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
   },
   {
    "id": "latch7_overseer_view_receiver_strips_both",
@@ -1487,7 +1287,7 @@
    ],
    "material": null,
    "tag": "C",
-   "mass_g": 2.0,
+   "mass_g": 2.48,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -1527,7 +1327,7 @@
    ],
    "material": null,
    "tag": "C",
-   "mass_g": 2.0,
+   "mass_g": 2.48,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -2255,10 +2055,10 @@
    "id": "latch7_ov_receiver",
    "name": "overseer: receiver (generated)",
    "role": "structure",
-   "group": "Overseer: receiver (on the drone), cut away",
+   "group": "Overseer: receiver (on the drone)",
    "color": "#9fb4cc",
-   "opacity": 0.12,
-   "printed": false,
+   "opacity": null,
+   "printed": true,
    "box": [
     -34.0,
     34.0,
@@ -2278,7 +2078,7 @@
      0.0,
      -1.0,
      0.0,
-     86.07
+     86.14
     ],
     [
      0.0,
