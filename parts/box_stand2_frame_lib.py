@@ -61,6 +61,12 @@ def _splice_cuts():
     return U(*out)
 
 
+def _splice_boss(x, z, y0, y1):
+    """a splice boss: round, the outboard ones squared out to the rail's outer face (round left a 1.8 fin there: room_full 1.48 in it)"""
+    b = cyl("y", x, z, 8.0, y0, y1)
+    return b + box(x, RAIL_X[1], y0, y1, z - 8.0, z + 8.0) if x > 150 else b
+
+
 def _rail_room(y0, y1):
     return box(X_IN, RAIL_X[1], y0, y1, BED, RAIL_TOP)
 
@@ -108,7 +114,7 @@ def rear_setup(h, s):
     pad, stud = _foot(FEET["rear"])
     inner = [cyl("x", y, z, 7.0, X_IN, X_IN + 6.0) for y, z in JOINT]                           # its contact face on the yoke
     outer = [cyl("x", y, z, 8.5, RAIL_X[1] - 10.0, RAIL_X[1]) for y, z in JOINT]                # the heads' seats (r 7 left 1.5 round the Ø11 counterbore: drawn_wall)
-    plate = [cyl("y", x, z, 8.0, Y_SPLICE - PLATE, Y_SPLICE - 0.25) for x, z in SPLICE]
+    plate = [_splice_boss(x, z, Y_SPLICE - PLATE, Y_SPLICE - 0.25) for x, z in SPLICE]
     drawn = U(pad, *inner, *outer, *plate)
     cuts = U(sweep(), _joint_cuts(), _splice_cuts(), stud)
     if s > 0:
@@ -136,7 +142,7 @@ def rear_setup(h, s):
 # ------------------------------------------------------------------ front rail
 def rail_setup(h, s):
     pad, stud = _foot(FEET["front"])
-    plate = [cyl("y", x, z, 8.0, Y_SPLICE + 0.25, Y_SPLICE + PLATE) for x, z in SPLICE]
+    plate = [_splice_boss(x, z, Y_SPLICE + 0.25, Y_SPLICE + PLATE) for x, z in SPLICE]
     drawn = U(pad, *plate)
     cuts = U(sweep(), _splice_cuts(), stud)
     env = _rail_room(Y_SPLICE + 0.25, 250.0)
