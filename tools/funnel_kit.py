@@ -99,7 +99,17 @@ def pieces(only=()):
     F = fm(); out = {}; want = lambda n: not only or n in only                # an engine piece's mesh is fetched only when asked for
     def engine(part):
         r = json.load(open(os.path.join(ROOT, "parts", part, "result.json")))
-        return trimesh.load(pm.local(part), force="mesh"), dict(part=part, part_sha=r.get("part_sha"), print_stl_sha256=(r.get("print_stl") or {}).get("sha256"),
+        note = None
+        try:
+            f = pm.local(part)
+        except RuntimeError:                                                   # the release holds another upload than result.json names (14 Nov, the arm: an identical rerun's
+            import urllib.request                                              # record over the first run's asset). Taken only when it is the same part: volume within 0.05 %
+            f = os.path.join(ROOT, "parts", part, "print.stl"); urllib.request.urlretrieve(r["print_stl"]["url"], f)
+            v = trimesh.load(f, force="mesh").volume
+            if abs(v - r["volume_mm3"]) > 5e-4 * r["volume_mm3"]:
+                raise
+            note = f"the release's {part}.stl is not the upload result.json names (sha256 {pm.sha256(f)[:12]}, {v:.1f} mm3 against the result's {r['volume_mm3']}): an identical rerun's record; the kit file is gated itself"
+        return trimesh.load(f, force="mesh"), dict(part=part, **({"release_note": note} if note else {}), part_sha=r.get("part_sha"), print_stl_sha256=(r.get("print_stl") or {}).get("sha256"),
                                                                  mass_g=r.get("mass_g"), worst=max(max(x["inlayer"], x["across"]) for x in r["strength"]["rows"]), solid_ok=r.get("solid_ok"))
     for nm in ("nose", "tail"):
         m, src = engine(f"box_funnel_half_{nm}") if want(f"box_funnel_half_{nm}") else (None, None)
