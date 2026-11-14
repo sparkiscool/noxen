@@ -67,24 +67,24 @@
    ]
   }
  },
- "note": "The box's swap arm, v8, for latch v7 and both packs. Two heads 180 apart; each is a lift on a bought MGN12H rail driven by a T8 x 2 screw, with three carbon rods out under the grab unit, picking its carriage up for the last 54.1 mm: 115.80000000000001 mm to the drone seat. Push limited by the grab unit's float springs to 118 N (x1.83 over the Overseer insert); the screw holds with the power off. Bays at R 129. Swap cycle, both packs, 551 states: 0 overlaps. Hub, carriage and lift are shown as their setups (drawn attachments and envelope): the engine has not run them yet.",
+ "note": "The box's swap arm, v8, for latch v7 and both packs. Two heads 180 apart; each is a lift on a bought MGN12H rail driven by a T8 x 2 screw, with three carbon rods out under the grab unit, picking its carriage up for the last 54.1 mm: 115.80000000000001 mm to the drone seat. Push limited by the grab unit's float springs to 118 N (x1.83 over the Overseer insert); the screw holds with the power off. Bays at R 129. Swap cycle, both packs, 551 states: 0 overlaps. Hub, carriage and lift are their runs' shapes.",
  "cg_ref": null,
  "timeline": "tools/swap_arm_motion.py:timeline",
  "appendix": "systems/swap_arm.appendix.html",
  "parts": [
   {
-   "id": "box_arm8_hub_setup",
-   "name": "hub (drawn attachments; the body is generated)",
+   "id": "box_arm8_hub_run",
+   "name": "hub (generated)",
    "role": "structure",
    "group": "hub (turns)",
    "color": "#c9d3dc",
    "opacity": null,
-   "mesh": "parts/box_arm8/view/box_arm8_hub_setup.stl",
+   "mesh": "parts/box_arm8_hub/part.stl",
    "pose": null,
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "setup, not run",
+   "version": "run, arm v8",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub"
@@ -214,7 +214,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub",
@@ -234,7 +234,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub",
@@ -254,7 +254,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub",
@@ -274,7 +274,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub",
@@ -294,7 +294,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub",
@@ -303,18 +303,18 @@
    }
   },
   {
-   "id": "box_arm8_a_carriage",
-   "name": "head A: carriage (setup envelope; generated)",
+   "id": "box_arm8_a_carriage_run",
+   "name": "head A: carriage (generated)",
    "role": "structure",
    "group": "head A",
    "color": "#e8b04a",
    "opacity": null,
-   "mesh": "parts/box_arm8/view/box_arm8_a_carriage.stl",
+   "mesh": "parts/box_arm8_carriage/part.stl",
    "pose": null,
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "setup, not run",
+   "version": "run, arm v8",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "carriage",
@@ -334,7 +334,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "carriage",
@@ -354,7 +354,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "carriage",
@@ -363,18 +363,18 @@
    }
   },
   {
-   "id": "box_arm8_a_lift",
-   "name": "head A: lift: yoke on the MGN block, arm to the nut (setup envelope; generated)",
+   "id": "box_arm8_a_lift_run",
+   "name": "head A: lift (generated)",
    "role": "structure",
    "group": "head A",
    "color": "#5f9ed1",
    "opacity": null,
-   "mesh": "parts/box_arm8/view/box_arm8_a_lift.stl",
+   "mesh": "parts/box_arm8_lift/part.stl",
    "pose": null,
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "setup, not run",
+   "version": "run, arm v8",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -394,7 +394,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -414,7 +414,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -434,7 +434,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -454,7 +454,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -474,7 +474,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -494,7 +494,7 @@
    "material": "TPU",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -514,7 +514,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -534,7 +534,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -554,7 +554,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -574,7 +574,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -594,7 +594,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -614,7 +614,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -634,7 +634,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -654,7 +654,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -674,7 +674,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -694,7 +694,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -714,7 +714,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub",
@@ -734,7 +734,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub",
@@ -754,7 +754,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub",
@@ -774,7 +774,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub",
@@ -794,7 +794,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "hub",
@@ -803,18 +803,43 @@
    }
   },
   {
-   "id": "box_arm8_b_carriage",
-   "name": "head B: carriage (setup envelope; generated)",
+   "id": "box_arm8_b_carriage_run",
+   "name": "head B: carriage (generated)",
    "role": "structure",
    "group": "head B",
    "color": "#e8b04a",
    "opacity": null,
-   "mesh": "parts/box_arm8/view/box_arm8_b_carriage.stl",
-   "pose": null,
+   "mesh": "parts/box_arm8_carriage/part.stl",
+   "pose": [
+    [
+     -1.0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     1.0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     -1.0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     1.0
+    ]
+   ],
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "setup, not run",
+   "version": "run, arm v8",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "carriage",
@@ -834,7 +859,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "carriage",
@@ -854,7 +879,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "carriage",
@@ -863,18 +888,43 @@
    }
   },
   {
-   "id": "box_arm8_b_lift",
-   "name": "head B: lift: yoke on the MGN block, arm to the nut (setup envelope; generated)",
+   "id": "box_arm8_b_lift_run",
+   "name": "head B: lift (generated)",
    "role": "structure",
    "group": "head B",
    "color": "#5f9ed1",
    "opacity": null,
-   "mesh": "parts/box_arm8/view/box_arm8_b_lift.stl",
-   "pose": null,
+   "mesh": "parts/box_arm8_lift/part.stl",
+   "pose": [
+    [
+     -1.0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     1.0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     -1.0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     1.0
+    ]
+   ],
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "setup, not run",
+   "version": "run, arm v8",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -894,7 +944,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -914,7 +964,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -934,7 +984,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -954,7 +1004,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -974,7 +1024,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -994,7 +1044,7 @@
    "material": "TPU",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -1014,7 +1064,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -1034,7 +1084,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -1054,7 +1104,7 @@
    "material": "PCTG",
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -1074,7 +1124,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -1094,7 +1144,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -1114,7 +1164,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -1134,7 +1184,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -1154,7 +1204,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -1174,7 +1224,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
@@ -1194,7 +1244,7 @@
    "material": null,
    "tag": "C",
    "owner": "swap arm",
-   "version": "arm v8 (13 Nov)",
+   "version": "arm v8 (14 Nov)",
    "source": "parts/box_arm8/make.py",
    "kin": {
     "stage": "lift",
