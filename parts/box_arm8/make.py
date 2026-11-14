@@ -370,7 +370,8 @@ def numbers():
                   carried_overseer_roll_Nm_1g=round(0.766 * 9.81 * 0.058, 2), reach_deg=dict(roll=round(math.degrees(math.atan(3.0 / L.FLOAT_X)), 1), pitch=round(math.degrees(math.atan(3.0 / 32.5)), 1)),
                   latch_takes_rigid_deg=dict(roll=0.6, pitch=1.6), note="stiff while carrying, gives once the insert push has taken up the preload"),
         sensing="an SS49E in each hall post, 1.2 under its bolt's magnet; the head lets go only with both bolts read out (box electronics: two analog lines per head, as v7)",
-        pads="each of the eight pads (four per pack) on its own M3 x 8 set screw from below, +-0.75; the latch's height window is +-0.21")
+        pads="the eight pads (four per pack) glued in 0.4 deep seats in the deck, each picked from 2.0 / 2.2 / 2.4 / 2.6 / 2.8 thick at set-up (+-0.4 in 0.2 steps; the latch's height window is +-0.21). "
+             "14 Nov: they were on M3 jack screws, but the holes ended under the deck and two Scout pads stood over the pilots' slots")
     return out
 
 
@@ -397,7 +398,7 @@ def loads_report():
                 rule="the screw pushes over 30 N only in the last 8 mm of an insert, where the receiver's guides hold the cartridge's pitch; a jam at the plug end before that stops at 30 N (0.4 N m / deg x lever, inside the float)",
                 from_v7="case list and forces from parts/box_arm/ref (arm_v7_system.json, swap_system.py): insert / pull in the guides and free, stall into a jam (here the float limit), axle stall with the head held in a bay, dropped pack 50 mm, handling 3 g down + 2 g side, hand 50 N on a rail tip (hub setup)",
                 missing=["power cut with a head out: not a case any more (the 2 mm screw holds; v7's worst was 2.80 on the 625ZZ)", "the ring belt's tooth shear at the axle stall (E)", "v7's frame model itself is not rerun for v8's geometry: rail bending and hub turn under load are the engine's and hand numbers",
-                         "the carriage's return spring and the pick-up at the stop (a few N, E): not a case"])
+                         "the carriage's pick-up at its stop is a case of the carriage alone (17.4 N, E: return spring 10 N + 0.25 kg at 3 g); the return spring's anchor on the carriage is not drawn"])
 
 
 # ------------------------------------------------------------------ print check
@@ -422,37 +423,41 @@ PRINTED = {  # part folder -> (source key or callable, material, print pose note
     "pilot": (None, "PCTG", "on its outer side face", 4),
     "paddle": (None, "PCTG", "flat", 2),
     "tie": (None, "PCTG", "bar down (the cheeks up)", 4),
-    "pads": (None, "TPU", "flat, 2.0 thick", 16),
+    "pads": (None, "TPU", "top face down, 2.4 thick (set-up spares 2.0 to 2.8)", 16),
     "stub": (None, "PCTG", "flange down", 1), "post": (None, "PCTG", "flange down", 1), "detent_arm": (None, "PCTG", "flat", 1),
     "saddle_overseer": (None, "PCTG", "flat", 4), "saddle_scout": (None, "PCTG", "flat", 7), "link": (None, "PCTG", "flat", 20)}
 
 
-SUPPORTS = dict(rail="none", wheels="none (bearing pocket up)", unit_body="yes: under the deck and the cross bars, from the base plate only", blade="none", pilot="none", paddle="none",
-                tie="none (the 6.2 bores bridge)", pads="none", stub="none", post="none", detent_arm="none (the roller slot bridges 4.2)", saddle_overseer="none", saddle_scout="none", link="none")
+# poses, supports and the files themselves: parts/box_arm8/kit.py (measured on each print file), parts/box_arm8/kit.json
 ORDER = ["Stub side: press the two 6010-2RS into the hub's sleeve from the stub end, slide the hub on the stub, screw the post on; axle stepper and 16T pulley on the stub's ear, belt round the hub's ring, detent arm with its 623ZZ on its pivot.",
          "Each V rail on the hub's plate: two M5 x 10 into the heat-set M5 inserts.",
-         "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench); three V wheels, two 625ZZ in each, on M5 x 20 axles, the third on its eccentric bush; roll it onto the V rail and set the bush until it runs without play.",
+         "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench); three V wheels, two 625ZZ in each, on M5 x 20 axles, the third on its eccentric bush; roll it onto the V rail and set the bush until it runs without play. The tab on the spine's side is the pick-up stop: the lift's nut lug meets it as the block's top reaches the rail's end.",
          "Each screw drive: stepper on its face plate (four M3), coupler, inner F8-16M, screw through the thrust wall, outer F8-16M, lock ring; the nut on the screw with its flange's two sides filed to the body.",
          "Each lift: bond the three o 6 x 115 carbon rods in the yoke's sockets (resin through each port until it shows at the mouth), slide the two ties on and bond them at their stations (float bolt centres 45 hub side and 20 far side of the tab line); four M4 inserts in each pair of ties.",
          "Yoke on the MGN block with four M3 x 12; the nut into its lug (flange in the slot); the return spring from the carriage to the rail's channel.",
-         "Each grab unit: servo, paddle, blades on their two o 3 carbon rods with the four blade springs, pilots on their springs, an SS49E in each hall post, the eight TPU pads on their M3 jack screws.",
+         "Each grab unit (the steps and their sweeps: parts/box_arm8/kit.json test_set): servo in from the open side, two M3 x 8 through its inner ear; paddle onto the spline, M3 x 35 from the hub end; each pilot on two cut o 3 springs, its o 3 x 9 pin in from the blade bay; blades and their four springs, the two o 3 x 66 rods through; an SS49E in each hall post; the eight TPU pads into their seats.",
          "Grab unit on the ties: four M4 shoulder bolts down through the base with a PTFE and a steel washer under each head, a float spring round each bolt between tie and base.",
          "Ring: each bay's receiver on its saddle by the receiver's own mount bolts, the 20 link bars between neighbouring ears.",
-         "Set up: jack each pad to the pack's bottom with a cartridge gripped; park by the screw's position; check both hall readings with the bolts in and out."]
+         "Set up: with a cartridge gripped, each pad must touch the pack's bottom: swap a pad for the next thickness where it does not, then glue; park by the screw's position; check both hall readings with the bolts in and out."]
+
+
+def current(k):
+    """the engine part's result is of the setup on main, and passed"""
+    import part_sha
+    d = os.path.join(ROOT, "parts", "box_arm8_" + k); r = json.load(open(os.path.join(d, "result.json")))
+    return bool(r.get("strength_ok") and r.get("solid_ok") and r.get("setup_sha") == part_sha.setup_sha(os.path.join(d, "part.py")))
 
 
 def print_kit(pr):
-    """the 14 drawn pieces as files to print, and the assembly order. Not to print before the three runs pass: a failed run can still move a joint."""
+    """the print kit as parts/box_arm8/kit.py measured it (kit.json: files, poses, supports, order, test set), and the three engine parts' state"""
     gen = {k: json.load(open(os.path.join(ROOT, "parts", "box_arm8_" + k, "result.json"))) for k in ("hub", "carriage", "lift")}
-    ok = all(g.get("strength_ok") and g.get("solid_ok") for g in gen.values())
-    return dict(hold=("Released 13 Nov: hub, carriage and lift ran PASS (strength and solid check); the joints these pieces share did not move after their solid checks" if ok else
-                      "DO NOT PRINT YET: hub, carriage and lift have not all passed their runs; a failed run can move a joint these pieces share (rail seat, wheel axles, sockets, MGN faces)"),
-                generated=[dict(part="box_arm8_" + k, count=1 if k == "hub" else 2, worst=g["strength"]["worst"], mass_g=g["mass_g"], solid_check="PASS" if g.get("solid_ok") else "FAIL",
-                                file=f"python tools/print_mesh.py fetch box_arm8_{k}", pose=dict(hub="plate face down (+y)", carriage="plate face down (-y)", lift="upright, the plate's lower end down (+z)")[k]) for k, g in gen.items()],
-                pieces=[dict(file=f"parts/{v['part']}/part.stl", material=v["material"] + (" (PETG settings + 10 C)" if v["material"] == "PCTG" else " 95A"), count=v["count"], pose=v["print_pose"], supports=SUPPORTS[k],
-                             solid_check="PASS", g_each=v["g_each"], fits_180=v["fits_180"]) for k, v in pr.items()],
-                generated_later=["hub (1), carriage (2), lift (2): their runs' print meshes (tools/print_mesh.py fetch), not part.stl"],
-                order=ORDER)
+    cur = {k: current(k) for k in gen}
+    kj = os.path.join(HERE, "kit.json"); kit = json.load(open(kj)) if os.path.exists(kj) else {}
+    return dict(hold=("All three engine parts are of the setups on main and passed." if all(cur.values()) else
+                      "Drawn pieces: print. Engine parts waiting on their runs: " + ", ".join(k for k in cur if not cur[k]) + " (14 Nov: the carriage's bed plane and pick-up stop, the lift's bed, "
+                      "and one load point the latch moved 0.06 mm; the 13 Nov shapes are not to be printed)"),
+                generated=[dict(part="box_arm8_" + k, count=1 if k == "hub" else 2, current=cur[k], worst=g["strength"]["worst"], mass_g=g["mass_g"], solid_check="PASS" if g.get("solid_ok") else "FAIL") for k, g in gen.items()],
+                kit="parts/box_arm8/kit.json", files=kit.get("files", []), print_order=kit.get("order", []), test_set=kit.get("test_set"), open=kit.get("open", []), order=ORDER)
 
 
 def main():
@@ -478,7 +483,7 @@ def main():
     one("saddle_overseer", saddle(S, "overseer")); one("saddle_scout", saddle(S, "scout"))
     one("link", link_bar(S))
     res["printed"] = pr
-    res["generated"] = {q["part"][9:]: dict(part=q["part"], setup=f"parts/{q['part']}/part.py", state=f"run {'PASS' if q['solid_check'] == 'PASS' and q['worst'] <= 0.5 else 'FAIL'}: worst {q['worst']}, {q['mass_g']} g") for q in print_kit(pr)["generated"]}
+    res["generated"] = {q["part"][9:]: dict(part=q["part"], setup=f"parts/{q['part']}/part.py", state=(f"run {'PASS' if q['solid_check'] == 'PASS' and q['worst'] <= 0.5 else 'FAIL'}: worst {q['worst']}, {q['mass_g']} g" if q["current"] else "setup changed 14 Nov: rerunning")) for q in print_kit(pr)["generated"]}
     res["bought"] = BOUGHT
     res["print_kit"] = print_kit(pr)
     res["compat"] = compat(S, fast)
@@ -543,14 +548,16 @@ BOUGHT = [
     dict(part="float bolt", spec="M4 shoulder screw, o 5 x 16 shoulder", n=8, url=A + "uxcell-Stainless-Shoulder-Length-Thread/dp/B077GYHYSB"),
     dict(part="float spring", spec="o 8 x 1.0 wire x 15, 5.8 N/mm (E from wire and coil count)", n=8, url=A + "clp/B0DYJYL4ZG", check="8 OD, 1 wire, 15 free, 10 in the pack. On a scale: 18 N at 11.9 long; the push limit follows this rate"),
     dict(part="blade spring", spec="o 6 x 0.7 wire x 25, 1.6 N/mm (E), two per blade", n=8, url=A + "uxcell-0-7mmx6mmx25mm-Stainless-Compression-Springs/dp/B076LRJH99", check="on a scale: 12.5 N at 17.1 long"),
-    dict(part="pilot spring", spec="o 6 x 0.6 wire x 20", n=4, url=A + "uxcell-0-6mmx6mmx20mm-Stainless-Compression-Springs/dp/B076LWWTR7"),
+    dict(part="pilot spring", spec="the latch's spring (o 3.0, 0.3 wire, 30 free) cut to 15, two side by side under each pilot (14 Nov: the o 6 x 20 had no way into the pocket)", n=8, url=A + "PATIKIL-Compression-Stainless-Mechanical-Assortment/dp/B0DKCRCBV2", check="E 0.25 N/mm each: the pilot must come back up by itself"),
+    dict(part="paddle screw", spec="M3 x 35 socket head, through the paddle into the servo's shaft", n=2, url=A + "Socket-Screws-Available-Stainless-Machine/dp/B08P6DYH7V", check="the M3 x 12 listing's other lengths (not confirmed on it). E: 7 into the shaft; washers under the head if it bottoms"),
+    dict(part="servo ear screws", spec="M3 x 8 socket head, two per servo into the unit body's tab (o 2.5, they cut their thread)", n=4, url=A + "Socket-Screws-Available-Stainless-Machine/dp/B08P6DYH7V"),
     dict(part="carriage return spring", spec="extension spring, 5 to 10 N over 60 mm, from the kit", n=2, url=A + "Extension-Different-Assortment-Stainless-Individual/dp/B0CFRF42LQ", check="rates not listed: pick on a scale"),
     dict(part="float washer", spec="PTFE washer M5 between each float bolt's head and its tie, with a steel M5 x 15 washer", n=8, url=A + "PATIKIL-Washer-Sealing-Gasket-Flanges/dp/B0H1XBGWPM"),
     dict(part="insert M5", spec="heat-set, rail bolts", n=4, url=A + "Threaded-Inserts-M5xD7xL6-Printing-Components/dp/B0H142Y3BM"),
-    dict(part="insert M3 / M4", spec="heat-set: stepper faces and servo M3 (16), MGN rail M3 (8); float bolts M4 (8, the next line)", n=24, url=A + "initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR"),
+    dict(part="insert M3 / M4", spec="heat-set: stepper faces M3 (16), MGN rail M3 (8); float bolts M4 (8, the next line)", n=24, url=A + "initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR"),
     dict(part="insert M4", spec="heat-set M4-0.7, the float bolts screw into the ties", n=8, url=A + "clp/B07457F9ST", check="20 in the pack; the ties' holes are o 5.6: measure the insert first (M)"),
     dict(part="wheel axle", spec="M5 x 20 countersunk DIN 7991", n=6, url=A + "Socket-Screws-Countersunk-Stainless-Bright/dp/B0CJV8XJ3Y"),
-    dict(part="carbon rod 3", spec="o 3 x 500: blade rods 66 long, four; on hand", n=1, url=A + "Carbon-Fiber-Length-Diameter-Suitable/dp/B09N91J1FC"),
+    dict(part="carbon rod 3", spec="o 3 x 500: blade rods 66 long, four; pilot pins 9 long, four; on hand", n=1, url=A + "Carbon-Fiber-Length-Diameter-Suitable/dp/B09N91J1FC"),
 ]
 
 COL = dict(hub="#c9d3dc", rail="#9fb4cc", carriage="#e8b04a", lift="#5f9ed1", unit="#7fc97f", bought="#8a8f96", tpu="#333333", fixed="#b7a3c9", bay="#8a94a6", pack="#2f4fbf", box="#d8d8d8")
@@ -560,14 +567,16 @@ def write_assembly(res, S, H, FX, out_dir):
     path = os.path.join(ROOT, "systems", "swap_arm.assembly.json")
     old = json.load(open(path)) if os.path.exists(path) else {}
     parts = []
-    def add(pid, name, m, group, color, role, material, kin=None, opacity=None, folder=None, version="arm v8 (13 Nov)"):
+    def add(pid, name, m, group, color, role, material, kin=None, opacity=None, folder=None, version="arm v8 (13 Nov)", pose=None):
         if folder: mesh = f"parts/{folder}/part.stl"
         else:
             mesh = f"parts/box_arm8/view/{pid}.stl"; tm(m).export(os.path.join(ROOT, mesh))
-        parts.append(dict(id=pid, name=name, role=role, group=group, color=color, opacity=opacity, mesh=mesh, pose=None, material=material, tag="C", owner="swap arm",
+        parts.append(dict(id=pid, name=name, role=role, group=group, color=color, opacity=opacity, mesh=mesh, pose=pose, material=material, tag="C", owner="swap arm",
                           version=version, source="parts/box_arm8/make.py", kin=kin))
     hub = U(*hub_drawn()) - U(*hub_cuts())
-    add("box_arm8_hub_setup", "hub (drawn attachments; the body is generated)", hub, "hub (turns)", COL["hub"], "structure", "PCTG", dict(stage="hub"), version="setup, not run")
+    ran = {k: current(k) for k in ("hub", "carriage", "lift")}                                  # the run's shape where the result is of the setup on main, else the setup
+    if ran["hub"]: add("box_arm8_hub_run", "hub (generated)", None, "hub (turns)", COL["hub"], "structure", "PCTG", dict(stage="hub"), folder="box_arm8_hub", version="run, arm v8")
+    else: add("box_arm8_hub_setup", "hub (drawn attachments; the body is generated)", hub, "hub (turns)", COL["hub"], "structure", "PCTG", dict(stage="hub"), version="setup, not run")
     for k, (m, mat, kind) in FX.items():
         add("box_arm8_fx_" + k, k.replace("_", " "), m, "stub side (fixed)", COL["fixed"] if kind == "print" else COL["bought"], "structure" if kind == "print" else "bought", mat,
             folder=("box_arm8_" + k) if kind == "print" else None)
@@ -576,8 +585,13 @@ def write_assembly(res, S, H, FX, out_dir):
         for k, (m, mat, kind, grp) in H.items():
             stage = "hub" if grp == "hub" else ("lift" if grp == "unit" else grp)
             col = COL["bought"] if kind == "bought" else COL["tpu"] if mat == "TPU" else COL[grp if grp != "hub" else "rail"]
+            kin = dict(stage=stage, head=hd, blade=(1 if k == "blade_p" else -1 if k == "blade_n" else 0) * (1 if hd == "A" else -1))
+            if kind == "run" and ran[k]:
+                add(f"box_arm8_{hd.lower()}_{k}_run", f"head {hd}: {k} (generated)", None, f"head {hd}", col, "structure", mat, kin, folder="box_arm8_" + k, version="run, arm v8",
+                    pose=None if hd == "A" else [[-1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, -1.0, 0], [0, 0, 0, 1.0]])
+                continue
             add(f"box_arm8_{hd.lower()}_{k}", f"head {hd}: {names.get(k, k.replace('_', ' '))}", f(m), f"head {hd}", col, "bought" if kind == "bought" else "structure", mat,
-                dict(stage=stage, head=hd, blade=(1 if k == "blade_p" else -1 if k == "blade_n" else 0) * (1 if hd == "A" else -1)), version="setup, not run" if kind == "run" else "arm v8 (13 Nov)")
+                kin, version="setup, not run" if kind == "run" else "arm v8 (14 Nov)")
     for kind, angs in BAYS.items():
         for a_ in angs:
             add(f"box_arm8_bay_{a_}_recv".replace("-", "m"), f"bay {a_}: {kind} receiver (latch v7)", at_radius(S[kind]["recv_bay"], L.R_BAY, a_), "bays", COL["bay"], "protected", "PCTG", opacity=0.55)
@@ -594,7 +608,7 @@ def write_assembly(res, S, H, FX, out_dir):
            "note": f"The box's swap arm, v8, for latch v7 and both packs. Two heads 180 apart; each is a lift on a bought MGN12H rail driven by a T8 x 2 screw, with three carbon rods out under the grab unit, picking its carriage up for the last "
                    f"{L.T2:g} mm: {nb['travel_mm']['drone']} mm to the drone seat. Push limited by the grab unit's float springs to {L.F_LIMIT:g} N (x{L.F_LIMIT / L.F_INSERT['overseer']:.2f} over the Overseer insert); the screw holds with the power off. "
                    f"Bays at R {L.R_BAY:g}. Swap cycle, both packs, {c['states']} states: {'0 overlaps' if c['zero'] else str(len(c['overlaps'])) + ' overlapping pairs, listed under the viewer'}. "
-                   f"Hub, carriage and lift are shown as their setups (drawn attachments and envelope): the engine has not run them yet.",
+                   + ("Hub, carriage and lift are their runs' shapes." if all(ran.values()) else "Shown as their setups (drawn attachments and envelope), their runs pending: " + ", ".join(k for k in ran if not ran[k]) + "."),
            "cg_ref": None, "timeline": "tools/swap_arm_motion.py:timeline", "appendix": "systems/swap_arm.appendix.html", "parts": parts}
     json.dump(asm, open(path, "w"), indent=1)
     open(os.path.join(ROOT, "systems", "swap_arm.appendix.html"), "w").write(appendix(res))
@@ -617,13 +631,19 @@ def appendix(res):
     bought = "".join(td(b["part"], b["spec"], b["n"], f"<a href='{b['url']}'>listing</a>", b.get("check", "")) for b in res["bought"])
     ld = "".join(td(r["case"], r["cls"], r["F_N"], r["mgn_index"], r["nut_N"]) for r in res["loads"]["cases"] if "overseer" in r["case"])
     kit = res.get("print_kit") or {}
-    kit_html = (f"<h3>Print kit: the 14 drawn pieces</h3><p><b>{kit.get('hold', '')}</b></p><table><tr><th>file</th><th>material</th><th>n</th><th>pose</th><th>supports</th><th>solid check</th></tr>"
-                + "".join(td(q["file"], q["material"], q["count"], q["pose"], q["supports"], q["solid_check"]) for q in kit.get("pieces", [])) + "</table><p>Generated, after their runs: "
-                + "; ".join(kit.get("generated_later", [])) + "</p><h3>Assembly order</h3><ol>" + "".join(f"<li>{o}</li>" for o in kit.get("order", [])) + "</ol>")
+    ts = kit.get("test_set") or {}
+    kit_html = (f"<h3>Print kit</h3><p><b>{kit.get('hold', '')}</b> Files: the release's print-&lt;name&gt;.stl, each in its print pose (parts/box_arm8/kit.json; pictures in parts/box_arm8/kit/).</p>"
+                "<table><tr><th>file</th><th>set</th><th>material</th><th>n</th><th>on the bed mm</th><th>first layer mm&sup2;</th><th>supports</th><th>brim</th><th>g each</th><th>solid check</th></tr>"
+                + "".join(td(f"<a href='{q['release']}'>{q['file'].split('/')[1]}</a>", q["set"], q["material"], q["count"], " x ".join(str(v) for v in q["size_on_bed_mm"]), q["first_layer_mm2"], q["supports"], q["brim"], q["grams_each"], q["solid_check"]) for q in kit.get("files", [])) + "</table>"
+                + "<h3>Print order</h3><ol>" + "".join(f"<li>{o['step'][2:]}" + (f" <i>(waiting on its run: {', '.join(o['waiting'])})</i>" if o["waiting"] else "") + "</li>" for o in kit.get("print_order", [])) + "</ol>"
+                + "<h3>Grab-unit test set (one head)</h3><ol>" + "".join(f"<li>{o}</li>" for o in ts.get("steps", [])) + "</ol><table><tr><th>bought for it</th><th>spec</th><th>n</th><th></th><th>check</th></tr>"
+                + "".join(td(b_["part"], b_["spec"], b_["n"], f"<a href='{b_['url']}'>listing</a>", b_.get("check", "")) for b_ in ts.get("bought", [])) + "</table>"
+                + "<h3>Open, measured on arrival</h3><table><tr><th>item</th><th>state</th><th>measure</th><th>if it is off</th></tr>" + "".join(td(o["item"], o["state"], o["what"], o["if_off"]) for o in kit.get("open", [])) + "</table>"
+                + "<h3>Assembly order</h3><ol>" + "".join(f"<li>{o}</li>" for o in kit.get("order", [])) + "</ol>")
     return (f"<div class='arm8'><style>.arm8 table{{border-collapse:collapse;font-size:13px;margin:8px 0}}.arm8 td,.arm8 th{{border:1px solid #8884;padding:3px 7px;vertical-align:top}}</style>"
             f"<h3>What the head does</h3><table>{''.join(rows)}</table>"
             f"<h3>Printed pieces (drawn)</h3><table><tr><th>part</th><th>material</th><th>n</th><th>g each</th><th>box mm</th><th>print pose</th><th>fits 180</th></tr>{prn}</table>"
-            f"<p>Generated, setups ready and not yet run: hub, carriage, lift (parts/box_arm8_*/part.py).</p>"
+            f"<p>Generated: " + "; ".join(f"{k}: {v['state']}" for k, v in res["generated"].items()) + ".</p>"
             f"<h3>Load cases at the grab unit (each its own)</h3><table><tr><th>case</th><th>class</th><th>F N</th><th>MGN12H block index (static)</th><th>nut N</th></tr>{ld}</table>"
             f"<p>Not modelled: {'; '.join(res['loads']['missing'])}.</p>"
             f"{kit_html}<h3>Bought</h3><table><tr><th>part</th><th>spec</th><th>n</th><th></th><th>check</th></tr>{bought}</table></div>")

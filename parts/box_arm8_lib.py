@@ -152,16 +152,20 @@ def carriage_bodies():
     """the drawn attachments: three wheel bosses, then the MGN rail's seat on the spine"""
     b = [cyl("y", x, Z0 + c, 10.0, PLATE_Y[0], PLATE_Y[1]) for x, c in WHEELS]                 # M5 axle bosses, the plate's full depth
     b += [box(RAIL_X - 6.0, RAIL_X + 6.0, SPINE["y"][1] - 3.0, SPINE["y"][1], MGN_U[0], MGN_U[1])]
+    b += [box(SPINE["x"][1] - 0.01, STOP["x1"], LUG["y"][0], SPINE["y"][1], STOP["u"], STOP["u"] + STOP["t"])]   # the pick-up stop: a tab on the spine's side over the lift's nut lug
     return b
+# 14 Nov (print kit): the stop was room over the rail's top, 12.8 past the rail seat's plane. The 13 Nov run kept 3.3 of it (the block passes it: no pick-up, and the
+# block runs off the rail's end), and with it past the seat no face of the carriage lay on the bed (1 mm2 of first layer, supports on the rail seat). Now the lift's
+# nut lug meets a drawn tab on the spine's side when the block's top reaches the rail's end, and everything ends on the rail seat's plane: that plane is the bed.
+STOP = dict(u=LUG["u"][1] + T2, t=3.0, x1=54.0)     # 1.0 from the screw (o 8 at x 59); 2.7 x 16.1 of the lug's top under it
 CAR_TOP = MGN_U[1] + 3.0
 def carriage_env():
     s = SPINE; w3 = Z0 + WHEELS[2][1]
     return U(box(12.0, s["x"][0] + 0.01, PLATE_Y[0], PLATE_Y[1], 2.0, CAR_TOP),                               # the wheel pair's column of plate, 9.85 thick
-             box(12.0, RAIL_X - 6.1, PLATE_Y[1] - 0.01, YOKE["y"][0] - 1.0, 2.0, MGN_U[1]),                   # 12.25 thick from the wheel pair to the rail's side, 1.0 behind the yoke and 0.6 behind the MGN block
-             #                                                                                                  (13 Nov run: 0.53 where the plate bends between the low wheel's axle and the spine)
+             box(12.5, s["x"][0] + 0.01, 58.0, PLATE_Y[0] + 0.01, Z0 + WHEELS[0][1] + WHEEL_R + 2.5, Z0 + WHEELS[1][1] - WHEEL_R - 2.5),   # a rib behind the plate between the wheel pair, 10.75 deep, 1.0 from the V rail's ridge
+             #                                                                                                  (13 Nov run: 0.53 where the plate bends between the low wheel's axle and the spine; it was 2.4 on the front, past the bed plane)
              box(-30.5, 12.01, PLATE_Y[0], PLATE_Y[1], w3 - 22.0, w3 + 22.0),                                 # and a strap across the rail to the third wheel, 44 wide
-             box(s["x"][0], s["x"][1], s["y"][0], s["y"][1], MGN_U[0], CAR_TOP),                                 # the spine: the MGN rail on its front, the wheel pair beside it
-             box(s["x"][0], s["x"][1], s["y"][1] - 0.01, s["y"][1] + MGN["H"] - 0.2, MGN_U[1], CAR_TOP))      # the stop over the rail's top: the block lifts the carriage by it
+             box(s["x"][0], s["x"][1], s["y"][0], s["y"][1], MGN_U[0], CAR_TOP))                                 # the spine: the MGN rail on its front, the wheel pair beside it
 def carriage_cuts():
     c = [cyl("y", x, Z0 + cc, 2.6, 50, 82) for x, cc in WHEELS] + [cyl("y", RAIL_X, u, 2.0, SPINE["y"][1] - 7.0, SPINE["y"][1] + 1) for u in mgn_bolts()]    # M3 heat-set inserts under the rail
     return U(*c)
@@ -261,14 +265,26 @@ def blade(side, face):
 def faces():
     m7 = latch(); return dict(open=m7.m6.BLADE_OPEN, grip=m7.bl.TAB_OUT - m7.m6.R0, limit=m7.bl.TAB_OUT - m7.bl.TRAVEL)
 def pilot(sx, sz, ext=0.0):
+    """a sprung pilot. 14 Nov (print kit): as drawn it had nothing to keep it in, no seat for its spring, and its stem's slot ran under the Scout pads beside it.
+    Now: the tip as before; under it a neck 3.8 wide through the deck; under that the stem, as wide as the tip, whose top is the shoulder a o 3 carbon pin (along z,
+    PILOT_PIN, pushed in from the blade bay; the blade's end then keeps it in) holds: up-stop at rest, PILOT_TRAVEL down onto two o 3 springs side by side on the
+    pocket's floor (PILOT_FLOOR, over the float bolt's head room). Nothing of it is wider than the tip, so it drops in from above and the deck beside it is whole."""
     p = PILOT; x0, x1 = p["x"]; z0, z1 = p["z"]; t = p["taper"]; top = p["top"] + ext
     tip = hullp([[x, y, z] for (x, z) in ((x0, z0), (x1, z0), (x1, z1), (x0, z1)) for y in (-2.0 + ext, top - t)] + [[x, top, z] for (x, z) in ((x0, z0), (x1 - t, z0), (x1 - t, z1 - t), (x0, z1 - t))])
-    stem = U(box(x0, x1, -21.0 + ext, -6.5 + ext, STEM_Z[0], STEM_Z[1]), box(x0, x1, -9.0 + ext, -1.99 + ext, z0, STEM_Z[1]))   # below the deck the stem stands beyond the blade's end
+    stem = U(box(x0, PILOT_PIN[0] - 1.7, PILOT_STEM[1] - 0.01 + ext, -1.99 + ext, z0, z1), box(x0, x1, PILOT_STEM[0] + ext, PILOT_STEM[1] + ext, STEM_Z[0], z1))   # below the deck the stem stands beyond the blade's end
     m = U(tip, stem)
     if sx < 0: m = m.mirror([1, 0, 0])
     if sz < 0: m = m.mirror([0, 0, 1])
     return m
-STEM_Z = (19.5, 24.0)
+def pilot_pin(sx, sz):
+    return cyl("z", sx * PILOT_PIN[0], PILOT_PIN[1], 1.5, *sorted((sz * 17.3, sz * 26.5)))
+STEM_Z = (19.5, 22.3)
+PILOT_STEM = (-17.5, -12.0)    # the stem under the pin's level; its top is the shoulder the pin holds
+PILOT_PIN = (16.1, -10.5)      # |x|, y of the o 3 x 9 carbon pin
+PILOT_FLOOR = -28.0            # spring pocket floor: 10.5 of spring at rest, 5.5 with the pilot flush
+PILOT_TRAVEL = 5.0
+PAD_T = 2.4                    # the heel pads, nominal: glued in 0.4 deep seats in the deck, picked from 2.0 / 2.2 / 2.4 / 2.6 / 2.8 at set-up (they were on M3 jack screws whose
+PAD_STEPS = (2.0, 2.2, 2.4, 2.6, 2.8)   # holes ended under the deck, and two of the Scout's four stood over the pilots' slots)
 PILOTS = ((1, -1), (-1, 1))    # the hall posts stand in the other two corners
 def unit_body():
     """the printed housing: deck (both packs' pad seats, the hall posts), side walls with the blade rods and spring seats over the booms,
@@ -282,28 +298,49 @@ def unit_body():
     blocks = [box(-25.8, 25.8, y1 - 0.01, -19.0, -47.0, -28.0), box(-25.8, -23.0, y1 - 0.01, -14.5, 20.0, 71.5)]
     guides = []
     for sx, sz in PILOTS:
-        gd = box(8.2, 19.1, -22.0, -5.9, 17.3, 27.9)
+        gd = box(8.2, 21.1, PILOT_FLOOR - 2.0, -5.9, 17.3, 27.9)
         if sz < 0: gd = gd.mirror([0, 0, 1])
         if sx < 0: gd = gd.mirror([1, 0, 0])
         guides.append(gd)
     bbs = [q.bounding_box() for q in pads]
-    jacks = [box(b[0] - 1, b[3] + 1, -10.0, -5.9, b[2] - 1, b[5] + 1) for b in bbs]                        # a boss under each pad for its M3 jack screw
-    m = U(deck, *walls, base, *cross, *blocks, *guides, *jacks)
+    pads = [box(b[0], b[3], -PAD_T, 0.0, b[2], b[5]) for b in bbs]                                         # nominal pads, 0.4 into their seats
+    m = U(deck, *walls, base, *cross, *blocks, *guides)
     cut = [cyl("x", ROD_YT, z, 1.6, -40, 40) for z in (-12.0, 12.0)]                                       # o 3 carbon rods (the blades slide on them)
     cut += [cyl("z", 0.0, CAM_Y, 6.5, 22.0, 28.0)]                                                         # the servo's boss through its wall
-    cut += [U(box(*sorted((sx * 10.2, sx * 17.1)), -40, -5.0, *sorted((sz * (STEM_Z[0] - 0.4), sz * (STEM_Z[1] + 0.4)))), box(*sorted((sx * 10.2, sx * 17.1)), -9.5, 0.0, *sorted((sz * 17.0, sz * (STEM_Z[1] + 0.4))))) for sx, sz in PILOTS]
+    cut += [U(box(*sorted((sx * 10.2, sx * 17.1)), PILOT_FLOOR, 0.0, *sorted((sz * (STEM_Z[0] - 0.4), sz * (STEM_Z[1] + 0.4)))),                  # stem and spring pocket, blind
+              box(*sorted((sx * 10.2, sx * 17.1)), PILOT_STEM[1] - PILOT_TRAVEL - 0.5, 0.0, *sorted((sz * 17.0, sz * (STEM_Z[1] + 0.4)))),
+              cyl("z", sx * PILOT_PIN[0], PILOT_PIN[1], 1.55, *sorted((sz * 16.0, sz * 26.5)))) for sx, sz in PILOTS]
     cut += [U(cyl("y", sx * FLOAT_X, z, 5.0, y0 - 1, y1 + 1), cyl("y", sx * FLOAT_X, z, 8.0, y1, y1 + 6.5)) for sx in (-1, 1) for z in FLOAT_Z]   # o 10 round each o 5 shoulder (+-2.5 of float); room for the head and its washer
     cut += [box(*sorted((sx * 11.3, sx * 14.7)), 3.8, 5.7, *sorted((sz * 18.7, sz * 21.5))) for sx, sz in ((1, 1), (-1, -1))]   # a pocket in each post for its hall sensor
-    cut += [cyl("y", (b[0] + b[3]) / 2, (b[2] + b[5]) / 2, 1.25, -45, -5.5) for b in bbs]                  # M3 jack screws, tapped in the print
+    cut += [box(b[0] - 0.2, b[3] + 0.2, -PAD_T, 0.0, b[2] - 0.2, b[5] + 0.2) for b in bbs]                 # the pads' seats
     cut += [box(-10.2, 30.2, CAM_Y - 10.2, CAM_Y + 10.2, 27.0, 68.5)]                                      # the servo
-    cut += [box(-13.0, 13.0, y1, -5.0, -8.0, 8.0)]                                                         # the cam's sweep
-    return m - U(*cut), pads
+    cut += [box(-13.0, 13.0, y1, -5.0, -10.5, 8.0)]                                                        # the cam's sweep, and 4.5 behind it: the paddle is lowered in there and slid onto the spline
+    cut += [box(-6.5, 6.5, CAM_Y, 1.0, 7.9, 27.01), cyl("z", 0.0, CAM_Y, 3.2, -48.0, -10.0)]               # the paddle's nose down into the wall's hole from above; its M3 x 35 and the driver in from the hub end
+    # 14 Nov (print kit): the servo could not be put in or held. It slides in from the open +x side, so its boss and spline need a slot through the
+    # wall out to that side; the inner ear screws from behind (two M3 x 8, tapped in the print) to a tab between the side wall and the servo's end,
+    # the driver through two holes in the end bar. The outer ear stays free: a tab there would stand in the servo's way in.
+    e = SERVO_EAR
+    cut += [box(0.0, 34.0, CAM_Y - 6.5, CAM_Y + 6.5, 22.0, 28.0)]
+    tab = box(-23.01, -10.6, y1 - 0.01, CAM_Y + e["dy"] + 3.5, e["z"] - 4.0, e["z"]) - U(*[cyl("z", e["x"][0], CAM_Y + sy * e["dy"], 1.25, e["z"] - 5, e["z"] + 1) for sy in (-1, 1)])
+    cut += [cyl("z", e["x"][0], CAM_Y + sy * e["dy"], 2.5, 68.0, 72.0) for sy in (-1, 1)]
+    return (m + tab) - U(*cut), pads
+SERVO_EAR = dict(x=(10.0 - 24.75, 10.0 + 24.75), dy=5.0, z=68.4 - 27.7 - 2.5, t=2.5, span=54.5)       # DS3218 (systems/dimensions.md: ears 4 x o 4.5 on 49.5 x 10, 54.5 over them, underside 27.7 above the base; thickness 2.5 E)
+SPLINE = dict(r=2.98, tip=22.0, case=28.0)     # 25T, o 5.96; its tip 6.0 out of the case top (E: boss and spline height are not in the sheet, measure)
+def paddle(state="grip"):
+    """the cam as it is printed (14 Nov; it was a brick with nothing to hold it on the servo): the bar between the blades' tails, a o 8 stem, a o 11 nose that enters
+    the wall's o 13 hole and takes the 25T spline in a o 5.8 bore it cuts its own teeth in (E), drawn down on the spline by one M3 x 35 from the cam's end. o 10 round the
+    screw in the bar: 3.3 of wall each side (the gate reads less as a neck); 0.4 from the blades' tails at their limit."""
+    bar = box(-4.0, 4.0, -11.25, 11.25, -6.0, 6.0) if state != "open" else box(-11.25, 11.25, -4.0, 4.0, -6.0, 6.0)
+    m = U(bar, cyl("z", 0, 0, 5.0, -6.0, 6.0), cyl("z", 0, 0, 4.0, 5.9, 14.5), mf.Manifold.cylinder(1.5, 4.0, 5.5, 48).translate([0, 0, 14.5]), cyl("z", 0, 0, 5.5, 16.0, SPLINE["case"] - 2.0))
+    m = m - cyl("z", 0, 0, 2.9, SPLINE["tip"] - 1.5, 30) - cyl("z", 0, 0, 1.7, -7, 30)
+    return m.translate([0, CAM_Y, 0])
 def unit_bought(state="grip"):
     f = faces()[state]
-    paddle = box(-4.0, 4.0, CAM_Y - 11.25, CAM_Y + 11.25, -6.0, 6.0) if state != "open" else box(-11.25, 11.25, CAM_Y - 4.0, CAM_Y + 4.0, -6.0, 6.0)
+    e = SERVO_EAR
     fb = [(sx * FLOAT_X, z) for sx in (-1, 1) for z in FLOAT_Z]
-    out = dict(servo=U(box(-10.0, 30.0, CAM_Y - 10.0, CAM_Y + 10.0, 28.0, 68.4), cyl("z", 0.0, CAM_Y, 6.0, 22.0, 28.0), cyl("z", 0.0, CAM_Y, 3.5, 6.0, 22.0), cyl("z", 0.0, CAM_Y, 7.5, 18.5, 22.0)),
-               paddle=U(paddle, cyl("z", 0.0, CAM_Y, 4.0, -6.0, 6.0)),
+    out = dict(servo=U(box(-10.0, 30.0, CAM_Y - 10.0, CAM_Y + 10.0, 28.0, 68.4), cyl("z", 0.0, CAM_Y, 6.0, SPLINE["case"] - 2.0, 28.0), cyl("z", 0.0, CAM_Y, SPLINE["r"] - 0.1, SPLINE["tip"], 28.0),
+                        box(10.0 - e["span"] / 2, 10.0 + e["span"] / 2, CAM_Y - 9.0, CAM_Y + 9.0, e["z"], e["z"] + e["t"])),      # with its ears, boss (2 high, E) and spline
+               paddle=paddle(state),
                blade_rods=U(*[cyl("x", ROD_YT, z, 1.5, -33.0, 33.0) for z in (-12.0, 12.0)]),
                blade_springs=U(*[cyl("x", ROD_YT, z, 3.0, *sorted((sx * (f + 7.5), sx * SEAT_X))) - cyl("x", ROD_YT, z, 2.3, -40, 40) for sx in (-1, 1) for z in (-12.0, 12.0)]),
                halls=U(*[box(*sorted((sx * 11.5, sx * 14.5)), 4.0, 5.5, *sorted((sz * 18.9, sz * 21.3))) for sx, sz in ((1, 1), (-1, -1))]),

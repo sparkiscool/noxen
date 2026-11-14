@@ -33,8 +33,12 @@ def lift(h):
     pad, nut = L.mount_pad(), L.nut_seat()
     y0, y1 = L.SOCKET[0] - 2.0, L.SOCKET[1]; ym = (y0 + y1) / 2
     halves = [(cyl("y", bx, bu, L.COLLAR_R, ya, yb), np.array([bx, (ya + yb) / 2, bu])) for bx, bu in L.boom_axes() for ya, yb in ((y0, ym), (ym, y1))]
-    drawn = U(pad, nut, *L.sockets())
-    p = Part("box_arm8_lift", h, drawn, L.lift_cuts(), env, build="+z", material="PCTG")                      # upright, the plate's lower end down: the yoke's twist into the plate is in-layer (filled solid +z 0.28, +x 0.31, +y 0.69)
+    yk = L.YOKE; rim = box(yk["x"][0], L.BOOMS[2][0] - L.COLLAR_R, yk["y"][0], yk["y"][1], yk["u"][1] - 3.0, yk["u"][1])     # the yoke's top face, drawn 3 thick: what the print stands on
+    drawn = U(pad, nut, rim, *L.sockets())
+    # upright as before (the yoke's twist into the plate is in-layer: filled solid z 0.28, x 0.31, y 0.69), but the other end down. 14 Nov (print kit): the 13 Nov run left
+    # 21 mm2 at the plate's lower end (the bed of build +z) and 1866 by chance at the yoke's top. Bed = the yoke's top, drawn, and the audit refuses the setup under BED_MIN.
+    p = Part("box_arm8_lift", h, drawn, L.lift_cuts(), env, build="-z", material="PCTG")
+    p.bed_min_mm2 = 1000.0
     p.support("default", U(pad, nut))                                                                         # bolted on the MGN block's face; the nut holds the bar direction
     # the grab unit's load reaches the lift through the three boom rods: each rod bears on its socket near the floor and near the mouth (a force each: the rod's shear and its bending)
     for nm, cls, F, P, s in _cases():
@@ -46,8 +50,12 @@ def lift(h):
 # ------------------------------------------------------------------ carriage: wheels to the MGN rail's seat
 def carriage(h):
     env = L.carriage_env(); bodies = L.carriage_bodies(); drawn = U(*bodies)
-    p = Part("box_arm8_carriage", h, drawn, L.carriage_cuts(), env, build="-y", material="PCTG")
+    p = Part("box_arm8_carriage", h, drawn, L.carriage_cuts(), env, build="-y", material="PCTG")              # the rail seat's plane on the bed (the room ends on it): the seat prints on the plate, the wheel bosses' faces up
+    p.bed_min_mm2 = 1500.0                                                                                     # the rail seat and the three bosses' ends, drawn (topo/audit.py bed)
     p.support("default", U(*bodies[:3]))
+    st = L.STOP; lg = L.LUG                                                                                    # the pick-up: the lift's nut lug under the stop tab, every swap
+    p.load_multi("pick-up at the stop: return spring 10 N (E) + the carriage with rail and wheels, 0.25 kg (E) at 3 g",
+                 [(box(lg["x"][0], st["x1"], lg["y"][0], lg["y"][1], st["u"], st["u"] + 1.5), np.array([0.0, 0.0, 10.0 + 0.25 * 9.81 * 3]))], cls="flight")
     ys = L.SPINE["y"][1]; bolts = L.mgn_bolts()
     for nm, cls, F, P, s in _cases():
         R, M, C, _ = L.mgn_wrench(F, P)
@@ -76,7 +84,8 @@ def hub(h):
     flare = mf.Manifold.cylinder(8.0, 50.2, 58.0, 96).rotate([-90, 0, 0]).translate([0, 26.2, 0])           # the sleeve's wall grows from the belt's lane to its full 58 over 8 mm: no step at the lane's edge
     env = U(cyl("y", 0, 0, 50.2, 8.0, 26.3, 96), flare, cyl("y", 0, 0, 58.0, 34.1, y1, 96), cyl("y", 0, 0, R, y1 - 8.0, y1, 96) - cyl("y", 0, 0, 58.0, 0, 100, 96), *keel, *[L.rot180(g_) for g_ in keel],
             *room, *[L.rot180(g_) for g_ in room])                                                             # an 8 mm plate, the sleeve's wall, the two keels: the room is the load's way, not the whole disc
-    p = Part("box_arm8_hub", h, drawn, U(*M.hub_cuts()), env, build="+y", material="PCTG")
+    p = Part("box_arm8_hub", h, drawn, U(*M.hub_cuts()), env, build="+y", material="PCTG")                    # the sleeve's stub end on the bed, the rail seats up
+    p.bed_min_mm2 = 700.0                                                                                     # the drawn sleeve's end ring, 782 mm2 (topo/audit.py bed)
     p.support("default", cyl("y", 0, 0, 42.5, 8.0, 40.0, 96) - cyl("y", 0, 0, 39.5, 7, 41, 96))
     x, y = L.SCREW; w = L.THRUST_WALL                         # the screw's force enters the hub at its thrust wall
     for hd, sg in (("A", 1.0), ("B", -1.0)):

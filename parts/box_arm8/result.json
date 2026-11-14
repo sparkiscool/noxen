@@ -96,7 +96,7 @@
    "note": "stiff while carrying, gives once the insert push has taken up the preload"
   },
   "sensing": "an SS49E in each hall post, 1.2 under its bolt's magnet; the head lets go only with both bolts read out (box electronics: two analog lines per head, as v7)",
-  "pads": "each of the eight pads (four per pack) on its own M3 x 8 set screw from below, +-0.75; the latch's height window is +-0.21"
+  "pads": "the eight pads (four per pack) glued in 0.4 deep seats in the deck, each picked from 2.0 / 2.2 / 2.4 / 2.6 / 2.8 thick at set-up (+-0.4 in 0.2 steps; the latch's height window is +-0.21). 14 Nov: they were on M3 jack screws, but the holes ended under the deck and two Scout pads stood over the pilots' slots"
  },
  "loads": {
   "cases": [
@@ -158,7 +158,7 @@
     ],
     "at": [
      0.0,
-     98.4,
+     98.5,
      60.0
     ],
     "s": 115.80000000000001,
@@ -734,17 +734,17 @@
    "power cut with a head out: not a case any more (the 2 mm screw holds; v7's worst was 2.80 on the 625ZZ)",
    "the ring belt's tooth shear at the axle stall (E)",
    "v7's frame model itself is not rerun for v8's geometry: rail bending and hub turn under load are the engine's and hand numbers",
-   "the carriage's return spring and the pick-up at the stop (a few N, E): not a case"
+   "the carriage's pick-up at its stop is a case of the carriage alone (17.4 N, E: return spring 10 N + 0.25 kg at 3 g); the return spring's anchor on the carriage is not drawn"
   ]
  },
  "ring": {
-  "R 113: receiver sets, Overseer beside Scout": 1007.3,
+  "R 113: receiver sets, Overseer beside Scout": 897.0,
   "R 129: receiver sets, Overseer beside Scout": 0.0,
   "bay sets with saddles, overseer beside scout, no feet": 0.0,
-  "bay sets with saddles, scout beside scout, no feet": 0.1,
+  "bay sets with saddles, scout beside scout, no feet": 0.0,
   "drone (overseer) vs the Scout bays at 60 and 120": 0.0,
   "drone (scout) vs the Scout bays at 60 and 120": 0.0,
-  "an Overseer bay at 60 vs the funnel": 3205.8,
+  "an Overseer bay at 60 vs the funnel": 3199.1,
   "a Scout bay at 60 vs the funnel": 0.0
  },
  "bay_mount": {
@@ -816,7 +816,7 @@
     ],
     [
      -27.8,
-     -0.09
+     -0.16
     ],
     [
      27.8,
@@ -828,7 +828,7 @@
     ],
     [
      27.8,
-     -0.09
+     -0.16
     ]
    ],
    "bolts_frame": "x across, along the pack from the tab line; the receiver's own r['MOUNT']",
@@ -969,11 +969,11 @@
    "part": "box_arm8_unit_body",
    "material": "PCTG",
    "count": 2,
-   "g_each": 106.7,
+   "g_each": 105.7,
    "box_mm": [
     67.0,
     44.1,
-    169.0
+    167.0
    ],
    "bed": "y up",
    "fits_180": true,
@@ -1017,13 +1017,13 @@
    "part": "box_arm8_pilot",
    "material": "PCTG",
    "count": 4,
-   "g_each": 1.0,
+   "g_each": 0.6,
    "box_mm": [
     6.1,
-    26.0,
-    6.6
+    22.5,
+    4.9
    ],
-   "bed": "x up",
+   "bed": "z up",
    "fits_180": true,
    "print_pose": "on its outer side face",
    "watertight": true,
@@ -1033,11 +1033,11 @@
    "part": "box_arm8_paddle",
    "material": "PCTG",
    "count": 2,
-   "g_each": 2.7,
+   "g_each": 4.1,
    "box_mm": [
     22.5,
-    8.0,
-    12.0
+    11.0,
+    32.0
    ],
    "bed": "y up",
    "fits_180": true,
@@ -1065,15 +1065,15 @@
    "part": "box_arm8_pads",
    "material": "TPU",
    "count": 16,
-   "g_each": 0.0,
+   "g_each": 0.1,
    "box_mm": [
     6.5,
-    2.0,
+    2.4,
     2.7
    ],
    "bed": "y up",
    "fits_180": true,
-   "print_pose": "flat, 2.0 thick",
+   "print_pose": "top face down, 2.4 thick (set-up spares 2.0 to 2.8)",
    "watertight": true,
    "bodies": 1
   },
@@ -1178,17 +1178,17 @@
   "hub": {
    "part": "box_arm8_hub",
    "setup": "parts/box_arm8_hub/part.py",
-   "state": "run PASS: worst 0.353, 349.6 g"
+   "state": "setup changed 14 Nov: rerunning"
   },
   "carriage": {
    "part": "box_arm8_carriage",
    "setup": "parts/box_arm8_carriage/part.py",
-   "state": "run PASS: worst 0.434, 87.83 g"
+   "state": "setup changed 14 Nov: rerunning"
   },
   "lift": {
    "part": "box_arm8_lift",
    "setup": "parts/box_arm8_lift/part.py",
-   "state": "run PASS: worst 0.407, 138.66 g"
+   "state": "setup changed 14 Nov: rerunning"
   }
  },
  "bought": [
@@ -1316,9 +1316,23 @@
   },
   {
    "part": "pilot spring",
-   "spec": "o 6 x 0.6 wire x 20",
+   "spec": "the latch's spring (o 3.0, 0.3 wire, 30 free) cut to 15, two side by side under each pilot (14 Nov: the o 6 x 20 had no way into the pocket)",
+   "n": 8,
+   "url": "https://www.amazon.com/PATIKIL-Compression-Stainless-Mechanical-Assortment/dp/B0DKCRCBV2",
+   "check": "E 0.25 N/mm each: the pilot must come back up by itself"
+  },
+  {
+   "part": "paddle screw",
+   "spec": "M3 x 35 socket head, through the paddle into the servo's shaft",
+   "n": 2,
+   "url": "https://www.amazon.com/Socket-Screws-Available-Stainless-Machine/dp/B08P6DYH7V",
+   "check": "the M3 x 12 listing's other lengths (not confirmed on it). E: 7 into the shaft; washers under the head if it bottoms"
+  },
+  {
+   "part": "servo ear screws",
+   "spec": "M3 x 8 socket head, two per servo into the unit body's tab (o 2.5, they cut their thread)",
    "n": 4,
-   "url": "https://www.amazon.com/uxcell-0-6mmx6mmx20mm-Stainless-Compression-Springs/dp/B076LWWTR7"
+   "url": "https://www.amazon.com/Socket-Screws-Available-Stainless-Machine/dp/B08P6DYH7V"
   },
   {
    "part": "carriage return spring",
@@ -1341,7 +1355,7 @@
   },
   {
    "part": "insert M3 / M4",
-   "spec": "heat-set: stepper faces and servo M3 (16), MGN rail M3 (8); float bolts M4 (8, the next line)",
+   "spec": "heat-set: stepper faces M3 (16), MGN rail M3 (8); float bolts M4 (8, the next line)",
    "n": 24,
    "url": "https://www.amazon.com/initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR"
   },
@@ -1360,198 +1374,904 @@
   },
   {
    "part": "carbon rod 3",
-   "spec": "o 3 x 500: blade rods 66 long, four; on hand",
+   "spec": "o 3 x 500: blade rods 66 long, four; pilot pins 9 long, four; on hand",
    "n": 1,
    "url": "https://www.amazon.com/Carbon-Fiber-Length-Diameter-Suitable/dp/B09N91J1FC"
   }
  ],
  "print_kit": {
-  "hold": "Released 13 Nov: hub, carriage and lift ran PASS (strength and solid check); the joints these pieces share did not move after their solid checks",
+  "hold": "Drawn pieces: print. Engine parts waiting on their runs: hub, carriage, lift (14 Nov: the carriage's bed plane and pick-up stop, the lift's bed, and one load point the latch moved 0.06 mm; the 13 Nov shapes are not to be printed)",
   "generated": [
    {
     "part": "box_arm8_hub",
     "count": 1,
+    "current": false,
     "worst": 0.353,
     "mass_g": 349.6,
-    "solid_check": "PASS",
-    "file": "python tools/print_mesh.py fetch box_arm8_hub",
-    "pose": "plate face down (+y)"
+    "solid_check": "PASS"
    },
    {
     "part": "box_arm8_carriage",
     "count": 2,
+    "current": false,
     "worst": 0.434,
     "mass_g": 87.83,
-    "solid_check": "PASS",
-    "file": "python tools/print_mesh.py fetch box_arm8_carriage",
-    "pose": "plate face down (-y)"
+    "solid_check": "PASS"
    },
    {
     "part": "box_arm8_lift",
     "count": 2,
+    "current": false,
     "worst": 0.407,
     "mass_g": 138.66,
-    "solid_check": "PASS",
-    "file": "python tools/print_mesh.py fetch box_arm8_lift",
-    "pose": "upright, the plate's lower end down (+z)"
+    "solid_check": "PASS"
    }
   ],
-  "pieces": [
+  "kit": "parts/box_arm8/kit.json",
+  "files": [
    {
-    "file": "parts/box_arm8_rail/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
+    "file": "print/box_arm8_unit_body.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_unit_body.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_unit_body.png",
+    "set": "grab unit",
+    "material": "PCTG",
     "count": 2,
-    "pose": "keel side up (the ridges' flanks at 45 deg, no supports)",
-    "supports": "none",
     "solid_check": "PASS",
-    "g_each": 62.4,
-    "fits_180": true
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's -y side on the bed",
+    "pose_why": "base plate on the bed: the deck's seats and the rod bores stand as drawn",
+    "size_on_bed_mm": [
+     167.0,
+     67.0,
+     44.1
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 5827,
+    "overhang_mm2": 7894,
+    "support_mm2": 6975,
+    "widest_overhang_mm": 51.5,
+    "widest_at": [
+     -56.4,
+     -0.1,
+     32.5
+    ],
+    "supports": "yes: 6975 mm2 of overhang wider than 6 mm (the widest 51.5); tree supports from the bed",
+    "grams_each": 105.7
    },
    {
-    "file": "parts/box_arm8_unit_body/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
-    "count": 2,
-    "pose": "base plate down",
-    "supports": "yes: under the deck and the cross bars, from the base plate only",
-    "solid_check": "PASS",
-    "g_each": 106.7,
-    "fits_180": true
-   },
-   {
-    "file": "parts/box_arm8_blade/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
+    "file": "print/box_arm8_blade.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_blade.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_blade.png",
+    "set": "grab unit",
+    "material": "PCTG",
     "count": 4,
-    "pose": "outer face down",
-    "supports": "none",
     "solid_check": "PASS",
-    "g_each": 6.9,
-    "fits_180": true
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's -z side on the bed",
+    "pose_why": "on its end: the hook's pull bends the blade along its length, in the layers (flat on its face it stands on 119 mm2 and needs supports under the hook)",
+    "size_on_bed_mm": [
+     37.4,
+     10.8,
+     34.0
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 136,
+    "overhang_mm2": 139,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 139 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 6.92
    },
    {
-    "file": "parts/box_arm8_wheels/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
+    "file": "print/box_arm8_pilot.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pilot.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pilot.png",
+    "set": "grab unit",
+    "material": "PCTG",
+    "count": 4,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's -x side on the bed",
+    "pose_why": "least to support, then most on the bed, of the six flat poses",
+    "size_on_bed_mm": [
+     22.5,
+     4.9,
+     6.1
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 96,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.55
+   },
+   {
+    "file": "print/box_arm8_paddle.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_paddle.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_paddle.png",
+    "set": "grab unit",
+    "material": "PCTG",
+    "count": 2,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's -z side on the bed",
+    "pose_why": "cam end on the bed, the spline bore up: round and true",
+    "size_on_bed_mm": [
+     22.5,
+     11.0,
+     32.0
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 179,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 4.12
+   },
+   {
+    "file": "print/box_arm8_rail.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_rail.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_rail.png",
+    "set": "hub side",
+    "material": "PCTG",
+    "count": 2,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "the ridge side on the bed, keel up: both flanks of each ridge print alike",
+    "size_on_bed_mm": [
+     144.0,
+     23.0,
+     28.8
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 1845,
+    "overhang_mm2": 795,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 795 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 62.36
+   },
+   {
+    "file": "print/box_arm8_wheel.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_wheel.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_wheel.png",
+    "set": "carriage",
+    "material": "PCTG",
     "count": 6,
-    "pose": "one V wheel, groove axis up",
-    "supports": "none (bearing pocket up)",
     "solid_check": "PASS",
-    "g_each": 4.4,
-    "fits_180": true
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "least to support, then most on the bed, of the six flat poses",
+    "size_on_bed_mm": [
+     26.0,
+     26.0,
+     10.0
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 510,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 4.45
    },
    {
-    "file": "parts/box_arm8_pilot/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
+    "file": "print/box_arm8_tie.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_tie.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_tie.png",
+    "set": "lift",
+    "material": "PCTG",
     "count": 4,
-    "pose": "on its outer side face",
-    "supports": "none",
     "solid_check": "PASS",
-    "g_each": 1.0,
-    "fits_180": true
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's -z side on the bed",
+    "pose_why": "bar on the bed, the rod bores lying: the bar bends in the layers",
+    "size_on_bed_mm": [
+     53.0,
+     16.0,
+     12.1
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 833,
+    "overhang_mm2": 96,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 96 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 9.01
    },
    {
-    "file": "parts/box_arm8_paddle/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
-    "count": 2,
-    "pose": "flat",
-    "supports": "none",
+    "file": "print/box_arm8_stub.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_stub.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_stub.png",
+    "set": "stub side",
+    "material": "PCTG",
+    "count": 1,
     "solid_check": "PASS",
-    "g_each": 2.7,
-    "fits_180": true
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's -y side on the bed",
+    "pose_why": "least to support, then most on the bed, of the six flat poses",
+    "size_on_bed_mm": [
+     136.0,
+     110.0,
+     40.0
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 8455,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 125.99
    },
    {
-    "file": "parts/box_arm8_tie/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
+    "file": "print/box_arm8_post.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_post.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_post.png",
+    "set": "stub side",
+    "material": "PCTG",
+    "count": 1,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's -y side on the bed",
+    "pose_why": "least to support, then most on the bed, of the six flat poses",
+    "size_on_bed_mm": [
+     57.0,
+     57.0,
+     22.0
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 2486,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 16.58
+   },
+   {
+    "file": "print/box_arm8_detent_arm.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_detent_arm.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_detent_arm.png",
+    "set": "stub side",
+    "material": "PCTG",
+    "count": 1,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +z side on the bed",
+    "pose_why": "least to support, then most on the bed, of the six flat poses",
+    "size_on_bed_mm": [
+     27.6,
+     8.6,
+     18.4
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 121,
+    "overhang_mm2": 70,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 70 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 3.48
+   },
+   {
+    "file": "print/box_arm8_saddle_overseer.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_saddle_overseer.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_saddle_overseer.png",
+    "set": "ring",
+    "material": "PCTG",
     "count": 4,
-    "pose": "bar down (the cheeks up)",
-    "supports": "none (the 6.2 bores bridge)",
     "solid_check": "PASS",
-    "g_each": 9.0,
-    "fits_180": true
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +z side on the bed, turned 45 deg on the plate",
+    "pose_why": "least to support, then most on the bed, of the six flat poses",
+    "size_on_bed_mm": [
+     169.5,
+     169.5,
+     4.0
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 4772,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 23.61
    },
    {
-    "file": "parts/box_arm8_pads/part.stl",
-    "material": "TPU 95A",
-    "count": 16,
-    "pose": "flat, 2.0 thick",
-    "supports": "none",
-    "solid_check": "PASS",
-    "g_each": 0.0,
-    "fits_180": true
-   },
-   {
-    "file": "parts/box_arm8_stub/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
-    "count": 1,
-    "pose": "flange down",
-    "supports": "none",
-    "solid_check": "PASS",
-    "g_each": 126.0,
-    "fits_180": true
-   },
-   {
-    "file": "parts/box_arm8_post/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
-    "count": 1,
-    "pose": "flange down",
-    "supports": "none",
-    "solid_check": "PASS",
-    "g_each": 16.6,
-    "fits_180": true
-   },
-   {
-    "file": "parts/box_arm8_detent_arm/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
-    "count": 1,
-    "pose": "flat",
-    "supports": "none (the roller slot bridges 4.2)",
-    "solid_check": "PASS",
-    "g_each": 3.5,
-    "fits_180": true
-   },
-   {
-    "file": "parts/box_arm8_saddle_overseer/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
-    "count": 4,
-    "pose": "flat",
-    "supports": "none",
-    "solid_check": "PASS",
-    "g_each": 23.6,
-    "fits_180": true
-   },
-   {
-    "file": "parts/box_arm8_saddle_scout/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
+    "file": "print/box_arm8_saddle_scout.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_saddle_scout.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_saddle_scout.png",
+    "set": "ring",
+    "material": "PCTG",
     "count": 7,
-    "pose": "flat",
-    "supports": "none",
     "solid_check": "PASS",
-    "g_each": 15.2,
-    "fits_180": true
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +z side on the bed",
+    "pose_why": "least to support, then most on the bed, of the six flat poses",
+    "size_on_bed_mm": [
+     108.9,
+     62.1,
+     4.0
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 3098,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 15.24
    },
    {
-    "file": "parts/box_arm8_link/part.stl",
-    "material": "PCTG (PETG settings + 10 C)",
+    "file": "print/box_arm8_link.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_link.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_link.png",
+    "set": "ring",
+    "material": "PCTG",
     "count": 20,
-    "pose": "flat",
-    "supports": "none",
     "solid_check": "PASS",
-    "g_each": 7.5,
-    "fits_180": true
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "least to support, then most on the bed, of the six flat poses",
+    "size_on_bed_mm": [
+     109.7,
+     14.0,
+     4.0
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 1518,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 7.47
+   },
+   {
+    "file": "print/box_arm8_pad_a_20.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pad_a_20.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pad_a_20.png",
+    "set": "grab unit",
+    "material": "TPU 95A",
+    "count": 4,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "top face on the bed (smooth to the pack); a set-up spare: print once",
+    "size_on_bed_mm": [
+     6.5,
+     2.7,
+     2.0
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 18,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.04
+   },
+   {
+    "file": "print/box_arm8_pad_a_22.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pad_a_22.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pad_a_22.png",
+    "set": "grab unit",
+    "material": "TPU 95A",
+    "count": 4,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "top face on the bed (smooth to the pack); a set-up spare: print once",
+    "size_on_bed_mm": [
+     6.5,
+     2.7,
+     2.2
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 18,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.05
+   },
+   {
+    "file": "print/box_arm8_pad_a_24.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pad_a_24.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pad_a_24.png",
+    "set": "grab unit",
+    "material": "TPU 95A",
+    "count": 8,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "top face on the bed (smooth to the pack)",
+    "size_on_bed_mm": [
+     6.5,
+     2.7,
+     2.4
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 18,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.05
+   },
+   {
+    "file": "print/box_arm8_pad_a_26.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pad_a_26.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pad_a_26.png",
+    "set": "grab unit",
+    "material": "TPU 95A",
+    "count": 4,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "top face on the bed (smooth to the pack); a set-up spare: print once",
+    "size_on_bed_mm": [
+     6.5,
+     2.7,
+     2.6
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 18,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.06
+   },
+   {
+    "file": "print/box_arm8_pad_a_28.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pad_a_28.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pad_a_28.png",
+    "set": "grab unit",
+    "material": "TPU 95A",
+    "count": 4,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "top face on the bed (smooth to the pack); a set-up spare: print once",
+    "size_on_bed_mm": [
+     6.5,
+     2.7,
+     2.8
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 18,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.06
+   },
+   {
+    "file": "print/box_arm8_pad_b_20.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pad_b_20.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pad_b_20.png",
+    "set": "grab unit",
+    "material": "TPU 95A",
+    "count": 4,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "top face on the bed (smooth to the pack); a set-up spare: print once",
+    "size_on_bed_mm": [
+     7.0,
+     3.0,
+     2.0
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 21,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.05
+   },
+   {
+    "file": "print/box_arm8_pad_b_22.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pad_b_22.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pad_b_22.png",
+    "set": "grab unit",
+    "material": "TPU 95A",
+    "count": 4,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "top face on the bed (smooth to the pack); a set-up spare: print once",
+    "size_on_bed_mm": [
+     7.0,
+     3.0,
+     2.2
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 21,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.06
+   },
+   {
+    "file": "print/box_arm8_pad_b_24.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pad_b_24.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pad_b_24.png",
+    "set": "grab unit",
+    "material": "TPU 95A",
+    "count": 8,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "top face on the bed (smooth to the pack)",
+    "size_on_bed_mm": [
+     7.0,
+     3.0,
+     2.4
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 21,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.06
+   },
+   {
+    "file": "print/box_arm8_pad_b_26.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pad_b_26.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pad_b_26.png",
+    "set": "grab unit",
+    "material": "TPU 95A",
+    "count": 4,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "top face on the bed (smooth to the pack); a set-up spare: print once",
+    "size_on_bed_mm": [
+     7.0,
+     3.0,
+     2.6
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 21,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.07
+   },
+   {
+    "file": "print/box_arm8_pad_b_28.stl",
+    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_pad_b_28.stl",
+    "picture": "parts/box_arm8/kit/box_arm8_pad_b_28.png",
+    "set": "grab unit",
+    "material": "TPU 95A",
+    "count": 4,
+    "solid_check": "PASS",
+    "watertight": true,
+    "thin_walls": 0,
+    "pose": "the part's +y side on the bed",
+    "pose_why": "top face on the bed (smooth to the pack); a set-up spare: print once",
+    "size_on_bed_mm": [
+     7.0,
+     3.0,
+     2.8
+    ],
+    "fits_bed": true,
+    "brim": "a 5 mm brim fits",
+    "first_layer_mm2": 21,
+    "overhang_mm2": 0,
+    "support_mm2": 0,
+    "widest_overhang_mm": 0.0,
+    "widest_at": null,
+    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+    "grams_each": 0.07
    }
   ],
-  "generated_later": [
-   "hub (1), carriage (2), lift (2): their runs' print meshes (tools/print_mesh.py fetch), not part.stl"
+  "print_order": [
+   {
+    "step": "1 grab-unit test set, one head (try it on the Scout cartridge)",
+    "files": [
+     "print/box_arm8_unit_body.stl",
+     "print/box_arm8_blade.stl",
+     "print/box_arm8_pilot.stl",
+     "print/box_arm8_paddle.stl",
+     "print/box_arm8_pad_a_24.stl",
+     "print/box_arm8_pad_b_24.stl"
+    ],
+    "waiting": [],
+    "counts": {
+     "unit_body": 1,
+     "blade": 2,
+     "pilot": 2,
+     "paddle": 1,
+     "pad_a_24": 4,
+     "pad_b_24": 4
+    }
+   },
+   {
+    "step": "2 pad set-up spares, once (pick per pad at set-up)",
+    "files": [
+     "print/box_arm8_pad_a_20.stl",
+     "print/box_arm8_pad_a_22.stl",
+     "print/box_arm8_pad_a_26.stl",
+     "print/box_arm8_pad_a_28.stl",
+     "print/box_arm8_pad_b_20.stl",
+     "print/box_arm8_pad_b_22.stl",
+     "print/box_arm8_pad_b_26.stl",
+     "print/box_arm8_pad_b_28.stl"
+    ],
+    "waiting": [],
+    "counts": null
+   },
+   {
+    "step": "3 one head's slide: carriage, lift, rail, three wheels, two ties (proves the reach and the push on the bench before the hub is printed)",
+    "files": [
+     "print/box_arm8_rail.stl",
+     "print/box_arm8_wheel.stl",
+     "print/box_arm8_tie.stl"
+    ],
+    "waiting": [
+     "carriage",
+     "lift"
+    ],
+    "counts": {
+     "carriage": 1,
+     "lift": 1,
+     "rail": 1,
+     "wheel": 3,
+     "tie": 2
+    }
+   },
+   {
+    "step": "4 stub side and hub (the longest print)",
+    "files": [
+     "print/box_arm8_stub.stl",
+     "print/box_arm8_post.stl",
+     "print/box_arm8_detent_arm.stl"
+    ],
+    "waiting": [
+     "hub"
+    ],
+    "counts": null
+   },
+   {
+    "step": "5 the second head: everything of 1 and 3 again",
+    "files": [
+     "print/box_arm8_unit_body.stl",
+     "print/box_arm8_blade.stl",
+     "print/box_arm8_pilot.stl",
+     "print/box_arm8_paddle.stl",
+     "print/box_arm8_pad_a_24.stl",
+     "print/box_arm8_pad_b_24.stl",
+     "print/box_arm8_rail.stl",
+     "print/box_arm8_wheel.stl",
+     "print/box_arm8_tie.stl"
+    ],
+    "waiting": [
+     "carriage",
+     "lift"
+    ],
+    "counts": null
+   },
+   {
+    "step": "6 the ring: saddles and links, with the bays",
+    "files": [
+     "print/box_arm8_saddle_scout.stl",
+     "print/box_arm8_saddle_overseer.stl",
+     "print/box_arm8_link.stl"
+    ],
+    "waiting": [],
+    "counts": null
+   }
+  ],
+  "test_set": {
+   "what": "one grab unit, to try on the bench against the Scout latch cartridge (parts/latch7/kit.json)",
+   "files": {
+    "print/box_arm8_unit_body.stl": 1,
+    "print/box_arm8_blade.stl": 2,
+    "print/box_arm8_pilot.stl": 2,
+    "print/box_arm8_paddle.stl": 1,
+    "print/box_arm8_pad_a_24.stl": 4,
+    "print/box_arm8_pad_b_24.stl": 4
+   },
+   "bought": [
+    {
+     "part": "grab servo",
+     "n": 1,
+     "spec": "DS3218, the 180 deg version (on hand)",
+     "url": "https://www.amazon.com/DS3218-Digital-Servo-Torque-Waterproof/dp/B07TKTQ2NZ",
+     "check": "E: the spline's tip 6.0 out of the case top and the ears 2.5 thick (not in the sheet). Measure both: the paddle's nose and the ear tab follow"
+    },
+    {
+     "part": "blade rods and pilot pins",
+     "n": 1,
+     "spec": "o 3 carbon rod (on hand): two 66 long, two 9 long",
+     "url": "https://www.amazon.com/Carbon-Fiber-Length-Diameter-Suitable/dp/B09N91J1FC"
+    },
+    {
+     "part": "blade spring",
+     "n": 4,
+     "spec": "o 6 x 0.7 wire x 25, two per blade",
+     "url": "https://www.amazon.com/uxcell-0-7mmx6mmx25mm-Stainless-Compression-Springs/dp/B076LRJH99",
+     "check": "on a scale: 12.5 N at 17.1 long"
+    },
+    {
+     "part": "pilot spring",
+     "n": 4,
+     "spec": "the latch's spring (o 3.0, 0.3 wire, 30 free) cut to 15 long, two side by side under each pilot (they were one o 6 x 20, which has no way into the pocket)",
+     "url": "https://www.amazon.com/PATIKIL-Compression-Stainless-Mechanical-Assortment/dp/B0DKCRCBV2",
+     "check": "E 0.25 N/mm each cut to 15: about 2 N a pilot at rest, 5 N flush. The pilot must come back up by itself"
+    },
+    {
+     "part": "paddle screw",
+     "n": 1,
+     "spec": "M3 x 35 socket head",
+     "url": "https://www.amazon.com/Socket-Screws-Available-Stainless-Machine/dp/B08P6DYH7V",
+     "check": "the M3 x 12 listing's other lengths (M3 x 35 not confirmed on it: any M3 x 35 does). E: it reaches 7 into the servo's shaft; if it bottoms before the paddle is tight, washers under its head"
+    },
+    {
+     "part": "servo ear screws",
+     "n": 2,
+     "spec": "M3 x 8 socket head, into the tab's o 2.5 holes (they cut their thread)",
+     "url": "https://www.amazon.com/Socket-Screws-Available-Stainless-Machine/dp/B08P6DYH7V"
+    },
+    {
+     "part": "CA glue",
+     "n": 1,
+     "spec": "thin cyanoacrylate: rod ends, pilot pins, pads",
+     "url": "https://www.amazon.com/s?k=thin+CA+glue",
+     "check": "any; on hand"
+    }
+   ],
+   "steps": [
+    "Trial fit dry first: the servo must slide in from the open side with its spline in the slot, and the paddle's o 5.8 bore must press onto the spline by the screw (it cuts its own teeth; E).",
+    "1 Servo in from the open side; two M3 x 8 through its inner ear into the tab, driver through the two holes in the end bar. The outer ear stays free.",
+    "2 Paddle: lower it between the walls, slide it onto the spline, M3 x 35 through it from the hub end (driver through the o 6.4 hole). Servo at grip: paddle along the bay.",
+    "3 Each pilot: two cut springs into the pocket, pilot on them, press 1 mm, push the o 3 x 9 pin in from the blade bay. It must sink 5 and come back.",
+    "4 Each blade down into its bay with its two springs against the wall; then both o 3 x 66 rods through wall, springs and blades. CA at the rod ends when it works.",
+    "5 Pads: the 2.4 ones into their seats, dry for now.",
+    "Try: turn the paddle a quarter turn by hand or with the servo: the blades open to 22.6 between faces (grip 12.4). Set the unit under the Scout cartridge (pilots into the recess corners), let the blades close on the tabs: both bolts must draw in and the cartridge lift out of its receiver with the unit; open: it must stay behind latched.",
+    "Report: does the paddle hold on the spline, do the blades reach the tabs' stop (bolts fully in), does the cartridge sit on all four Scout pads with the blades closed (if not, which pad and by how much: that picks the pad thickness)."
+   ],
+   "install": {
+    "steps": [
+     {
+      "step": "1 servo in from the open side (+x), its spline through the slot in the wall; two M3 x 8 through the inner ear from the far end (driver through the end bar's two holes)",
+      "mm3": 0.0
+     },
+     {
+      "step": "2 paddle down between the walls 4.5 short of the spline, slid onto it, one M3 x 35 through it from the hub end (driver through the o 6.4 hole)",
+      "mm3": 0.0
+     },
+     {
+      "step": "3 each pilot: two o 3 springs into its pocket, the pilot down on them, pressed 1 mm, its o 3 x 9 pin pushed in from the blade bay",
+      "mm3": 0.0
+     },
+     {
+      "step": "4 each blade down into its bay at the grip position (paddle turned along the bay), its two springs between it and the wall",
+      "mm3": 0.0
+     },
+     {
+      "step": "5 the two o 3 x 66 rods in from one side through wall, springs and both blades; a drop of CA at each end",
+      "mm3": 0.0
+     },
+     {
+      "step": "6 the eight pads into their seats (2.4 first), CA",
+      "mm3": 0.0
+     }
+    ],
+    "working": {
+     "paddle_turning_mm3": 0.0,
+     "blades_grip_open_limit_mm3": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "pilots_down_mm3": 0.0,
+     "pilots_held_by_pin_mm3": 1.839
+    },
+    "ok": true
+   }
+  },
+  "open": [
+   {
+    "item": "MGN12H rail hole positions",
+    "state": "E until the rail is here",
+    "what": "the carriage's four M3 inserts are 25 apart from 12.5 in from the rail's end (a 100 rail with four holes can only be 12.5 / 25 / 25 / 25 / 12.5 if it is cut evenly). Measure the first hole from each end and the pitch before printing the carriage",
+    "if_off": "parts/box_arm8_lib.py MGN first / pitch, and the carriage reruns (its rail seat and loads follow)"
+   },
+   {
+    "item": "float spring's rate",
+    "state": "E 5.8 N/mm from wire and coil count",
+    "what": "on a kitchen scale: 18 N at 11.9 long (the preload), about 32 N at 9.4",
+    "if_off": "the push limit (118 N) and the float's preload follow the rate: parts/box_arm8_lib.py K_FLOAT, P_FLOAT; no printed part changes unless the limit leaves 97..125 N"
+   },
+   {
+    "item": "M4 inserts",
+    "state": "E: the ties' holes are o 5.6",
+    "what": "measure the insert's body before printing the ties (o 5.6 suits a 6.0 knurl, 5.0 long)",
+    "if_off": "parts/box_arm8_lib.py tie(): the hole; the ties are drawn pieces, no run"
+   }
   ],
   "order": [
    "Stub side: press the two 6010-2RS into the hub's sleeve from the stub end, slide the hub on the stub, screw the post on; axle stepper and 16T pulley on the stub's ear, belt round the hub's ring, detent arm with its 623ZZ on its pivot.",
    "Each V rail on the hub's plate: two M5 x 10 into the heat-set M5 inserts.",
-   "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench); three V wheels, two 625ZZ in each, on M5 x 20 axles, the third on its eccentric bush; roll it onto the V rail and set the bush until it runs without play.",
+   "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench); three V wheels, two 625ZZ in each, on M5 x 20 axles, the third on its eccentric bush; roll it onto the V rail and set the bush until it runs without play. The tab on the spine's side is the pick-up stop: the lift's nut lug meets it as the block's top reaches the rail's end.",
    "Each screw drive: stepper on its face plate (four M3), coupler, inner F8-16M, screw through the thrust wall, outer F8-16M, lock ring; the nut on the screw with its flange's two sides filed to the body.",
    "Each lift: bond the three o 6 x 115 carbon rods in the yoke's sockets (resin through each port until it shows at the mouth), slide the two ties on and bond them at their stations (float bolt centres 45 hub side and 20 far side of the tab line); four M4 inserts in each pair of ties.",
    "Yoke on the MGN block with four M3 x 12; the nut into its lug (flange in the slot); the return spring from the carriage to the rail's channel.",
-   "Each grab unit: servo, paddle, blades on their two o 3 carbon rods with the four blade springs, pilots on their springs, an SS49E in each hall post, the eight TPU pads on their M3 jack screws.",
+   "Each grab unit (the steps and their sweeps: parts/box_arm8/kit.json test_set): servo in from the open side, two M3 x 8 through its inner ear; paddle onto the spline, M3 x 35 from the hub end; each pilot on two cut o 3 springs, its o 3 x 9 pin in from the blade bay; blades and their four springs, the two o 3 x 66 rods through; an SS49E in each hall post; the eight TPU pads into their seats.",
    "Grab unit on the ties: four M4 shoulder bolts down through the base with a PTFE and a steel washer under each head, a float spring round each bolt between tie and base.",
    "Ring: each bay's receiver on its saddle by the receiver's own mount bolts, the 20 link bars between neighbouring ears.",
-   "Set up: jack each pad to the pack's bottom with a cartridge gripped; park by the screw's position; check both hall readings with the bolts in and out."
+   "Set up: with a cartridge gripped, each pad must touch the pack's bottom: swap a pad for the next thickness where it does not, then glue; park by the screw's position; check both hall readings with the bolts in and out."
   ]
  },
  "compat": {
