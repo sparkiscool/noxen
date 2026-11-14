@@ -6,9 +6,9 @@ Pieces (each in the 180 bed):
               Y -64..0 (the rear sheet at -66, the PSU at X >= 42 behind Y -36, the axle stepper X -71..-29, Y -48..0, Z 19..61 cut out).
               Printed face down (build -y): the face is the first layer; the column's bending runs in the layers.
   base_r/_l   one half each side of X 0, under the mast's foot (8 M5 up into heat-set inserts in the foot, 4 a half) out to its rail
-              at |X| 120..175 (the ring's sweep leaves 42 at |X| 120, 61+ outboard), the rail's rear part with the rear foot at
-              (+-148, -44), and the lap's outer cheek (|X| 148..175, Y 72..110). Printed on its floor face (build +z).
-  rail_r/_l   the rail forward of the lap (Y 72..250) with the front foot at (+-148, 232); its tongue (|X| 120..148, Y 72..110)
+              at |X| 120..177.5 (the ring's sweep leaves 42 at |X| 120, 61+ outboard), the rail's rear part with the rear foot at
+              (+-149, -44), and the lap's outer cheek (|X| 149..177.5, Y 72..110). Printed on its floor face (build +z).
+  rail_r/_l   the rail forward of the lap (Y 72..250) with the front foot at (+-149, 232); its tongue (|X| 120..149, Y 72..110)
               laps the base's cheek with 4 M5 x 60 across (X), nuts outboard. Printed on its floor face.
   feet        four TPU 95A pads Ø36 x 5 (a Ø8 x 4 stud pressed into each foot pad): the stand stands on four points, so every floor
               reaction is known (flat floor: four; an uneven floor: three, each foot lifted in turn).
@@ -73,7 +73,8 @@ BOLT_R = 38.0
 STUB_BOLTS = [(BOLT_R * np.cos(a), BOLT_R * np.sin(a)) for a in np.radians([45.0, 225.0, 315.0])]   # (X, Z); the 135 deg hole (-26.9, 26.9) is 0.5 into the stepper behind the flange
 FOOT_BOLTS = [(sx * x, y) for sx in (1, -1) for x in (10.0, 34.0) for y in (-54.0, -12.0)]          # mast foot to the halves (X, Y), Z -135
 LAP_BOLTS = [(y, z) for y in (80.0, 102.0) for z in (-200.0, -176.0)]                              # rail tongue to the base cheek, along X (Y, Z)
-RAIL_X = (120.0, 175.0); LAP_X = 148.0; FOOT_X = 148.0
+RAIL_X = (120.0, 177.5); LAP_X = 149.0; FOOT_X = 149.0      # 175 / 148 and a top at -140: the rail's room filled solid read 0.476 (handling, uneven floor)
+RAIL_TOP = -128.0
 FEET = {"rear": -44.0, "front": 232.0}             # foot Y; at X +-FOOT_X
 FOOT_R, STUD_R = 18.0, 4.0
 Z_FOOT = -135.0                                     # the mast foot / base top plane
@@ -201,13 +202,13 @@ def mast_setup(h):
 # ------------------------------------------------------------------ base halves and rails (side s = +1 right, -1 left; drawn at +X and mirrored)
 def _env_base():
     a = box(0.25, RAIL_X[1], -64.0, 66.0, BED, Z_FOOT)
-    b = box(118.0, RAIL_X[1], 60.0, 72.0, BED, -140.0)
-    c = box(LAP_X + 0.25, RAIL_X[1], 72.0, 109.75, BED, -140.0)
+    b = box(118.0, RAIL_X[1], 60.0, 72.0, BED, RAIL_TOP)
+    c = box(LAP_X + 0.25, RAIL_X[1], 72.0, 109.75, BED, RAIL_TOP)
     return U(a, b, c)
 
 
 def _env_rail():
-    return U(box(RAIL_X[0], LAP_X - 0.25, 72.25, 110.5, BED, -140.0), box(RAIL_X[0], RAIL_X[1], 110.25, 250.0, BED, -140.0))
+    return U(box(RAIL_X[0], LAP_X - 0.25, 72.25, 110.5, BED, RAIL_TOP), box(RAIL_X[0], RAIL_X[1], 110.25, 250.0, BED, RAIL_TOP))
 
 
 def _lap_cuts():
