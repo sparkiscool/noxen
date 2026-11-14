@@ -62,7 +62,8 @@ bl.BOLT_HZ = 11.0                      # bolt bar 22 wide (v6 18): it takes the 
 v5.PIN_L = m6.PIN_L = 20.0
 F_BLADE = 15.0                         # the head's blade spring at the squeeze (heads v7 concept, E); 20 N recommended
 ARM = dict(x_deg_rss=0.30, x_deg_worst=0.55, x_capture_deg=1.20, y_axial_mm=1.8, tilt_x_deg=1.28, tilt_x_float_deg=2.37,
-           roll_z_deg=0.74, roll_z_float_deg=1.06, stall_N=118.0, insert_N=60.0, xt60_pull_N=57.0, across_N=43.5, r_drone_mm=220.3)
+           roll_z_deg=0.74, roll_z_float_deg=1.06, stall_N=118.0, over_N=106.6, insert_N=60.0, xt60_pull_N=57.0, across_N=43.5, r_drone_mm=220.3)
+#   over_N: what the head puts on a cartridge on every swap (arm v8 lib: P_FLOAT 72 + K_FLOAT 23.04 x S_OVER 1.5); the arm classes its own 118 N limit case as misuse
 #   stall_N: the most the head can push on a cartridge. 13 Nov, arm v8 (parts/box_arm8_lib.py F_LIMIT, E): 118 N, its float springs near solid (72 N preload, 23 N/mm,
 #   106.6 N at the commanded over-travel on every swap); it was the v7 head stepper's 74 N stall
 SERVO = {"DS3218 (on hand)": 20.0, "MG995 (ordered)": 9.2}      # kg cm (listings, dimensions M)
