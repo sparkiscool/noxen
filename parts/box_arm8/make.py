@@ -445,7 +445,12 @@ def current(k):
     """the engine part's result is of the setup on main, and passed"""
     import part_sha
     d = os.path.join(ROOT, "parts", "box_arm8_" + k); r = json.load(open(os.path.join(d, "result.json")))
-    return bool(r.get("strength_ok") and r.get("solid_ok") and r.get("setup_sha") == part_sha.setup_sha(os.path.join(d, "part.py")))
+    now = part_sha.setup_sha(os.path.join(d, "part.py"))
+    return bool(r.get("strength_ok") and r.get("solid_ok") and (r.get("setup_sha") == now or STAMP.get(k) == (r.get("setup_sha"), now)))
+# a run stamped with another setup_sha than main gives for the same setup: (the runner's stamp, the hash here and in CI's own setup.json refresh). 14 Nov, the lift's
+# run of fb2b41b3: its least-squares load split leaves +-1e-13 where a force component is nought, the sign differs between the run's machine and the others, and
+# topo/run.py design_hash reads the sign bit (36k negative zeros in the lift's load arrays). Exactly this pair only: any setup change gives another hash and it waits again.
+STAMP = {"lift": ("115fe1709a62dfdf", "2fbd2d3c3a2d555d")}
 
 
 def print_kit(pr):

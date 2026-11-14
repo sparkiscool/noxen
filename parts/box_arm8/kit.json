@@ -149,14 +149,13 @@
   {
    "step": "3 one head's slide: carriage, lift, rail, three wheels, two ties (proves the reach and the push on the bench before the hub is printed)",
    "files": [
+    "print/box_arm8_carriage.stl",
+    "print/box_arm8_lift.stl",
     "print/box_arm8_rail.stl",
     "print/box_arm8_wheel.stl",
     "print/box_arm8_tie.stl"
    ],
-   "waiting": [
-    "carriage",
-    "lift"
-   ],
+   "waiting": [],
    "counts": {
     "carriage": 1,
     "lift": 1,
@@ -170,11 +169,10 @@
    "files": [
     "print/box_arm8_stub.stl",
     "print/box_arm8_post.stl",
-    "print/box_arm8_detent_arm.stl"
+    "print/box_arm8_detent_arm.stl",
+    "print/box_arm8_hub.stl"
    ],
-   "waiting": [
-    "hub"
-   ],
+   "waiting": [],
    "counts": null
   },
   {
@@ -186,14 +184,13 @@
     "print/box_arm8_paddle.stl",
     "print/box_arm8_pad_a_24.stl",
     "print/box_arm8_pad_b_24.stl",
+    "print/box_arm8_carriage.stl",
+    "print/box_arm8_lift.stl",
     "print/box_arm8_rail.stl",
     "print/box_arm8_wheel.stl",
     "print/box_arm8_tie.stl"
    ],
-   "waiting": [
-    "carriage",
-    "lift"
-   ],
+   "waiting": [],
    "counts": null
   },
   {
@@ -832,25 +829,106 @@
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
    "grams_each": 0.07
-  }
- ],
- "waiting": [
+  },
   {
-   "part": "box_arm8_hub",
+   "file": "print/box_arm8_hub.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_hub.stl",
+   "picture": "parts/box_arm8/kit/box_arm8_hub.png",
+   "set": "engine part",
+   "material": "PCTG",
    "count": 1,
-   "why": "its run is not of the setup on main (1323d7a27de31f1d, the result d19854cc35f0e37a): rerunning"
+   "solid_check": "PASS",
+   "watertight": true,
+   "thin_walls": 0,
+   "pose": "the part's -y side on the bed, turned 121.5 deg on the plate",
+   "pose_why": "the setup's build direction (+y): the layers its strength was checked with",
+   "size_on_bed_mm": [
+    160.6,
+    144.4,
+    76.0
+   ],
+   "fits_bed": true,
+   "brim": "a 5 mm brim fits",
+   "first_layer_mm2": 973,
+   "low_gap_mm2": 1124,
+   "overhang_mm2": 7611,
+   "support_mm2": 6615,
+   "widest_overhang_mm": 25.5,
+   "widest_at": [
+    -43.7,
+    53.1,
+    38.5
+   ],
+   "supports": "yes: 6615 mm2 of overhang wider than 6 mm (the widest 25.5); tree supports from the bed",
+   "bed_note": "1124 mm2 of the underside lies 0.25 to 0.5 above the bed beside the first layer (the engine's surface stops short of the bed plane): it prints as a rough, slightly sagged face; the drawn seats are on the bed",
+   "grams_each": 349.57,
+   "worst": 0.353,
+   "run_mass_g": 349.58
   },
   {
-   "part": "box_arm8_carriage",
+   "file": "print/box_arm8_carriage.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_carriage.stl",
+   "picture": "parts/box_arm8/kit/box_arm8_carriage.png",
+   "set": "engine part",
+   "material": "PCTG",
    "count": 2,
-   "why": "its run is not of the setup on main (e2ace4342da91cd9, the result 8af4458d878a8522): rerunning"
+   "solid_check": "PASS",
+   "watertight": true,
+   "thin_walls": 0,
+   "pose": "the part's +y side on the bed",
+   "pose_why": "the setup's build direction (-y): the layers its strength was checked with",
+   "size_on_bed_mm": [
+    102.5,
+    86.3,
+    23.6
+   ],
+   "fits_bed": true,
+   "brim": "a 5 mm brim fits",
+   "first_layer_mm2": 2323,
+   "low_gap_mm2": 2688,
+   "overhang_mm2": 30,
+   "support_mm2": 0,
+   "widest_overhang_mm": 0.0,
+   "widest_at": null,
+   "supports": "none: 30 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "2688 mm2 of the underside lies 0.25 to 0.5 above the bed beside the first layer (the engine's surface stops short of the bed plane): it prints as a rough, slightly sagged face; the drawn seats are on the bed",
+   "grams_each": 91.77,
+   "worst": 0.373,
+   "run_mass_g": 91.77
   },
   {
-   "part": "box_arm8_lift",
+   "file": "print/box_arm8_lift.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_lift.stl",
+   "picture": "parts/box_arm8/kit/box_arm8_lift.png",
+   "set": "engine part",
+   "material": "PCTG",
    "count": 2,
-   "why": "its run is not of the setup on main (2fbd2d3c3a2d555d, the result 297182c01660ed8e): rerunning"
+   "solid_check": "PASS",
+   "watertight": true,
+   "thin_walls": 0,
+   "pose": "the part's +z side on the bed",
+   "pose_why": "the setup's build direction (-z): the layers its strength was checked with",
+   "size_on_bed_mm": [
+    93.2,
+    56.6,
+    85.4
+   ],
+   "fits_bed": true,
+   "brim": "a 5 mm brim fits",
+   "first_layer_mm2": 1288,
+   "low_gap_mm2": 691,
+   "overhang_mm2": 820,
+   "support_mm2": 0,
+   "widest_overhang_mm": 0.0,
+   "widest_at": null,
+   "supports": "none: 820 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "691 mm2 of the underside lies 0.25 to 0.5 above the bed beside the first layer (the engine's surface stops short of the bed plane): it prints as a rough, slightly sagged face; the drawn seats are on the bed",
+   "grams_each": 142.76,
+   "worst": 0.407,
+   "run_mass_g": 142.77
   }
  ],
+ "waiting": [],
  "open": [
   {
    "item": "MGN12H rail hole positions",

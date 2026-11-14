@@ -26,6 +26,7 @@ from box_arm8_lib import U, vol, box, cyl
 BED = 180.0
 BRIDGE_MM = 6.0          # an overhang no wider than this bridges or is a short lip: no supports for it
 PITCH = 0.25
+LOW_MM = 0.75            # an engine part's generated surface stops 0.25 to 0.5 short of the room's end plane (the bed): measured apart, as low_gap_mm2
 REL = "https://github.com/sparkiscool/noxen/releases/download/meshes/print-"
 DOWN = {"+x": (1, 0, 0), "-x": (-1, 0, 0), "+y": (0, 1, 0), "-y": (0, -1, 0), "+z": (0, 0, 1), "-z": (0, 0, -1)}
 
@@ -57,13 +58,15 @@ def measure(t):
     V = sc.voxels(t, PITCH, lo, shape)
     k0 = int(np.argmax(V.any(axis=(0, 1))))
     first = float(V[:, :, k0].sum()) * PITCH ** 2
-    st = np.ones((3, 3), bool); over = 0.0; need = 0.0; span = 0.0; where = None
+    st = np.ones((3, 3), bool); over = 0.0; need = 0.0; span = 0.0; where = None; low = 0.0
     for k in range(k0 + 1, V.shape[2]):
         cur = V[:, :, k]
         if not cur.any(): continue
         u = cur & ~ndi.binary_dilation(V[:, :, k - 1], st)             # nothing under it within 45 deg
         n = int(u.sum())
         if not n: continue
+        if (k - k0) * PITCH <= LOW_MM:                                     # a face up to 0.75 above the bed: no support fits under it, it prints as a rough underside
+            low += n * PITCH ** 2; continue
         over += n * PITCH ** 2
         d = ndi.distance_transform_edt(np.pad(u, 1))[1:-1, 1:-1] * PITCH * 2
         lab, nl = ndi.label(u, st)
@@ -74,7 +77,7 @@ def measure(t):
                     need += a[i]
                     if w[i] > span:
                         span = float(w[i]); c = ndi.center_of_mass(lab == i + 1); where = [round(float(lo[0] + c[0] * PITCH), 1), round(float(lo[1] + c[1] * PITCH), 1), round(float(lo[2] + k * PITCH), 1)]
-    return dict(first_layer_mm2=round(first), overhang_mm2=round(over), support_mm2=round(need), widest_overhang_mm=round(span, 1), widest_at=where)
+    return dict(first_layer_mm2=round(first), low_gap_mm2=round(low), overhang_mm2=round(over), support_mm2=round(need), widest_overhang_mm=round(span, 1), widest_at=where)
 
 
 def all_poses(t):
@@ -152,7 +155,7 @@ def engine_parts():
         build = re.search(r'build="([+-][xyz])"', open(os.path.join(ROOT, "parts", "box_arm8_setups.py")).read().split(f"def {k}(h)")[1]).group(1)
         down = ("-" if build[0] == "+" else "+") + build[1]
         now = part_sha.setup_sha(os.path.join(d, "part.py"))
-        cur = bool(r.get("setup_sha") == now and r.get("strength_ok") and r.get("solid_ok"))
+        cur = M.current(k)
         why = None if cur else ("its run is not of the setup on main (%s, the result %s): rerunning" % (now, r.get("setup_sha")) if r.get("setup_sha") != now else "its run did not pass")
         out[k] = dict(part=p, n=n, down=down, build=build, current=cur, why=why, worst=r["strength"]["worst"], mass_g=r["mass_g"],
                       mesh=(trimesh.load(print_mesh.local(p), force="mesh") if cur else None))
@@ -177,9 +180,10 @@ def one_file(fn, t0, mat, n, pose, why, group, pd, kd, poses=None, extra=None):
     d = dict(file=f"print/{fn}.stl", release=REL + fn + ".stl", picture=os.path.relpath(png, ROOT), set=group, material=mat, count=n, solid_check="PASS" if ok else "FAIL", watertight=bool(g.is_watertight),
              thin_walls=len(info.get("thin_walls", [])), pose=f"the part's {pose} side on the bed" + (f", turned {th:g} deg on the plate" if th not in (0.0, 90.0) else ""), pose_why=why,
              size_on_bed_mm=e, fits_bed=fits, brim=("a 5 mm brim fits" if spare >= 5.0 else f"NO room for a 5 mm brim: {spare} mm to the bed's edge each side, print without brim or skirt") if fits else "DOES NOT FIT",
-             first_layer_mm2=ms["first_layer_mm2"], overhang_mm2=ms["overhang_mm2"], support_mm2=ms["support_mm2"], widest_overhang_mm=ms["widest_overhang_mm"], widest_at=ms["widest_at"],
+             first_layer_mm2=ms["first_layer_mm2"], low_gap_mm2=ms["low_gap_mm2"], overhang_mm2=ms["overhang_mm2"], support_mm2=ms["support_mm2"], widest_overhang_mm=ms["widest_overhang_mm"], widest_at=ms["widest_at"],
              supports=("yes: %d mm2 of overhang wider than %g mm (the widest %.1f); tree supports from the bed" % (ms["support_mm2"], BRIDGE_MM, ms["widest_overhang_mm"])) if sup else
                       ("none: %d mm2 past 45 deg, none of it wider than %g mm" % (ms["overhang_mm2"], BRIDGE_MM)),
+             bed_note=("%d mm2 of the underside lies 0.25 to 0.5 above the bed beside the first layer (the engine's surface stops short of the bed plane): it prints as a rough, slightly sagged face; the drawn seats are on the bed" % ms["low_gap_mm2"]) if ms["low_gap_mm2"] >= 20 else "",
              grams_each=round(abs(g.volume) / 1000 * (1.21 if mat.startswith("TPU") else 1.23), 2))
     if extra: d.update(extra)
     return d
@@ -239,7 +243,7 @@ def main():
             files[k] = old[k]; continue
         files[k] = one_file("box_arm8_" + k, e["mesh"], "PCTG", e["n"], e["down"], f"the setup's build direction ({e['build']}): the layers its strength was checked with", "engine part", pd, kd,
                             extra=dict(worst=e["worst"], run_mass_g=e["mass_g"]))
-    for k, q in files.items(): print(k, q["solid_check"], q["pose"], q["size_on_bed_mm"], "first", q["first_layer_mm2"], "over", q["overhang_mm2"], "sup", q["support_mm2"], q["widest_overhang_mm"], q["widest_at"], q["brim"][:12], q["grams_each"], "thin", q["thin_walls"])
+    for k, q in files.items(): print(k, q["solid_check"], q["pose"], q["size_on_bed_mm"], "first", q["first_layer_mm2"], "low", q.get("low_gap_mm2"), "over", q["overhang_mm2"], "sup", q["support_mm2"], q["widest_overhang_mm"], q["widest_at"], q["brim"][:12], q["grams_each"], "thin", q["thin_walls"])
     order = [dict(step=nm, files=[f"print/box_arm8_{k}.stl" for k in ks if k in files], waiting=[k for k in ks if k not in files], counts=cnt) for nm, ks, cnt in ORDER]
     out = dict(note="Bambu A1 mini, PCTG (PETG settings + 10 C) unless TPU. Counts are for the whole arm (two heads); the test set's own counts are in test_set. Nothing here is handed: "
                     "both blades are one file, both pilots are one file (the second is the first turned half round).",
