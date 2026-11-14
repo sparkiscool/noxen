@@ -6,4 +6,4 @@ def setup(h):
     return rear_setup(h, -1)
 
 
-SPEC = dict(h=1.6, gen_cm3=110.0, max_worst=0.5)
+SPEC = dict(h=1.8, gen_cm3=110.0, max_worst=0.5)

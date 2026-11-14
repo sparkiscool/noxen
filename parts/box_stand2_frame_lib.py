@@ -5,8 +5,8 @@ Why setup 2 (14 Nov, the first runs): the base halves (the yoke and the rail's r
 before their build (16.8 GB: the gate grid and the mesh of a part that size), and the rails, lapped onto the halves' cheeks side by
 side in X, failed 0.71 / 0.64 at the tongue's root in box handling on an uneven floor (the 2 g side friction at the front foot bends the
 rail about Z, and a lap split in X leaves the root half its width). Now every rail section is whole:
-  yoke_r / _l     under the mast's foot (X 0..120, Y -64..40; its 4 pads take 4 M5 x 16 up into the foot's inserts) out to its rear rail's
-                  inner face at |X| 120, where 5 M5 x 60 come in from the rail's outer face (heads outboard) into heat-set inserts in the yoke.
+  yoke_r / _l     under the mast's foot (X 0..120, Y -64..62; its 4 pads take 4 M5 x 16 up into the foot's inserts) out to its rear rail's
+                  inner face at |X| 120, where 6 M5 x 60 come in from the rail's outer face (heads outboard) into heat-set inserts in the yoke.
   rear_r / _l     the rail from Y -64 to its splice plate at Y 110 (|X| 120..177.5), with the rear foot at (+-149, -44).
   rail_r / _l     the rail from its splice plate at Y 110 to the front foot at (+-149, 232).
 The splice: a butt joint, 4 M5 x 30 hex bolts along Y at the section's corners; the nut and the head sit in pockets behind the
@@ -21,8 +21,8 @@ from parts.box_stand2_lib import (box, cyl, U, mirror_x, sweep, PSU, FOOT_BOLTS,
 
 X_IN = RAIL_X[0]                    # the yoke's end / the rail's inner face
 Y_SPLICE = 110.0
-YOKE_Y = (-64.0, 40.0)
-JOINT = [(-54.0, -200.0), (-14.0, -200.0), (26.0, -200.0), (-14.0, -152.0), (26.0, -152.0)]      # yoke to rear rail, along X (Y, Z)
+YOKE_Y = (-64.0, 62.0)                # 40: the right yoke's room filled solid read 0.489 (handling, under the PSU)
+JOINT = [(-54.0, -200.0), (-14.0, -200.0), (26.0, -200.0), (52.0, -198.0), (-14.0, -152.0), (26.0, -152.0)]      # yoke to rear rail, along X (Y, Z)
 SPLICE = [(128.0, -203.0), (170.0, -203.0), (128.0, -176.0), (170.0, -142.0)]                    # rear to front rail, along Y (X, Z)
 PLATE = 8.0                         # each splice boss, along Y
 POCKET = 6.0                        # the nut / head pocket behind it
