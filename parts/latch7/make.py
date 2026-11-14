@@ -148,8 +148,23 @@ bl.rgeom = _rgeom
 #      so the XT60W-M gets one: a printed collar 27.1 x 12.5 x 3.0 round its body, glued (CA or epoxy on the scuffed housing: 57 N on 142 mm2 = 0.4 MPa), 1.5 behind its
 #      mating face. Carrier, cap and float are as they were but 0.4 deeper (the collar's long walls are 2.05, the E1-M's flange was 12.1). The body (17.0 E without tabs)
 #      stands 12.5 above the collar: 6.5 mm (Scout) / 4.8 (Overseer) above the receiver's mount plane, 10.0 / 8.3 with its solder tabs, where the E1-M's body stood 0.2: the drones need that room
-XT60W = dict(L=20.5, body=17.0, W=15.5, D=8.1, tabs=3.5, glue=0.15, back=1.5)
+XT60W = dict(L=20.5, body=17.0, W=15.5, D=8.1, tabs=3.5, glue=0.15, mate=7.7, f_body=16.7)
 bl.XM_FD = 12.5
+# 14 Nov: where the plug's rear really is. Mated, the pair is 33.0 long (sheet): 16.7 + 17.0 of body sharing 7.7, 3.5 of solder tabs at each end. The male hangs in its collar 1.5
+# short of home (as the E1-M did), so its body runs from 7.7 under the collar's underside to 9.3 over it, the tabs to 12.8 (13 Nov's model stacked the whole 17 on top of the
+# mating length: 6.2 too tall, the "4.8 / 8.3 above the mount plane" of that day's reports was wrong).
+# Spark 14 Nov: the Overseer's base is printed and glued to its nodes and has no hole over the plug: nothing of the latch above the mount plane there. PLUG_DROP lowers the
+# pack's plug pocket in the cartridge (inside it: the outline and the grabber interface do not move, nor the plug's place along the pack), the carrier's pocket and the cap's
+# ceiling with it; the guide pegs grow by the same so they still enter 1.7 before the plug. The leads are soldered to the tabs' sides and leave toward the lead end, lying in
+# WIRE's channel through the cap's rim and the top of the receiver's lead end wall: tabs, leads and the float's 0.5 end 0.5 under the mount plane.
+PLUG_DROP = {"overseer": 3.5}
+WIRE = dict(hx=6.0, under_mount=4.8)      # the lead channel: |x| <= 6 (tabs at +-3.6, 12 AWG o 3.4), from 4.8 under the mount plane up
+_geom7 = bl.geom
+def _geom(pack):
+    g = _geom7(pack); d = PLUG_DROP.get(pack, 0.0)
+    for k in ("Y_XF_FACE", "Y_XF_REAR", "Y_SH0", "Y_SH1", "Y_PW1", "Y_ZONE"): g[k] -= d
+    return g
+bl.geom = _geom
 
 
 def plug_collar(g):
@@ -159,13 +174,34 @@ def plug_collar(g):
 
 
 def _xt60w_male(g, collar=True):
-    """the XT60W-M in its collar, where the E1-M sat: its nose in the pack's plug as before (the checks' engage depth), the body up through the cap"""
-    zx, ym = g["Z_X"], g["Y_XF_FACE"] + 1.5; y1 = ym - XT60W["back"] + XT60W["body"]
+    """the XT60W-M in its collar, where the E1-M sat: its mating end in the pack's plug as before (the checks' engage depth), the body up through the cap, the solder tabs on top"""
+    zx, ym = g["Z_X"], g["Y_XF_FACE"] + 1.5; y1 = ym - XT60W["mate"] + XT60W["body"]
     m = U(box(-bl.XM_IW / 2, bl.XM_IW / 2, ym - bl.XM_IL, ym, zx - bl.XM_ID / 2, zx + bl.XM_ID / 2),
           box(-XT60W["W"] / 2, XT60W["W"] / 2, ym - 0.01, y1, zx - XT60W["D"] / 2, zx + XT60W["D"] / 2),
           *[cyl("y", sx * 3.6, zx, 1.8, y1 - 0.5, y1 + XT60W["tabs"]) for sx in (-1, 1)])
     return m + plug_collar(g) if collar else m
 bl.xt60_male = _xt60w_male
+
+
+# ---- the Overseer's own mount (Spark 14 Nov: "can we just change the design for the battery side, the base is already glued to the nodes"). overseer_base has four M3
+#      heat-set inserts, faces on the mount plane, at drone (x, y) = (-60, +-25), (20, +-25); the slot it keeps is x -121.8..61.9 and the receiver's tail end face sits on -121.8.
+#      Four bosses on the deck under them: M3 x 10 socket head from below with the cartridge out, head flush in the deck's underside (2.4 over the cartridge's rim), 4.6 under
+#      the head, 5.4 into the insert. The six bosses of the mount plane stay for the arm's bays (parts/box_arm8 bay_mount): one part, two support sets.
+OV_SLOT_X0 = -121.8
+OV_INSERTS = [(-60.0, 25.0), (-60.0, -25.0), (20.0, 25.0), (20.0, -25.0)]
+DRONE_HEAD = dict(r=3.2, h=3.2, len=10.0)
+OV_TOP = dict(y_abs=33.3, depth=8.4)   # the base's own material stands beside the slot at |y| 33.4..34.0 over the top 8 mm: nothing of the receiver past 33.3 there
+
+
+def drone_mount(B):
+    """the Overseer's four deck bosses: (positions (x, z), bosses, cuts) in cartridge coords; nothing for the Scout (its frame takes the four bosses it has)"""
+    g, r = B["g"], B["r"]
+    if g["pack"] != "overseer": return [], None, None
+    z0 = r["Z_E0"] - r["END_T"]; pos = [(y_, x_ - OV_SLOT_X0 + z0) for x_, y_ in OV_INSERTS]
+    yh = r["Y_DK0"] + bl.STRIP_REC                       # the deck's underside in the strip recess: the head's seat is DRONE_HEAD h above it
+    boss = U(*[cyl("y", x, z, bl.BOSS_R, r["Y_DK0"], r["Y_M"]) for x, z in pos]) - bl.cart_path(r)
+    cuts = U(*[c for x, z in pos for c in (cyl("y", x, z, bl.BOLT_D / 2, -60.0, r["Y_M"] + 1), cyl("y", x, z, DRONE_HEAD["r"], -60.0, yh + DRONE_HEAD["h"]))])
+    return pos, boss, cuts
 
 
 WALL_RELIEF = {"overseer": 0.1}        # 13 Nov: the Overseer cartridge (55 x 58.6) rolled 0.74 deg (the arm's worst) is 0.38 wider a side at its rail's top edge; at 0.3 a side
@@ -330,7 +366,7 @@ def _no_pin(g, retract=0.0, side=1):
 
 
 def _peg_geo(r):
-    y1 = r["Y_DK1"]; y0 = y1 - v5.POLE_L; yr = r["LIP_Y0"]
+    y1 = r["Y_DK1"]; y0 = y1 - v5.POLE_L - PLUG_DROP.get(r["pack"], 0.0); yr = r["LIP_Y0"]
     zmax = r["Z_X"] - r["PKX_ZW"]                      # the float pocket's edge: the peg's root stays on the carrier's rail, not in the pocket
     return y0, y1, yr, zmax
 
@@ -387,13 +423,19 @@ FOOT_WEB_X0 = 25.3                     # run 265 (13 Nov): the Scout receiver fa
 #                                        The room is now a web from the side wall's outer face (25.3) out to the pads' 34.0, from the pad's top up to the drawn boss, over the foot's length
 
 
+# 14 Nov, the rerun with the web's room (74.1 g): the same two necks under the tail foot blocks and 1.07 at the same root (0.56 at beta 4). The room was there (130 mm2 of
+# section all the way up) and the engine did not fill it: the hold-down's 28 N stands 11 mm along the pack and 6 mm across from the corner boss it hangs from, and a
+# stiffness layout leaves that on a slender leg. The foot's gusset into the boss is drawn (CLAUDE.md: pads, bosses ... and the gusset into the body): 4.8 x the foot's
+# length from the pad's outer end to the bolt, pad top up into the drawn boss ring, clear of the head bore. B["foot_gussets"]
+
+
 def scout_feet(B):
     """four landing feet on the Scout receiver (10 Nov, Spark: the battery must fit the funnel). Its keel hangs in the funnel's
     hole and its clipped ends never reach the end walls, so nothing held it along x. Each foot is a pad on a side ledge, its outer
     end 0.3 from an end wall's foot, on a leg down from a corner boss; the Scout then sits at its drawn height, held along x and y."""
     g = B["g"]; fm = _funnel(); zt = g["Z_T"]
     xn = fm.SEAT[1] - fm.SETTINGS["scout"] - FOOT_PLAY; xt = fm.SEAT[0] + fm.SETTINGS["scout"] + FOOT_PLAY      # drone x of the pads' outer ends
-    legs = []; pads = []
+    legs = []; pads = []; gus = []
     for sx in (1, -1):
         for zo, za in ((xn + zt, FOOT_ANCHOR["z"][0]), (xt + zt, FOOT_ANCHOR["z"][1])):
             zp = sorted((zo, zo - math.copysign(FOOT_PAD["L"], zo - zt)))
@@ -405,10 +447,13 @@ def scout_feet(B):
             zw = sorted((zp[0] if abs(zp[0] - zt) > abs(zp[1] - zt) else zp[1], bz + math.copysign(FOOT_ROOT, zt - bz)))        # from the pad's outer end to FOOT_ROOT past the bolt
             legs.append(box(*sorted((sx * FOOT_WEB_X0, sx * FOOT_PAD["x"][1])), FOOT_PAD["y1"], bl.HEAD_Y + 3.0, *zw))         # run 265: a web's room, wall to pad line, pad top to the drawn boss
             pads.append(hullp(pts[:8]))
+            zo = zp[0] if abs(zp[0] - zt) > abs(zp[1] - zt) else zp[1]                # the pad's outer end
+            gus.append(box(*sorted((sx * FOOT_PAD["x"][0], sx * FOOT_PAD["x"][1])), FOOT_PAD["y1"], bl.HEAD_Y + 3.0, *sorted((zo, bz))))
     legs = U(*legs)
     # 13 Nov: the legs filled the mount bolts' head counterbores (131 mm3 of 945 each) and bores: the receiver could not be bolted on. Bolt and driver sweep cut through
     legs = legs - U(*[c for bx, bz in B["r"]["MOUNT"] for c in (cyl("y", bx, bz, bl.HEAD_R, -60.0, bl.HEAD_Y), cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, 100.0))]) - bl.cart_path(B["r"])
-    B["foot_pads"] = pads
+    bores = U(*[c for bx, bz in B["r"]["MOUNT"] for c in (cyl("y", bx, bz, bl.HEAD_R, -60.0, bl.HEAD_Y), cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, 100.0))])
+    B["foot_pads"] = pads; B["foot_gussets"] = [g_ - bores - bl.cart_path(B["r"]) for g_ in gus]; legs = legs + U(*B["foot_gussets"])
     for sk in B.get("rskids", []):                                   # 0.4 clear of the TPU skids
         for dx, dy in ((0.4, 0), (-0.4, 0), (0, 0.4), (0, -0.4), (0, 0)):
             legs = legs - sk.translate([dx, dy, 0])
@@ -474,6 +519,15 @@ def build(pack="scout"):
     B["recv"] = B["recv"] - grow; B["cap"] = B["cap"] - grow
     if WALL_RELIEF.get(pack):                # the side walls' faces set back above the lead-in: the cartridge rolled the arm's worst still enters
         B["recv"] = B["recv"] - U(*[box(*sorted((s * (r["RF"] - 0.01), s * (r["RF"] + WALL_RELIEF[pack]))), bl.Y_RB + bl.HCAP - 0.01, r["Y_DK0"] + 0.01, r["Z_E0"], r["Z_E1"]) for s in (1, -1)])
+    B["drone_pos"], db, dc = drone_mount(B)
+    if db is not None:
+        B["drone_boss"], B["drone_cuts"] = db, dc; B["recv"] = B["recv"] + db - dc
+        ym_ = r["Y_M"]; zx_ = B["g"]["Z_X"]; z1_ = r["Z_E1"] + r["END_T"]
+        B["wire_cut"] = box(-WIRE["hx"], WIRE["hx"], ym_ - WIRE["under_mount"], ym_ + 1.0, zx_ + 5.5, z1_ + 1.0)      # the leads' channel out over the lead end
+        B["recv"] = B["recv"] - B["wire_cut"]
+        B["cap"] = B["cap"] - box(-WIRE["hx"], WIRE["hx"], r["Y_DK1"] - 1.0, ym_ + 1.0, zx_ + 5.5, zx_ + bl.CARRIER_HZ + 1.0)      # through the cap's whole rim there (a 0.9 floor under the channel was a thin wall)
+        # no partner insert over the lead-end bolts on the Overseer: they screw into M3 x 5.7 heat-set inserts in the cap (o 4.0), which clamps carrier and cap to the receiver
+        B["cap"] = B["cap"] - U(*[cyl("y", bx, bz, 2.0, r["Y_DK1"] - 1, ym_ + 1, 24) for bx, bz in r["MOUNT"] if abs(bz - zx_) < 1e-6])
     B["recv_bay"] = B["recv"]                # the receiver in a bay of the arm's ring: no landing feet (two Scout bays 30 deg apart met at their feet, 9.3 mm3, arm v8)
     if pack == "scout":
         B["feet"] = scout_feet(B); B["recv"] = B["recv"] + B["feet"]
@@ -824,6 +878,7 @@ def main(pack="scout"):
     B = build(pack); g = B["g"]
     res, rows = m6.checks(B)
     res["pack"] = pack
+    res["engage_depth_mm"]["guide_poles"] = round(res["engage_depth_mm"]["guide_poles"] + PLUG_DROP.get(pack, 0.0), 2)      # the pegs are longer by the plug's drop
     res["hold"] = m6.hold_report(B)
     res["hold_strong"] = [m6.hold(B, Fb, m6.MU["pad_tpu"], n) for Fb in (20.0, 25.0) for n in (1.0, 2.0, 3.0)]
     res["hold"]["all_gravity_directions"] += [dict(h, pads="TPU-faced pads") for h in res["hold_strong"]]      # the motion's readouts use the 25 N row
@@ -1115,10 +1170,11 @@ def appendix_overseer(ro, rs):
 BED = 180.0                            # Bambu A1 mini
 
 
-def printability(m):
-    """the best of the six flat-down poses on the A1 mini: least area that overhangs past 45 deg (needs support), then most bed contact."""
+def printability(m, near=0.0):
+    """the best of the six flat-down poses on the A1 mini: least area that overhangs past 45 deg (needs support), then most bed contact.
+    near > 0 (the print kit): among the poses within near mm2 (or 10 %) of the least support, the one with the largest face on the bed (CLAUDE.md: largest flat face down)."""
     t = bl.tm(m); n = t.face_normals; ar = t.area_faces; c = t.triangles_center
-    best = None
+    best = None; rows = []
     for ax in range(3):
         for sg in (1, -1):
             down = np.zeros(3); down[ax] = sg                     # this direction of the part goes onto the bed
@@ -1132,7 +1188,11 @@ def printability(m):
             row = dict(down="%s%s" % ("+" if sg > 0 else "-", "xyz"[ax]), bed_mm2=round(float(ar[on_bed].sum()), 0), support_mm2=round(float(ar[over].sum()), 0),
                        size_mm=[round(float(v), 1) for v in ext], fits_bed=fits, on_the_diagonal=bool(diag))
             row["diag_spare_mm"] = round(BED - (a_ + b_) / math.sqrt(2), 1) if diag else None
+            rows.append(row)
             if best is None or (not row["fits_bed"], row["support_mm2"], -row["bed_mm2"]) < (not best["fits_bed"], best["support_mm2"], -best["bed_mm2"]): best = row
+    if near > 0:
+        ok = [r_ for r_ in rows if r_["fits_bed"] == best["fits_bed"] and r_["support_mm2"] <= best["support_mm2"] + max(near, 0.1 * best["support_mm2"])]
+        best = max(ok, key=lambda r_: r_["bed_mm2"])
     return best
 
 
@@ -1161,8 +1221,13 @@ def build_check(B):
     steps.append(dict(step="6 cartridge up into the receiver", how="bolts held in, 40 mm swept; pushed in alone the lead-ins cam the bolts (no stuck step)", mm3=v, ok=bool(v < 0.05)))
     r = B["r"]; scout = g["pack"] == "scout"                 # 13 Nov: the Scout's feet were drawn through the mount bolts' head bores; nothing checked that the receiver can be bolted on
     sw = U(*[c for bx, bz in r["MOUNT"] for c in ([cyl("y", bx, bz, bl.BOLT_D / 2 - 0.05, -60.0, r["Y_M"] + 1)] + ([cyl("y", bx, bz, bl.HEAD_R - 0.05, -60.0, bl.HEAD_Y - 0.05)] if abs(bx) > g["RF"] else []))])
-    v = round(vol(sw ^ U(B["recv"], B["carrier"], B["cap"])), 3)
-    steps.append(dict(step="7 receiver onto the drone: %d M3 from below through the bosses" % len(r["MOUNT"]), how="each bolt and its driver swept from 60 mm below" + (" up to the head seat" if scout else "") + ", through receiver, carrier and cap", mm3=v, ok=bool(v < 0.05)))
+    if B.get("drone_pos"):                                   # the Overseer's four into the base's inserts: bolt, head and driver from below, past the seated strips, to the head's seat
+        yh = r["Y_DK0"] + bl.STRIP_REC + DRONE_HEAD["h"]
+        swd = U(*[c for x, z in B["drone_pos"] for c in (cyl("y", x, z, bl.BOLT_D / 2 - 0.05, -60.0, r["Y_M"] + 1), cyl("y", x, z, DRONE_HEAD["r"] - 0.05, -60.0, yh - 0.05))])
+        sw = sw + swd; extra = vol(swd ^ B["strips"])           # these four pass beside the seated strips: counted against them too
+    else: extra = 0.0
+    v = round(vol(sw ^ U(B["recv"], B["carrier"], B["cap"])) + extra, 3)
+    steps.append(dict(step="7 receiver onto the drone: %d M3 from below through the bosses" % (len(r["MOUNT"]) + len(B.get("drone_pos") or [])), how="each bolt and its driver swept from 60 mm below" + (" up to the head seat" if scout else "") + ", through receiver, carrier and cap", mm3=v, ok=bool(v < 0.05)))
     v = round(vol(_xt60w_male(g, collar=False) ^ U(B["recv"], B["carrier"], B["cap"], B["collar"])), 3)
     steps.append(dict(step="8 XT60W-M glued into its collar, laid in the carrier, cap on", how="the plug's body against collar, carrier, cap and receiver, seated", mm3=v, ok=bool(v < 0.05)))
     out["install"] = steps
@@ -1208,8 +1273,68 @@ def write_both():
     json.dump(asm, open(os.path.join(ROOT, "systems", "latch7_both.assembly.json"), "w"), indent=1)
     print("latch7_both:", len(parts), "parts")
 
+# ------------------------------------------------------------------ the print kit (13 Nov, Spark: "i want to start printing soon")
+def _on_bed(m, down):
+    """the piece turned so its `down` face (printability's pose, e.g. "+y") lies on the bed at z 0, centred on the plate"""
+    ax = "xyz".index(down[1]); sg = 1.0 if down[0] == "+" else -1.0; d = np.zeros(3); d[ax] = sg
+    a = np.cross(d, [0, 0, -1.0]); c = float(d @ [0, 0, -1.0])
+    if np.linalg.norm(a) < 1e-9: R = np.eye(3) if c > 0 else np.diag([1.0, -1.0, -1.0])
+    else:
+        K = np.array([[0, -a[2], a[1]], [a[2], 0, -a[0]], [-a[1], a[0], 0]]); R = np.eye(3) + K + K @ K / (1 + c)
+    t = bl.tm(m); T = np.eye(4); T[:3, :3] = R; t.apply_transform(T)
+    lo, hi = t.bounds; t.apply_translation([-(lo[0] + hi[0]) / 2, -(lo[1] + hi[1]) / 2, -lo[2]])
+    return t
+
+
+def kit():
+    """print/latch7_*.stl: every drawn, final piece of both sets in its print pose (meshes.yml publishes print/*.stl as print-<name>.stl on a push to main), each solid-checked
+    as exported, with a picture on its bed (parts/latch7/kit/) and parts/latch7/kit.json: file, pose, supports, material, count, and the assembly order. The receivers are
+    engine parts: they join when their runs pass."""
+    sys.path.insert(0, os.path.join(ROOT, "tools")); import solid_check as sc
+    from topo.build import render
+    pd, kd = os.path.join(ROOT, "print"), os.path.join(HERE, "kit"); os.makedirs(pd, exist_ok=True); os.makedirs(kd, exist_ok=True)
+    out = dict(note="Scout first, then Overseer. Bambu A1 mini, PCTG (PETG settings + 10 C) unless TPU. Counts are for one drone set (receiver side) and one cartridge.", files=[], waiting=[], assembly={})
+    done = {}
+    for pack in ("scout", "overseer"):
+        B = build(pack); g = B["g"]; pre = "latch7_" if pack == "scout" else "latch7_ov_"
+        pin = cyl("y", 0.0, 0.0, GUIDE_PIN[0] / 2, 0.0, GUIDE_PIN[1], 24)
+        pieces = [("cartridge", B["cart"], pre + "cartridge", "PCTG", 1, "on the pack"), ("bolt", slider(g, 0, 1), pre + "bolt", "PCTG", 2, "both bolts are this one file (the second is turned half round)"),
+                  ("stop bar", B["stop"], "latch7_stop_bar", "PCTG", 1, "the same file for both packs"), ("spring guide pin", pin, "latch7_spring_pin", "PCTG", 4, "o 2.0 x 7, standing; the same file for both packs; print a few spare"),
+                  ("plug carrier", B["carrier"], pre + "plug_carrier", "PCTG", 1, "with its two guide pegs"), ("plug carrier cap", B["cap"], pre + "plug_carrier_cap", "PCTG", 1, ""),
+                  ("seat strip", sorted(B["strips"].decompose(), key=lambda m: m.bounding_box()[0])[0], "latch7_seat_strip", "TPU 95A", 2, "the same file for both packs, two per receiver"),
+                  ("plug collar", B["collar"], "latch7_plug_collar", "PCTG", 1, "WAITING on Spark's XT60W-M measurement (body 15.5 x 8.1 and its length without tabs, E from the Amass sheet): do not print yet")]
+        for nm, m, fn, mat, n, note in pieces:
+            if fn not in done:
+                pr = printability(m, near=30.0); t = _on_bed(m, pr["down"]); f = os.path.join(pd, fn + ".stl"); t.export(f)
+                ok, info = sc.solid_check(bl.tm_load(f) if hasattr(bl, "tm_load") else __import__("trimesh").load(f, force="mesh"))
+                png = os.path.join(kd, fn + ".png")
+                render(t, png, title=f"{fn}.stl on its bed ({pr['down']} face down)", info=f"{mat} | {t.extents[0]:.1f} x {t.extents[1]:.1f} x {t.extents[2]:.1f} mm | solid check {'PASS' if ok else 'FAIL'}")
+                ext = [round(float(v), 1) for v in t.extents]
+                done[fn] = dict(file=f"print/{fn}.stl", release=f"https://github.com/sparkiscool/noxen/releases/download/meshes/print-{fn}.stl", picture=os.path.relpath(png, ROOT), solid_check="PASS" if ok else "FAIL",
+                                thin_walls=len(info.get("thin_walls", [])), pose=f"the part's {pr['down']} face on the bed", size_on_bed_mm=ext, fits_bed=bool(max(ext[:2]) <= BED and ext[2] <= BED),
+                                supports=("none" if pr["support_mm2"] < 5.0 else "yes: %d mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)" % pr["support_mm2"]),
+                                material=mat, grams_each=round(abs(t.volume) / 1000 * (1.21 if mat.startswith("TPU") else 1.23), 2), note=note, used_by={})
+            done[fn]["used_by"][pack] = n
+            if "WAITING" in note and fn not in out["waiting"]: out["waiting"].append(fn)
+        mg = next(b_ for b_ in m6.BOUGHT if b_["part"] == "tab magnet"); spg = next(b_ for b_ in m6.BOUGHT if b_["part"].startswith("latch spring")); xt = next(b_ for b_ in m6.BOUGHT if b_["part"].startswith("XT60"))
+        out["assembly"][pack] = dict(
+            bought=[dict(part="latch spring", n=4, spec=spg["spec"], url=spg["url"], check=spg["check"]), dict(part="magnet", n=2, spec=mg["spec"], url=mg["url"]),
+                    dict(part="XT60W pair", n=1, spec=xt["spec"], url=xt["url"], note="female on the pack's lead, male in the collar and carrier")],
+            cartridge=["1 press a magnet into each bolt's underside", "2 push each bolt in through its wall hole from outside (the second turned half round)", "3 drop the stop bar down across the rib into both bolts",
+                       "4 four springs, a guide pin inside each, squeezed and dropped into the bolts' slots from above", "5 pack down into the cartridge over them (the keeper lips snap over it); its XT60W-F into the keyed pocket at the lead end, two M3 set screws"],
+            receiver=["6 (when the receiver's run has passed) the two TPU seat strips into their recesses under the deck, between their keys", "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier, cap on",
+                      "8 carrier and cap onto the lead-end bosses; the receiver's M3 mount bolts from below clamp them"],
+            checked="parts/%s/result.json build.install: every step swept, 0 mm3" % OUT[pack][0])
+    out["files"] = list(done.values())
+    json.dump(out, open(os.path.join(HERE, "kit.json"), "w"), indent=1)
+    for f_ in out["files"]: print(f_["file"], f_["solid_check"], f_["pose"], f_["size_on_bed_mm"], f_["supports"][:14], f_["material"], f_["used_by"], f_["grams_each"], "thin", f_["thin_walls"])
+    return out
+
+
 if __name__ == "__main__":
     pk = "overseer" if "--overseer" in sys.argv else "scout"
+    if "--kit" in sys.argv:
+        kit(); sys.exit(0)
     if "--fit" in sys.argv:
         for q in ("scout", "overseer"):
             print(q, json.dumps(funnel_fit(build(q)), indent=1))
