@@ -12,7 +12,7 @@ Pieces (each in the 180 bed):
               laps the base's cheek with 4 M5 x 60 across (X), nuts outboard. Printed on its floor face.
   feet        four TPU 95A pads Ø36 x 5 (a Ø8 x 4 stud pressed into each foot pad): the stand stands on four points, so every floor
               reaction is known (flat floor: four; an uneven floor: three, each foot lifted in turn).
-Joints (all M5, steel): stub flange to the mast face, 3 x M5 x 12 from the mast side (the heads in the face's counterbores, the tool from
+Joints (all M5, steel): stub flange to the mast face, 3 x M5 x 16 from the mast side (the heads in the face's counterbores, the tool from
 behind through the mast), threading into M5 heat-set inserts in the stub's flange; mast foot to the halves, 8 x M5 x 16 up from under
 the halves' top pads into M5 inserts in the foot; lap, 4 x M5 x 60 + nyloc a side.
 
@@ -145,8 +145,9 @@ def rigid_split(pts, F, P):
 
 
 # ------------------------------------------------------------------ mast
-FACE_T, BOSS_T = 4.0, 10.0
-SEAT_Y = -6.0                       # the stub bolts' head seats (the face 6 thick at a bolt)
+FACE_T, BOSS_T = 4.0, 14.0
+Z_TOP = 44.0                        # the mast's top (the flange's at 45): 179 tall, in the 180 bed
+SEAT_Y = -10.0                      # the stub bolts' head seats: the face 10 thick at a bolt (6 read 0.72 filled solid at the one top bolt)
 RING = [(np.cos(a) * 39.0, np.sin(a) * 39.0) for a in np.radians(np.arange(0, 360, 30))]
 
 
@@ -155,15 +156,15 @@ def _motor_cut():
 
 
 def mast_parts():
-    face = (cyl("y", 0, 0, 45.0, -FACE_T, 0.0, 96) - cyl("y", 0, 0, 33.0, -FACE_T - 1, 1.0, 96)) ^ box(-50, 50, -10, 1, -50, 40.0)
-    bosses = [cyl("y", x, z, 8.0, -BOSS_T, 0.0) for x, z in STUB_BOLTS]
+    face = (cyl("y", 0, 0, 45.0, -FACE_T, 0.0, 96) - cyl("y", 0, 0, 33.0, -FACE_T - 1, 1.0, 96)) ^ box(-50, 50, -20, 1, -50, Z_TOP)
+    bosses = [cyl("y", x, z, 9.0, -BOSS_T, 0.0) for x, z in STUB_BOLTS]
     feet = [cyl("z", x, y, 7.0, Z_FOOT, Z_FOOT + 12.0) for x, y in FOOT_BOLTS]
     drawn = U(face, *bosses, *feet)
     cuts = U(_motor_cut(), box(*PSU), cyl("y", 0, 0, 13.0, -70.0, 1.0, 64),                        # the stub's bore: the post's screw from behind
-             *[cyl("y", x, z, 2.75, -11.0, 1.0) for x, z in STUB_BOLTS],
+             *[cyl("y", x, z, 2.75, SEAT_Y - 1.0, 1.0) for x, z in STUB_BOLTS],
              *[cyl("y", x, z, 5.0, -70.0, SEAT_Y) for x, z in STUB_BOLTS],                         # the heads and the hex key, back through the mast
              *[cyl("z", x, y, 3.2, Z_FOOT - 1.0, Z_FOOT + 8.0) for x, y in FOOT_BOLTS])            # M5 x D7 x L6 heat-set inserts
-    env = U(box(-42.0, 40.0, -64.0, 0.0, Z_FOOT, 40.0), cyl("y", 0, 0, 45.0, -10.0, 0.0, 96) ^ box(-50, 50, -11, 1, -50, 40.0))
+    env = U(box(-42.0, 40.0, -64.0, 0.0, Z_FOOT, Z_TOP), cyl("y", 0, 0, 45.0, -14.0, 0.0, 96) ^ box(-50, 50, -20, 1, -50, Z_TOP))
     return drawn, cuts, env
 
 
@@ -173,7 +174,7 @@ def mast_setup(h):
     p.bed_min_mm2 = 1500.0                                                               # the drawn face ring and bosses at Y 0 (topo/audit.py bed)
     p.support("default", U(*[cyl("z", x, y, 7.0, Z_FOOT, Z_FOOT + 3.0) for x, y in FOOT_BOLTS]))
     ring = [(np.array([x, -1.0, z]), cyl("y", x, z, 4.5, -2.0, 0.0)) for x, z in RING
-            if not (x < -24.0 and z > 14.0) and z < 35.0]                                # the flange bears on the face ring
+            if not (x < -24.0 and z > 14.0)]                                # the flange bears on the face ring
     heads = [(np.array([x, SEAT_Y, z]), cyl("y", x, z, 4.8, SEAT_Y, SEAT_Y + 1.5) - cyl("y", x, z, 2.9, -12, 2)) for x, z in STUB_BOLTS]
     lin = [(np.array([x, -3.0, z]), cyl("y", x, z, 4.5, SEAT_Y, 0.0) - cyl("y", x, z, 2.9, -12, 2)) for x, z in STUB_BOLTS]
     for nm, cls, loads, My, acc in arm_cases():
@@ -216,7 +217,7 @@ def _lap_cuts():
 
 
 def _foot(y):
-    pad = cyl("z", FOOT_X, y, FOOT_R, BED, BED + 6.0, 64)
+    pad = cyl("z", FOOT_X, y, FOOT_R, BED, BED + 9.0, 64)              # 4.5 over the stud hole (6 left 1.5: audit drawn_wall)
     return pad, cyl("z", FOOT_X, y, STUD_R, BED - 1.0, BED + 4.5)
 
 
