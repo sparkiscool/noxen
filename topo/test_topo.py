@@ -1316,6 +1316,17 @@ def t_audit_room_full():
         ok = ok_rep["worst"] is not None and ok_rep["worst"] < 0.5 and refused and soft.get("fail") and soft["thinned"] > soft["worst"]
         check("audit room_full: a room that holds its load passes, one that cannot even filled solid is refused", bool(ok),
               f"10 N {ok_rep['worst']}, 20 kN {soft['worst']} refused {refused}, thinned {soft['thinned']}")
+        # the budget (14 Nov, the Scout v4 cradle): the room holds its load filled solid, but the budget is a sliver of it
+        Lb = Layout(p, volfrac=0.05, settings=s, log=lambda s_: None)
+        w = ok_rep["worst"]; m = w / 0.05 / 12.0
+        bud = room_strength(Lb, m, log=lambda s_: None, hard=False)
+        try:
+            room_strength(Lb, m, log=lambda s_: None); b_ref = False
+        except SetupError as e:
+            b_ref = "budget" in str(e)
+        check("audit room_full: a budget whose thinned room reads over 6x max_worst is refused, the same room at 0.3 is not",
+              bool(b_ref and "budget" in (bud.get("fail") or "") and not ok_rep.get("fail") and w < m),
+              f"worst {w}, max_worst {m:.4f}, thinned {bud.get('thinned')}, refused {b_ref}")
         # the peak in a fin (13 Nov, the funnel's nose half): the pad hangs on a strip of room one cell thin; the refusal names the fin
         f = Part("mini_fin", 1.0, box(0, 3, 0, 10, 0, 10) + box(20, 24, 2, 8, 2, 8), box(100, 101, 100, 101, 100, 101),
                  box(0, 24, 0, 10, 4.5, 5.5), log=lambda s_: None)

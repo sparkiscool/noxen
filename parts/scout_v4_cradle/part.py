@@ -23,7 +23,7 @@ from parts.scout_v4_units_lib import S, ASM, box, cyl, U, payload_cases, point_c
 
 import json as _json, os as _os
 HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
-SPEC = dict(h=0.8, gen_cm3=2.0, max_worst=0.3)   # E: cradle, arms and coupler 1.5 g, at the nodes' PCTG limit
+SPEC = dict(h=0.8, gen_cm3=6.0, max_worst=0.3)   # 14 Nov: the sleeve run at 2.0 failed early (1.85, head-first 280 N): 9 % of a 21 cm3 room, thinned 2.41 (audit budget check now); 6.0 thins it to ~0.8
 F0 = S.CAM["case"][1]                            # the case's front on the lip, ahead of the axis (fixed: the lens never moves)
 D0, D1 = S.CAM_DEPTH                             # 12..18: the coupon's C
 H = S.CAM["side"] / 2                             # 18

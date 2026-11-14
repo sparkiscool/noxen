@@ -48,6 +48,8 @@ Checks (hard = raises, soft = logged + in the report):
                        Open the room along the load path (deeper behind the socket, wider at the root), move the support
                        nearer the load, or shorten the lever. When the peak sits in a fin (room_fins: design room one cell
                        thin), the refusal says so and gives its box: close the fin first (13 Nov, the funnel's nose half).
+                       Also refused (14 Nov, the Scout v4 cradle: 0.226 filled, budget 9 % of the room, early fail at 1.85): a budget
+                       whose uniformly thinned room reads over 6 x max_worst (every passing part reads under 5.5 x): raise gen_cm3.
   parity         hard  a column of the grid where the room, the drawn or the cuts mesh has an odd number of distinct crossings: the
                        ray-parity voxeliser (part.voxelise) then flips that column from the odd crossing up. Two bodies that only
                        touch on a face (a box stacked flush on another) stay two shells in a manifold union, the ray meets the
@@ -628,6 +630,9 @@ def room_fins(part):
     return des & ~ndi.binary_opening(np.pad(des, 1), np.ones((2, 2, 2), bool))[1:-1, 1:-1, 1:-1]
 
 
+BUDGET_K = 6.0                                                                    # room_full's budget check: thinned over BUDGET_K x max_worst is refused
+
+
 def room_strength(L, max_worst, log=print, hard=True):
     """room_full (see the module doc): the build's own as-built strength (topo/build.py strength) on the room filled solid.
     Returns the report dict; raises SetupError over max_worst when hard."""
@@ -663,7 +668,13 @@ def room_strength(L, max_worst, log=print, hard=True):
         msg = (f"room_full: the room filled solid reads {st['worst']:.2f} in '{st['worst_case']}' at {st['worst_at']} (max_worst {max_worst}): "
                f"no layout in this room can pass. Open the room along that load's path (deeper behind the socket or pad, wider at the root), "
                f"move a support nearer the load, or shorten the lever.")
-    if st["worst"] > max_worst:
+    if st["worst"] <= max_worst and rep["thinned"] > BUDGET_K * max_worst:
+        # 14 Nov, the Scout v4 cradle's sleeve: the room filled solid read 0.226 but the 2.0 cm3 budget was 9 % of it (thinned 2.41, 8x
+        # max_worst) and the run failed early at 1.85. Every passing result on main reads thinned <= 5.4x max_worst.
+        msg = (f"budget: the budget is {share:.0%} of the room; thinned uniformly to it the room reads {rep['thinned']:.2f}, over "
+               f"{BUDGET_K:.0f}x max_worst ({max_worst}; every passing part reads under 5.5x): the layout cannot reach max_worst on it. Raise "
+               f"gen_cm3 toward what the room needs (filled solid {st['worst']:.2f}, so at least {100 * st['worst'] / (BUDGET_K * max_worst):.0f} % of the room) or shorten the load path.")
+    if st["worst"] > max_worst or "budget: " in msg:
         log("audit: FAIL " + msg)
         rep["fail"] = msg
         if hard:
