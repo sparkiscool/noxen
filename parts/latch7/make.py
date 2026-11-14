@@ -1329,7 +1329,9 @@ def kit():
     sys.path.insert(0, os.path.join(ROOT, "tools")); import solid_check as sc
     from topo.build import render
     pd, kd = os.path.join(ROOT, "print"), os.path.join(HERE, "kit"); os.makedirs(pd, exist_ok=True); os.makedirs(kd, exist_ok=True)
-    out = dict(note="Scout first, then Overseer. Bambu A1 mini, PCTG (PETG settings + 10 C) unless TPU. Counts are for one drone set (receiver side) and one cartridge.", files=[], waiting=[], assembly={})
+    out = dict(note="Scout first, then Overseer. Bambu A1 mini, PCTG (PETG settings + 10 C) unless TPU. Counts are for one drone set (receiver side) and one cartridge.", files=[], waiting=[], assembly={},
+               supersedes=["14 Nov (the Scout's plug 4.3 lower): print/latch7_cartridge.stl, print/latch7_plug_carrier.stl and print/latch7_plug_carrier_cap.stl replace the files of the "
+                           "same names sent 13 Nov (13:15 and 16:55 Pacific): do not print or use those three. Every other file is unchanged."])
     done = {}
     for pack in ("scout", "overseer"):
         B = build(pack); g = B["g"]; pre = "latch7_" if pack == "scout" else "latch7_ov_"
