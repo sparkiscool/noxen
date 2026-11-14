@@ -22,6 +22,8 @@ Drawn (attachments only):
   end pads    the end walls' top bands that hold the cartridge along the pack, with their lead-ins (at the corners: the middle is relieved)
 
 Supports: the boss faces on the mount plane; at the lead end the wall tops under the carrier's ears (EAR_SEAT), which the lead-end bolts clamp.
+Overseer (Spark 14 Nov: its base is printed, the receiver fits it): on the drone the support is four deck bosses under the base's M3 inserts
+(make.drone_mount); the six bosses and ear seats are the support set "bay" for the arm's bays, with the bay's cases on it. One part, two support sets.
 Loads (systems/dimensions.md L, J; make.ARM; each its own case; the swap mass at its CG, the couple about the contact as a rigid
 cartridge on the shelves and the seat strips, E):
   crash 35 g in the 6 face and 8 corner directions; flight 4 g + 2 g lateral (4); catch 6 g; swap insert at the head's limit on the seats (118 N,
@@ -85,14 +87,18 @@ def bodies(pack):
     slab = slab - U(*[p_.translate([dx, 0, dz]) for p_ in B["poles"] for dx in (-0.3, 0.3) for dz in (-0.3, 0.3)])
     if B.get("clip") is not None: slab = slab ^ B["clip"]
     room = recv + slab
-    if pack in WALL_OUT:                                       # side walls out to the line the pocket blocks already reach
-        wo = U(*[box(*sorted((s * (rf + 1.0), s * WALL_OUT[pack])), bl.Y_RB, ym, z0, z1) for s in (1, -1)])
+    if pack in WALL_OUT:                                       # side walls out to the line the pocket blocks already reach; over the top 8.4 only to 33.3 (the Overseer's base
+        yt = ym - mk.OV_TOP["depth"]                           # stands beside its slot there, Spark 14 Nov: the base is printed, the receiver gives)
+        wo = U(*[m_ for s in (1, -1) for m_ in (box(*sorted((s * (rf + 1.0), s * WALL_OUT[pack])), bl.Y_RB, yt, z0, z1), box(*sorted((s * (rf + 1.0), s * mk.OV_TOP["y_abs"])), yt - 0.5, ym, z0, z1))])
         room = room + (wo - bl.carrier_zone(r, bl.FIT) - U(*bolts))
+    if B.get("drone_pos"):                                     # the Overseer's four deck bosses into the base's inserts, their bolts and heads; the leads' channel
+        room = room + B["drone_boss"] - B["drone_cuts"] - B["wire_cut"]
     # cuts: the holes inside drawn material (mount bolts, head counterbores, bolt pockets, through the whole room). The cartridge's path, the carrier's
     # notch and the plug path are the room's own faces: the build cuts the part to the room exactly, with no 0.5 stand-off (a 5 mm wall stays 5)
     cuts = list(bolts) + [cyl("y", bx, bz, bl.HEAD_R, -5.0, bl.HEAD_Y) for bx, bz in r["MOUNT"] if abs(bx) > rf]
     for s in (-1, 1):
         pk, _ = bl.pocket_cut(r); cuts.append(pk if s > 0 else bl.mirx(pk))
+    if B.get("drone_pos"): cuts.append(B["drone_cuts"])
     cuts = U(*cuts) ^ big
     D = {}
     for i, (bx, bz) in enumerate(r["MOUNT"]):
@@ -105,6 +111,8 @@ def bodies(pack):
         if lead:                                               # the carrier's ear sits on the wall's top here and the lead-end bolt clamps it: the seat, 6 deep, is drawn with the boss
             b_ = b_ + box(*sorted((bx - bl.BOSS_R, bx + bl.BOSS_R)), r["Y_DK0"] - EAR_SEAT, r["Y_DK0"] + 0.01, bz - bl.CARRIER_HZ, bz + bl.CARRIER_HZ)
         D[f"boss {i}"] = b_ ^ recv
+    for i, (x_, z_) in enumerate(B.get("drone_pos") or []):
+        D[f"drone boss {i}"] = cyl("y", x_, z_, bl.BOSS_R, r["Y_DK0"], ym) ^ recv
     for s, sn in ((1, "+x"), (-1, "-x")):
         X = lambda a, b: sorted((s * a, s * b))
         D[f"pocket {sn}"] = box(*X(rf, rf + r["PK_D"] + bl.PK_WALL), bl.Y_RB, r["PK_Y1"] + bl.PK_WALL, zt - r["PK_HZ"] - bl.PK_WALL, zt + r["PK_HZ"] + bl.PK_WALL) ^ recv
@@ -117,7 +125,7 @@ def bodies(pack):
             D[f"corner {sn} {en}"] = U(box(*X(rf, rf + SKIN), *yb, *zz),
                                        box(*X(r["X_IN"] - 1.0, rf + SKIN), r["RAIL_Y0"], r["Y_DK0"] + 0.01, *sorted((zf - sg * 0.5, zf + sg * r["END_T"])))) ^ recv
     for i, (hb, w) in enumerate(zip(B["hold_blocks"], B["hold_where"])):       # foot + hold-down, one drawn body each: the Scout's pad with the block on it, the Overseer's wall-thick block
-        D[f"foot {i}"] = (hb + B["foot_pads"][i] if "foot_pads" in B else hb) ^ recv
+        D[f"foot {i}"] = (hb + B["foot_pads"][i] + B["foot_gussets"][i] if "foot_pads" in B else hb) ^ recv      # Scout: with the gusset up into the corner boss (make.scout_feet, 14 Nov)
     cuts = cuts + (B["hold_notch"] ^ big); room = room - B["hold_notch"]
     return B, D, cuts, room
 
@@ -131,7 +139,13 @@ def setup_for(pack, name):
         R = lambda m: T(m)
         sup = [cyl("y", bx, bz, bl.BOSS_R + 0.5, (r["Y_DK0"] if abs(bz - g["Z_X"]) < 1e-6 else ym) - 1.5, ym + 0.5) for bx, bz in r["MOUNT"]]
         sup += [box(*sorted((bx - bl.BOSS_R, bx + bl.BOSS_R)), r["Y_DK0"] - 1.5, r["Y_DK0"] + 0.5, bz - bl.CARRIER_HZ, bz + bl.CARRIER_HZ) for bx, bz in r["MOUNT"] if abs(bz - g["Z_X"]) < 1e-6]
-        p.support("default", R(U(*sup)))
+        drone = B.get("drone_pos")
+        if drone:                                              # Overseer: the drone holds it by the four deck bosses (support "default"); a bay by the six (support "bay")
+            p.support("default", R(U(*[cyl("y", x_, z_, bl.BOSS_R + 0.5, ym - 1.5, ym + 0.5) for x_, z_ in drone])))
+            p.support("bay", R(U(*sup)))
+        else:
+            p.support("default", R(U(*sup)))
+        BS = "bay" if drone else "default"
         W = g["SWAP_M"] * G; cg = np.asarray(g["SWAP_CG"], float)
         y_rail = g["Y_TOP"] - 5.0
         shelf = {s: box(*sorted((s * rf, s * (rf + r["PK_D"]))), bl.Y_RB, r["PK_Y0"] + 0.01, zt - bl.BOLT_HZ, zt + bl.BOLT_HZ) ^ D[f"pocket {sn}"] for s, sn in ((1, "+x"), (-1, "-x"))}
@@ -176,7 +190,13 @@ def setup_for(pack, name):
         pull = max(A["xt60_pull_N"], bay.get("pull_out", 0.0))
         p.load_multi(f"swap pull {pull:.1f} N, bolts in (fault)", [(R(shelf[s]), V((0, -pull / 2, 0))) for s in (1, -1)], cls="misuse")
         for nm, d in (("+x", (1, 0, 0)), ("-x", (-1, 0, 0)), ("+y", (0, 1, 0)), ("+z", (0, 0, 1)), ("-z", (0, 0, -1))):       # a bay on the ring holds the pack sideways and upside
-            p.load_multi(f"bay: the pack's weight 1 g {nm}", inertia(d), cls="flight")                                           # down (-y is in flight 4 g and catch 6 g)
+            p.load_multi(f"bay: the pack's weight 1 g {nm}", inertia(d), cls="flight", support=BS)                               # down (-y is in flight 4 g and catch 6 g)
+        if drone:                                              # the swap's own forces again, held as a bay holds it (on the drone they are the cases above)
+            p.load_multi("bay: the pack's weight 1 g -y", inertia((0, -1, 0)), cls="flight", support=BS)
+            p.load_multi(f"bay: swap insert, the head at its limit {A['stall_N']:.0f} N on the seats", [(R(D[f"seat {sn[s]}"]), V((0, A["stall_N"] / 2, 0))) for s in (1, -1)], cls="flight", support=BS)
+            p.load_multi(f"bay: swap pull {pull:.1f} N, bolts in (fault)", [(R(shelf[s]), V((0, -pull / 2, 0))) for s in (1, -1)], cls="misuse", support=BS)
+            for s in (1, -1):
+                p.load_multi(f"bay: swap across {A['across_N']} N {sn[s]}", [(R(D[f"side {sn[s]} tab"]), V((s * A["across_N"], 0, 0)))], cls="flight", support=BS)
         feet = [D[k] for k in D if k.startswith("foot")]; Wd = ALLUP_G[pack] * G
         Fh = (A["stall_N"] - Wd) / len(feet)                   # the head's push less the drone's weight comes back down through the four end-wall tongues
         hy = mk.HOLD["y"][0]
