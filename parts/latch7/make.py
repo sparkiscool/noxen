@@ -185,11 +185,12 @@ bl.xt60_male = _xt60w_male
 
 # ---- the Overseer's own mount (Spark 14 Nov: "can we just change the design for the battery side, the base is already glued to the nodes"). overseer_base has four M3
 #      heat-set inserts, faces on the mount plane, at drone (x, y) = (-60, +-25), (20, +-25); the slot it keeps is x -121.8..61.9 and the receiver's tail end face sits on -121.8.
-#      Four bosses on the deck under them: M3 x 10 socket head from below with the cartridge out, head flush in the deck's underside (2.4 over the cartridge's rim), 4.6 under
-#      the head, 5.4 into the insert. The six bosses of the mount plane stay for the arm's bays (parts/box_arm8 bay_mount): one part, two support sets.
+#      Four bosses on the deck under them: M3 x 10 socket head from below with the cartridge out, head in the deck's underside (2.2 over the cartridge's rim), 5.0 under
+#      the head, 5.0 into the insert. The six bosses of the mount plane stay for the arm's bays (parts/box_arm8 bay_mount): one part, two support sets.
 OV_SLOT_X0 = -121.8
 OV_INSERTS = [(-60.0, 25.0), (-60.0, -25.0), (20.0, 25.0), (20.0, -25.0)]
-DRONE_HEAD = dict(r=3.2, h=3.2, len=10.0)
+DRONE_HEAD = dict(r=3.2, h=2.8, len=10.0)    # 5.0 of deck under the head, 5.0 of an M3 x 10 in the insert (its o 4.0 hole stops 0.3 short of the bottom plate: 5 of thread at most,
+#                                              Overseer design chat 14 Nov); the 3.0 head stands 0.2 out of its seat, 2.2 over the cartridge's rim. Boss o 10: inside the base's o 11 pads
 OV_TOP = dict(y_abs=33.3, depth=8.4)   # the base's own material stands beside the slot at |y| 33.4..34.0 over the top 8 mm: nothing of the receiver past 33.3 there
 
 
