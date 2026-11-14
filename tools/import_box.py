@@ -2,14 +2,16 @@
 streams (tools/box_check.py). Writes systems/box.assembly.json (box W frame), systems/box.check.json and systems/box.appendix.html.
   swap arm         systems/swap_arm.assembly.json once the arm stream has pushed it; until then the arm v7 meshes imported from the
                    nox repo on 3 Nov (hub, stub, rails, heads, grabbers, detent, drives, 11 bay receivers, two packs), marked superseded
-  stand, enclosure the built demo's mast, cradle keel, kb, toe and cross bars; the v2 sheets and PSU as boxes (from the nox repo, 3 Nov)
+  stand            the stand v2 (parts/box_stand2_lib.py, 14 Nov): mast, two base halves, two rails (engine parts: their result once
+                   run, their drawn faces and room until then) and four TPU feet
+  enclosure        the v2 sheets and PSU as boxes (from the nox repo, 3 Nov)
   funnel           parts/box_funnel/make.py v5: the two frame halves and the cross arm (engine parts: their result once run, a
                    placeholder and their drawn faces and room until then), the two end walls, strips, drive
   dome             parts/box_dome (its entries are kept as they stand in the file)
   latch            latch v7, both packs, seated: receiver and cartridge with its pack (parts/latch7/make.py build, in the seat frame)
   drones           the Scout v4 and the Overseer as their own systems stand today, seated (their meshes in place, no copies)
-Run: python tools/import_box.py            everything but the 3 Nov import is rebuilt; the arm, stand and enclosure lines are kept
-     python tools/import_box.py <nox>      also re-imports the arm v7, stand and enclosure from a checkout of sparkiscool/nox
+Run: python tools/import_box.py            everything but the 3 Nov import is rebuilt; the arm and enclosure lines are kept
+     python tools/import_box.py <nox>      also re-imports the arm v7 and enclosure from a checkout of sparkiscool/nox
 """
 import json, os, re, shutil, sys
 import numpy as np, trimesh
@@ -41,7 +43,7 @@ def copy_mesh(src, pid):
 
 
 def imported(nox):
-    """the arm v7, the stand and the enclosure from a checkout of sparkiscool/nox (3 Nov)"""
+    """the arm v7 and the enclosure from a checkout of sparkiscool/nox (3 Nov)"""
     parts = []
     arm = json.load(open(os.path.join(nox, "nox", "box", "box_swap_arm.assembly.json")))
     for p in arm["parts"]:
@@ -65,15 +67,6 @@ def imported(nox):
                           pose=np.eye(4).tolist(), material="PETG", mass_g=None, tag="C", owner="box swap arm v7", version="v7 + 8 Nov",
                           source="tools/import_box.py (rec0 turned about the axle)",
                           note=f"overseer bay at {deg} deg, beside the drone slot (8 Nov): latch receiver + a seated cartridge, the 0 deg bay turned"))
-    st = json.load(open(os.path.join(nox, "nox", "box", "box_structure.assembly.json")))
-    for p in st["parts"]:
-        if p["name"] not in ("mast", "cradle_keel", "kb", "toe", "barA", "barB"):
-            continue
-        pid = slug("stand " + p["name"])
-        mesh, nf = copy_mesh(os.path.join(nox, p["mesh"]), pid)
-        parts.append(dict(id=pid, name=f"stand: {p['name']}", role="structure", group="stand", color="#b7bfc9", mesh=mesh, pose=p.get("pose"),
-                          material="PETG", mass_g=p.get("mass_g"), tag=p.get("tag", "M"), owner="box structure", version=p.get("version"),
-                          source="nox/box/box_structure.assembly.json (runs/box_system/v1/W)", note=p.get("note", "")))
     v2 = json.load(open(os.path.join(nox, "nox", "box", "box_structure_v2.assembly.json")))
     for p in v2["parts"]:
         if "box" not in p or not (p["name"].startswith("sheet") or p["name"].startswith("PSU")):
@@ -224,79 +217,86 @@ def appendix(chk):
 {'<table><tr><th>piece</th><th>piece</th><th>mm3</th><th>states, worst</th></tr>' + pairs + '</table>' if pairs else ''}
 <h3>Clearances (mm, sampled to about 1)</h3><table><tr><th>mm</th><th>between</th><th>and</th><th>where</th></tr>{clr}</table>
 <h2>Funnel v5: print kit (A1 mini, 180 bed; parts/box_funnel/kit.json)</h2>
-<p><b>{'Every file is ready: in its print pose, on the plate, solid check PASS on that file.' if kit['ok'] else 'NOT ready to print: ' + e(', '.join(kit['not_ready']) or 'pieces missing') + ' (the halves and arms are written from their runs; a piece is ready when its file lies over its bed minimum, fits the plate and passes the solid check).'}</b> The stand is not in this kit: the stand note below.</p>
+<p><b>{'Every file is ready: in its print pose, on the plate, solid check PASS on that file.' if kit['ok'] else 'NOT ready to print: ' + e(', '.join(kit['not_ready']) or 'pieces missing') + ' (the halves and arms are written from their runs; a piece is ready when its file lies over its bed minimum, fits the plate and passes the solid check).'}</b> The stand is not in this kit: its own section below.</p>
 <table><tr><th>file</th><th>count</th><th>on the bed (x, y, z)</th><th>pose</th><th>flat on the bed</th><th>supports</th><th>material</th><th>solid check</th><th>print file</th></tr>{prt}</table>
 <h3>Bought</h3><table><tr><th>part</th><th>qty</th><th>note</th></tr>{bought}</table><p>Fasteners: {e(FASTENERS)}.</p>
 <p>Hold-down: each end wall carries two 3 x 3 x 16 steel keys that enter the notches in the receiver's end faces; the walls land a drone at park, back off to open and drive in to seated (the arm v8 head pushes up to 118 N; the Overseer weighs 21.6 N, the Scout 4.9 N).</p>
-<p><b>Stand: FAILS with the arm v8; do not print the 15 longer mast.</b> {e(STAND_NOTE)}</p>"""
+<h2>Stand v2</h2><p>{e(STAND_NOTE)}</p>{stand_rows()}"""
 
 
-STAND_V = {"box_stand_cradle_keel": "v6 as printed (git 33cd639) with its cradle upstand sawn off at the bar top (W Z -181 as printed): 36.7 of 55.2 cm3; 15 lower for the hub 15 higher (Spark 13 Nov). FAILS with the arm v8 (parts/box_stand_mast/check.py)",
-           "box_stand_toe": "v7b as printed, uncut; 15 lower for the hub 15 higher (Spark 13 Nov). FAILS with the arm v8 on an uneven floor (parts/box_stand_mast/check.py)"}
-STAND_NOTE = ("Checked 14 Nov with the arm v8 on it (parts/box_stand_mast/check.py, hand beam checks, PCTG, gate 0.5 in every class): the stand FAILS and "
-              "the 15 longer mast is NOT to be printed. The arm v8 with its 11 bays and packs is 9.7 kg with its CG at W Y 129 (the v1 stand was "
-              "sized for 2.9 kg at Y 60): 15.2 N m standing on the mast's foot, 38.9 N m with the 106.6 N insert at the drone. Mast tube 0.77 "
-              "standing (sustained), 0.86 box handling; kb's tenon in the mast 1.12 / 1.27; the sawn keel at least 1.75 standing even on a "
-              "perfectly flat floor (the floor's reaction has to come up at Y 128..163, in front of the bars at Y 62, through a 20 x 40 bar); bars "
-              "1.22 and the toe 2.11 on an uneven floor. The mast also does not take the v8 stub: its flange's 4 M5 at r 38 on 45 deg sit at X "
-              "+-26.9, off the mast's 40 wide face (holes at X +-10, Z +-30 for stub v3). The cradle held the v1 demo's -90 bay module; in v8 "
-              "every bay is on the arm's ring, so that load is in the arm's 9.7 kg through the stub. Needed: a new stand (mast with the v8 stub's "
-              "face, a base bearing on the floor forward to about Y 250 as two rails at |X| 100 or more, where the ring leaves 37 to 76 mm over the "
-              "floor; no centre keel has the depth), engine parts from the loads in parts/box_stand_mast/feedback.md.")
+STAND_PIECES = [("box_stand2_mast", "stand v2: mast (the stub's face down to the foot)"),
+                ("box_stand2_base_r", "stand v2: base half, right (+X, under the PSU)"), ("box_stand2_base_l", "stand v2: base half, left"),
+                ("box_stand2_rail_r", "stand v2: rail, right"), ("box_stand2_rail_l", "stand v2: rail, left")]
+STAND_BOUGHT = [("M5 x 12 socket cap, 12.9 (stub to mast, from behind)", 3, "https://www.amazon.com/dp/B0953F8919"),
+                ("M5 x 16 socket cap, 12.9 (base halves up into the mast foot)", 8, "https://www.amazon.com/dp/B0BLNLH7YY"),
+                ("M5 x 60 socket cap, 12.9 (rail laps)", 8, "https://www.amazon.com/dp/B06XCMHM41"),
+                ("M5 nyloc, 304 (rail laps)", 8, "https://www.amazon.com/dp/B078NNFT93"),
+                ("M5 x D7 x L6 heat-set insert (8 in the mast foot, 3 in the stub flange)", 11, "https://www.amazon.com/dp/B0H142Y3BM")]
+STAND_NOTE = ("Stand v2 (14 Nov, parts/box_stand2_lib.py): five PCTG engine pieces and four TPU 95A feet, every piece in the 180 bed. The mast takes the "
+              "arm v8 stub's flange on its face at W Y 0 (bearing ring r 33..45, three M5 x 12 from behind into heat-set inserts in the flange) and "
+              "runs down behind the hub (X -42..40, Y -64..0, clear of the axle stepper and the PSU) to its foot at W Z -135, where two base halves "
+              "bolt up into it (8 M5 into inserts). Each half reaches out under the ring's sweep to its rail at |X| 120..175 (the sweep leaves 42 mm "
+              "over the floor at |X| 120), with the rear foot at (+-148, -44); the rail laps its cheek over Y 72..110 (4 M5 x 60 across) and runs "
+              "forward to the front foot at (+-148, 232). Four feet, so every floor reaction is known: flat floor and each foot lifted in turn "
+              "(uneven floor). Loads: the arm v8 with its 11 bays and packs (9.7 kg at W Y 129) and every case of parts/box_stand_mast/check.py, "
+              "the stand's own weight. Not for the arm stream to miss: the stub's 135 deg M5 hole sits 0.5 mm into the axle stepper behind "
+              "the flange (the mast uses the other three), and nothing fits on the flange's front face (2.0 mm to the bearings), so the stub's "
+              "holes need M5 heat-set inserts (5.5 to 6.4). The built demo stand (mast, kb, bars, keel, toe) is out: it fails with the arm v8.")
 
 
-def stand_versions(parts):
-    """the stand pieces as the hub-15-higher stand uses them (13 Nov)"""
-    for p in parts:
-        if p["id"] in STAND_V:
-            p["version"] = STAND_V[p["id"]]
+def stand_rows():
+    """the stand v2's pieces (status of each run) and its bought parts, for the appendix"""
+    from html import escape as e
+    rows = ""
+    for pid, name in STAND_PIECES:
+        rj = os.path.join(ROOT, "parts", pid, "result.json"); r = json.load(open(rj)) if os.path.exists(rj) else {}
+        st = r.get("strength") or {}; w = st.get("worst") if isinstance(st, dict) else None
+        sc = r.get("solid_ok")
+        rel = (r.get("print_stl") or {}).get("url", "") if isinstance(r.get("print_stl"), dict) else ""
+        rows += (f"<tr><td>{e(name)}</td><td>{e(str(r.get('status', 'not run yet')))}</td><td>{e(str(r.get('mass_g', '')))}</td><td>{e(str(w if w is not None else ''))}</td>"
+                 f"<td>{e(str(sc if sc is not None else ''))}</td><td>{('<a href=' + chr(34) + rel + chr(34) + '>' + e(pid) + '.stl</a>') if rel else ''}</td></tr>")
+    bought = "".join(f"<tr><td><a href=\"{u}\">{e(n)}</a></td><td>{q}</td></tr>" for n, q, u in STAND_BOUGHT)
+    return ("<table><tr><th>piece</th><th>run</th><th>g</th><th>worst</th><th>solid check</th><th>print file</th></tr>" + rows + "</table>"
+            "<p>Also: four TPU 95A feet (parts/box_stand2_foot, Ø36 x 5 with a Ø8 x 4 stud).</p>"
+            "<h3>Stand bought</h3><table><tr><th>part</th><th>qty</th></tr>" + bought + "</table>")
 
 
-def recut_stand(parts, arm_parts, clear=2.5):
-    """the stand's pieces cut back from the arm's bays where they cross (13 Nov: the arm v8 ring is R 127, was 113, and its -90 deg
-    bay sits in the built demo's cradle keel, 8.5 cm3): the bays' hull, grown by `clear`, out of the stand piece's mesh. Geometry
-    only: the keel's strength with that pocket is not checked here, and the printed demo keel needs the same pocket or a new keel."""
-    import manifold3d as mf
-    def load_w(p):
-        m = trimesh.load(os.path.join(ROOT, p["mesh"]), force="mesh"); m.apply_transform(np.array(p["pose"], float) if isinstance(p.get("pose"), list) else np.eye(4)); return m
-    bays = {}
-    for p in arm_parts:
-        if p.get("group") == "bays" or (p.get("kin") or {}).get("bay") is not None:
-            if p.get("mesh") and os.path.exists(os.path.join(ROOT, p["mesh"])):
-                bays.setdefault(p["name"].split(":")[0].strip(), []).append(load_w(p))          # "bay -90": its receiver, cartridge, pack and saddle together
-    done = []
-    for p in parts:
-        if not p["id"].startswith("box_stand_") or not p.get("mesh"):
-            continue
-        sm = load_w(p); cut = []
-        for key, ms in bays.items():
-            V = np.vstack([m.vertices for m in ms])
-            if (V.min(0) > sm.bounds[1]).any() or (V.max(0) < sm.bounds[0]).any():
-                continue
-            h = trimesh.convex.convex_hull(V); h = trimesh.convex.convex_hull(h.vertices + clear * h.vertex_normals)
-            cut.append((key, mf.Manifold(mf.Mesh(np.asarray(h.vertices, np.float32), np.asarray(h.faces, np.uint32)))))
-        if not cut:
-            continue
-        S = mf.Manifold(mf.Mesh(np.asarray(sm.vertices, np.float32), np.asarray(sm.faces, np.uint32)))
-        if S.is_empty():
-            print(f"recut_stand: {p['id']} is not a solid mesh, left as it is"); continue
-        v0 = S.volume(); keys = []
-        for key, c in cut:
-            if (S ^ c).volume() > 0.5:
-                S = S - c; keys.append(key)
-        if not keys:
-            continue
-        mm = S.to_mesh(); t = trimesh.Trimesh(np.asarray(mm.vert_properties)[:, :3], np.asarray(mm.tri_verts), process=False)
-        t.apply_transform(np.linalg.inv(np.array(p["pose"], float)) if isinstance(p.get("pose"), list) else np.eye(4)); t.export(os.path.join(ROOT, p["mesh"]))
-        p["version"] = f"{str(p.get('version') or '').split('; recut')[0]}; recut 13 Nov round the arm v8 {', '.join(keys)} ({(v0 - S.volume()) / 1000:.1f} cm3 off, {clear} clear; strength not rechecked)"
-        done.append((p["id"], keys, round((v0 - S.volume()) / 1000, 1)))
-    print(f"recut_stand: {done or 'nothing crosses a bay'}")
+def stand_parts():
+    """the stand v2: the five engine pieces (their result once CI has run them, else their drawn faces and room) and the four TPU feet"""
+    import importlib
+    import box_check as bc
+    sys.path.insert(0, ROOT)
+    L = importlib.import_module("parts.box_stand2_lib")
+    base = dict(role="structure", group="stand", material="PCTG", tag="C", owner="box stand v2", source="parts/box_stand2_lib.py")
+    out = []
+    for pid, name in STAND_PIECES:
+        p = importlib.import_module(f"parts.{pid}.part").setup(importlib.import_module(f"parts.{pid}.part").SPEC["h"])
+        drawn, cuts, env = p.drawn_m, p.cuts_m, p.env0_m
+        rj = os.path.join(ROOT, "parts", pid, "result.json")
+        done = os.path.exists(rj) and bool(json.load(open(rj)).get("print_stl"))
+        e = dict(base, id=pid, name=name, color="#b7bfc9", pose=np.eye(4).tolist(), version="v2 setup 14 Nov",
+                 note=f"engine part (parts/{pid}/part.py)")
+        if done:
+            e["mesh"] = f"parts/{pid}/part.stl"; out.append(e); continue
+        for suf, m, col, op, what in (("drawn", drawn - cuts, "#7f8a96", None, "drawn faces (what the stub, a bolt or the floor touches)"),
+                                      ("room", (env + drawn) - cuts, "#d5dbe2", 0.25, "room the engine may fill (what every clearance check uses)")):
+            out.append(dict(base, id=f"{pid}_{suf}", name=f"{name}: {what}", color=col, opacity=op, mesh=view(m, f"{pid}_{suf}", f"{pid}_{suf}"),
+                            pose=np.eye(4).tolist(), part=f"{pid}_{suf}", version="v2 14 Nov", note="shown until the run's mesh is in"))
+    fm = L.foot_mesh()
+    fv = view(fm, "box_stand2_foot", "box_stand2_foot")
+    for s in (1, -1):
+        for k, y in L.FEET.items():
+            P = np.eye(4); P[:3, 3] = [s * L.FOOT_X, y, L.FLOOR]
+            out.append(dict(base, id=f"box_stand2_foot_{'r' if s > 0 else 'l'}_{k}", name=f"stand v2: TPU 95A foot, {'right' if s > 0 else 'left'} {k}", color="#3a3a3a",
+                            material="TPU", mesh=fv, part="box_stand2_foot", pose=P.tolist(), version="v2 14 Nov",
+                            note="Ø36 x 5 pad, its Ø8 x 4 stud pressed into the piece's foot pad"))
+    return out
 
 
 def main(nox=None):
     out = os.path.join(ROOT, "systems", "box.assembly.json"); old = json.load(open(out))
     kept = lambda pre: [p for p in old["parts"] if p["id"].startswith(pre)]
-    parts = imported(nox) if nox else kept(("box_arm_", "box_stand_", "box_enclosure_"))
+    parts = [p for p in (imported(nox) if nox else kept(("box_arm_", "box_enclosure_"))) if not p["id"].startswith("box_stand")]
     new_arm = os.path.join(ROOT, "systems", "swap_arm.assembly.json")
     if os.path.exists(new_arm):                                  # the arm stream's system replaces the 3 Nov import (bays and packs with it)
         parts = [p for p in parts if not p["id"].startswith("box_arm_")]
@@ -308,16 +308,13 @@ def main(nox=None):
         for p in parts:
             if p["id"].startswith("box_arm_"):
                 p["version"] = "v7, superseded (the arm stream's systems/swap_arm.assembly.json replaces it when pushed)"
-    if os.path.exists(new_arm):
-        recut_stand(parts, json.load(open(new_arm))["parts"])
-    stand_versions(parts)
-    parts += funnel_parts() + kept("box_dome_") + latch_parts() + drone_parts()
+    parts += stand_parts() + funnel_parts() + kept("box_dome_") + latch_parts() + drone_parts()
     a = dict(old, parts=parts, appendix="systems/box.appendix.html", fps=8,
              note=("Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). "
                    "In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are "
                    "engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, "
                    + ("the swap arm from systems/swap_arm.assembly.json, " if os.path.exists(new_arm) else "the swap arm v7 at park with 11 bay receivers and two packs (3 Nov import, SUPERSEDED: the arm stream's new arm replaces it when pushed), ")
-                   + "the stand of the built demo with its keel and toe cut back from the arm v8 bays (they FAIL strength as cut: the note under the viewer), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. "
+                   + "the stand v2 (mast, two base halves, two rails: engine parts, shown as their drawn faces and room until their runs; four TPU feet), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. "
                    "Compatibility between the streams: tools/box_check.py, its result under the viewer."))
     import box_check
     json.dump(a, open(out, "w"), indent=0, ensure_ascii=False)
