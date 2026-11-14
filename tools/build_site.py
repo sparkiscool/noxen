@@ -278,7 +278,9 @@ def build(inline=False, offline=False):
             st, r = status(src)
             mesh = None
             cand = os.path.join(ROOT, "parts", src, "part.stl")
-            if st in ("done", "stale", "pending", "failed") and os.path.exists(cand):
+            if p.get("as_printed") and os.path.exists(os.path.join(ROOT, p["mesh"])):   # the version on the drone, not the design on main (14 Nov, Spark: the glued base)
+                mesh = os.path.join(ROOT, p["mesh"])
+            elif st in ("done", "stale", "pending", "failed") and os.path.exists(cand):
                 mesh = cand
             elif st == "placed" and "mesh" in p and os.path.exists(os.path.join(ROOT, p["mesh"])):
                 mesh = os.path.join(ROOT, p["mesh"])
