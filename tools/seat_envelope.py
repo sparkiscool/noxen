@@ -25,6 +25,8 @@ def parts_of(sysname):
             continue
         src = p.get("part", p.get("id"))
         cand = os.path.join(ROOT, "parts", src, "part.stl")
+        if p.get("as_printed") and p.get("mesh"):                          # the version on the drone (assembly "as_printed")
+            cand = os.path.join(ROOT, p["mesh"])
         if os.path.exists(cand):
             m = trimesh.load(cand, force="mesh")
         elif p.get("mesh") and os.path.exists(os.path.join(ROOT, p["mesh"])):

@@ -938,10 +938,11 @@
  },
  "audit_smoke": {
   "box_arm8_hub": "run 13 Nov: PASS, worst 0.353 (float limit), solid check PASS, 349.6 g",
-  "box_arm8_carriage": "rerun 13 Nov: PASS, worst 0.434 (insert off square), solid check PASS, 87.8 g (first run 0.528: the plate between the low wheel's axle and the spine, now 12.25 thick)",
-  "box_arm8_lift": "first run 0.532, rerun at 91 % of the room 0.510, both at the inside corner where the 30 deep yoke met the 20 deep plate beside the MGN block: budget was not the cause. Fixed: the yoke's back tapers out to the plate's back face over its last 12, printed upright (+z). Audit PASS, 0.284 solid, estimate 0.31; rerunning",
+  "box_arm8_carriage": "rerun 13 Nov: PASS, worst 0.434, solid check PASS, 87.8 g (first run 0.528: the plate between the low wheel's axle and the spine, now 12.25 thick)",
+  "box_arm8_lift": "third run 13 Nov: PASS, worst 0.407 (float limit), solid check PASS, 138.7 g. The first two (0.532, 0.510) peaked at the inside corner where the 30 deep yoke met the 20 deep plate beside the MGN block; the yoke's back now tapers into the plate and it prints upright",
   "cause": "both first runs came 12 to 15 % over the audit's estimate at budget (0.47, 0.46 -> 0.53): an estimate within 15 % of the limit is not a setup with margin",
-  "layout": "13 Nov: the first v8 layout could not pass in print (carriage 2.15 filled solid). Not the plug's side: pull-out acts at the tab line in either pose. The load went 70 across to three rods beside the hub, back through a 5 mm plate to the wheels, and out along printed booms. Now: the lift's guide is a bought MGN12H rail on the carriage's spine beside the wheel pair, the lever to the tab line is three o 6 carbon rods, and each room is cut to the load's way"
+  "layout": "13 Nov: the first v8 layout could not pass in print (carriage 2.15 filled solid). Not the plug's side: pull-out acts at the tab line in either pose. The load went 70 across to three rods beside the hub, back through a 5 mm plate to the wheels, and out along printed booms. Now: the lift's guide is a bought MGN12H rail on the carriage's spine beside the wheel pair, the lever to the tab line is three o 6 carbon rods, and each room is cut to the load's way",
+  "ci": "13 Nov 16:27 Pacific: an older workflow's results commit (835993a) put the lift's first failed result back over the passing one (338ba56); restored from 338ba56"
  },
  "solid_check": {
   "printed": "all 14 drawn prints PASS tools/solid_check.py (rail, unit body, blade, wheel, pilot, paddle, tie, pad, stub, post, detent arm, both saddles, link)",
@@ -1177,17 +1178,17 @@
   "hub": {
    "part": "box_arm8_hub",
    "setup": "parts/box_arm8_hub/part.py",
-   "state": "setup ready, not run"
+   "state": "run PASS: worst 0.353, 349.6 g"
   },
   "carriage": {
    "part": "box_arm8_carriage",
    "setup": "parts/box_arm8_carriage/part.py",
-   "state": "run PASS (0.434, 87.8 g)"
+   "state": "run PASS: worst 0.434, 87.83 g"
   },
   "lift": {
    "part": "box_arm8_lift",
    "setup": "parts/box_arm8_lift/part.py",
-   "state": "setup changed after two failed runs; rerunning"
+   "state": "run PASS: worst 0.407, 138.66 g"
   }
  },
  "bought": [
@@ -1244,7 +1245,7 @@
   },
   {
    "part": "carbon rod 6",
-   "spec": "o 6 x 500 solid pultruded carbon: three 117 long per head (the booms)",
+   "spec": "o 6 x 500 solid pultruded carbon: three 115 long per head (the booms)",
    "n": 2,
    "url": "https://www.amazon.com/clp/B0DK3LWS3V",
    "check": "take the round 6 x 500; 6.0 +- 0.1 in the 6.2 sockets"
@@ -1365,7 +1366,36 @@
   }
  ],
  "print_kit": {
-  "hold": "DO NOT PRINT YET: hub, carriage and lift are still running; a failed run can move a joint these pieces share (rail seat, wheel axles, sockets, MGN faces)",
+  "hold": "Released 13 Nov: hub, carriage and lift ran PASS (strength and solid check); the joints these pieces share did not move after their solid checks",
+  "generated": [
+   {
+    "part": "box_arm8_hub",
+    "count": 1,
+    "worst": 0.353,
+    "mass_g": 349.6,
+    "solid_check": "PASS",
+    "file": "python tools/print_mesh.py fetch box_arm8_hub",
+    "pose": "plate face down (+y)"
+   },
+   {
+    "part": "box_arm8_carriage",
+    "count": 2,
+    "worst": 0.434,
+    "mass_g": 87.83,
+    "solid_check": "PASS",
+    "file": "python tools/print_mesh.py fetch box_arm8_carriage",
+    "pose": "plate face down (-y)"
+   },
+   {
+    "part": "box_arm8_lift",
+    "count": 2,
+    "worst": 0.407,
+    "mass_g": 138.66,
+    "solid_check": "PASS",
+    "file": "python tools/print_mesh.py fetch box_arm8_lift",
+    "pose": "upright, the plate's lower end down (+z)"
+   }
+  ],
   "pieces": [
    {
     "file": "parts/box_arm8_rail/part.stl",
@@ -1509,16 +1539,14 @@
    }
   ],
   "generated_later": [
-   "parts/box_arm8_hub (1)",
-   "parts/box_arm8_carriage (2)",
-   "parts/box_arm8_lift (2): from their runs' print meshes (tools/print_mesh.py fetch), not part.stl"
+   "hub (1), carriage (2), lift (2): their runs' print meshes (tools/print_mesh.py fetch), not part.stl"
   ],
   "order": [
    "Stub side: press the two 6010-2RS into the hub's sleeve from the stub end, slide the hub on the stub, screw the post on; axle stepper and 16T pulley on the stub's ear, belt round the hub's ring, detent arm with its 623ZZ on its pivot.",
    "Each V rail on the hub's plate: two M5 x 10 into the heat-set M5 inserts.",
    "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench); three V wheels, two 625ZZ in each, on M5 x 20 axles, the third on its eccentric bush; roll it onto the V rail and set the bush until it runs without play.",
    "Each screw drive: stepper on its face plate (four M3), coupler, inner F8-16M, screw through the thrust wall, outer F8-16M, lock ring; the nut on the screw with its flange's two sides filed to the body.",
-   "Each lift: bond the three o 6 x 117 carbon rods in the yoke's sockets (resin through each port until it shows at the mouth), slide the two ties on and bond them at their stations (float bolt centres 45 hub side and 20 far side of the tab line); four M4 inserts in each pair of ties.",
+   "Each lift: bond the three o 6 x 115 carbon rods in the yoke's sockets (resin through each port until it shows at the mouth), slide the two ties on and bond them at their stations (float bolt centres 45 hub side and 20 far side of the tab line); four M4 inserts in each pair of ties.",
    "Yoke on the MGN block with four M3 x 12; the nut into its lug (flange in the slot); the return spring from the carriage to the rail's channel.",
    "Each grab unit: servo, paddle, blades on their two o 3 carbon rods with the four blade springs, pilots on their springs, an SS49E in each hall post, the eight TPU pads on their M3 jack screws.",
    "Grab unit on the ties: four M4 shoulder bolts down through the base with a PTFE and a steel washer under each head, a float spring round each bolt between tie and base.",

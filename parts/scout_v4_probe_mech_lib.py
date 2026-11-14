@@ -6,8 +6,9 @@ the root the cutter leaves. The 12 T pinion is undercut at x = 0 (z < 17), so th
 centre distance stays 20.8 (tools/scout_v4_shape.GEAR), the pinion's root thickens and its tip stays 0.25 m wide.
 Print clearances (Bambu A1 mini, PCTG, 0.4 nozzle, 0.16 layers; E until the coupon is read):
   - BACKLASH 0.15 a gear on the pitch circle (0.3 in the pair): FDM flanks are ~0.05-0.1 proud and the turret's bores ~0.1 off
-  - holes print ~0.1 under: the spool's bore 3.4 runs free on an M3 (2.9 real); the D bore 3.1 / 2.6 across the flat grips
-    the N20's 3.0 / 2.5 shaft (press, then a drop of CA); the MR63ZZ seats 6.05 for a light press of the 6.0 race
+  - holes print under: 14 Nov, Spark's coupon (M by coupon, tools/scout_v4_shape.COUPON_PICK): the spool's and the roller's bores
+    3.3 (A1) slide free on an M3; the D bore 3.3 / 2.8 across the flat (one past D3, which pressed too hard) on the N20's 3.0 / 2.5
+    shaft (press, then a drop of CA); no bearings (B dropped); the pair on 20.9 centres (G2, untried: bench)
   parts/scout_v4_probe_coupon prints every one of these in three sizes, and the pair on 20.8 / 20.9 / 21.0 centres."""
 import math, os, sys
 import numpy as np, trimesh

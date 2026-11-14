@@ -7,7 +7,7 @@ print/scout_v4_probe_spool.stl (print pose).
   the stack's clamp: one slot 1.2 wide (B 0.13 + the ribbon 0.6 + A 0.13 and 0.34 for the epoxy) 8 deep into the hub at 45 deg to
   its surface, backwards from the winding, across the full 19.6: the three ends go in together (B on the hub's side), epoxy
   (scuff the paint); the ribbon leaves the stack at the slot's end, radially in to r 5 and along the axis out of the drum hub's end
-  bore 3.4: the spool turns on the M3 x 40 axle (fixed in the turret's bosses, a nyloc on the -y side)
+  bore 3.3 (14 Nov coupon A1: slides on free): the spool turns on the M3 x 40 axle (fixed in the turret's bosses, a nyloc on the -y side)
 Print: +y face (the gear) down, no supports (the -y flange overhangs the hub by 1.9: bridged), 0.16 layers, 4 walls, 100 % infill."""
 import math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

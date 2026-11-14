@@ -2269,7 +2269,7 @@
 -88.0,
 88.0,
 -99.5,
--16.300000136097008
+-16.299999999999997
 ],
 "note": "engine part (parts/box_funnel_half_nose/part.py): the box is its drawn faces' extent until its run commits a mesh",
 "mesh": "parts/box_funnel_half_nose/part.stl"
@@ -2317,7 +2317,7 @@
 -88.0,
 88.0,
 -99.5,
--16.300000136097008
+-16.299999999999997
 ],
 "note": "engine part (parts/box_funnel_half_tail/part.py): the box is its drawn faces' extent until its run commits a mesh",
 "mesh": "parts/box_funnel_half_tail/part.stl"
@@ -4866,7 +4866,7 @@
 },
 {
 "id": "box_scout_v4_scout_v4_probe_roller",
-"name": "Scout: the coil's pressure roller (drawn: parts/scout_v4_probe_roller/make.py): a printed O10.1 x 19 tube on two MR63ZZ (uxcell B075CLH2WM), an M3 axle, two 4 x 0.5 x 15 springs (uxcell B076LQCBR1)",
+"name": "Scout: the coil's pressure roller (drawn: parts/scout_v4_probe_roller/make.py): a printed O8 x 19 tube turning on its M3 axle (bore 3.3, no bearings), two 4 x 0.5 x 15 springs (uxcell B076LQCBR1)",
 "role": "bought",
 "group": "landing: Scout",
 "color": "#7a8590",
@@ -8182,9 +8182,9 @@
 ]
 ],
 "material": "PETG",
-"tag": "E",
+"tag": "C",
 "owner": "overseer",
-"version": "v1 setup (29 Oct, Spark): one PETG piece under the bottom plate ending the 6 rear / left / right core ties and the 4 bay ties, clamped by the 8 arm bottom screws, 4 M3 inserts on z -8.1 for the future battery mechanism; run pending",
+"version": "AS PRINTED (Spark 14 Nov: the base on the drone, glued to the nodes): v7 of 31 Oct, commit dc223fe, 88.5 g PETG, 4 M3 x 5.7 inserts at (-60, +-25), (20, +-25) on z -8.1; the page and the funnel checks draw this mesh (as_printed). The design on main (parts/overseer_base, 10 Nov rerun, 191.8 g) is not printed.",
 "source": "systems/overseer.assembly.json, seated",
 "mesh": "parts/overseer_base/part.stl",
 "part": "box_overseer_overseer_base",

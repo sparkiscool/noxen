@@ -1,0 +1,343 @@
+{
+ "note": "Scout first, then Overseer. Bambu A1 mini, PCTG (PETG settings + 10 C) unless TPU. Counts are for one drone set (receiver side) and one cartridge.",
+ "files": [
+  {
+   "file": "print/latch7_cartridge.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_cartridge.stl",
+   "picture": "parts/latch7/kit/latch7_cartridge.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's -y face on the bed",
+   "size_on_bed_mm": [
+    40.0,
+    96.0,
+    45.6
+   ],
+   "fits_bed": true,
+   "supports": "yes: 1956 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
+   "material": "PCTG",
+   "grams_each": 39.3,
+   "note": "on the pack",
+   "used_by": {
+    "scout": 1
+   }
+  },
+  {
+   "file": "print/latch7_bolt.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_bolt.stl",
+   "picture": "parts/latch7/kit/latch7_bolt.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's +x face on the bed",
+   "size_on_bed_mm": [
+    42.0,
+    6.7,
+    16.4
+   ],
+   "fits_bed": true,
+   "supports": "yes: 32 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
+   "material": "PCTG",
+   "grams_each": 3.71,
+   "note": "both bolts are this one file (the second is turned half round)",
+   "used_by": {
+    "scout": 2
+   }
+  },
+  {
+   "file": "print/latch7_stop_bar.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_stop_bar.stl",
+   "picture": "parts/latch7/kit/latch7_stop_bar.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's +y face on the bed",
+   "size_on_bed_mm": [
+    22.0,
+    5.0,
+    2.0
+   ],
+   "fits_bed": true,
+   "supports": "none",
+   "material": "PCTG",
+   "grams_each": 0.15,
+   "note": "the same file for both packs",
+   "used_by": {
+    "scout": 1,
+    "overseer": 1
+   }
+  },
+  {
+   "file": "print/latch7_spring_pin.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_spring_pin.stl",
+   "picture": "parts/latch7/kit/latch7_spring_pin.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's +y face on the bed",
+   "size_on_bed_mm": [
+    2.0,
+    2.0,
+    7.0
+   ],
+   "fits_bed": true,
+   "supports": "none",
+   "material": "PCTG",
+   "grams_each": 0.03,
+   "note": "o 2.0 x 7, standing; the same file for both packs; print a few spare",
+   "used_by": {
+    "scout": 4,
+    "overseer": 4
+   }
+  },
+  {
+   "file": "print/latch7_plug_carrier.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_plug_carrier.stl",
+   "picture": "parts/latch7/kit/latch7_plug_carrier.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's +y face on the bed",
+   "size_on_bed_mm": [
+    63.1,
+    20.7,
+    20.3
+   ],
+   "fits_bed": true,
+   "supports": "yes: 258 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
+   "material": "PCTG",
+   "grams_each": 6.18,
+   "note": "with its two guide pegs",
+   "used_by": {
+    "scout": 1
+   }
+  },
+  {
+   "file": "print/latch7_plug_carrier_cap.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_plug_carrier_cap.stl",
+   "picture": "parts/latch7/kit/latch7_plug_carrier_cap.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's +y face on the bed",
+   "size_on_bed_mm": [
+    63.1,
+    20.0,
+    9.8
+   ],
+   "fits_bed": true,
+   "supports": "none",
+   "material": "PCTG",
+   "grams_each": 5.85,
+   "note": "",
+   "used_by": {
+    "scout": 1
+   }
+  },
+  {
+   "file": "print/latch7_seat_strip.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_seat_strip.stl",
+   "picture": "parts/latch7/kit/latch7_seat_strip.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's +y face on the bed",
+   "size_on_bed_mm": [
+    4.8,
+    26.0,
+    2.4
+   ],
+   "fits_bed": true,
+   "supports": "none",
+   "material": "TPU 95A",
+   "grams_each": 0.36,
+   "note": "the same file for both packs, two per receiver",
+   "used_by": {
+    "scout": 2,
+    "overseer": 2
+   }
+  },
+  {
+   "file": "print/latch7_plug_collar.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_plug_collar.stl",
+   "picture": "parts/latch7/kit/latch7_plug_collar.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's +y face on the bed",
+   "size_on_bed_mm": [
+    27.1,
+    12.5,
+    3.0
+   ],
+   "fits_bed": true,
+   "supports": "none",
+   "material": "PCTG",
+   "grams_each": 0.76,
+   "note": "WAITING on Spark's XT60W-M measurement (body 15.5 x 8.1 and its length without tabs, E from the Amass sheet): do not print yet",
+   "used_by": {
+    "scout": 1,
+    "overseer": 1
+   }
+  },
+  {
+   "file": "print/latch7_ov_cartridge.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_ov_cartridge.stl",
+   "picture": "parts/latch7/kit/latch7_ov_cartridge.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's -z face on the bed",
+   "size_on_bed_mm": [
+    55.0,
+    58.6,
+    174.0
+   ],
+   "fits_bed": true,
+   "supports": "yes: 4870 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
+   "material": "PCTG",
+   "grams_each": 101.46,
+   "note": "on the pack",
+   "used_by": {
+    "overseer": 1
+   }
+  },
+  {
+   "file": "print/latch7_ov_bolt.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_ov_bolt.stl",
+   "picture": "parts/latch7/kit/latch7_ov_bolt.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's +x face on the bed",
+   "size_on_bed_mm": [
+    42.0,
+    6.7,
+    23.9
+   ],
+   "fits_bed": true,
+   "supports": "yes: 32 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
+   "material": "PCTG",
+   "grams_each": 5.53,
+   "note": "both bolts are this one file (the second is turned half round)",
+   "used_by": {
+    "overseer": 2
+   }
+  },
+  {
+   "file": "print/latch7_ov_plug_carrier.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_ov_plug_carrier.stl",
+   "picture": "parts/latch7/kit/latch7_ov_plug_carrier.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's +y face on the bed",
+   "size_on_bed_mm": [
+    65.6,
+    20.7,
+    19.5
+   ],
+   "fits_bed": true,
+   "supports": "yes: 258 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
+   "material": "PCTG",
+   "grams_each": 6.16,
+   "note": "with its two guide pegs",
+   "used_by": {
+    "overseer": 1
+   }
+  },
+  {
+   "file": "print/latch7_ov_plug_carrier_cap.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_ov_plug_carrier_cap.stl",
+   "picture": "parts/latch7/kit/latch7_ov_plug_carrier_cap.png",
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "the part's +y face on the bed",
+   "size_on_bed_mm": [
+    65.6,
+    20.0,
+    10.7
+   ],
+   "fits_bed": true,
+   "supports": "none",
+   "material": "PCTG",
+   "grams_each": 8.07,
+   "note": "",
+   "used_by": {
+    "overseer": 1
+   }
+  }
+ ],
+ "waiting": [
+  "latch7_plug_collar"
+ ],
+ "assembly": {
+  "scout": {
+   "bought": [
+    {
+     "part": "latch spring",
+     "n": 4,
+     "spec": "compression, 304 stainless, wire 0.3, OD 3.0, free 30; four per cartridge (two in each bolt)",
+     "url": "https://www.amazon.com/PATIKIL-Compression-Stainless-Mechanical-Assortment/dp/B0DKCRCBV2",
+     "check": "on a kitchen scale: 1.7..2.2 N at 14.6 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)"
+    },
+    {
+     "part": "magnet",
+     "n": 2,
+     "spec": "o 2 x 2 N52, axial",
+     "url": "https://us.amazon.com/Cylinder-Magnets-2x2mm-Very-Small/dp/B08YPBKNTS"
+    },
+    {
+     "part": "XT60W pair",
+     "n": 1,
+     "spec": "Amass XT60W, male + female (Spark 10 Nov)",
+     "url": "https://www.amazon.com/dp/B0DZ288QD2",
+     "note": "female on the pack's lead, male in the collar and carrier"
+    }
+   ],
+   "cartridge": [
+    "1 press a magnet into each bolt's underside",
+    "2 push each bolt in through its wall hole from outside (the second turned half round)",
+    "3 drop the stop bar down across the rib into both bolts",
+    "4 four springs, a guide pin inside each, squeezed and dropped into the bolts' slots from above",
+    "5 pack down into the cartridge over them (the keeper lips snap over it); its XT60W-F into the keyed pocket at the lead end, two M3 set screws"
+   ],
+   "receiver": [
+    "6 (when the receiver's run has passed) the two TPU seat strips into their recesses under the deck, between their keys",
+    "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier, cap on",
+    "8 carrier and cap onto the lead-end bosses; the receiver's M3 mount bolts from below clamp them"
+   ],
+   "checked": "parts/latch7/result.json build.install: every step swept, 0 mm3"
+  },
+  "overseer": {
+   "bought": [
+    {
+     "part": "latch spring",
+     "n": 4,
+     "spec": "compression, 304 stainless, wire 0.3, OD 3.0, free 30; four per cartridge (two in each bolt)",
+     "url": "https://www.amazon.com/PATIKIL-Compression-Stainless-Mechanical-Assortment/dp/B0DKCRCBV2",
+     "check": "on a kitchen scale: 1.7..2.2 N at 14.6 long; fully closed it must be 9.0 long or less (E 0.127 N/mm, 28 coils)"
+    },
+    {
+     "part": "magnet",
+     "n": 2,
+     "spec": "o 2 x 2 N52, axial",
+     "url": "https://us.amazon.com/Cylinder-Magnets-2x2mm-Very-Small/dp/B08YPBKNTS"
+    },
+    {
+     "part": "XT60W pair",
+     "n": 1,
+     "spec": "Amass XT60W, male + female (Spark 10 Nov)",
+     "url": "https://www.amazon.com/dp/B0DZ288QD2",
+     "note": "female on the pack's lead, male in the collar and carrier"
+    }
+   ],
+   "cartridge": [
+    "1 press a magnet into each bolt's underside",
+    "2 push each bolt in through its wall hole from outside (the second turned half round)",
+    "3 drop the stop bar down across the rib into both bolts",
+    "4 four springs, a guide pin inside each, squeezed and dropped into the bolts' slots from above",
+    "5 pack down into the cartridge over them (the keeper lips snap over it); its XT60W-F into the keyed pocket at the lead end, two M3 set screws"
+   ],
+   "receiver": [
+    "6 (when the receiver's run has passed) the two TPU seat strips into their recesses under the deck, between their keys",
+    "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier, cap on",
+    "8 carrier and cap onto the lead-end bosses; the receiver's M3 mount bolts from below clamp them"
+   ],
+   "checked": "parts/latch7_overseer/result.json build.install: every step swept, 0 mm3"
+  }
+ },
+ "supersedes": [
+  "14 Nov (the Scout's plug 4.3 lower): print/latch7_cartridge.stl, print/latch7_plug_carrier.stl and print/latch7_plug_carrier_cap.stl replace the files of the same names sent 13 Nov (13:15 and 16:55 Pacific): do not print or use those three. Every other file is unchanged."
+ ]
+}

@@ -249,7 +249,7 @@
  "mass_g": 87.83,
  "watertight": true,
  "export": {
-  "faces_in": 40862,
+  "faces_in": 40858,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -259,7 +259,7 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 40862,
+  "faces": 40858,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -270,12 +270,12 @@
    "caps_split": 22,
    "caps_left": 0,
    "watertight": true,
-   "faces": 299738,
+   "faces": 299742,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 71410.9,
-  "exact_mm3": 71408.9
+  "volume_mm3": 71410.5,
+  "exact_mm3": 71408.8
  },
  "bodies": {
   "bodies_raw": 1,
@@ -283,7 +283,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 71408.9,
+ "volume_mm3": 71408.8,
  "drawn_g": 14.85,
  "export_cleanup": {
   "pitch": 0.25,
@@ -298,7 +298,7 @@
   {
    "estimate_gb": 3.27,
    "parts": {
-    "held": 0.46,
+    "held": 0.45,
     "gate": 0.64,
     "mesh": 2.17
    },
@@ -332,7 +332,7 @@
  ],
  "stl": "box_arm8_carriage.stl",
  "view_stl": "box_arm8_carriage_view.stl",
- "view_faces": 40862,
+ "view_faces": 40858,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -443,7 +443,7 @@
    "index": 0.331
   },
   "cavity": {
-   "last": 1.5359746340187075,
+   "last": 1.535959262305308,
    "ratio": 5.0,
    "T0": 17.197069782184144,
    "row": false
@@ -490,11 +490,11 @@
    "default"
   ]
  },
- "build_s": 51.1,
- "layout_s": 693,
- "peak_gb": 1.251736,
+ "build_s": 37.6,
+ "layout_s": 522,
+ "peak_gb": 1.243044,
  "memory": {
-  "estimate_gb": 1.6,
+  "estimate_gb": 1.59,
   "parts": {
    "held": 0.32,
    "factor": 0.5,
@@ -524,7 +524,7 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 1.18
+  "peak_it1_gb": 1.17
  },
  "early": {
   "rows": [
@@ -848,6 +848,12 @@
   },
   "drawn_thin": [],
   "drawn_walls": [],
+  "bed": {
+   "build": "-y",
+   "drawn_mm2": 0.0,
+   "room_mm2": 41.1,
+   "min_mm2": null
+  },
   "parity": [],
   "cases": 19,
   "supports": 1,
@@ -881,19 +887,19 @@
   }
  },
  "baseline": null,
- "total_s": 744,
+ "total_s": 560,
  "part_sha": "0e55cdfeec67",
  "lib_sha": "",
- "setup_sha": "fb35dc94a19a120e",
+ "setup_sha": "8af4458d878a8522",
  "max_worst": 0.5,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/box_arm8_carriage.stl",
-  "sha256": "ec019fe4d708c8677f564e868ba7d0659ca23ecec4dbcaa8c4cb15027a292ec6",
-  "bytes": 2043184,
-  "faces": 40862,
-  "view_faces": 40862,
-  "view_sha256": "ec019fe4d708c8677f564e868ba7d0659ca23ecec4dbcaa8c4cb15027a292ec6",
-  "at": "2026-11-13 22:40"
+  "sha256": "71e7d91bd6dd8fe0263dbc75f69e0414079f911ac8238d6b1b38748f540dcb7a",
+  "bytes": 2042984,
+  "faces": 40858,
+  "view_faces": 40858,
+  "view_sha256": "71e7d91bd6dd8fe0263dbc75f69e0414079f911ac8238d6b1b38748f540dcb7a",
+  "at": "2026-11-14 01:02"
  }
 }

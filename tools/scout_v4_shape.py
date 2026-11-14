@@ -82,18 +82,25 @@ HFOV, VFOV = math.radians(61.0 / 2), math.radians(50.0 / 2)   # Arducam 12MP aut
 # coupon (parts/scout_v4_probe_coupon) and reports e.g. "D2 B1 A3 G2 M1 T2 C2": set COUPON_PICK, rerun the drawn makes and the parts.
 COUPON = dict(
     D=((3.0, 2.5), (3.1, 2.6), (3.2, 2.7)),   # the pinion's D bore (diameter, across the flat) on the N20's 3.0 / 2.5 shaft: the one that presses on firm
-    B=(6.00, 6.05, 6.10),                     # the MR63ZZ's seat in the roller: the one the bearing presses into by thumb and stays
+    B=(6.00, 6.05, 6.10),                     # the MR63ZZ's seat in the roller (14 Nov: dropped, no bearings; kept as the printed coupon's record)
     A=(3.3, 3.4, 3.5),                        # the spool's bore on the M3 axle: the smallest that turns free with no wobble
     G=(20.8, 20.9, 21.0),                     # the gear pair's centres: the first that turns smoothly with no tight spot
     M=(14.0, 15.5, 17.0),                     # the spool's hub r; its mandrel is 0.9 of it (r 12.6 / 14.0 / 15.3: below 90 % of yield at the hub when the mandrel leaves no curl); the smallest that leaves no curl
     T=(25.4, 15.0, 12.7),                     # the blades' cup radius (a 19 mm blade: 1.8 / 3.4 / 4.3 deep): the narrowest throat the two blades and the ribbon pass with no binding
     C=(18.0, 20.0, 22.0),                     # the camera case's depth front to back without the lens: the narrowest gap the case drops into
 )
-COUPON_PICK = dict(D=2, B=2, A=2, G=1, M=1, T=2, C=2)   # 12 Nov: the drawn defaults until Spark reads the coupon
+COUPON_PICK = dict(D=(3.3, 2.8), A=1, G=2, M=1, T=1, C=(12.0, 18.0))   # 14 Nov, Spark printed the coupon (print-scout_v4_probe_coupon.stl, 0589981; M by coupon):
+# D1, D2 would not go on, D3 too hard to press home: one step past D3, 3.3 / 2.8 (printed holes come out small on the A1 mini). B: dropped, no
+# bearings (the roller turns on its M3 axle in an A1 bore, PCTG on steel). A: all three slide on free; A1 3.3, the snuggest, for the spool and
+# the roller. M: no curl on any mandrel; M1, hub r 14. T: all three pass; T1, the narrowest throat (R 25.4). C: the case fits all three gaps
+# (under ~18 deep; the listing gives none): the cradle holds it by the back plate's four M2s, nothing fits its depth, drawn for 12..18.
+# G: not yet tried (no spool / pinion printed): G2 20.9, 0.1 over the standard 20.8 for teeth that print fat; Spark checks the mesh on the bench.
+# A pick is a 1-based index into COUPON or an explicit size (a number or a tuple).
 
 
 def pick(k):
-    return COUPON[k][COUPON_PICK[k] - 1]
+    v = COUPON_PICK[k]
+    return COUPON[k][v - 1] if isinstance(v, int) else v
 
 
 BLADE_T = 0.13            # E: Topzone 3/4 in blade (B00ZMHXV4I, not listed); tape patents give 0.0045..0.0060 in (0.11..0.15); the margins are checked over 0.10..0.15
@@ -106,8 +113,12 @@ FIGHT = (BLADE_T + CABLE_T) * 2 * math.pi * 1.6  # A pays out this much more tha
 N20_STALL = 2.2 * 9.81 * 10                       # E: N20 6 V 100 rpm stall 2.2 kg cm, 0.67 A (Zbotic N20-6V-100 listing; 1.5..2.2 across vendors): 216 N mm at the shaft
 SPOOL_STALL = N20_STALL * 40 / 12 * 0.85          # 612 N mm at the spool through 40 / 12 (85 %): the turret's tape-tension case; the stroke needs 100..292 (t 0.10..0.15, R 12.7..25.4, mu 0.05..0.4)
 LENS_HALF = CUP_R - math.sqrt(CUP_R ** 2 - (19.0 / 2) ** 2) + BLADE_T + CABLE_T / 2 + 0.4   # half the lens's thickness along x (the cup's sag, a blade, half the ribbon, 0.4): 3.87 at T2
-CAM = dict(case=(1.5, 1.5 + pick("C")), side=36.0, lens=(1.5 + pick("C"), 3.0 + pick("C"), 6.0))   # the camera IN its metal case (Spark 9 Nov: kept on, the heat spreader; bracket off): 36 square (listing), depth: the coupon's C (20 E; no listing gives it)
-LENS_OFF = 3.0 + pick("C")                                        # the lens window ahead of the tilt axis
+CAM_DEPTH = pick("C")                                              # (12, 18): the coupon's C, the case is under ~18 deep; no listing gives it, Spark measures nothing
+CAM = dict(case=(1.5, 1.5 + CAM_DEPTH[1]), side=36.0, lens=(1.5 + CAM_DEPTH[1], 3.0 + CAM_DEPTH[1], 6.0), fit=0.45, wall=2.2, sleeve=CAM_DEPTH[0], lip=3.0)
+# 14 Nov (design chat: the case has no back holes, only one threaded side hole a side for its bracket): the cradle is a square sleeve round the
+# case's four sides (36 + 2 x 0.45 inside), its front rim's lip fixed at case[1] so the lens never moves with the depth; the sleeve runs 12 back
+# (the shallowest case), a deeper one stands out behind it to case[0]; the case's own side screws clamp it through a slot along each side
+LENS_OFF = 3.0 + CAM_DEPTH[1]                                     # the lens window ahead of the tilt axis: fixed by the lip, any depth
 PROBE_DX = 0.0                                                    # the whole probe (turret, mast, head) and RM moved along x to put the Scout's CG on the thrust centre
 MAST_X = pick("M") + 1.1 + PROBE_DX                                          # the mast's axis (x, 0): the stack's tangent off the wound spool (r 14..15.4, mean + half the stack), inside the roof's ring node
 REACH = 150.0                                                     # the mast's roll-out (9 Nov, Spark: "shorten the distance where it's as safe as possible"; was 300)
@@ -118,8 +129,8 @@ HEAD = dict(clip=14.0, plate=3.0, dx=-7.5, ay=-3.8, az=45.0, range=(-20.0, 90.0)
 # the probe's turret (9 Nov, Spark: "do the double blade ... make the design for the mast itself fully"): under the roof, where the FC sat
 BLADE_W = 19.0                                                    # tape blade width (9 Nov, Spark: "as safe as possible", 3/4 in; was 10): ~3.5x the fold moment (E)
 SPOOL = dict(c=(PROBE_DX, 41.0), r=pick("M") + 1.9, hub=pick("M"), y0=-11.7, y1=11.7)  # 9 Nov, the mast sims (tools/probe_mast_sim.py): hub O28 (was O20: von Mises 1574 MPa at r 10 opposite sense, 1283 at r 14), 1.6 turns of the stack (A, the 0.6 ribbon, B) to O30.8, O31.8 flanges, 23.4 wide; axis y at x 0, z 41 (its flanges 0.6 over the deck)
-ROLLER = dict(ang=-30.0, r=5.05, gap=0.0, w=19.0, F=(12.0, 7.8))  # the coil's pressure roller 30 deg before the exit (the sims: with the mast pushed, nothing but a friction lock holds the outer turn;
-                                                  # 8 N locks a 2.4 N push at mu 0.3): O10.1 printed tube on two MR63ZZ (10 Nov: O8 left 1.0 round their O6.05 seats; 2.0 now), an M3 axle in radial slots, two 4 x 0.5 x 15 springs, 12 N on the full coil, 7.8 empty
+ROLLER = dict(ang=-30.0, r=4.0, gap=0.0, w=19.0, F=(12.0, 7.8), bore=pick("A"), mu=0.25)   # the coil's pressure roller 30 deg before the exit (the sims: with the mast pushed, nothing but a friction lock holds the outer turn;
+                                                  # 8 N locks a 2.4 N push at mu 0.3). 14 Nov (coupon, no bearings): an O8 printed tube turning on its M3 axle in an A1 3.3 bore (2.35 wall), PCTG on steel mu 0.25 E (roller_drag()); the axle in radial slots, two 4 x 0.5 x 15 springs, 12 N on the full coil, 7.8 empty
 GEAR = dict(spool_t=40, pinion_t=12, m=0.8, y=(11.7, 14.7), c=pick("G"))      # printed spur pair, module 0.8, 40 / 12 on 20.8 centres: the N20 sits under the spool (9 Nov: outboard along +y it ran through the DS0 lug socket); ~1.5 s for the 150 mm, 3.3x its torque
 N20_FACE = GEAR["y"][0] - 2.9                                    # the N20's gearbox face (y): 2.9 short of the pinion, the turret's 2.6 face plate between (9 Nov audit: 1.6 was too thin)
 DRUM = dict(r=9.0, y0=-17.7, y1=-11.7)   # 10 Nov turret run 6: r 11 put the drum's ring in the head-first path (0.34); the 0.6 ribbon's 3.5 turns of room need r ~8.2                        # the drum on the spool's -y side: the camera cable's loose coil, 3.5 turns of room for the spool's ~2.2
@@ -345,8 +356,13 @@ def head_parts(split=False):
              box(ax - 21.2, ax + 11.6, sv + 6.0, sv + 8.5, az - 6.25, az + 6.25),    #   its mounting tabs (32.8 across, DORHEA listing)
              cyl_y(2.4, ax, az, w + 1.5, sv, 16)]                                     #   the spline
     fixed = [m.apply_translation([0, ay, 0]) for m in fixed] + [clip]
-    t = [box(-0.5, c["case"][0], -w, w, -h + 4.0, h - 4.0),                          # back plate (open in the middle for the cable plug)
-         box(-6.0, 14.0, -w, -h, -10.0, 10.0), box(-6.0, 14.0, h, w, -10.0, 10.0),   # the two side walls gripping the case (a TPU strap over its top)
+    f0, si, so = c["case"][1], h + c["fit"], h + c["fit"] + c["wall"]
+    sl = trimesh.util.concatenate([box(f0 - c["sleeve"], f0, -so, so, si, so), box(f0 - c["sleeve"], f0, -so, so, -so, -si),
+                                   box(f0 - c["sleeve"], f0, si, so, -si, si), box(f0 - c["sleeve"], f0, -so, -si, -si, si),
+                                   box(f0, f0 + 4.0, si - c["lip"], so, -si + c["lip"], so + 3.0), box(f0, f0 + 4.0, -so, -si + c["lip"], -si + c["lip"], so + 3.0),
+                                   box(f0, f0 + 4.0, -so, so, si - c["lip"], so + 3.0), box(f0 - c["sleeve"], f0, -so, so, so, so + 3.0)])   # 14 Nov: the sleeve, its lip (top and upper sides) and the generated room's reach over and ahead of it (parts/scout_v4_cradle env)
+    t = [sl,
+         box(-6.0, f0 - c["sleeve"] + 0.5, -w, -h, -10.0, 10.0), box(-6.0, f0 - c["sleeve"] + 0.5, h, w, -10.0, 10.0),   # the arms from the axis to the sleeve (generated: a sketch)
          cyl_y(7.0, 0.0, 0.0, w, w + 1.5),                                            # the SG90's horn, screwed to the +y wall
          cyl_y(1.5, 0.0, 0.0, -w - 4.0, -w, 12),                                      # idler: an M3 screw (-y) into the bracket's boss
          box(c["case"][0], c["case"][1], -h, h, -h, h),                               # the camera in its metal case
@@ -362,6 +378,18 @@ def head_parts(split=False):
         cradle.apply_transform(pose); cam.apply_transform(pose)
         return dict(head_frame=frame_, probe_servo=servo, cradle=cradle, probe_tilt=cam, probe_leds=led)
     return trimesh.util.concatenate(fixed), tilt, led
+
+
+def roller_drag(mu=None):
+    """14 Nov (no bearings): the roller's journal friction on its M3 axle, seen at the spool. The tube turns on the steel axle in its
+    A1 bore: torque mu F r_bore on the tube, a drag of that over the tube's r where it rolls on the coil, times the coil's r on the spool.
+    Against the stroke's 100..292 N mm (tools/probe_mast_sim.py stroke_case) and the N20 100 rpm through 40 / 12 at 85 %: 417..612 (E)"""
+    mu = ROLLER["mu"] if mu is None else mu
+    out = {}
+    for nm, F, rc in (("full", ROLLER["F"][0], SPOOL["hub"] + COIL), ("empty", ROLLER["F"][1], SPOOL["hub"] + 0.15)):
+        out[nm] = mu * F * ROLLER["bore"] / 2 / ROLLER["r"] * rc
+    need = 292.0 + max(out.values()); lo = N20_STALL * 1.5 / 2.2 * 40 / 12 * 0.85
+    return dict(drag=out, need=need, margin=(lo / need, SPOOL_STALL / need))
 
 
 def tilt_sweep():
@@ -545,6 +573,8 @@ def checks(meshes):
             if o.contains(meshes[k].vertices).any() or (meshes[k].is_watertight and meshes[k].contains(o.vertices).any()):
                 clash.append(f"{k} x cage {nm}")
     out["probe vs cage"] = ("clear" if not clash else "CLASH: " + ", ".join(clash), "every probe part against the cage's nodes, sockets and rods (parked)")
+    rd = roller_drag(); r4 = roller_drag(0.4)
+    out["roller drag"] = (f"{rd['drag']['full']:.1f} N mm at the spool (mu {ROLLER['mu']}; {r4['drag']['full']:.1f} at 0.4)", f"the O{2 * ROLLER['r']:.0f} roller on its M3 axle, no bearings: the stroke's worst 292 + it = {rd['need']:.0f} against the N20's 417..612, {rd['margin'][0]:.2f}..{rd['margin'][1]:.2f}x ({r4['margin'][0]:.2f}x at mu 0.4)")
     gap, hit = tilt_sweep()
     out["head tilt sweep"] = (f"clear, {gap} over the base plate" if gap > 0 and not hit else f"HITS at {hit} deg, gap {gap}", f"the cradle, camera and LED bars over {HEAD['range'][0]:.0f}..+{HEAD['range'][1]:.0f} deg")
     for nm in ("frame",):
@@ -650,9 +680,9 @@ def entries(meshes):
         add(f"blades_{k}", f"prop {k} (Gemfan Hurricane SL 5125, 3 blade)", "bought", "props", "#3b6ea8", 2.8, "listing", "a sketch of the three blades")
     add("probe_tilt", "probe camera: Arducam 12MP autofocus USB in its metal case (B0FLX58WKZ; bracket off)", "bought", "camera", "#1d5e3a", 45.0, "listing",
         f"nods with the cradle about the SG90's axis from {HEAD['range'][0]:.0f} to +{HEAD['range'][1]:.0f} deg; parked {math.degrees(TILT):.0f} deg up it is the front camera, lens ({LENS[0]:.0f}, 0, {LENS[2]:.0f}), "
-        "61 x 50 deg, autofocus 10 cm to inf, 1080p 30 live, 12 MP stills; the case is its heat spreader (Spark 9 Nov); 36 square, depth 20 E: measure")
+        "61 x 50 deg, autofocus 10 cm to inf, 1080p 30 live, 12 MP stills; the case is its heat spreader (Spark 9 Nov); 36 square, under ~18 deep (14 Nov coupon C: it fits the 18.6 gap), drawn 18; held in a sleeve by its own side screws, its front on the sleeve's lip, so its depth never matters")
     add("cradle", "probe camera cradle (generated, parts/scout_v4_cradle)", "structure", "camera", "#3c6e57", 2.5, "E",
-        "side pads, front lips and a back stop round the case, the horn's pad and the idler's insert; a TPU strap over the case (1 g); PCTG", "PCTG")
+        "a square sleeve round the case's four sides (36.9 inside), 12 long, open front and back, a lip on its front rim outside the lens, a slot along each side at mid-height through which the camera's own side screws (its bracket's, up to M3) clamp it wherever the holes are; any depth 12..18 (14 Nov, coupon C), the lens fixed by the lip; the horn's pad and the idler's insert; PCTG", "PCTG")
     add("probe_leds", "probe light: two 25 x 8 mm bars of Clearhill 5 V COB strip, 4000 K, CRI 90 (B0F1YPP6QS)", "bought", "camera", "#fff1b8", 0.5, "E",
         "stuck on the camera case's top and bottom fronts (the metal case is their heat sink; no fins), 25 mm is the strip's cut length; ~0.2 W a bar at 8 W/m; on the DRV8833's B channel, DC or PWM >= 20 kHz")
     add("probe_servo", "probe tilt servo: SG90 (DORHEA, B0DFKPVRC2) and its 470 uF capacitor", "bought", "camera", "#2f3b45", 10.0, "listing",
@@ -663,15 +693,15 @@ def entries(meshes):
         "side plates round the spool and the drum, the N20's cheeks, the roller's guides and spring pockets, the throat up to the head's seat, RM's rod sockets; TPU lip 1, wires 1 (E); PCTG", "PCTG")
     add("probe_spool", "probe spool with its 40 T gear (drawn: parts/scout_v4_probe_spool/make.py)", "structure", "camera", "#d08a1e", 21.0, "C",
         f"hub O28 between O31.8 flanges 19.6 apart, the 40 T gear (module 0.8, x -0.35, generated involute) outside the +y one, the drum's hub O8 outside the -y one; the stack (blade A outside, the 0.81 ribbon, blade B on the hub) wound 1.6 turns to O31.4 for the {REACH:.0f} mm; its three ends epoxied in one 1.4 slot at 45 deg into the hub, the ribbon on through the hub to the drum; turns on an M3 x 40; PCTG, gear face down", "PCTG")
-    add("probe_pinion", "probe pinion, 12 T, on the N20's 3 mm D shaft (drawn: parts/scout_v4_probe_pinion/make.py)", "structure", "camera", "#a85f10", 0.3, "C", "x +0.35 (no undercut), centres 20.8 from the spool's; D bore 3.1 / 2.6 pressed on with CA; PCTG", "PCTG")
+    add("probe_pinion", "probe pinion, 12 T, on the N20's 3 mm D shaft (drawn: parts/scout_v4_probe_pinion/make.py)", "structure", "camera", "#a85f10", 0.3, "C", f"x +0.35 (no undercut), centres {GEAR['c']} from the spool's (14 Nov: the coupon's G2, untried: check the mesh on the bench); D bore {pick('D')[0]} / {pick('D')[1]} (one past the coupon's D3) pressed on with CA; PCTG", "PCTG")
     add("probe_motor", "N20 6 V 100 rpm gear motor (B07MZH851L; replaces the 300 rpm B0BZDC951L)", "bought", "camera", "#8b8f96", 10.0, "E",
         "the same body: 37 long (can 17 x O12, 3 mm D shaft 10); under the spool and the drum facing +y, in a pocket through the deck; the coil's own unwind is ~100 N mm on the spool and winding in needs up to ~170 (sims): the 300 rpm stalls at ~140 through 40 / 12, the 100 rpm at ~420 (E); ~4.5 s for the 150; parked: the DRV8833 in brake, the head seated (the coil's push is ~35 N mm at the gearbox)")
     add("probe_drum", "the head's cable, coiled loosely in the drum", "bought", "camera", "#c96f2d", 3.0, "E",
         "a flat ribbon of 6 x 30 AWG PTFE wire (Remington 30KITSTRPTFE, B0722LL645; 0.81 thick, 4.9 wide (12 Nov: type E 30 AWG, OD 0.032 in, E), kapton-bound; the 26 AWG pair made it 1.2 and the blades' fight 17 mm): 5 V, GND, USB D+ / D- (side by side), the servo's signal, the LED bars' minus; the 470 uF at the servo covers its start; a JST ZH 1.5 mm 4-pin lead into the camera; up inside the lens on A, wound between the blades, its spool end through the hub into the drum's loose coil (3.5 turns of room for 1.6); the USB pair to the USB-C breakout on the Radxa")
     add("probe_feed", "the two blades from the spool up into the throat", "bought", "camera", "#b8902a", 8.8, "E",
         "two 19 mm (3/4 in) steel tape strips, 0.2 m each with 0.15 m used, cut from the Topzone 16 ft tape (B00ZMHXV4I; its case and spring not used), curves facing (~22 g/m, E); spool ends set in printed clamp slots with epoxy, tip ends with an O2.2 hole each for the head's M2s (a carbide bit or a punch: hardened steel); their mass is all here")
-    add("probe_roller", "the coil's pressure roller (drawn: parts/scout_v4_probe_roller/make.py): a printed O10.1 x 19 tube on two MR63ZZ (uxcell B075CLH2WM), an M3 axle, two 4 x 0.5 x 15 springs (uxcell B076LQCBR1)", "bought", "camera", "#7a8590", 2.5, "E",
-        "30 deg before the exit, its axle's ends in radial slots of the turret's walls, the two springs pushing it on the coil: 12 N full, 7.8 N empty (E: the springs' rate ~1.5 N/mm); the sims: a coil whose mast is pushed out lifts its outer turn (blossoms) unless something locks it; the roller's friction locks a push of up to 2.4 N (mu 0.3)")
+    add("probe_roller", f"the coil's pressure roller (drawn: parts/scout_v4_probe_roller/make.py): a printed O{2 * ROLLER['r']:.0f} x 19 tube turning on its M3 axle (bore {ROLLER['bore']}, no bearings), two 4 x 0.5 x 15 springs (uxcell B076LQCBR1)", "bought", "camera", "#7a8590", 2.5, "E",
+        f"30 deg before the exit, its axle's ends in radial slots of the turret's walls, the two springs pushing it on the coil: 12 N full, 7.8 N empty (E: the springs' rate ~1.5 N/mm); the sims: a coil whose mast is pushed out lifts its outer turn (blossoms) unless something locks it; the roller's friction locks a push of up to 2.4 N (mu 0.3); its axle's drag (PCTG on steel, mu 0.25 E) is ~{roller_drag()['drag']['full']:.0f} N mm at the spool, {roller_drag()['margin'][0]:.2f}x left on the N20 at the worst stroke")
     for k, col in (("a", "#e8c547"), ("b", "#b8902a")):
         add(f"probe_mast_{k}", f"probe mast, blade {k.upper()} (10 mm steel tape, curves facing)", "placeholder", "camera", col, 0.0, "E",
             f"drawn 1 mm long above the throat; the page's timeline rolls it out to {REACH:.0f} mm and back (tools/scout_v4_timeline.py). Its mass is in the feed's")
