@@ -466,7 +466,7 @@ def scout_feet(B):
 #      (gearmotors, tab slots: the side notches of 800061d could not be reached). The end faces carry only at their four corners: between them the end walls are 3 thick
 #      below the rail band, the lead end has the plug slot, the Scout's ends are clipped. Scout: in the end face of a block standing on each foot pad. Overseer: in the end
 #      face where the side wall runs out, outboard of the mount bolts (3.3 behind the end face at |x| 27.8: the notch starts at 30.5, 2.0 of wall to the bore)
-HOLD = dict(x1=34.0, ov_x0=30.5, y=(6.0, 10.0), depth=2.5, top=13.0, ov_len=12.0, tongue=dict(x=(30.9, 33.9), h_mm=3.0, proud_mm=2.0))
+HOLD = dict(x1=34.0, ov_x0=30.5, y=(6.0, 10.0), depth=2.5, top=13.0, ov_len=12.0, sc_len=12.0, tongue=dict(x=(30.9, 33.9), h_mm=3.0, proud_mm=2.0))
 #      tongue: a 3 x 3 steel square key (agreed with the funnel stream 13 Nov), flats up and down. A round O2.5 dowel was refused: a line on PCTG, 101 MPa Hertz at 27.7 N on 2.0 (PCTG 46)
 
 
@@ -475,7 +475,13 @@ def hold_down(B):
     g, r = B["g"], B["r"]; blocks, notches, where = [], [], []; zt = g["Z_T"]
     bolts = U(*[cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, 100.0) for bx, bz in r["MOUNT"]])
     if g["pack"] == "scout":
-        spans = [(1 if p_.bounding_box()[0] > 0 else -1, p_.bounding_box()[2], p_.bounding_box()[5], FOOT_PAD["x"][0], FOOT_PAD["x"][0]) for p_ in B["foot_pads"]]
+        bolts = bolts + U(*[cyl("y", bx, bz, bl.HEAD_R, -60.0, bl.HEAD_Y) for bx, bz in r["MOUNT"]])      # the Scout's mount bolts go in from below: head and driver sweep too (build check step 7)
+        # 14 Nov, run on 4d3d93cf: 0.64 across the layers at the lead notches' roots in the hold-down. The block was the foot pad's 6.0 long, 3.5 of it behind the 2.5 notch:
+        # the key's 27 N on the lip bent that 3.5 ligament across the layers. The block now runs HOLD sc_len in from the end face, as the Overseer's (0.375 there)
+        spans = []
+        for p_ in B["foot_pads"]:
+            bb = p_.bounding_box(); lead_ = (bb[2] + bb[5]) / 2 > zt
+            spans.append((1 if bb[0] > 0 else -1, bb[5] - HOLD["sc_len"] if lead_ else bb[2], bb[5] if lead_ else bb[2] + HOLD["sc_len"], FOOT_PAD["x"][0], FOOT_PAD["x"][0]))
     else:
         z0, z1 = r["Z_E0"] - r["END_T"], r["Z_E1"] + r["END_T"]
         spans = [(sx, za, zb, r["RF"] + WALL_RELIEF.get("overseer", 0.0), HOLD["ov_x0"]) for sx in (1, -1) for za, zb in ((z0, z0 + HOLD["ov_len"]), (z1 - HOLD["ov_len"], z1))]
