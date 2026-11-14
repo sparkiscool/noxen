@@ -1334,7 +1334,7 @@
    "receiver": 0.0,
    "cartridge": 0.0
   },
-  "rests_at_mm": -0.0,
+  "rests_at_mm": -0.01,
   "tab_line_at_seat_x": 0.0,
   "touches_at": {
    "x": [
@@ -1350,7 +1350,7 @@
     -44.3
    ]
   },
-  "pressed_0p3_in_mm3": 37.6,
+  "pressed_0p3_in_mm3": 21.8,
   "landing_mm3": {
    "worst": 0.0,
    "at": null,
@@ -1366,7 +1366,7 @@
   "free_play_mm": {
    "to_nose": 0.52,
    "to_tail": 0.52,
-   "across": 0.7
+   "across": 0.68
   },
   "ok": true
  },
@@ -1957,7 +1957,7 @@
    "index": 0.11,
    "note": "6 g of the drone on two; the key stands at least 6.7 out of the wall's 55 deg face (funnel stream)"
   },
-  "clearances_at_landing": "the notches are inside the receiver's outline: the funnel fit, its 65 landing states and the free play are unchanged. The end walls must park at least 2.5 mm further out than their seated gap while the drone lands and leaves (tongue 2.0 + 0.5), then drive in; seated, the receiver can sit 0.52 to the nose, 0.52 to the tail, 0.7 across before the funnel stops it"
+  "clearances_at_landing": "the notches are inside the receiver's outline: the funnel fit, its 65 landing states and the free play are unchanged. The end walls must park at least 2.5 mm further out than their seated gap while the drone lands and leaves (tongue 2.0 + 0.5), then drive in; seated, the receiver can sit 0.52 to the nose, 0.52 to the tail, 0.68 across before the funnel stops it"
  },
  "mass_g": {
   "latch7_carrier": 5.07,
@@ -3110,16 +3110,166 @@
    "source": "parts/latch7/make.py"
   }
  ],
+ "scout_keepout": {
+  "frame": "Scout v4 drone frame: x to the nose (the lead end), y left, z up; mm",
+  "pose_of_cartridge_coords": [
+   [
+    0.0,
+    0.0,
+    1.0,
+    -36.22
+   ],
+   [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    1.0,
+    0.0,
+    -44.5
+   ]
+  ],
+  "mount_plane_z": 9.6,
+  "tab_line_x": 6.65,
+  "mount_bolts_xy": [
+   [
+    -36.32,
+    -26.55
+   ],
+   [
+    -36.32,
+    26.55
+   ],
+   [
+    49.58,
+    -26.55
+   ],
+   [
+    49.58,
+    26.55
+   ]
+  ],
+  "notes": {
+   "receiver_room": "everything the receiver's run may fill (drawn + generated), bolt and pocket cuts out",
+   "cartridge_path_down": "the cartridge with its two bolts out, swept 150 straight down (hull): the swap path",
+   "plug_tabs": "the XT60W male in its collar with its solder tabs (E, Amass sheet): the tabs stand over the mount plane",
+   "leads_E": "12 over the tabs for the 12 AWG pair to turn (E, not drawn anywhere else)",
+   "tpu_skids": "the receiver's TPU edge skids: their own item, drop it if they go"
+  },
+  "items": {
+   "receiver_room": {
+    "mesh": "parts/latch7/view/keepout/receiver_room.stl",
+    "lo": [
+     -48.33,
+     -34.0,
+     -44.3
+    ],
+    "hi": [
+     63.08,
+     34.0,
+     9.6
+    ],
+    "mm3": 96971.4
+   },
+   "carrier_cap": {
+    "mesh": "parts/latch7/view/keepout/carrier_cap.stl",
+    "lo": [
+     38.93,
+     -31.55,
+     -10.4
+    ],
+    "hi": [
+     59.58,
+     31.55,
+     9.6
+    ],
+    "mm3": 8485.7
+   },
+   "cartridge_path_down": {
+    "mesh": "parts/latch7/view/keepout/cartridge_path_down.stl",
+    "lo": [
+     -36.22,
+     -23.3,
+     -194.5
+    ],
+    "hi": [
+     59.78,
+     23.3,
+     1.1
+    ],
+    "mm3": 802234.6
+   },
+   "plug_tabs": {
+    "mesh": "parts/latch7/view/keepout/plug_tabs.stl",
+    "lo": [
+     43.33,
+     -13.55,
+     -6.9
+    ],
+    "hi": [
+     55.83,
+     13.55,
+     13.4
+    ],
+    "mm3": 2445.7
+   },
+   "leads_E": {
+    "mesh": "parts/latch7/view/keepout/leads_E.stl",
+    "lo": [
+     43.33,
+     -13.55,
+     13.4
+    ],
+    "hi": [
+     55.83,
+     13.55,
+     25.4
+    ],
+    "mm3": 4065.0
+   },
+   "seat_strips": {
+    "mesh": "parts/latch7/view/keepout/seat_strips.stl",
+    "lo": [
+     -6.35,
+     -20.25,
+     1.1
+    ],
+    "hi": [
+     19.65,
+     20.25,
+     3.5
+    ],
+    "mm3": 599.0
+   },
+   "tpu_skids": {
+    "mesh": "parts/latch7/view/keepout/tpu_skids.stl",
+    "lo": [
+     -44.72,
+     -35.75,
+     -41.75
+    ],
+    "hi": [
+     65.28,
+     35.75,
+     -6.0
+    ],
+    "mm3": 6808.2
+   }
+  }
+ },
  "overseer": {
-  "swap_g": 766.5,
+  "swap_g": 767.2,
   "spring_over_inertia": 2.03,
   "lever": {
-   "xt60_from_tab_line_mm": 77.7,
-   "far_pads_at_mm": 80.6,
-   "lead_pads_at_mm": 79.4,
+   "xt60_from_tab_line_mm": 77.6,
+   "far_pads_at_mm": 80.7,
+   "lead_pads_at_mm": 79.3,
    "pull": {
-    "far_pads_N": 54.9,
-    "both_nubs_N": 119.4,
+    "far_pads_N": 54.8,
+    "both_nubs_N": 119.3,
     "per_nub_N": 59.7,
     "v6_assumed_per_nub_N": 32.3,
     "times_v6": 1.85
@@ -3132,9 +3282,9 @@
   },
   "at_the_real_pull": {
    "blade_pull": {
-    "N": 59.7,
-    "MPa": 2.15,
-    "index": 0.22
+    "N": 59.6,
+    "MPa": 2.14,
+    "index": 0.219
    },
    "nub_pull": {
     "N": 29.8,
@@ -3149,12 +3299,12 @@
    },
    "rib": {
     "XT60 pull 57 N + 1 g": {
-     "MPa": 1.97,
+     "MPa": 1.96,
      "index": 0.201
     },
     "cross wall carrying a rib end": {
      "MPa": 3.52,
-     "index": 0.361
+     "index": 0.36
     },
     "swap across 43.5 N": {
      "MPa": 1.98,
@@ -3182,7 +3332,7 @@
     "bar_shear_MPa": 0.67,
     "index": 0.203
    },
-   "worst_index": 0.361
+   "worst_index": 0.36
   },
   "hold": [
    {
@@ -3192,19 +3342,19 @@
     "wedge_x_N": 15.04,
     "draw_per_blade_N": 24.35,
     "pad_preload_N": 48.71,
-    "margin_pads_stay_down": 4.7,
+    "margin_pads_stay_down": 4.71,
     "worst_dir_lift": [
      -0.87,
      0.0,
      0.5
     ],
-    "margin_no_slip": 3.66,
+    "margin_no_slip": 3.65,
     "worst_dir_slip": [
      -1.0,
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 14.93,
+    "margin_pull_frictionless": 14.92,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.058
    },
@@ -3221,13 +3371,13 @@
      0.5,
      0.43
     ],
-    "margin_no_slip": 1.79,
+    "margin_no_slip": 1.78,
     "worst_dir_slip": [
      -0.87,
      0.5,
      0.0
     ],
-    "margin_pull_frictionless": 7.47,
+    "margin_pull_frictionless": 7.46,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.116
    },
@@ -3238,7 +3388,7 @@
     "wedge_x_N": 15.04,
     "draw_per_blade_N": 24.35,
     "pad_preload_N": 48.71,
-    "margin_pads_stay_down": 1.35,
+    "margin_pads_stay_down": 1.36,
     "worst_dir_lift": [
      -0.75,
      0.5,
@@ -3250,9 +3400,9 @@
      0.5,
      0.0
     ],
-    "margin_pull_frictionless": 4.98,
+    "margin_pull_frictionless": 4.97,
     "slip_x_mm": 0.0,
-    "pack_top_mm": 0.175
+    "pack_top_mm": 0.174
    },
    {
     "Fb": 25.0,
@@ -3261,7 +3411,7 @@
     "wedge_x_N": 20.04,
     "draw_per_blade_N": 32.45,
     "pad_preload_N": 64.9,
-    "margin_pads_stay_down": 6.27,
+    "margin_pads_stay_down": 6.28,
     "worst_dir_lift": [
      -0.87,
      0.0,
@@ -3273,7 +3423,7 @@
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 19.89,
+    "margin_pull_frictionless": 19.88,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.058
    },
@@ -3284,19 +3434,19 @@
     "wedge_x_N": 20.04,
     "draw_per_blade_N": 32.45,
     "pad_preload_N": 64.9,
-    "margin_pads_stay_down": 3.11,
+    "margin_pads_stay_down": 3.12,
     "worst_dir_lift": [
      -0.75,
      0.5,
      0.43
     ],
-    "margin_no_slip": 2.44,
+    "margin_no_slip": 2.43,
     "worst_dir_slip": [
      -1.0,
      0.0,
      0.0
     ],
-    "margin_pull_frictionless": 9.95,
+    "margin_pull_frictionless": 9.94,
     "slip_x_mm": 0.0,
     "pack_top_mm": 0.116
    },
@@ -3321,38 +3471,8 @@
     ],
     "margin_pull_frictionless": 6.63,
     "slip_x_mm": 0.0,
-    "pack_top_mm": 0.175
+    "pack_top_mm": 0.174
    }
   ]
- },
- "motion_collision": {
-  "frames": 787,
-  "duration_s": 32.8,
-  "fps": 24,
-  "limit_mm3": 0.05,
-  "worst_mm3": {
-   "cartridge / receiver": 0.0,
-   "slider p / receiver": 0.0,
-   "slider n / receiver": 0.0,
-   "blade p / receiver": 0.0,
-   "blade n / receiver": 0.0,
-   "heel deck / receiver": 0.0,
-   "cartridge / slider p": 0.0,
-   "cartridge / slider n": 0.0,
-   "slider p / slider n": 0.0,
-   "cartridge / blade p": 0.0,
-   "cartridge / blade n": 0.0,
-   "slider p / blade p": 0.0,
-   "slider n / blade n": 0.0,
-   "slider p / blade n": 0.0,
-   "slider n / blade p": 0.0,
-   "blade p / blade n": 0.0,
-   "cartridge / heel deck": 0.0,
-   "slider p / heel deck": 0.0,
-   "slider n / heel deck": 0.0
-  },
-  "at_s": {},
-  "max_mm3": 0.0,
-  "ok": true
  }
 }

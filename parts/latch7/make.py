@@ -835,6 +835,40 @@ def funnel_fit(B, step=4.0):
 OUT = {"scout": ("latch7", "latch7_"), "overseer": ("latch7_overseer", "latch7_ov_")}     # result folder, part folder prefix
 
 
+# ------------------------------------------------------------------ the Scout set's keep-out in the Scout v4 drone frame (design chat 14 Nov)
+SCOUT_V4 = dict(lead_bolt_x=49.58, path_down=150.0, lead_room=12.0)   # tools/scout_v4_shape.py REC_BOLTS + BX: the lead-end mount bolts at drone x 49.58, the tab line at +6.65
+#                                                                       (the funnel's seat frame has it at 0); lead_room E: the 12 AWG pair's bend over the plug's tabs
+
+
+def scout_keepout(B):
+    """What the Scout v4 frame, flow sensor and skid room must clear: each item a mesh in the DRONE frame (x nose = the lead end, y left, z up, the receiver's
+    top = the mount plane at z 9.6) under parts/latch7/view/keepout/, with its box. The skids are their own item (droppable)."""
+    from parts.latch7_recv_lib import bodies                         # the receiver's whole room (what its run may fill), not the drawn attachments
+    Bq, D, cuts, room = bodies("scout"); g, r = B["g"], B["r"]
+    T = to_seat(B).copy(); T[0, 3] += SCOUT_V4["lead_bolt_x"] - (max(z for x, z in r["MOUNT"]) + T[0, 3])
+    cart = B["cart"] + slider(g, 0, 1) + slider(g, 0, -1)
+    xb = B["male"].bounding_box(); top = xb[4]
+    items = dict(receiver_room=room - cuts, carrier_cap=U(B["carrier"], B["cap"]),
+                 cartridge_path_down=U(cart, cart.translate([0.0, -SCOUT_V4["path_down"], 0.0])).hull(),
+                 plug_tabs=B["male"], leads_E=box(xb[0], xb[3], top, top + SCOUT_V4["lead_room"], xb[2], xb[5]),
+                 seat_strips=B["strips"])
+    if B.get("rskids"): items["tpu_skids"] = U(*B["rskids"])
+    d = os.path.join(HERE, "view", "keepout"); os.makedirs(d, exist_ok=True); out = {}
+    for k, m in items.items():
+        m = m.transform(T); bb = [round(float(v), 2) for v in m.bounding_box()]
+        bl.tm(m).export(os.path.join(d, k + ".stl")); out[k] = dict(mesh=f"parts/latch7/view/keepout/{k}.stl", lo=bb[:3], hi=bb[3:], mm3=round(vol(m), 1))
+    return dict(frame="Scout v4 drone frame: x to the nose (the lead end), y left, z up; mm", pose_of_cartridge_coords=[[round(float(v), 3) for v in row] for row in T],
+                mount_plane_z=round(float(r["Y_M"] + T[2, 3]), 2), tab_line_x=round(float(g["Z_T"] + T[0, 3]), 2),
+                mount_bolts_xy=sorted([round(float(z + T[0, 3]), 2), round(float(x), 2)] for x, z in r["MOUNT"]),
+                notes=dict(receiver_room="everything the receiver's run may fill (drawn + generated), bolt and pocket cuts out",
+                           cartridge_path_down=f"the cartridge with its two bolts out, swept {SCOUT_V4['path_down']:g} straight down (hull): the swap path",
+                           plug_tabs="the XT60W male in its collar with its solder tabs (E, Amass sheet): the tabs stand over the mount plane",
+                           leads_E=f"{SCOUT_V4['lead_room']:g} over the tabs for the 12 AWG pair to turn (E, not drawn anywhere else)",
+                           tpu_skids="the receiver's TPU edge skids: their own item, drop it if they go"),
+                items=out)
+
+
+
 def save(B):
     g = B["g"]; pre = OUT[g["pack"]][1]
     out = {pre + "receiver": B["recv"], pre + "carrier": B["carrier"], pre + "carrier_cap": B["cap"], pre + "cartridge": B["cart"],
@@ -941,6 +975,7 @@ def main(pack="scout"):
     for p in pp:
         p["id"] = p["id"].replace("latch6", nm); p["version"] = "latch v7 (10 Nov)"; p["source"] = "parts/latch7/make.py"
     res["page_parts"] = pp
+    if pack == "scout": res["scout_keepout"] = scout_keepout(B)
     if pack == "scout":
         ov = build("overseer")
         res["overseer"] = dict(swap_g=round(ov["g"]["SWAP_M"], 1), spring_over_inertia=m6.spring_report(ov)["preload_over_inertia"], **strength(ov),
