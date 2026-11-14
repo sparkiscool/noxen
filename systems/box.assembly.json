@@ -4,256 +4,10 @@
 "readme_view": "iso",
 "artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
 "machine": "box",
-"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, the swap arm from systems/swap_arm.assembly.json, the stand of the built demo with its keel and toe cut back from the arm v8 bays (they FAIL strength as cut: the note under the viewer), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. Compatibility between the streams: tools/box_check.py, its result under the viewer.",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, the swap arm from systems/swap_arm.assembly.json, the stand v2 (mast, two base halves, two rails: engine parts, shown as their drawn faces and room until their runs; four TPU feet), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. Compatibility between the streams: tools/box_check.py, its result under the viewer.",
 "cg_ref": null,
 "timeline": "tools/landing_box.py:timeline",
 "parts": [
-{
-"id": "box_stand_mast",
-"name": "stand: mast",
-"role": "structure",
-"group": "stand",
-"color": "#b7bfc9",
-"mesh": "parts/box_stand_mast/part.stl",
-"pose": [
-[
-1.0,
-0.0,
--0.0,
-0.0
-],
-[
-0.0,
-1.0,
-0.0,
-1e-06
-],
-[
--0.0,
-0.0,
-1.0,
-2e-06
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"material": "PETG",
-"mass_g": null,
-"tag": "M",
-"owner": "box structure",
-"version": "v6; 15 longer (187, Spark 13 Nov: the hub 15 higher over the floor): reprint",
-"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
-"note": "print/box_mast_v6.stl"
-},
-{
-"id": "box_stand_cradle_keel",
-"name": "stand: cradle_keel",
-"role": "structure",
-"group": "stand",
-"color": "#b7bfc9",
-"mesh": "parts/box_stand_cradle_keel/part.stl",
-"pose": [
-[
-1.0,
-0.0,
--0.0,
--0.0
-],
-[
-0.0,
-1.0,
-0.0,
-7e-06
-],
-[
--0.0,
-0.0,
-1.0,
--15.000009
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"material": "PETG",
-"mass_g": null,
-"tag": "M",
-"owner": "box structure",
-"version": "v6 as printed (git 33cd639) with its cradle upstand sawn off at the bar top (W Z -181 as printed): 36.7 of 55.2 cm3; 15 lower for the hub 15 higher (Spark 13 Nov). FAILS with the arm v8 (parts/box_stand_mast/check.py)",
-"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
-"note": "print/box_cradle_keel_v6.stl"
-},
-{
-"id": "box_stand_kb",
-"name": "stand: kb",
-"role": "structure",
-"group": "stand",
-"color": "#b7bfc9",
-"mesh": "parts/box_stand_kb/part.stl",
-"pose": [
-[
-1.0,
-0.0,
--0.0,
--0.0
-],
-[
-0.0,
-1.0,
--0.0,
--2e-06
-],
-[
--0.0,
--0.0,
-1.0,
--14.999993
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"material": "PETG",
-"mass_g": null,
-"tag": "M",
-"owner": "box structure",
-"version": "v7b",
-"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
-"note": "print/box_kb_v7b.stl"
-},
-{
-"id": "box_stand_toe",
-"name": "stand: toe",
-"role": "structure",
-"group": "stand",
-"color": "#b7bfc9",
-"mesh": "parts/box_stand_toe/part.stl",
-"pose": [
-[
-1.0,
-0.0,
--0.0,
--0.0
-],
-[
-0.0,
-1.0,
--0.0,
--1.5e-05
-],
-[
--0.0,
--0.0,
-1.0,
--14.999989
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"material": "PETG",
-"mass_g": null,
-"tag": "M",
-"owner": "box structure",
-"version": "v7b as printed, uncut; 15 lower for the hub 15 higher (Spark 13 Nov). FAILS with the arm v8 on an uneven floor (parts/box_stand_mast/check.py)",
-"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
-"note": "print/box_toe_v7b.stl"
-},
-{
-"id": "box_stand_bara",
-"name": "stand: barA",
-"role": "structure",
-"group": "stand",
-"color": "#b7bfc9",
-"mesh": "parts/box_stand_bara/part.stl",
-"pose": [
-[
-1.0,
-0.0,
-0.0,
--0.0
-],
-[
-0.0,
-1.0,
--0.0,
--3e-06
-],
-[
-0.0,
--0.0,
-1.0,
--14.999992
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"material": "PETG",
-"mass_g": null,
-"tag": "M",
-"owner": "box structure",
-"version": "v8",
-"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
-"note": "print/box_bar_half_v8.stl"
-},
-{
-"id": "box_stand_barb",
-"name": "stand: barB",
-"role": "structure",
-"group": "stand",
-"color": "#b7bfc9",
-"mesh": "parts/box_stand_barb/part.stl",
-"pose": [
-[
--1.0,
-0.0,
--0.0,
--0.0
-],
-[
--0.0,
--1.0,
--0.0,
-108.000363
-],
-[
--0.0,
--0.0,
-1.0,
--14.999987
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"material": "PETG",
-"mass_g": null,
-"tag": "M",
-"owner": "box structure",
-"version": "v8",
-"source": "nox/box/box_structure.assembly.json (runs/box_system/v1/W)",
-"note": "print/box_bar_half_v8.stl"
-},
 {
 "id": "box_enclosure_psu_lrs_350_24",
 "name": "enclosure: PSU LRS-350-24",
@@ -2275,6 +2029,590 @@
 },
 "part": "box_arm8_bay_120_cart",
 "max_faces": 4000
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "PCTG",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_mast_drawn",
+"name": "stand v2: mast (the stub's face down to the foot): drawn faces (what the stub, a bolt or the floor touches)",
+"color": "#7f8a96",
+"opacity": null,
+"mesh": "parts/box_stand2_mast_drawn/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"part": "box_stand2_mast_drawn",
+"version": "v2 14 Nov",
+"note": "shown until the run's mesh is in"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "PCTG",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_mast_room",
+"name": "stand v2: mast (the stub's face down to the foot): room the engine may fill (what every clearance check uses)",
+"color": "#d5dbe2",
+"opacity": 0.25,
+"mesh": "parts/box_stand2_mast_room/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"part": "box_stand2_mast_room",
+"version": "v2 14 Nov",
+"note": "shown until the run's mesh is in"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "PCTG",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_base_r_drawn",
+"name": "stand v2: base half, right (+X, under the PSU): drawn faces (what the stub, a bolt or the floor touches)",
+"color": "#7f8a96",
+"opacity": null,
+"mesh": "parts/box_stand2_base_r_drawn/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"part": "box_stand2_base_r_drawn",
+"version": "v2 14 Nov",
+"note": "shown until the run's mesh is in"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "PCTG",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_base_r_room",
+"name": "stand v2: base half, right (+X, under the PSU): room the engine may fill (what every clearance check uses)",
+"color": "#d5dbe2",
+"opacity": 0.25,
+"mesh": "parts/box_stand2_base_r_room/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"part": "box_stand2_base_r_room",
+"version": "v2 14 Nov",
+"note": "shown until the run's mesh is in"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "PCTG",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_base_l_drawn",
+"name": "stand v2: base half, left: drawn faces (what the stub, a bolt or the floor touches)",
+"color": "#7f8a96",
+"opacity": null,
+"mesh": "parts/box_stand2_base_l_drawn/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"part": "box_stand2_base_l_drawn",
+"version": "v2 14 Nov",
+"note": "shown until the run's mesh is in"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "PCTG",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_base_l_room",
+"name": "stand v2: base half, left: room the engine may fill (what every clearance check uses)",
+"color": "#d5dbe2",
+"opacity": 0.25,
+"mesh": "parts/box_stand2_base_l_room/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"part": "box_stand2_base_l_room",
+"version": "v2 14 Nov",
+"note": "shown until the run's mesh is in"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "PCTG",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_rail_r_drawn",
+"name": "stand v2: rail, right: drawn faces (what the stub, a bolt or the floor touches)",
+"color": "#7f8a96",
+"opacity": null,
+"mesh": "parts/box_stand2_rail_r_drawn/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"part": "box_stand2_rail_r_drawn",
+"version": "v2 14 Nov",
+"note": "shown until the run's mesh is in"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "PCTG",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_rail_r_room",
+"name": "stand v2: rail, right: room the engine may fill (what every clearance check uses)",
+"color": "#d5dbe2",
+"opacity": 0.25,
+"mesh": "parts/box_stand2_rail_r_room/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"part": "box_stand2_rail_r_room",
+"version": "v2 14 Nov",
+"note": "shown until the run's mesh is in"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "PCTG",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_rail_l_drawn",
+"name": "stand v2: rail, left: drawn faces (what the stub, a bolt or the floor touches)",
+"color": "#7f8a96",
+"opacity": null,
+"mesh": "parts/box_stand2_rail_l_drawn/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"part": "box_stand2_rail_l_drawn",
+"version": "v2 14 Nov",
+"note": "shown until the run's mesh is in"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "PCTG",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_rail_l_room",
+"name": "stand v2: rail, left: room the engine may fill (what every clearance check uses)",
+"color": "#d5dbe2",
+"opacity": 0.25,
+"mesh": "parts/box_stand2_rail_l_room/part.stl",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+0.0
+],
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+0.0,
+0.0,
+1.0,
+0.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"part": "box_stand2_rail_l_room",
+"version": "v2 14 Nov",
+"note": "shown until the run's mesh is in"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "TPU",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_foot_r_rear",
+"name": "stand v2: TPU 95A foot, right rear",
+"color": "#3a3a3a",
+"mesh": "parts/box_stand2_foot/part.stl",
+"part": "box_stand2_foot",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+149.0
+],
+[
+0.0,
+1.0,
+0.0,
+-44.0
+],
+[
+0.0,
+0.0,
+1.0,
+-216.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"version": "v2 14 Nov",
+"note": "Ø36 x 5 pad, its Ø8 x 2.8 stud pressed into the piece's foot pad"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "TPU",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_foot_r_front",
+"name": "stand v2: TPU 95A foot, right front",
+"color": "#3a3a3a",
+"mesh": "parts/box_stand2_foot/part.stl",
+"part": "box_stand2_foot",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+149.0
+],
+[
+0.0,
+1.0,
+0.0,
+232.0
+],
+[
+0.0,
+0.0,
+1.0,
+-216.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"version": "v2 14 Nov",
+"note": "Ø36 x 5 pad, its Ø8 x 2.8 stud pressed into the piece's foot pad"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "TPU",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_foot_l_rear",
+"name": "stand v2: TPU 95A foot, left rear",
+"color": "#3a3a3a",
+"mesh": "parts/box_stand2_foot/part.stl",
+"part": "box_stand2_foot",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+-149.0
+],
+[
+0.0,
+1.0,
+0.0,
+-44.0
+],
+[
+0.0,
+0.0,
+1.0,
+-216.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"version": "v2 14 Nov",
+"note": "Ø36 x 5 pad, its Ø8 x 2.8 stud pressed into the piece's foot pad"
+},
+{
+"role": "structure",
+"group": "stand",
+"material": "TPU",
+"tag": "C",
+"owner": "box stand v2",
+"source": "parts/box_stand2_lib.py",
+"id": "box_stand2_foot_l_front",
+"name": "stand v2: TPU 95A foot, left front",
+"color": "#3a3a3a",
+"mesh": "parts/box_stand2_foot/part.stl",
+"part": "box_stand2_foot",
+"pose": [
+[
+1.0,
+0.0,
+0.0,
+-149.0
+],
+[
+0.0,
+1.0,
+0.0,
+232.0
+],
+[
+0.0,
+0.0,
+1.0,
+-216.0
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"version": "v2 14 Nov",
+"note": "Ø36 x 5 pad, its Ø8 x 2.8 stud pressed into the piece's foot pad"
 },
 {
 "role": "structure",
