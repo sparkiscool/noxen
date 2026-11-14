@@ -225,23 +225,26 @@ def appendix(chk):
 
 
 STAND_PIECES = [("box_stand2_mast", "stand v2: mast (the stub's face down to the foot)"),
-                ("box_stand2_base_r", "stand v2: base half, right (+X, under the PSU)"), ("box_stand2_base_l", "stand v2: base half, left"),
-                ("box_stand2_rail_r", "stand v2: rail, right"), ("box_stand2_rail_l", "stand v2: rail, left")]
+                ("box_stand2_yoke_r", "stand v2: yoke, right (+X, under the PSU)"), ("box_stand2_yoke_l", "stand v2: yoke, left"),
+                ("box_stand2_rear_r", "stand v2: rear rail, right"), ("box_stand2_rear_l", "stand v2: rear rail, left"),
+                ("box_stand2_rail_r", "stand v2: front rail, right"), ("box_stand2_rail_l", "stand v2: front rail, left")]
 STAND_BOUGHT = [("M5 x 16 socket cap, 12.9 (3 stub to mast from behind, 8 base halves up into the mast foot)", 11, "https://www.amazon.com/dp/B0BLNLH7YY"),
                 ("M5 x 15 x 1.2 washer, 304 (under the three stub bolts' heads)", 3, "https://www.amazon.com/dp/B0DX6TD1Q7"),
-                ("M5 x 60 socket cap, 12.9 (rail laps)", 8, "https://www.amazon.com/dp/B06XCMHM41"),
-                ("M5 nyloc, 304 (rail laps)", 8, "https://www.amazon.com/dp/B078NNFT93"),
-                ("M5 x D7 x L6 heat-set insert (8 in the mast foot, 3 in the stub flange)", 11, "https://www.amazon.com/dp/B0H142Y3BM")]
-STAND_NOTE = ("Stand v2 (14 Nov, parts/box_stand2_lib.py): five PCTG engine pieces and four TPU 95A feet, every piece in the 180 bed. The mast takes the "
-              "arm v8 stub's flange on its face at W Y 0 (bearing ring r 33..45, three M5 x 16 on Ø15 washers from behind into heat-set inserts in the flange) and "
-              "runs down behind the hub (X -42..40, Y -64..0, clear of the axle stepper and the PSU) to its foot at W Z -135, where two base halves "
-              "bolt up into it (8 M5 into inserts). Each half reaches out under the ring's sweep to its rail at |X| 120..177.5 (the sweep leaves 42 mm "
-              "over the floor at |X| 120), with the rear foot at (+-149, -44); the rail laps its cheek over Y 72..110 (4 M5 x 60 across) and runs "
-              "forward to the front foot at (+-149, 232). Four feet, so every floor reaction is known: flat floor and each foot lifted in turn "
-              "(uneven floor). Loads: the arm v8 with its 11 bays and packs (9.7 kg at W Y 129) and every case of parts/box_stand_mast/check.py, "
-              "the stand's own weight. Not for the arm stream to miss: the stub's 135 deg M5 hole sits 0.5 mm into the axle stepper behind "
-              "the flange (the mast uses the other three), and nothing fits on the flange's front face (2.0 mm to the bearings), so the stub's "
-              "holes need M5 heat-set inserts (5.5 to 6.4). The built demo stand (mast, kb, bars, keel, toe) is out: it fails with the arm v8.")
+                ("M5 x 60 socket cap, 12.9 (rear rails into the yokes, from outboard)", 10, "https://www.amazon.com/dp/B06XCMHM41"),
+                ("M5 x 30 hex head bolt, DIN 933, A2-70 (rail splices)", 8, "https://www.amazon.com/dp/B07K4DSQLB"),
+                ("M5 nyloc, 304 (rail splices)", 8, "https://www.amazon.com/dp/B078NNFT93"),
+                ("M5 x D7 x L6 heat-set insert (8 in the mast foot, 10 in the yokes, 3 in the stub flange)", 21, "https://www.amazon.com/dp/B0H142Y3BM")]
+STAND_NOTE = ("Stand v2 (14 Nov, parts/box_stand2_lib.py, parts/box_stand2_frame_lib.py): seven PCTG engine pieces and four TPU 95A feet, every piece in the "
+              "180 bed. The mast takes the arm v8 stub's flange on its face at W Y 0 (bearing on the face ring r 33..45, three M5 x 16 on Ø15 washers "
+              "from behind into heat-set inserts in the flange) and runs down behind the hub (X -42..40, Y -64..0, clear of the axle stepper and the "
+              "PSU) to its foot at W Z -135, where the two yokes bolt up into it (8 M5 into inserts). Each yoke reaches out under the ring's sweep "
+              "to its rear rail at |X| 120..177.5 (the sweep leaves 42 mm over the floor at |X| 120; 5 M5 x 60 from the rail's outer face into "
+              "inserts in the yoke); the rear rail carries the rear foot at (+-149, -44) to a butt splice at Y 110 (4 M5 x 30 hex bolts, nuts "
+              "turned through side windows), the front rail on to the front foot at (+-149, 232). Four feet, so every floor reaction is known: flat "
+              "floor and each foot lifted in turn (uneven floor). Loads: the arm v8 with its 11 bays and packs (9.7 kg at W Y 129) and every case "
+              "of parts/box_stand_mast/check.py, the stand's own weight. For the arm stream: the stub's 135 deg M5 hole sits 0.5 mm into the axle "
+              "stepper behind the flange (the mast uses the other three), and nothing fits on the flange's front face (2.0 mm to the bearings), so "
+              "the stub's holes need M5 heat-set inserts (5.5 to 6.4). The built demo stand (mast, kb, bars, keel, toe) is out: it fails with the arm v8.")
 
 
 def stand_rows():
