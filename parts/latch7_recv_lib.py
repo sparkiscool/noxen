@@ -205,8 +205,15 @@ def setup_for(pack, name):
         for en in ("tail", "lead"):
             under = [D[f"foot {i}"] ^ box(*sorted((sg_ * tx[0], sg_ * tx[1])), bl.Y_RB - 1.0, bl.Y_RB + 2.0, -500, 500) for i, w in enumerate(B["hold_where"]) if w["corner"].endswith(en) for sg_ in ((1 if w["x"][0] > 0 else -1),)]
             p.load_multi(f"landing 6 g on the {en} wall's two tongues", [(R(u_), V((0, 6 * Wd / 2, 0))) for u_ in under], cls="flight")
-        p.load_multi(f"hold-down: the head's {A['stall_N']:.0f} N up on the seats, held by the funnel's four end-wall tongues",
-                     [(R(D[f"seat {sn[s]}"]), V((0, A["stall_N"] / 2, 0))) for s in (1, -1)] + [(R(f_), V((0, -Fh, 0))) for f_ in floors], cls="flight")
+        if pack == "scout":      # 14 Nov: the head's every-swap push is the commanded over-travel's (over_N, flight); its 118 N limit is the arm's own misuse case
+            Fo = (A["over_N"] - Wd) / len(feet)                # (parts/box_arm8_lib.py: "insert at the float limit", misuse). The Overseer keeps the 118 N as flight: stricter, and it passes it
+            p.load_multi(f"hold-down: the head's every-swap {A['over_N']:.1f} N up on the seats, held by the funnel's four end-wall tongues",
+                         [(R(D[f"seat {sn[s]}"]), V((0, A["over_N"] / 2, 0))) for s in (1, -1)] + [(R(f_), V((0, -Fo, 0))) for f_ in floors], cls="flight")
+            p.load_multi(f"hold-down at the head's limit {A['stall_N']:.0f} N (fault), held by the funnel's four end-wall tongues",
+                         [(R(D[f"seat {sn[s]}"]), V((0, A["stall_N"] / 2, 0))) for s in (1, -1)] + [(R(f_), V((0, -Fh, 0))) for f_ in floors], cls="misuse")
+        else:
+            p.load_multi(f"hold-down: the head's {A['stall_N']:.0f} N up on the seats, held by the funnel's four end-wall tongues",
+                         [(R(D[f"seat {sn[s]}"]), V((0, A["stall_N"] / 2, 0))) for s in (1, -1)] + [(R(f_), V((0, -Fh, 0))) for f_ in floors], cls="flight")
         pad = lambda f_: f_ ^ box(-200, 200, bl.Y_RB - 1, bl.Y_RB + 4.0, -500, 500)
         p.load_multi("landing 6 g on the four feet (funnel)", [(R(pad(f_)), V((0, 6 * Wd / 4, 0))) for f_ in feet], cls="flight")
         p.load_multi(f"XT60 pull-out {A['xt60_pull_N']:.0f} N + 1 g on the four feet", [(R(pad(f_)), V((0, (A["xt60_pull_N"] + Wd) / 4, 0))) for f_ in feet], cls="flight")
