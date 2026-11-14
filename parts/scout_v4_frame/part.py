@@ -41,7 +41,10 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of
                                       check_collars, rigid_split, SockDown, SockDown6, BraceSock, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
                                       M25_INS, BOSS_R, DIRS14, FLIGHT)
 
-SPEC = dict(h=2.0, gen_cm3=100.0, max_worst=0.3)   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
+SPEC = dict(h=2.0, gen_cm3=130.0, max_worst=0.3)
+# 14 Nov, the fold of the bolt forks (rounds 7 / 7b, run of 8f97d87, scout_v4_frame_vl): 189.3 g, solid PASS, worst 0.211 (6 g landing on the
+# nose bolts only), every motor case <= 0.20 in-layer / 0.17 across; latch v7's keep-out cut, the flow sensor forward, the boards on the grid.
+# Rounds 1-6 (12-13 Nov) on the D / B cage: 0.46-0.83 from 150 g to 300 g, BT-TB's 550 N climb over the receiver's tail edge the floor   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
 # 10 Nov (the NODES stream's socket-depth rule, units_lib.socket_depth): DN / DT 13.5 and BN / BT 11.5 deep (their 645 / 528 N), taken
 # behind the standard floor (the mouths stay inside the 180; those 4 rods 3.5 / 1.5 longer), DS / BS 7.0 (their mouths 3 nearer).
 # 10 Nov, run 186 (60 cm3, 18 % of the room): FAIL 1.515 (BN-NB 528 N), 117 g; the result read what the room filled solid thinned
@@ -63,14 +66,14 @@ POD_Z0 = DZ1 - 12.0                                 # 12 Nov (the design chat: <
 ARM_Z0 = POD_Z0 = DZ1 - 16.0                        # 13 Nov (variant vb of the round va / vb / vc): a flat 16 deep band, root to pod: 159.0 g, solid PASS, worst 0.59
                                                    # (BS0 compression across), every motor case <= 0.44, the engine's hold kept; the 12 band (va) 0.81 and the haunch at
                                                    # gen 130 (vc) 0.46 at 196 g. Was a haunch to z 6 at the root (0.83 across where its bottom chord met the body)
-LATCH_V7 = False                                   # 14 Nov (the swap design chat): latch v7's Scout set (parts/latch7/result.json "scout_keepout": its receiver
+LATCH_V7 = True                                    # 14 Nov (the swap design chat): latch v7's Scout set (parts/latch7/result.json "scout_keepout": its receiver
                                                    # room, carrier and cap, the cartridge's path down, the lowered plug's tabs and its leads out the lead end) as
                                                    # the frame's keep-out in place of the receiver v3 box; the receiver's room x -48.3..63.1
 FLOW_LO = None                                     # the flow sensor's low corner (x, z) when moved (it is 16 x 22.6 x 6.5 turned): None = its placed mesh
-LANDING_ONE_END = False                            # the box's keys can hold one end only while a Scout slides down an end wall: 6 g on the nose bolts / the tail bolts
+LANDING_ONE_END = True                             # the box's keys can hold one end only while a Scout slides down an end wall: 6 g on the nose bolts / the tail bolts
 BRACES, BRACE_IN, BRACE_LO, BRACE_ROOM = False, 20.0, (42.0, 42.0, -8.0), 9.6   # the under-arm braces (off by default): the upper socket BRACE_IN
                                                    # inboard of the motor along the arm at the room's bottom, the lower at (+-x, +-y, z); room r round the rod
-END_NODES, SIDE_NODES, TUBE_NODES = ("DN", "BN", "DT", "BT"), ("DS0", "BS0", "DS1", "BS1"), ()   # the frame's end sockets; those holding a 6 mm tube (6.2 bore, units_lib.SockDown6)
+END_NODES, SIDE_NODES, TUBE_NODES = ("BN0", "BN1", "BT0", "BT1"), ("SA0", "SB0", "SA1", "SB1"), ()   # the frame's end sockets; those holding a 6 mm tube (6.2 bore, units_lib.SockDown6)
 REC_SUPPORT = "insert"                              # 13 Nov round 5 (insert at 170 / 185 / 200: 246.7 / 265.5 / 284.2 g, 0.306 / 0.308 / 0.281)
                                                    # the battery bolts' support: "face" the boss's clamped bottom 1.5; "insert" with the insert's 6 mm
                                                    # bore lining (13 Nov: BT-TB's floor sits 3.6 over the face region's top, by the tail boss)

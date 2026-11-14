@@ -143,21 +143,22 @@ FLAT = HUB + R_KEEP + KEEP                       # 155.0: the ring's flats
 CH_LINE = 2 * HUB + (R_KEEP + KEEP) * math.sqrt(2)   # 262.7: the corner chamfers |x| + |y| = CH_LINE
 ZR, ZB, XR = 61.0, 12.0, 130.0                    # ring and flat roof, the bottom nodes, the roof's nose / tail apex
 ZR = max(ZR, Z_PROP + Z_SWEEP + 13.0)
+ZF = 2.7                                         # the bottom nodes on the bolt forks (14 Nov: seat_check --descent with their real meshes, 0 crossings)
 YC = CH_LINE - FLAT                              # 107.7: where a flat meets a chamfer
-BS_X = 60.0                                      # 12 Nov: BS0 / BS1 in the nose block's corners (were x 0, mid-way along the receiver: the frame could anchor
-                                                 # their 175 N only by bending a 106 mm bar or a hanger across its layers; here the block holds them in its layers).
-                                                 # The D / B pair to S0 keeps its 28.7 depth and spreads 60 in x; BS's rod 117 -> 131
+FORK_X = (49.58, -36.35)                         # 14 Nov (the bolt forks): the side forks' sockets at the receiver bolts' x (REC_BOLTS + BX, checked below)
 NODES = {
     "R0": (FLAT, YC, ZR), "P1": (YC, FLAT, ZR), "P2": (-YC, FLAT, ZR), "P3": (-FLAT, YC, ZR),                               # the ring's eight corners (left half, nose -> tail)
     "P4": (-FLAT, -YC, ZR), "P5": (-YC, -FLAT, ZR), "P6": (YC, -FLAT, ZR), "R7": (FLAT, -YC, ZR),                           # right half
     "RF": (XR, 0, ZR), "RM": (PROBE_DX, 0, ZR), "RB": (-XR, 0, ZR), "RS0": (0.0, XR, ZR), "RS1": (0.0, -XR, ZR),            # the flat roof: a cross from RM to four apexes 25 in from the ring (9 Nov: the same on all four sides)                                                              # the flat roof's spine
-    "TB": (-FLAT, 0, ZB), "S0": (0.0, FLAT, ZB), "S1": (0.0, -FLAT, ZB),                                                    # the bottom nodes in the flats' planes
-    "NB": (FLAT, 0, ZB),                                                                                                     # the nose node: on a rod triangle to the deck's nose end and the nose bay (9 Nov: was a solid stub of the base, there for the old front camera)
-    "DS0": (0.0, 40.0, 19.9), "BS0": (BS_X, 40.0, -8.8), "DS1": (0.0, -40.0, 19.9), "BS1": (BS_X, -40.0, -8.8),               # 9 Nov one body (printed deck-top down): DS's collar top on the bed (24.5), BS's crown (down in print) over the funnel's y walls           # (9 Nov: 33.8 apart, so the two rods to S0 / S1 are 17 deg apart and their sockets stay a node; DS under the discs' 27.7)            # sockets on the deck's side lugs (PRINTED)
-    "DN": (75.5, 0, 19.9), "BN": (75.5, 0, 2.7),                                                                           # 9 Nov one body: the collars (13 toward NB, crowns down) end at x 89.2, inside the A1 mini's 180; BN's crown (down in print) on the funnel's -2.3                                                                            # two sockets on the nose bay's front face, 62 mm rods to NB (PRINTED; DN on the deck's nose end, 95 mm, read 1.1 x Euler nose-first)
-    "DT": (-75.5, 0, 19.9), "BT": (-75.5, 0, 2.7),                                                                         # 9 Nov one body: as DN / BN at the tail                                                     # both on the tail tray's end, 17 deg apart from TB (9 Nov: DT on the deck's tail end was 11 deg off BT, a fork)                                                                # sockets on the deck's tail end and the tail tray's end, its socket's bottom over the moved tail wall's top + 2 (PRINTED)
+    "TB": (-FLAT, 0, ZF), "S0": (0.0, FLAT, ZF), "S1": (0.0, -FLAT, ZF),                                                    # the bottom nodes in the flats' planes, at ZF (14 Nov, the bolt forks)
+    "NB": (FLAT, 0, ZF),                                                                                                     # the nose node
+    # 14 Nov, the architecture review's "bolt forks" (the design chat; runs of 13 Nov, scout_v4_frame_vh / vl): each bottom node is held by a
+    # horizontal fork of two 3.0 rods to sockets at z 11 beside the receiver's 4 bolts, in the frame's layers; the 8 D / B rods and their vertical
+    # triangles are gone (the end crash's couple through 17 mm deep, 80 mm long triangles had read 550-700 N per socket; the forks ~180 N)
+    "BN0": (75.5, 23.0, 11.0), "BN1": (75.5, -23.0, 11.0), "BT0": (-75.5, 23.0, 11.0), "BT1": (-75.5, -23.0, 11.0),
+    "SA0": (FORK_X[0], 40.0, 11.0), "SA1": (FORK_X[0], -40.0, 11.0), "SB0": (FORK_X[1], 40.0, 11.0), "SB1": (FORK_X[1], -40.0, 11.0),
 }
-PRINTED = ("DN", "BN", "DS0", "BS0", "DS1", "BS1", "DT", "BT")
+PRINTED = ("BN0", "BN1", "BT0", "BT1", "SA0", "SA1", "SB0", "SB1")
 ROOTS = {}
 TIED = ("RM",)                                    # nodes tied to the core through the probe's turret: RM's ring and the throat's top collar print as one (9 Nov: 2.1 -> ~1 mm worst, the roof's centre held)
 NODE_PARTS = [k for k in NODES if k not in PRINTED and k not in TIED]               # the generated cage nodes (parts/scout_v4_node_<k>, parts/scout_v4_node_lib.py)
@@ -165,7 +166,7 @@ RODS = [("R0", "P1"), ("P2", "P3"), ("P4", "P5"), ("P6", "R7"),   # the ring, op
         ("RF", "R0"), ("RF", "R7"), ("RF", "RM"), ("RM", "RB"), ("RB", "P3"), ("RB", "P4"), ("RM", "RS0"), ("RM", "RS1"), ("RS0", "P1"), ("RS0", "P2"), ("RS1", "P5"), ("RS1", "P6"),                                 # the flat roof: nose and tail triangles, spine, hoop
         ("NB", "R0"), ("NB", "R7"), ("TB", "P3"), ("TB", "P4"),                                                                                            # the end Vs (the camera's window stays clear between them)
         ("S0", "P1"), ("S0", "P2"), ("S1", "P6"), ("S1", "P5"),                                                              # the side fans
-        ("DS0", "S0"), ("BS0", "S0"), ("DS1", "S1"), ("BS1", "S1"), ("DT", "TB"), ("BT", "TB"), ("DN", "NB"), ("BN", "NB")]                                                            # the triangles that hold the bottom nodes, on x 0 and y 0
+        ("BN0", "NB"), ("BN1", "NB"), ("BT0", "TB"), ("BT1", "TB"), ("SA0", "S0"), ("SB0", "S0"), ("SA1", "S1"), ("SB1", "S1")]   # the forks that hold the bottom nodes
 TIES = []
 LUG = (8.0, 36.0, 44.0, -15.5)                   # the deck's side lugs: |x| 8, |y| 36..44 (3.2 outside the receiver), down to z -14 (over the funnel's y walls, -16.3)
 ROD_G_MM, NODE_G = 0.011, 6.0                    # 3.0 carbon rod; a printed PCTG node (v21 run: 5..13 g, E)
@@ -271,7 +272,9 @@ def place(src, rot=None, lo=None, yc=0.0):
     return m
 
 
+FLOW_LO = (64.0, -6.8)                                                              # the flow sensor's low corner (x, z): x 64..80 past latch v7's receiver room (x 63.1), its bottom 0.6 over the walls-in funnel + 2 at x 80
 REC_BOLTS = [(48.28, 26.55), (48.28, -26.55), (-37.65, 26.55), (-37.65, -26.55)]   # the receiver's 4 bolt bosses (receiver v3, C), drone frame before BX
+assert all(abs(FORK_X[i] - (REC_BOLTS[2 * i][0] + BX)) < 0.01 for i in (0, 1)), "the side forks sit at the receiver bolts' x"
 REC_TOP = 9.6                                                                       # the receiver's top: the base's yokes sit on it
 BATTERY_SET = (266.5, (-3.47, -0.01, -15.93))                                       # 9 Nov (Spark: "get rid of the battery mechanism, leave 4 bolts for it to mount
                                                                                     # to"): the receiver 60, cartridge 30, pack 165, XT60 10, feet and pads 1.5 are not drawn;
@@ -592,7 +595,7 @@ def write():
         meshes[f"prop_{k}"], meshes[f"blades_{k}"] = prop(mx, my)
     meshes.update(probe())
     meshes["probe_mast_a"], meshes["probe_mast_b"] = mast()
-    meshes["scout_flow_mtf_02p"] = place("scout_flow_mtf_02p", rot=([0, 0, 1], 90), lo=(54.5 + BX, -19.1))   # turned 90 deg, in the pod: outer edge x 70.5
+    meshes["scout_flow_mtf_02p"] = place("scout_flow_mtf_02p", rot=([0, 0, 1], 90), lo=FLOW_LO)   # turned 90 deg, forward of latch v7's receiver room (14 Nov)
     # 9 Nov (one body, the nose bay gone): the FC and the Radxa hang under the deck over the receiver on posts (inserts in the deck),
     # the XR2 and the DRV8833 flat on tape lands beside the FC, the UBEC on the tail tray's floor across the drone
     meshes["fc"] = place("fc", lo=(FC_X[0], FC_Z0))                                  # 36 square, component side up, its posts down from the deck
