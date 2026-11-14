@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   237450.0
+   237424.0
   ],
   "sealed_voids": [],
   "inner_shells": [],
@@ -15,13 +15,13 @@
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 1,
+  "acute_edges": 0,
   "ok": true
  },
  "function_check": {
   "skin_mm3": 58653.9,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
   "outside_env_mm3": 0.0,
   "ok": true
  },
@@ -184,7 +184,7 @@
    {
     "case": "head A: insert at the drone, scout, in the receiver's guides: 59.2 N through the float springs",
     "cls": "flight",
-    "inlayer": 0.142,
+    "inlayer": 0.141,
     "across": 0.19,
     "at": [
      6.2,
@@ -239,8 +239,8 @@
    {
     "case": "head B: insert at the drone, overseer, in the receiver's guides: 64.5 N through the float springs",
     "cls": "flight",
-    "inlayer": 0.18,
-    "across": 0.229,
+    "inlayer": 0.181,
+    "across": 0.23,
     "at": [
      -6.2,
      27.2,
@@ -301,10 +301,10 @@
   ],
   "ok": true
  },
- "mass_g": 349.6,
+ "mass_g": 349.58,
  "watertight": true,
  "export": {
-  "faces_in": 323538,
+  "faces_in": 323834,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 1,
@@ -314,23 +314,23 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 323538,
+  "faces": 323834,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
   "simplified": true,
   "first_pass": {
-   "degenerate": 0,
-   "folded": 0,
-   "caps_split": 2,
+   "degenerate": 8,
+   "folded": 2,
+   "caps_split": 3,
    "caps_left": 0,
    "watertight": true,
-   "faces": 598588,
+   "faces": 598696,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 284222.3,
-  "exact_mm3": 284229.0
+  "volume_mm3": 284206.3,
+  "exact_mm3": 284213.3
  },
  "bodies": {
   "bodies_raw": 1,
@@ -338,7 +338,7 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 284229.0,
+ "volume_mm3": 284213.3,
  "drawn_g": 108.56,
  "export_cleanup": {
   "pitch": 0.25,
@@ -360,15 +360,15 @@
    "limit_gb": 14.0,
    "gate_cells": 150246096,
    "bounds_mm": [
-    171.1,
+    171.2,
     76.0,
     176.0
    ],
-   "faces": 895376,
+   "faces": 895512,
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 7.14,
+   "estimate_gb": 7.15,
    "parts": {
     "held": 0.85,
     "gate": 6.3,
@@ -377,7 +377,7 @@
    "limit_gb": 14.0,
    "gate_cells": 150246096,
    "bounds_mm": [
-    171.1,
+    171.2,
     76.0,
     176.0
    ],
@@ -482,7 +482,7 @@
    {
     "it": 32,
     "beta": 8.0,
-    "worst": 0.326,
+    "worst": 0.327,
     "worst_case": "head B: insert at the float limit, overseer: 118 N, the float pitched to its reach (3.0 N m)"
    },
    {
@@ -498,7 +498,7 @@
    "index": 0.324
   },
   "cavity": {
-   "last": 2.1363246850018727,
+   "last": 2.157286990223768,
    "ratio": 5.0,
    "T0": 65.91930573259592,
    "row": true
@@ -550,11 +550,11 @@
    "default"
   ]
  },
- "build_s": 293.3,
- "layout_s": 803,
- "peak_gb": 2.186104,
+ "build_s": 281.1,
+ "layout_s": 779,
+ "peak_gb": 2.171512,
  "memory": {
-  "estimate_gb": 2.38,
+  "estimate_gb": 2.39,
   "parts": {
    "held": 0.56,
    "factor": 0.81,
@@ -584,7 +584,7 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 1.96
+  "peak_it1_gb": 1.98
  },
  "early": {
   "rows": [
@@ -980,6 +980,12 @@
   },
   "drawn_thin": [],
   "drawn_walls": [],
+  "bed": {
+   "build": "+y",
+   "drawn_mm2": 781.7,
+   "room_mm2": 2888.3,
+   "min_mm2": 700.0
+  },
   "parity": [],
   "cases": 24,
   "supports": 1,
@@ -1013,19 +1019,19 @@
   }
  },
  "baseline": null,
- "total_s": 1097,
+ "total_s": 1060,
  "part_sha": "c008f1815a35",
  "lib_sha": "",
- "setup_sha": "d19854cc35f0e37a",
+ "setup_sha": "1323d7a27de31f1d",
  "max_worst": 0.5,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/box_arm8_hub.stl",
-  "sha256": "4d913d368e0a7cdeb3bfbcba1a71c499447a1bd9235bf7c6b4b322d761e5b1a8",
-  "bytes": 16176984,
-  "faces": 323538,
+  "sha256": "cb82275a7181d4d5f0b89bee192b7ddefa7f41a2c078bd6d57ff88c16493f6c2",
+  "bytes": 16191784,
+  "faces": 323834,
   "view_faces": 60000,
-  "view_sha256": "1d494b2e8f4812c3ebb397ea5469a5bada011b5b69ada4bcb239abdcdd8893f8",
-  "at": "2026-11-13 22:46"
+  "view_sha256": "c706bc008e5604d99ae15f5c6fa7983bd8104cdff98593d66906f1102422b7f6",
+  "at": "2026-11-14 02:50"
  }
 }
