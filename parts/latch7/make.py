@@ -157,14 +157,16 @@ bl.XM_FD = 12.5
 # pack's plug pocket in the cartridge (inside it: the outline and the grabber interface do not move, nor the plug's place along the pack), the carrier's pocket and the cap's
 # ceiling with it; the guide pegs grow by the same so they still enter 1.7 before the plug. The leads are soldered to the tabs' sides and leave toward the lead end, lying in
 # WIRE's channel through the cap's rim and the top of the receiver's lead end wall: tabs, leads and the float's 0.5 end 0.5 under the mount plane.
-PLUG_DROP = {"overseer": 3.5}
+PLUG_DROP = {"overseer": 3.5, "scout": 4.3}     # Scout 14 Nov (Scout v4 design chat): the tabs and the leads' turn stood 3.8 + 12 over the mount plane, inside the FC
 WIRE = dict(hx=6.0, under_mount=4.8)      # the lead channel: |x| <= 6 (tabs at +-3.6, 12 AWG o 3.4), from 4.8 under the mount plane up
-_geom7 = bl.geom
+_geom7 = getattr(bl.geom, "_v7_base", bl.geom)      # this file loaded twice in one process (latch7_recv_lib loads its own copy, bl is shared): wrap the base once, or the drop doubles
 def _geom(pack):
     g = _geom7(pack); d = PLUG_DROP.get(pack, 0.0)
     for k in ("Y_XF_FACE", "Y_XF_REAR", "Y_SH0", "Y_SH1", "Y_PW1", "Y_ZONE"): g[k] -= d
     return g
-bl.geom = _geom
+_geom._v7_base = _geom7; bl.geom = _geom
+SCOUT_Z_T = 42.87                      # the Scout's tab line stays where every printed and frozen piece has it (grabber interface, bolts, strips, stop bar): the lighter
+bl.TAB_OFF["scout"] = 0.12             # lead end after the plug's drop moved the swap CG 0.12 toward the tail; the tab line is 0.12 off the CG now (build() asserts it)
 
 
 def plug_collar(g):
@@ -506,6 +508,7 @@ def build(pack="scout"):
     bl._CACHE.clear()
     B = m6.build(pack); set_pack(B["g"])
     r = B["r"]
+    assert pack != "scout" or abs(B["g"]["Z_T"] - SCOUT_Z_T) < 1e-9, B["g"]["Z_T"]
     B["rskids"] = []; B["cstrips"] = []        # the Scout's TPU edge skids and cartridge side strips go (Scout v4 design chat 14 Nov: v4 stands on four TPU feet
     #                                            on the receiver's bottom corners, the box does not need them either); the cartridge's two TPU end skids stay (its outline)
     B["strips"] = seat_strips(r)
@@ -520,14 +523,14 @@ def build(pack="scout"):
     if WALL_RELIEF.get(pack):                # the side walls' faces set back above the lead-in: the cartridge rolled the arm's worst still enters
         B["recv"] = B["recv"] - U(*[box(*sorted((s * (r["RF"] - 0.01), s * (r["RF"] + WALL_RELIEF[pack]))), bl.Y_RB + bl.HCAP - 0.01, r["Y_DK0"] + 0.01, r["Z_E0"], r["Z_E1"]) for s in (1, -1)])
     B["drone_pos"], db, dc = drone_mount(B)
-    if db is not None:
-        B["drone_boss"], B["drone_cuts"] = db, dc; B["recv"] = B["recv"] + db - dc
+    if db is not None: B["drone_boss"], B["drone_cuts"] = db, dc; B["recv"] = B["recv"] + db - dc
+    if PLUG_DROP.get(pack):
         ym_ = r["Y_M"]; zx_ = B["g"]["Z_X"]; z1_ = r["Z_E1"] + r["END_T"]
         B["wire_cut"] = box(-WIRE["hx"], WIRE["hx"], ym_ - WIRE["under_mount"], ym_ + 1.0, zx_ + 5.5, z1_ + 1.0)      # the leads' channel out over the lead end
         B["recv"] = B["recv"] - B["wire_cut"]
         B["cap"] = B["cap"] - box(-WIRE["hx"], WIRE["hx"], r["Y_DK1"] - 1.0, ym_ + 1.0, zx_ + 5.5, zx_ + bl.CARRIER_HZ + 1.0)      # through the cap's whole rim there (a 0.9 floor under the channel was a thin wall)
         # no partner insert over the lead-end bolts on the Overseer: they screw into M3 x 5.7 heat-set inserts in the cap (o 4.0), which clamps carrier and cap to the receiver
-        B["cap"] = B["cap"] - U(*[cyl("y", bx, bz, 2.0, r["Y_DK1"] - 1, ym_ + 1, 24) for bx, bz in r["MOUNT"] if abs(bz - zx_) < 1e-6])
+        if db is not None: B["cap"] = B["cap"] - U(*[cyl("y", bx, bz, 2.0, r["Y_DK1"] - 1, ym_ + 1, 24) for bx, bz in r["MOUNT"] if abs(bz - zx_) < 1e-6])
     B["recv_bay"] = B["recv"]                # the receiver in a bay of the arm's ring: no landing feet (two Scout bays 30 deg apart met at their feet, 9.3 mm3, arm v8)
     if pack == "scout":
         B["feet"] = scout_feet(B); B["recv"] = B["recv"] + B["feet"]
@@ -836,7 +839,7 @@ OUT = {"scout": ("latch7", "latch7_"), "overseer": ("latch7_overseer", "latch7_o
 
 # ------------------------------------------------------------------ the Scout set's keep-out in the Scout v4 drone frame (design chat 14 Nov)
 SCOUT_V4 = dict(lead_bolt_x=49.58, path_down=150.0, lead_room=12.0)   # tools/scout_v4_shape.py REC_BOLTS + BX: the lead-end mount bolts at drone x 49.58, the tab line at +6.65
-#                                                                       (the funnel's seat frame has it at 0); lead_room E: the 12 AWG pair's bend over the plug's tabs
+#                                                                       (the funnel's seat frame has it at 0); lead_room E: how far past the lead end wall the keep-out follows the 12 AWG pair
 
 
 def scout_keepout(B):
@@ -849,7 +852,7 @@ def scout_keepout(B):
     xb = B["male"].bounding_box(); top = xb[4]
     items = dict(receiver_room=room - cuts, carrier_cap=U(B["carrier"], B["cap"]),
                  cartridge_path_down=U(cart, cart.translate([0.0, -SCOUT_V4["path_down"], 0.0])).hull(),
-                 plug_tabs=B["male"], leads_E=box(xb[0], xb[3], top, top + SCOUT_V4["lead_room"], xb[2], xb[5]),
+                 plug_tabs=B["male"], leads_out_E=box(-WIRE["hx"], WIRE["hx"], r["Y_M"] - WIRE["under_mount"], r["Y_M"], g["Z_X"] + 5.5, r["Z_E1"] + r["END_T"] + SCOUT_V4["lead_room"]),
                  seat_strips=B["strips"])
     d = os.path.join(HERE, "view", "keepout"); os.makedirs(d, exist_ok=True); out = {}
     for k, m in items.items():
@@ -860,8 +863,8 @@ def scout_keepout(B):
                 mount_bolts_xy=sorted([round(float(z + T[0, 3]), 2), round(float(x), 2)] for x, z in r["MOUNT"]),
                 notes=dict(receiver_room="everything the receiver's run may fill (drawn + generated), bolt and pocket cuts out",
                            cartridge_path_down=f"the cartridge with its two bolts out, swept {SCOUT_V4['path_down']:g} straight down (hull): the swap path",
-                           plug_tabs="the XT60W male in its collar with its solder tabs (E, Amass sheet): the tabs stand over the mount plane",
-                           leads_E=f"{SCOUT_V4['lead_room']:g} over the tabs for the 12 AWG pair to turn (E, not drawn anywhere else)"),
+                           plug_tabs="the XT60W male in its collar with its solder tabs (E, Amass sheet): 14 Nov 4.3 lower, tabs and float 0.5 under the mount plane",
+                           leads_out_E=f"the 12 AWG pair's way out: from the tabs through the cap's rim and the lead end wall's top, {SCOUT_V4['lead_room']:g} past the wall toward the nose (E past the wall; the frame takes them on from there)"),
                 items=out)
 
 
