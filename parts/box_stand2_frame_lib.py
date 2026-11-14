@@ -67,9 +67,10 @@ def _rail_room(y0, y1):
 # ------------------------------------------------------------------ yoke
 def yoke_setup(h, s):
     pads = [cyl("z", x, y, 8.0, Z_FOOT - 10.0, Z_FOOT) for x, y in FOOT_BOLTS if x > 0]
+    seat = box(2.0, 40.0, -62.0, -4.0, Z_FOOT - 4.0, Z_FOOT)                                    # the face the mast's foot bears on (pads alone: 0.55 filled solid at a pad)
     ends = [cyl("x", y, z, 7.0, X_IN - 12.0, X_IN) for y, z in JOINT]                           # the insert bosses, their end the contact face
     rim = box(X_IN - 8.0, X_IN, YOKE_Y[0] + 4.0, YOKE_Y[1] - 4.0, BED, BED + 5.0)               # the end face's foot: the bed (build +z)
-    drawn = U(*pads, *ends, rim)
+    drawn = U(*pads, seat, *ends, rim)
     cuts = U(sweep(), _joint_cuts(), *[cyl("z", x, y, 2.75, Z_FOOT - 11.0, Z_FOOT + 1.0) for x, y in FOOT_BOLTS],
              *[cyl("z", x, y, 5.5, FLOOR - 2.0, Z_FOOT - 10.0) for x, y in FOOT_BOLTS])          # the M5 x 16 heads and the key from below
     if s > 0:
@@ -77,7 +78,7 @@ def yoke_setup(h, s):
     env = box(0.25, X_IN - 0.25, YOKE_Y[0], YOKE_Y[1], BED, Z_FOOT)
     p = Part("box_stand2_yoke_" + ("r" if s > 0 else "l"), h, _side(drawn, s), _side(cuts, s), _side(env, s), build="+z", material="PCTG")
     p.bed_min_mm2 = 500.0                                                # the drawn rim under the end face (topo/audit.py bed)
-    p.support("default", _side(U(*[cyl("z", x, y, 8.0, Z_FOOT - 3.0, Z_FOOT) - cyl("z", x, y, 3.0, -300, 0) for x, y in FOOT_BOLTS if x > 0]), s))
+    p.support("default", _side(box(2.0, 40.0, -62.0, -4.0, Z_FOOT - 2.0, Z_FOOT) - U(*[cyl("z", x, y, 3.0, -300, 0) for x, y in FOOT_BOLTS if x > 0]), s))
     regs = [(np.array([s * (X_IN - 5.0), y, z]), _side(cyl("x", y, z, 6.5, X_IN - 10.0, X_IN) - cyl("x", y, z, 3.4, 0, 300), s)) for y, z in JOINT]
     for cn, cls, feet, acc in floor_cases():
         F, P = [], []
@@ -105,7 +106,7 @@ def _split_wrench(pts, F, M):
 def rear_setup(h, s):
     pad, stud = _foot(FEET["rear"])
     inner = [cyl("x", y, z, 7.0, X_IN, X_IN + 6.0) for y, z in JOINT]                           # its contact face on the yoke
-    outer = [cyl("x", y, z, 7.0, RAIL_X[1] - 10.0, RAIL_X[1]) for y, z in JOINT]                # the heads' seats
+    outer = [cyl("x", y, z, 8.5, RAIL_X[1] - 10.0, RAIL_X[1]) for y, z in JOINT]                # the heads' seats (r 7 left 1.5 round the Ø11 counterbore: drawn_wall)
     plate = [cyl("y", x, z, 8.0, Y_SPLICE - PLATE, Y_SPLICE - 0.25) for x, z in SPLICE]
     drawn = U(pad, *inner, *outer, *plate)
     cuts = U(sweep(), _joint_cuts(), _splice_cuts(), stud)
