@@ -433,7 +433,7 @@ ORDER = ["Stub side: press the two 6010-2RS into the hub's sleeve from the stub 
          "Each V rail on the hub's plate: two M5 x 10 into the heat-set M5 inserts.",
          "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench); three V wheels, two 625ZZ in each, on M5 x 20 axles, the third on its eccentric bush; roll it onto the V rail and set the bush until it runs without play.",
          "Each screw drive: stepper on its face plate (four M3), coupler, inner F8-16M, screw through the thrust wall, outer F8-16M, lock ring; the nut on the screw with its flange's two sides filed to the body.",
-         "Each lift: bond the three o 6 x 117 carbon rods in the yoke's sockets (resin through each port until it shows at the mouth), slide the two ties on and bond them at their stations (float bolt centres 45 hub side and 20 far side of the tab line); four M4 inserts in each pair of ties.",
+         "Each lift: bond the three o 6 x 115 carbon rods in the yoke's sockets (resin through each port until it shows at the mouth), slide the two ties on and bond them at their stations (float bolt centres 45 hub side and 20 far side of the tab line); four M4 inserts in each pair of ties.",
          "Yoke on the MGN block with four M3 x 12; the nut into its lug (flange in the slot); the return spring from the carriage to the rail's channel.",
          "Each grab unit: servo, paddle, blades on their two o 3 carbon rods with the four blade springs, pilots on their springs, an SS49E in each hall post, the eight TPU pads on their M3 jack screws.",
          "Grab unit on the ties: four M4 shoulder bolts down through the base with a PTFE and a steel washer under each head, a float spring round each bolt between tie and base.",
@@ -443,10 +443,15 @@ ORDER = ["Stub side: press the two 6010-2RS into the hub's sleeve from the stub 
 
 def print_kit(pr):
     """the 14 drawn pieces as files to print, and the assembly order. Not to print before the three runs pass: a failed run can still move a joint."""
-    return dict(hold="DO NOT PRINT YET: hub, carriage and lift are still running; a failed run can move a joint these pieces share (rail seat, wheel axles, sockets, MGN faces)",
+    gen = {k: json.load(open(os.path.join(ROOT, "parts", "box_arm8_" + k, "result.json"))) for k in ("hub", "carriage", "lift")}
+    ok = all(g.get("strength_ok") and g.get("solid_ok") for g in gen.values())
+    return dict(hold=("Released 13 Nov: hub, carriage and lift ran PASS (strength and solid check); the joints these pieces share did not move after their solid checks" if ok else
+                      "DO NOT PRINT YET: hub, carriage and lift have not all passed their runs; a failed run can move a joint these pieces share (rail seat, wheel axles, sockets, MGN faces)"),
+                generated=[dict(part="box_arm8_" + k, count=1 if k == "hub" else 2, worst=g["strength"]["worst"], mass_g=g["mass_g"], solid_check="PASS" if g.get("solid_ok") else "FAIL",
+                                file=f"python tools/print_mesh.py fetch box_arm8_{k}", pose=dict(hub="plate face down (+y)", carriage="plate face down (-y)", lift="upright, the plate's lower end down (+z)")[k]) for k, g in gen.items()],
                 pieces=[dict(file=f"parts/{v['part']}/part.stl", material=v["material"] + (" (PETG settings + 10 C)" if v["material"] == "PCTG" else " 95A"), count=v["count"], pose=v["print_pose"], supports=SUPPORTS[k],
                              solid_check="PASS", g_each=v["g_each"], fits_180=v["fits_180"]) for k, v in pr.items()],
-                generated_later=["parts/box_arm8_hub (1)", "parts/box_arm8_carriage (2)", "parts/box_arm8_lift (2): from their runs' print meshes (tools/print_mesh.py fetch), not part.stl"],
+                generated_later=["hub (1), carriage (2), lift (2): their runs' print meshes (tools/print_mesh.py fetch), not part.stl"],
                 order=ORDER)
 
 
@@ -473,7 +478,7 @@ def main():
     one("saddle_overseer", saddle(S, "overseer")); one("saddle_scout", saddle(S, "scout"))
     one("link", link_bar(S))
     res["printed"] = pr
-    res["generated"] = {k: dict(part="box_arm8_" + k, setup=f"parts/box_arm8_{k}/part.py", state="setup ready, not run") for k in ("hub", "carriage", "lift")}
+    res["generated"] = {q["part"][9:]: dict(part=q["part"], setup=f"parts/{q['part']}/part.py", state=f"run {'PASS' if q['solid_check'] == 'PASS' and q['worst'] <= 0.5 else 'FAIL'}: worst {q['worst']}, {q['mass_g']} g") for q in print_kit(pr)["generated"]}
     res["bought"] = BOUGHT
     res["print_kit"] = print_kit(pr)
     res["compat"] = compat(S, fast)
@@ -527,7 +532,7 @@ BOUGHT = [
     dict(part="screw collar", spec="8 mm lock ring, 13 x 5, outside the outer bearing (the coupler bears on the inner one)", n=2, url=A + "clp/B0D17CLMJM"),
     dict(part="lift rail", spec="MGN12 rail 100 long (uncut) with one MGN12H block: the block's four M3 hold the yoke, the rail's four M3 go into the carriage's spine", n=2,
          url=A + "Iverntech-Linear-MGN12H-Carriage-Printer/dp/B086SNDDXH", check="block 27 x 45.4, 13 high on the rail; holes 20 x 20; rail holes 25 apart from 12.5 in (M: measure, the setup's seats follow)"),
-    dict(part="carbon rod 6", spec="o 6 x 500 solid pultruded carbon: three 117 long per head (the booms)", n=2, url=A + "clp/B0DK3LWS3V", check="take the round 6 x 500; 6.0 +- 0.1 in the 6.2 sockets"),
+    dict(part="carbon rod 6", spec="o 6 x 500 solid pultruded carbon: three 115 long per head (the booms)", n=2, url=A + "clp/B0DK3LWS3V", check="take the round 6 x 500; 6.0 +- 0.1 in the 6.2 sockets"),
     dict(part="rail and yoke bolts", spec="M3 x 12 socket head, stainless: rail to spine (8), yoke to block (8)", n=16, url=A + "Socket-Screws-Available-Stainless-Machine/dp/B08P6DYH7V", check="100 in the pack"),
     dict(part="wheel bearing", spec="625ZZ, two per V wheel", n=12, url=A + "Double-Bearings-5x16x5mm-0-2x0-63x0-2-BlueStars/dp/B09XT9TKY8"),
     dict(part="detent roller", spec="623ZZ", n=1, url=A + "uxcell-Groove-Bearings-Metric-Shielded/dp/B085RSRF2F"),
