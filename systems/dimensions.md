@@ -373,6 +373,8 @@ Predicted = break load: the load at which the method's stress reaches the materi
 | `post_pull_6x6_B` | post pull 6 x 6, copy B at the box-part default (4 walls, 15 % gyroid) | 37.7 (as copy A) | to test | 1.0 | E |
 | `post_pull_4x3_B` | post pull 4 x 3, copy B (4 walls, 15 % gyroid) | 13.3 (as copy A) | to test | 1.0 | E |
 | `layer_pull` | layer pull, 3.6 x 3.6 neck upright, straight pull: Zt = F / A, A 12.96 mm² (`print/test_layer_pull_v1.stl`) | 326.8 (nox/topo FE h 1.0, gauge / flare junction; h 0.5 258.0; Zt A 330.5) | to test | 1.0 | E |
+| `arm_up` | Scout v4 arm coupon (`parts/scout_v4_arm_coupon/make.py`: motor 1's pod and arm cut from the frame's print mesh, as printed, deck top down, 100 %), block in a vise, puck on 4 M2 x 20, cord through its eye 8 above the pad, pulled straight up | 328 (nox/topo FE h 1.0, across the layers, the arm's underside 30 from the motor; h 2.0 519) | to test | 1.0 | E |
+| `arm_side` | arm coupon, a second print, pulled level across the arm | 538 (nox/topo FE h 1.0, in-layer, the pad 12 from the motor's centre; h 2.0 714) | to test | 1.0 | E |
 | `glue_epoxy` | glue lap, 2-part epoxy, 24 h, single lap A 60 mm² (`print/test_glue_lap_v1.stl` x 2) | 120 (2.0 MPa x 60, hand) | to test | 1.0 | E |
 | `glue_methacrylate` | glue lap, methacrylate (MMA) adhesive, 24 h, A 60 mm² | 120 (2.0 MPa x 60, hand) | to test | 1.0 | E |
 | `socket_pull` | socket coupon, 3.0 rod epoxied 24 h in the bore the fit picks, pull out; A 88.6 mm² (rod face, `print/test_socket_coupon_v2.stl`) | 177 (2.0 MPa x π x 3.0 x 9.4, hand) | to test | 1.0 | E |
