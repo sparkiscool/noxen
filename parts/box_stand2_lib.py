@@ -10,7 +10,7 @@ Pieces (each in the 180 bed):
               (+-149, -44), and the lap's outer cheek (|X| 149..177.5, Y 72..110). Printed on its floor face (build +z).
   rail_r/_l   the rail forward of the lap (Y 72..250) with the front foot at (+-149, 232); its tongue (|X| 120..149, Y 72..110)
               laps the base's cheek with 4 M5 x 60 across (X), nuts outboard. Printed on its floor face.
-  feet        four TPU 95A pads Ø36 x 5 (a Ø8 x 4 stud pressed into each foot pad): the stand stands on four points, so every floor
+  feet        four TPU 95A pads Ø36 x 5 (a Ø8 x 2.8 stud pressed into each foot pad): the stand stands on four points, so every floor
               reaction is known (flat floor: four; an uneven floor: three, each foot lifted in turn).
 Joints (all M5, steel): stub flange to the mast face, 3 x M5 x 16 from the mast side (the heads in the face's counterbores, the tool from
 behind through the mast), threading into M5 heat-set inserts in the stub's flange; mast foot to the halves, 8 x M5 x 16 up from under
@@ -218,8 +218,8 @@ def _lap_cuts():
 
 
 def _foot(y):
-    pad = cyl("z", FOOT_X, y, FOOT_R, BED, BED + 9.0, 64)              # 4.5 over the stud hole (6 left 1.5: audit drawn_wall)
-    return pad, cyl("z", FOOT_X, y, STUD_R, BED - 1.0, BED + 4.5)
+    pad = cyl("z", FOOT_X, y, FOOT_R, BED, BED + 6.0, 64)              # 6 thick, 3 over a 3 deep stud hole (4.5 deep left 1.5: drawn_wall; 9 thick was a block: drawn_blocks)
+    return pad, cyl("z", FOOT_X, y, STUD_R, BED - 1.0, BED + 3.0)
 
 
 def base_parts():
@@ -299,4 +299,4 @@ def base_setup(h, s):
 
 # ------------------------------------------------------------------ the TPU foot (no run: a pad)
 def foot_mesh():
-    return U(cyl("z", 0, 0, FOOT_R, 0.0, 5.0, 64), cyl("z", 0, 0, STUD_R - 0.1, 5.0, 9.0, 32))
+    return U(cyl("z", 0, 0, FOOT_R, 0.0, 5.0, 64), cyl("z", 0, 0, STUD_R - 0.1, 5.0, 7.8, 32))
