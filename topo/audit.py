@@ -65,6 +65,12 @@ Checks (hard = raises, soft = logged + in the report):
                        the part's box + the export's mesh), from the envelope's box before the first solve and from the part's
                        before the export cleanup and before the solid check (10 Nov: the frame was killed twice right after the
                        export): a part over it ends with status mem_refused and the reason (split it: the grid is its box).
+  bed            hard where the setup asks (part.bed_min_mm2), reported for every part: the flat the DRAWN solid lays on the bed, i.e. its
+                       section 0.1 mm inside the room's extreme plane along the build direction. The engine knows the build direction
+                       only as the layers' weak axis: nothing makes a result touch the bed. 14 Nov, the funnel's halves (build -z, 176 wide):
+                       both passed strength and the gate and stood on 40 to 66 mm2, the side walls' top edges being square to their
+                       55 deg faces (a line) and the rib's room ending 1.0 short of that plane. Draw a flat rim on the bed plane and end
+                       the room on it. Under bed_min_mm2 the run is refused.
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -253,6 +259,18 @@ def plate_fit(env, h):
     return L, W, H, bool(fits)
 
 
+
+
+def bed_contact(drawn_m, cuts_m, env_m, build, inside=0.1):
+    """(mm2 of the drawn solid, mm2 of the whole room) in the plane `inside` mm above the bed: the room's extreme along the build
+    direction ("-z": the room's top is on the bed). Exact sections of the manifolds, not cells."""
+    T = {"+z": [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]], "-z": [[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0]],      # proper rotations taking the build direction to +z
+         "+x": [[0, 0, -1, 0], [0, 1, 0, 0], [1, 0, 0, 0]], "-x": [[0, 0, 1, 0], [0, 1, 0, 0], [-1, 0, 0, 0]],
+         "+y": [[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0]], "-y": [[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0]]}[build]
+    T = np.array(T, float)
+    room = ((env_m + drawn_m) - cuts_m).transform(T.tolist()); d = (drawn_m - cuts_m).transform(T.tolist())
+    z = room.bounding_box()[2] + inside
+    return float(d.slice(z).area()), float(room.slice(z).area())
 
 
 def diameter_mm(mask, h):
@@ -569,6 +587,14 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         fails.append(f"drawn_wall: a drawn body has a wall under 2 mm at {w['at']} after its cuts ({w['thick_mm']:.1f} mm by the gate's rule, "
                      f"{w['core_mm3']:.1f} mm3){more}: the gate fails it wherever the engine leaves it exposed, and the cleanup may not cut drawn "
                      f"material (a 2.0 collar wall with 0.5 resin grooves is 1.5 at the grooves). Thicken the wall, shallow the cut, or declare it thin_ok.")
+
+    bd, br = bed_contact(part.drawn_m, part.cuts_m, part.env_m, part.build)
+    need = getattr(part, "bed_min_mm2", None)
+    rep["bed"] = dict(build=part.build, drawn_mm2=round(bd, 1), room_mm2=round(br, 1), min_mm2=need)
+    if need is not None and bd < need:
+        fails.append(f"bed: the drawn solid lays {bd:.0f} mm2 on the bed (build {part.build}, the setup asks {need:.0f}): nothing makes the engine's "
+                     f"material touch the bed, so the part would stand on edges. Draw a flat rim or pad on the room's extreme plane along the "
+                     f"build direction and end the room on that plane.")
 
     rep["parity"] = []
     for nm, t in (("room", part.env_t), ("drawn", part.drawn_t), ("cuts", part.cuts_t)):

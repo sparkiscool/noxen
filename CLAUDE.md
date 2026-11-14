@@ -30,7 +30,7 @@ block); a loaded drawn body has less than one member of design room behind it; a
 smallest extent after its cuts, or has a wall under 2 mm anywhere after them (the gate erodes it; a 2.0 collar with 0.5 resin
 grooves is 1.5 at the grooves, 7 Nov; thin_ok for the camera posts); a loaded drawn body reaches the support only
 through room thinner than a member (a slab or a stub: the engine bridges it with a blob on a neck); a load region reaches off its
-drawn face into room (the engine grows a knob out to the loaded nodes); the room filled solid fails `max_worst` (no layout in it can pass: open the room along the load path, 9 Nov). The fix is always the setup, never a
+drawn face into room (the engine grows a knob out to the loaded nodes); the room filled solid fails `max_worst` (no layout in it can pass: open the room along the load path, 9 Nov); the drawn solid lays less than the setup's `bed_min_mm2` flat on the bed (nothing makes a result touch it: a drawn rim on the build direction's end plane, 14 Nov). The fix is always the setup, never a
 `--set audit=warn`: delete the block, open the envelope behind the feature, move the cut. `result.json` carries the
 audit report; `python -m topo.run parts/<name> --h <SPEC h> --maxit 1 --no-coarse` runs it in a minute (at the SPEC h: room is measured
 in cells, a coarser h can pass a setup the run refuses).

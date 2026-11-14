@@ -1267,6 +1267,30 @@ def t_coarse_setup_fails():
         check("coarse: a setup that raises at 2h skips the coarse stage", False, f"{type(e).__name__}: {e}; log tail {lines[-3:]}")
 
 
+def t_audit_bed():
+    """bed (topo/audit.py bed_contact): the drawn solid's flat on the bed plane, the room's extreme along the build direction (14 Nov:
+    the funnel's halves passed everything standing on 40 to 66 mm2). A 10 x 10 pad drawn on the room's top and bottom faces."""
+    try:
+        import manifold3d as mf
+        from .audit import bed_contact, audit, SetupError
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        drawn = box(0, 10, 0, 10, 0, 3) + box(0, 4, 0, 10, 17, 20) + box(20, 24, 0, 10, 8, 12); cut = box(2, 3, 2, 3, -1, 21); env = box(0, 24, 0, 10, 0, 20)
+        got = {b: bed_contact(drawn, cut, env, b)[0] for b in ("+z", "-z", "+x", "-x", "+y")}
+        want = {"+z": 99.0, "-z": 39.0, "+x": 60.0, "-x": 40.0, "+y": 58.0}      # each face's sections of the three bodies (the bore opens on the z faces only)
+        p = Part("mini_bed", 1.0, drawn, cut, env, build="-z", log=lambda s_: None)
+        p.support("default", box(-1, 1.5, -1, 11, -1, 4)); p.load("down", box(20, 24, 0, 10, 8, 12), (0, 0, -5.0), cls="flight")
+        rep = audit(p, 3.2, log=lambda s_: None, hard=False)
+        p.bed_min_mm2 = 60.0
+        refused = any(f.startswith("bed:") for f in audit(p, 3.2, log=lambda s_: None, hard=False)["fails"])
+        p.bed_min_mm2 = 30.0
+        passed = not any(f.startswith("bed:") for f in audit(p, 3.2, log=lambda s_: None, hard=False)["fails"])
+        ok = all(abs(got[b] - want[b]) < 0.5 for b in got) and abs(rep["bed"]["drawn_mm2"] - 39.0) < 0.5 and refused and passed
+        check("audit bed: the drawn solid's flat on the bed plane in each build direction; under the setup's bed_min_mm2 it is refused", bool(ok), f"{ {b: round(v, 1) for b, v in got.items()} } refused {refused} passed {passed}")
+    except Exception as e:
+        check("audit bed", False, repr(e)[:200])
+
+
 def t_audit_room_full():
     """room_full (topo/audit.py room_strength): the room filled solid must pass max_worst, else no layout can and the run is refused
     (9 Nov: the Scout v4 frame's 16 x 8 side lugs read 2.55 after 69 min). The 24 x 10 x 10 bar holds 10 N; at 20 kN it cannot."""
@@ -1625,7 +1649,7 @@ ARMS_GEN = 14.0
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_no_cavity):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_no_cavity):
         t()
     if not quick:
         t_end_to_end()

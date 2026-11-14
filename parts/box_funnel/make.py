@@ -91,6 +91,10 @@ RIB_Y = 88.0                                      # the rib's outer face, the be
 JOINT = dict(hi=(53.0, -34.0, 2.2), lo=(47.0, -52.2, 1.7), top=(68.0, -24.5, 2.2))   # the low one outside the carried pack's sweep; the top one in the rib, 15 of rib left outboard of its pocket
 RIB_X = 50.0                                      # the rib is RIB_Y wide from the joint to here
 ROOT_Z = -41.0                                    # the rib's root and its flange at the joint reach down to here (the rib elsewhere to z -31.7, over the drive)
+TOP_Z = SEAT_Z + H_Y                              # -16.3: the half's bed plane (it prints upside down, build -z). 14 Nov: the first runs' halves touched the bed on 40 to 66 mm2 (the walls' top
+                                                  # edges were square to their 55 deg faces, a line; the rib's room ended 1.0 short of them), so everything over the rails ends ON this plane:
+RIM = (90.0, 61.0, 3.0)                           # the side walls' top edges level, with a drawn rim behind them: to |x|, out to |y|, thick (7.0 x 90 of flat a wall, 1260 mm2 a half the run cannot remove; beyond |x| 90 the Overseer's foot nodes pass |y| 59)
+LIP = 0.4                                         # the ledges' plastic seat face stands this far under the seat plane: the drones rest on the TPU strips alone (they stand proud), so the supports' scars under the ledges (print pose) never touch a drone
 ROOM_Y = 59.0                                     # the room behind the side walls ends here (the bays beside the drone, the Overseer's foot nodes); a cut that nears it runs out past it, never short of it
 ARM_LANE = (88.1, 113.1, -116.0, 116.0, -58.8)   # arm v8's carriage and rods at the drone: nothing below W Z 161.5 over W X -28..116, Y 58..79 (turned pose, restated by the arm worker 13 Nov: W Y 54..79, W X +-116 = seat x 88.1..113.1; parts/box_arm8/make.py funnel_keepout() is the source, tools/box_check.py reads it)
 PACK_R = 169.0                                    # a pack carried on the wheel sweeps r 165 about the axle over W Y 114..210 (seat x -53..43), + 4   # the halves' joint at x 0: (|y|, z, hole r) of the M4 and the M3
@@ -241,6 +245,7 @@ def fixed():
         cuts += [box(lo, hi, sy * 33.0, sy * (SCREW_Y - BLOCK[1] + 0.5), z0 + TAB_H[0] - 0.5, z0 + TAB_H[1] + 0.5) for sy in (-1, 1)]
     cuts += [box(SEAT[0] + 1.0, SEAT[1] - 1.0, sy * STRIP_Y[0], sy * STRIP_Y[1], z0 - STRIP_D, z0 + 0.01) for sy in (-1, 1)]
     cuts += [cyl_z(z0 - 30.0, z0 + 5.0, x, y, PROBE_R, 16) for x, y in PROBES]
+    cuts.append(box(SEAT[0], SEAT[1], SEAT[2], SEAT[3], z0 - LIP, z0 + 0.01))                      # LIP: the plastic seat face, under the strips' tops
     f = f - U(cuts)
     return U([m for m in f.decompose() if m.volume() > 5.0])
 
@@ -269,6 +274,8 @@ def half_bodies(sx):
     xmid = (bxa + bxb) / 2; side = box(0.0, sx * 400.0, -400, 400, -400, 400)
     S = fixed() ^ side
     R = dict(shell=S); drawn = [S]; cuts = []; env = []
+    rx, ry, rt = RIM                                                                                                         # the bed rim (TOP_Z, RIM): the wall's top edge level, a flat behind it
+    drawn += [box(0.0, sx * rx, sy * 50.0, sy * ry, TOP_Z - rt, TOP_Z) - inner() for sy in (-1, 1)]
     mr, mf_, tip = motor_x(sx); zc = z0 + SCREW_H; bx, by, bz = BLOCK
     for sy in (-1, 1):
         Y = lambda a, b: (sy * a, sy * b)
@@ -286,11 +293,11 @@ def half_bodies(sx):
         # rib 74 wide necked its outer fibre round the nut's pocket (0.57); outside a rib 77 wide it left the rib too narrow over the
         # motor (the run: 0.545). Now the rib is the beam's width (RIB_Y 88) and the bolt sits in it at |y| 68, its pocket open to the
         # top, 15 of rib outboard of it.
-        yt, zt_, rt = JOINT["top"]; ft = box(0.0, sx * 5.0, *Y(59.0, RIB_Y), ROOT_Z, z0 + 27.0)
+        yt, zt_, rt = JOINT["top"]; ft = box(0.0, sx * 5.0, *Y(59.0, RIB_Y), ROOT_Z, TOP_Z)
         R[f"joint_top{sy:+d}"] = ft; drawn.append(ft)
-        cuts += [cyl_x(-sx * 1.0, sx * 19.0, sy * yt, zt_, rt), cyl_x(sx * 5.0, sx * 19.0, sy * yt, zt_, 4.8), box(sx * 5.0, sx * 19.0, *Y(yt - 4.8, yt + 4.8), zt_, z0 + 28.0)]   # the head's and nut's pocket, open to the top
+        cuts += [cyl_x(-sx * 1.0, sx * 19.0, sy * yt, zt_, rt), cyl_x(sx * 5.0, sx * 19.0, sy * yt, zt_, 4.8), box(sx * 5.0, sx * 19.0, *Y(yt - 4.8, yt + 4.8), zt_, z0 + 29.0)]   # the head's and nut's pocket, open to the top
         R[f"joint_hi{sy:+d}"], R[f"joint_lo{sy:+d}"] = fh, fl; drawn += [fh, fl]
-        cuts.append(hull([(x, sy * y, z) for x in (-sx * 1.0, sx * 95.0) for y, z in ((79.0, z0 + 27.5), (RIB_Y + 1.0, z0 + 27.5), (RIB_Y + 1.0, z0 + 16.5))]))   # the rib's and the flange's top outer edge, chamfered: the Overseer's v8 foot nodes pass there landing 20 off centre (59 mm3 into the square edge at x 41)
+        cuts.append(hull([(x, sy * y, z) for x in (-sx * 1.0, sx * 95.0) for y, z in ((79.0 - 1.5 / 1.1, z0 + 29.0), (RIB_Y + 1.0, z0 + 29.0), (RIB_Y + 1.0, z0 + 16.5))]))   # the rib's and the flange's top outer edge, chamfered: the Overseer's v8 foot nodes pass there landing 20 off centre (59 mm3 into the square edge at x 41)
         cuts.append(box(sx * 5.0, sx * 19.0, *Y(yh, ROOM_Y + 0.5), zh - 4.8, zh + 4.8))                                    # the M4 nut's pocket, open to the side (as a bore it left a 1.2 fin of room to |y| 59)
         cuts += [cyl_x(-sx * 1.0, sx * 19.0, sy * yh, zh, rh), cyl_x(sx * 5.0, sx * 19.0, sy * yh, zh, 4.8),
                  cyl_x(-sx * 1.0, sx * 19.0, sy * yl, zl, rl), cyl_x(sx * 5.0, sx * 19.0, sy * yl, zl, 3.4)]
@@ -315,10 +322,11 @@ def half_bodies(sx):
             cuts.append(box(xs - SW[0] / 2 - 0.3, xs + SW[0] / 2 + 0.3, *Y(SW_Y - 3.5, LUG_Y[1] + 0.3), z0 + SW_H - 0.4, z0 + LUG_H[0]))     # the switch and its roller
             cuts += [cyl_z(z0 + SW_H - 1.0, z0 + LUG_H[1] + 1.0, xs + d, sy * (SW_Y + 7.3), 0.85, 12) for d in (-4.75, 4.75)]                # M2 self-tapping, up into the lug
         # ---- room
-        zt = z0 + 27.0
-        env.append(box(0.0, sx * 92.0, *Y(38.0, ROOM_Y), z0 - FLOOR - 0.2, zt))                                               # behind the side wall
+        zt = TOP_Z                                                                                                            # the rib's room ends on the bed plane (it ended 1.0 under it)
+        env.append(box(0.0, sx * rx, *Y(38.0, ROOM_Y), z0 - FLOOR - 0.2, zt))
+        env.append(box(sx * (rx - 1.0), sx * 92.0, *Y(38.0, ROOM_Y), z0 - FLOOR - 0.2, z0 + 27.0))                                               # behind the side wall
         env.append(box(sx * 92.0, sx * 112.0, *Y(38.0, ROOM_Y), z0 - FLOOR - 0.2, -31.0))                                      # behind the ear: full depth under h 13,
-        env.append(box(sx * 90.0, sx * (112.0 if sx > 0 else 108.0), *Y(38.0, 56.0), -33.0, zt))                                                    # 5 less above it (the Overseer's foot nodes and tubes pass |y| 59 from z -28)
+        env.append(box(sx * 90.0, sx * (112.0 if sx > 0 else 108.0), *Y(38.0, 56.0), -33.0, z0 + 27.0))                                                    # 5 less above it (the Overseer's foot nodes and tubes pass |y| 59 from z -28)
         env.append(box(0.0, sx * (84.0 if sx > 0 else 76.0), *Y(46.0, 74.0), z0 + 12.6, zt))
         env.append(box(0.0, sx * RIB_X, *Y(73.0, RIB_Y), z0 + 12.6, zt))                                                      # out to RIB_Y from the joint to past the motor (at |y| 74 and 77 the rib's lower outer fibre over the motor read 0.43 filled and 0.545 built; a step or taper in its width near the joint was a notch)
         env.append(box(sx * (RIB_X - 2.0), sx * (84.0 if sx > 0 else 76.0), *Y(73.0, 77.0), z0 + 12.6, zt))                  # and 77 wide from there to its end: the Overseer's foot nodes pass outside it there (v8 nodes, 13 Nov: 1066 mm3 into an 88 rib at x 84)

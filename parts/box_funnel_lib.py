@@ -16,7 +16,11 @@ Loads (systems/dimensions.md L and System Box catch; E unless tagged), each its 
   handling    50 N on a wall's top edge (out, down) and on an ear (misuse)
 Supports: the faces a piece bolts to. A half: its two laps under the arms and its four joint flanges at x 0. An arm: its lap; the
 sheet's reactions come in at its end plate as loads (shares of the cases above by the levers between the four plates).
-Print: a half upside down (build -z: the side walls' top edges on the bed, supports under the ledges and the beam's wings). Standing
+Print: a half upside down (build -z). 14 Nov: the first runs' halves passed and stood on 40 to 66 mm2 (the walls' top edges square to
+their faces, a line), so the side walls' top edges are level with a drawn rim behind them and the rib's room ends on that plane
+(make.py TOP_Z, RIM; BED_MIN here, refused by the audit under it); the bed contact is within |y| 79, so a 5 mm brim fits the 180 bed
+though the beam is 176 wide 42 over it. Supports under the beam, the motor seats and the ledges; the ledges' plastic face stands 0.4
+under the seat plane (make.py LIP), so the drones rest on the TPU strips and never on a support's scar. Standing
 on its beam face (build -x, every face along x, no support) the rails and the rib behind each wall bend across the layers and the
 room filled solid read 0.53 at the ear (limit 0.5); upside down it reads 0.36. An arm on its outer face (build -x)."""
 import importlib.util, os, sys
@@ -34,12 +38,14 @@ OV, SC, LAND = 2200.0 * G, 500.0 * G, 6.0
 S55, C55 = np.sin(np.radians(55.0)), np.cos(np.radians(55.0))
 PULL, STALL, HAND, PUSH = 50.0, 135.0, 50.0, 118.0
 SPEC_HALF = dict(h=2.2, gen_cm3=140.0, max_worst=0.5, settings=dict(near_sym=True))
+BED_MIN = 1200.0                                            # mm2 of drawn flat a half lays on the bed (the two rims, 2 x 7.0 x 90 = 1260, and the joint flanges' tops)
 SPEC_ARM = dict(h=1.2, gen_cm3=40.0, max_worst=0.5)
 
 
 def half_setup(sx, h):
     drawn, cuts, env, R = fm.half_bodies(sx)
     p = Part("box_funnel_half_" + ("nose" if sx > 0 else "tail"), h, drawn, cuts, env, build="-z", material="PCTG")
+    p.bed_min_mm2 = BED_MIN                                     # topo/audit.py bed: the rims' flat on the bed plane, refused under it
     z0 = fm.SEAT_Z; S = R["shell"]
     p.support("default", fm.U([R[k] for k in R if k.startswith(("lap", "joint"))]))
     ledge = lambda sy, a, b: S ^ fm.box(sx * a, sx * b, sy * 28.0, sy * 34.4, z0 - fm.FLOOR - 0.1, z0 + 0.2)
