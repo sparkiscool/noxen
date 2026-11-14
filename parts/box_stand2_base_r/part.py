@@ -6,4 +6,4 @@ def setup(h):
     return base_setup(h, 1)
 
 
-SPEC = dict(h=2.3, gen_cm3=150.0, max_worst=0.5)
+SPEC = dict(h=2.3, gen_cm3=220.0, max_worst=0.5)
