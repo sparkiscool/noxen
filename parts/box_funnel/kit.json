@@ -1,0 +1,189 @@
+{
+ "what": "the landing funnel's print kit: each file is in its print pose and was measured and gated as it lies (tools/funnel_kit.py)",
+ "printer": "Bambu A1 mini, 180 x 180 x 180",
+ "bought": "tools/import_box.py BOUGHT_LIST and FASTENERS (the page's Bought table): gearmotors, switches, probes and sleeves, the four hold-down keys",
+ "not_in_the_kit": "the stand's mast (15 longer): not drawn",
+ "ok": false,
+ "not_ready": [],
+ "pieces": [
+  {
+   "name": "box_funnel_wall_nose",
+   "file": "print/box_funnel_wall_nose.stl",
+   "sha256": "d8c09e9e4ed3430334328ae27af6e62aab3bc6724f254cf14567d49d031dab14",
+   "count": 1,
+   "material": "PCTG (PETG settings + 10 C)",
+   "pose": "standing on its foot, as it sits in the funnel",
+   "supports": "yes: 711 mm2 over 45 deg, 0.5 to 9.3 over the bed",
+   "bed_min_mm2": 200.0,
+   "bed_mm": [
+    46.9,
+    118.5,
+    40.0
+   ],
+   "bed_contact_mm2": 252,
+   "overhang_mm2": 711,
+   "volume_cm3": 16.2,
+   "contact_extent_mm": [
+    3.7,
+    68.8
+   ],
+   "brim_mm": 5.0,
+   "overhang_over_bed_mm": [
+    0.5,
+    9.3
+   ],
+   "fits_180": true,
+   "source": {
+    "drawn": "parts/box_funnel/make.py carriage(+1)",
+    "poses_measured": {
+     "standing on its foot, as it sits in the funnel": {
+      "bed_contact_mm2": 252,
+      "overhang_mm2": 711
+     },
+     "upside down on its top edge": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 960
+     },
+     "on its x- side": {
+      "bed_contact_mm2": 10,
+      "overhang_mm2": 4630
+     },
+     "on its x+ side": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4432
+     },
+     "standing on its -y end": {
+      "bed_contact_mm2": 132,
+      "overhang_mm2": 558
+     },
+     "standing on its +y end": {
+      "bed_contact_mm2": 135,
+      "overhang_mm2": 555
+     },
+     "on its 55 deg sliding face": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4641
+     },
+     "on its back (the sliding face up)": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4432
+     }
+    }
+   },
+   "solid_check": "PASS",
+   "picture": "parts/box_funnel/kit/box_funnel_wall_nose.png",
+   "ok": true
+  },
+  {
+   "name": "box_funnel_wall_tail",
+   "file": "print/box_funnel_wall_tail.stl",
+   "sha256": "77560bb9a71c5a45dd41cb731387c438dae26429778e9e90c4b63864c0b82a23",
+   "count": 1,
+   "material": "PCTG (PETG settings + 10 C)",
+   "pose": "standing on its foot, as it sits in the funnel",
+   "supports": "yes: 711 mm2 over 45 deg, 0.5 to 9.3 over the bed",
+   "bed_min_mm2": 200.0,
+   "bed_mm": [
+    46.9,
+    118.5,
+    40.0
+   ],
+   "bed_contact_mm2": 252,
+   "overhang_mm2": 711,
+   "volume_cm3": 16.2,
+   "contact_extent_mm": [
+    3.7,
+    68.8
+   ],
+   "brim_mm": 5.0,
+   "overhang_over_bed_mm": [
+    0.5,
+    9.3
+   ],
+   "fits_180": true,
+   "source": {
+    "drawn": "parts/box_funnel/make.py carriage(-1)",
+    "poses_measured": {
+     "standing on its foot, as it sits in the funnel": {
+      "bed_contact_mm2": 252,
+      "overhang_mm2": 711
+     },
+     "upside down on its top edge": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 960
+     },
+     "on its x- side": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4432
+     },
+     "on its x+ side": {
+      "bed_contact_mm2": 10,
+      "overhang_mm2": 4630
+     },
+     "standing on its -y end": {
+      "bed_contact_mm2": 132,
+      "overhang_mm2": 558
+     },
+     "standing on its +y end": {
+      "bed_contact_mm2": 135,
+      "overhang_mm2": 555
+     },
+     "on its 55 deg sliding face": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4641
+     },
+     "on its back (the sliding face up)": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4432
+     }
+    }
+   },
+   "solid_check": "PASS",
+   "picture": "parts/box_funnel/kit/box_funnel_wall_tail.png",
+   "ok": true
+  },
+  {
+   "name": "box_funnel_strips",
+   "file": "print/box_funnel_strips.stl",
+   "sha256": "55154dbfbf90237cfc50a23c3f24b15e3ef11cd3df1136e727bdb309ad6e7252",
+   "count": 1,
+   "material": "TPU 95A",
+   "pose": "flat, the six side by side (one plate)",
+   "supports": "none",
+   "bed_min_mm2": 300.0,
+   "bed_mm": [
+    62.3,
+    36.8,
+    2.0
+   ],
+   "bed_contact_mm2": 991,
+   "overhang_mm2": 0,
+   "volume_cm3": 2.0,
+   "contact_extent_mm": [
+    62.3,
+    36.8
+   ],
+   "brim_mm": 5.0,
+   "overhang_over_bed_mm": null,
+   "fits_180": true,
+   "source": {
+    "drawn": "parts/box_funnel/make.py strips()",
+    "lengths_mm": [
+     62.3,
+     58.7,
+     58.4,
+     62.3,
+     58.7,
+     58.4
+    ],
+    "section_mm": [
+     2.8,
+     2.0
+    ]
+   },
+   "solid_check": "PASS",
+   "picture": "parts/box_funnel/kit/box_funnel_strips.png",
+   "ok": true
+  }
+ ]
+}
