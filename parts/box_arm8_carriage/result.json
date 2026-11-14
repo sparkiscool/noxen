@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   58417.8
+   61211.9
   ],
   "sealed_voids": [],
   "inner_shells": [],
@@ -19,43 +19,54 @@
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 7596.7,
+  "skin_mm3": 8296.9,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
   "outside_env_mm3": 0.0,
   "ok": true
  },
  "strength": {
   "rows": [
    {
+    "case": "pick-up at the stop: return spring 10 N (E) + the carriage with rail and wheels, 0.25 kg (E) at 3 g",
+    "cls": "flight",
+    "inlayer": 0.057,
+    "across": 0.053,
+    "at": [
+     48.4,
+     58.0,
+     81.2
+    ]
+   },
+   {
     "case": "insert at the drone, overseer, in the receiver's guides: 64.5 N through the float springs",
     "cls": "flight",
-    "inlayer": 0.214,
-    "across": 0.163,
+    "inlayer": 0.231,
+    "across": 0.162,
     "at": [
-     35.2,
+     34.0,
      77.2,
-     2.8
+     7.6
     ]
    },
    {
     "case": "pull-out at the drone, overseer, in the receiver's guides: 64.5 N at the blades",
     "cls": "flight",
-    "inlayer": 0.227,
-    "across": 0.203,
+    "inlayer": 0.248,
+    "across": 0.193,
     "at": [
-     35.2,
+     34.0,
      77.2,
-     2.8
+     7.6
     ]
    },
    {
     "case": "pull-out, overseer, the cartridge free of the guides (bound): the plug's 57 N at the lead end",
     "cls": "misuse",
-    "inlayer": 0.085,
-    "across": 0.041,
+    "inlayer": 0.084,
+    "across": 0.038,
     "at": [
-     35.2,
+     35.7,
      77.2,
      2.8
     ]
@@ -63,193 +74,193 @@
    {
     "case": "insert at the float limit, overseer: 118 N, the float pitched to its reach (3.0 N m)",
     "cls": "misuse",
-    "inlayer": 0.322,
-    "across": 0.256,
+    "inlayer": 0.339,
+    "across": 0.259,
     "at": [
-     35.2,
-     70.8,
-     10.8
+     34.0,
+     77.2,
+     7.6
     ]
    },
    {
     "case": "insert off square, overseer: the limit + 43.5 N across at the mouth",
     "cls": "misuse",
-    "inlayer": 0.434,
-    "across": 0.315,
+    "inlayer": 0.373,
+    "across": 0.237,
     "at": [
-     35.2,
-     70.8,
-     12.4
+     34.0,
+     77.2,
+     9.2
     ]
    },
    {
     "case": "axle stall, head held in a bay: 5.53 N m at the hub = 43 N across at the cartridge",
     "cls": "misuse",
-    "inlayer": 0.212,
-    "across": 0.259,
+    "inlayer": 0.205,
+    "across": 0.167,
     "at": [
-     41.7,
-     72.4,
-     78.0
+     35.7,
+     70.8,
+     2.8
     ]
    },
    {
     "case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)",
     "cls": "misuse",
-    "inlayer": 0.329,
+    "inlayer": 0.361,
     "across": 0.261,
     "at": [
-     35.2,
+     34.0,
      77.2,
-     2.8
+     7.6
     ]
    },
    {
     "case": "box handling 3 g down + 2 g side, carrying (v7's case)",
     "cls": "misuse",
-    "inlayer": 0.149,
-    "across": 0.127,
+    "inlayer": 0.126,
+    "across": 0.076,
     "at": [
-     35.2,
-     70.8,
-     12.4
+     34.0,
+     77.2,
+     9.2
     ]
    },
    {
     "case": "carrying overseer at full reach, gravity down the bar",
     "cls": "flight",
-    "inlayer": 0.035,
+    "inlayer": 0.038,
     "across": 0.028,
     "at": [
-     35.2,
+     34.0,
      77.2,
-     2.8
+     7.6
     ]
    },
    {
     "case": "handling 3 g down the bar",
     "cls": "misuse",
-    "inlayer": 0.066,
+    "inlayer": 0.072,
     "across": 0.052,
     "at": [
-     35.2,
+     34.0,
      77.2,
-     2.8
+     7.6
     ]
    },
    {
     "case": "carrying overseer at full reach, gravity across",
     "cls": "flight",
-    "inlayer": 0.078,
-    "across": 0.096,
+    "inlayer": 0.076,
+    "across": 0.062,
     "at": [
-     41.7,
-     72.4,
-     78.0
+     35.7,
+     70.8,
+     2.8
     ]
    },
    {
     "case": "handling 3 g across",
     "cls": "misuse",
-    "inlayer": 0.144,
-    "across": 0.18,
+    "inlayer": 0.128,
+    "across": 0.117,
     "at": [
-     41.7,
-     72.4,
-     78.0
+     35.7,
+     70.8,
+     2.8
     ]
    },
    {
     "case": "carrying overseer at full reach, gravity along the axle",
     "cls": "flight",
-    "inlayer": 0.055,
-    "across": 0.05,
+    "inlayer": 0.046,
+    "across": 0.033,
     "at": [
-     35.2,
+     34.0,
      70.8,
-     10.8
+     7.6
     ]
    },
    {
     "case": "handling 3 g along the axle",
     "cls": "misuse",
-    "inlayer": 0.072,
-    "across": 0.068,
+    "inlayer": 0.059,
+    "across": 0.051,
     "at": [
-     35.2,
+     35.7,
      70.8,
-     12.4
+     2.8
     ]
    },
    {
     "case": "insert at the drone, scout, in the receiver's guides: 59.2 N through the float springs",
     "cls": "flight",
-    "inlayer": 0.196,
-    "across": 0.15,
+    "inlayer": 0.212,
+    "across": 0.149,
     "at": [
-     35.2,
+     34.0,
      77.2,
-     2.8
+     7.6
     ]
    },
    {
     "case": "pull-out at the drone, scout, in the receiver's guides: 59.2 N at the blades",
     "cls": "flight",
-    "inlayer": 0.208,
-    "across": 0.186,
+    "inlayer": 0.228,
+    "across": 0.177,
     "at": [
-     35.2,
+     34.0,
      77.2,
-     2.8
+     7.6
     ]
    },
    {
     "case": "pull-out, scout, the cartridge free of the guides (bound): the plug's 57 N at the lead end",
     "cls": "misuse",
     "inlayer": 0.098,
-    "across": 0.069,
+    "across": 0.064,
     "at": [
-     35.2,
+     34.0,
      77.2,
-     2.8
+     7.6
     ]
    },
    {
     "case": "insert at the float limit, scout: 118 N, the float pitched to its reach (3.0 N m)",
     "cls": "misuse",
-    "inlayer": 0.322,
-    "across": 0.256,
+    "inlayer": 0.339,
+    "across": 0.259,
     "at": [
-     35.2,
-     70.8,
-     10.8
+     34.0,
+     77.2,
+     7.6
     ]
    },
    {
     "case": "insert off square, scout: the limit + 43.5 N across at the mouth",
     "cls": "misuse",
-    "inlayer": 0.434,
-    "across": 0.315,
+    "inlayer": 0.373,
+    "across": 0.237,
     "at": [
-     35.2,
-     70.8,
-     12.4
+     34.0,
+     77.2,
+     9.2
     ]
    }
   ],
-  "worst": 0.434,
+  "worst": 0.373,
   "worst_case": "insert off square, overseer: the limit + 43.5 N across at the mouth",
   "worst_at": [
-   35.2,
-   70.8,
-   12.4
+   34.0,
+   77.2,
+   9.2
   ],
   "ok": true
  },
- "mass_g": 87.83,
+ "mass_g": 91.77,
  "watertight": true,
  "export": {
-  "faces_in": 40858,
+  "faces_in": 287638,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -259,23 +270,13 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 40858,
+  "faces": 287638,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
-  "simplified": true,
-  "first_pass": {
-   "degenerate": 2,
-   "folded": 2,
-   "caps_split": 22,
-   "caps_left": 0,
-   "watertight": true,
-   "faces": 299742,
-   "n_dropped_shells": 0,
-   "dropped_shells": []
-  },
-  "volume_mm3": 71410.5,
-  "exact_mm3": 71408.8
+  "simplified": false,
+  "volume_mm3": 74609.4,
+  "exact_mm3": 74609.4
  },
  "bodies": {
   "bodies_raw": 1,
@@ -283,8 +284,8 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 71408.8,
- "drawn_g": 14.85,
+ "volume_mm3": 74609.4,
+ "drawn_g": 15.19,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
@@ -296,34 +297,34 @@
  },
  "memory_build": [
   {
-   "estimate_gb": 3.27,
+   "estimate_gb": 3.34,
    "parts": {
-    "held": 0.45,
-    "gate": 0.64,
-    "mesh": 2.17
+    "held": 0.49,
+    "gate": 0.6,
+    "mesh": 2.24
    },
    "limit_gb": 14.0,
-   "gate_cells": 15247100,
+   "gate_cells": 14379750,
    "bounds_mm": [
-    82.3,
-    26.5,
+    86.3,
+    23.6,
     102.5
    ],
-   "faces": 389128,
+   "faces": 401416,
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 1.12,
+   "estimate_gb": 1.17,
    "parts": {
-    "held": 0.48,
-    "gate": 0.64,
+    "held": 0.56,
+    "gate": 0.6,
     "mesh": 0.0
    },
    "limit_gb": 14.0,
-   "gate_cells": 15247100,
+   "gate_cells": 14379750,
    "bounds_mm": [
-    82.3,
-    26.5,
+    86.3,
+    23.6,
     102.5
    ],
    "faces": 0,
@@ -332,7 +333,7 @@
  ],
  "stl": "box_arm8_carriage.stl",
  "view_stl": "box_arm8_carriage_view.stl",
- "view_faces": 40858,
+ "view_faces": 120000,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -409,44 +410,44 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.9411858631134499,
-  "nd": 16342,
+  "volfrac": 0.9703400022080623,
+  "nd": 15851,
   "sym_axes": [],
-  "n_real": 19,
+  "n_real": 20,
   "n_ties": 24,
   "backend": "direct",
-  "iterations": 130,
+  "iterations": 155,
   "stopped": "max_stage",
   "checks": [
    {
     "it": 35,
     "beta": 4.0,
-    "worst": 0.331,
-    "worst_case": "insert off square, overseer: the limit + 43.5 N across at the mouth"
+    "worst": 0.345,
+    "worst_case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)"
    },
    {
     "it": 70,
     "beta": 8.0,
-    "worst": 0.331,
-    "worst_case": "insert off square, overseer: the limit + 43.5 N across at the mouth"
+    "worst": 0.345,
+    "worst_case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)"
    },
    {
-    "it": 80,
+    "it": 105,
     "beta": 16.0,
-    "worst": 0.331,
-    "worst_case": "insert off square, overseer: the limit + 43.5 N across at the mouth"
+    "worst": 0.345,
+    "worst_case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)"
    }
   ],
   "hold": {
    "started_it": 35,
    "beta": 4.0,
-   "index": 0.331
+   "index": 0.345
   },
   "cavity": {
-   "last": 1.535959262305308,
+   "last": 0.6273830359587022,
    "ratio": 5.0,
-   "T0": 17.197069782184144,
-   "row": false
+   "T0": 27.469429358271256,
+   "row": true
   }
  },
  "grid": {
@@ -454,18 +455,19 @@
   "h": 1.6,
   "shape": [
    56,
-   32,
+   24,
    72
   ],
   "origin": [
-   -35.95,
+   -33.95,
    47.6,
    -14.0
   ],
-  "cells": 129024,
-  "design": 16342,
-  "drawn": 2992,
+  "cells": 96768,
+  "design": 15851,
+  "drawn": 3012,
   "cases": [
+   "pick-up at the stop: return spring 10 N (E) + the carriage with rail and wheels, 0.25 kg (E) at 3 g",
    "insert at the drone, overseer, in the receiver's guides: 64.5 N through the float springs",
    "pull-out at the drone, overseer, in the receiver's guides: 64.5 N at the blades",
    "pull-out, overseer, the cartridge free of the guides (bound): the plug's 57 N at the lead end",
@@ -490,260 +492,271 @@
    "default"
   ]
  },
- "build_s": 37.6,
- "layout_s": 522,
- "peak_gb": 1.243044,
+ "build_s": 67.0,
+ "layout_s": 840,
+ "peak_gb": 1.244656,
  "memory": {
-  "estimate_gb": 1.59,
+  "estimate_gb": 1.56,
   "parts": {
-   "held": 0.32,
-   "factor": 0.5,
-   "assembly": 0.19,
-   "block": 0.53,
-   "energies": 0.06
+   "held": 0.43,
+   "factor": 0.48,
+   "assembly": 0.18,
+   "block": 0.43,
+   "energies": 0.05
   },
   "limit_gb": 14.0,
-  "cases": 43,
-  "active_dofs": 69945,
+  "cases": 44,
+  "active_dofs": 68043,
   "backend": "direct",
   "block": 64,
   "build": {
-   "estimate_gb": 1.19,
+   "estimate_gb": 1.03,
    "parts": {
-    "held": 0.32,
-    "gate": 0.87,
+    "held": 0.43,
+    "gate": 0.6,
     "mesh": 0.0
    },
    "limit_gb": 14.0,
-   "gate_cells": 20841600,
+   "gate_cells": 14414400,
    "bounds_mm": [
-    82.3,
-    36.4,
+    86.3,
+    23.6,
     103.0
    ],
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 1.17
+  "peak_it1_gb": 1.15
  },
  "early": {
   "rows": [
    {
+    "case": "pick-up at the stop: return spring 10 N (E) + the carriage with rail and wheels, 0.25 kg (E) at 3 g",
+    "cls": "flight",
+    "inlayer": 0.084,
+    "across": 0.061,
+    "at": [
+     48.4,
+     58.0,
+     81.2
+    ]
+   },
+   {
     "case": "insert at the drone, overseer, in the receiver's guides: 64.5 N through the float springs",
     "cls": "flight",
-    "inlayer": 0.184,
-    "across": 0.16,
+    "inlayer": 0.221,
+    "across": 0.148,
     "at": [
-     36.8,
+     34.0,
      77.2,
-     1.2
+     7.6
     ]
    },
    {
     "case": "pull-out at the drone, overseer, in the receiver's guides: 64.5 N at the blades",
     "cls": "flight",
-    "inlayer": 0.195,
-    "across": 0.137,
+    "inlayer": 0.237,
+    "across": 0.154,
     "at": [
-     36.8,
+     34.0,
      77.2,
-     1.2
+     7.6
     ]
    },
    {
     "case": "pull-out, overseer, the cartridge free of the guides (bound): the plug's 57 N at the lead end",
     "cls": "misuse",
-    "inlayer": 0.075,
-    "across": 0.038,
+    "inlayer": 0.082,
+    "across": 0.036,
     "at": [
-     36.8,
-     77.2,
-     1.2
+     35.7,
+     75.6,
+     2.8
     ]
    },
    {
     "case": "insert at the float limit, overseer: 118 N, the float pitched to its reach (3.0 N m)",
     "cls": "misuse",
-    "inlayer": 0.258,
-    "across": 0.24,
+    "inlayer": 0.323,
+    "across": 0.236,
     "at": [
-     36.8,
+     34.0,
      77.2,
-     1.2
+     7.6
     ]
    },
    {
     "case": "insert off square, overseer: the limit + 43.5 N across at the mouth",
     "cls": "misuse",
-    "inlayer": 0.331,
-    "across": 0.25,
+    "inlayer": 0.338,
+    "across": 0.2,
     "at": [
-     35.2,
-     69.2,
-     12.4
+     34.0,
+     77.2,
+     9.2
     ]
    },
    {
     "case": "axle stall, head held in a bay: 5.53 N m at the hub = 43 N across at the cartridge",
     "cls": "misuse",
-    "inlayer": 0.17,
-    "across": 0.193,
+    "inlayer": 0.163,
+    "across": 0.164,
     "at": [
-     41.7,
+     42.0,
      72.4,
-     79.6
+     6.0
     ]
    },
    {
     "case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)",
     "cls": "misuse",
-    "inlayer": 0.284,
-    "across": 0.253,
+    "inlayer": 0.345,
+    "across": 0.237,
     "at": [
-     36.8,
+     34.0,
      77.2,
-     1.2
+     7.6
     ]
    },
    {
     "case": "box handling 3 g down + 2 g side, carrying (v7's case)",
     "cls": "misuse",
-    "inlayer": 0.116,
-    "across": 0.094,
+    "inlayer": 0.113,
+    "across": 0.083,
     "at": [
-     35.2,
-     69.2,
-     12.4
+     34.0,
+     77.2,
+     9.2
     ]
    },
    {
     "case": "carrying overseer at full reach, gravity down the bar",
     "cls": "flight",
-    "inlayer": 0.03,
-    "across": 0.027,
+    "inlayer": 0.037,
+    "across": 0.025,
     "at": [
-     36.8,
+     34.0,
      77.2,
-     1.2
+     7.6
     ]
    },
    {
     "case": "handling 3 g down the bar",
     "cls": "misuse",
-    "inlayer": 0.057,
-    "across": 0.05,
+    "inlayer": 0.069,
+    "across": 0.047,
     "at": [
-     36.8,
+     34.0,
      77.2,
-     1.2
+     7.6
     ]
    },
    {
     "case": "carrying overseer at full reach, gravity across",
     "cls": "flight",
-    "inlayer": 0.063,
-    "across": 0.072,
+    "inlayer": 0.061,
+    "across": 0.061,
     "at": [
-     41.7,
+     42.0,
      72.4,
-     79.6
+     6.0
     ]
    },
    {
     "case": "handling 3 g across",
     "cls": "misuse",
-    "inlayer": 0.117,
-    "across": 0.135,
+    "inlayer": 0.105,
+    "across": 0.113,
     "at": [
-     41.7,
+     42.0,
      72.4,
-     79.6
+     6.0
     ]
    },
    {
     "case": "carrying overseer at full reach, gravity along the axle",
     "cls": "flight",
-    "inlayer": 0.042,
-    "across": 0.026,
+    "inlayer": 0.04,
+    "across": 0.033,
     "at": [
-     35.2,
+     34.0,
      69.2,
-     12.4
+     9.2
     ]
    },
    {
     "case": "handling 3 g along the axle",
     "cls": "misuse",
-    "inlayer": 0.058,
-    "across": 0.04,
+    "inlayer": 0.051,
+    "across": 0.051,
     "at": [
-     35.2,
-     69.2,
-     12.4
+     48.4,
+     72.4,
+     -2.0
     ]
    },
    {
     "case": "insert at the drone, scout, in the receiver's guides: 59.2 N through the float springs",
     "cls": "flight",
-    "inlayer": 0.169,
-    "across": 0.148,
+    "inlayer": 0.203,
+    "across": 0.136,
     "at": [
-     36.8,
+     34.0,
      77.2,
-     1.2
+     7.6
     ]
    },
    {
     "case": "pull-out at the drone, scout, in the receiver's guides: 59.2 N at the blades",
     "cls": "flight",
-    "inlayer": 0.179,
-    "across": 0.125,
+    "inlayer": 0.218,
+    "across": 0.142,
     "at": [
-     36.8,
+     34.0,
      77.2,
-     1.2
+     7.6
     ]
    },
    {
     "case": "pull-out, scout, the cartridge free of the guides (bound): the plug's 57 N at the lead end",
     "cls": "misuse",
-    "inlayer": 0.085,
-    "across": 0.052,
+    "inlayer": 0.094,
+    "across": 0.053,
     "at": [
-     36.8,
+     34.0,
      77.2,
-     1.2
+     7.6
     ]
    },
    {
     "case": "insert at the float limit, scout: 118 N, the float pitched to its reach (3.0 N m)",
     "cls": "misuse",
-    "inlayer": 0.258,
-    "across": 0.24,
+    "inlayer": 0.323,
+    "across": 0.236,
     "at": [
-     36.8,
+     34.0,
      77.2,
-     1.2
+     7.6
     ]
    },
    {
     "case": "insert off square, scout: the limit + 43.5 N across at the mouth",
     "cls": "misuse",
-    "inlayer": 0.331,
-    "across": 0.25,
+    "inlayer": 0.338,
+    "across": 0.2,
     "at": [
-     35.2,
-     69.2,
-     12.4
+     34.0,
+     77.2,
+     9.2
     ]
    }
   ],
-  "worst": 0.331,
-  "worst_case": "insert off square, overseer: the limit + 43.5 N across at the mouth",
+  "worst": 0.345,
+  "worst_case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)",
   "worst_at": [
-   35.2,
-   69.2,
-   12.4
+   34.0,
+   77.2,
+   7.6
   ],
   "ok": true,
   "beta": 4.0,
@@ -752,34 +765,34 @@
   "k": 3.0
  },
  "field": {
-  "worst": 0.331,
-  "worst_case": "insert off square, overseer: the limit + 43.5 N across at the mouth",
+  "worst": 0.345,
+  "worst_case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)",
   "worst_at": [
-   35.2,
-   69.2,
-   12.4
+   34.0,
+   77.2,
+   7.6
   ],
   "beta": 32.0,
-  "iteration": 130
+  "iteration": 155
  },
  "gen_cm3": 63.0,
  "h": 1.6,
  "audit": {
   "solid_ok": [],
-  "drawn_share": 0.155,
+  "drawn_share": 0.16,
   "load_room": [],
   "bodies": [
    {
     "id": 1,
     "cells": 672,
-    "inscribed_mm": 7.5,
+    "inscribed_mm": 8.0,
     "touches_cut": true,
     "touches_support": true,
     "loaded": false,
     "room": 0.97,
-    "room_depth_mm": 73.6,
+    "room_depth_mm": 72.0,
     "at": [
-     -22.4,
+     -22.3,
      73.2,
      46.0
     ],
@@ -788,7 +801,7 @@
    },
    {
     "id": 2,
-    "cells": 684,
+    "cells": 714,
     "inscribed_mm": 8.0,
     "touches_cut": true,
     "touches_support": true,
@@ -796,33 +809,33 @@
     "room": 0.93,
     "room_depth_mm": 84.8,
     "at": [
-     22.3,
+     22.2,
      73.2,
      14.0
     ],
     "core_mm": 5.6,
-    "free_cells": 684
+    "free_cells": 714
    },
    {
     "id": 3,
-    "cells": 684,
+    "cells": 714,
     "inscribed_mm": 8.0,
     "touches_cut": true,
     "touches_support": true,
     "loaded": false,
     "room": 0.93,
-    "room_depth_mm": 83.2,
+    "room_depth_mm": 80.0,
     "at": [
-     22.3,
+     22.2,
      73.2,
      78.0
     ],
     "core_mm": 5.6,
-    "free_cells": 684
+    "free_cells": 714
    },
    {
     "id": 4,
-    "cells": 952,
+    "cells": 912,
     "inscribed_mm": 1.6,
     "touches_cut": true,
     "touches_support": false,
@@ -830,19 +843,19 @@
     "room": 0.95,
     "room_depth_mm": 100.8,
     "at": [
-     44.0,
-     76.4,
-     42.0
+     44.4,
+     75.5,
+     45.9
     ],
     "core_mm": 1.6,
-    "free_cells": 952,
-    "share_of_drawn": 0.32
+    "free_cells": 912,
+    "share_of_drawn": 0.3
    }
   ],
   "envelope_waste": 0.0,
   "plate": {
-   "L_mm": 83.2,
-   "W_mm": 35.2,
+   "L_mm": 86.4,
+   "W_mm": 22.4,
    "H_mm": 102.4,
    "fits": true
   },
@@ -850,56 +863,43 @@
   "drawn_walls": [],
   "bed": {
    "build": "-y",
-   "drawn_mm2": 0.0,
-   "room_mm2": 41.1,
-   "min_mm2": null
+   "drawn_mm2": 2037.1,
+   "room_mm2": 5455.7,
+   "min_mm2": 1500.0
   },
   "parity": [],
-  "cases": 19,
+  "cases": 20,
   "supports": 1,
   "fails": [],
   "room_full": {
-   "worst": 0.361,
+   "worst": 0.331,
    "worst_case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)",
    "worst_at": [
-    36.8,
-    78.8,
-    2.8
+    34.0,
+    77.2,
+    7.6
    ],
-   "budget_share": 0.941,
-   "thinned": 0.38,
+   "budget_share": 0.97,
+   "thinned": 0.34,
    "max_worst": 0.5,
-   "fin_cells": 66,
-   "worst_in_fin": true,
-   "fin": {
-    "cells": 12,
-    "lo": [
-     36.0,
-     74.8,
-     -7.6
-    ],
-    "hi": [
-     37.7,
-     78.0,
-     2.0
-    ]
-   }
+   "fin_cells": 96,
+   "worst_in_fin": false
   }
  },
  "baseline": null,
- "total_s": 560,
+ "total_s": 907,
  "part_sha": "0e55cdfeec67",
  "lib_sha": "",
- "setup_sha": "8af4458d878a8522",
+ "setup_sha": "e2ace4342da91cd9",
  "max_worst": 0.5,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/box_arm8_carriage.stl",
-  "sha256": "71e7d91bd6dd8fe0263dbc75f69e0414079f911ac8238d6b1b38748f540dcb7a",
-  "bytes": 2042984,
-  "faces": 40858,
-  "view_faces": 40858,
-  "view_sha256": "71e7d91bd6dd8fe0263dbc75f69e0414079f911ac8238d6b1b38748f540dcb7a",
-  "at": "2026-11-14 01:02"
+  "sha256": "1bb411273624182a64510974922eab905a963616d0de9bc49193f49e25326437",
+  "bytes": 14381984,
+  "faces": 287638,
+  "view_faces": 60000,
+  "view_sha256": "a20a6d01582cd6260e384fd4bf09cd9718ae53db3975a41dbbbe6959422b2f58",
+  "at": "2026-11-14 02:48"
  }
 }
