@@ -9,11 +9,13 @@ on its front rim's top and upper sides, outside the lens (cut at the LED bars' w
 lens sits at the same place for any depth, and a deeper case stands out behind. A slot along each side wall at mid-height (3.4 wide,
 up to M3) through which the camera's own side screws clamp it to the sleeve wherever along the depth its holes are, the heads on
 the slot's edges.
-Drawn (attachments only): the sleeve and its lip, the horn's pad (O14, its two screws 5 out, the spline's hub hole), the idler's boss
+Drawn (attachments only): the sleeve and its lip, its side walls on back into the horn's pad and the idler's boss (the room beside the
+case is under a member), the horn's pad (O14, its two screws 5 out, the spline's hub hole), the idler's boss
 with an M3 x 5.7 insert.
 Cuts: the deepest case, the side screws' slots and their heads, the lens's view forward, the plug and its cable out the back, the LED
 bars' windows in the sleeve's top and bottom fronts and their light forward, the horn and the spline, the screws.
-Support: the horn's pad and the idler's boss (the axis). Loads: the camera (45 g) and LED bars on the lip, the two side screws and
+Support: the horn's pad and the idler's boss (the axis); in the head-first crash also the sleeve's bottom front edge on the head
+frame's crash stop ("landed"). Loads: the camera (45 g) and LED bars on the lip, the two side screws and
 the sleeve's top and bottom, CG at the shallowest case's middle (the longer lever), in 35 g crashes and flight; the head-first crash (systems/scout_v4.head_load.json, ~250 N
 down onto the case's top)."""
 import math
@@ -57,7 +59,9 @@ def bodies():
     sleeve = (box(xb, F0 + 2.0, -SO, SO, -SO, SO) - box(xb - 1, F0 + 0.01, -SI, SI, -SI, SI) - box(F0 - 1, F0 + 3, -SI + LIP, SI - LIP, -SI + LIP, SI - LIP)
               - box(F0, F0 + 3, -SO - 1, SO + 1, -SO - 1, -SI + LIP))                     # no lip along the bottom: its corner swung within 0.1 of the base plate at -20 deg (tilt_sweep)
     horn = ycyl(0.0, 0.0, 7.0, w - 1.1, w + 1.5); idler = ycyl(0.0, 0.0, 4.5, -w - 4.0, -w)
-    drawn += [sleeve, horn, idler]
+    arms = [box(-2.0, xb + 0.5, *((SI, SO) if sy > 0 else (-SO, -SI)), -10.0, 10.0) for sy in (-1, 1)]   # 14 Nov run of 8c421a5 (early fail 1.55 at the sleeve's back): the side walls drawn
+    # back into the horn's pad and the idler's boss: beside the case the room is 3 wide (y 18.45..21.5, the SG90's face at 23), under the 6.25 member, so nothing was generated there
+    drawn += [sleeve, horn, idler] + arms
     for sy in (-1, 1):                                                                      # the camera's own side screws (up to M3) in a slot along each side at mid-height
         cuts.append(box(xb + 1.5, F0 - 1.5, sy * SI - 0.5 if sy > 0 else -SO - 1.0, SO + 1.0 if sy > 0 else -SI + 0.5, -1.7, 1.7))
         cuts.append(box(xb - 1.0, F0 + 0.5, *((SO, SO + 2.25) if sy > 0 else (-SO - 2.25, -SO)), -3.5, 3.5))   # the heads (O7, 2.2 tall) and a driver along the slot: room only to y 22.9 (the SG90's face at 23)
@@ -74,10 +78,13 @@ def bodies():
     regs = [lipreg - box(F0 - 8.6, 80.0, -13.0, 13.0, -40, 40),                             # the case's front on the lip
             box(xb + 1.5, F0 - 1.5, SO - 0.6, SO, -3.5, 3.5) - box(-50, 50, -50, 50, -1.7, 1.7),   # the +y screw's head on its slot's edges
             box(xb + 1.5, F0 - 1.5, -SO, -SO + 0.6, -3.5, 3.5) - box(-50, 50, -50, 50, -1.7, 1.7),
-            box(xb, F0 - 8.6, -13.0, 13.0, SI, SI + 0.6), box(xb, F0 - 8.6, -13.0, 13.0, -SI - 0.6, -SI)]   # the case's top and bottom on the sleeve
-    pts = [(F0, 0.0, 0.0), (F0 - L / 2, SO, 0.0), (F0 - L / 2, -SO, 0.0), (xb + 2.0, 0.0, SI), (xb + 2.0, 0.0, -SI)]
+            box(xb, F0, -SI, SI, SI, SI + 0.6) - box(F0 - 8.6, 80.0, -13.0, 13.0, 0.0, 40.0),
+            box(xb, F0, -SI, SI, -SI - 0.6, -SI) - box(F0 - 8.6, 80.0, -13.0, 13.0, -40.0, 0.0)]   # the case's top and bottom bearing on the whole sleeve (less the LED windows)
+    pts = [(F0, 0.0, 0.0), (F0 - L / 2, SO, 0.0), (F0 - L / 2, -SO, 0.0), (F0 - L / 2, 0.0, SI), (F0 - L / 2, 0.0, -SI)]
     sup = U([ycyl(0.0, 0.0, 7.0, w + 1.2, w + 1.5), ycyl(0.0, 0.0, 4.5, -w - 4.0, -w - 3.7)])
-    return dict(drawn=place(U(drawn)), cuts=place(U(cuts)), env=place(U(env)), sup=place(sup),
+    land = box(F0 - 1.5, F0, -SO, SO, -SO, -SO + 0.6) - box(F0 - 8.6, 80.0, -13.0, 13.0, -40.0, 0.0)   # the sleeve's bottom front edge on the head frame's crash stop (at -20 deg), beside the LED window
+    squeeze = box(F0 - 1.5, F0, -SI, SI, -SI - 0.6, -SI) - box(F0 - 8.6, 80.0, -13.0, 13.0, -40.0, 0.0)   # the metal case's bottom front corners on the sleeve, right over it
+    return dict(drawn=place(U(drawn)), cuts=place(U(cuts)), env=place(U(env)), sup=place(sup), land=place(U([sup, land])), squeeze=place(squeeze),
                 regs=[place(r) for r in regs], pts=[wpt(q) for q in pts])
 
 
@@ -88,5 +95,12 @@ def setup(h):
     g = ASM["scout_v4_probe_tilt"]["mass_g"] + ASM["scout_v4_probe_leds"]["mass_g"]                # the camera (45) and the LED bars
     cg = wpt((F0 - D0 / 2, 0.0, 0.0))                                                     # the shallowest case's middle: the farthest from the axis
     payload_cases(p, "camera and LED bars", B["pts"], B["regs"], g, cg)
-    point_case(p, f"head-first crash: {HEAD_N} N down onto the case's top", B["pts"], B["regs"], (0, 0, -float(HEAD_N)), wpt((F0 - D0 / 2, 0.0, H)))
+    # 14 Nov (run of 8c421a5: 1.55 with the 280 N through the pivots): as parts/scout_v4_head_frame models it, the SG90 slips at 1.8 kg cm
+    # and the cradle nods down until the sleeve's bottom front edge lands on the head frame's crash stop (-20 deg). The metal case is rigid:
+    # its bottom front corners squeeze the sleeve's bottom wall onto the stop (world-down in that pose); the pivots carry what the
+    # slipping SG90 holds (18 N at 10 mm) until then. (Split rigidly over the lip, screws and faces, the 280 N read 2.7 filled solid.)
+    p.support("landed", B["land"])
+    R = trimesh.transformations.rotation_matrix(-S.TILT, [0, 1, 0])[:3, :3] @ trimesh.transformations.rotation_matrix(math.radians(-20.0), [0, 1, 0])[:3, :3]
+    p.load(f"head-first crash: {HEAD_N} N, the case landed on the crash stop through the sleeve's bottom", B["squeeze"], tuple(R @ np.array([0, 0, -float(HEAD_N)])), cls="crash", support="landed")
+    point_case(p, "head-first crash: the pivots until the SG90 slips (18 N)", B["pts"], B["regs"], (0, 0, -18.0), wpt((F0 - D0 / 2, 0.0, H)))
     return p

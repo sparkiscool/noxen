@@ -19,7 +19,7 @@ from parts.scout_v4_units_lib import S, ASM, box, cyl, U, payload_cases, point_c
 
 import json as _json, os as _os
 HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
-SPEC = dict(h=1.0, gen_cm3=14.0, max_worst=0.3)  # 10 Nov run 2: 10 cm3 read 0.41 in the SG90 stall (its pads 17 out from the clip in y); 14. Run 1: 3 cm3 stopped early at 5.3 (250 N through the pivots; now the crash stop takes it), room_full 0.13 with ~3.6 uniformly thinned at 4 %: 10 for the SG90 stall and 35 g cases
+SPEC = dict(h=1.0, gen_cm3=17.0, max_worst=0.3)  # 14 Nov run of 12fa257: 14 read 0.318 in the SG90 stall (the sweep cut now holds the cradle's drawn side walls to y 20.65, room_full 0.13): 17. 10 Nov run 2: 10 cm3 read 0.41 in the SG90 stall (its pads 17 out from the clip in y); 14. Run 1: 3 cm3 stopped early at 5.3 (250 N through the pivots; now the crash stop takes it), room_full 0.13 with ~3.6 uniformly thinned at 4 %: 10 for the SG90 stall and 35 g cases
 HOLES = 27.7                                      # SG90 tab holes apart (typical drawing, E; the DORHEA listing gives the tabs' 32.8 span)
 
 
@@ -70,8 +70,8 @@ def bodies():
     drawn += pads
     # the crash stop: under the camera's lower front edge (tools/scout_v4_shape.tilt_sweep's lowest point, x ~21 at -20 deg), on the plate
     pz = hz + S.HEAD["clip"] + S.HEAD["plate"]; ys = (ay - S.CAM["side"] / 2, ay + S.CAM["side"] / 2)
-    stop = box(mx + 3.5, mx + 8.0, ys[0], ys[1], pz - 2.5, pz); drawn.append(stop)
-    stop_reg = box(mx + 3.5, mx + 8.0, ys[0], ys[1], pz - 0.6, pz)
+    stop = box(mx + 1.5, mx + 8.0, ys[0], ys[1], pz - 2.5, pz); drawn.append(stop)      # 14 Nov: from mx + 1.5 (was 3.5): the cradle's sleeve lands its bottom front edge at x ~18.9 (mx + 3.8)
+    stop_reg = box(mx + 1.5, mx + 8.0, ys[0], ys[1], pz - 0.6, pz)
     cuts.append(box(ax - 16.7, ax + 6.3, ay + sv - 0.3, ay + sv + 23.1, az - 6.55, az + 6.55))   # the SG90's body
     cuts.append(box(ax - 21.5, ax + 11.9, ay + sv + 5.7, ay + sv + 8.6, az - 6.55, az + 6.55))    # its tabs
     cuts.append(ycyl(ax, az, 7.6, ay + w, ay + sv + 0.1))                                     # the horn and the spline

@@ -362,7 +362,7 @@ def head_parts(split=False):
                                    box(f0, f0 + 4.0, si - c["lip"], so, -si + c["lip"], so + 3.0), box(f0, f0 + 4.0, -so, -si + c["lip"], -si + c["lip"], so + 3.0),
                                    box(f0, f0 + 4.0, -so, so, si - c["lip"], so + 3.0), box(f0 - c["sleeve"], f0, -so, so, so, so + 3.0)])   # 14 Nov: the sleeve, its lip (top and upper sides) and the generated room's reach over and ahead of it (parts/scout_v4_cradle env)
     t = [sl,
-         box(-6.0, f0 - c["sleeve"] + 0.5, -w, -h, -10.0, 10.0), box(-6.0, f0 - c["sleeve"] + 0.5, h, w, -10.0, 10.0),   # the arms from the axis to the sleeve (generated: a sketch)
+         box(-6.0, f0 - c["sleeve"] + 0.5, -so, -si, -10.0, 10.0), box(-6.0, f0 - c["sleeve"] + 0.5, si, so, -10.0, 10.0),   # the side walls on back to the axis (drawn)
          cyl_y(7.0, 0.0, 0.0, w, w + 1.5),                                            # the SG90's horn, screwed to the +y wall
          cyl_y(1.5, 0.0, 0.0, -w - 4.0, -w, 12),                                      # idler: an M3 screw (-y) into the bracket's boss
          box(c["case"][0], c["case"][1], -h, h, -h, h),                               # the camera in its metal case
