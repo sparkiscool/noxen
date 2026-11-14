@@ -146,10 +146,18 @@ def rigid_split(pts, F, P):
 
 
 # ------------------------------------------------------------------ mast
-FACE_T, BOSS_T = 4.0, 10.0          # the boss ends at the washer seat (r 12 x 14 made one drawn body with a 7 mm core: audit drawn_blocks)
+FACE_T, BOSS_T = 6.0, 10.0          # the boss ends at the washer seat (r 12 x 14 made one drawn body with a 7 mm core: audit drawn_blocks)
 Z_TOP = 44.0                        # the mast's top (the flange's at 45): 179 tall, in the 180 bed
 SEAT_Y = -10.0                      # the stub bolts' seats, under an M5 x 15 washer: the face 10 thick at a bolt (6 read 0.72 filled solid at the one top bolt, 10 with the head alone 0.55)
 RING = [(np.cos(a) * 39.0, np.sin(a) * 39.0) for a in np.radians(np.arange(0, 360, 30))]
+
+
+def _sector(deg, half=15.0):
+    """the face ring's 30 deg sector round deg (in the XZ plane), its first 2 mm: a bearing region"""
+    a = np.radians(np.linspace(deg - half, deg + half, 7))
+    pts = [[0.0, y, 0.0] for y in (-2.0, 0.0)] + [[50 * np.cos(t), y, 50 * np.sin(t)] for t in a for y in (-2.0, 0.0)]
+    wedge = mf.Manifold.hull_points(pts)
+    return wedge ^ (cyl("y", 0, 0, 44.5, -2.0, 0.0, 96) - cyl("y", 0, 0, 33.5, -3.0, 1.0, 96))
 
 
 def _motor_cut():
@@ -161,7 +169,7 @@ def mast_parts():
     bosses = [cyl("y", x, z, 9.5, -BOSS_T, 0.0) for x, z in STUB_BOLTS]
     feet = [cyl("z", x, y, 7.0, Z_FOOT, Z_FOOT + 12.0) for x, y in FOOT_BOLTS]
     drawn = U(face, *bosses, *feet)
-    cuts = U(_motor_cut(), box(*PSU), cyl("y", 0, 0, 13.0, -70.0, 1.0, 64),                        # the stub's bore: the post's screw from behind
+    cuts = U(_motor_cut(), box(*PSU),                                                                # (no bore behind the stub's: nothing passes it; v1's Ø26 took the face's back-up, 14 Nov run 1)
              *[cyl("y", x, z, 2.75, SEAT_Y - 1.0, 1.0) for x, z in STUB_BOLTS],
              *[cyl("y", x, z, 7.75, -70.0, SEAT_Y) for x, z in STUB_BOLTS],                        # the Ø15 washers, heads and the hex key, back through the mast
              *[cyl("z", x, y, 3.2, Z_FOOT - 1.0, Z_FOOT + 8.0) for x, y in FOOT_BOLTS])            # M5 x D7 x L6 heat-set inserts
@@ -174,8 +182,8 @@ def mast_setup(h):
     p = Part("box_stand2_mast", h, drawn, cuts, env, build="-y", material="PCTG")       # the face on the bed (Y 0), the column up
     p.bed_min_mm2 = 1500.0                                                               # the drawn face ring and bosses at Y 0 (topo/audit.py bed)
     p.support("default", U(*[cyl("z", x, y, 7.0, Z_FOOT, Z_FOOT + 3.0) for x, y in FOOT_BOLTS]))
-    ring = [(np.array([x, -1.0, z]), cyl("y", x, z, 4.5, -2.0, 0.0)) for x, z in RING
-            if not (x < -24.0 and z > 14.0)]                                # the flange bears on the face ring
+    ring = [(np.array([x, -1.0, z]), _sector(np.degrees(np.arctan2(z, x)))) for x, z in RING
+            if not (x < -24.0 and z > 14.0)]                                # the flange bears on the face ring: 30 deg sectors of it (run 1 put up to 280 N on Ø9 points: 2.39 early)
     heads = [(np.array([x, SEAT_Y, z]), cyl("y", x, z, 7.4, SEAT_Y, SEAT_Y + 1.5) - cyl("y", x, z, 2.9, -12, 2)) for x, z in STUB_BOLTS]
     lin = [(np.array([x, -3.0, z]), cyl("y", x, z, 4.5, SEAT_Y, 0.0) - cyl("y", x, z, 2.9, -12, 2)) for x, z in STUB_BOLTS]
     for nm, cls, loads, My, acc in arm_cases():
