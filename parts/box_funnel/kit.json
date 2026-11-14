@@ -1,0 +1,349 @@
+{
+ "what": "the landing funnel's print kit: each file is in its print pose and was measured and gated as it lies (tools/funnel_kit.py)",
+ "printer": "Bambu A1 mini, 180 x 180 x 180",
+ "bought": "tools/import_box.py BOUGHT_LIST and FASTENERS (the page's Bought table): gearmotors, switches, probes and sleeves, the four hold-down keys",
+ "not_in_the_kit": "the stand's mast (15 longer): not drawn",
+ "ok": true,
+ "not_ready": [],
+ "pieces": [
+  {
+   "name": "box_funnel_half_nose",
+   "file": "print/box_funnel_half_nose.stl",
+   "sha256": "800bdd44ca21535a8b8e98ab1ba2be9b881432c290e0613e3eb12401717bdb2c",
+   "count": 1,
+   "material": "PCTG (PETG settings + 10 C)",
+   "pose": "upside down: the two rims behind the side walls' top edges and the rib's top on the bed",
+   "supports": "yes, everywhere over 45 deg: under the beam (about 42 over the bed, to the plate's edge), the motor seats and the ledges. The ledges' plastic face stands 0.4 under the seat plane, so a scar there never touches a drone; scrape the strips' pocket floors flat before gluing the strips",
+   "bed_min_mm2": 1200.0,
+   "bed_mm": [
+    162.0,
+    176.0,
+    83.2
+   ],
+   "bed_contact_mm2": 1590,
+   "overhang_mm2": 11303,
+   "volume_cm3": 200.9,
+   "contact_extent_mm": [
+    90.0,
+    157.1
+   ],
+   "brim_mm": 5.0,
+   "overhang_over_bed_mm": [
+    0.0,
+    80.9
+   ],
+   "fits_180": true,
+   "source": {
+    "part": "box_funnel_half_nose",
+    "part_sha": "d1f8a8b3ab2d",
+    "print_stl_sha256": "0a26ed114aafff0760840fd71a346de37a859bd7401e9953edf9838836645b43",
+    "mass_g": 247.06,
+    "worst": 0.372,
+    "solid_ok": true
+   },
+   "solid_check": "PASS",
+   "picture": "parts/box_funnel/kit/box_funnel_half_nose.png",
+   "ok": true
+  },
+  {
+   "name": "box_funnel_half_tail",
+   "file": "print/box_funnel_half_tail.stl",
+   "sha256": "7990514596012e500276acf4b747f87f339300c441b07c63c3663f8e2c682358",
+   "count": 1,
+   "material": "PCTG (PETG settings + 10 C)",
+   "pose": "upside down: the two rims behind the side walls' top edges and the rib's top on the bed",
+   "supports": "yes, everywhere over 45 deg: under the beam (about 42 over the bed, to the plate's edge), the motor seats and the ledges. The ledges' plastic face stands 0.4 under the seat plane, so a scar there never touches a drone; scrape the strips' pocket floors flat before gluing the strips",
+   "bed_min_mm2": 1200.0,
+   "bed_mm": [
+    128.0,
+    176.0,
+    83.2
+   ],
+   "bed_contact_mm2": 1470,
+   "overhang_mm2": 9626,
+   "volume_cm3": 203.1,
+   "contact_extent_mm": [
+    90.0,
+    157.1
+   ],
+   "brim_mm": 5.0,
+   "overhang_over_bed_mm": [
+    0.0,
+    80.9
+   ],
+   "fits_180": true,
+   "source": {
+    "part": "box_funnel_half_tail",
+    "part_sha": "01d883ace587",
+    "print_stl_sha256": "548cc67bd169dea74cbfb02ce9ce718cae9cb263a9683f9749ed152d2f87c992",
+    "mass_g": 249.85,
+    "worst": 0.378,
+    "solid_ok": true
+   },
+   "solid_check": "PASS",
+   "picture": "parts/box_funnel/kit/box_funnel_half_tail.png",
+   "ok": true
+  },
+  {
+   "name": "box_funnel_arm",
+   "file": "print/box_funnel_arm.stl",
+   "sha256": "1a834c19e3cfbf2653e1698a382cf7d99911ea280dd41f1486584ecb8002919a",
+   "count": 2,
+   "material": "PCTG (PETG settings + 10 C)",
+   "pose": "on its outer face (the side away from the half's beam), the lap's four bolt heads' face down",
+   "supports": "yes: 2288 mm2 over 45 deg, 0.0 to 40.8 over the bed",
+   "bed_min_mm2": 300.0,
+   "bed_mm": [
+    27.7,
+    161.4,
+    44.0
+   ],
+   "bed_contact_mm2": 407,
+   "overhang_mm2": 2288,
+   "volume_cm3": 51.8,
+   "contact_extent_mm": [
+    27.7,
+    159.8
+   ],
+   "brim_mm": 5.0,
+   "overhang_over_bed_mm": [
+    0.0,
+    40.8
+   ],
+   "fits_180": true,
+   "source": {
+    "part": "box_funnel_arm",
+    "release_note": "the release's box_funnel_arm.stl is not the upload result.json names (sha256 f125774983e7, 51751.1 mm3 against the result's 51751.2): an identical rerun's record; the kit file is gated itself",
+    "part_sha": "70d39dd5115a",
+    "print_stl_sha256": "4a5cb8cb8f564558fb212bfa18267262c7818ae73dae33a8f1c4537233d72433",
+    "mass_g": 63.65,
+    "worst": 0.448,
+    "solid_ok": true,
+    "corners": "nose +y and tail -y"
+   },
+   "solid_check": "PASS",
+   "picture": "parts/box_funnel/kit/box_funnel_arm.png",
+   "ok": true
+  },
+  {
+   "name": "box_funnel_arm_mirrored",
+   "file": "print/box_funnel_arm_mirrored.stl",
+   "sha256": "03a7c980412e5c2b7f4eb4b4650ae767d3bec9573e5be9a03ac1a37407f71f23",
+   "count": 2,
+   "material": "PCTG (PETG settings + 10 C)",
+   "pose": "on its outer face (the side away from the half's beam), the lap's four bolt heads' face down",
+   "supports": "yes: 2288 mm2 over 45 deg, 0.0 to 40.8 over the bed",
+   "bed_min_mm2": 300.0,
+   "bed_mm": [
+    27.7,
+    161.4,
+    44.0
+   ],
+   "bed_contact_mm2": 407,
+   "overhang_mm2": 2288,
+   "volume_cm3": 51.8,
+   "contact_extent_mm": [
+    27.7,
+    159.8
+   ],
+   "brim_mm": 5.0,
+   "overhang_over_bed_mm": [
+    0.0,
+    40.8
+   ],
+   "fits_180": true,
+   "source": {
+    "part": "box_funnel_arm",
+    "release_note": "the release's box_funnel_arm.stl is not the upload result.json names (sha256 f125774983e7, 51751.1 mm3 against the result's 51751.2): an identical rerun's record; the kit file is gated itself",
+    "part_sha": "70d39dd5115a",
+    "print_stl_sha256": "4a5cb8cb8f564558fb212bfa18267262c7818ae73dae33a8f1c4537233d72433",
+    "mass_g": 63.65,
+    "worst": 0.448,
+    "solid_ok": true,
+    "corners": "nose -y and tail +y (the mirror image)"
+   },
+   "solid_check": "PASS",
+   "picture": "parts/box_funnel/kit/box_funnel_arm_mirrored.png",
+   "ok": true
+  },
+  {
+   "name": "box_funnel_wall_nose",
+   "file": "print/box_funnel_wall_nose.stl",
+   "sha256": "d8c09e9e4ed3430334328ae27af6e62aab3bc6724f254cf14567d49d031dab14",
+   "count": 1,
+   "material": "PCTG (PETG settings + 10 C)",
+   "pose": "standing on its foot, as it sits in the funnel",
+   "supports": "yes: 711 mm2 over 45 deg, 0.5 to 9.3 over the bed",
+   "bed_min_mm2": 200.0,
+   "bed_mm": [
+    46.9,
+    118.5,
+    40.0
+   ],
+   "bed_contact_mm2": 252,
+   "overhang_mm2": 711,
+   "volume_cm3": 16.2,
+   "contact_extent_mm": [
+    3.7,
+    68.8
+   ],
+   "brim_mm": 5.0,
+   "overhang_over_bed_mm": [
+    0.5,
+    9.3
+   ],
+   "fits_180": true,
+   "source": {
+    "drawn": "parts/box_funnel/make.py carriage(+1)",
+    "poses_measured": {
+     "standing on its foot, as it sits in the funnel": {
+      "bed_contact_mm2": 252,
+      "overhang_mm2": 711
+     },
+     "upside down on its top edge": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 960
+     },
+     "on its x- side": {
+      "bed_contact_mm2": 10,
+      "overhang_mm2": 4630
+     },
+     "on its x+ side": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4432
+     },
+     "standing on its -y end": {
+      "bed_contact_mm2": 132,
+      "overhang_mm2": 558
+     },
+     "standing on its +y end": {
+      "bed_contact_mm2": 135,
+      "overhang_mm2": 555
+     },
+     "on its 55 deg sliding face": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4641
+     },
+     "on its back (the sliding face up)": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4432
+     }
+    }
+   },
+   "solid_check": "PASS",
+   "picture": "parts/box_funnel/kit/box_funnel_wall_nose.png",
+   "ok": true
+  },
+  {
+   "name": "box_funnel_wall_tail",
+   "file": "print/box_funnel_wall_tail.stl",
+   "sha256": "77560bb9a71c5a45dd41cb731387c438dae26429778e9e90c4b63864c0b82a23",
+   "count": 1,
+   "material": "PCTG (PETG settings + 10 C)",
+   "pose": "standing on its foot, as it sits in the funnel",
+   "supports": "yes: 711 mm2 over 45 deg, 0.5 to 9.3 over the bed",
+   "bed_min_mm2": 200.0,
+   "bed_mm": [
+    46.9,
+    118.5,
+    40.0
+   ],
+   "bed_contact_mm2": 252,
+   "overhang_mm2": 711,
+   "volume_cm3": 16.2,
+   "contact_extent_mm": [
+    3.7,
+    68.8
+   ],
+   "brim_mm": 5.0,
+   "overhang_over_bed_mm": [
+    0.5,
+    9.3
+   ],
+   "fits_180": true,
+   "source": {
+    "drawn": "parts/box_funnel/make.py carriage(-1)",
+    "poses_measured": {
+     "standing on its foot, as it sits in the funnel": {
+      "bed_contact_mm2": 252,
+      "overhang_mm2": 711
+     },
+     "upside down on its top edge": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 960
+     },
+     "on its x- side": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4432
+     },
+     "on its x+ side": {
+      "bed_contact_mm2": 10,
+      "overhang_mm2": 4630
+     },
+     "standing on its -y end": {
+      "bed_contact_mm2": 132,
+      "overhang_mm2": 558
+     },
+     "standing on its +y end": {
+      "bed_contact_mm2": 135,
+      "overhang_mm2": 555
+     },
+     "on its 55 deg sliding face": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4641
+     },
+     "on its back (the sliding face up)": {
+      "bed_contact_mm2": 0,
+      "overhang_mm2": 4432
+     }
+    }
+   },
+   "solid_check": "PASS",
+   "picture": "parts/box_funnel/kit/box_funnel_wall_tail.png",
+   "ok": true
+  },
+  {
+   "name": "box_funnel_strips",
+   "file": "print/box_funnel_strips.stl",
+   "sha256": "55154dbfbf90237cfc50a23c3f24b15e3ef11cd3df1136e727bdb309ad6e7252",
+   "count": 1,
+   "material": "TPU 95A",
+   "pose": "flat, the six side by side (one plate)",
+   "supports": "none",
+   "bed_min_mm2": 300.0,
+   "bed_mm": [
+    62.3,
+    36.8,
+    2.0
+   ],
+   "bed_contact_mm2": 991,
+   "overhang_mm2": 0,
+   "volume_cm3": 2.0,
+   "contact_extent_mm": [
+    62.3,
+    36.8
+   ],
+   "brim_mm": 5.0,
+   "overhang_over_bed_mm": null,
+   "fits_180": true,
+   "source": {
+    "drawn": "parts/box_funnel/make.py strips()",
+    "lengths_mm": [
+     62.3,
+     58.7,
+     58.4,
+     62.3,
+     58.7,
+     58.4
+    ],
+    "section_mm": [
+     2.8,
+     2.0
+    ]
+   },
+   "solid_check": "PASS",
+   "picture": "parts/box_funnel/kit/box_funnel_strips.png",
+   "ok": true
+  }
+ ]
+}
