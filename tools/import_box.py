@@ -196,15 +196,16 @@ BOUGHT_LIST = [
      "one per wall tab; pick the 6 V 100 rpm option (alt B07JD2SY8W); each shaft cut to 62: Amazon lists this motor with a 34, 55 or 100 shaft only (searched 13 Nov), and the wall's travel needs 59.3 (front plate 3.5 + half the nut block 6.0 + 48.2 of travel + half the nut 1.6), so the 55 is 4.3 short; 37.2 mm at 0.7 mm a turn = 32 s"),
     ("KW12-3 roller lever micro switch, 10 pack", 2, "https://www.amazon.com/SDTC-Tech-Momentary-Microswitch-Normally/dp/B0CPYNDYPP", "one home switch a wall (outmost), on the +y side; every other position is timed from it"),
     ("P156-E spring probe, 100 pack", 4, "https://www.amazon.com/Spring-Probes-Accuracy-Testing-Contact/dp/B0CC2GQKL1", "seat sense and keep-alive, in the ledges"),
+    ("3 x 3 x 16 steel parallel key, round ended, 10 pack", 4, "https://www.amazon.com/Feather-Stainless-Parallel-Fastening-Connection/dp/B0GC54N5FH",
+     "the hold-down keys, two pressed into each end wall's square sockets, flats up and down; to length, nothing to cut. Round ended: 2.0 in the receiver's notch it bears on 5.0 mm2 (a square end 6.0), 5.5 MPa at 27.7 N a key against PCTG's 46 (listing found by search 14 Nov, not opened: check 3 x 3 x 16 on the page)"),
     ("R156-4S probe sleeve, 100 pack", 4, "https://www.amazon.com/100Pcs-Spring-Sleeve-R156-4S-Welding/dp/B0CPWSZN8L", "glued in the ledge bores"),
 ]
 FASTENERS = "16 M4 x 60 with nuts and washers (the four laps), 8 M4 x 16 with nuts and washers (arms to the side sheets: 8 holes O4.5 in the acrylic, 99 under the seat plane's W Z 220.3 = W Z 121.3), 4 M4 x 16 and 2 M3 x 16 with nuts and washers (the halves' joint: an M4 behind each side wall, an M4 outside each rib at |y| 83, an M3 under each ledge), 4 M4 nuts (the walls' blocks), 8 M2 x 10 self-tapping (switches), 4 cable ties (motors)"
-PRINT = [("box_funnel_half_nose", "frame, nose half", "162 x 176 x 83", "upside down: the side walls' top edges on the bed; supports under the ledges and the beam's wings", "PCTG"),
-         ("box_funnel_half_tail", "frame, tail half", "128 x 176 x 83", "as the nose half", "PCTG"),
-         ("box_funnel_arm", "cross arm, 2 as drawn + 2 mirrored", "44 x 162 x 28", "on its outer face (the beam's 29 deep side flat on the bed)", "PCTG"),
-         ("box_funnel_wall_nose", "nose wall", "31 x 121 x 40", "on its back, the 55 deg sliding face up", "PCTG"),
-         ("box_funnel_wall_tail", "tail wall", "31 x 121 x 40", "as the nose wall", "PCTG"),
-         ("box_funnel_strips", "ledge strips, 6 pieces (three a side, between the probes)", "58 to 62 x 2.8 x 2.0", "flat", "TPU 95A")]
+def print_rows():
+    """the funnel's printed pieces: parts/box_funnel/kit.json (tools/funnel_kit.py: each file in its print pose, measured and gated as it lies)"""
+    k = json.load(open(os.path.join(ROOT, "parts", "box_funnel", "kit.json")))
+    return k, [(p["name"], f"x {p['count']}", " x ".join(f"{v:g}" for v in p["bed_mm"]), p["pose"], f"{p['bed_contact_mm2']} mm2" + (f", brim {p['brim_mm']:g}" if p.get("brim_mm") else ""),
+                p["supports"], p["material"], p["solid_check"], p["file"]) for p in k["pieces"]]
 
 
 def appendix(chk):
@@ -214,14 +215,17 @@ def appendix(chk):
     rows = "".join(f"<tr><td>{e(c['what'])}</td><td>{'clear' if c['ok'] else 'OVERLAP'}</td></tr>" for c in chk["checked"])
     pairs = "".join(f"<tr><td>{e(p['a'])}</td><td>{e(p['b'])}</td><td>{p['mm3'] if p['mm3'] is not None else str(p['samples_inside']) + ' samples'}</td><td>{p['states']}: {e(p['state'])}</td></tr>" for p in chk["overlapping_pairs"])
     clr = "".join(f"<tr><td>{c['mm']:.1f}</td><td>{e(c['between'])}</td><td>{e(c['and_'])}</td><td>{e(str(c['at']))}</td></tr>" for c in chk["clearances_mm"])
-    prt = "".join(f"<tr><td>{e(n)}</td><td>{e(sz)}</td><td>{e(pose)}</td><td>{e(mat)}</td></tr>" for _, n, sz, pose, mat in PRINT)
+    kit, pr = print_rows()
+    prt = "".join("<tr>" + "".join(f"<td>{e(str(c))}</td>" for c in r) + "</tr>" for r in pr)
     bought = "".join(f"<tr><td><a href=\"{u}\">{e(n)}</a></td><td>{q}</td><td>{e(note)}</td></tr>" for n, q, u, note in BOUGHT_LIST)
     return f"""<h2>Compatibility check (tools/box_check.py)</h2>
 <p><b>{'PASS: 0 overlaps' if chk['ok'] else 'FAIL: ' + str(len(chk['overlapping_pairs'])) + ' overlapping pairs'}</b>. Every pair of pieces from different streams (funnel, latch v7, drones, arm, box), seated, landing and on the swap path. Arm: {e(chk['arm'])}.{' Not checked, no mesh in the tree: ' + e(', '.join(chk['no_mesh_in_the_tree'])) + '.' if chk['no_mesh_in_the_tree'] else ''}</p>
 <table><tr><th>checked</th><th>result</th></tr>{rows}</table>
 {'<table><tr><th>piece</th><th>piece</th><th>mm3</th><th>states, worst</th></tr>' + pairs + '</table>' if pairs else ''}
 <h3>Clearances (mm, sampled to about 1)</h3><table><tr><th>mm</th><th>between</th><th>and</th><th>where</th></tr>{clr}</table>
-<h2>Funnel v5: printed pieces (A1 mini, 180 bed)</h2><table><tr><th>piece</th><th>size</th><th>pose on the bed</th><th>material</th></tr>{prt}</table>
+<h2>Funnel v5: print kit (A1 mini, 180 bed; parts/box_funnel/kit.json)</h2>
+<p><b>{'Every file is ready: in its print pose, on the plate, solid check PASS on that file.' if kit['ok'] else 'NOT ready to print: ' + e(', '.join(kit['not_ready']) or 'pieces missing') + ' (the halves and arms are written from their runs; a piece is ready when its file lies over its bed minimum, fits the plate and passes the solid check).'}</b> The mast is not in the kit: the stand is not redrawn (the note below).</p>
+<table><tr><th>file</th><th>count</th><th>on the bed (x, y, z)</th><th>pose</th><th>flat on the bed</th><th>supports</th><th>material</th><th>solid check</th><th>print file</th></tr>{prt}</table>
 <h3>Bought</h3><table><tr><th>part</th><th>qty</th><th>note</th></tr>{bought}</table><p>Fasteners: {e(FASTENERS)}.</p>
 <p>Hold-down: each end wall carries two 3 x 3 x 16 steel keys that enter the notches in the receiver's end faces; the walls land a drone at park, back off to open and drive in to seated (the arm v8 head pushes up to 118 N; the Overseer weighs 21.6 N, the Scout 4.9 N).</p>
 <p><b>Stand: not ready to print.</b> {e(STAND_NOTE)}</p>"""
