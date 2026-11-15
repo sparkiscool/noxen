@@ -21,7 +21,7 @@ Supports: the sockets of the two members with the largest frame-model axial forc
 Run: parts/scout_cage_node_<key>/part.py -> setup(h) = make("<key>")."""
 import json, os, sys
 import numpy as np
-from topo import Part
+from topo import Part, fit
 from topo.part import man
 from parts.cage_node_lib import collar_shape, along, U, GROOVE_D, port_dir, PORT_R
 from parts.socket_inject import injectable_socket_cuts, FEED_H
@@ -50,7 +50,7 @@ STRUT_BACK, KEEP_OFF = 0.0, 0.0                           # the strut's room end
 MOUTH_R, COLLAR_PAST = None, 0.0                          # MOUTH_R: a cut of this radius from each mouth plane out along the rod (other collars spared), so every
 #   mouth is one exact cut face through collar and barrel alike; the collar is drawn COLLAR_PAST into it. None = off (the v3 nodes)
 ROD_R, ROD_GAP = 1.5, 1.0                                # a passing rod's radius and the least gap to a collar's surface
-BORE_R, DEPTH = 1.6, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
+BORE_R, DEPTH = fit.bore(3.0, "bond") / 2, 10.0                                 # 3.0 rod: bore 3.2, 10 deep (coupons v2)
 CAGE_CENTRE = (0.0, 0.0, 10.0)                            # ports point away from here (out of the cage) where the members allow
 GN = 9.81e-3
 

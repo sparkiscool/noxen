@@ -135,9 +135,10 @@ GUIDE_PIN = (2.0, 7.0)
 FASTENERS = {
     "scout": [dict(part="M3 x 35 socket head cap screw", n=4, spec="DIN 912, 304 stainless; receiver to the drone from below (head on the counterbore at 24.5, 5.4 into the drone's insert)",
                    url="https://www.amazon.com/uxcell-M3x35mm-Thread-Stainless-Socket/dp/B01MAZ4SZB")],
-    "overseer": [dict(part="M3 x 10 socket head cap screw", n=4, spec="DIN 912, 304 stainless; the deck bosses into the base's inserts (5.0 of deck, 5.0 of thread)",
+    "overseer": [dict(part="M3 x 10 socket head cap screw", n=6, spec="DIN 912, 304 stainless; four: the deck bosses into the base's inserts from the mouth (5.0 of deck, 5.0 of thread); "
+                      "two: the lead clamp from the drone side, head on the cap's lug, 4.2 of lug, 5.8 into the receiver lug's insert (OV_CLAMP)",
                       url="https://www.amazon.com/Socket-Screws-Washers-Assortment-Stainless/dp/B091N1J6F8"),
-                 dict(part="M3 x 5.7 heat-set insert", n=2, spec="ruthex RX-M3x5.7 brass, in the plug cap's o 4.0 holes over the lead-end bolts",
+                 dict(part="M3 x 5.7 heat-set insert", n=2, spec="ruthex RX-M3x5.7 brass, pressed from above into the o 4.0 x 7.0 holes in the receiver's two lead lugs (OV_CLAMP), before the carrier goes in",
                       url="https://www.amazon.com/ruthex-M3-Threaded-Inserts-RX-M3x5-7/dp/B08BCRZZS3"),
                  dict(part="M3 x 14 socket head cap screw", n=4, spec="DIN 912, 18-8 (304) stainless, full thread; a bay only (tail and tab-line pairs, from the mouth): head in the deck at 4.5 under the mount plane (BAY_HEAD), the saddle's 4.0, 5.5 into the bay's insert; in before the seat strips",
                       url="https://www.amazon.com/Socket-Screws-Stainless-Thread-Bright/dp/B08GLL3G52")],
@@ -220,9 +221,7 @@ OV_TOP = dict(y_abs=33.3, depth=8.4)   # the base's own material stands beside t
 #      before the strips), M3 x 14: 4.5 of receiver, the saddle's 4.0, 5.5 into the bay's insert. Cut in the PROTOTYPE (receiver_proto); the OPTIMISE setup takes them when it reruns. The lead pair (into the cap's inserts) cannot: the receiver ends at the
 #      ear seat (y 60.1) there and the carrier's ears are above it, so its head has no receiver to bear on above the cartridge (see FASTENERS "open")
 BAY_HEAD = dict(under=4.5, len=14.0)
-OV_OPEN = ("the lead pair (into the cap's M3 x 5.7 inserts, clamping carrier and cap): no head seat from below is possible in the receiver: the cartridge fills |x| <= 27.5 up to y 58.6 "
-           "on the bolt's axis (|x| 27.8) and the receiver ends at the ear seat (y 60.1) under the carrier's ears; it needs the carrier and cap changed (the pair moved out "
-           "beside the cartridge, or the clamp taken another way), not listed")
+OV_OPEN = None                         # 15 Nov: closed by OV_CLAMP (the pair moved outboard onto lugs below the base, clamped on the bench before the receiver goes on)
 
 
 def bay_heads(B):
@@ -947,7 +946,26 @@ def write_assembly(res, pack="scout"):
                    f"In the landing funnel: {'clear seated, landing and on the swap path' if f['ok'] else 'NOT clear, see the numbers'}; "
                    f"the cartridge passes the hole with {f['hole_gap_mm']['side']} mm a side. Numbers under the viewer.",
            "cg_ref": None, "timeline": f"tools/{nm}_motion.py:timeline", "appendix": f"systems/{nm}.appendix.html", "parts": res["page_parts"]}
+    asm["assembly"] = assembly_block(pack)
     json.dump(asm, open(os.path.join(ROOT, "systems", f"{nm}.assembly.json"), "w"), indent=1)
+
+
+def assembly_block(pack, suffix=""):
+    """the tools/assembly_check.py block of a pack's latch page (15 Nov): the guide poles are a second drawing of the pegs printed on the plug carrier (build: carrier +
+    pegs) and the v6 nose skid is gone in v7 (build: rskids = []): left out; the Overseer's lead clamp in its order, on the bench before the receiver goes on (ov_clamp)."""
+    nm = OUT[pack][0]; v = lambda x: f"{nm}_view_{x}{suffix}"
+    ex = [v("guide_pole_p"), v("guide_pole_n")] + ([v("receiver_skid_nose")] if pack == "scout" else [])
+    out = {"fit_tol_mm3": 0.5, "note": "written by parts/latch7/make.py assembly_block: " + " ".join(assembly_block.__doc__.split()), "exclude": ex}
+    if pack == "overseer":
+        up = [0, 0, 1]                                                          # page z = cartridge y, toward the drone
+        out["paths"] = [
+            dict(name="carrier into the lead notch", part=v("carrier"), **{"with": [v("xt60_male")]}, order=10, out=up, length_mm=30, fit="mate",
+                 against=[v("receiver"), v("receiver_strips")], why="the XT60W-M in its collar laid in the carrier, the carrier down into the notch (0.2 a side in x and z), its ears on the seat; the cartridge out"),
+            dict(name="cap onto the carrier", part=v("carrier_cap"), order=20, out=up, length_mm=30, fit="mate", against=[v("receiver"), v("receiver_strips"), v("carrier"), v("xt60_male")],
+                 why="its skirts 0.5 outboard of the ears down onto the receiver's lead lugs, the plug's body up through its window"),
+            dict(name="lead clamp bolts from the drone side", part=v("lead_clamp_bolts"), order=30, out=up, length_mm=40, fit="screw", against=[v("receiver"), v("carrier"), v("carrier_cap")],
+                 why="2 x M3 x 10 through the cap's lugs into the receiver lugs' inserts, on the bench before the receiver goes on the base (its heads then stand 2.4 under the base)")]
+    return out
 
 
 def main(pack="scout"):
@@ -1298,18 +1316,25 @@ def build_check(B):
     v = sweep(m6.cart_all(B) + m6.moving(g, bl.OVERLAP + 0.3, 1) + m6.moving(g, bl.OVERLAP + 0.3, -1) + pack, (0, -1, 0), R, n=80)
     steps.append(dict(step="6 cartridge up into the receiver", how="bolts held in, 40 mm swept; pushed in alone the lead-ins cam the bolts (no stuck step)", mm3=v, ok=bool(v < 0.05)))
     r = B["r"]; scout = g["pack"] == "scout"                 # 13 Nov: the Scout's feet were drawn through the mount bolts' head bores; nothing checked that the receiver can be bolted on
-    sw = U(*[c for bx, bz in r["MOUNT"] for c in ([cyl("y", bx, bz, bl.BOLT_D / 2 - 0.05, -60.0, r["Y_M"] + 1)] + ([cyl("y", bx, bz, bl.HEAD_R - 0.05, -60.0, bl.HEAD_Y - 0.05)] if abs(bx) > g["RF"] else []))])
+    mount = [(bx, bz) for bx, bz in r["MOUNT"] if not (B.get("clamp") and abs(bz - g["Z_X"]) < 1e-6)]     # 15 Nov: the Overseer's lead pair is the lead clamp now (step 7b)
+    sw = U(*[c for bx, bz in mount for c in ([cyl("y", bx, bz, bl.BOLT_D / 2 - 0.05, -60.0, r["Y_M"] + 1)] + ([cyl("y", bx, bz, bl.HEAD_R - 0.05, -60.0, bl.HEAD_Y - 0.05)] if abs(bx) > g["RF"] else []))])
     if B.get("drone_pos"):                                   # the Overseer's four into the base's inserts: bolt, head and driver from below, past the seated strips, to the head's seat
         yh = r["Y_DK0"] + bl.STRIP_REC + DRONE_HEAD["h"]
         swd = U(*[c for x, z in B["drone_pos"] for c in (cyl("y", x, z, bl.BOLT_D / 2 - 0.05, -60.0, r["Y_M"] + 1), cyl("y", x, z, DRONE_HEAD["r"] - 0.05, -60.0, yh - 0.05))])
         sw = sw + swd; extra = vol(swd ^ B["strips"])           # these four pass beside the seated strips: counted against them too
     else: extra = 0.0
-    bh = bay_heads(B); rv = B["recv"]
+    bh = bay_heads(B); rv = B.get("recv_print", B["recv"])
     if bh is not None:                                       # the Overseer's four bay bolts: head and driver from below to their seat in the deck (the engine part cuts them)
         sw = sw + U(*[cyl("y", bx, bz, bl.HEAD_R - 0.05, -60.0, r["Y_M"] - BAY_HEAD["under"] - 0.05) for bx, bz in r["MOUNT"] if abs(bz - g["Z_X"]) > 1e-6]); rv = rv - bh
     v = round(vol(sw ^ U(rv, B["carrier"], B["cap"])) + extra, 3)
-    steps.append(dict(step="7 receiver onto the drone: %d M3 from below through the bosses" % (len(r["MOUNT"]) + len(B.get("drone_pos") or [])), how="each bolt and its driver swept from 60 mm below" + (" up to the head seat" if scout else "") + ", through receiver, carrier and cap", mm3=v, ok=bool(v < 0.05)))
-    v = round(vol(_xt60w_male(g, collar=False) ^ U(B["recv"], B["carrier"], B["cap"], B["collar"])), 3)
+    if B.get("clamp"):                                       # the lead clamp, on the bench before the receiver goes on: bolt, head and driver from 60 above down to the head's seat
+        k = B["clamp"]; C_ = OV_CLAMP; yh = C_["face"] + C_["lug_t"]
+        swc = U(*[U(cyl("y", s_ * C_["x"], g["Z_X"], C_["shank_r"] - 0.05, yh - C_["bolt_len"], yh + 60.0), cyl("y", s_ * C_["x"], g["Z_X"], C_["head_r"] + 0.2, yh + 0.05, yh + 60.0)) for s_ in (1, -1)])
+        vc = round(vol(swc ^ U(rv - k["inserts"], B["carrier"], B["cap"])) + vol(k["bolts"] ^ U(rv, B["carrier"], B["cap"])), 3)
+        steps.append(dict(step="7b lead clamp: 2 x M3 x 10 from the drone side through the cap's lugs into the receiver lugs' inserts (before the receiver goes on)",
+                          how="each bolt, its head and the driver swept from 60 above to the head's seat (y %.1f) through receiver, carrier and cap; the bolts seated against them" % yh, mm3=vc, ok=bool(vc < 0.05)))
+    steps.append(dict(step="7 receiver onto the drone: %d M3 from below through the bosses" % (len(mount) + len(B.get("drone_pos") or [])), how="each bolt and its driver swept from 60 mm below" + (" up to the head seat" if scout else "") + ", through receiver, carrier and cap", mm3=v, ok=bool(v < 0.05)))
+    v = round(vol(_xt60w_male(g, collar=False) ^ U(rv, B["carrier"], B["cap"], B["collar"])), 3)
     steps.append(dict(step="8 XT60W-M glued into its collar, laid in the carrier, cap on", how="the plug's body against collar, carrier, cap and receiver, seated", mm3=v, ok=bool(v < 0.05)))
     out["install"] = steps
     out["serviceable"] = "a bolt comes out the way it went in once the pack, springs and stop bar are lifted out; nothing is glued"
@@ -1334,7 +1359,7 @@ def write_both():
         if os.path.exists(os.path.join(ROOT, "parts", rid, "part.py")):
             B = build(pk); ym = B["r"]["Y_M"]; bb = B["recv"].bounding_box(); done = os.path.exists(os.path.join(ROOT, "parts", rid, "result.json"))
             P = T @ m6.page_matrix(B["g"]["Z_T"]) @ np.array([[1, 0, 0, 0], [0, 0, -1, ym], [0, 1, 0, 0], [0, 0, 0, 1.0]])
-            if done: parts[:] = [p for p in parts if p["id"] != f"{nm}_view_receiver_both"]      # the run's part replaces its drawn room on the page
+            done = False                                      # 15 Nov: the engine receivers are OPTIMISE; the drawn PROTOTYPE is the one printed and stays on the page (the run's part faint)
             parts.append(dict(id=rid, name=f"{pk}: receiver (generated)", role="structure", group=f"{pk.capitalize()}: receiver (on the drone)" + ("" if done else ", cut away"),
                               color="#9fb4cc", opacity=None if done else 0.12, printed=done, box=[round(float(v), 1) for v in (bb[0], bb[3], bb[2], bb[5], 0.0, ym - bb[1])], pose=P.tolist(),
                               material="PCTG", tag="C", version="latch v7 receiver, engine part (13 Nov)", source=f"parts/{rid}/part.py"))
@@ -1355,6 +1380,12 @@ def write_both():
     try: asm["assembly"] = json.load(open(fj)).get("assembly")               # the assembly gate's block (tools/assembly_check.py) stays as its owner wrote it
     except (OSError, ValueError): pass
     if asm.get("assembly") is None: asm.pop("assembly", None)
+    else:                                                                     # 15 Nov: the per-pack blocks' exclusions and the Overseer's lead clamp paths, on this page's ids
+        ids = {p["id"] for p in parts}; A = asm["assembly"]
+        for pk in ("scout", "overseer"):
+            b_ = assembly_block(pk, "_both")
+            A["exclude"] = A.get("exclude", []) + [x for x in b_["exclude"] if x not in A.get("exclude", []) and x in ids]
+            A["paths"] = [q for q in A.get("paths", []) if not q["name"].startswith(f"{pk}: ")] + [dict(q, name=f"{pk}: {q['name']}") for q in b_.get("paths", [])]
     json.dump(asm, open(fj, "w"), indent=1)
     print("latch7_both:", len(parts), "parts")
 
@@ -1383,7 +1414,7 @@ def kit():
                            "same names sent 13 Nov (13:15 and 16:55 Pacific): do not print or use those three. Every other file is unchanged."])
     done = {}
     for pack in ("scout", "overseer"):
-        B = build(pack); g = B["g"]; pre = "latch7_" if pack == "scout" else "latch7_ov_"
+        B = apply_clamp(build(pack)); g = B["g"]; pre = "latch7_" if pack == "scout" else "latch7_ov_"     # the Overseer's carrier and cap as the lead clamp has them (15 Nov)
         pin = cyl("y", 0.0, 0.0, GUIDE_PIN[0] / 2, 0.0, GUIDE_PIN[1], 24)
         pieces = [("cartridge", B["cart"], pre + "cartridge", "PCTG", 1, "on the pack"), ("bolt", slider(g, 0, 1), pre + "bolt", "PCTG", 2, "both bolts are this one file (the second is turned half round)"),
                   ("stop bar", B["stop"], "latch7_stop_bar", "PCTG", 1, "the same file for both packs"), ("spring guide pin", pin, "latch7_spring_pin", "PCTG", 4, "o 2.0 x 7, standing; the same file for both packs; print a few spare"),
@@ -1484,23 +1515,147 @@ def kit_receivers():
 #          (the tail wall 4.0 MPa, 4.4; Scout 3.4 MPa, 5)
 #        crash 35 g out of the mouth: 263 N on the two bolt shelves (3.2 ledge, 4.6 deep, 42 long): 1.4 MPa in-layer, margin 25; the walls in tension to the deck 0.14 MPa
 #      Assembly path: Scout: strips into their recesses, collar/carrier/cap onto the lead bosses, the receiver onto the drone with 4 x M3 x 35 from below (heads on the HEAD_Y seats).
-#      Overseer: (bay only) 4 x M3 x 14 from the mouth to their seats in the deck (bay_heads), BEFORE the seat strips; strips; carrier and cap into the lead notch; the receiver onto
-#      the glued base with 4 x M3 x 10 from the mouth into its inserts (unchanged). OPEN: the lead pair (OV_OPEN).
+#      Overseer: (bay only) 4 x M3 x 14 from the mouth to their seats in the deck (bay_heads), BEFORE the seat strips; strips; the two lead inserts; carrier and cap into the lead
+#      notch, the lead clamp's 2 x M3 x 10 from the drone side (OV_CLAMP); the receiver onto the glued base with 4 x M3 x 10 from the mouth into its inserts (unchanged).
 PROTO = {"scout": "latch7_receiver", "overseer": "latch7_ov_receiver"}       # print/<name>.stl (meshes.yml publishes it as print-<name>.stl); the engine parts of the same names are OPTIMISE
+
+
+# ---- the Overseer's lead clamp (15 Nov, the latch worker: OV_OPEN closed). The lead pair (|x| 27.8, z_X) had no seat: below the ears the cartridge fills |x| <= 27.5 to y 58.6,
+#      and |x| 27.8..34.0 is 6.2 wide where an M3 needs 7.4 (o 3.4 + 2 x 2.0) and an insert 8.0; at the ends the walls are 6.0. What the outline really allows: the funnel's
+#      seat holds the receiver only over its bottom 10 mm (seat frame: at the lead end nothing of the funnel above y 28 inside |x| 52), and the glued base's underside beside the
+#      lead end stands at y >= 66.6 for |x| 34..45 (overseer_base as printed, dc223fe: z -10.3 at the lowest); inside |x| 33 it is the slot (>= 69.2). So the pair moves out to
+#      |x| 39.0 on lugs below the base: one per side, a receiver lug on the side wall (insert from above) and a cap lug on it, the head on the cap lug, 2.4 under the base.
+#        receiver  lug x 32.8..43.0, y 47.0..57.0, z_X +- 7 with a 45 deg gusset under it into the wall (to y 36.8); the M3 x 5.7 insert in a o 4.0 x 7.0 hole (2.0 wall out, 3.0
+#                  floor); the wall's top at the lead end lowered to the lug face (y 57.0) outboard of x 30.8 over the notch's length for the cap's skirt (0.5 off it); the ear
+#                  seat (x 27.9..30.8) made 0.2 up to the ears (the notch's 0.2 FIT stays in x and z: the clamp holds y); the old lead holes in the wall filled.
+#        carrier   ears to |x| 30.8 (were 32.8: the skirt passes outboard), the old o 3.4 holes filled: no bolt goes through the carrier, the cap holds it on its seat.
+#        cap       a skirt x 31.3..33.3 (the slot's 33.3) down to y 57.0 along its 20 length, to x 34.0 below y 67.0 and x 35.6 below 64.6, the lug x 31.3..43.0, y 57.0..61.2, z_X +- 7;
+#                  the old insert holes filled. The head (o 5.5 x 3.0) on the lug's top at 61.2: 64.2, the driver's o 6.4 sweep up from there (0.2 off the skirt).
+#        bolt      M3 x 10 DIN 912 (the drone's four are the same): 4.2 of lug, 5.8 into the 5.7 insert (0.1 past it into the 1.3 below), from above on the bench.
+#      Hand calculation (PCTG E as above: flight in-layer 9.8 / across 4.9 MPa, misuse 15.6 / 7.8). The cap takes the XT60W's insertion push, 60 N up (make.ARM insert_N, E), every
+#      swap (flight), 118 N if the head's stall went all through the plug (misuse), half a side; the carrier's pull-out (57 N) goes down through its ears onto the seat, not the bolts.
+#      The cap prints standing on its -z end (442 mm2 on the bed, the least support): its plate and its skirts bend in the layers.
+#        cap plate between the lugs, at the ceiling's outer edge (x 14.3, 20 x 5.7): M = 30 x (39.0 - 14.3) = 741 Nmm on Z 108 mm3: 6.9 MPa, index 0.70 (misuse 0.87)
+#        skirt at y 63 (x 31.3..35.6, 4.3 x 20; its root 2.7 into the plate, x to 34.0 up to 67.0, 1.0 under the base): M = 30 x (39.0 - 33.45) = 167 Nmm on Z 61.6 mm3
+#                  + 30 N on 86 mm2: 3.1 MPa in-layer, index 0.32 (misuse 0.39)
+#        cap lug (x 35.6 to the bolt, 4.2 x 14): M = 30 x 3.4 = 102 Nmm on Z 41.2 mm3: 2.5 MPa in-layer, index 0.25
+#        receiver lug (prints mount plane down; 10 deep, 14 wide, 6.2 out to the bolt): M = 30 x 6.2 = 186 Nmm on Z 233 mm3: 0.8 MPa in-layer, index 0.08
+#        insert in PCTG: 30 N (59 misuse) against the ruthex M3 x 5.7's pull-out (several hundred N, E): index < 0.2; the M3 in tension: nothing
+#      Least margin: the cap plate, 1.43 at the flight load (index 0.70), 1.15 at misuse (0.87). The lugs' outer lead corners are cut at 45 deg to the receiver's own corner
+#      line, so the receiver's print stays 177.9 square on the bed's diagonal.
+OV_CLAMP = dict(x=39.0, hz=7.0, face=57.0, lug_t=4.2, x_out=43.0, ear_x=30.8, skirt=(31.3, 33.3), root=(34.0, 67.0), skirt_thick_x=35.6, under_base=64.6, lug_y0=47.0, gusset=10.2,
+                ins_r=2.0, ins_depth=7.0, ins_len=5.7, head_r=2.75, head_h=3.0, sweep_r=3.2, bolt_len=10.0, shank_r=1.5, seat_pad=0.2)
+
+
+def ov_clamp(B):
+    """the Overseer's lead clamp (OV_CLAMP), cartridge coords: dict(carrier, cap, recv_add, recv_cut, bolts, inserts, sweep, ears_seat); None for the Scout.
+    Drawn after build(): the engine's receiver setup (parts/latch7_recv_lib.py, mk.build) does not see it, so its design hash is unchanged."""
+    g, r = B["g"], B["r"]
+    if g["pack"] != "overseer": return None
+    C = OV_CLAMP; zx = g["Z_X"]; zc0, zc1 = zx - bl.CARRIER_HZ, zx + bl.CARRIER_HZ          # the carrier's and cap's length, 153.8..173.8
+    zn0, zn1 = zc0 - bl.FIT, zc1 + bl.FIT                                                       # the notch's
+    zl0, zl1 = zx - C["hz"], zx + C["hz"]
+    old = [(bx, bz) for bx, bz in r["MOUNT"] if abs(bz - zx) < 1e-6]                           # the old lead pair
+    car = B["carrier"] + U(*[cyl("y", bx, bz, bl.BOLT_D / 2 + 0.05, r["Y_DK0"], r["Y_DK1"], 40) for bx, bz in old])
+    car = car ^ box(-C["ear_x"], C["ear_x"], -100, 100, -100, 400)
+    pg = U(*B["poles"]); trim = U(box(-40, 40, -100, 100, zc0 - 0.01, zc0 + 0.05), box(-40, 40, -100, 100, zc1 - 0.05, zc1 + 0.01))
+    px, pz = r["PKX_XW"] + 2.0, r["PKX_ZW"] + 2.0                                             # the pocket block under the ears, 0.25 a side in its part of the notch too
+    trim = U(trim, *[box(*sorted((s_ * (px - 0.05), s_ * (px + 0.01))), -100, r["Y_DK0"], zx - pz - 1, zx + pz + 1) for s_ in (1, -1)],
+             box(-px - 1, px + 1, -100, r["Y_DK0"], zx - pz - 0.01, zx - pz + 0.05), box(-px - 1, px + 1, -100, r["Y_DK0"], zx + pz - 0.05, zx + pz + 0.01))
+    car = car - (trim - pg)                                                                     # 0.25 a side in the notch along the pack (its 0.2 FIT is the fit table's mate, 0.2, to the hundredth)
+    cap = B["cap"] + (U(*[cyl("y", bx, bz, 2.05, r["Y_DK1"], r["Y_M"], 40) for bx, bz in old]) ^ box(-40, 40, r["Y_DK1"], r["Y_M"], zc0, zc1))
+    add, cut, bolts, ins, sweep, cadd = [], [], [], [], [], []
+    for s in (1, -1):
+        X = lambda a, b: sorted((s * a, s * b)); xb = s * C["x"]
+        yh = C["face"] + C["lug_t"]                                                              # the head's seat, 61.2
+        cadd += [box(*X(C["skirt"][0], C["skirt"][1]), C["face"], r["Y_M"], zc0, zc1),
+                 box(*X(C["skirt"][0], C["root"][0]), C["face"], C["root"][1], zc0, zc1),               # the skirt's root into the plate, 2.7 deep (a 2.0 skirt was a neck)
+                 box(*X(C["skirt"][0], C["skirt_thick_x"]), C["face"], C["under_base"], zc0, zc1),
+                 box(*X(C["skirt"][0], C["x_out"]), C["face"], yh, zl0, zl1)]
+        cut += [box(*X(C["ear_x"], 45.0), C["face"], r["Y_DK0"] + 0.5, zn0, zn1)]               # the wall's top under the skirt and lug
+        add += [box(*X(r["XW"] - 0.01, C["x_out"]), C["lug_y0"], C["face"], zl0, zl1),
+                prism_xy([(s * (r["XW"] - 0.01), C["lug_y0"]), (s * C["x_out"], C["lug_y0"]), (s * (r["XW"] - 0.01), C["lug_y0"] - C["gusset"])], zl0, zl1)]
+        add += [cyl("y", s * 27.8, zx, bl.BOLT_D / 2 + 0.05, 5.0, r["Y_DK0"], 40) ^ box(*X(r["RF"] + WALL_RELIEF.get("overseer", 0.0), r["XW"]), 5.0, r["Y_DK0"], zn0, zn1)]
+        hole = cyl("y", xb, zx, C["ins_r"], C["face"] - C["ins_depth"], C["face"] + 0.01, 40)
+        cut += [hole]
+        ins.append(cyl("y", xb, zx, C["ins_r"], C["face"] - C["ins_len"], C["face"], 40) - cyl("y", xb, zx, C["shank_r"], C["face"] - C["ins_len"] - 1, C["face"] + 1, 40))
+        bolts.append(U(cyl("y", xb, zx, C["shank_r"], yh - C["bolt_len"], yh, 40), cyl("y", xb, zx, C["head_r"], yh, yh + C["head_h"], 40)))
+        sweep.append(U(cyl("y", xb, zx, bl.BOLT_D / 2, C["face"] - 1.0, 120.0, 40), cyl("y", xb, zx, C["sweep_r"], yh, 120.0, 40)))
+    dl = r["Z_E1"] + r["END_T"] + 34.0; xo = C["x_out"] + 5.0                      # |x| + z <= dl: the receiver's own corner (34.0, its lead end face)
+    diag = U(*[hullp([[s * x_, y_, z_] for x_, z_ in ((xo, dl + 5.0), (xo, dl - xo), (dl - zl1 - 5.0, zl1 + 5.0), (xo, zl1 + 5.0)) for y_ in (0.0, 80.0)]) for s in (1, -1)])
+    #                                          the lugs' outer lead corners cut at 45 deg to the receiver's own corner line (|x| + z <= 34.0 + its lead end): the print stays 177.9 square on the diagonal
+    cap = (cap + (U(*cadd) - diag)) - U(*sweep) - U(box(-50, 50, -100, 100, zc0 - 0.01, zc0 + 0.05), box(-50, 50, -100, 100, zc1 - 0.05, zc1 + 0.01))
+    seat = box(-C["ear_x"], C["ear_x"], r["Y_DK0"] - C["seat_pad"] - 0.01, r["Y_DK0"], zn0, zn1)
+    return dict(carrier=car, cap=cap, recv_add=U(*add) - diag, recv_cut=U(*cut), seat=seat, bolts=U(*bolts), inserts=U(*ins), sweep=U(*sweep))
+
+
+# ---- the Scout's receiver against the Scout v4 frame (15 Nov, tools/assembly_check.py box): the frame's yokes, cut to the latch keep-out (result.json scout_keepout), still
+#      stand 1.3-1.5 into the room round the receiver's four boss tops where their faceted sockets hug the columns (0.5 mm3 in all). The receiver gives: each boss top is trimmed
+#      by the yokes' own shape grown 0.2, over the top 3.5 mm only (the bolted faces, the mount plane, stay). The frame is read as it stands (parts/scout_v4_frame/part.stl).
+YOKE_TRIM = dict(grow=0.2, depth=3.5, r=8.5)
+
+
+def scout_yoke_trim(B):
+    """what the Scout v4 frame's yokes take off the receiver's boss tops (cartridge coords), or None (no frame mesh, or the Overseer)"""
+    g, r = B["g"], B["r"]
+    f = os.path.join(ROOT, "parts", "scout_v4_frame", "part.stl")
+    if g["pack"] != "scout" or not os.path.exists(f): return None
+    import trimesh
+    from topo.part import man
+    rj = json.load(open(os.path.join(ROOT, "parts", "latch7", "result.json"))).get("scout_keepout", {})
+    T = np.vstack([np.array(rj["pose_of_cartridge_coords"], float), [0, 0, 0, 1.0]]) if rj.get("pose_of_cartridge_coords") else None
+    if T is None: return None
+    F = man(trimesh.load(f, force="mesh")).transform(np.linalg.inv(T)[:3].tolist())
+    reg = U(*[cyl("y", bx, bz, YOKE_TRIM["r"], r["Y_M"] - YOKE_TRIM["depth"], r["Y_M"] + 0.01, 48) for bx, bz in r["MOUNT"]])
+    Fr = F ^ reg; d = YOKE_TRIM["grow"]
+    return U(Fr, *[Fr.translate([a * d, b * d, c * d]) for a, b, c in ((1, 0, 0), (-1, 0, 0), (0, 0, 1), (0, 0, -1), (0, -1, 0), (0.7, 0, 0.7), (-0.7, 0, 0.7), (0.7, 0, -0.7), (-0.7, 0, -0.7))]) ^ reg
+
+
+def peg_way(B):
+    """the carrier's two guide pegs' way out, straight up to the mount plane, 0.3 a side (15 Nov, the assembly check: the receiver's grooves for them stopped at the
+    carrier's top, y 63.1, and the carrier rib (z to Z_X - CARRIER_HZ - FIT) stands 0.45 over the pegs' -z faces above it: the carrier could not be lifted out or set in)"""
+    r = B["r"]; z0 = B["g"]["Z_X"] - bl.CARRIER_HZ                                  # what of the carrier stands past its ears' -z face: the pegs with their roots
+    out = (B["carrier"] ^ box(-60, 60, -100, 100, z0 - 20.0, z0 - 0.02)).decompose()
+    return U(*[U(p_.translate([dx, 0, dz]), p_.translate([dx, r["Y_M"] + 1.0 - p_.bounding_box()[1], dz])).hull() for p_ in out for dx in (-0.3, 0.3) for dz in (-0.3, 0.3)])
 
 
 def receiver_proto(B):
     """the drawn PROTOTYPE receiver, cartridge coords: B["recv"] less the bay bolts' head bores, the side wall padded out to 34.0 round each (5.0 wall - the bore's 3.2
-    would leave 1.8 at the groove; 3.0 now; over the top OV_TOP depth only to OV_TOP y_abs, 2.3 there; the funnel's seat is +-34.4)"""
+    would leave 1.8 at the groove; 3.0 now; over the top OV_TOP depth only to OV_TOP y_abs, 2.3 there; the funnel's seat is +-34.4); the Overseer's lead clamp (ov_clamp);
+    the Scout's boss tops clear of the frame's yokes (scout_yoke_trim)"""
     R = B["recv"]; bh = bay_heads(B); g, r = B["g"], B["r"]
-    if bh is None: return R
+    if bh is None:
+        tr = scout_yoke_trim(B); R = R - peg_way(B)
+        return R if tr is None else R - tr
     yt = r["Y_M"] - OV_TOP["depth"]
     pads = U(*[m_ for bx, bz in r["MOUNT"] if abs(bz - g["Z_X"]) > 1e-6 for s in (np.sign(bx),)
                for m_ in (box(*sorted((s * (r["RF"] + 1.0), s * 34.0)), bl.Y_RB, yt, bz - bl.HEAD_R - 3.0, bz + bl.HEAD_R + 3.0),
                           box(*sorted((s * (r["RF"] + 1.0), s * OV_TOP["y_abs"])), yt - 0.5, r["Y_M"], bz - bl.HEAD_R - 3.0, bz + bl.HEAD_R + 3.0))])
     pads = pads ^ box(-50.0, 50.0, bl.Y_RB, r["Y_M"], r["Z_E0"] - r["END_T"], r["Z_E1"] + r["END_T"])        # inside the end faces (the tail pair's pad ran 1.2 past it)
-    shanks = U(*[cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, r["Y_M"] + 1.0) for bx, bz in r["MOUNT"]])
-    return R + (pads - bl.cart_path(r) - B["hold_notch"] - shanks) - bh
+    shanks = U(*[cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, r["Y_M"] + 1.0) for bx, bz in r["MOUNT"] if abs(bz - g["Z_X"]) > 1e-6])
+    pockets = U(*[pk if s_ > 0 else bl.mirx(pk) for s_ in (1, -1) for pk in (bl.pocket_cut(r)[0],)])
+    R = R + (pads - bl.cart_path(r) - B["hold_notch"] - shanks - pockets) - bh          # 15 Nov: the pads stood in the bolt pockets at the tab line (the bolts at rest, 38 mm3 each)
+    R = R - peg_way(B)
+    k = ov_clamp(B)
+    seat = (R.translate([0, k["seat"].bounding_box()[4] - k["seat"].bounding_box()[1], 0]) ^ k["seat"])     # the ear seat's own faces, 0.2 up
+    return (R + seat + (k["recv_add"] - bl.cart_path(r))) - k["recv_cut"]
+
+
+def receiver_all_print(B):
+    """m6.receiver_all as printed (15 Nov): the PROTOTYPE receiver (receiver_proto), the clamped carrier and cap, strips, plug, pegs, the clamp's bolts: what a system
+    that seats this latch (tools/box_check.latch_bodies) should draw instead of the engine's room"""
+    B = apply_clamp(B); k = B.get("clamp")
+    return U(B["recv_print"], B["carrier"], B["cap"], B["strips"], B["male"], *B["poles"], *([k["bolts"], k["inserts"]] if k else []))
+
+
+def apply_clamp(B):
+    """B with the print parts (15 Nov): the Overseer's carrier and cap as clamped (ov_clamp), B["clamp"] its bolts and inserts; the receiver as printed (receiver_proto)
+    in B["recv_print"]. B["recv"] (the engine's room) is left as build() made it."""
+    k = ov_clamp(B)
+    if k is not None:
+        B["carrier"], B["cap"] = k["carrier"], k["cap"]; B["clamp"] = k
+    B["recv_print"] = receiver_proto(B)
+    return B
 
 
 def proto():
@@ -1546,15 +1701,128 @@ def proto():
         names = {f_["part"] for k_ in FASTENERS for f_ in FASTENERS[k_]}
         a_["bought"] = [b_ for b_ in a_["bought"] if b_["part"] not in names] + [dict(f_) for f_ in FASTENERS[pack] + FASTENERS["both"]]
         a_["open"] = OV_OPEN if pack == "overseer" else None
-        a_["receiver"] = ((["6a (a bay only) 4 x M3 x 14 from the mouth up to their seats in the deck, before the strips"] if pack == "overseer" else []) +
-                          ["6 the two TPU seat strips into their recesses under the deck, between their keys", "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier, cap on",
-                           "8 carrier and cap into the lead-end notch" + ("; the lead pair into the cap's inserts: OPEN (see open)" if pack == "overseer" else ", on the lead-end bosses"),
-                           ("9 the receiver onto the glued base: 4 x M3 x 10 from the mouth into its inserts" if pack == "overseer" else "9 the receiver onto the drone: 4 x M3 x 35 from below, heads on the seats at 24.5 (the lead pair through carrier and cap)")])
+        if pack == "overseer":                            # 15 Nov: the lead clamp (OV_CLAMP), all on the bench before the receiver goes on the base
+            a_["receiver"] = ["6a (a bay only) 4 x M3 x 14 from the mouth up to their seats in the deck, before the strips",
+                              "6 the two TPU seat strips into their recesses under the deck, between their keys",
+                              "6b two M3 x 5.7 heat-set inserts pressed from above (the mount-plane side) into the o 4.0 holes in the receiver's two lead lugs, flush with the lug face",
+                              "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier; the carrier down into the lead-end notch, its ears on the seat",
+                              "8 the cap down onto the carrier, its two skirts outside the ears, its lugs on the receiver's lugs; 2 x M3 x 10 from the drone side through the cap's lugs into the inserts, snug",
+                              "9 the receiver onto the glued base: 4 x M3 x 10 from the mouth into its inserts (the clamp's heads stand 2.4 under the base: to reach them, the receiver comes off)"]
+            a_["checked"] = "parts/latch7_overseer/result.json build.install (step 7b the clamp, every step swept, 0 mm3); tools/assembly_check.py latch7_overseer and latch7_both: the three paths"
+        else:
+            a_["receiver"] = ["6 the two TPU seat strips into their recesses under the deck, between their keys", "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier, cap on",
+                              "8 carrier and cap into the lead-end notch, on the lead-end bosses",
+                              "9 the receiver onto the drone: 4 x M3 x 35 from below, heads on the seats at 24.5 (the lead pair through carrier and cap)"]
     json.dump(out, open(kj, "w"), indent=1)
     return out
 
 
+def clamp_kit():
+    """15 Nov: the Overseer's plug carrier and cap as the lead clamp has them (ov_clamp): print/latch7_ov_plug_carrier*.stl, solid-checked as exported, their pictures and
+    kit.json lines; then proto() (both receivers); a picture of the clamp assembled (kit/latch7_ov_lead_clamp.png). The other print files are not touched."""
+    sys.path.insert(0, os.path.join(ROOT, "tools")); import solid_check as sc, trimesh
+    from topo.build import render
+    pd, kd, kj = os.path.join(ROOT, "print"), os.path.join(HERE, "kit"), os.path.join(HERE, "kit.json"); out = json.load(open(kj))
+    B = apply_clamp(build("overseer"))
+    for nm, m, fn, note in (("plug carrier", B["carrier"], "latch7_ov_plug_carrier", "with its two guide pegs; 15 Nov: ears to |x| 30.8, no bolt holes (the lead clamp's cap holds it on its seat)"),
+                            ("plug carrier cap", B["cap"], "latch7_ov_plug_carrier_cap", "15 Nov: the lead clamp's cap: two skirts and lugs, each bolted with an M3 x 10 into the receiver lug's insert")):
+        pr = printability(m, near=30.0); t = _on_bed(m, pr["down"]); f = os.path.join(pd, fn + ".stl"); t.export(f)
+        t = trimesh.load(f, force="mesh"); ok, info = sc.solid_check(t)
+        g_ = round(abs(t.volume) / 1000 * 1.23, 2); ext = [round(float(v), 1) for v in t.extents]
+        png = os.path.join(kd, fn + ".png")
+        render(t, png, title=f"{fn}.stl on its bed ({pr['down']} face down)", info=f"PCTG | {ext[0]} x {ext[1]} x {ext[2]} mm | {g_} g | solid check {'PASS' if ok else 'FAIL'}")
+        sup = "none" if pr["support_mm2"] < 5.0 else "yes: %d mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)" % pr["support_mm2"]
+        hrs = max(0.3, round(g_ / 9.0, 1))                                    # small parts, 0.2 layers: ~9 g/h on the A1 mini (E)
+        side = {"+y": "its top (the mount-plane face)", "-z": "its tail-side end face (z %.1f)" % (B["g"]["Z_X"] - bl.CARRIER_HZ)}.get(pr["down"], "its %s face" % pr["down"])
+        line = f"print/{fn}.stl, {side} down, " + ("no supports" if sup == "none" else "tree supports (touching the bed only)") + f", PCTG at PETG settings + 10 C, 0.2 layers, 4 walls, 30 % gyroid, ~{hrs} h (E)"
+        row = next((f_ for f_ in out["files"] if f_.get("file") == f"print/{fn}.stl"), None)
+        new = dict(file=f"print/{fn}.stl", release=f"https://github.com/sparkiscool/noxen/releases/download/meshes/print-{fn}.stl", picture=os.path.relpath(png, ROOT), stage="PROTOTYPE", print=True,
+                   solid_check="PASS" if ok else "FAIL", thin_walls=len(info.get("thin_walls", [])), pose=f"the part's {pr['down']} face on the bed", size_on_bed_mm=ext, fits_bed=bool(max(ext[:2]) <= BED and ext[2] <= BED),
+                   supports=sup, material="PCTG", grams_each=g_, print_line=line, note=note, used_by={"overseer": 1})
+        if row is None: out["files"].append(new)
+        else: row.clear(); row.update(new)
+        print(fn, "PASS" if ok else "FAIL", g_, "g", ext, sup[:40], line)
+    out["supersedes"] = [x for x in out.get("supersedes", []) if not x.startswith("15 Nov (the Overseer's lead clamp)")] + [
+        "15 Nov (the Overseer's lead clamp): print/latch7_ov_plug_carrier.stl, print/latch7_ov_plug_carrier_cap.stl and print/latch7_ov_receiver.stl replace the files of the same names sent "
+        "before: do not print or use those three (their lead pair could not be fitted). print/latch7_receiver.stl (Scout): its four boss tops trimmed clear of the Scout v4 frame's yokes."]
+    json.dump(out, open(kj, "w"), indent=1)
+    proto(); clamp_assembled(B)
+    return out
+
+
+def clamp_assembled(B=None):
+    """the lead clamp assembled (kit/latch7_ov_lead_clamp.png): receiver (as printed), carrier, cap, bolts, inserts at the lead end"""
+    B = B or apply_clamp(build("overseer")); kd = os.path.join(HERE, "kit")
+    R = receiver_proto(B); k = B["clamp"]; zx = B["g"]["Z_X"]; win = box(-60, 60, 20, 80, zx - 30, zx + 20)
+    cols = [(R ^ win, [0.62, 0.70, 0.80]), (B["carrier"], [0.50, 0.58, 0.67]), (B["cap"], [0.80, 0.80, 0.78]), (k["bolts"], [0.25, 0.25, 0.28]), (k["inserts"], [0.85, 0.65, 0.25])]
+    ms = []
+    for m, c in cols:
+        t = bl.tm(m.rotate([90, 0, 0])); t.visual.face_colors = (np.array(c + [1.0]) * 255).astype(np.uint8); ms.append(t)
+    clamp_picture(ms, os.path.join(kd, "latch7_ov_lead_clamp.png"))
+
+
+def clamp_picture(ms, png):
+    """the lead clamp assembled: an iso view and a section through one bolt (the plane x = OV_CLAMP x), each part its own colour"""
+    import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+    import trimesh
+    fig = plt.figure(figsize=(16, 7), dpi=120)
+    allm = trimesh.util.concatenate(ms); lo, hi = allm.bounds; c, r_ = (lo + hi) / 2, (hi - lo).max() / 2
+    for i, (el, az, ttl) in enumerate(((28, -55, "lead end from the drone side (receiver, carrier, cap, 2 x M3 x 10, inserts)"), (-25, -125, "from below and outboard: the receiver lug and its gusset"))):
+        ax = fig.add_subplot(1, 3, i + 1, projection="3d"); a, e = np.radians(az), np.radians(el)
+        cam = np.array([np.cos(e) * np.cos(a), np.cos(e) * np.sin(a), np.sin(e)])
+        for m in ms:
+            sh = 0.35 + 0.65 * np.clip(m.face_normals @ cam, 0, 1); col = np.clip(m.visual.face_colors[:, :3] / 255.0 * sh[:, None], 0, 1)
+            ax.add_collection3d(Poly3DCollection(m.triangles, facecolors=col, edgecolors=col, linewidths=0.05))
+        ax.set_xlim(c[0] - r_, c[0] + r_); ax.set_ylim(c[1] - r_, c[1] + r_); ax.set_zlim(c[2] - r_, c[2] + r_); ax.view_init(el, az); ax.set_axis_off(); ax.set_title(ttl, fontsize=9)
+    ax = fig.add_subplot(1, 3, 3); x0 = -OV_CLAMP["x"]
+    for m in ms:
+        sec = m.section(plane_origin=[x0, 0, 0], plane_normal=[1, 0, 0])
+        if sec is None: continue
+        for ent in sec.discrete:
+            ax.fill(ent[:, 1], ent[:, 2], color=tuple(float(v) for v in m.visual.face_colors[0, :3] / 255.0), alpha=0.9, lw=0.3, ec="k")
+    ax.set_aspect("equal"); ax.set_title("section at the -x bolt (x %.1f): the stack, the mount plane at the top" % x0, fontsize=9); ax.set_xlabel("along the pack, the lead end to the left (mm)"); ax.set_ylabel("toward the drone (mm)")
+    plt.tight_layout(); plt.savefig(png); plt.close(fig)
+
+
+def clamp_page():
+    """15 Nov: the Overseer's latch page with the lead clamp: the view meshes of the receiver (as printed), carrier and cap, the clamp's bolts and inserts; result.json
+    page_parts and build; systems/latch7_overseer.assembly.json (its parts and the assembly block) and the Scout's block; then write_both(). Nothing else of main() reruns."""
+    pack = "overseer"; nm = OUT[pack][0]
+    B = apply_clamp(build(pack)); g = B["g"]; k = B["clamp"]; B["recv"] = B["recv_print"]
+    zt = g["Z_T"]; half = box(-500, 500, -500, 500, zt, 1000) - box(v5.POLE_X, 500, -500, 500, g["Z_P1"] - 3.0, 1000); M = m6.page_matrix(zt)
+    d = os.path.join(ROOT, "parts", nm, "view")
+    for n_, m in (("receiver", B["recv"]), ("carrier", B["carrier"]), ("carrier_cap", B["cap"]), ("lead_clamp_bolts", k["bolts"]), ("lead_clamp_inserts", k["inserts"])):
+        t = bl.tm(m ^ half); t.apply_transform(M); t.export(os.path.join(d, n_ + ".stl"))
+    rj = os.path.join(ROOT, "parts", nm, "result.json"); res = json.load(open(rj))
+    pp = [p for p in res["page_parts"] if not p["id"].startswith(f"{nm}_view_lead_clamp")]
+    grp = next(p["group"] for p in pp if p["id"] == f"{nm}_view_carrier")
+    i = next(j for j, p in enumerate(pp) if p["id"] == f"{nm}_view_carrier_cap") + 1
+    pp[i:i] = [dict(id=f"{nm}_view_lead_clamp_bolts", name="lead clamp bolts (2 x M3 x 10)", role="bought", group=grp, color="#3a3d42", opacity=None, mesh=f"parts/{nm}/view/lead_clamp_bolts.stl",
+                    pose=None, material=None, tag="C", mass_g=None, version="latch v7 lead clamp (15 Nov)", source="parts/latch7/make.py"),
+               dict(id=f"{nm}_view_lead_clamp_inserts", name="lead clamp inserts (2 x M3 x 5.7 heat-set)", role="bought", group=grp, color="#c9a24a", opacity=None, mesh=f"parts/{nm}/view/lead_clamp_inserts.stl",
+                    pose=None, material=None, tag="C", mass_g=None, version="latch v7 lead clamp (15 Nov)", source="parts/latch7/make.py")]
+    for p in pp:
+        if p["id"] in (f"{nm}_view_receiver", f"{nm}_view_carrier", f"{nm}_view_carrier_cap"): p["version"] = "latch v7, PROTOTYPE with the lead clamp (15 Nov)"
+    res["page_parts"] = pp; res["build"] = build_check(B)
+    res["lead_clamp"] = dict(OV_CLAMP, bolts="2 x M3 x 10 DIN 912, from the drone side, on the bench", inserts="2 x ruthex M3 x 5.7 in the receiver's lugs",
+                             least_index=dict(flight=0.70, misuse=0.87, where="the cap's plate at the ceiling's outer edge (make.py OV_CLAMP hand calculation)"),
+                             clear_of=dict(base_mm=2.16, funnel=funnel_fit(B)["ok"]))
+    json.dump(res, open(rj, "w"), indent=1)
+    for pk in ("scout", "overseer"):
+        f = os.path.join(ROOT, "systems", f"{OUT[pk][0]}.assembly.json"); a = json.load(open(f))
+        if pk == pack: a["parts"] = pp
+        a["assembly"] = assembly_block(pk)
+        json.dump(a, open(f, "w"), indent=1)
+    write_both()
+    print("build", res["build"]["ok"], [(s_["step"][:3], s_["mm3"]) for s_ in res["build"]["install"]])
+
+
 if __name__ == "__main__":
+    if "--clamp" in sys.argv:
+        clamp_kit(); clamp_page(); sys.exit(0)
+    if "--clamp-page" in sys.argv:
+        clamp_assembled(); clamp_page(); sys.exit(0)
     if "--kit-receivers" in sys.argv:
         kit_receivers(); sys.exit(0)
     if "--proto" in sys.argv:

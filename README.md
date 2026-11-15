@@ -25,19 +25,19 @@ Grey parts are placeholders still to be generated, red ones failed their last ru
 side sheets with the Scout v4 and the Overseer seated in it (`tools/import_box.py` rebuilds the page from the tree and
 `tools/box_check.py` checks the streams against each other on every change; `parts/box_funnel/make.py` draws the funnel).
 
-## xswap short lock (the Overseer's battery mechanism)
-[![xswap short lock in the Overseer](https://sparkiscool.github.io/noxen/xswap.png)](https://sparkiscool.github.io/noxen/xswap.html?view=iso&still)
-
-[Open the lock viewer](https://sparkiscool.github.io/noxen/xswap.html?view=iso&still): the short lock v5 on the Overseer's base inserts through one
-swap cycle (pincer, fingers, gate bars, rail, flip), the drone see-through round it, with the shell's height over the cage feet read out
-(`tools/import_xswap.py` copies the lock's meshes from its own page; `tools/xswap_motion.py` is the cycle).
+## Battery latch v7 (both packs)
+[Open the latch page](https://claude.ai/artifact/Pqu6aZFdW9g7jtRyBFdraw): latch v7 for the Scout and the Overseer (cartridge on the pack, receiver on
+the drone), the fit-test coupons and the print kit (`parts/latch7/make.py`, `parts/latch7/kit.json`). The xswap short lock (3 Nov) is retired:
+latch v7 replaced it (`systems/xswap.assembly.json` is kept as history).
 
 ## Live artifacts (the pages above as claude.ai artifacts, republished by the sessions)
 Each system's `artifact` URL is in its `systems/<name>.assembly.json`; a session publishes `site/<name>.html` there after `python tools/build_site.py --inline`.
 - Overseer: https://claude.ai/artifact/VhDfnp75uoVsj8SnyrW2Qg
 - Scout v4: https://claude.ai/artifact/AqA1sXuqfs4APM6zRdf2iL
 - Nox Ground Unit: https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z
-- xswap short lock in the Overseer: https://claude.ai/artifact/Tiij4hVRdJWVdtLy9JdeQv
+- Battery latch v7: https://claude.ai/artifact/Pqu6aZFdW9g7jtRyBFdraw
+- xswap short lock (retired): https://claude.ai/artifact/Tiij4hVRdJWVdtLy9JdeQv
+- Probe bench build sheet (no sign-in, served from `artifacts/`): https://sparkiscool.github.io/noxen/artifacts/probe_bench_assembly.html
 
 ## How it works
 Every part is drawn first and printed the same day; the topology engine only lightens parts Spark's tests froze. One page shows

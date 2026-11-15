@@ -49,38 +49,48 @@ jobs:
               bad=$(for n in $list; do if ! [[ "$n" =~ ^[A-Za-z0-9_-]+$ ]] || [ ! -f "parts/$n/part.py" ]; then echo -n " $n"; fi; done)
               if [ -n "$bad" ]; then echo "::error::not a part (no parts/<name>/part.py):$bad; nothing dispatched"; exit 1; fi
             else list=$(python3 tools/stale_parts.py); fi
-            # a push made with Spark's own credentials already started these runs: skip every part that another run
-            # of this workflow is still working on (the dispatch is then only for the ones it missed). A run whose
-            # own find job is still going has no matrix yet (28 Oct: the dispatch 9 s after the push doubled 5 parts),
-            # so first wait for every other run's find to finish.
-            others() { gh run list --workflow parts.yml --limit 30 --json databaseId,status \
-                       --jq '.[] | select(.status == "in_progress" or .status == "queued" or .status == "waiting" or .status == "pending" or .status == "requested") | .databaseId' \
-                       | grep -v "^${{ github.run_id }}$" || true; }    # no other run: grep -v returns 1, which under pipefail killed the job (29 Oct)
-            for i in $(seq 1 24); do
-              pending=$(for id in $(others); do gh run view "$id" --json jobs --jq 'if (.jobs | length) == 0 then "none yet" else (.jobs[] | select(.name == "find" and .status != "completed") | .name) end'; done)
-              [ -z "$pending" ] && break
-              echo "another run is still finding its parts, waiting"; sleep 10
-            done
-            # a part running elsewhere is skipped only when that run works on the same setup files (part.py, the libs, every file
-            # the setup reads: tools/part_sha.py --files); on an older setup it stops itself (the run job's watchdog, below) and the
-            # new one runs here (Spark 29 Oct: an old design never keeps running once a new one supersedes it)
-            for id in $(others); do
-              sha=$(gh run view "$id" --json headSha --jq .headSha)
-              for b in $(gh run view "$id" --json jobs --jq '.jobs[] | select(.status != "completed") | .name' | sed -n 's/^run (\(.*\))$/\1/p'); do
-                case " $list " in *" $b "*) ;; *) continue;; esac
-                if git cat-file -e "$sha" 2>/dev/null && git diff --quiet "$sha" HEAD -- $(python3 tools/part_sha.py --files "$b"); then
-                  list=$(echo " $list " | sed "s/ $b / /g"); echo "$b: already running on this same setup (run $id), skipped"
-                else
-                  echo "$b: running on an older setup in run $id; that run stops itself, the new one starts here"
-                fi
-              done
-            done
           else
             # every commit of the push, not only the last one: a part whose part.py or inputs/ changed, or one whose identity (libs,
             # the files its setup read: tools/part_sha.py) changed and now builds another setup than its result's (10 Nov: a new
             # systems/scout_v4.head_load.json reran nothing and superseded nothing); deleted parts excluded
             list=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | python3 tools/part_sha.py --affected)
           fi
+          # a part another run of this workflow is still working on, on this same setup, is skipped, on a dispatch and on a push alike
+          # (15 Nov: a lib edit that moved no setup re-ran the frame and the turret beside their own runs: a push reruns a stale part whose
+          # identity it touches, and those two were stale because they were running). The dispatch is then only for the ones it missed. A run whose
+          # own find job is still going has no matrix yet (28 Oct: the dispatch 9 s after the push doubled 5 parts),
+          # so first wait for every other run's find to finish.
+          others() { gh run list --workflow parts.yml --limit 30 --json databaseId,status \
+                     --jq '.[] | select(.status == "in_progress" or .status == "queued" or .status == "waiting" or .status == "pending" or .status == "requested") | .databaseId' \
+                     | grep -v "^${{ github.run_id }}$" || true; }    # no other run: grep -v returns 1, which under pipefail killed the job (29 Oct)
+          for i in $(seq 1 24); do
+            pending=$(for id in $(others); do gh run view "$id" --json jobs --jq 'if (.jobs | length) == 0 then "none yet" else (.jobs[] | select(.name == "find" and .status != "completed") | .name) end'; done)
+            [ -z "$pending" ] && break
+            echo "another run is still finding its parts, waiting"; sleep 10
+          done
+          # a part running elsewhere is skipped only when that run works on the same setup: the same setup files (part.py, the libs,
+          # every file the setup reads: tools/part_sha.py --files), or other files that build the same design hash (the watchdog's
+          # test: a lib edit that moves no geometry); on an older setup it stops itself (the run job's watchdog, below) and the
+          # new one runs here (Spark 29 Oct: an old design never keeps running once a new one supersedes it)
+          same() {    # $1 part, $2 the other run's commit
+            git cat-file -e "$2" 2>/dev/null || return 1
+            git diff --quiet "$2" HEAD -- $(python3 tools/part_sha.py --files "$1") && return 0
+            rm -rf /tmp/othwt; git worktree add -q --detach /tmp/othwt "$2" 2>/dev/null || return 1
+            a=$(cd /tmp/othwt && python -m topo.run parts/$1 --design-hash 2>/dev/null | tail -1); git worktree remove --force /tmp/othwt
+            h=$(python -m topo.run parts/$1 --design-hash 2>/dev/null | tail -1)
+            [ -n "$a" ] && [ "$a" = "$h" ]
+          }
+          for id in $(others); do
+            sha=$(gh run view "$id" --json headSha --jq .headSha)
+            for b in $(gh run view "$id" --json jobs --jq '.jobs[] | select(.status != "completed") | .name' | sed -n 's/^run (\(.*\))$/\1/p'); do
+              case " $list " in *" $b "*) ;; *) continue;; esac
+              if same "$b" "$sha"; then
+                list=$(echo " $list " | sed "s/ $b / /g"); echo "$b: already running on this same setup (run $id), skipped"
+              else
+                echo "$b: running on an older setup in run $id; that run stops itself, the new one starts here"
+              fi
+            done
+          done
           # xargs -r: an empty list gives [] and no run job (29 Oct: a dispatch for a part already running elsewhere ran a job with no part and went red)
           echo "parts=$(echo $list | xargs -r -n1 | jq -R . | jq -s -c .)" >> "$GITHUB_OUTPUT"
           echo "will run: $list"

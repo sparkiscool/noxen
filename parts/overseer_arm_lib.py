@@ -27,6 +27,7 @@ import json, os
 import numpy as np, trimesh, manifold3d as mf
 from topo import Part
 from topo.part import man
+from topo import fit                             # the printer's fit table: every mating size below
 from parts.cage_node_lib import socket_cuts, collar_shape
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -41,8 +42,8 @@ ROOT_R = 66.5                                    # root centre on the 45 deg dia
 BOLT_TOP = (63.17, 15.0)                         # u, |v|: top plate screws (O Arms and hub row, M)
 BOLT_BOT = (63.74, 10.0)                         # bottom plate screws (M)
 PEG = (57.66, 11.0, 5.8, 1.5)                    # u, |v|, dia, height (M)
-HOLE_D = 3.2                                     # M3 shank (E: close fit like the rod bore; plates Ø3.1 / 3.0, M)
-NUT_AF, NUT_T = 5.7, 2.6                         # M3 nut AF 5.5 x 2.4 + clearance (E: not recorded in dimensions.md)
+HOLE_D = fit.bore(3.0, "close")                                     # M3 shank (E: close fit like the rod bore; plates Ø3.1 / 3.0, M)
+NUT_AF, NUT_T = fit.across(5.5, "nut"), 2.6                         # M3 nut AF 5.5 x 2.4 + clearance (E: not recorded in dimensions.md)
 BOSS_R, FLOOR = 5.5, 3.0                         # boss radius (2.2 wall round the relief), 3.0 floor behind the pocket
 BOSS_U, BOSS_V, BOSS_T = (57.5, 72.0), (3.0, 22.0), 8.0   # plate boss block per side and face (29 Oct): u 57.5..72 (the lips reach 57.7; the Pi deck keeps u >= 58),
 #   |v| 3..22, 8 tall. Was a stadium r 5.5 round the two bolts, 5.6 tall: its core at the gate's 2 mm erosion was slivers between the
@@ -53,7 +54,7 @@ PAD_D, PAD_T = 36.0, 14.0                        # motor pad (arms section, C): 
 PAD_CONE_D, PAD_CONE_R = 8.0, 14.0               # 9 Nov: the solid cone under the solid pad: 8 deep, O36 -> O28
 LUG_R = 5.5                                      # lug radius round each slot (slot 1.6 + 2.0 wall + 1.9)
 MOTOR_SLOT = (8.0, 9.5)                          # X2216 base pattern: one pair across at 16 (r 8), the other at 19 (r 9.5), 45 deg to the leads (O motor row, spec)
-SLOT_D = 3.2                                     # M3 into the motor's tapped base (2.8 deep: no nut exists on a motor)
+SLOT_D = fit.bore(3.0, "close")                                     # M3 into the motor's tapped base (2.8 deep: no nut exists on a motor)
 HEAD_D, HEAD_T = 6.2, 0.0                        # no head counterbore (7 Nov): the heads bear on the pad's underside, the full 14 under them; M3 x 18 (14 pad + 4 into the motor, Spark to confirm the base's thread depth)
 SWEEP_D = 7.0                                    # driver sweep under each motor bolt, through the whole envelope
 BORE_D = 8.6                                     # shaft / clip bore (arms section, CHECK P)
@@ -62,7 +63,7 @@ M_MOTOR, M_ESC = 96.0, 0.0                       # g: motor 81 + prop 10 + screw
 Z_MOTOR_CG = 60.0                                # motor CG (arms section)
 THRUST_N, TORQUE_NM = 21.0, 0.5                  # arms section (E)
 E_CARBON, E_PETG = 120e3, 2780.0                 # MPa (arms section)
-NODE_R, SOCK_BORE_R, SOCK_DEPTH, SOCK_WALL = 10.15, 1.6, 10.0, 2.5     # cage node rule (cage_node_lib); wall 2.5 (29 Oct): 2.0 at the resin grooves
+NODE_R, SOCK_BORE_R, SOCK_DEPTH, SOCK_WALL = 10.15, fit.bore(3.0, "bond") / 2, 10.0, 2.5     # cage node rule (cage_node_lib); wall 2.5 (29 Oct): 2.0 at the resin grooves
 ROD_A = 7.07                                     # 3.0 solid carbon area, mm2 (dimensions.md C)
 
 

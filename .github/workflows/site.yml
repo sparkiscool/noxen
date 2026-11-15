@@ -1,14 +1,14 @@
 # Rebuilds the viewer page from systems/*.assembly.json and parts/*/ and publishes it to GitHub Pages.
-# Runs after every results commit (parts.yml starts it) and after any edit to systems/ or site/.
+# Runs after every results commit (parts.yml starts it) and after any edit to systems/, site/ or artifacts/.
 name: site
 on:
   push:
     branches: [main]
-    paths: ['systems/**', 'site/**', 'parts/*/part.stl', 'parts/*/result.json', 'parts/*/feedback.md', 'tools/build_site.py', 'tools/motion.py', 'tools/motion_template.html', 'tools/snap_site.py']
+    paths: ['systems/**', 'site/**', 'parts/*/part.stl', 'parts/*/result.json', 'parts/*/feedback.md', 'tools/build_site.py', 'tools/motion.py', 'tools/motion_template.html', 'tools/snap_site.py', 'artifacts/**']
   workflow_dispatch:
 
 permissions: { pages: write, id-token: write, contents: read }
-concurrency: { group: site, cancel-in-progress: true }
+concurrency: { group: site, cancel-in-progress: false }   # the running build finishes and the newest waiting one runs next: back-to-back results commits were cancelling every build (15 Nov)
 
 jobs:
   build:
@@ -22,6 +22,7 @@ jobs:
       - run: python tools/build_site.py --inline    # also site/<drone>.html, the drone's artifact file, every current part embedded
       - run: pip install playwright && playwright install --with-deps chromium
       - run: python tools/snap_site.py                 # site/<drone>.png: the picture the README shows (served from Pages, never committed)
+      - run: cp -r artifacts site/artifacts            # standalone pages (artifacts/*.html) at <pages>/artifacts/, no sign-in
       - uses: actions/upload-pages-artifact@v4
         with: { path: site }
   deploy:

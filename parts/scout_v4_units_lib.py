@@ -9,6 +9,7 @@ masses at their CG (35 g crash in 14 directions, flight, landing) and the joint 
 import json, os, sys
 import numpy as np, trimesh, manifold3d as mf
 from topo.part import man
+from topo import fit                                          # the printer's fit table: every mating size below
 from parts.cage_node_lib import U
 from parts.scout_units_lib import box, cyl, along, hull, unit, rigid_split, Sock, DIRS14, FLIGHT, check_collars, G, FLOOR, DEPTH, BORE_R, WALL
 
@@ -21,7 +22,7 @@ NL4 = json.load(open(os.path.join(ROOT, "systems", "scout_v4.cage_loads.json")))
 ASM = {p["id"]: p for p in json.load(open(os.path.join(ROOT, "systems", "scout_v4.assembly.json")))["parts"]}
 DRONE_G = sum(p["mass_g"] for p in ASM.values()) + S.BATTERY_SET[0]
 HIT_N = round(2 * DRONE_G * G * 600.0 / 15.0, -1)            # ground hit (the Overseer's rule: 2 m g h / 15 mm from 0.6 m): the battery mechanism's feet take it into its 4 bolts
-M3_INS, M3_CLR, M2_INS, M25_INS = (2.0, 6.0), 1.7, (1.6, 4.5), (1.75, 4.5)   # heat-set insert holes (r, depth): M3 x 5.7 O4 x 6; M3 clearance r; M2 O3.2; M2.5 O3.5
+M3_INS, M3_CLR, M2_INS, M25_INS = (fit.insert("M3") / 2, 6.0), fit.bore(3.0, "screw") / 2, (fit.insert("M2") / 2, 4.5), (fit.insert("M2.5") / 2, 4.5)   # heat-set insert holes (r, depth): M3 x 5.7 O4 x 6; M3 clearance r; M2 O3.2; M2.5 O3.5
 BOSS_R = 5.0                                                  # O10 boss round an M3 insert (wall 3)
 
 
@@ -30,10 +31,20 @@ def m(t):
     return man(t)
 
 
+def ins_hole(x, y, z0, z1, r, up=True):
+    """a heat-set insert's hole, vertical, z0..z1, radius r (the fit table's insert hole: M3_INS, M2_INS, M25_INS), the insert pressed in
+    upward (up: from z0) or downward (from z1); its boss gets the standard install and tighten cases (topo/handling.py: the iron's push,
+    the screw's torque and its pull-out) on a ring 1.5 round the hole"""
+    from topo import handling
+    thread = {round(v["hole"] / 2, 3): k for k, v in fit._T["inserts"].items()}.get(round(r, 3), "M3")
+    handling.declare("insert", cyl(x, y, z0, z1, r + 1.5) - cyl(x, y, z0 - 1, z1 + 1, r), (x, y, z0 if up else z1), (0, 0, 1 if up else -1), thread)
+    return cyl(x, y, z0, z1, r)
+
+
 def ins_cut(x, y, z, r_d, up=True, extra=1.0):
-    """an insert hole r_d = (r, depth) from z going up (into material above) or down"""
+    """an insert hole r_d = (r, depth) from z going up (into material above) or down (ins_hole)"""
     r, d = r_d
-    return cyl(x, y, z - (0 if up else d), z + (d if up else 0), r) if True else None
+    return ins_hole(x, y, z - (0 if up else d), z + (d if up else 0), r, up)
 
 
 def socks_of(node, ring_r=None, cls=None):
@@ -173,7 +184,7 @@ class SockDown(Sock):
         return U([along(f, f + self.port_d * 150.0, PORT_R), along(v, v + self.port_d * 150.0, VENT_R)])
 
 
-TUBE_BORE_R, TUBE_DEPTH_MIN = 3.1, 15.0                       # a 6 mm (6/4) carbon tube: 6.2 bore, 15 deep at least (13 Nov, the design chat)
+TUBE_BORE_R, TUBE_DEPTH_MIN = fit.bore(6.0, "bond") / 2, 15.0                       # a 6 mm (6/4) carbon tube: 6.2 bore, 15 deep at least (13 Nov, the design chat)
 
 
 def socket_depth6(axial, side, moment=0.0):

@@ -1,0 +1,2340 @@
+{
+ "drone": "scout_v4",
+ "ok": false,
+ "gate": true,
+ "fit_tol_mm3": 0.5,
+ "fit_table": [
+  {
+   "kind": "bond",
+   "gap": 0.0,
+   "allow": 0.2,
+   "min_gap": 0.0,
+   "tag": "M",
+   "src": "carbon rod in a resin socket: the 3.2 / 6.2 bores for 3 / 6 rods (CLAUDE.md), the resin fills the rest: it only has to go in (Overseer coupons v2, Spark 27 Oct: the largest of the coupon bores fit; OD + 0.3 was loose in PETG)"
+  },
+  {
+   "kind": "press",
+   "gap": 0.1,
+   "allow": 0.3,
+   "min_gap": 0.1,
+   "tag": "M",
+   "src": "a D bore pressed on the N20's 3.0 / 2.5 D shaft: drawn 3.3 / 2.8 (+0.3 on the diameter and across the flat) pushes on by hand, a drop of CA (the probe coupon, Spark 14 Nov: D1 3.0 / 2.5 and D2 3.1 / 2.6 would not go on, D3 3.2 / 2.7 too hard to press home; printed holes come out ~0.1-0.2 small). min_gap: the drawn clearance per side the check accepts, 0.15 less the viewing mesh's 0.05 (D3's 0.1 failed by hand at 0.10 drawn, so a press mate is checked against the shaft's own D, not a round stand-in)"
+  },
+  {
+   "kind": "free",
+   "gap": 0.1,
+   "allow": 0.3,
+   "tag": "M",
+   "src": "a bore turning free on an M3 axle or a 3 mm rod: 3.3 (coupon A1, the snuggest of 3.3 / 3.4 / 3.5, all free)"
+  },
+  {
+   "kind": "slide",
+   "gap": 0.25,
+   "allow": 0.6,
+   "tag": "E",
+   "src": "a bought body sliding into a printed pocket, sleeve or slot over its length (camera case, SG90 body): the axle's +0.3 plus 0.3 for the long contact and the case's own tolerance; check on the bench"
+  },
+  {
+   "kind": "mate",
+   "gap": 0.2,
+   "allow": 0.5,
+   "tag": "E",
+   "src": "a printed part sliding onto another printed part: both faces print GROW fat (0.2 of it gone) + 0.3 running"
+  },
+  {
+   "kind": "clear",
+   "gap": 0.95,
+   "allow": 2.0,
+   "tag": "E",
+   "src": "parts that pass each other and must never touch (an assembly path past a neighbour, a moving part)"
+  },
+  {
+   "kind": "screw",
+   "gap": 0.15,
+   "allow": 0.4,
+   "tag": "E",
+   "src": "a screw's shank through a printed clearance hole: M2 2.4, M3 3.4"
+  },
+  {
+   "kind": "tap",
+   "gap": -0.2,
+   "allow": -0.4,
+   "tag": "E",
+   "src": "a screw cutting its own thread in a printed pilot: M2 1.6, M3 2.6 (the SG90 tab pilots)"
+  },
+  {
+   "kind": "close",
+   "gap": 0.05,
+   "allow": 0.2,
+   "tag": "E",
+   "src": "a screw's shank close-fit through a printed hole where it locates the part (the Overseer arms' M3 3.2 as the rod bore, overseer_arm_lib HOLE_D / SLOT_D; the carbon plates' \u00d83.1 / 3.0 M; the hub deck's M2 2.2)"
+  },
+  {
+   "kind": "port",
+   "gap": 0.145,
+   "allow": 0.39,
+   "tag": "M",
+   "src": "the resin injection port for one 14 G blunt tip (OD 2.11): \u00d82.5 (Spark 8 Nov, CLAUDE.md; cage_node_lib PORT_R)"
+  },
+  {
+   "kind": "nut",
+   "gap": 0.05,
+   "allow": 0.2,
+   "tag": "E",
+   "src": "a hex nut's pocket across its flats: M3 5.5 -> 5.7 (overseer_arm_lib NUT_AF; not recorded in dimensions.md)"
+  }
+ ],
+ "grow_mm": 0.1,
+ "parts_checked": 50,
+ "printed": [
+  "scout_v4_cradle",
+  "scout_v4_frame",
+  "scout_v4_head_frame",
+  "scout_v4_node_nb",
+  "scout_v4_node_p1",
+  "scout_v4_node_p2",
+  "scout_v4_node_p3",
+  "scout_v4_node_p4",
+  "scout_v4_node_p5",
+  "scout_v4_node_p6",
+  "scout_v4_node_r0",
+  "scout_v4_node_r7",
+  "scout_v4_node_rb",
+  "scout_v4_node_rf",
+  "scout_v4_node_rs0",
+  "scout_v4_node_rs1",
+  "scout_v4_node_s0",
+  "scout_v4_node_s1",
+  "scout_v4_node_tb",
+  "scout_v4_probe_pinion",
+  "scout_v4_probe_spool",
+  "scout_v4_probe_turret"
+ ],
+ "skipped": [],
+ "pairs": [
+  {
+   "a": "scout_v4_frame",
+   "b": "scout_v4_radxa_zero_3w",
+   "mm3": 165.01,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 45.63,
+     "at": [
+      -70.2,
+      11.0,
+      15.8
+     ],
+     "extent_mm": [
+      7.3,
+      6.5,
+      4.4
+     ],
+     "depth_mm": 4.42
+    },
+    {
+     "mm3": 40.96,
+     "at": [
+      -70.2,
+      -11.4,
+      14.2
+     ],
+     "extent_mm": [
+      7.3,
+      7.4,
+      1.3
+     ],
+     "depth_mm": 1.26
+    },
+    {
+     "mm3": 40.85,
+     "at": [
+      -12.6,
+      -11.4,
+      14.2
+     ],
+     "extent_mm": [
+      7.3,
+      7.5,
+      1.3
+     ],
+     "depth_mm": 1.26
+    },
+    {
+     "mm3": 37.57,
+     "at": [
+      -12.6,
+      11.0,
+      14.2
+     ],
+     "extent_mm": [
+      7.3,
+      6.5,
+      1.3
+     ],
+     "depth_mm": 1.26
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_frame",
+   "b": "scout_v4_fc",
+   "mm3": 73.78,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 39.43,
+     "at": [
+      23.3,
+      -9.8,
+      17.7
+     ],
+     "extent_mm": [
+      9.0,
+      7.5,
+      2.2
+     ],
+     "depth_mm": 2.2
+    },
+    {
+     "mm3": 11.86,
+     "at": [
+      25.4,
+      11.0,
+      17.0
+     ],
+     "extent_mm": [
+      5.7,
+      5.0,
+      0.8
+     ],
+     "depth_mm": 0.8
+    },
+    {
+     "mm3": 11.3,
+     "at": [
+      47.7,
+      11.0,
+      17.0
+     ],
+     "extent_mm": [
+      5.7,
+      4.9,
+      0.8
+     ],
+     "depth_mm": 0.8
+    },
+    {
+     "mm3": 11.19,
+     "at": [
+      47.7,
+      -11.0,
+      17.0
+     ],
+     "extent_mm": [
+      5.6,
+      4.9,
+      0.8
+     ],
+     "depth_mm": 0.8
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_probe_turret",
+   "b": "scout_v4_probe_pinion",
+   "mm3": 3.0,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 3.0,
+     "at": [
+      0.0,
+      15.3,
+      21.8
+     ],
+     "extent_mm": [
+      7.0,
+      0.2,
+      3.5
+     ],
+     "depth_mm": 0.2
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_probe_spool",
+   "b": "scout_v4_probe_drum",
+   "mm3": 303.05,
+   "limit_mm3": 320.0,
+   "contact": "the head's cable coil is drawn as a solid ring over the drum's O8 hub (a loose coil, nothing printed in it)",
+   "ok": true,
+   "pieces": [
+    {
+     "mm3": 246.85,
+     "at": [
+      0.0,
+      -14.2,
+      41.0
+     ],
+     "extent_mm": [
+      8.0,
+      6.0,
+      8.0
+     ],
+     "depth_mm": 6.0
+    },
+    {
+     "mm3": 56.2,
+     "at": [
+      0.0,
+      -14.7,
+      41.0
+     ],
+     "extent_mm": [
+      8.0,
+      4.0,
+      8.0
+     ],
+     "depth_mm": 4.0
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_probe_spool",
+   "b": "scout_v4_probe_feed",
+   "mm3": 11.4,
+   "limit_mm3": 15.0,
+   "contact": "the blades leave the wound coil at its tangent (the feed drawn from the coil's surface)",
+   "ok": true,
+   "pieces": [
+    {
+     "mm3": 11.4,
+     "at": [
+      13.5,
+      0.0,
+      42.1
+     ],
+     "extent_mm": [
+      0.4,
+      19.0,
+      1.7
+     ],
+     "depth_mm": 0.4
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_probe_spool",
+   "b": "scout_v4_probe_pinion",
+   "mm3": 5.66,
+   "limit_mm3": 8.0,
+   "contact": "the 40 / 12 gear mesh: the teeth are drawn at an arbitrary phase",
+   "ok": true,
+   "pieces": [
+    {
+     "mm3": 2.83,
+     "at": [
+      1.3,
+      13.2,
+      25.2
+     ],
+     "extent_mm": [
+      1.1,
+      3.0,
+      1.3
+     ],
+     "depth_mm": 1.06
+    },
+    {
+     "mm3": 2.83,
+     "at": [
+      -1.3,
+      13.2,
+      25.2
+     ],
+     "extent_mm": [
+      1.1,
+      3.0,
+      1.3
+     ],
+     "depth_mm": 1.06
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_frame",
+   "b": "scout_v4_receiver_bolts",
+   "mm3": 4.87,
+   "limit_mm3": 6.0,
+   "contact": "the M3 x 5.7 heat-set inserts (drawn with the bolts) melted into the yokes' insert holes",
+   "ok": true,
+   "pieces": [
+    {
+     "mm3": 0.32,
+     "at": [
+      47.7,
+      26.2,
+      12.5
+     ],
+     "extent_mm": [
+      0.3,
+      1.2,
+      5.7
+     ],
+     "depth_mm": 0.27
+    },
+    {
+     "mm3": 0.3,
+     "at": [
+      51.0,
+      27.7,
+      12.5
+     ],
+     "extent_mm": [
+      0.8,
+      1.1,
+      5.7
+     ],
+     "depth_mm": 0.84
+    },
+    {
+     "mm3": 0.3,
+     "at": [
+      50.0,
+      -28.4,
+      12.5
+     ],
+     "extent_mm": [
+      1.2,
+      0.3,
+      5.7
+     ],
+     "depth_mm": 0.32
+    },
+    {
+     "mm3": 0.27,
+     "at": [
+      -38.2,
+      26.1,
+      12.5
+     ],
+     "extent_mm": [
+      0.3,
+      1.2,
+      5.7
+     ],
+     "depth_mm": 0.32
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_frame",
+   "b": "scout_v4_probe_turret",
+   "mm3": 0.06,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": true
+  },
+  {
+   "a": "scout_v4_frame",
+   "b": "scout_v4_motor_4",
+   "mm3": 0.01,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": true
+  },
+  {
+   "a": "scout_v4_probe_horn",
+   "b": "scout_v4_probe_servo",
+   "mm3": 0.0,
+   "limit_mm3": 2.0,
+   "contact": "the horn's hub on the SG90's spline, 0.25 off the case on the spline's shoulder (the spline itself not drawn)",
+   "ok": true
+  }
+ ],
+ "mates": [
+  {
+   "a": "scout_v4_cradle",
+   "b": "scout_v4_head_frame",
+   "fit": "mate",
+   "need_mm": 0.2,
+   "gap_mm": 0.5,
+   "overlap_mm3": 0.0,
+   "ok": true,
+   "why": "the cradle turns between the head frame's brackets"
+  },
+  {
+   "a": "scout_v4_probe_pinion",
+   "b": "scout_v4_probe_motor",
+   "fit": "press",
+   "need_mm": 0.1,
+   "gap_mm": 0.15,
+   "overlap_mm3": 0.0,
+   "ok": true,
+   "why": "the pinion's D bore on the N20's 3.0 / 2.5 D shaft"
+  },
+  {
+   "a": "scout_v4_probe_spool",
+   "b": "scout_v4_probe_turret",
+   "fit": "mate",
+   "need_mm": 0.2,
+   "gap_mm": 0.499,
+   "overlap_mm3": 0.0,
+   "ok": true,
+   "why": "the spool turns between the turret's side plates"
+  }
+ ],
+ "paths": [
+  {
+   "name": "FC up onto its posts",
+   "part": "scout_v4_fc",
+   "order": 1,
+   "fit": "slide",
+   "gap_mm": 0.25,
+   "steps": 65,
+   "move": {
+    "out": [
+     0,
+     0,
+     -1
+    ],
+    "length_mm": 32
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the FC on its grommets up from below onto its 4 posts (M3 into the inserts) with the receiver off (the battery mechanism bolts on after: its room is the boards' way in), the screws' heads from below"
+  },
+  {
+   "name": "XR2 up onto its land",
+   "part": "scout_v4_xr2",
+   "order": 2,
+   "fit": "slide",
+   "gap_mm": 0.25,
+   "steps": 65,
+   "move": {
+    "out": [
+     0,
+     0,
+     -1
+    ],
+    "length_mm": 32
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the XR2 taped up from below onto its land beside the FC with the receiver off (the battery mechanism bolts on after: its room is the boards' way in)"
+  },
+  {
+   "name": "DRV8833 up onto its land",
+   "part": "scout_v4_drv8833",
+   "order": 3,
+   "fit": "slide",
+   "gap_mm": 0.25,
+   "steps": 65,
+   "move": {
+    "out": [
+     0,
+     0,
+     -1
+    ],
+    "length_mm": 32
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [
+    {
+     "part": "scout_v4_frame",
+     "mm3": 249.4,
+     "at_step": 16,
+     "of_steps": 65,
+     "along": "8.0 mm out",
+     "pieces": [
+      {
+       "mm3": 249.4,
+       "at": [
+        13.2,
+        -36.5,
+        3.5
+       ],
+       "extent_mm": [
+        18.5,
+        4.5,
+        3.0
+       ],
+       "depth_mm": 3.0
+      }
+     ]
+    }
+   ],
+   "tight": [],
+   "ok": false,
+   "why": "the DRV8833 taped up from below onto its land beside the FC with the receiver off (the battery mechanism bolts on after: its room is the boards' way in)"
+  },
+  {
+   "name": "Radxa up onto its posts",
+   "part": "scout_v4_radxa_zero_3w",
+   "order": 4,
+   "fit": "slide",
+   "gap_mm": 0.25,
+   "steps": 65,
+   "move": {
+    "out": [
+     0,
+     0,
+     -1
+    ],
+    "length_mm": 32
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [
+    {
+     "part": "scout_v4_frame",
+     "mm3": 962.08,
+     "at_step": 30,
+     "of_steps": 65,
+     "along": "15.0 mm out",
+     "pieces": [
+      {
+       "mm3": 1127.09,
+       "at": [
+        -63.8,
+        -0.1,
+        0.6
+       ],
+       "extent_mm": [
+        20.3,
+        31.2,
+        4.8
+       ],
+       "depth_mm": 4.76
+      }
+     ]
+    }
+   ],
+   "tight": [],
+   "ok": false,
+   "why": "the Radxa up from below onto its 4 posts (M2.5 into the inserts) with the receiver off (the battery mechanism bolts on after: its room is the boards' way in), the screws' heads from below; its tail third through the tail tray's window, before the UBEC (which hangs under it)"
+  },
+  {
+   "name": "UBEC up into its pod",
+   "part": "scout_v4_ubec",
+   "order": 5,
+   "fit": "slide",
+   "gap_mm": 0.25,
+   "steps": 41,
+   "move": {
+    "out": [
+     0,
+     0,
+     -1
+    ],
+    "length_mm": 20
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the UBEC taped up under its two end lands in the pod below the tail tray, after the Radxa (it closes the Radxa's way in)"
+  },
+  {
+   "name": "flow sensor up into its pod",
+   "part": "scout_v4_flow_mtf_02p",
+   "order": 6,
+   "fit": "slide",
+   "gap_mm": 0.25,
+   "steps": 41,
+   "move": {
+    "out": [
+     0,
+     0,
+     -1
+    ],
+    "length_mm": 20
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the MTF-02P taped up under its land in the nose pod, open below"
+  },
+  {
+   "name": "turret onto the frame",
+   "part": "scout_v4_probe_turret",
+   "order": 10,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 181,
+   "move": {
+    "out": [
+     0,
+     0,
+     1
+    ],
+    "length_mm": 90
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the turret goes on as one unit with its spool, gears, N20 (into the deck's pocket), drum and roller (the DRV8833 is taped under the deck), down from above"
+  },
+  {
+   "name": "rod R0-P1 out of R0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.70711,
+     0.70711,
+     0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_r0"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod R0-P1 out of P1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.70711,
+     -0.70711,
+     -0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_p1"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod P2-P3 out of P2",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.70711,
+     -0.70711,
+     0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_p2"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod P2-P3 out of P3",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 19,
+   "move": {
+    "out": [
+     0.70711,
+     0.70711,
+     -0.0
+    ],
+    "length_mm": 9.0
+   },
+   "into": [
+    "scout_v4_node_p3"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod P4-P5 out of P4",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 19,
+   "move": {
+    "out": [
+     0.70711,
+     -0.70711,
+     0.0
+    ],
+    "length_mm": 9.0
+   },
+   "into": [
+    "scout_v4_node_p4"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod P4-P5 out of P5",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.70711,
+     0.70711,
+     -0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_p5"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod P6-R7 out of P6",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.70711,
+     0.70711,
+     0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_p6"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod P6-R7 out of R7",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.70711,
+     -0.70711,
+     -0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_r7"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RF-R0 out of RF",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.22606,
+     0.97411,
+     0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_rf"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RF-R0 out of R0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.22606,
+     -0.97411,
+     -0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_r0"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RF-R7 out of RF",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.22606,
+     -0.97411,
+     0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_rf"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RF-R7 out of R7",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.22606,
+     0.97411,
+     -0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_r7"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RF-RM out of RF",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_rf"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RF-RM out of RM",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     1.0,
+     -0.0,
+     -0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_probe_turret"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RM-RB out of RM",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 22,
+   "move": {
+    "out": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "length_mm": 10.5
+   },
+   "into": [
+    "scout_v4_probe_turret"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RM-RB out of RB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 21,
+   "move": {
+    "out": [
+     1.0,
+     -0.0,
+     -0.0
+    ],
+    "length_mm": 10.0
+   },
+   "into": [
+    "scout_v4_node_rb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RB-P3 out of RB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 20,
+   "move": {
+    "out": [
+     -0.22606,
+     0.97411,
+     0.0
+    ],
+    "length_mm": 9.5
+   },
+   "into": [
+    "scout_v4_node_rb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RB-P3 out of P3",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 19,
+   "move": {
+    "out": [
+     0.22606,
+     -0.97411,
+     -0.0
+    ],
+    "length_mm": 9.0
+   },
+   "into": [
+    "scout_v4_node_p3"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RB-P4 out of RB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 20,
+   "move": {
+    "out": [
+     -0.22606,
+     -0.97411,
+     0.0
+    ],
+    "length_mm": 9.5
+   },
+   "into": [
+    "scout_v4_node_rb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RB-P4 out of P4",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 19,
+   "move": {
+    "out": [
+     0.22606,
+     0.97411,
+     -0.0
+    ],
+    "length_mm": 9.0
+   },
+   "into": [
+    "scout_v4_node_p4"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RM-RS0 out of RM",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 23,
+   "move": {
+    "out": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "length_mm": 11.0
+   },
+   "into": [
+    "scout_v4_probe_turret"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RM-RS0 out of RS0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 19,
+   "move": {
+    "out": [
+     -0.0,
+     -1.0,
+     -0.0
+    ],
+    "length_mm": 9.0
+   },
+   "into": [
+    "scout_v4_node_rs0"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RM-RS1 out of RM",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 23,
+   "move": {
+    "out": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "length_mm": 11.0
+   },
+   "into": [
+    "scout_v4_probe_turret"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RM-RS1 out of RS1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 19,
+   "move": {
+    "out": [
+     -0.0,
+     1.0,
+     -0.0
+    ],
+    "length_mm": 9.0
+   },
+   "into": [
+    "scout_v4_node_rs1"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RS0-P1 out of RS0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.97411,
+     0.22606,
+     0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_rs0"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RS0-P1 out of P1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.97411,
+     -0.22606,
+     -0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_p1"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RS0-P2 out of RS0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 22,
+   "move": {
+    "out": [
+     -0.97411,
+     0.22606,
+     0.0
+    ],
+    "length_mm": 10.5
+   },
+   "into": [
+    "scout_v4_node_rs0"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RS0-P2 out of P2",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 21,
+   "move": {
+    "out": [
+     0.97411,
+     -0.22606,
+     -0.0
+    ],
+    "length_mm": 10.0
+   },
+   "into": [
+    "scout_v4_node_p2"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RS1-P5 out of RS1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 22,
+   "move": {
+    "out": [
+     -0.97411,
+     -0.22606,
+     0.0
+    ],
+    "length_mm": 10.5
+   },
+   "into": [
+    "scout_v4_node_rs1"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RS1-P5 out of P5",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 21,
+   "move": {
+    "out": [
+     0.97411,
+     0.22606,
+     -0.0
+    ],
+    "length_mm": 10.0
+   },
+   "into": [
+    "scout_v4_node_p5"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RS1-P6 out of RS1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.97411,
+     -0.22606,
+     0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_rs1"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod RS1-P6 out of P6",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.97411,
+     0.22606,
+     -0.0
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_p6"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod NB-R0 out of NB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.0,
+     0.87947,
+     0.47595
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_nb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod NB-R0 out of R0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.0,
+     -0.87947,
+     -0.47595
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_r0"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod NB-R7 out of NB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.0,
+     -0.87947,
+     0.47595
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_nb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod NB-R7 out of R7",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.0,
+     0.87947,
+     -0.47595
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_r7"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod TB-P3 out of TB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 22,
+   "move": {
+    "out": [
+     0.0,
+     0.87947,
+     0.47595
+    ],
+    "length_mm": 10.5
+   },
+   "into": [
+    "scout_v4_node_tb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod TB-P3 out of P3",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 18,
+   "move": {
+    "out": [
+     -0.0,
+     -0.87947,
+     -0.47595
+    ],
+    "length_mm": 8.5
+   },
+   "into": [
+    "scout_v4_node_p3"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod TB-P4 out of TB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 22,
+   "move": {
+    "out": [
+     0.0,
+     -0.87947,
+     0.47595
+    ],
+    "length_mm": 10.5
+   },
+   "into": [
+    "scout_v4_node_tb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod TB-P4 out of P4",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 18,
+   "move": {
+    "out": [
+     -0.0,
+     0.87947,
+     -0.47595
+    ],
+    "length_mm": 8.5
+   },
+   "into": [
+    "scout_v4_node_p4"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod S0-P1 out of S0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 21,
+   "move": {
+    "out": [
+     0.87947,
+     0.0,
+     0.47595
+    ],
+    "length_mm": 10.0
+   },
+   "into": [
+    "scout_v4_node_s0"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod S0-P1 out of P1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 18,
+   "move": {
+    "out": [
+     -0.87947,
+     -0.0,
+     -0.47595
+    ],
+    "length_mm": 8.5
+   },
+   "into": [
+    "scout_v4_node_p1"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod S0-P2 out of S0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.87947,
+     0.0,
+     0.47595
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_s0"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod S0-P2 out of P2",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.87947,
+     -0.0,
+     -0.47595
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_p2"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod S1-P6 out of S1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 21,
+   "move": {
+    "out": [
+     0.87947,
+     0.0,
+     0.47595
+    ],
+    "length_mm": 10.0
+   },
+   "into": [
+    "scout_v4_node_s1"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod S1-P6 out of P6",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 18,
+   "move": {
+    "out": [
+     -0.87947,
+     -0.0,
+     -0.47595
+    ],
+    "length_mm": 8.5
+   },
+   "into": [
+    "scout_v4_node_p6"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod S1-P5 out of S1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.87947,
+     0.0,
+     0.47595
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_s1"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod S1-P5 out of P5",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.87947,
+     -0.0,
+     -0.47595
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_p5"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod BN0-NB out of BN0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 18,
+   "move": {
+    "out": [
+     0.95581,
+     -0.27652,
+     -0.09979
+    ],
+    "length_mm": 8.5
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod BN0-NB out of NB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.95581,
+     0.27652,
+     0.09979
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_nb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod BN1-NB out of BN1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 18,
+   "move": {
+    "out": [
+     0.95581,
+     0.27652,
+     -0.09979
+    ],
+    "length_mm": 8.5
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod BN1-NB out of NB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     -0.95581,
+     -0.27652,
+     0.09979
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_nb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod BT0-TB out of BT0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 31,
+   "move": {
+    "out": [
+     -0.95581,
+     -0.27652,
+     -0.09979
+    ],
+    "length_mm": 15.0
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod BT0-TB out of TB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 28,
+   "move": {
+    "out": [
+     0.95581,
+     0.27652,
+     0.09979
+    ],
+    "length_mm": 13.5
+   },
+   "into": [
+    "scout_v4_node_tb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod BT1-TB out of BT1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 31,
+   "move": {
+    "out": [
+     -0.95581,
+     0.27652,
+     -0.09979
+    ],
+    "length_mm": 15.0
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod BT1-TB out of TB",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 29,
+   "move": {
+    "out": [
+     0.95581,
+     -0.27652,
+     0.09979
+    ],
+    "length_mm": 14.0
+   },
+   "into": [
+    "scout_v4_node_tb"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod SA0-S0 out of SA0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 25,
+   "move": {
+    "out": [
+     -0.39504,
+     0.91628,
+     -0.06613
+    ],
+    "length_mm": 12.0
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod SA0-S0 out of S0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.39504,
+     -0.91628,
+     0.06613
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_s0"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod SB0-S0 out of SB0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 28,
+   "move": {
+    "out": [
+     0.30068,
+     0.95125,
+     -0.06866
+    ],
+    "length_mm": 13.5
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod SB0-S0 out of S0",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 21,
+   "move": {
+    "out": [
+     -0.30068,
+     -0.95125,
+     0.06866
+    ],
+    "length_mm": 10.0
+   },
+   "into": [
+    "scout_v4_node_s0"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod SA1-S1 out of SA1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 25,
+   "move": {
+    "out": [
+     -0.39504,
+     -0.91628,
+     -0.06613
+    ],
+    "length_mm": 12.0
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod SA1-S1 out of S1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 17,
+   "move": {
+    "out": [
+     0.39504,
+     0.91628,
+     0.06613
+    ],
+    "length_mm": 8.0
+   },
+   "into": [
+    "scout_v4_node_s1"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod SB1-S1 out of SB1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 28,
+   "move": {
+    "out": [
+     0.30068,
+     -0.95125,
+     -0.06866
+    ],
+    "length_mm": 13.5
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "rod SB1-S1 out of S1",
+   "part": "scout_v4_cage_rods",
+   "order": 50,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 21,
+   "move": {
+    "out": [
+     -0.30068,
+     0.95125,
+     0.06866
+    ],
+    "length_mm": 10.0
+   },
+   "into": [
+    "scout_v4_node_s1"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod's end slides out of its socket along the rod: the bore open from its floor past the mouth"
+  },
+  {
+   "name": "blades into the head frame's clip",
+   "part": "scout_v4_probe_mast_a",
+   "order": 60,
+   "fit": "slide",
+   "gap_mm": 0.25,
+   "steps": 33,
+   "move": {
+    "out": [
+     0,
+     0,
+     -1
+    ],
+    "length_mm": 16
+   },
+   "into": [
+    "scout_v4_head_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the two blades' tips (the lens, 2 x 2.78 thick, 19 wide) slide up into the head frame's 14 mm clip"
+  },
+  {
+   "name": "SG90 into the head frame's ring",
+   "part": "scout_v4_probe_servo",
+   "order": 70,
+   "fit": "slide",
+   "gap_mm": 0.25,
+   "steps": 61,
+   "move": {
+    "out": [
+     0,
+     -1,
+     0
+    ],
+    "length_mm": 30
+   },
+   "into": [
+    "scout_v4_head_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "step 2 (parts/scout_v4_head_lib.py): the SG90 with its horn slid +y into the frame's closed ring from the cradle's room, its tabs stop on the ring's face"
+  },
+  {
+   "name": "camera into the cradle (in hand)",
+   "part": "scout_v4_probe_tilt",
+   "order": 75,
+   "fit": "slide",
+   "gap_mm": 0.25,
+   "steps": 65,
+   "move": {
+    "out": [
+     -0.9659,
+     0.0,
+     -0.2588
+    ],
+    "length_mm": 32
+   },
+   "into": [
+    "scout_v4_cradle"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "step 3: the case slid into the cradle from behind until its front meets the lip, the cradle still off the head (Spark 15 Nov: it could not)"
+  },
+  {
+   "name": "cradle lowered onto the horn",
+   "part": "scout_v4_cradle",
+   "order": 80,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 171,
+   "move": {
+    "moves": [
+     {
+      "turn": {
+       "axis": [
+        0,
+        1,
+        0
+       ],
+       "at": [
+        7.6,
+        -3.8,
+        118.0
+       ],
+       "deg": 15
+      }
+     },
+     {
+      "out": [
+       0,
+       0,
+       1
+      ],
+      "length_mm": 70
+     }
+    ]
+   },
+   "into": [
+    "scout_v4_head_frame",
+    "scout_v4_probe_servo"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "step 5: the cradle with the camera and LED bars at nod 0 lowered straight down between the bracket and the SG90, the horn's arm, hub and centre screw sliding up its channel from the open bottom edge; with the horn here (shown lifted out together; head_frame/make.py checks the channel over the horn)"
+  },
+  {
+   "name": "head nods -20..+90 deg",
+   "part": "scout_v4_cradle",
+   "order": 100,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 221,
+   "move": {
+    "turn": {
+     "axis": [
+      0,
+      1,
+      0
+     ],
+     "at": [
+      7.6,
+      -3.8,
+      118.0
+     ],
+     "deg": [
+      -75,
+      35
+     ]
+    }
+   },
+   "into": [
+    "scout_v4_head_frame",
+    "scout_v4_probe_servo"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the cradle, camera and LED bars about the SG90's axis from 20 down to 90 up (parked 15 up)"
+  }
+ ],
+ "not_print_ready": {
+  "scout_v4_frame": [
+   "clashes with scout_v4_fc: 73.8 mm3",
+   "clashes with scout_v4_radxa_zero_3w: 165.0 mm3",
+   "blocks the path 'DRV8833 up onto its land' (249.4 mm3 8.0 mm out)",
+   "blocks the path 'Radxa up onto its posts' (962.1 mm3 15.0 mm out)"
+  ],
+  "scout_v4_probe_pinion": [
+   "clashes with scout_v4_probe_turret: 3.0 mm3"
+  ],
+  "scout_v4_probe_turret": [
+   "clashes with scout_v4_probe_pinion: 3.0 mm3"
+  ]
+ },
+ "would_block": {},
+ "seconds": 5.4,
+ "placed": {}
+}

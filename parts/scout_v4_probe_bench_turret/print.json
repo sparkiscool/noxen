@@ -6,6 +6,43 @@
   "faces": 5272,
   "view_faces": 5272,
   "view_sha256": "885171ed72e6bd7fa22575250842ce81f157cae43bdc54cab08447b2a9816e08",
-  "at": "2026-11-15 02:05"
+  "at": "2026-11-15 03:24"
+ },
+ "make": {
+  "sha": {
+   "parts/cage_node_lib.py": "bad3d25f2b60",
+   "parts/scout_units_lib.py": "edbb61c2b9c7",
+   "parts/scout_v4_probe_bench_turret/make.py": "b6b576823d7e",
+   "parts/scout_v4_probe_mech_lib.py": "736ade7c0a36",
+   "parts/scout_v4_probe_turret/part.py": "9d896992a52b",
+   "parts/scout_v4_units_lib.py": "f5b138d4c6b6",
+   "parts/socket_inject.py": "6613a0572d9f",
+   "systems/fit_table.json": "8d560ff6f55b",
+   "systems/overseer.cage.json": "298700a6d756",
+   "systems/scout.cage_loads.json": "f4f45404daae",
+   "systems/scout_v4.assembly.json": "0bb71507e343",
+   "systems/scout_v4.cage_loads.json": "0249fb2a400f",
+   "systems/scout_v4.head_load.json": "60882f276c0d",
+   "tools/scout_v4_shape.py": "c0dafeecc6c9"
+  },
+  "rc": 0,
+  "s": 15.2,
+  "at": "2026-11-15 03:45",
+  "commit": "b4ee40e4",
+  "solid": {
+   "ok": true,
+   "file": "parts/scout_v4_probe_bench_turret/part.stl",
+   "sha256": "885171ed72e6bd7fa22575250842ce81f157cae43bdc54cab08447b2a9816e08",
+   "cm3": 44.067,
+   "bodies_plain": 1,
+   "specks_plain": 0,
+   "bodies_eroded": 1,
+   "acute_edges": 15
+  }
+ },
+ "assembly": {
+  "drone": "scout_v4_bench",
+  "ok": true,
+  "why": []
  }
 }

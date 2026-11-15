@@ -1373,39 +1373,39 @@
  "build": {
   "printed": {
    "receiver": {
-    "down": "+y",
-    "bed_mm2": 2813.0,
-    "support_mm2": 8675.0,
+    "down": "+x",
+    "bed_mm2": 115.0,
+    "support_mm2": 24409.0,
     "size_mm": [
-     68.0,
+     86.0,
      68.6,
      183.6
     ],
     "fits_bed": true,
     "on_the_diagonal": true,
-    "diag_spare_mm": 2.1
+    "diag_spare_mm": 1.7
    },
    "carrier": {
     "down": "+y",
-    "bed_mm2": 881.0,
+    "bed_mm2": 813.0,
     "support_mm2": 258.0,
     "size_mm": [
-     65.6,
+     61.6,
      19.5,
-     20.7
+     20.6
     ],
     "fits_bed": true,
     "on_the_diagonal": false,
     "diag_spare_mm": null
    },
    "carrier cap": {
-    "down": "+y",
-    "bed_mm2": 1028.0,
-    "support_mm2": 0.0,
+    "down": "-z",
+    "bed_mm2": 442.0,
+    "support_mm2": 172.0,
     "size_mm": [
-     65.6,
-     10.7,
-     20.0
+     86.0,
+     11.8,
+     19.9
     ],
     "fits_bed": true,
     "on_the_diagonal": false,
@@ -1529,7 +1529,13 @@
     "ok": true
    },
    {
-    "step": "7 receiver onto the drone: 10 M3 from below through the bosses",
+    "step": "7b lead clamp: 2 x M3 x 10 from the drone side through the cap's lugs into the receiver lugs' inserts (before the receiver goes on)",
+    "how": "each bolt, its head and the driver swept from 60 above to the head's seat (y 61.2) through receiver, carrier and cap; the bolts seated against them",
+    "mm3": -0.0,
+    "ok": true
+   },
+   {
+    "step": "7 receiver onto the drone: 8 M3 from below through the bosses",
     "how": "each bolt and its driver swept from 60 mm below, through receiver, carrier and cap",
     "mm3": 0.0,
     "ok": true
@@ -2689,7 +2695,7 @@
    "material": "PCTG",
    "tag": "C",
    "mass_g": null,
-   "version": "latch v7 (10 Nov)",
+   "version": "latch v7, PROTOTYPE with the lead clamp (15 Nov)",
    "source": "parts/latch7/make.py"
   },
   {
@@ -2719,7 +2725,7 @@
    "material": "PCTG",
    "tag": "C",
    "mass_g": null,
-   "version": "latch v7 (10 Nov)",
+   "version": "latch v7, PROTOTYPE with the lead clamp (15 Nov)",
    "source": "parts/latch7/make.py"
   },
   {
@@ -2734,7 +2740,37 @@
    "material": "PCTG",
    "tag": "C",
    "mass_g": null,
-   "version": "latch v7 (10 Nov)",
+   "version": "latch v7, PROTOTYPE with the lead clamp (15 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_lead_clamp_bolts",
+   "name": "lead clamp bolts (2 x M3 x 10)",
+   "role": "bought",
+   "group": "receiver (on the drone), cut away",
+   "color": "#3a3d42",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/lead_clamp_bolts.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 lead clamp (15 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_lead_clamp_inserts",
+   "name": "lead clamp inserts (2 x M3 x 5.7 heat-set)",
+   "role": "bought",
+   "group": "receiver (on the drone), cut away",
+   "color": "#c9a24a",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/lead_clamp_inserts.stl",
+   "pose": null,
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 lead clamp (15 Nov)",
    "source": "parts/latch7/make.py"
   },
   {
@@ -3085,5 +3121,45 @@
   },
   "max_mm3": 0.0044,
   "ok": true
+ },
+ "lead_clamp": {
+  "x": 39.0,
+  "hz": 7.0,
+  "face": 57.0,
+  "lug_t": 4.2,
+  "x_out": 43.0,
+  "ear_x": 30.8,
+  "skirt": [
+   31.3,
+   33.3
+  ],
+  "root": [
+   34.0,
+   67.0
+  ],
+  "skirt_thick_x": 35.6,
+  "under_base": 64.6,
+  "lug_y0": 47.0,
+  "gusset": 10.2,
+  "ins_r": 2.0,
+  "ins_depth": 7.0,
+  "ins_len": 5.7,
+  "head_r": 2.75,
+  "head_h": 3.0,
+  "sweep_r": 3.2,
+  "bolt_len": 10.0,
+  "shank_r": 1.5,
+  "seat_pad": 0.2,
+  "bolts": "2 x M3 x 10 DIN 912, from the drone side, on the bench",
+  "inserts": "2 x ruthex M3 x 5.7 in the receiver's lugs",
+  "least_index": {
+   "flight": 0.7,
+   "misuse": 0.87,
+   "where": "the cap's plate at the ceiling's outer edge (make.py OV_CLAMP hand calculation)"
+  },
+  "clear_of": {
+   "base_mm": 2.16,
+   "funnel": true
+  }
  }
 }

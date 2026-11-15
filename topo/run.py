@@ -353,6 +353,19 @@ def load_part_dir(path):
     m.loader.exec_module(mod)
     spec = dict(mod.SPEC)
     spec.setdefault("setup", mod.setup)
+    raw0, hand = spec["setup"], bool(spec.get("hand_held"))
+
+    def recorded(h, _s=raw0, _f=f):
+        """the setup with what it drew recorded (topo/fit.py shapes: the audit's fit check) and the standard handling and assembly cases of
+        the features its helpers declared (topo/handling.py)"""
+        from . import fit, handling
+        with fit.shapes() as rec:
+            part = _s(h)
+        part.fit_shapes, part.fit_declared = rec, fit.declared(_f)
+        if rec.features or hand:
+            handling.apply(part, rec.features, hand_held=hand, log=getattr(part, "log", print))
+        return part
+    spec["setup"] = recorded
     if spec.get("assembly_paths"):                     # declared assembly paths (topo/paths.py): cut through the part on every build of the setup
         from .paths import apply_declared
         raw, refs = spec["setup"], list(spec["assembly_paths"])

@@ -1163,6 +1163,30 @@ def t_audit_load_room():
         check("audit load_room", False, str(e))
 
 
+def t_audit_held_load():
+    """audit: held_load (15 Nov: the Scout v4 frame's receiver insert bosses got handling cases on the support that holds them). A pad
+    loaded on itself passes; a load on the supported face only is refused."""
+    try:
+        import manifold3d as mf
+        from topo.audit import audit, SetupError
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        def refused(on_support):
+            p = Part("heldmini", 1.0, box(0, 3, 0, 20, 0, 20) + box(30, 34, 6, 14, 6, 14), box(100, 101, 100, 101, 100, 101),
+                     box(0, 34, 0, 20, 0, 30), log=lambda s_: None)
+            p.support("default", box(-1, 1.5, -1, 21, -1, 21))
+            p.load("down", box(-1, 1.5, 6, 14, 6, 14) if on_support else box(30, 34, 6, 14, 6, 14), (0, 0, -10.0))
+            try:
+                audit(p, 4.0, log=lambda s_: None); return False
+            except SetupError as e:
+                return "held_load" in str(e)
+        a, b = refused(True), refused(False)
+        check("audit held_load: a load on its own support's nodes only is refused, on the pad it passes", a and not b, f"held refused {a}, pad refused {b}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit held_load", False, str(e))
+
+
 def t_design_hash():
     """the design hash (topo/run.py) is the same for the same setup built twice and differs when a load, a cut or the budget
     changes (29 Oct: parts.yml stops a running part whose design main has since changed)."""
@@ -1355,6 +1379,85 @@ def t_audit_path():
     except Exception as e:
         traceback.print_exc()
         check("audit path", False, repr(e)[:200])
+
+
+def t_audit_fit():
+    """fit (topo/audit.py fit_sizes; systems/fit_table.json the only source of mating sizes, 15 Nov): a part dir whose part.py declares a
+    3 mm rod through the table (fit.bore(3.0, "bond") = 3.2) and draws its bore from it passes; the same part drawing a 3.25 bore by hand
+    beside it is refused; a part that declares nothing is not held (nothing to hold it to). The setup's handling feature (an insert boss
+    declared by its helper, topo/handling.py) adds its install and tighten cases on the main support, the torque a pure twist."""
+    try:
+        import os, tempfile, textwrap
+        from .run import load_part_dir
+        from .audit import audit
+        from . import handling
+        src = textwrap.dedent('''
+            import manifold3d as mf
+            from topo import Part, fit, handling
+            BORE = fit.bore(3.0, "bond")
+            SPEC = dict(h=1.0, gen_cm3=1.0)
+            def setup(h):
+                box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+                pad = box(16, 24, 0, 10, 0, 10)
+                cuts = mf.Manifold.cylinder(12, BORE / 2, BORE / 2, 32).translate([20, 5, -1])
+                if HAND:
+                    cuts = cuts + mf.Manifold.cylinder(12, 3.25 / 2, 3.25 / 2, 32).translate([18, 5, -1])
+                if INS:
+                    ins = mf.Manifold.cylinder(6, fit.insert("M3") / 2, fit.insert("M3") / 2, 32).translate([20, 5, 4])
+                    handling.declare("insert", box(16, 24, 0, 10, 2, 10) - ins, (20, 5, 10), (0, 0, -1), "M3")
+                p = Part("mini_fit", h, box(0, 3, 0, 10, 0, 10) + pad, cuts, box(0, 24, 0, 10, 0, 10), log=lambda s_: None)
+                p.support("default", box(-1, 1.5, -1, 11, -1, 11)); p.load("down", pad, (0, 0, -10.0), cls="flight")
+                return p
+            ''')
+        def run(hand, ins, declare=True):
+            d = tempfile.mkdtemp(prefix="topo_fit_"); os.makedirs(os.path.join(d, "mini"))
+            body = src.replace("HAND", str(hand)).replace("INS", str(ins))
+            if not declare:
+                body = body.replace('fit.bore(3.0, "bond")', "3.2")
+            open(os.path.join(d, "mini", "part.py"), "w").write(body)
+            spec = load_part_dir(os.path.join(d, "mini")); p = spec["setup"](1.0)
+            return p, [f for f in audit(p, 3.2, log=lambda s_: None, hard=False)["fails"] if f.startswith("fit:")]
+        p_ok, f_ok = run(False, False)
+        p_bad, f_bad = run(True, False)
+        p_none, f_none = run(True, False, declare=False)
+        p_ins, f_ins = run(False, True)
+        names = [c.name for c in p_ins.cases]
+        tq = [c for c in p_ins.cases if "tighten" in c.name]
+        F = tq[0].F.reshape(-1, 3) if tq else None
+        net = F.sum(0) if F is not None else None
+        clamp = handling.clamp_n("M3")
+        ok_h = (len(p_ins.cases) == 3 and any("install" in n for n in names) and tq and abs(net[2] - clamp) < 1e-6 * clamp
+                and abs(net[0]) < 1e-6 and abs(net[1]) < 1e-6 and tq[0].cls == "crash" and tq[0].support == "default")
+        ok = not f_ok and len(f_bad) == 1 and "3.25" in f_bad[0] and not f_none and not f_ins and ok_h
+        check("audit fit: a bore from the table passes, a 3.25 by hand beside a declared 3 mm rod is refused; a declared insert boss gets "
+              "its install and tighten cases", bool(ok), f"table {f_ok}; by hand {f_bad[:1]}; undeclared {f_none}; insert {f_ins} cases {names} "
+              f"net {None if net is None else np.round(net, 3).tolist()} (clamp {clamp:.0f} N)")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit fit", False, repr(e)[:200])
+
+
+def t_path_sweep_gap():
+    """paths.sweep grows the piece by at least its fit gap everywhere and by at most gap + BALL_TOL across the pull (15 Nov: the
+    12-segment sphere left 0.23 of a 0.25 slide gap along a box's edges and corners, the Scout v4 frame's ways in): a 10 mm cube pulled
+    20 along -x, grown by the slide gap and by 0.95: points off its faces, edges and the far end's corners at the gap are inside, at
+    gap + BALL_TOL + 0.001 off the faces and edges outside, and the seated end is not grown"""
+    try:
+        import manifold3d as mf
+        from . import paths as P, fit
+        from .part import tm
+        cube = mf.Manifold.cube([10, 10, 10]); res = []
+        for g in (fit.gap("slide"), 0.95):
+            sw = P.sweep({"out": [-1, 0, 0], "length_mm": 20}, cube, grow=g); t = tm(sw)
+            pts = lambda d: np.array([[5, 10 + d, 5], [5, 5, -d], [5, 10 + d / np.sqrt(2), 10 + d / np.sqrt(2)], [5, -d / np.sqrt(2), -d / np.sqrt(2)],
+                                      [-20 - d / np.sqrt(3), 10 + d / np.sqrt(3), 10 + d / np.sqrt(3)]])
+            inn = t.contains(pts(g - 1e-4)); out = t.contains(pts(g + P.BALL_TOL + 1e-3)[:4])
+            res.append((g, inn.tolist(), out.tolist(), float(np.asarray(sw.bounding_box())[3])))
+        ok = all(all(i) and not any(o) and abs(x1 - 10.0) < 1e-6 for _, i, o, x1 in res)
+        check("path sweep: grown by the full gap at faces, edges and corners, at most BALL_TOL more, the seated end not grown", ok, str(res))
+    except Exception as e:
+        traceback.print_exc()
+        check("path sweep gap", False, repr(e)[:200])
 
 
 def t_audit_room_full():
@@ -1726,7 +1829,7 @@ ARMS_GEN = 14.0
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_no_cavity, t_audit_path):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_no_cavity, t_audit_path, t_audit_fit, t_path_sweep_gap):
         t()
     if not quick:
         t_end_to_end()

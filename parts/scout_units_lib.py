@@ -23,6 +23,7 @@ units carry it by bolts up from below (the receiver's bolt keys) into inserts in
 import json, os
 import numpy as np, trimesh, manifold3d as mf
 from topo.part import man
+from topo import fit                                         # the printer's fit table: every mating size below
 from parts.cage_node_lib import socket_cuts, collar_shape, cone, U
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -40,7 +41,7 @@ REC_SET_G, REC_SET_CG = 155.0, np.array([1.5, 0.0, -20.0])  # the half each yoke
 BOLT_NOSE = [(36.0, 0.0), (19.93, 0.0), (1.9, 18.03), (1.9, -18.03), (3.9, 31.0), (3.9, -31.0)]   # M3 down through the plate into inserts, all Bee35 holes (tools/bee35_plate.HOLES): the
 #   nose bolt, the FC's 25.5 diamond (the FC sits on top of the plate since 4 Nov, its standoff bolts go on through the plate), the (3.9, +-31) pair
 BOLT_TAIL = [(-16.13, 0.0), (-55.0, 13.0), (-55.0, -13.0)]   # the FC diamond's tail hole (Bee35) and one drilled pair at the plate's tail end (at (-55, +-20) the pads were sheared by the UBEC lead clearance, run 1)
-PAD_R, PAD_T, INS_R, INS_D = 5.0, 6.0, 2.0, 6.0               # pad O10 x 6 under the plate, M3 x 5.7 insert hole O4 x 6
+PAD_R, PAD_T, INS_R, INS_D = 5.0, 6.0, fit.insert("M3") / 2, 6.0               # pad O10 x 6 under the plate, M3 x 5.7 insert hole O4 x 6
 BOSS_R = 5.0                                                 # receiver boss O10, z 9.6..18.5, insert hole from below
 YOKE_SPLIT_X = -8.0                                          # the nose unit's yoke runs x -8..54.3 over the receiver, the tail unit's -51.3..-8 (the FC is on top of the plate since 4 Nov)
 # ---- the funnel seat: runners to the Overseer receiver's 184 x 66.8 outline at z -44.3 (parts/box_funnel/make.py, parts/scout_belly_skirt)
@@ -51,7 +52,7 @@ RIM_T, CHAMFER, FACE_DEG = 3.0, 4.0, 55.0
 LENS, TILT = np.array([130.0, 0.0, 38.0]), np.radians(30.0)             # 30 deg up (4 Nov, Spark: close-ups and ceilings); tools/scout_meshes.CAMERA_LENS / CAMERA_TILT
 CAM_F, CAM_U, CAM_R = np.array([np.cos(TILT), 0, np.sin(TILT)]), np.array([-np.sin(TILT), 0, np.cos(TILT)]), np.array([0, 1.0, 0])
 BOARD_BACK = LENS - 12.0 * CAM_F                                          # the board's back face centre
-CAM_SQ, POST_L, POST_R, CAM_INS_R, CAM_INS_D, PLUG_BACK = 14.0, 10.0, 2.8, 1.6, 5.7, 8.0
+CAM_SQ, POST_L, POST_R, CAM_INS_R, CAM_INS_D, PLUG_BACK = 14.0, 10.0, 2.8, fit.insert("M2") / 2, 5.7, 8.0
 ROOT_R, ROOT_L = 5.0, 4.0                                    # the post's root boss O10 x 4 behind the plug keep-out (5 Nov: the 2 mm stubs were left loose twice)
 CAM_G, CAM_CG = 10.0, LENS - 8.9 * CAM_F
 HFOV, VFOV = 44.5, 36.5
@@ -67,7 +68,7 @@ WINDOW = (57.0, 83.0, 10.0)                                  # x0, x1, |y|: the 
 #   on O8 posts along +x with M2.5 x 4 inserts; a driver column along -x from each hole is a cut
 RADXA_X = -78.4                                              # the PCB's back face (the posts' seat), posts to +x
 RADXA_HOLES = [(-32.5 + X, 15.0 - Y) for X, Y in ((3.55, 3.60), (3.60, 26.45), (61.40, 3.60), (61.40, 26.50))]   # (y, z)
-RPOST_R, RPOST_L, RINS_R, RINS_D = 4.0, 5.0, 1.75, 4.0       # O8 post 5 long behind the PCB, M2.5 x 4 insert (E)
+RPOST_R, RPOST_L, RINS_R, RINS_D = 4.0, 5.0, fit.insert("M2.5") / 2, 4.0       # O8 post 5 long behind the PCB, M2.5 x 4 insert (E)
 DRIVER_R, DRIVER_L = 4.0, 40.0                               # the screwdriver's way in: O8 from the hole out along -x, 40 long
 RADXA_CUT = (-83.2 - 0.5, RADXA_X + 0.5, -33.0, 33.0, -15.5, 15.5)
 RADXA_PLUGS = (-85.0, -76.0, -24.0, 27.0, 15.0, 28.0)        # USB-C x2 and micro HDMI plugs up from the ports edge, between the arms
@@ -79,7 +80,7 @@ LAND_T = 4.0                                                 # the UBEC's and XR
 LEAD_CH = (8.0, 5.0, 6.0)                                    # lead channel: width (x here), height (z), length out of each UBEC end
 BOARDS_G, BOARDS_CG = 32.0, np.array([-82.0, 0.0, -6.0])    # Radxa 10 + UBEC 15 + XR2 1 + cables 6 (E)
 # ---- sockets (cage_node_lib: 3.0 rod, bore 3.2 x 10, floor 3, wall 2.5; the bore bottom 3.0 from the node centre, as the Overseer's node 17)
-BORE_R, DEPTH, FLOOR, WALL = 1.6, 10.0, 3.0, 3.0            # WALL 3.0 (8 Nov: 2.5 beyond the 0.5 injection annulus, as the cage nodes)
+BORE_R, DEPTH, FLOOR, WALL = fit.bore(3.0, "bond") / 2, 10.0, 3.0, 3.0            # WALL 3.0 (8 Nov: 2.5 beyond the 0.5 injection annulus, as the cage nodes)
 # ---- prop keep-out: the cage rule for anything printed too (12 beyond the swept discs)
 MOTORS = [(54.1, 54.1), (-54.1, 54.1), (-54.1, -54.1), (54.1, -54.1)]
 DISC_R, DISC_Z = 44.45 + 4.0 + 12.0, (37.2 - 12.0, 45.2 + 12.0)
@@ -300,7 +301,7 @@ def export_env(part, name):
 
 # ---- arm clips -------------------------------------------------------------------------------------------------------------------
 CLIP = {1: (1, -1, "A3", "S1"), 2: (-1, 1, "A1", "S0"), 3: (1, 1, "A0", "S0"), 4: (-1, -1, "A2", "S1")}   # PX4 motor k: arm signs, tie (v21, 8 Nov: in to the side knee; v20 down to the skid ends, v19 up to the rail corners B)
-CLIP_Z0, CLIP_T, M2_R, M2_PAD_R, SHAFT_R = PLATE_Z - 8.0, 8.0, 1.1, 3.0, 3.0   # 8 thick (4 Nov run 1: at 4 the tie collar's top, root z 17, was sheared by the plate keep-out to a 1.1 sliver; roots now z 13.5)
+CLIP_Z0, CLIP_T, M2_R, M2_PAD_R, SHAFT_R = PLATE_Z - 8.0, 8.0, fit.bore(2.0, "close") / 2, 3.0, 3.0   # 8 thick (4 Nov run 1: at 4 the tie collar's top, root z 17, was sheared by the plate keep-out to a 1.1 sliver; roots now z 13.5)
 
 
 def arm_clip_setup(k, h):

@@ -7,7 +7,7 @@ streams (tools/box_check.py). Writes systems/box.assembly.json (box W frame), sy
   funnel           parts/box_funnel/make.py v5: the two frame halves and the cross arm (engine parts: their result once run, a
                    placeholder and their drawn faces and room until then), the two end walls, strips, drive
   dome             parts/box_dome (its entries are kept as they stand in the file)
-  latch            latch v7, both packs, seated: receiver and cartridge with its pack (parts/latch7/make.py build, in the seat frame)
+  latch            latch v7, both packs, seated: the PROTOTYPE receiver as printed and the cartridge with its pack (tools/box_check.py latch_bodies, in the seat frame)
   drones           the Scout v4 and the Overseer as their own systems stand today, seated (their meshes in place, no copies)
 Run: python tools/import_box.py            everything but the 3 Nov import is rebuilt; the arm and enclosure lines are kept
      python tools/import_box.py <nox>      also re-imports the arm v7 and enclosure from a checkout of sparkiscool/nox
@@ -150,7 +150,8 @@ def funnel_parts():
 
 
 def latch_parts():
-    """latch v7, both packs, at the seat (as tools/box_check.py poses them): receiver, cartridge with its pack"""
+    """latch v7, both packs, at the seat (as tools/box_check.py poses them): the printed PROTOTYPE receiver (print/latch7_receiver.stl, print/latch7_ov_receiver.stl,
+    with its carrier, cap, strips, plug, pegs and clamp bolts), cartridge with its pack"""
     import box_check as bc
     out = []
     for drone, (R, C) in bc.latch_bodies().items():
@@ -159,17 +160,20 @@ def latch_parts():
             pid = f"box_latch7_{pack}_{kind}"
             out.append(dict(id=pid, name=f"{'Scout' if pack == 'scout' else 'Overseer'}: latch v7 {kind}" + (" and pack" if kind == "cartridge" else ""), role="protected", group=grp,
                             color="#8899aa" if kind == "receiver" else "#2f4fbf", mesh=view(body.man, pid, pid), pose=SEAT_TO_W, material="PCTG", tag="C", owner="battery latch",
-                            version="v7", source=f"parts/latch7/make.py build({pack!r}), seated", note="the latch set the funnel seats"))
+                            version="v7", source=f"parts/latch7/make.py receiver_all_print(build({pack!r}))" if kind == "receiver" else f"parts/latch7/make.py build({pack!r}), seated",
+                            note=("the PROTOTYPE receiver as printed (print/" + ("latch7_receiver" if pack == "scout" else "latch7_ov_receiver") + ".stl) and its carrier, cap, strips, plug and pegs, seated") if kind == "receiver" else "the latch set the funnel seats"))
     return out
 
 
 def drone_parts():
-    """both drones as their systems stand, seated (tools/seat_envelope.py's seating), their own meshes in place"""
-    import seat_envelope as se
+    """both drones as their systems stand, seated (tools/seat_envelope.py's seating, lifted with their receiver: tools/box_check.py latch_bodies.lift), their own meshes in place"""
+    import seat_envelope as se, box_check as bc
+    bc.latch_bodies()
     from build_site import pose_matrix
     out = []
     for sysname, label, TD in (("scout_v4", "Scout", se.T_SCOUT), ("overseer", "Overseer", se.T_OV)):   # T_SCOUT: the Scout's receiver bolts on latch v7's (15 Nov: eye put it 6.65 off)
         a = json.load(open(os.path.join(ROOT, "systems", f"{sysname}.assembly.json")))
+        TD = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, bc.latch_bodies.lift[sysname]], [0, 0, 0, 1.0]]) @ TD
         for p in a["parts"]:
             if any(k in p["name"].lower() for k in se.SKIP):
                 continue

@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Probe Bench Build</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a workshop build sheet. One reading column, a parts rail that stacks on phones, numbered steps you tick off, a test log at the end. */
+:root{
+  --bg:#f4f6f8; --panel:#ffffff; --ink:#15191f; --muted:#5b6573; --line:#d6dce4;
+  --accent:#2b56c9; --tape:#f2c200; --tape-ink:#3a2f00; --ok:#1f7a4d; --warn:#a4570b;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111418; --panel:#1a1f26; --ink:#e7ebf0; --muted:#9aa5b3; --line:#2c343e;
+  --accent:#7d9cf2; --tape:#e8b900; --tape-ink:#1c1600; --ok:#56c08b; --warn:#e3a35b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111418; --panel:#1a1f26; --ink:#e7ebf0; --muted:#9aa5b3; --line:#2c343e;
+  --accent:#7d9cf2; --tape:#e8b900; --tape-ink:#1c1600; --ok:#56c08b; --warn:#e3a35b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.wrap{max-width:860px;margin:0 auto;display:grid;gap:36px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:2.3rem;font-weight:700;letter-spacing:.2px}
+h2{font-size:1.5rem;font-weight:700;border-bottom:2px solid var(--ink);padding-bottom:6px}
+h3{font-size:1.12rem;font-weight:600}
+p{margin:0}
+.lede{color:var(--muted);max-width:65ch}
+.tag{display:inline-block;font:600 .72rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  background:var(--tape);color:var(--tape-ink);padding:5px 8px;border-radius:3px}
+header{display:grid;gap:10px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font:400 .85rem var(--mono);color:var(--muted)}
+section{display:grid;gap:14px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;min-width:0}
+.box h3{margin-bottom:8px}
+ul.plain{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+ul.plain li{display:flex;gap:10px;align-items:baseline}
+.qty{font:600 .82rem var(--mono);color:var(--accent);min-width:2.6em}
+.code{font:400 .86em var(--mono);background:color-mix(in srgb,var(--line) 45%,transparent);padding:1px 5px;border-radius:3px;overflow-wrap:anywhere}
+.note{border-left:4px solid var(--tape);background:var(--panel);padding:10px 14px;border-radius:0 6px 6px 0}
+.warn{border-left-color:var(--warn)}
+figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto}
+figcaption{font:400 .82rem var(--mono);color:var(--muted);margin-top:6px}
+svg text{font-family:var(--mono);font-size:11px;fill:var(--ink)}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
+.step{counter-increment:s;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;background:var(--panel);
+  border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.step.done{opacity:.6}
+.step .n{grid-row:span 3;font:700 1.6rem/1 var(--display);color:var(--accent);min-width:1.4em}
+.step .n::before{content:counter(s)}
+.step label{display:flex;align-items:center;gap:10px;cursor:pointer}
+.step input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);flex:none}
+.step ul{margin:4px 0 0;padding-left:1.1em;display:grid;gap:4px;min-width:0}
+.uses{font:400 .8rem var(--mono);color:var(--muted)}
+.tests{display:grid;gap:12px}
+.field{display:grid;gap:4px}
+.field label{font-weight:600}
+.field small{color:var(--muted)}
+input[type=text],input[type=number],textarea,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);
+  border-radius:5px;padding:8px 10px;width:100%;max-width:100%}
+textarea{min-height:80px;resize:vertical}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+button{font:600 .95rem var(--body);background:var(--accent);color:var(--panel);border:0;border-radius:5px;padding:10px 16px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+:focus-visible{outline:3px solid var(--tape);outline-offset:2px}
+pre#out{font:400 .85rem/1.5 var(--mono);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ok{color:var(--ok);font-weight:600}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="tag">Scout v4 · ceiling probe</span>
+  <h1>Probe bench build</h1>
+  <p class="lede">Assemble the probe's mast mechanism on the bench base, then run the four tests and copy the results back to the design chat. Tick each step as you go; your ticks stay in this browser.</p>
+  <div class="meta"><span>parts: release <span class="code">meshes</span></span><span>material: PCTG</span><span>stroke: 150 mm</span><span>no bearings</span></div>
+</header>
+
+<section>
+  <h2>What you need</h2>
+  <div class="cols">
+    <div class="box"><h3>Printed</h3><ul class="plain">
+      <li><span class="qty">1×</span>bench base</li>
+      <li><span class="qty">1×</span>bench turret</li>
+      <li><span class="qty">1×</span>spool (with the 40-tooth gear)</li>
+      <li><span class="qty">2×</span>pinion (one spare)</li>
+      <li><span class="qty">2×</span>roller tube (the roller file, printed twice)</li>
+      <li><span class="qty">3</span>roller saddles S1, S2, S3 (one each)</li>
+      <li><span class="qty">1×</span>head frame</li>
+      <li><span class="qty">1×</span>cradle (the sleeve)</li>
+    </ul></div>
+    <div class="box"><h3>Bought</h3><ul class="plain">
+      <li><span class="qty">1×</span>N20 motor, 6 V 100 rpm</li>
+      <li><span class="qty">1×</span>tape measure (19 mm blade)</li>
+      <li><span class="qty">6</span>PTFE wires, 30 AWG, ~300 mm</li>
+      <li><span class="qty">1×</span>ZCZQC leaf battery contact (presses the roller)</li>
+      <li><span class="qty">1×</span>SG90 servo, with the bag it came in: one arm horn, its centre screw, the small horn screws, the 2 tab screws</li>
+      <li><span class="qty">1×</span>Arducam camera in its metal case (bracket off) + its own 2 side screws</li>
+    </ul></div>
+    <div class="box"><h3>Hardware</h3><ul class="plain">
+      <li><span class="qty">1×</span>M3 × 40 + nyloc (spool axle)</li>
+      <li><span class="qty">1×</span>3 mm carbon rod, cut to 23.8 mm (roller axle)</li>
+      <li><span class="qty">5×</span>M3 × 10 (4 turret to base, 1 camera idler)</li>
+      <li><span class="qty">5×</span>M3 heat-set inserts, 5.7 long (4 bench base, 1 head frame)</li>
+      <li><span class="qty">1×</span>M2 × 4 (blade A)</li>
+      <li><span class="qty">1×</span>M2 × 6 + nut (blade B)</li>
+      <li><span class="qty">2×</span>M1.6 × 4 (motor face)</li>
+      <li><span class="qty">—</span>5-min epoxy, CA, kapton, light oil</li>
+      <li><span class="qty">tool</span>PH1 screwdriver, shaft 75 mm or longer</li>
+    </ul></div>
+  </div>
+</section>
+
+<section>
+  <h2>How it fits together</h2>
+  <figure>
+    <svg viewBox="0 0 640 360" width="640" height="360" role="img" aria-label="Side view of the bench turret: spool with gear, pinion on the N20 below, roller pressing the coil, the blade stack leaving up through the throat to the head.">
+      <rect x="40" y="300" width="560" height="16" fill="var(--line)" stroke="var(--ink)" stroke-width="1"/>
+      <text x="48" y="336">bench base, clamped to the table</text>
+      <rect x="150" y="96" width="260" height="204" fill="none" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text x="156" y="90" fill="var(--muted)">bench turret walls</text>
+      <circle cx="260" cy="190" r="58" fill="var(--panel)" stroke="var(--ink)" stroke-width="1.6"/>
+      <circle cx="260" cy="190" r="44" fill="none" stroke="var(--tape)" stroke-width="7"/>
+      <circle cx="260" cy="190" r="34" fill="var(--panel)" stroke="var(--ink)" stroke-width="1.2"/>
+      <circle cx="260" cy="190" r="3" fill="var(--ink)"/>
+      <text x="196" y="194">spool</text>
+      <text x="20" y="150">coil: A · ribbon · B</text>
+      <line x1="140" y1="154" x2="218" y2="168" stroke="var(--muted)" stroke-width="1"/>
+      <circle cx="260" cy="268" r="16" fill="var(--panel)" stroke="var(--ink)" stroke-width="1.4"/>
+      <text x="282" y="276">pinion on the N20</text>
+      <rect x="230" y="284" width="60" height="16" fill="var(--line)" stroke="var(--ink)" stroke-width="1"/>
+      <circle cx="320" cy="140" r="9" fill="var(--panel)" stroke="var(--accent)" stroke-width="2"/>
+      <path d="M332 130 l24 -14" stroke="var(--accent)" stroke-width="1.5" fill="none"/>
+      <text x="358" y="114" fill="var(--accent)">roller + leaf contact press the coil</text>
+      <path d="M304 190 Q312 150 330 60" stroke="var(--tape)" stroke-width="5" fill="none"/>
+      <rect x="318" y="40" width="26" height="56" fill="none" stroke="var(--ink)" stroke-width="1.6"/>
+      <text x="352" y="72">throat: flat at the bottom,</text>
+      <text x="352" y="86">lens at the top</text>
+      <line x1="331" y1="40" x2="331" y2="14" stroke="var(--tape)" stroke-width="7"/>
+      <text x="352" y="22">mast up to the head frame</text>
+      <text x="420" y="196" fill="var(--muted)">spool axle: M3 × 40</text>
+      <text x="420" y="210" fill="var(--muted)">through both walls</text>
+    </svg>
+    <figcaption>Side view, schematic, not to scale. The motor sits under the spool; its pinion drives the spool's gear.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Assembly</h2>
+  <ol class="steps" id="steps">
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s1"><h3>Base</h3></label>
+      <ul><li>Heat-set the 4 inserts into the bench base's four posts.</li>
+      <li>Bolt the bench turret on top with 4 × M3 × 10.</li>
+      <li>Clamp the base to the table by its end tabs.</li></ul>
+      <span class="uses">bench base · bench turret · 4 inserts · 4 × M3 × 10</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s2"><h3>Blades and ribbon</h3></label>
+      <ul><li>Cut two 200 mm strips from the tape and file the cut edges smooth. Call them A and B.</li>
+      <li>Lay the 6 PTFE wires side by side on A's curved-in face and tape them along its length with kapton. That is the ribbon.</li>
+      <li>Scuff the paint off the last 10 mm of one end of each blade, the end that goes into the spool.</li></ul>
+      <span class="uses">tape · 6 PTFE wires · kapton</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s3"><h3>Stack into the spool</h3></label>
+      <ul><li>Stack the three spool ends: B, then the ribbon, then A, the two blades' curves facing each other.</li>
+      <li>Push all three ends together into the angled slot across the spool's hub, B on the hub side, and epoxy them in.</li>
+      <li>Run the ribbon's end through the hub and out of the small hub on the side opposite the gear. Leave it loose.</li></ul>
+      <span class="uses">spool · 5-min epoxy</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s4"><h3>Roller, then the spool</h3></label>
+      <ul><li>Cut the 3 mm carbon rod to 23.8 mm, sand the ends square, and put a drop of light oil on it.</li>
+      <li>Clip the battery contact onto the S2 saddle's thin tab, from the slit end: the contact's flat back goes into the slit, the curved leaf sits on the tab's open face.</li>
+      <li>Slide a tube, the saddle (groove down) and the second tube onto the rod, saddle in the middle.</li>
+      <li>From the spool's side, push the saddle into the turret's middle pocket, leaf first, and drop the rod's ends into the two slots. The leaf presses on the pocket's far wall.</li>
+      <li>Set the spool between the turret's side walls, gear on the side with the motor plate. Its coil holds the roller in place.</li>
+      <li>Push an M3 × 40 through the walls and the spool. Nyloc on the far side, snug, not tight: the spool must spin freely.</li></ul>
+      <span class="uses">2 roller tubes · saddle S2 · 1 contact · carbon rod 23.8 mm · spool · M3 × 40 + nyloc</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s5"><h3>Motor</h3></label>
+      <ul><li>Press a pinion onto the N20 shaft, flat to flat, all the way on. A drop of CA.</li>
+      <li>Screw the motor's face to the turret's motor plate with 2 × M1.6 × 4, so the pinion meshes with the spool's gear.</li>
+      <li>Turn the spool by hand: the gears should roll with no tight spot.</li></ul>
+      <span class="uses">N20 · pinion · 2 × M1.6 × 4 · CA</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s6"><h3>Check the roller</h3></label>
+      <ul><li>Turn the spool by hand: the two roller tubes should turn with the coil and the rod should sit down in its slots.</li>
+      <li>Nothing to adjust: the saddle you fit (S1, S2 or S3) sets how hard the leaf pushes. Start with S2.</li></ul>
+      <span class="uses">—</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s7"><h3>Wind and feed</h3></label>
+      <ul><li>Turn the spool by hand to wind the stack on, leaving about 160 mm free.</li>
+      <li>Feed the free ends up through the throat: in at the flat slot at the bottom, out of the curved opening at the top.</li>
+      <li>Test the roller: run the mast fully out, then push it back down by hand. If the coil's outer turn lifts anywhere, swap S2 for S3. If it holds and the mast runs freely, try S1 too; keep the lightest saddle that holds.</li></ul>
+      <span class="uses">—</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s8"><h3>Head frame</h3></label>
+      <ul><li>Slide the head frame's sleeve over the blade tips. Mark A through the top screw hole and B through the middle of the slot. Take it off.</li>
+      <li>Drill or punch a 2.2 mm hole at each mark.</li>
+      <li>Refit the sleeve: A on the M2 × 4 through its fixed hole, B on the M2 × 6 and nut through the slot, so B can slide.</li>
+      <li>Leave the ribbon a 4 mm slack loop at the head, its end up through the slot in the plate.</li>
+      <li>Heat-set one insert into the hole in the bracket on the frame's idler side (the small upright plate opposite the servo's ring).</li></ul>
+      <span class="uses">head frame · M2 × 4 · M2 × 6 + nut · 1 insert</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s9"><h3>Servo into the head frame</h3></label>
+      <ul><li>Push the arm horn onto the SG90's spline with its centre screw, then turn the output by hand until the arm points straight up.</li>
+      <li>Slide the SG90 into the frame's closed ring from the open side, where the cradle will go, until its tabs stop on the ring's face. The horn ends up facing the bracket.</li>
+      <li>Drive its two tab screws through the tabs into the ring's pilot holes with the long PH1, reaching past the bracket. Stop when snug; PCTG strips if you keep turning.</li></ul>
+      <span class="uses">head frame · SG90 + horn · centre screw · 2 tab screws</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s11"><h3>Camera into the cradle</h3></label>
+      <ul><li>Slide the camera case into the cradle from the open back, lens first, until its front meets the lip. The lip runs along the top and the sides only.</li>
+      <li>Clamp it with its own two side screws through the slots in the side walls. The heads sit in the recesses.</li>
+      <li>If you have the LED bars, stick them on the case's top and bottom fronts through their windows. Skip them on the bench if you don't.</li></ul>
+      <span class="uses">cradle · camera + 2 side screws</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s12"><h3>Cradle onto the frame</h3></label>
+      <ul><li>Hold the cradle level (camera pointing forward) and lower it straight down between the bracket and the horn. The horn's hub, centre screw and arm drop into the channel on the cradle's wall from its open bottom edge.</li>
+      <li>Put two of the small horn screws through the arm's holes into the slot above the axis.</li>
+      <li>Screw an M3 × 10 in from outside the bracket, through its insert, into the cradle's boss. Stop before it clamps: the cradle must nod freely on it.</li>
+      <li>Nod the camera by hand from 20° down to straight up. Nothing should rub.</li></ul>
+      <span class="uses">2 horn screws · M3 × 10</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s10"><h3>Power for the bench</h3></label>
+      <ul><li>5 V from a USB supply straight to the N20's two leads. Swap the leads to reverse.</li>
+      <li>Stop by hand before either end of the travel: the motor has no end stop.</li>
+      <li>The driver board is not needed on the bench. Leave the SG90 unplugged and tilt the camera by hand.</li></ul>
+      <span class="uses">5 V USB supply · 2 leads</span></li>
+  </ol>
+  <div class="note warn"><strong>Careful:</strong> cut tape edges are sharp. Wear gloves for steps 2 and 8, and keep fingers clear of the gears when the motor runs.</div>
+</section>
+
+<section>
+  <h2>Tests and results</h2>
+  <p class="lede">Fill these in as you test, then copy the summary and paste it into the chat.</p>
+  <form class="tests" id="log" onsubmit="return false">
+    <div class="box field">
+      <label for="t_cycles">1 · Out and in, 20 cycles</label>
+      <small>Time each stroke (expect about 4–5 s for 150 mm). Watch for the coil lifting off the spool, the blades springing into the lens above the throat, and B's screw sliding in its slot.</small>
+      <div class="row">
+        <div class="field"><label for="t_cycles">cycles done</label><input type="number" id="t_cycles" min="0" placeholder="20"></div>
+        <div class="field"><label for="t_time">stroke time, s</label><input type="text" id="t_time" placeholder="4.6"></div>
+        <div class="field"><label for="t_lift">coil lifted off?</label><select id="t_lift"><option value="">choose</option><option>no</option><option>a little</option><option>yes, jammed</option></select></div>
+        <div class="field"><label for="t_lens">lens forms above the throat?</label><select id="t_lens"><option value="">choose</option><option>yes</option><option>partly</option><option>no</option></select></div>
+        <div class="field"><label for="t_slot">B slot travel, mm</label><input type="text" id="t_slot" placeholder="expect 7.5–9.5"></div>
+      </div>
+    </div>
+    <div class="box field">
+      <label for="t_gear">2 · Gear mesh</label>
+      <small>Any tight spot, skipping or clicking.</small>
+      <select id="t_gear"><option value="">choose</option><option>smooth</option><option>tight spot</option><option>skips or clicks</option></select>
+    </div>
+    <div class="box field">
+      <label for="t_fold">3 · Fold force</label>
+      <small>Mast fully out (150 mm). Pull the head sideways with a luggage scale until the mast folds. Expect about 3.3 N.</small>
+      <div class="row">
+        <div class="field"><label for="t_fold">fold force, N (or g)</label><input type="text" id="t_fold" placeholder="3.3 N"></div>
+        <div class="field"><label for="t_dir">direction</label><input type="text" id="t_dir" placeholder="sideways / forwards"></div>
+      </div>
+    </div>
+    <div class="box field">
+      <label for="t_notes">4 · Anything else</label>
+      <small>Rubbing, snags, the ribbon drifting to an edge, parts that didn't fit.</small>
+      <textarea id="t_notes" placeholder="e.g. ribbon drifts to the left edge after 10 cycles"></textarea>
+    </div>
+    <div class="bar"><button type="button" id="copy">Copy results</button><button type="button" class="ghost" id="clear">Clear ticks and results</button><span id="msg" class="ok" aria-live="polite"></span></div>
+    <pre id="out"></pre>
+  </form>
+</section>
+</div>
+
+<script>
+(function(){
+  const KEY='probe-bench-v1';
+  const ids=['t_cycles','t_time','t_lift','t_lens','t_slot','t_gear','t_fold','t_dir','t_notes'];
+  const boxes=[...document.querySelectorAll('.step input[type=checkbox]')];
+  function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}}
+  function save(st){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+  const st=load();
+  boxes.forEach(b=>{b.checked=!!(st.steps&&st.steps[b.id]);b.closest('.step').classList.toggle('done',b.checked);
+    b.addEventListener('change',()=>{b.closest('.step').classList.toggle('done',b.checked);persist()})});
+  ids.forEach(id=>{const el=document.getElementById(id);if(st.f&&st.f[id]!=null)el.value=st.f[id];el.addEventListener('input',()=>{persist();render()})});
+  function persist(){const s={steps:{},f:{}};boxes.forEach(b=>s.steps[b.id]=b.checked);ids.forEach(id=>s.f[id]=document.getElementById(id).value);save(s)}
+  function v(id){const x=document.getElementById(id).value.trim();return x||'—'}
+  function render(){
+    const done=boxes.filter(b=>b.checked).length;
+    document.getElementById('out').textContent=
+`PROBE BENCH RESULTS
+assembly steps done: ${done}/${boxes.length}
+1 out/in: cycles ${v('t_cycles')}, stroke ${v('t_time')} s, coil lift ${v('t_lift')}, lens ${v('t_lens')}, B slot travel ${v('t_slot')} mm
+2 gear mesh: ${v('t_gear')}
+3 fold: ${v('t_fold')} (${v('t_dir')})
+4 notes: ${v('t_notes')}`;
+  }
+  boxes.forEach(b=>b.addEventListener('change',render));
+  render();
+  document.getElementById('copy').addEventListener('click',()=>{
+    const t=document.getElementById('out').textContent,msg=document.getElementById('msg');
+    navigator.clipboard.writeText(t).then(()=>{msg.textContent='Copied'},()=>{
+      const r=document.createRange();r.selectNodeContents(document.getElementById('out'));const s=getSelection();s.removeAllRanges();s.addRange(r);msg.textContent='Selected: press copy'});
+  });
+  document.getElementById('clear').addEventListener('click',()=>{
+    boxes.forEach(b=>{b.checked=false;b.closest('.step').classList.remove('done')});
+    ids.forEach(id=>document.getElementById(id).value='');persist();render();document.getElementById('msg').textContent='Cleared';
+  });
+})();
+</script>
+
+</html>

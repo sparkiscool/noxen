@@ -3415,34 +3415,26 @@
    }
   ]
  },
- "motion_collision": {
-  "frames": 787,
-  "duration_s": 32.8,
-  "fps": 24,
-  "limit_mm3": 0.05,
-  "worst_mm3": {
-   "cartridge / receiver": 0.0,
-   "slider p / receiver": 0.0,
-   "slider n / receiver": 0.0,
-   "blade p / receiver": 0.0,
-   "blade n / receiver": 0.0,
-   "heel deck / receiver": 0.0,
-   "cartridge / slider p": 0.0,
-   "cartridge / slider n": 0.0,
-   "slider p / slider n": 0.0,
-   "cartridge / blade p": 0.0,
-   "cartridge / blade n": 0.0,
-   "slider p / blade p": 0.0,
-   "slider n / blade n": 0.0,
-   "slider p / blade n": 0.0,
-   "slider n / blade p": 0.0,
-   "blade p / blade n": 0.0,
-   "cartridge / heel deck": 0.0,
-   "slider p / heel deck": 0.0,
-   "slider n / heel deck": 0.0
+ "make": {
+  "sha": {
+   "parts/box_funnel/make.py": "6d4f7af3e649",
+   "parts/latch5/battery_latch_v4.py": "f55aaf78bdf7",
+   "parts/latch5/make.py": "5e01bbf4890a",
+   "parts/latch6/make.py": "783c373b02e5",
+   "parts/latch7/make.py": "3ee20169a07e",
+   "parts/latch7_recv_lib.py": "1b5a38b50c5a",
+   "tools/build_site.py": "954e55503aa7",
+   "tools/seat_check.py": "5acab205ab60",
+   "tools/seat_envelope.py": "fe96ec54e18a"
   },
-  "at_s": {},
-  "max_mm3": 0.0,
-  "ok": true
+  "rc": 0,
+  "s": 14.2,
+  "at": "2026-11-15 03:43",
+  "commit": "b4ee40e4",
+  "solid": {
+   "ok": false,
+   "files": [],
+   "why": "a generator that wrote no print file"
+  }
  }
 }

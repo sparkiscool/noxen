@@ -2982,7 +2982,7 @@
    "mass_g": 80.0,
    "tag": "E",
    "owner": "overseer core session",
-   "version": "core v2",
+   "version": "core v2; 15 Nov: the four motor runs redrawn out through the top cover's side windows (tools/overseer_wires.py)",
    "source": "nox/overseer/core_v1.py",
    "id": "wires",
    "group": "bought",
@@ -2996,7 +2996,7 @@
    "mass_g": 0.0,
    "tag": "E",
    "owner": "overseer core session",
-   "version": "30 Oct: every other lead of the wire runs drawn red (the + of each pair), the rest black; the 80 g stays on wires",
+   "version": "30 Oct: every other lead of the wire runs drawn red (the + of each pair), the rest black; the 80 g stays on wires; 15 Nov: its motor run redrawn out through the top cover's side window (tools/overseer_wires.py)",
    "source": "nox/overseer/core_v1.py",
    "id": "wires_red",
    "group": "bought",
@@ -3090,19 +3090,19 @@
    "version": "mesh 30 Oct: the DECXIN body on node 21, looking back and 40 deg down (tools/bought_meshes.py); was an axis-aligned box"
   },
   {
-   "name": "top cover (translucent PETG, N logo)",
+   "name": "top cover (translucent PCTG, N logo)",
    "role": "structure",
    "mesh": "parts/overseer_top_cover/part.stl",
-   "material": "PETG",
-   "mass_g": 27.2,
+   "material": "PCTG",
+   "mass_g": 54.8,
    "cg": [
-    0.0,
-    0.0,
-    62.0
+    2.6,
+    -0.1,
+    68.4
    ],
    "tag": "C",
    "owner": "overseer",
-   "version": "v1 (3 Nov, Spark: cover over the FC for looks, thin, translucent; clamped by the 8 top plate bolts, the plate sandwiched, no seams). Drawn: parts/overseer_top_cover/make.py",
+   "version": "v2.1 (3 Nov, Spark: cover over the FC for looks, thin, translucent; clamped by 4 top plate bolts, the plate sandwiched, no seams; 15 Nov: shell 2.52, 6 lines, over the 2 mm floor, PCTG). Drawn: parts/overseer_top_cover/make.py",
    "source": "parts/overseer_top_cover/make.py",
    "id": "overseer_top_cover",
    "group": "printed",
@@ -3643,18 +3643,6 @@
     "b": "hub_deck",
     "allow_mm3": 76,
     "why": "the + leads of the front runs through the deck nose. the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
-   },
-   {
-    "a": "wires",
-    "b": "overseer_top_cover",
-    "allow_mm3": 39,
-    "why": "the motor leads drawn straight out along the diagonals through the cover's skirt over the arm roots; the cover's cable exits are the 48 x 18 side windows. the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
-   },
-   {
-    "a": "wires_red",
-    "b": "overseer_top_cover",
-    "allow_mm3": 14,
-    "why": "the + motor lead of the same run (-51, +51). the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
    },
    {
     "a": "wires",

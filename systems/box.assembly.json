@@ -3879,8 +3879,8 @@
 "tag": "C",
 "owner": "battery latch",
 "version": "v7",
-"source": "parts/latch7/make.py build('scout'), seated",
-"note": "the latch set the funnel seats"
+"source": "parts/latch7/make.py receiver_all_print(build('scout'))",
+"note": "the PROTOTYPE receiver as printed (print/latch7_receiver.stl) and its carrier, cap, strips, plug and pegs, seated"
 },
 {
 "id": "box_latch7_scout_cartridge",
@@ -3959,8 +3959,8 @@
 "tag": "C",
 "owner": "battery latch",
 "version": "v7",
-"source": "parts/latch7/make.py build('overseer'), seated",
-"note": "the latch set the funnel seats"
+"source": "parts/latch7/make.py receiver_all_print(build('overseer'))",
+"note": "the PROTOTYPE receiver as printed (print/latch7_ov_receiver.stl) and its carrier, cap, strips, plug and pegs, seated"
 },
 {
 "id": "box_latch7_overseer_cartridge",
@@ -8444,7 +8444,7 @@
 },
 {
 "id": "box_overseer_overseer_top_cover",
-"name": "Overseer: top cover (translucent PETG, N logo)",
+"name": "Overseer: top cover (translucent PCTG, N logo)",
 "role": "structure",
 "group": "landing: Overseer",
 "color": "#dbe9f5",
@@ -8474,10 +8474,10 @@
 1.0
 ]
 ],
-"material": "PETG",
+"material": "PCTG",
 "tag": "C",
 "owner": "overseer",
-"version": "v1 (3 Nov, Spark: cover over the FC for looks, thin, translucent; clamped by the 8 top plate bolts, the plate sandwiched, no seams). Drawn: parts/overseer_top_cover/make.py",
+"version": "v2.1 (3 Nov, Spark: cover over the FC for looks, thin, translucent; clamped by 4 top plate bolts, the plate sandwiched, no seams; 15 Nov: shell 2.52, 6 lines, over the 2 mm floor, PCTG). Drawn: parts/overseer_top_cover/make.py",
 "source": "systems/overseer.assembly.json, seated",
 "mesh": "parts/overseer_top_cover/part.stl",
 "part": "box_overseer_overseer_top_cover",

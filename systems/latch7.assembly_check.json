@@ -1,0 +1,156 @@
+{
+ "drone": "latch7",
+ "ok": true,
+ "gate": true,
+ "fit_tol_mm3": 0.5,
+ "fit_table": [
+  {
+   "kind": "bond",
+   "gap": 0.0,
+   "allow": 0.2,
+   "min_gap": 0.0,
+   "tag": "M",
+   "src": "carbon rod in a resin socket: the 3.2 / 6.2 bores for 3 / 6 rods (CLAUDE.md), the resin fills the rest: it only has to go in (Overseer coupons v2, Spark 27 Oct: the largest of the coupon bores fit; OD + 0.3 was loose in PETG)"
+  },
+  {
+   "kind": "press",
+   "gap": 0.1,
+   "allow": 0.3,
+   "min_gap": 0.1,
+   "tag": "M",
+   "src": "a D bore pressed on the N20's 3.0 / 2.5 D shaft: drawn 3.3 / 2.8 (+0.3 on the diameter and across the flat) pushes on by hand, a drop of CA (the probe coupon, Spark 14 Nov: D1 3.0 / 2.5 and D2 3.1 / 2.6 would not go on, D3 3.2 / 2.7 too hard to press home; printed holes come out ~0.1-0.2 small). min_gap: the drawn clearance per side the check accepts, 0.15 less the viewing mesh's 0.05 (D3's 0.1 failed by hand at 0.10 drawn, so a press mate is checked against the shaft's own D, not a round stand-in)"
+  },
+  {
+   "kind": "free",
+   "gap": 0.1,
+   "allow": 0.3,
+   "tag": "M",
+   "src": "a bore turning free on an M3 axle or a 3 mm rod: 3.3 (coupon A1, the snuggest of 3.3 / 3.4 / 3.5, all free)"
+  },
+  {
+   "kind": "slide",
+   "gap": 0.25,
+   "allow": 0.6,
+   "tag": "E",
+   "src": "a bought body sliding into a printed pocket, sleeve or slot over its length (camera case, SG90 body): the axle's +0.3 plus 0.3 for the long contact and the case's own tolerance; check on the bench"
+  },
+  {
+   "kind": "mate",
+   "gap": 0.2,
+   "allow": 0.5,
+   "tag": "E",
+   "src": "a printed part sliding onto another printed part: both faces print GROW fat (0.2 of it gone) + 0.3 running"
+  },
+  {
+   "kind": "clear",
+   "gap": 0.95,
+   "allow": 2.0,
+   "tag": "E",
+   "src": "parts that pass each other and must never touch (an assembly path past a neighbour, a moving part)"
+  },
+  {
+   "kind": "screw",
+   "gap": 0.15,
+   "allow": 0.4,
+   "tag": "E",
+   "src": "a screw's shank through a printed clearance hole: M2 2.4, M3 3.4"
+  },
+  {
+   "kind": "tap",
+   "gap": -0.2,
+   "allow": -0.4,
+   "tag": "E",
+   "src": "a screw cutting its own thread in a printed pilot: M2 1.6, M3 2.6 (the SG90 tab pilots)"
+  },
+  {
+   "kind": "close",
+   "gap": 0.05,
+   "allow": 0.2,
+   "tag": "E",
+   "src": "a screw's shank close-fit through a printed hole where it locates the part (the Overseer arms' M3 3.2 as the rod bore, overseer_arm_lib HOLE_D / SLOT_D; the carbon plates' \u00d83.1 / 3.0 M; the hub deck's M2 2.2)"
+  },
+  {
+   "kind": "port",
+   "gap": 0.145,
+   "allow": 0.39,
+   "tag": "M",
+   "src": "the resin injection port for one 14 G blunt tip (OD 2.11): \u00d82.5 (Spark 8 Nov, CLAUDE.md; cage_node_lib PORT_R)"
+  },
+  {
+   "kind": "nut",
+   "gap": 0.05,
+   "allow": 0.2,
+   "tag": "E",
+   "src": "a hex nut's pocket across its flats: M3 5.5 -> 5.7 (overseer_arm_lib NUT_AF; not recorded in dimensions.md)"
+  }
+ ],
+ "grow_mm": 0.1,
+ "parts_checked": 23,
+ "printed": [
+  "latch7_view_blade_n",
+  "latch7_view_blade_p",
+  "latch7_view_carrier",
+  "latch7_view_carrier_cap",
+  "latch7_view_cartridge",
+  "latch7_view_heel_deck",
+  "latch7_view_heel_pads",
+  "latch7_view_receiver",
+  "latch7_view_receiver_strips",
+  "latch7_view_slider_n",
+  "latch7_view_slider_p",
+  "latch7_view_spring_pin_a",
+  "latch7_view_spring_pin_b",
+  "latch7_view_spring_pin_e",
+  "latch7_view_spring_pin_f",
+  "latch7_view_stop_bar"
+ ],
+ "skipped": [],
+ "pairs": [
+  {
+   "a": "latch7_view_cartridge",
+   "b": "latch7_view_spring_b",
+   "mm3": 0.03,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": true
+  },
+  {
+   "a": "latch7_view_cartridge",
+   "b": "latch7_view_spring_f",
+   "mm3": 0.03,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": true
+  },
+  {
+   "a": "latch7_view_slider_p",
+   "b": "latch7_view_spring_b",
+   "mm3": 0.03,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": true
+  },
+  {
+   "a": "latch7_view_slider_n",
+   "b": "latch7_view_spring_e",
+   "mm3": 0.03,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": true
+  },
+  {
+   "a": "latch7_view_slider_n",
+   "b": "latch7_view_spring_f",
+   "mm3": 0.03,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": true
+  }
+ ],
+ "mates": [],
+ "paths": [],
+ "not_print_ready": {},
+ "would_block": {},
+ "seconds": 0.1,
+ "placed": {}
+}

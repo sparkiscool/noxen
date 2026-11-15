@@ -1,11 +1,44 @@
 {
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_arm_coupon.stl",
-  "sha256": "a520c41c6ebf1956b022599b81837b2e13031462251e8ce20b9f0803290d8f3a",
-  "bytes": 3632984,
-  "faces": 72658,
+  "sha256": "ec9574474b4a552c976a8931ec2c79c95e2f4682d062263f4e59c36876621d56",
+  "bytes": 3772284,
+  "faces": 75444,
   "view_faces": 60000,
-  "view_sha256": "89a5a2b77d71b73bf9c16b17a8487d4efa566af5e37ee4335d0472b0c9c9fd49",
-  "at": "2026-11-14 09:45"
+  "view_sha256": "ff7b10261415fe2b09cd4a167aa9e3a24c40bbc3da46e09b8e05aca2a806e209",
+  "at": "2026-11-15 03:19"
+ },
+ "make": {
+  "sha": {
+   "parts/cage_node_lib.py": "bad3d25f2b60",
+   "parts/scout_units_lib.py": "edbb61c2b9c7",
+   "parts/scout_v4_arm_coupon/make.py": "b58702bb42d5",
+   "parts/scout_v4_frame/print.stl.part": "gone",
+   "parts/socket_inject.py": "6613a0572d9f",
+   "systems/fit_table.json": "8d560ff6f55b",
+   "systems/overseer.cage.json": "298700a6d756",
+   "systems/scout.cage_loads.json": "f4f45404daae",
+   "tools/print_mesh.py": "70ee08eda91a",
+   "tools/scout_v4_shape.py": "c0dafeecc6c9"
+  },
+  "rc": 0,
+  "s": 42.1,
+  "at": "2026-11-15 03:17",
+  "commit": "1a7afeaf",
+  "solid": {
+   "ok": false,
+   "file": "parts/scout_v4_arm_coupon/part.stl",
+   "sha256": "ff7b10261415fe2b09cd4a167aa9e3a24c40bbc3da46e09b8e05aca2a806e209",
+   "cm3": 55.585,
+   "bodies_plain": 4,
+   "specks_plain": 11,
+   "bodies_eroded": 5,
+   "acute_edges": 18
+  }
+ },
+ "assembly": {
+  "drone": "test_parts",
+  "ok": true,
+  "why": []
  }
 }

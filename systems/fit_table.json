@@ -1,6 +1,6 @@
 {
  "printer": "Bambu A1 mini, PCTG, 0.4 nozzle",
- "note": "The printer fit table (15 Nov): the only source of hole, bore, slot, sleeve and press-fit sizes for make.py parts and topology setups alike (topo/fit.py reads it; tools/assembly_check.py holds mates and assembly paths to it). allow: what the drawn size adds to the bought part's nominal (total: on the diameter or across two faces). From the Scout v4 probe coupon (14 Nov, tools/scout_v4_shape.COUPON_PICK) and the Overseer coupons v2 (27 Oct, systems/dimensions.md row Carbon rods). A new coupon result changes a row here, tagged M.",
+ "note": "The printer fit table (15 Nov): the only source of hole, bore, slot, sleeve, insert and press-fit sizes for make.py parts and topology setups alike (topo/fit.py reads it: fit.bore / across / insert; the setup audit's fit check refuses a round or width drawn near a declared bought part at a size not from here; tools/assembly_check.py holds mates and assembly paths to it). allow: what the drawn size adds to the bought part's nominal (total: on the diameter or across two faces). From the Scout v4 probe coupon (14 Nov, tools/scout_v4_shape.COUPON_PICK) and the Overseer coupons v2 (27 Oct, systems/dimensions.md row Carbon rods). A new coupon result changes a row here, tagged M.",
  "grow_mm": 0.1,
  "grow_src": "a printed face stands this proud of the drawn one: holes ~0.1-0.2 small on the diameter, outer faces fat (the probe coupon) M",
  "mesh_mm": 0.05,
@@ -14,8 +14,9 @@
   },
   "press": {
    "allow": 0.3,
+   "min_gap": 0.1,
    "tag": "M",
-   "src": "a D bore pressed on the N20's 3.0 / 2.5 D shaft: 3.3 / 2.8 (coupon D: 3.0..3.2 would not go or not press home)"
+   "src": "a D bore pressed on the N20's 3.0 / 2.5 D shaft: drawn 3.3 / 2.8 (+0.3 on the diameter and across the flat) pushes on by hand, a drop of CA (the probe coupon, Spark 14 Nov: D1 3.0 / 2.5 and D2 3.1 / 2.6 would not go on, D3 3.2 / 2.7 too hard to press home; printed holes come out ~0.1-0.2 small). min_gap: the drawn clearance per side the check accepts, 0.15 less the viewing mesh's 0.05 (D3's 0.1 failed by hand at 0.10 drawn, so a press mate is checked against the shaft's own D, not a round stand-in)"
   },
   "free": {
    "allow": 0.3,
@@ -46,6 +47,48 @@
    "allow": -0.4,
    "tag": "E",
    "src": "a screw cutting its own thread in a printed pilot: M2 1.6, M3 2.6 (the SG90 tab pilots)"
+  },
+  "close": {
+   "allow": 0.2,
+   "tag": "E",
+   "src": "a screw's shank close-fit through a printed hole where it locates the part (the Overseer arms' M3 3.2 as the rod bore, overseer_arm_lib HOLE_D / SLOT_D; the carbon plates' Ø3.1 / 3.0 M; the hub deck's M2 2.2)"
+  },
+  "port": {
+   "allow": 0.39,
+   "tag": "M",
+   "src": "the resin injection port for one 14 G blunt tip (OD 2.11): Ø2.5 (Spark 8 Nov, CLAUDE.md; cage_node_lib PORT_R)"
+  },
+  "nut": {
+   "allow": 0.2,
+   "tag": "E",
+   "src": "a hex nut's pocket across its flats: M3 5.5 -> 5.7 (overseer_arm_lib NUT_AF; not recorded in dimensions.md)"
   }
- }
+ },
+ "inserts": {
+  "M2": {
+   "hole": 3.2,
+   "depth": 4.5,
+   "tag": "M",
+   "src": "M2 heat-set insert hole Ø3.2 (the camera insert posts, Spark 29 Oct by coupon; scout_v4_units_lib M2_INS)"
+  },
+  "M2.5": {
+   "hole": 3.5,
+   "depth": 4.5,
+   "tag": "E",
+   "src": "M2.5 heat-set insert hole Ø3.5 (scout_v4_units_lib M25_INS; the listing's hole)"
+  },
+  "M3": {
+   "hole": 4.0,
+   "depth": 6.0,
+   "tag": "E",
+   "src": "M3 x 5.7 heat-set insert hole Ø4.0 x 6 (scout_v4_units_lib M3_INS, the base and the FC mount; the listing's hole)"
+  },
+  "M5": {
+   "hole": 6.4,
+   "depth": 8.0,
+   "tag": "E",
+   "src": "M5 heat-set insert (D7 x L6) hole Ø6.4 x 8 (box_stand2p_lib; the repo's value until a coupon)"
+  }
+ },
+ "inserts_src": "a heat-set insert's hole is the listing's, not nominal + allow: fit.insert(thread) -> the hole diameter"
 }

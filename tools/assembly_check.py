@@ -27,6 +27,9 @@ Format (systems/<drone>.assembly.json, top level):
   a part line may carry "fit_mesh": "tools/<file>.py:<function>" (function(line) -> trimesh, world frame): the geometry the check
   uses instead of the page's mesh (the Scout v4 rods: cut to their socket floors, the page draws them node to node).
   role "placeholder" parts are left out, and "exclude": [ids] (a second drawing of a part already placed, e.g. a page's cut-away copy).
+  a generated part's line may carry "prototype": "<folder of a make.py>" (tools/make_parts.py): the drawn prototype it replaces. The
+  generated part is placed (here and on the page) only when its own gates pass on the current setup and, placed, it is named in no
+  failing pair, mate or path; otherwise the prototype is, and the report's "placed" says which ({id: {src, stage, why}}).
 
     python tools/assembly_check.py <drone> [<drone> ...] | --all   [--write]  [--quiet]
       --all: every drone file not archived; each gates, with or without an "assembly" block (without one: interference alone, every
@@ -43,6 +46,9 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 from topo import fit as FIT                                     # noqa: E402
 from topo import paths as PATHS                                 # noqa: E402
+sys.path.insert(0, HERE)
+import make_parts as MAKE                                       # noqa: E402
+import print_mesh                                               # noqa: E402
 
 PRINTED_MAT = ("PCTG", "PETG", "TPU", "PLA")
 
@@ -109,7 +115,7 @@ def pieces(I, n=4):
     return out
 
 
-def run(drone, log=print):
+def run(drone, log=print, _proto=None):
     f = os.path.join(ROOT, "systems", f"{drone}.assembly.json")
     a = json.load(open(f))
     A = dict(a.get("assembly") or {})
@@ -120,6 +126,17 @@ def run(drone, log=print):
     tol = float(A.get("fit_tol_mm3", 0.5))
     t0 = time.time()
     lines = [p for p in a["parts"] if p.get("role") != "placeholder" and (p.get("id") or p["name"]) not in A.get("exclude", [])]
+    stage_of = {}
+    for k, p in enumerate(lines):                                  # a generated part on its prototype's line: placed only when its gates pass
+        if not p.get("prototype"):
+            continue
+        i = p.get("id") or p["name"]; gen = p.get("part", i); st = MAKE.part_state(gen)
+        if not st["own_ok"] or i in (_proto or ()):
+            why = f"{gen}: {st['status']}" if not st["own_ok"] else f"{gen}: passes its own gates, fails the assembly check: {'; '.join(_proto[i][:2])}"
+            lines[k] = dict(p, part=p["prototype"], mesh=f"parts/{p['prototype']}/part.stl")
+            stage_of[i] = dict(src=p["prototype"], stage="prototype", why=why)
+        else:
+            stage_of[i] = dict(src=gen, stage="optimised", why=None)
     ids = [p.get("id") or p["name"] for p in lines]
     by = dict(zip(ids, lines))
     M, MM, skipped = {}, {}, []
@@ -262,7 +279,11 @@ def run(drone, log=print):
     rep = dict(drone=drone, ok=bool(ok), gate=gate, fit_tol_mm3=tol, fit_table=FIT.table(), grow_mm=FIT.GROW, parts_checked=len(M), printed=sorted(printed),
                skipped=skipped, pairs=sorted(pairs, key=lambda r: (r["ok"], -r["mm3"])), mates=mrows, paths=prow,
                not_print_ready={k: v for k, v in sorted(blame.items())} if gate else {},
-               would_block={} if gate else {k: v for k, v in sorted(blame.items())}, seconds=round(time.time() - t0, 1))
+               would_block={} if gate else {k: v for k, v in sorted(blame.items())}, seconds=round(time.time() - t0, 1), placed=stage_of)
+    back = {i: blame[i] for i, v in stage_of.items() if v["stage"] == "optimised" and i in blame}
+    if back and _proto is None:                                    # the generated part does not go together: its prototype stays on the drone
+        log(f"assembly {drone}: {', '.join(back)} fail the check placed; their prototypes stay")
+        return run(drone, log, _proto=back)
     return rep
 
 
@@ -301,8 +322,9 @@ def write(rep):
     if strip(old) != strip(rep):
         json.dump(rep, open(out, "w"), indent=1)
     for pid in rep["printed"]:
-        rj = os.path.join(ROOT, "parts", pid, "result.json")
-        if not os.path.exists(rj):
+        src = (rep.get("placed") or {}).get(pid, {}).get("src", pid)
+        rj = print_mesh.record(src)                            # result.json (generated), print.json (drawn: tools/make_parts.py)
+        if not rj or not os.path.exists(rj):
             continue
         r = json.load(open(rj))
         v = dict(drone=rep["drone"], ok=pid not in rep["not_print_ready"], why=rep["not_print_ready"].get(pid, []))

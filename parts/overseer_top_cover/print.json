@@ -1,11 +1,42 @@
 {
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/overseer_top_cover.stl",
-  "sha256": "35d1ad200d1cef4149666a165213c2588a2d9fbcb536aea6bbdd0bcc7c2c9bd0",
-  "bytes": 27410184,
-  "faces": 548202,
+  "sha256": "0e83a12f448762b353e988d165d09e807e450210fee4943e344b3e5f76331e16",
+  "bytes": 12500084,
+  "faces": 250000,
   "view_faces": 60000,
-  "view_sha256": "9301e3abba26d1973affb3c79652a5c5c0b03fc7e859653bbfac8d6061756a2d",
-  "at": "2026-11-09 23:09"
+  "view_sha256": "3ab0711688651b249df164b7207e9b1e1bc24d0e091f584d31faa05aac369882",
+  "at": "2026-11-15 04:17"
+ },
+ "make": {
+  "sha": {
+   "parts/cage_node_lib.py": "bad3d25f2b60",
+   "parts/overseer_arm_lib.py": "7c7959c0ca22",
+   "parts/overseer_top_cover/make.py": "04bd9d36757f",
+   "parts/overseer_tube_arm_lib.py": "3d19ec88f72a",
+   "parts/socket_inject.py": "6613a0572d9f",
+   "systems/fit_table.json": "8d560ff6f55b",
+   "systems/overseer.cage.json": "298700a6d756",
+   "systems/overseer.cage_loads.json": "4ed2587bdf32"
+  },
+  "rc": 0,
+  "s": 14.2,
+  "at": "2026-11-15 04:16",
+  "commit": "ed310275",
+  "solid": {
+   "ok": true,
+   "file": "parts/overseer_top_cover/part.stl",
+   "sha256": "0e83a12f448762b353e988d165d09e807e450210fee4943e344b3e5f76331e16",
+   "cm3": 44.54,
+   "bodies_plain": 1,
+   "specks_plain": 0,
+   "bodies_eroded": 1,
+   "acute_edges": 10
+  }
+ },
+ "assembly": {
+  "drone": "overseer",
+  "ok": true,
+  "why": []
  }
 }

@@ -65,9 +65,33 @@ def _rot(axis, at, deg):
     return T
 
 
+BALL_TOL = 0.02          # mm: the most a sweep's growth may exceed `grow` anywhere (it never falls short of it)
+
+
+def _inscribed(n):
+    """the least distance from the centre to a face of manifold3d's unit sphere of n segments (its vertices are on the sphere, its faces
+    inside it: at 12 segments 0.922, so a 0.25 growth was 0.23 at a box's corners, 15 Nov, the Scout v4 frame's ways in)"""
+    import manifold3d as mf
+    m = mf.Manifold.sphere(1.0, n).to_mesh(); V = np.asarray(m.vert_properties, float)[:, :3]; F = np.asarray(m.tri_verts)
+    a, b, c = V[F[:, 0]], V[F[:, 1]], V[F[:, 2]]
+    nn = np.cross(b - a, c - a); nn /= np.linalg.norm(nn, axis=1)[:, None]
+    return float(np.abs((nn * a).sum(1)).min())
+
+
+def ball(r, tol=BALL_TOL):
+    """a polyhedral ball whose every face is at least r from its centre and whose vertices are at most r + tol from it: grown by it, a
+    piece is grown by r at least everywhere (faces, edges, corners) and by r + tol at most"""
+    import manifold3d as mf
+    for n in (12, 16, 24, 32, 48, 64, 96):
+        k = _inscribed(n)
+        if r * (1.0 / k - 1.0) <= tol or n == 96:
+            return mf.Manifold.sphere(r / k, n)
+
+
 def sweep(path, piece, grow=0.0):
     """the volume the piece passes through on its way in, grown by `grow` per side (a manifold). A pull: the piece moved 0..length_mm
-    along `out`, exactly (a Minkowski sum with the segment); grown, the seated end is not grown into its stop (the growth starts
+    along `out`, exactly (a Minkowski sum with the segment); grown by at least `grow` and at most grow + BALL_TOL everywhere, corners
+    included (ball); grown, the seated end is not grown into its stop (the growth starts
     `grow` out along the pull, so a face resting on a stop stays on it). A turn: the piece at every 2 deg of the range, unioned."""
     import manifold3d as mf
     if "turn" in path:
@@ -79,7 +103,7 @@ def sweep(path, piece, grow=0.0):
             pcs.append(piece.transform(T[:3, :].tolist()))
         s = mf.Manifold.batch_boolean(pcs, mf.OpType.Add)
         if grow > 0:
-            s = s.minkowski_sum(mf.Manifold.sphere(grow, 12))
+            s = s.minkowski_sum(ball(grow))
         return s
     if "moves" in path:                                           # a pull in steps (out of a spline, then up): each from where the last ended
         segs, off = [], np.zeros(3)
@@ -91,8 +115,8 @@ def sweep(path, piece, grow=0.0):
     u = _unit(path["out"]); L = float(path["length_mm"])
     if grow > 0:
         r = float(grow)
-        seg = mf.Manifold.batch_hull([mf.Manifold.sphere(r, 12).translate(tuple(u * r)),
-                                      mf.Manifold.sphere(r, 12).translate(tuple(u * (L + r)))])
+        b = ball(r); R = float(np.asarray(b.bounding_box())[3])          # its vertices' radius: shifted by it, the seated end is not grown
+        seg = mf.Manifold.batch_hull([b.translate(tuple(u * R)), b.translate(tuple(u * (L + R)))])
     else:
         seg = mf.Manifold.batch_hull([mf.Manifold.sphere(1e-3, 6), mf.Manifold.sphere(1e-3, 6).translate(tuple(u * L))])
     try:

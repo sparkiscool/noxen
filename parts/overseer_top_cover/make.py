@@ -2,14 +2,16 @@
 * lots of room for the cables and around the FC;
 * a super smooth, aerodynamic dome, kept low under the rear props; it need not be symmetric;
 * the Noxen N mark raised on top (thicker, not holes; noxensys.com/assets/icon.svg);
-* thin, for translucent PETG;
+* thin, for translucent PETG (now PCTG, the 8 Nov rule for every printed part; translucent PCTG prints as clear);
 * held by 4 top plate bolts, one per arm root;
 * clamps seamlessly to the top plate, the plate sandwiched;
 * passes the plate and sits fully on the rectangular arm roots, its end edges square like theirs.
 Drawn only, no topology run (a cosmetic shell, no load path): python parts/overseer_top_cover/make.py writes part.stl.
+Hand calc (the handling case, E): a 50 N thumb push (r0 5) on the crown, taken as a flat clamped-free disc r 60, t 2.52, the dome's
+shell action ignored: sigma = 3P / (2 pi t^2) ((1 + nu) ln(a / r0) + 1) = 3.76 x 4.43 = 17 MPa against PCTG Xt 46: margin 2.7.
 
 Shape: one continuous height field H(x, y), soft-blended, the 3D field blurred 0.27 mm and meshed by marching cubes (no facets).
-* Footprint = the top plate's own outline (sectioned from parts/top_plate/part.stl) + 1.35, plus the flat top rectangle of
+* Footprint = the top plate's own outline (sectioned from parts/top_plate/part.stl) + 2.77 (gap 0.25 + lip 2.52), plus the flat top rectangle of
   each arm root at the plate (u ..72.8 front / 74.1 rear on the diagonal, v about +-23, measured on the printed arm meshes),
   whose outer corners pass the plate: the cover passes the plate and sits fully on them, its ends square and flush with the
   roots' ends and sides (Spark 3 Nov). The lip runs down past the plate edge to z 45 elsewhere: the plate sandwiched, no seam.
@@ -18,20 +20,25 @@ Shape: one continuous height field H(x, y), soft-blended, the 3D field blurred 0
 * The dome softens down under the rear prop disks (10 in, r 127). There it stays 6 under the blade band (z 82) at the disk
   edge and slopes 1:2 lower inside it, so the wash runs off it. The floor is 12 over the plate everywhere: the cable shelf
   over the lobes and roots.
-* Shell 1.26 normal (3 lines at 0.42). The N mark is raised 2.0 on the dome top, 56 wide (the largest on slopes under 31 deg), centre x 20,
+* Shell 2.52 normal (6 lines at 0.42; 15 Nov: the 1.26 shell was under the 2 mm floor, the solid check's 0.9 erosion left only the
+  logo and the bolt tubes, 13 bodies; 2.1 still broke into 7 on the curved skirt corners), the same thickness on the 3:1 skirt (its vertical allowance capped at 3.5 x, not 2.5 x).
+  The N mark is raised 2.0 on the dome top, 56 wide (the largest on slopes under 31 deg), centre x 20,
   reading upright to someone standing in front of the drone.
-* 4 of the 8 top plate bolts A (arm lib BOLT_TOP), the outer one on each arm root (|y| 55): a 1.6 seat ring on the plate top and
-  a tube up to the shell round a O7.2 driver well; the other 4 heads sit free under the cover. M3 x 50 as now (drilled bottom plate).
+* 4 of the 8 top plate bolts A (arm lib BOLT_TOP), the outer one on each arm root (|y| 55): a 2.0 seat ring on the plate top and
+  a 2.52 tube up to the shell round a driver well; the other 4 heads sit free under the cover. M3 x 50 as now (drilled bottom plate;
+  the seat is 0.4 thicker than v2's 1.6, so 0.4 less thread past the nut, E).
+* Fits (systems/fit_table.json, topo/fit.py): bolt holes fit.bore(3, screw) 3.4; driver wells fit.bore(5.5, clear) 7.5 round the M3
+  socket head; the lip and the root ends fit.gap(slide) 0.25 a side round the bought top plate's edge.
 * Cable exits:
   - one 48 x 18 on each side face.
-* Print (Bambu A1 mini, translucent PETG, dried 65 C 8 h):
+* Print (Bambu A1 mini, translucent PCTG, dried 65 C 8 h):
   - upright: the lip on the smooth PEI plate with glue stick;
-  - variable layer height (adaptive, 0.08..0.2, smooth 5) for a stair-free dome; line width 0.42, 3 wall loops;
+  - variable layer height (adaptive, 0.08..0.2, smooth 5) for a stair-free dome; line width 0.42, 6 wall loops;
   - top / bottom 5 layers, monotonic; infill 100 %;
   - supports: tree (organic), on build plate only, inside the dome only, top Z distance 0.2, interface 2 layers;
-  - nozzle 255, bed 70; outer wall 40, inner 60, first layer 20 mm/s; max volumetric 8; fan 20 %; flow 1.03;
+  - nozzle 265, bed 80 (PETG +10 C); outer wall 40, inner 60, first layer 20 mm/s; max volumetric 8; fan 20 %; flow 1.03;
   - seam: back, scarf seam on; ironing on the top surfaces only (glossy logo).
-Grid: 0.45 mm; decimated to 150k faces."""
+Grid: 0.45 mm; decimated to 150k faces (250k when 150k would open the mesh)."""
 import os, sys, json, numpy as np, trimesh, manifold3d as mf
 from scipy import ndimage
 from skimage import measure
@@ -39,13 +46,16 @@ from matplotlib.path import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(os.path.dirname(HERE)); sys.path.insert(0, ROOT)
 from parts.overseer_tube_arm_lib import ROOT_S0, TUBE_DEPTH, TUBE_BORE_R, TUBE_WALL
+from topo import fit
 
 PB, PT, STACK = 45.0, 46.6, 26.0                            # plate underside / top (mesh), stack height (Spark)
-T, LIP, GAP = 1.26, 1.2, 0.15
+T, LIP, GAP = 2.52, 2.52, fit.gap("slide")                   # shell and lip 6 lines (over the 2 mm floor with margin); round the bought plate's edge
 HD, FLOOR, XC, AXF, AXR, AY = 40.0, 12.0, 5.0, 75.0, 95.0, 65.0
 PROP_Z, PROP_R, PROP_CLR = 82.0, 127.0, 6.0
 LOGO_W, LOGO_C, LOGO_T = 56.0, (20.0, 0.0), 2.0             # the largest that fits where the dome is under 31 deg (Spark 3 Nov: as big as it can be)
-BOLT_U, BOLT_V, HOLE_R, SEAT_R, DRIVE_R = 63.17, 15.0, 1.7, 5.0, 3.6
+BOLT_U, BOLT_V, SEAT_H = 63.17, 15.0, 2.0
+HOLE_R, DRIVE_R = fit.bore(3.0, "screw") / 2, fit.bore(5.5, "clear") / 2   # M3 shank 3.4; the M3 socket head (O5.5) down its well 7.5
+SEAT_R = DRIVE_R + T                                        # the seat ring under the whole tube
 SIDE_EXIT = (48.0, 18.0, 38.0)                              # width, height over the plate, start r (no exits at the root ends: Spark 3 Nov)
 RES, XY = 0.45, 92.0
 SKIRT = 3.0                                                 # skirt rise per mm in from the edge (72 deg; prints upright)
@@ -138,7 +148,7 @@ H = softmin(Hc, PT + SKIRT * sd_o, 3.0)
 H = ndimage.gaussian_filter(H, 1.0 / RES)                    # 1 mm blur: no creases
 H = np.minimum(H, PT + SKIRT * np.maximum(sd_o, 0.0))               # keep the edge true after the blur
 gx, gy = np.gradient(H, RES)
-Tn = T * np.minimum(np.sqrt(1.0 + gx ** 2 + gy ** 2), 2.5)
+Tn = T * np.minimum(np.sqrt(1.0 + gx ** 2 + gy ** 2), 3.5)       # normal thickness T up to the 3:1 skirt (sqrt 10 = 3.16)
 s = LOGO_W / 472.0
 logo_cs = mf.CrossSection([ccw([(LOGO_C[0] + (v - 128.5) * s, LOGO_C[1] + (u - 236.0) * s) for u, v in p]) for p in LOGO])   # reads upright from the front
 sd_logo = sdf(logo_cs)
@@ -164,9 +174,9 @@ shell = np.minimum(np.minimum(sd_o[..., None], Hz - Z), Z - PB)
 hollow = np.minimum(Hz - Tz - Z, np.maximum(sd_i[..., None], Z - PT))
 F = np.minimum(shell, -hollow).astype(np.float32)
 F = np.maximum(F, np.minimum(np.minimum(sd_logo[..., None], Hz + LOGO_T - Z), Z - (Hz - Tz)))                # raised logo
-F = np.maximum(F, np.minimum(np.minimum(SEAT_R - rb[..., None], Z - PT), PT + 1.6 - Z))                    # bolt seat rings
+F = np.maximum(F, np.minimum(np.minimum(SEAT_R - rb[..., None], Z - PT), PT + SEAT_H - Z))                 # bolt seat rings
 F = np.maximum(F, np.minimum(np.minimum(np.minimum(DRIVE_R + T - rb[..., None], Hz - Z), Z - PT), sd_o[..., None]))  # tubes
-F = np.minimum(F, -np.minimum(DRIVE_R - rb[..., None], Z - (PT + 1.6)))                                      # driver wells
+F = np.minimum(F, -np.minimum(DRIVE_R - rb[..., None], Z - (PT + SEAT_H)))                                      # driver wells
 F = np.minimum(F, -(HOLE_R - rb[..., None]) + 0 * Z)                                                          # M3 holes
 F = np.minimum(F, -exit_field(Z))
 F = np.pad(ndimage.gaussian_filter(F, 0.6), 1, constant_values=-1.0)    # smooth field: smooth surface
@@ -182,6 +192,9 @@ for n_f in (150000, 250000):                                         # decimate 
     if d.is_watertight and abs(d.volume - t.volume) < 0.01 * abs(t.volume):
         t = d; break
 t.export(os.path.join(HERE, "part.stl"))
+from topo.build import render                              # noqa: E402
+render(t, os.path.join(HERE, "preview.png"), title="overseer_top_cover (drawn prototype)",
+       info=f"{abs(t.volume) * 1.23e-3:.1f} g PCTG | shell {T} (6 lines) | as printed: lip down")
 
 # ---------------- checks
 b = t.bounds
@@ -196,6 +209,6 @@ for nm, A, B in segs:
         q = A + (B - A) * u; i, j = int(round((q[0] + XY) / RES)), int(round((q[1] + XY) / RES))
         if 0 <= i < len(xs) and 0 <= j < len(xs) and sd_o[i, j] > -4.0 and PB - 4.0 < q[2] < H[i, j] + 4.0:
             hits.append(nm); break
-print(f"{abs(t.volume) / 1000:.1f} cm3 = {abs(t.volume) * 1.27e-3:.1f} g PETG, {len(t.faces)} faces, watertight {t.is_watertight}")
+print(f"{abs(t.volume) / 1000:.1f} cm3 = {abs(t.volume) * 1.23e-3:.1f} g PCTG, {len(t.faces)} faces, watertight {t.is_watertight}")
 print(f"box x {b[0][0]:.1f}..{b[1][0]:.1f} y {b[0][1]:.1f}..{b[1][1]:.1f} z {b[0][2]:.1f}..{b[1][2]:.1f}; peak {H.max():.1f}")
 print(f"ceiling over the stack >= {ceil:.1f} over the plate (stack {STACK}); top under the prop disks <= {top_in_disk:.1f} (blades {PROP_Z}); cage members near: {hits or 'none'}")

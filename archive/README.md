@@ -36,3 +36,8 @@ A sweep moves a folder here when it is mesh-only and nothing draws, names or reg
 - Overseer: `parts/overseer_cage_node_0`, `1`, `8`, `9`, `12`, `14`, `16`, `19`, the 30 Oct meshes of nodes that are now mirrors
   (systems/overseer.assembly.json draws each from its `part`: 0 from 4, 1 from 3, 8 from 6, 9 from 10, 12 from 11, 14 from
   13, 16 from 15, 19 from 18).
+- Overseer TPU foot boots (15 Nov): `parts/overseer_tpu_foot` (make.py, absorber_model.py, the boot meshes). Spark rejected the
+  boots on 11 Nov ("I dont want this stupid design with the tpu block under"); foot nodes v8 have no boot, stud or shoulder, and
+  systems/overseer.assembly.json dropped them, so its make.py (still importing cage_foot_lib's removed NECK_R) failed every
+  drawn-parts run. Its make.py keeps PRINTED, the printed node commits the v8 rods and cut points come from (the nodes 2-5
+  feedback.md notes name it at its old path). Its print files stay on the `meshes` release.

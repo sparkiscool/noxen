@@ -14,7 +14,7 @@ Drawn (attachments only): the motor pads (4 x M2 on 12 x 12, O8 centre), the bat
 below, on the receiver's top z 9.6), the turret's 4 O10 insert bosses (M3 from the top), the FC's 4 O8 posts (M3 inserts, the FC on
 grommets under them, component side up) and the Radxa's 4 O8 posts (M2.5 inserts), the tape lands of the UBEC (over it, in its pod under the tail tray),
 the XR2 and the DRV8833 (over them) and the flow sensor (over it, open below), the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1).
-Cuts: the receiver's box under the yokes, the boards and their plugs, the props' discs + 12, the motors and their screws' drivers
+Cuts: the receiver's box under the yokes, the boards (their meshes + the fit gap), their plugs and their ways in from below (assembly paths), the props' discs + 12, the motors and their screws' drivers
 from below, the turret above the deck, its N20's pocket and its gear's slot, the bolt holes, the rods beyond the mouths.
 Support: the battery mechanism's 4 bolts (the receiver, the cartridge and the pack, 266.5 g, hang there; everything else is carried
 to them).
@@ -37,11 +37,14 @@ import os
 import numpy as np, trimesh
 from topo import Part
 from topo.part import man
+from topo import fit as FIT
 from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of, socket_cases, socket_bodies, disc_cuts, region_top, region_bot,
                                       check_collars, rigid_split, SockDown, SockDown6, BraceSock, TURRET_BOLTS, REC_BOLTS, DZ0, DZ1, DRONE_G, G, HIT_N, M3_INS, M3_CLR,
-                                      M25_INS, BOSS_R, DIRS14, FLIGHT)
+                                      M25_INS, BOSS_R, DIRS14, FLIGHT, ins_hole)
 
-SPEC = dict(h=2.0, gen_cm3=130.0, max_worst=0.3)
+SPEC = dict(h=2.0, gen_cm3=130.0, max_worst=0.3,
+            assembly_paths=[f"scout_v4:{n}" for n in ("FC up onto its posts", "XR2 up onto its land", "DRV8833 up onto its land", "Radxa up onto its posts",
+                                                      "UBEC up into its pod", "flow sensor up into its pod")])   # 15 Nov: the boards' ways in, cut (topo/paths.py)
 # 14 Nov, the fold of the bolt forks (rounds 7 / 7b, run of 8f97d87, scout_v4_frame_vl): 189.3 g, solid PASS, worst 0.211 (6 g landing on the
 # nose bolts only), every motor case <= 0.20 in-layer / 0.17 across; latch v7's keep-out cut, the flow sensor forward, the boards on the grid.
 # Rounds 1-6 (12-13 Nov) on the D / B cage: 0.46-0.83 from 150 g to 300 g, BT-TB's 550 N climb over the receiver's tail edge the floor   # E: the old frame's 36 + the units' 24 + 20, less the 12 deck bolts' pairs of bosses and the nose bay; PCTG at the nodes' 0.3
@@ -86,6 +89,7 @@ LUG_Y1 = 64.0                                      # the lugs' room: out to y 64
 T_MAX, DYN, Q_PEAK, F_IMB, Q_STRIKE, F_STRIKE = 11.8, 1.5, 130.0, 11.0, 1000.0, 17.0   # N, -, N mm, N, N mm, N
 M2_PATTERN = 6.0                                   # 12 x 12, 4 x M2
 ROOT = S.ROOT
+GAP = FIT.gap("slide")                              # 0.25: a bought board's drawn clearance to the frame (systems/fit_table.json)
 
 
 def bounds(pid):
@@ -139,6 +143,50 @@ def grid_snap(lo, hi, bb, h):
     n = np.ceil((bhi - blo) / h).astype(int) + 2; n = (np.ceil(n / 8) * 8).astype(int)
     o = 0.5 * (blo + bhi) - n * h / 2.0
     return o + np.floor((np.asarray(lo) - o) / h) * h, o + np.ceil((np.asarray(hi) - o) / h) * h
+
+
+def board_keepout(pid, g=None):
+    """a bought board's body as the assembly check reads it (its placed mesh), grown by the fit table's slide gap: moved +-g along x and y
+    and +g up (its way in, below it, is the declared assembly path's sweep)"""
+    g = GAP if g is None else g
+    M = man(trimesh.load(os.path.join(ROOT, "parts", pid, "part.stl"), force="mesh"))
+    return U([M.translate(list(d)) for d in ((0, 0, 0), (g, 0, 0), (-g, 0, 0), (0, g, 0), (0, -g, 0), (0, 0, g))])
+
+
+def ways_in(extra=0.08):
+    """the boards' ways in (SPEC assembly_paths: each board pulled straight down out of its seat), swept exactly (topo/paths.sweep, no
+    growth) from the board's mesh moved out GAP + extra in 16 directions across the pull (0.33: at a box's corner the preview read 0.874 of the offset): the
+    declared path's own cut grows by a 12-segment sphere, 0.2415 of the 0.25 at a corner, and the assembly check read the faces 0.241 off (tight)"""
+    from topo import paths as PATHS
+    out = []
+    g = GAP + extra
+    for ref in SPEC["assembly_paths"]:
+        p, a = PATHS.declared(ref)
+        if "out" not in p or p.get("body") is not None:
+            continue
+        M = PATHS.body(p, PATHS.piece_mesh(p, a))
+        W = PATHS.sweep(p, M, grow=0.0)
+        out += [W.translate([g * np.cos(t), g * np.sin(t), 0.0]) for t in np.arange(16) * np.pi / 8]
+    return U(out)
+
+
+def board_post(x, y, z0, r, r_in, depth, K):
+    """a post down from the deck onto a board's face at z0 round its insert (r_in x depth from z0) -> (post, insert cut). Where the board's
+    grown body K stands inside the post's circle above the face (a connector beside the hole: the Radxa's USB-C 2 2.9 from its hole, the
+    FC's USB-C 3.25), the post's foot up to K's top there is the half of its ring away from it (walls r - r_in = 2.0 the gate's floor, the
+    insert hole open through it: the insert goes in past it), the insert above the foot, or from the deck top when it would leave a cap under 2 over it"""
+    full = cyl(x, y, z0, DZ1, r)
+    hit = (full ^ K) ^ box(x - r - 1, x + r + 1, y - r - 1, y + r + 1, z0 + GAP + 0.01, DZ1 + 1)   # a face it rests on is its seat, not in its way
+    ins = lambda z1: ins_hole(x, y, z0 - 0.1, z1 + depth, r_in) if z1 + depth <= DZ1 - 2.0 else ins_hole(x, y, z0 - 0.1, DZ1 + 1, r_in, up=False)   # a cap under 2 over it:
+    if hit.volume() < 1e-3:                                                           # through, the insert pressed in flush from the deck top
+        return full, ins(z0)
+    bb = np.asarray(hit.bounding_box(), float); zk = bb[5]
+    d = unit(np.array([(bb[0] + bb[3]) / 2 - x, (bb[1] + bb[4]) / 2 - y, 0.0])); n = np.array([-d[1], d[0], 0.0])
+    c0 = np.array([x, y, 0.0]); R = r + 1.0
+    half = hull_pts([c0 + s_ * R * n + t_ * R * d + [0, 0, z] for s_ in (-1, 1) for t_ in (0.0, -1.0) for z in (z0 - 1, zk)])
+    post = ((cyl(x, y, z0, zk, r) - cyl(x, y, z0 - 1, zk + 1, r_in)) ^ half) + cyl(x, y, zk, DZ1, r)
+    assert ((post ^ K) ^ box(x - R, x + R, y - R, y + R, z0 + GAP + 0.01, DZ1 + 1)).volume() < 1e-3, f"post at ({x:.1f}, {y:.1f}) in the board's body"
+    return post, ins(zk)
 
 
 def screw_pts(mx, my, z):
@@ -209,12 +257,13 @@ def bodies():
         if REC_SUPPORT == "insert":                                                   # and the insert's length: the M3's shear goes in along its 6 mm
             reg = U([reg, cyl(x, y, S.REC_TOP, S.REC_TOP + M3_INS[1], M3_INS[0] + 1.5) - cyl(x, y, S.REC_TOP - 1, S.REC_TOP + M3_INS[1] + 1, M3_INS[0])])
         rec_regs.append(reg)
-        cuts.append(cyl(x, y, S.REC_TOP - 1, S.REC_TOP + M3_INS[1], M3_INS[0]))
+        hole = ins_hole if REC_SUPPORT != "insert" else cyl                           # the insert support holds this lining: its install and
+        cuts.append(hole(x, y, S.REC_TOP - 1, S.REC_TOP + M3_INS[1], M3_INS[0]))      # tighten would load fixed nodes only (audit held_load, 15 Nov)
     # ---- the turret's bosses: M3 x 5.7 inserts from the top (PROBE's interface)
     tur, tur_regs = [], []
     for x, y in TURRET_BOLTS:
         tur.append(cyl(x, y, DZ0, DZ1, BOSS_R)); tur_regs.append(region_top(x, y, DZ1))
-        cuts.append(cyl(x, y, DZ1 - M3_INS[1], DZ1 + 1, M3_INS[0])); cuts.append(cyl(x, y, DZ0 - 20, DZ1 - M3_INS[1] - 0.6, M3_CLR))
+        cuts.append(ins_hole(x, y, DZ1 - M3_INS[1], DZ1 + 1, M3_INS[0], up=False)); cuts.append(cyl(x, y, DZ0 - 20, DZ1 - M3_INS[1] - 0.6, M3_CLR))
     drawn += tur
     cx, cz = S.SPOOL["c"]; g0 = S.N20_FACE; pz = cz - S.GEAR["c"]
     cuts.append(box(cx - 6.6, cx + 6.6, g0 - 27.6, g0 + 0.6, pz - 5.6, DZ1 + 1))      # the N20's pocket through the deck
@@ -226,39 +275,60 @@ def bodies():
     tt = TUR.bodies(); tdown = ((tt["drawn"] + tt["env"]) - tt["cuts"]) ^ box(-200, 200, -200, 200, -100, DZ1 - 0.01)   # what the turret prints there (its cuts win)   # stubs and roller guide hang below its floor pads
     cuts.append(U([tdown.translate(list(d)) for d in ((0.4, 0, 0), (-0.4, 0, 0), (0, 0.4, 0), (0, -0.4, 0), (0, 0, -0.4), (0, 0, 0))]) ^ box(-200, 200, -200, 200, -100, DZ1))   # 0.4 clear, never above the deck top (the bosses keep their height)
     cuts += disc_cuts()
-    # ---- the boards (bought meshes placed by tools/scout_v4_shape.py)
+    # ---- the boards (bought meshes placed by tools/scout_v4_shape.py). 15 Nov (the assembly check, tools/assembly_check.py: frame x Radxa
+    # 165 mm3, 4 posts 1.3-4.4 deep; frame x FC 75 mm3, 2.2 deep): the posts stood on guessed faces (the Radxa's PCB top 1.26 low, its holes
+    # on the bounds' centre 0.8 off the STEP's, one post in its USB-C; the FC's on its FETs) and the generated rings round them on the FC's USB.
+    # Now each board's own mesh, grown by the fit gap (board_keepout), is cut, the posts are drawn clear of it (board_post), and each board's
+    # way in (systems/scout_v4.assembly.json "assembly" paths, SPEC assembly_paths: the boards up from below, the receiver off) is cut
     boards = []
-    fb = bounds("scout_v4_fc"); fx, fy = fb[:, 0].mean(), fb[:, 1].mean(); ftop = fb[0][2] + 5.6 + 1.0   # board top (4 under it, 1.6 board) + a grommet
+    fb = bounds("scout_v4_fc"); fx, fy = fb[:, 0].mean(), fb[:, 1].mean()
+    ftop = fb[0][2] + 4.0 + 1.6 + 1.8 + GAP                                          # the FETs' top (the drawing: 4 under the board, 1.6 board, FETs 1.8 over
+    Kf = board_keepout("scout_v4_fc")                                                # the 25.5 holes) + the gap: the grommets' stack 2.05 (E)
     posts, pts, regs = [], [], []
     for dx in (-12.75, 12.75):
         for dy in (-12.75, 12.75):                                                    # 4 posts on its 25.5 holes (MicoAir spec), down from the deck
-            posts.append(cyl(fx + dx, fy + dy, ftop, DZ1, 4.0)); pts.append((fx + dx, fy + dy, ftop)); regs.append(region_bot(fx + dx, fy + dy, ftop, 4.0))
-            cuts.append(cyl(fx + dx, fy + dy, ftop - 0.1, ftop + M3_INS[1], M3_INS[0]))
-    drawn += posts
+            p_, ins = board_post(fx + dx, fy + dy, ftop, 4.0, M3_INS[0], M3_INS[1], Kf)   # the one by its USB-C: the foot half a ring, insert from the top
+            posts.append(p_); pts.append((fx + dx, fy + dy, ftop)); regs.append(region_bot(fx + dx, fy + dy, ftop, 4.0) ^ p_); cuts.append(ins)
+    drawn += posts; bposts = list(posts)
     fc_rings = U([cyl(x, y, ftop - 1, DZ1 + 1, 7.5) for x, y, _ in pts])
     board_cuts = [((fb[0][0] - 0.5, fb[0][1] - 0.5, fb[0][2] - 0.5), (fb[1][0] + 0.5, fb[1][1] + 0.5, ftop), None),   # the FC, under it and its grommets,
                   ((fb[0][0] - 0.5, fb[0][1] - 0.5, ftop), (fb[1][0] + 0.5, fb[1][1] + 0.5, fb[1][2] + 0.5), fc_rings)]   # its top components but not within 6.5
     # of a hole (E: the grommets' zone): each post's room runs out past the board's edge; their y faces on the grid (grid_snap, at the end)
+    cuts.append(Kf - U(posts))                                                        # and in those rings its body + the gap (the USB-C, the FETs)
+    for x, y in REC_BOLTS:                                                            # 15 Nov (audit room_full, the FC posts' tighten cases: 0.40 in a
+        if fb[0][0] < x < fb[1][0]:                                                   # fin of room one cell thin between the front receiver bosses and
+            yb = y - np.sign(y) * (BOSS_R - 0.1)                                      # the FC bay's cut, its y face on the grid): the bay's cut runs
+            ylo, yhi = (yb, fb[0][1]) if y < 0 else (fb[1][1], yb)                    # out to the boss's face, 0.1 short of it
+            cuts.append(box(x - BOSS_R, x + BOSS_R, ylo, yhi, fb[0][2] - 0.5, ftop))
     boards.append(("FC MicoAir743", pts, regs, ASM["scout_v4_fc"]["mass_g"], tuple(fb.mean(0))))
-    rb = bounds("scout_v4_radxa_zero_3w"); rx, ry = rb[:, 0].mean(), rb[:, 1].mean(); rtop = rb[0][2] + 3.2   # its PCB's top (1.55 under it, 1.6 board)
+    rb = bounds("scout_v4_radxa_zero_3w")                                            # 65 along x, the STEP's X 0 end forward (x = rb x1 - X), its Y 0 edge
+    rtop = rb[0][2] + 2.86 + 1.6                                                     # (USB-C, micro HDMI) to +y, the HDMI 1.5 over it (y = rb y1 - 1.5 - Y);
+    Kr = board_keepout("scout_v4_radxa_zero_3w")                                     # its PCB's top over the SD slot's 2.86 (dimensions.md H, the drawing)
     posts, pts, regs = [], [], []
-    for dx in (-28.925, 28.925):
-        for dy in (-11.425, 11.425):                                                  # 4 M2.5 posts (Radxa STEP: 57.85 x 22.85), down from the deck
-            posts.append(cyl(rx + dx, ry + dy, rtop, DZ1, 3.75)); pts.append((rx + dx, ry + dy, rtop)); regs.append(region_bot(rx + dx, ry + dy, rtop, 3.75))   # 3.75: 2.0 round the insert
-            cuts.append(cyl(rx + dx, ry + dy, rtop - 0.1, rtop + M25_INS[1], M25_INS[0]))
-    drawn += posts
-    board_cuts.append(((rb[0][0] - 0.2, rb[0][1] - 0.5, rb[0][2] - 0.5), (rb[1][0] + 2.4, rb[1][1] + 0.5, rb[1][2] + 0.5), U(posts)))   # 0.2 at its tail end (DT's collar); its front end
+    for X, Y in ((3.55, 3.60), (3.60, 26.45), (61.40, 3.60), (61.40, 26.50)):        # 4 M2.5 posts on the STEP's holes, down from the deck
+        x, y = rb[1][0] - X, rb[1][1] - 1.5 - Y
+        p_, ins = board_post(x, y, rtop, 3.75, M25_INS[0], M25_INS[1], Kr)          # 3.75: 2.0 round the insert; by USB-C 2 the foot half a ring
+        posts.append(p_); pts.append((x, y, rtop)); regs.append(region_bot(x, y, rtop, 3.75) ^ p_); cuts.append(ins)
+    drawn += posts; bposts += posts
+    board_cuts.append(((rb[0][0] - 0.2, rb[0][1] - 0.5, rb[0][2] - 0.5), (rb[1][0] + 2.4, rb[1][1] + 0.5, rb[1][2] + 0.5), U(posts)))   # 0.2 at its tail end; its front end
     # 2.4 on, into the turret's cut (13 Nov round 5: at gen 185 / 200 the engine filled the 1.9 gap between the two cuts, a 1.5-1.7 wall the gate refused)
-    for xa, xb in ((rb[1][0] - 46.0, rb[1][0] - 37.1),):                         # one USB-C plug out the -y edge, the camera's (12 Nov: the board runs on the UBEC
-        # through its 5 V pins, so the other port's cut, x -67..-58 across motor 4's arm root, went: room filled solid 0.270 there; it flashes on this one)
-        cuts.append(box(xa - 1.0, xb + 1.0, -41.0, rb[0][1] + 1.0, rb[0][2] - 0.5, rb[0][2] + 7.0))
+    cuts.append(Kr - U(posts))
+    cx_, g0_ = S.SPOOL["c"][0], S.N20_FACE                                         # 15 Nov (audit room_full, the Radxa front posts' tighten cases: 0.30
+    cuts.append(box(max(x for x, _, _ in pts) + 3.75 + 0.1, cx_ - 6.5, g0_ - 27.6, g0_ + 0.6, rb[1][2] + 0.4, DZ1 + 1))   # in a fin of room one
+    # cell thin between the posts' faces and the N20's pocket, over the board's cut): the pocket runs out to the posts, 0.1 short
+    xc, zc = rb[1][0] - 41.55, rtop + 1.58                                           # one USB-C plug out the +y edge (its ports' edge), the camera's on
+    cuts.append(box(xc - 6.2, xc + 6.2, rb[1][1] - 1.5, 41.0, zc - 3.3, zc + 3.3))   # USB-C 1 (X 37.1..46; 12 Nov: the board runs on the UBEC through its 5 V
+    # pins, so the other port's cut, across motor 4's arm root, went: room filled solid 0.270 there); the plug's overmold 12.4 x 6.6 (E)
     boards.append(("Radxa Zero 3W", pts, regs, ASM["scout_v4_radxa_zero_3w"]["mass_g"], tuple(rb.mean(0))))
+    rpath = box(rb[0][0] - 1.0, rb[1][0] + 1.0, rb[0][1] - 1.0, rb[1][1] + 1.0, -60.0, rb[0][2])   # the Radxa's way in from below, through the tail tray
     for pid, nm, below in (("scout_v4_ubec", "UBEC", False), ("scout_v4_xr2", "XR2", False), ("scout_v4_drv8833", "DRV8833", False)):
         b = bounds(pid)                                                               # tape lands (2.6: the gate's floor) over each: the UBEC hangs under its land in its pod (11 Nov)
         if below:
-            drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])
+            land = box(b[0][0], b[1][0], b[0][1], b[1][1], b[0][2] - 2.6, b[0][2])
         else:
-            drawn.append(box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 3.1)); reg = box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 3.1)
+            land = box(b[0][0], b[1][0], b[0][1], b[1][1], b[1][2] + 0.5, b[1][2] + 3.1)
+        land = land - rpath                                                           # 15 Nov: the UBEC's land in two, one at each end, clear of the Radxa's way in (the UBEC goes on after it)
+        drawn.append(land); reg = land
         cuts.append(box(b[0][0] - 0.5, b[1][0] + 0.5, b[0][1] - 0.5, b[1][1] + 0.5, b[0][2] - (0.0 if below else 0.5), b[1][2] + 0.5))
         boards.append((nm, [tuple(b.mean(0))], [reg], ASM[pid]["mass_g"], tuple(b.mean(0))))
     ub = bounds("scout_v4_ubec")
@@ -302,6 +372,7 @@ def bodies():
     for lo, hi, minus in board_cuts:
         (sl, sh) = grid_snap(lo, hi, bb, SPEC["h"]); lo2 = (lo[0], sl[1], lo[2]); hi2 = (hi[0], sh[1], hi[2])
         c_ = box(lo2[0], hi2[0], lo2[1], hi2[1], lo2[2], hi2[2]); cuts.append(c_ - minus if minus is not None else c_)
+    cuts.append(ways_in() - U(bposts))                                                # the boards' ways in (SPEC assembly_paths), 0.08 over the gap
     check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
     return dict(drawn=U(drawn) ^ box(-S.BED - 5, S.BED + 5, -S.BED - 5, S.BED + 5, -60.0, DZ1), cuts=U(cuts), env=env, flow_reg=flow_reg,   # the bed: DN / DT's deeper collars rise to 24.8 at their back (10 Nov)
                 pod_regs=pod_regs, rec_regs=rec_regs, tur_regs=tur_regs, socks=[s_ for s_ in socks if not isinstance(s_, BraceSock)], boards=boards, braces=braces)

@@ -1041,6 +1041,102 @@
 ],
 "why": "the cradle, camera and LED bars about the SG90's axis from 20 down to 90 up (parked 15 up)",
 "min_body_mm3": 50
+},
+{
+"name": "FC up onto its posts",
+"part": "scout_v4_fc",
+"order": 1,
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 32,
+"fit": "slide",
+"into": [
+"scout_v4_frame"
+],
+"why": "the FC on its grommets up from below onto its 4 posts (M3 into the inserts) with the receiver off (the battery mechanism bolts on after: its room is the boards' way in), the screws' heads from below"
+},
+{
+"name": "XR2 up onto its land",
+"part": "scout_v4_xr2",
+"order": 2,
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 32,
+"fit": "slide",
+"into": [
+"scout_v4_frame"
+],
+"why": "the XR2 taped up from below onto its land beside the FC with the receiver off (the battery mechanism bolts on after: its room is the boards' way in)"
+},
+{
+"name": "DRV8833 up onto its land",
+"part": "scout_v4_drv8833",
+"order": 3,
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 32,
+"fit": "slide",
+"into": [
+"scout_v4_frame"
+],
+"why": "the DRV8833 taped up from below onto its land beside the FC with the receiver off (the battery mechanism bolts on after: its room is the boards' way in)"
+},
+{
+"name": "Radxa up onto its posts",
+"part": "scout_v4_radxa_zero_3w",
+"order": 4,
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 32,
+"fit": "slide",
+"into": [
+"scout_v4_frame"
+],
+"why": "the Radxa up from below onto its 4 posts (M2.5 into the inserts) with the receiver off (the battery mechanism bolts on after: its room is the boards' way in), the screws' heads from below; its tail third through the tail tray's window, before the UBEC (which hangs under it)"
+},
+{
+"name": "UBEC up into its pod",
+"part": "scout_v4_ubec",
+"order": 5,
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 20,
+"fit": "slide",
+"into": [
+"scout_v4_frame"
+],
+"why": "the UBEC taped up under its two end lands in the pod below the tail tray, after the Radxa (it closes the Radxa's way in)"
+},
+{
+"name": "flow sensor up into its pod",
+"part": "scout_v4_flow_mtf_02p",
+"order": 6,
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 20,
+"fit": "slide",
+"into": [
+"scout_v4_frame"
+],
+"why": "the MTF-02P taped up under its land in the nose pod, open below"
 }
 ],
 "generate": [

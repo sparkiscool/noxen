@@ -219,19 +219,22 @@
    "file": "print/latch7_ov_plug_carrier.stl",
    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_ov_plug_carrier.stl",
    "picture": "parts/latch7/kit/latch7_ov_plug_carrier.png",
+   "stage": "PROTOTYPE",
+   "print": true,
    "solid_check": "PASS",
    "thin_walls": 0,
    "pose": "the part's +y face on the bed",
    "size_on_bed_mm": [
-    65.6,
-    20.7,
+    61.6,
+    20.6,
     19.5
    ],
    "fits_bed": true,
    "supports": "yes: 258 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
    "material": "PCTG",
-   "grams_each": 6.16,
-   "note": "with its two guide pegs",
+   "grams_each": 5.86,
+   "print_line": "print/latch7_ov_plug_carrier.stl, its top (the mount-plane face) down, tree supports (touching the bed only), PCTG at PETG settings + 10 C, 0.2 layers, 4 walls, 30 % gyroid, ~0.7 h (E)",
+   "note": "with its two guide pegs; 15 Nov: ears to |x| 30.8, no bolt holes (the lead clamp's cap holds it on its seat)",
    "used_by": {
     "overseer": 1
    }
@@ -240,19 +243,22 @@
    "file": "print/latch7_ov_plug_carrier_cap.stl",
    "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_ov_plug_carrier_cap.stl",
    "picture": "parts/latch7/kit/latch7_ov_plug_carrier_cap.png",
+   "stage": "PROTOTYPE",
+   "print": true,
    "solid_check": "PASS",
    "thin_walls": 0,
-   "pose": "the part's +y face on the bed",
+   "pose": "the part's -z face on the bed",
    "size_on_bed_mm": [
-    65.6,
-    20.0,
-    10.7
+    86.0,
+    11.8,
+    19.9
    ],
    "fits_bed": true,
-   "supports": "none",
+   "supports": "yes: 172 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
    "material": "PCTG",
-   "grams_each": 8.07,
-   "note": "",
+   "grams_each": 10.83,
+   "print_line": "print/latch7_ov_plug_carrier_cap.stl, its tail-side end face (z 153.8) down, tree supports (touching the bed only), PCTG at PETG settings + 10 C, 0.2 layers, 4 walls, 30 % gyroid, ~1.2 h (E)",
+   "note": "15 Nov: the lead clamp's cap: two skirts and lugs, each bolted with an M3 x 10 into the receiver lug's insert",
    "used_by": {
     "overseer": 1
    }
@@ -323,16 +329,16 @@
    "thin_walls": 0,
    "pose": "mount plane (the drone's face) on the bed, the cartridge's mouth up",
    "on_the_diagonal": false,
-   "bed_mm2": 1297,
+   "bed_mm2": 1277,
    "size_on_bed_mm": [
     68.0,
     111.4,
     53.9
    ],
    "fits_bed": true,
-   "supports": "yes: 4428 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
+   "supports": "yes: 4556 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
    "material": "PCTG",
-   "grams_each": 107.8,
+   "grams_each": 107.7,
    "print_line": "print/latch7_receiver.stl, mount plane down, tree supports (touching the bed only), PCTG at PETG settings + 10 C, 0.2 layers, 4 walls, 30 % gyroid, ~9.0 h (E)",
    "note": "drawn (make.receiver_proto; hand calculation in make.py PROTOTYPE, least margin 5, the lead end wall in a 35 g crash along the pack); one per drone",
    "used_by": {
@@ -349,17 +355,17 @@
    "thin_walls": 0,
    "pose": "mount plane (the drone's face) on the bed, the cartridge's mouth up; turned 45 deg about z in the file",
    "on_the_diagonal": true,
-   "bed_mm2": 2836,
+   "bed_mm2": 2825,
    "size_on_bed_mm": [
     177.9,
     177.9,
     68.6
    ],
    "fits_bed": true,
-   "supports": "yes: 8590 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
+   "supports": "yes: 8915 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
    "material": "PCTG",
-   "grams_each": 209.3,
-   "print_line": "print/latch7_ov_receiver.stl, mount plane down, already turned 45 deg on the bed (177.9 square), no brim, glue stick, tree supports (touching the bed only), PCTG at PETG settings + 10 C, 0.2 layers, 4 walls, 30 % gyroid, ~17.4 h (E)",
+   "grams_each": 214.2,
+   "print_line": "print/latch7_ov_receiver.stl, mount plane down, already turned 45 deg on the bed (177.9 square), no brim, glue stick, tree supports (touching the bed only), PCTG at PETG settings + 10 C, 0.2 layers, 4 walls, 30 % gyroid, ~17.8 h (E)",
    "note": "drawn (make.receiver_proto; hand calculation in make.py PROTOTYPE, least margin 2.5, the lead end wall in a 35 g crash along the pack); one per drone",
    "used_by": {
     "overseer": 1
@@ -451,14 +457,14 @@
     },
     {
      "part": "M3 x 10 socket head cap screw",
-     "n": 4,
-     "spec": "DIN 912, 304 stainless; the deck bosses into the base's inserts (5.0 of deck, 5.0 of thread)",
+     "n": 6,
+     "spec": "DIN 912, 304 stainless; four: the deck bosses into the base's inserts from the mouth (5.0 of deck, 5.0 of thread); two: the lead clamp from the drone side, head on the cap's lug, 4.2 of lug, 5.8 into the receiver lug's insert (OV_CLAMP)",
      "url": "https://www.amazon.com/Socket-Screws-Washers-Assortment-Stainless/dp/B091N1J6F8"
     },
     {
      "part": "M3 x 5.7 heat-set insert",
      "n": 2,
-     "spec": "ruthex RX-M3x5.7 brass, in the plug cap's o 4.0 holes over the lead-end bolts",
+     "spec": "ruthex RX-M3x5.7 brass, pressed from above into the o 4.0 x 7.0 holes in the receiver's two lead lugs (OV_CLAMP), before the carrier goes in",
      "url": "https://www.amazon.com/ruthex-M3-Threaded-Inserts-RX-M3x5-7/dp/B08BCRZZS3"
     },
     {
@@ -490,15 +496,17 @@
    "receiver": [
     "6a (a bay only) 4 x M3 x 14 from the mouth up to their seats in the deck, before the strips",
     "6 the two TPU seat strips into their recesses under the deck, between their keys",
-    "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier, cap on",
-    "8 carrier and cap into the lead-end notch; the lead pair into the cap's inserts: OPEN (see open)",
-    "9 the receiver onto the glued base: 4 x M3 x 10 from the mouth into its inserts"
+    "6b two M3 x 5.7 heat-set inserts pressed from above (the mount-plane side) into the o 4.0 holes in the receiver's two lead lugs, flush with the lug face",
+    "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier; the carrier down into the lead-end notch, its ears on the seat",
+    "8 the cap down onto the carrier, its two skirts outside the ears, its lugs on the receiver's lugs; 2 x M3 x 10 from the drone side through the cap's lugs into the inserts, snug",
+    "9 the receiver onto the glued base: 4 x M3 x 10 from the mouth into its inserts (the clamp's heads stand 2.4 under the base: to reach them, the receiver comes off)"
    ],
-   "checked": "parts/latch7_overseer/result.json build.install: every step swept, 0 mm3",
-   "open": "the lead pair (into the cap's M3 x 5.7 inserts, clamping carrier and cap): no head seat from below is possible in the receiver: the cartridge fills |x| <= 27.5 up to y 58.6 on the bolt's axis (|x| 27.8) and the receiver ends at the ear seat (y 60.1) under the carrier's ears; it needs the carrier and cap changed (the pair moved out beside the cartridge, or the clamp taken another way), not listed"
+   "checked": "parts/latch7_overseer/result.json build.install (step 7b the clamp, every step swept, 0 mm3); tools/assembly_check.py latch7_overseer and latch7_both: the three paths",
+   "open": null
   }
  },
  "supersedes": [
-  "14 Nov (the Scout's plug 4.3 lower): print/latch7_cartridge.stl, print/latch7_plug_carrier.stl and print/latch7_plug_carrier_cap.stl replace the files of the same names sent 13 Nov (13:15 and 16:55 Pacific): do not print or use those three. Every other file is unchanged."
+  "14 Nov (the Scout's plug 4.3 lower): print/latch7_cartridge.stl, print/latch7_plug_carrier.stl and print/latch7_plug_carrier_cap.stl replace the files of the same names sent 13 Nov (13:15 and 16:55 Pacific): do not print or use those three. Every other file is unchanged.",
+  "15 Nov (the Overseer's lead clamp): print/latch7_ov_plug_carrier.stl, print/latch7_ov_plug_carrier_cap.stl and print/latch7_ov_receiver.stl replace the files of the same names sent before: do not print or use those three (their lead pair could not be fitted). print/latch7_receiver.stl (Scout): its four boss tops trimmed clear of the Scout v4 frame's yokes."
  ]
 }

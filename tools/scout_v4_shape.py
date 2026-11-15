@@ -293,11 +293,12 @@ BATTERY_SET = (266.5, (-3.47, -0.01, -15.93))                                   
 def receiver_bolts():
     """the battery's receiver held like the Overseer's (9 Nov, Spark: "just like the overseer make the bottom of the battery mounted with
     4 screws"): 4 M3 up from below through the receiver's O3.4 boss holes into M3 x 5.7 heat-set inserts in the base's yokes (O4 x 6
-    holes in O10 bosses, wall >= 3); the screws' length is set by the receiver's boss (M3 x 12 E: measure), their heads reached from below"""
+    holes in O10 bosses, wall >= 3); 15 Nov: the latch v7 kit's screws (parts/latch7/kit.json: 4 x M3 x 35, the shank from REC_TOP - 29.6
+    to REC_TOP + 5.4, the head O5.5 x 3.0 below it in the receiver's head seats), their heads reached from below"""
     out = []
     for x, y in REC_BOLTS:
-        out.append(cyl(x + BX, y, REC_TOP - 7.0, REC_TOP + 5.0, 1.5, 16))            # the M3 screw, 12 long, head down inside the receiver's boss
-        out.append(cyl(x + BX, y, REC_TOP - 7.0, REC_TOP - 5.0, 2.75, 16))           #   its head O5.5 x 2 (low-profile button)
+        out.append(cyl(x + BX, y, REC_TOP - 29.6, REC_TOP + 5.4, 1.5, 16))           # the M3 x 35 shank, its tip 5.4 into the 5.7 insert
+        out.append(cyl(x + BX, y, REC_TOP - 32.6, REC_TOP - 29.6, 2.75, 16))         #   its head O5.5 x 3.0 in the receiver's head seat
         out.append(cyl(x + BX, y, REC_TOP, REC_TOP + 5.7, 2.0, 16))                  # the M3 x 5.7 heat-set insert in the yoke
     return trimesh.util.concatenate(out)
 
@@ -741,7 +742,7 @@ def entries(meshes):
                              ("radxa_zero_3w", "Radxa Zero 3W", 10.0, "under the deck behind the turret's N20 on four M2.5 posts (inserts in the deck), 65 along x, its USB-C plugs out the -y edge"),
                              ("scout_flow_mtf_02p", "flow MTF-02P", 1.5, "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn")):
         add(src, nm, "bought", "electronics", "#2b5d8a", g, "P", note)
-    add("receiver_bolts", "battery mount: 4 x M3 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)", "bought", "battery", "#5a5f66", 4.0, "E",
+    add("receiver_bolts", "battery mount: 4 x M3 x 35 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)", "bought", "battery", "#5a5f66", 4.0, "E",
         f"at ({REC_BOLTS[0][0] + BX:.1f}, +-26.55) and ({REC_BOLTS[2][0] + BX:.1f}, +-26.55) through the receiver's O3.4 boss holes; M3 x 12 E (the boss's depth: measure); the inserts in O10 bosses of the yokes (wall >= 3), the heads reached from below with the cartridge out")
     L = sum(float(np.linalg.norm(P(i) - P(j))) for i, j in RODS + TIES)
     add("cage_rods", "half cage v4, rods (3 mm carbon: the ring, the flat roof, end Vs and side fans)", "cage", "cage", "#2b2b2b", L * ROD_G_MM, "E",

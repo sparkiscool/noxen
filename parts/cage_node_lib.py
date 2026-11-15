@@ -22,6 +22,7 @@ import json, os
 import numpy as np
 from topo import Part
 from topo.part import man
+from topo import fit                                  # the printer's fit table (systems/fit_table.json): every mating size below
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAGE = json.load(open(os.path.join(HERE, "..", "systems", "overseer.cage.json")))
@@ -29,12 +30,12 @@ NODES = np.array(CAGE["nodes"], float)
 NODE_R = float(CAGE["node_r_mm"])                     # 10.15: where a bore starts unless a neighbour forces it further out (SOCKET_START)
 BASE = {0, 1, 2, 3, 4, 5}                             # the base loop, z -79.9
 WALL, FLOOR, MARGIN = 3.0, 3.0, 8.0                   # wall 3.0 (7 Nov: 2.5 beyond the 0.5 injection annulus, as 2.5 was beyond nothing before); 2.5 at the resin grooves
-KIND = {"tube": dict(bore_r=3.1, depth=15.0), "link": dict(bore_r=1.6, depth=10.0)}   # bore 6.2 / 3.2
+KIND = {"tube": dict(bore_r=fit.bore(6.0, "bond") / 2, depth=15.0), "link": dict(bore_r=fit.bore(3.0, "bond") / 2, depth=10.0)}   # bore 6.2 / 3.2 (fit table: bond)
 GROOVE_D, GROOVE_H, LEAD_IN = 0.5, 1.5, 1.0            # the coupon socket (socket_cuts below): resin grooves, lead-in
 POCKETS, POCKET_D, POCKET_DEG = 3, 0.3, 60.0                # resin pockets (Spark 7 Nov: "the inner pattern where the resin can make the best contact with the rod"):
 #   three 0.3 deep, 60 deg wide channels along the bore from above the floor out of the mouth, between three 60 deg lands of the plain bore that
 #   centre the rod; the port feeds the first pocket, the two grooves join them round the rod, the resin shows at the mouth through them
-PORT_R, PORT_S, PORT_CLEAR_DEG = 1.25, 1.5, 30.0        # resin injection port (Spark 5 Nov: "nodes need to be resin injectable"; 8 Nov: O2.5 for the one 14 G tip, O2.11): through the collar wall PORT_S above the floor, out between the members (none within PORT_CLEAR_DEG of it: at 40 the 6..8-member Scout nodes had none, their freest 30..38), so the resin fills from the floor and shows at the mouth
+PORT_R, PORT_S, PORT_CLEAR_DEG = fit.bore(2.11, "port") / 2, 1.5, 30.0        # resin injection port (Spark 5 Nov: "nodes need to be resin injectable"; 8 Nov: O2.5 for the one 14 G tip, O2.11): through the collar wall PORT_S above the floor, out between the members (none within PORT_CLEAR_DEG of it: at 40 the 6..8-member Scout nodes had none, their freest 30..38), so the resin fills from the floor and shows at the mouth
 CROWN_MIN_SIN = 0.3                                    # a bore within ~17 deg of vertical prints without a crown
 LAND_G, DRONE_G = 6.0, 3405.0                         # landing case 6 g; drone mass 3405 g (E, layout)
 LAND_FEET = 3                                         # a flat landing may rest on 3 of the 6 feet (E)

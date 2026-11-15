@@ -79,7 +79,7 @@
    ]
   }
  },
- "note": "The press-two-tabs latch, v7, on both packs, side by side: the Scout's on the left, the Overseer's on the right. One latch module: the same slider, springs, 3 x 20 dowels, magnets and grabber blades; only the cartridge and the receiver are sized to the pack. Each is cut at its tab line. Made stronger on 10 Nov: bolts 42 wide on two steel pins each, blades 34 wide with two hooks each, four springs. Scout 222.0 g with its cartridge, Overseer 765.8 g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; the Scout receiver stands on four landing feet. Worst strength index 0.483 (Scout), 0.361 (Overseer). Numbers under the viewer.",
+ "note": "The press-two-tabs latch, v7, on both packs, side by side: the Scout's on the left, the Overseer's on the right. One latch module: the same slider, springs, 3 x 20 dowels, magnets and grabber blades; only the cartridge and the receiver are sized to the pack. Each is cut at its tab line. Made stronger on 10 Nov: bolts 42 wide on two steel pins each, blades 34 wide with two hooks each, four springs. Scout 221.5 g with its cartridge, Overseer 766.5 g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; the Scout receiver stands on four landing feet. Worst strength index 0.483 (Scout), 0.361 (Overseer). Numbers under the viewer.",
  "cg_ref": null,
  "timeline": "tools/latch7_both_motion.py:timeline",
  "appendix": "systems/latch7.appendix.html",
@@ -132,46 +132,6 @@
    "color": "#3a3a3a",
    "opacity": null,
    "mesh": "parts/latch7/view/receiver_strips.stl",
-   "pose": [
-    [
-     1.0,
-     0.0,
-     0.0,
-     45.0
-    ],
-    [
-     0.0,
-     1.0,
-     0.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     1.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     0.0,
-     1.0
-    ]
-   ],
-   "material": "TPU",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
-  {
-   "id": "latch7_view_receiver_skid_nose_both",
-   "name": "scout: receiver skid nose",
-   "role": "TPU",
-   "group": "Scout: receiver (on the drone), cut away",
-   "color": "#3a3a3a",
-   "opacity": null,
-   "mesh": "parts/latch7/view/receiver_skid_nose.stl",
    "pose": [
     [
      1.0,
@@ -360,7 +320,7 @@
    ],
    "material": null,
    "tag": "C",
-   "mass_g": 2.0,
+   "mass_g": 2.59,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -400,7 +360,7 @@
    ],
    "material": null,
    "tag": "C",
-   "mass_g": 2.0,
+   "mass_g": 2.59,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -439,86 +399,6 @@
     ]
    ],
    "material": "PCTG",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
-  {
-   "id": "latch7_view_cartridge_strip_px_both",
-   "name": "scout: cartridge strip px",
-   "role": "TPU",
-   "group": "Scout: cartridge (on the pack), cut away",
-   "color": "#3a3a3a",
-   "opacity": null,
-   "mesh": "parts/latch7/view/cartridge_strip_px.stl",
-   "pose": [
-    [
-     1.0,
-     0.0,
-     0.0,
-     45.0
-    ],
-    [
-     0.0,
-     1.0,
-     0.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     1.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     0.0,
-     1.0
-    ]
-   ],
-   "material": "TPU",
-   "tag": "C",
-   "mass_g": null,
-   "version": "latch v7 (10 Nov)",
-   "source": "parts/latch7/make.py"
-  },
-  {
-   "id": "latch7_view_cartridge_strip_nx_both",
-   "name": "scout: cartridge strip nx",
-   "role": "TPU",
-   "group": "Scout: cartridge (on the pack), cut away",
-   "color": "#3a3a3a",
-   "opacity": null,
-   "mesh": "parts/latch7/view/cartridge_strip_nx.stl",
-   "pose": [
-    [
-     1.0,
-     0.0,
-     0.0,
-     45.0
-    ],
-    [
-     0.0,
-     1.0,
-     0.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     1.0,
-     0.0
-    ],
-    [
-     0.0,
-     0.0,
-     0.0,
-     1.0
-    ]
-   ],
-   "material": "TPU",
    "tag": "C",
    "mass_g": null,
    "version": "latch v7 (10 Nov)",
@@ -1288,7 +1168,7 @@
    "material": "PCTG",
    "tag": "C",
    "mass_g": null,
-   "version": "latch v7 (10 Nov)",
+   "version": "latch v7, PROTOTYPE with the lead clamp (15 Nov)",
    "source": "parts/latch7/make.py"
   },
   {
@@ -1368,7 +1248,7 @@
    "material": "PCTG",
    "tag": "C",
    "mass_g": null,
-   "version": "latch v7 (10 Nov)",
+   "version": "latch v7, PROTOTYPE with the lead clamp (15 Nov)",
    "source": "parts/latch7/make.py"
   },
   {
@@ -1408,7 +1288,87 @@
    "material": "PCTG",
    "tag": "C",
    "mass_g": null,
-   "version": "latch v7 (10 Nov)",
+   "version": "latch v7, PROTOTYPE with the lead clamp (15 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_lead_clamp_bolts_both",
+   "name": "overseer: lead clamp bolts (2 x M3 x 10)",
+   "role": "bought",
+   "group": "Overseer: receiver (on the drone), cut away",
+   "color": "#3a3d42",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/lead_clamp_bolts.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 lead clamp (15 Nov)",
+   "source": "parts/latch7/make.py"
+  },
+  {
+   "id": "latch7_overseer_view_lead_clamp_inserts_both",
+   "name": "overseer: lead clamp inserts (2 x M3 x 5.7 heat-set)",
+   "role": "bought",
+   "group": "Overseer: receiver (on the drone), cut away",
+   "color": "#c9a24a",
+   "opacity": null,
+   "mesh": "parts/latch7_overseer/view/lead_clamp_inserts.stl",
+   "pose": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     -45.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "material": null,
+   "tag": "C",
+   "mass_g": null,
+   "version": "latch v7 lead clamp (15 Nov)",
    "source": "parts/latch7/make.py"
   },
   {
@@ -1487,7 +1447,7 @@
    ],
    "material": null,
    "tag": "C",
-   "mass_g": 2.0,
+   "mass_g": 2.48,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -1527,7 +1487,7 @@
    ],
    "material": null,
    "tag": "C",
-   "mass_g": 2.0,
+   "mass_g": 2.48,
    "version": "latch v7 (10 Nov)",
    "source": "parts/latch7/make.py"
   },
@@ -2278,7 +2238,7 @@
      0.0,
      -1.0,
      0.0,
-     86.07
+     86.14
     ],
     [
      0.0,
@@ -2310,6 +2270,65 @@
    "latch7_overseer_view_guide_pole_p_both",
    "latch7_overseer_view_guide_pole_n_both",
    "latch7_view_receiver_skid_nose_both"
+  ],
+  "paths": [
+   {
+    "name": "overseer: carrier into the lead notch",
+    "part": "latch7_overseer_view_carrier_both",
+    "with": [
+     "latch7_overseer_view_xt60_male_both"
+    ],
+    "order": 10,
+    "out": [
+     0,
+     0,
+     1
+    ],
+    "length_mm": 30,
+    "fit": "mate",
+    "against": [
+     "latch7_overseer_view_receiver_both",
+     "latch7_overseer_view_receiver_strips_both"
+    ],
+    "why": "the XT60W-M in its collar laid in the carrier, the carrier down into the notch (0.2 a side in x and z), its ears on the seat; the cartridge out"
+   },
+   {
+    "name": "overseer: cap onto the carrier",
+    "part": "latch7_overseer_view_carrier_cap_both",
+    "order": 20,
+    "out": [
+     0,
+     0,
+     1
+    ],
+    "length_mm": 30,
+    "fit": "mate",
+    "against": [
+     "latch7_overseer_view_receiver_both",
+     "latch7_overseer_view_receiver_strips_both",
+     "latch7_overseer_view_carrier_both",
+     "latch7_overseer_view_xt60_male_both"
+    ],
+    "why": "its skirts 0.5 outboard of the ears down onto the receiver's lead lugs, the plug's body up through its window"
+   },
+   {
+    "name": "overseer: lead clamp bolts from the drone side",
+    "part": "latch7_overseer_view_lead_clamp_bolts_both",
+    "order": 30,
+    "out": [
+     0,
+     0,
+     1
+    ],
+    "length_mm": 40,
+    "fit": "screw",
+    "against": [
+     "latch7_overseer_view_receiver_both",
+     "latch7_overseer_view_carrier_both",
+     "latch7_overseer_view_carrier_cap_both"
+    ],
+    "why": "2 x M3 x 10 through the cap's lugs into the receiver lugs' inserts, on the bench before the receiver goes on the base (its heads then stand 2.4 under the base)"
+   }
   ]
  }
 }

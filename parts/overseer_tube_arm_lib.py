@@ -16,13 +16,13 @@ shear from them (the one-piece arm's rule). The tubes themselves: a 6/4 pair 22 
 printed arm), 1.2e7 across; the frame model's arm beam is this pair.
 """
 import numpy as np, manifold3d as mf
-from topo import Part
+from topo import Part, fit
 from parts.cage_node_lib import socket_cuts, collar_shape, FLOOR as C_FLOOR
 from parts.overseer_arm_lib import (Arm, cyl, U, along, hull_xy, stadium, rigid_split, frame_cases, mvec, G, Z_BOT, Z_PAD,
                                     BOLT_TOP, BOLT_BOT, BOSS_R, NUT_T, FLOOR, M_MOTOR, Z_MOTOR_CG, THRUST_N, TORQUE_NM, PAD_D,
                                     NODE_R, SOCK_BORE_R, SOCK_DEPTH, SOCK_WALL)
 
-TUBE_BORE_R, TUBE_DEPTH, TUBE_WALL = 3.1, 15.0, 2.5     # 6/4 tube: bore 6.2, 15 deep (coupon), 2.5 collar (2.0 at the grooves)
+TUBE_BORE_R, TUBE_DEPTH, TUBE_WALL = fit.bore(6.0, "bond") / 2, 15.0, 2.5     # 6/4 tube: bore 6.2, 15 deep (coupon), 2.5 collar (2.0 at the grooves)
 TUBE_Z = (14.0, 36.0)                                   # the two tubes, stacked on the arm axis
 ROOT_S0 = 12.0                                          # root socket floor, mm out along the arm axis from the root centre R
 PAD_BACK = 42.0                                         # pad socket mouth, mm short of the motor centre along the axis

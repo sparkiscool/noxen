@@ -5,7 +5,7 @@ the page build), writes systems/box.check.json and the page's appendix.
 Streams (each has its own check of itself; this one is between them), all in the funnel's seat frame:
   funnel   parts/box_funnel/make.py: the frame at its full room (so a run's result is covered whatever it generates), both end
            walls at the drone's setting, the strips, the drive
-  latch    latch v7, both packs (parts/latch7/make.py build): the receiver on the drone, the cartridge with its pack
+  latch    latch v7, both packs: the PROTOTYPE receiver as printed (parts/latch7/make.py receiver_all_print) on the drone, the cartridge with its pack
   drones   systems/scout_v4 and systems/overseer as tools/seat_envelope.py seats them
   arm      systems/swap_arm.assembly.json once it exists (W frame), else the arm v7 parts of systems/box.assembly.json (superseded);
            the parts that turn with the wheel swept about the axle
@@ -93,17 +93,36 @@ def funnel_bodies(fm):
     return out
 
 
-def latch_bodies():
-    """per drone: (receiver, cartridge with its pack), seated at the height the latch's own fit found"""
-    L = load("parts/latch7/make.py", "latch7_make"); out = {}
+_LB = {}
+
+
+def latch_bodies(fm=None):
+    """per drone: (printed receiver, cartridge with its pack), seated (15 Nov: the PROTOTYPE receivers Spark prints, parts/latch7/make.py
+    receiver_all_print: print/latch7_receiver.stl, print/latch7_ov_receiver.stl, with their carrier, cap, strips, plug, pegs and clamp bolts; not the
+    engine's drawn room). Height: where that receiver comes to rest in its funnel setting (lowered until more than 0.5 mm3 is in the funnel, rounded up
+    to 0.01); latch_bodies.lift[drone] is that height, and the drone is seated by the same (main(), tools/import_box.py drone_parts), so the
+    receiver stays on the drone's lines it bolts to."""
+    if _LB:
+        return dict(_LB)
+    fm = fm or load("parts/box_funnel/make.py", "box_funnel_make")
+    L = load("parts/latch7/make.py", "latch7_make"); out = {}; lift = {}
     for drone, pack in PACK.items():
         B = L.build(pack); T = L.to_seat(B); g = B["g"]
-        res = os.path.join(ROOT, "parts", L.OUT[pack][0], "result.json")
-        rest = float(json.load(open(res)).get("funnel", {}).get("rests_at_mm", 0.0)) if os.path.exists(res) else 0.0
-        R = L.m6.receiver_all(B).transform(T).translate([0, 0, rest + 0.05])
-        C = (L.m6.cart_all(B) + L.m6.moving(g, L.m6.R0, 1) + L.m6.moving(g, L.m6.R0, -1) + L.bl.pack_body(g)).transform(T).translate([0, 0, rest + 0.05])
-        out[drone] = (Body(f"latch v7 receiver ({pack})", "latch", man=R), Body(f"latch v7 cartridge + pack ({pack})", "latch", man=C))
-    return out
+        R = L.receiver_all_print(B).transform(T)
+        C = (L.m6.cart_all(B) + L.m6.moving(g, L.m6.R0, 1) + L.m6.moving(g, L.m6.R0, -1) + L.bl.pack_body(g)).transform(T)
+        F = fm.funnel(sc.walls_for(drone)); lo, hi = -12.0, 2.0
+        for _ in range(14):
+            mid = (lo + hi) / 2
+            if sc.volume(R.translate([0, 0, mid]) ^ F) > 0.5: lo = mid
+            else: hi = mid
+        z = float(np.ceil(hi * 100.0) / 100.0) + 0.0; lift[drone] = z
+        R, C = R.translate([0, 0, z]), C.translate([0, 0, z])
+        out[drone] = (Body(f"latch v7 receiver ({pack}, PROTOTYPE print/{L.PROTO[pack]}.stl)", "latch", man=R), Body(f"latch v7 cartridge + pack ({pack})", "latch", man=C))
+    _LB.update(out); latch_bodies.lift = lift
+    return dict(out)
+
+
+latch_bodies.lift = {}
 
 
 def box_bodies():
@@ -155,8 +174,8 @@ def box_bodies():
 
 def main(quick=False):
     t0 = time.time(); fm = load("parts/box_funnel/make.py", "box_funnel_make")
-    F = funnel_bodies(fm); LB = latch_bodies(); static, arm, turning, arm_src, missing = box_bodies()
-    drones = {d: [Body(f"{d}: {nm}", "drones", tri=m) for nm, m in se.parts_of(d)] for d in PACK}
+    F = funnel_bodies(fm); LB = latch_bodies(fm); static, arm, turning, arm_src, missing = box_bodies()
+    drones = {d: [Body(f"{d}: {nm}", "drones", tri=m).moved((0, 0, latch_bodies.lift[d])) for nm, m in se.parts_of(d)] for d in PACK}   # seated with its receiver
     hits, rows, hung = [], [], []
     moving_dome = lambda b: b.name.startswith(("dome hoop 1", "dome hoop 2", "dome hoop 3", "dome hoop 4", "dome fabric"))
     def test(state, A, Bs):

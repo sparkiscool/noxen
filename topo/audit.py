@@ -82,6 +82,11 @@ Checks (hard = raises, soft = logged + in the report):
                        but a drawn wall, lip or post standing in it blocks the piece whatever is generated. 15 Nov, Spark's Scout v4 bench
                        print: the camera could not slide into the cradle's sleeve, nothing kept its insertion path open. Move the drawn
                        feature out of the path (or end the path on it: a stop is where the piece seats, not in its way). Over PATH_MM3.
+  fit            hard  (fit_sizes; systems/fit_table.json the only source of mating sizes, 15 Nov: the Scout v4 bench print, holes drawn
+                       at sizes the coupon never proved) every straight round and box width the setup drew (recorded while setup(h)
+                       ran, topo/fit.py shapes) within the fit window of a bought part it declared through the table (fit.bore /
+                       across / insert: within 0.15 of a declared kind's drawn size) must be a size the table gives for a declared part,
+                       or the part's nominal itself (the body as a keep-out or a stand-in). A 3.25 hole by a declared 3 mm rod is refused.
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -663,6 +668,28 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
                          f"{p.get('extent_mm')} mm): the piece cannot go in past it whatever the engine generates. Move the drawn feature out "
                          f"of the path (the sweep is the piece grown by its fit gap, topo/fit.py), or end the path where the piece seats.")
 
+    fs = fit_sizes(part)
+    rep["fit_sizes"] = fs
+    for r in fs["refused"][:6]:
+        fails.append(f"fit: a {'round' if r['shape'] == 'round' else 'width'} of {r['drawn']} mm is drawn next to a declared bought part of {r['nominal']} "
+                     f"({', '.join(r['kinds'])}), at a size the fit table does not give for it (its sizes there: {r['table']}): take it from the table "
+                     f"(topo/fit.py bore / across / insert, systems/fit_table.json), or add the coupon's row there, tagged.")
+    # held_load: a case whose every loaded dof its own support fixes loads nothing (the full solid's compliance is zero: the layout
+    # raised it only after the whole build, no result.json). 15 Nov, the Scout v4 frame: its receiver-bolt insert bosses declared to
+    # topo/handling.py (install, tighten) on the main support, which holds the same insert lining (REC_SUPPORT "insert"): 8 cases on
+    # fixed nodes, the CI run died 24 min in. Declare the feature only where its case's support leaves it free.
+    rep["held_load"] = []
+    for c in part.cases:
+        fx = part.supports.get(c.support)
+        F = np.abs(np.asarray(c.F, float)).reshape(-1, 3)
+        if fx is None or (c.accel is not None and np.any(c.accel)) or not F.max() > 0:
+            continue
+        if not F[~fx].max(initial=0.0) > 1e-9 * F.max():
+            rep["held_load"].append(c.name)
+    if rep["held_load"]:
+        fails.append(f"held_load: {len(rep['held_load'])} cases load only nodes their own support fixes ({', '.join(rep['held_load'][:4])}"
+                     f"{' ...' if len(rep['held_load']) > 4 else ''}): they load nothing. A handling feature (topo/handling.py) on a face the "
+                     f"part's support holds is that support: draw it without the declaration there, or move the load off the support.")
     rep["cases"] = len(part.cases)
     rep["supports"] = len(part.supports)
     if not part.cases or not part.supports:
@@ -738,3 +765,32 @@ def room_strength(L, max_worst, log=print, hard=True):
         log(f"audit: room_full {st['worst']:.3f} filled solid ('{st['worst_case']}'), budget {share:.0%} of the room, "
             f"uniformly thinned ~{rep['thinned']}")
     return rep
+
+
+def fit_sizes(part):
+    """the fit check (systems/fit_table.json the only source of mating sizes, 15 Nov): every straight round and every box width the setup
+    drew (part.fit_shapes, recorded while setup(h) ran: topo/fit.py shapes) that falls in the fit window of a bought part the setup
+    declared through the table (part.fit_declared: topo/fit.py bore / across / insert) must be one of the table's sizes for a declared
+    nominal (or the nominal itself: the bought body as a keep-out or stand-in). Returns the report; its "refused" rows fail the audit."""
+    from . import fit as FIT
+    shp, dec = getattr(part, "fit_shapes", None), getattr(part, "fit_declared", None)
+    if shp is None or dec is None:
+        return dict(recorded=False, declared=[], refused=[])
+    out = dict(recorded=True, declared=[], refused=[])
+    for shape, drawn in (("round", list(shp.round)), ("box", [v for b in shp.box for v in b])):
+        noms = {}
+        for d in dec:
+            if d["shape"] == shape or d["kind"] == "insert":
+                noms.setdefault(d["nominal"], set()).add(d["kind"])
+        ok = set()
+        for n, ks in noms.items():
+            ok |= set(FIT.sizes(n)) if "insert" not in ks else {n}
+        for n, ks in sorted(noms.items()):
+            if ks == {"insert"}:
+                continue
+            lo, hi = FIT.window(n, ks)
+            out["declared"].append(dict(shape=shape, nominal=n, kinds=sorted(ks), window=[lo, hi]))
+            bad = sorted({v for v in drawn if lo <= v <= hi and not any(abs(v - s) < 0.006 for s in ok)})
+            for v in bad:
+                out["refused"].append(dict(shape=shape, nominal=n, kinds=sorted(ks), drawn=v, table=[s for s in FIT.sizes(n) if lo <= s <= hi]))
+    return out
