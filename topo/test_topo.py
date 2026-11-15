@@ -1848,16 +1848,67 @@ def t_slender_arm_short():
     run must fail loudly (the solid check FAIL in the result, or an early / strength fail), never hand back a part marked passing
     that was built over 1.05x its beta-4 index (the hold released for the gate, topo/run.py, must not read as a pass)."""
     try:
+        from .run import passed
         res = _arms_run(ARMS_GEN_SHORT)
         e, b = (res.get("early") or {}).get("worst"), (res.get("strength") or {}).get("worst")
-        failed = not res["solid_ok"]
-        weak_pass = bool(res["solid_ok"] and (not e or not b or b > 1.05 * e))
-        check("slender arms, short budget: the run reports FAIL, no part over 1.05x its beta-4 index passes", failed and not weak_pass,
+        hold = (res.get("layout") or {}).get("hold") or {}
+        failed = not passed(res, 0.5)
+        weak_pass = bool(passed(res) and (not e or not b or b > 1.05 * e))
+        # a released build over the limit carries the reason (run.py apply_released_check), whatever the gate says of it
+        over = bool(hold.get("released_it") is not None and e and b and b > 1.05 * e)
+        named = (not over) or (res.get("status") == "hold_released_fail" and bool(res["strength"].get("fail")) and res.get("strength_ok") is False
+                               and bool(hold.get("released_fail")))
+        check("slender arms, short budget: the run reports FAIL, no part over 1.05x its beta-4 index passes, a released one says why",
+              failed and not weak_pass and named,
               f"status {res.get('status')}, solid {'PASS' if res['solid_ok'] else 'FAIL'}, early {e}, built {b} (built / early "
-              f"{b / e if e and b else None}), hold {(res.get('layout') or {}).get('hold')}, {res['total_s']} s")
+              f"{b / e if e and b else None}), fail {str(res.get('fail'))[:200]}, hold {hold}, {res['total_s']} s")
     except Exception as e:
         traceback.print_exc()
         check("slender arms, short budget", False, str(e))
+
+
+def t_released_check():
+    """the released path's check (topo/run.py released_check / apply_released_check; 15 Nov: the arm test at 14 cm3 passed the gate
+    with the hold released, built at 1.61x its beta-4 index, and read as a pass): a build after the release keeps the hold's limit.
+    Over (1 + hold_tol) x a case's own beta-4 index (at least hold_floor x the worst), over max_worst, with no index or with no
+    reference it is a FAIL with the reason in the result (status, fail, strength ok / fail, strength_ok) though the gate passed;
+    within the limit it stays a pass. Settings' own thresholds, none restated here."""
+    try:
+        from .run import released_check, apply_released_check, passed
+        s = Settings()
+        tol, fl = s.hold_tol, s.hold_floor
+        row = lambda c, v, a=0.01: dict(case=c, cls="flight", inlayer=v, across=a, at=[0, 0, 0])
+        st_of = lambda rows: dict(rows=rows, worst=max(max(r["inlayer"], r["across"]) for r in rows),
+                                  worst_case=max(rows, key=lambda r: max(r["inlayer"], r["across"]))["case"], worst_at=[0, 0, 0], ok=True)
+        hold = dict(started_it=40, beta=4.0, index=0.30, cases=dict(arm=0.30, socket=0.20, lid=0.02), released_it=90)
+        mk = lambda rows: dict(name="t", solid_ok=True, mass_g=10.0, strength=st_of(rows), layout={})
+        good = [row("arm", 0.30 * (1 + tol) - 0.001), row("socket", 0.20), row("lid", fl * 0.30 * (1 + tol) - 0.001)]   # lid: under the floor's limit
+        weak = [row("arm", round(0.30 * 1.61, 3)), row("socket", 0.20), row("lid", 0.02)]                    # the 14 cm3 run: 1.61x
+        other = [row("arm", 0.30), row("socket", 0.20 * (1 + tol) + 0.002, 0.0), row("lid", 0.02)]           # not the worst case, its own limit
+        across = [row("arm", 0.10, 0.30 * (1 + tol) + 0.002), row("socket", 0.20), row("lid", 0.02)]         # the across-layer index counts
+        r_good, r_weak, r_other, r_across = mk(good), mk(weak), mk(other), mk(across)
+        msgs = []
+        w = [apply_released_check(r, hold, 0.5, s, log=msgs.append) for r in (r_good, r_weak, r_other, r_across)]
+        ok_pass = w[0] is None and passed(r_good, 0.5) and r_good.get("status") is None and "fail" not in r_good["strength"]
+        ok_weak = all(bool(y) and not passed(r) and r["status"] == "hold_released_fail" and r["fail"] == y and r["strength"]["fail"] == y
+                      and r["strength"]["ok"] is False and r["strength_ok"] is False and r["solid_ok"] is True
+                      for y, r in zip(w[1:], (r_weak, r_other, r_across)))
+        ok_text = "1.61x" in w[1] and "'arm'" in w[1] and "'socket'" in w[2] and "'arm'" in w[3] and len(msgs) == 3
+        over_mw = released_check(st_of(good), hold, 0.25, tol, fl)                                           # within the hold's limit, over max_worst
+        no_idx = released_check(dict(rows=[], worst=None, ok=False, fail="no built cell"), hold, 0.5, tol, fl)
+        no_ref = released_check(st_of(good), dict(released_it=90), 0.5, tol, fl)
+        old_ck = (released_check(st_of(weak), dict(index=0.30), 0.5, tol, fl),                               # a checkpoint's hold without cases:
+                  released_check(st_of(good), dict(index=0.30), 0.5, tol, fl))                               # every case against the worst
+        own = mk(weak); own.update(status="export_fail", solid_ok=False)                                     # a rebuild with its own fail keeps it
+        kept = apply_released_check(own, hold, 0.5, s, log=msgs.append) is None and own["status"] == "export_fail"
+        ok = (ok_pass and ok_weak and ok_text and bool(over_mw) and "max_worst" in over_mw and bool(no_idx) and bool(no_ref)
+              and bool(old_ck[0]) and old_ck[1] is None and kept and not passed(dict(r_good, solid_ok=False)) and not passed(r_good, 0.25))
+        check("released hold: a build over (1 + tol) x its beta-4 index or over max_worst is a FAIL with the reason, never a pass", ok,
+              f"pass {ok_pass}, weak {ok_weak} ({w[1][:150]}), text {ok_text}, over max_worst {bool(over_mw)}, no index {bool(no_idx)}, "
+              f"no reference {bool(no_ref)}, old checkpoint {bool(old_ck[0])} / {old_ck[1] is None}, own fail kept {kept}")
+    except Exception as e:
+        traceback.print_exc()
+        check("released hold", False, str(e))
 
 
 ARMS_GEN = 16.0
@@ -1867,7 +1918,7 @@ ARMS_GEN_SHORT = 14.0
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_no_cavity, t_audit_path, t_audit_fit, t_path_sweep_gap):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_released_check, t_no_cavity, t_audit_path, t_audit_fit, t_path_sweep_gap):
         t()
     if not quick:
         t_end_to_end()

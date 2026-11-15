@@ -1229,7 +1229,8 @@ class Layout:
         self.last_check = dict(st, it=it, beta=beta)
         if self.s.nominal_hold and self.hold is None and not self.hold_info:
             self.start_hold(f, r)
-            self.hold_info = dict(started_it=it, beta=beta, index=st["worst"], ref_built=round(self._hold_ref(0), 3))
+            self.hold_info = dict(started_it=it, beta=beta, index=st["worst"], ref_built=round(self._hold_ref(0), 3),
+                                  cases={r["case"]: max(r["inlayer"], r["across"]) for r in st.get("rows", []) if r.get("inlayer") is not None})
             self.log(f"layout: built hold from it {it} (beta {beta:.0f}, index {st['worst']:.2f}): each of {len(self.hold)} real cases "
                      f"keeps its strength index on the design as built within {1 + self.s.hold_tol:.2f} x its own here "
                      f"(at least {self.s.hold_floor:.1f} x the worst, {self._hold_ref(0):.2f}), and its compliance as built" + (" and gate-eroded" if self.s.hold_eroded else "")

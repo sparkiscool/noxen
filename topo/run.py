@@ -155,6 +155,58 @@ def early_check(L, f, bi, max_worst, k, log=print):
     return st
 
 
+def released_check(st, hold_info, max_worst, tol, floor):
+    """the check of a part built after the hold was released for the gate (_optimise): the same limit the hold's rows kept, read on
+    the built part. Every real case's built index must be within (1 + tol) x its own at the hold's start (the beta-4 check, at
+    least floor x the worst there; hold_info["cases"], or the worst alone from a checkpoint without them) and under max_worst.
+    Returns the reason it fails, or None. A build with no index, or a hold with no reference, fails: nothing says it is as strong."""
+    worst, ref = st.get("worst"), (hold_info or {}).get("index")
+    if worst is None:
+        return f"the hold was released for the gate and the build has no strength index ({st.get('fail') or 'no rated case'})"
+    if not ref:
+        return f"the hold was released for the gate and has no beta-4 index to hold the built {worst:.2f} against"
+    per = (hold_info or {}).get("cases") or {}
+    rated = [r for r in st.get("rows", []) if r.get("inlayer") is not None]
+    over = []
+    for r in rated:
+        b = max(r["inlayer"], r["across"])
+        own = per.get(r["case"], ref)
+        lim = (1.0 + tol) * max(own, floor * ref)
+        if b > lim + 1e-9:
+            over.append((b / max(own, 1e-9), f"'{r['case']}' built {b:.2f}, {b / max(own, 1e-9):.2f}x its beta-4 {own:.2f} (limit {lim:.2f})"))
+    if not rated and worst > (1.0 + tol) * ref + 1e-9:
+        over.append((worst / ref, f"built {worst:.2f}, {worst / ref:.2f}x the beta-4 {ref:.2f} (limit {(1.0 + tol) * ref:.2f})"))
+    if over:
+        over.sort(reverse=True)
+        return (f"the hold was released for the gate and the part was built weaker than the checked design: {over[0][1]}"
+                + (f" and {len(over) - 1} more case(s)" if len(over) > 1 else "") + f"; over {1.0 + tol:.2f}x is a FAIL: raise gen_cm3 "
+                f"or open the room so the budget buys the strength and the joints")
+    if worst > max_worst:
+        return (f"the hold was released for the gate and the built index {worst:.2f} in '{st.get('worst_case')}' is over max_worst "
+                f"{max_worst}")
+    return None
+
+
+def apply_released_check(res, hold_info, max_worst, s, log=print):
+    """a released build that fails released_check is a FAIL in the result (status "hold_released_fail", fail, strength ok False and
+    its fail, strength_ok False), whatever the solid check says of it: never a pass. Returns the reason or None."""
+    if res.get("status") is not None:                     # the rebuild already failed with its own reason (export, memory)
+        return None
+    why = released_check(res["strength"], hold_info, max_worst, s.hold_tol, s.hold_floor)
+    if why:
+        res["status"], res["fail"], res["strength_ok"] = "hold_released_fail", why, False
+        res["strength"] = dict(res["strength"], ok=False, fail=why)
+        log(f"STRENGTH FAIL: {why}")
+    return why
+
+
+def passed(res, max_worst=None):
+    """the run's own verdict: the gate passed, no failed status or strength reason, and (given max_worst) the index under it"""
+    st = res.get("strength") or {}
+    return bool(res.get("solid_ok") and res.get("status") is None and st.get("worst") is not None and not st.get("fail")
+                and res.get("strength_ok", True) and (max_worst is None or st["worst"] <= max_worst))
+
+
 def _layout_build(L, out_dir, name, t0, ex_base, early, extra, log):
     """the finished layout: density.npz, the final field's index, the build and every check. Returns the result dict."""
     L.save(os.path.join(out_dir, "density.npz"))
@@ -262,7 +314,10 @@ def _optimise(setup, h, gen_cm3, out_dir, name, settings, coarse, git, log, maxi
         L.release_hold(f"the solid check failed with the hold on (built index {failed['worst']})")
         L.run(maxit=maxit, beta_start=len(s.betas) - 1)
         res = _layout_build(L, out_dir, name, t0, ex_base, early, extra, log)
-        res["layout"]["hold"] = dict(L.hold_info, failed=failed)
+        # ... but never at the price the hold exists to stop (15 Nov: the arm test at 14 cm3 passed the gate released, built at
+        # 1.61x its beta-4 index): the released build keeps the hold's limit, as a check, or it is a FAIL with that reason
+        why = apply_released_check(res, L.hold_info, max_worst, s, log=log)
+        res.setdefault("layout", {})["hold"] = dict(L.hold_info, failed=failed, released_fail=why)
     field = res.get("field")
     if early.get("worst") is not None and res["strength"]["worst"]:
         log(f"early check vs final: {early['worst']:.2f} after beta {early['beta']:.0f} -> {res['strength']['worst']:.2f} built "
@@ -430,7 +485,8 @@ def main(argv=None):
         # strength gate: SPEC["max_worst"] (default 0.5). Above it the part is failed like a solid-check fail.
         mw = float(spec.get("max_worst", 0.5))
         r["max_worst"] = mw
-        r["strength_ok"] = bool(res["strength"]["worst"] is not None and res["strength"]["worst"] <= mw)
+        r["strength_ok"] = bool(res["strength"]["worst"] is not None and res["strength"]["worst"] <= mw and not res["strength"].get("fail")
+                                and res.get("strength_ok", True))
         with open(rj, "w") as fh:
             json.dump(r, fh, indent=1, default=str)
         if res.get("status") == "mem_refused":
@@ -445,7 +501,7 @@ def main(argv=None):
             return 1
     print(json.dumps(dict(name=res["name"], solid_ok=res["solid_ok"], mass_g=res["mass_g"],
                           worst=res["strength"]["worst"], total_s=res["total_s"]), indent=1))
-    return 0 if res["solid_ok"] else 1
+    return 0 if passed(res) else 1
 
 
 if __name__ == "__main__":
