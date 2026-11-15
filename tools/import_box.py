@@ -2,8 +2,7 @@
 streams (tools/box_check.py). Writes systems/box.assembly.json (box W frame), systems/box.check.json and systems/box.appendix.html.
   swap arm         systems/swap_arm.assembly.json once the arm stream has pushed it; until then the arm v7 meshes imported from the
                    nox repo on 3 Nov (hub, stub, rails, heads, grabbers, detent, drives, 11 bay receivers, two packs), marked superseded
-  stand            the stand v2 (parts/box_stand2_lib.py, 14 Nov): mast, two base halves, two rails (engine parts: their result once
-                   run, their drawn faces and room until then) and four TPU feet
+  stand            the stand v2 PROTOTYPE (parts/box_stand2p_lib.py, 15 Nov): drawn mast, two base halves, two front rails, four TPU feet
   enclosure        the v2 sheets and PSU as boxes (from the nox repo, 3 Nov)
   funnel           parts/box_funnel/make.py v5: the two frame halves and the cross arm (engine parts: their result once run, a
                    placeholder and their drawn faces and room until then), the two end walls, strips, drive
@@ -224,74 +223,68 @@ def appendix(chk):
 <h2>Stand v2</h2><p>{e(STAND_NOTE)}</p>{stand_rows()}"""
 
 
-STAND_PIECES = [("box_stand2_mast", "stand v2: mast (the stub's face down to the foot)"),
-                ("box_stand2_yoke_r", "stand v2: yoke, right (+X, under the PSU)"), ("box_stand2_yoke_l", "stand v2: yoke, left"),
-                ("box_stand2_rear_r", "stand v2: rear rail, right"), ("box_stand2_rear_l", "stand v2: rear rail, left"),
-                ("box_stand2_rail_r", "stand v2: front rail, right"), ("box_stand2_rail_l", "stand v2: front rail, left")]
-STAND_BOUGHT = [("M5 x 16 socket cap, 12.9 (3 stub to mast from behind, 8 yokes up into the mast foot)", 11, "https://www.amazon.com/dp/B0BLNLH7YY"),
-                ("M5 x 15 x 1.2 washer, 304 (under the three stub bolts' heads)", 3, "https://www.amazon.com/dp/B0DX6TD1Q7"),
-                ("M5 x 60 socket cap, 12.9 (rear rails into the yokes, from outboard)", 12, "https://www.amazon.com/dp/B06XCMHM41"),
-                ("M5 x 16 hex head bolt, DIN 933, A2-70 (rail splices, into inserts in the rear rail)", 8, "https://www.amazon.com/dp/B07K52GLM9"),
-                ("M5 x D7 x L6 heat-set insert (8 in the mast foot, 12 in the yokes, 8 in the rear rails, 3 in the stub flange)", 31, "https://www.amazon.com/dp/B0H142Y3BM")]
-STAND_NOTE = ("Stand v2 (14 Nov, parts/box_stand2_lib.py, parts/box_stand2_frame_lib.py): seven PCTG engine pieces and four TPU 95A feet, every piece in the "
-              "180 bed. The mast takes the arm v8 stub's flange on its face at W Y 0 (bearing on the face ring r 33..45, three M5 x 16 on Ø15 washers "
-              "from behind into heat-set inserts in the flange) and runs down behind the hub (X -42..40, Y -64..0, clear of the axle stepper and the "
-              "PSU) to its foot at W Z -135, where the two yokes bolt up into it (8 M5 into inserts). Each yoke reaches out under the ring's sweep "
-              "to its rear rail at |X| 120..177.5 (the sweep leaves 42 mm over the floor at |X| 120; 6 M5 x 60 from the rail's outer face into "
-              "inserts in the yoke); the rear rail carries the rear foot at (+-149, -44) to a butt splice at Y 110 (4 M5 x 16 hex bolts into inserts, heads "
-              "turned through side windows), the front rail on to the front foot at (+-149, 232). Four feet, so every floor reaction is known: flat "
-              "floor and each foot lifted in turn (uneven floor). Loads: the arm v8 with its 11 bays and packs (9.7 kg at W Y 129) and every case "
-              "of parts/box_stand_mast/check.py, the stand's own weight. For the arm stream: the stub's 135 deg M5 hole sits 0.5 mm into the axle "
-              "stepper behind the flange (the mast uses the other three), and nothing fits on the flange's front face (2.0 mm to the bearings), so "
-              "the stub's holes need M5 heat-set inserts (5.5 to 6.4). The built demo stand (mast, kb, bars, keel, toe) is out: it fails with the arm v8.")
+STAND_PIECES = [("box_stand2p_mast", "stand v2: mast (the stub's face down to the foot)", 1),
+                ("box_stand2p_base_r", "stand v2: base half, right (yoke + rear rail)", 1), ("box_stand2p_base_l", "stand v2: base half, left (yoke + rear rail)", 1),
+                ("box_stand2p_rail_r", "stand v2: front rail, right", 1), ("box_stand2p_rail_l", "stand v2: front rail, left", 1),
+                ("box_stand2p_foot", "stand v2: TPU 95A foot", 4)]
+STAND_PRINT = {"box_stand2p_mast": "on its +X side (W X 40 down), no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~14 h (E)",
+               "box_stand2p_base_r": "floor face down, no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~18 h (E)",
+               "box_stand2p_base_l": "floor face down, no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~18 h (E)",
+               "box_stand2p_rail_r": "floor face down, no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~7 h (E)",
+               "box_stand2p_rail_l": "floor face down, no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~7 h (E)",
+               "box_stand2p_foot": "pad down, four on one plate, TPU 95A, 0.2 layers, 3 walls, 30 % infill, ~1.5 h (E)"}
+STAND_BOUGHT = [("M5 x 16 socket cap, 12.9 (3 stub to mast from behind, 4 mast foot front row from below)", 7, "https://www.amazon.com/dp/B0BLNLH7YY"),
+                ("M5 x 25 socket cap, 12.9 (4 mast foot rear row, 10 rail splices)", 14, "https://www.amazon.com/dp/B0BQJ3DZ34"),
+                ("M5 x 15 x 1.2 washer, 304 (stub bolts, through bolts both sides)", 31, "https://www.amazon.com/dp/B0DX6TD1Q7"),
+                ("M5 nyloc, 304 (mast foot rear row, splices)", 14, "https://www.amazon.com/dp/B078NNFT93"),
+                ("M5 x D7 x L6 heat-set insert (4 in the mast foot's front row, 3 in the stub flange)", 7, "https://www.amazon.com/dp/B0H142Y3BM")]
+STAND_NOTE = ("Stand v2, PROTOTYPE (15 Nov, CLAUDE.md stages; parts/box_stand2p_lib.py): five drawn PCTG pieces and four TPU 95A feet, each in the 180 bed "
+              "and flat on it, sized by hand against every case of parts/box_stand_mast/check.json (worst index 0.35, the rail just ahead of the yoke in "
+              "box handling on an uneven floor; the gate's 0.5). The mast, an 82 x 64 tube, takes the arm v8 stub's flange on a 12 thick face at W Y 0 "
+              "(three M5 x 16 on Ø15 washers from behind, through holes in its back wall, into heat-set inserts in the stub's flange) and stands "
+              "on both base halves at W Z -135 (eight M5: the front row into inserts, the rear row through with nuts, reached through windows "
+              "in the mast's side walls). Each base half is the yoke (a closed box under the mast out to |X| 120) in one piece with the rear "
+              "rail (an open channel |X| 120..177.5 under the ring's sweep and the PSU) with the rear foot at (+-149, -44); the front rail bolts "
+              "to it at Y 110 (five M5 x 25 through, reached from under the channels) and runs to the front foot at (+-149, 232). Four feet: every "
+              "floor reaction is known (flat, and each foot lifted). For the arm stream: the stub's 135 deg M5 hole sits 0.5 mm into the axle "
+              "stepper (unused), its holes need M5 heat-set inserts (5.5 to 6.4: nothing fits in front of the flange, 2.0 to the bearings), and "
+              "the top insert pulls 532 N in box handling, 0.89 of an insert's 1500 N (E) at SF 2.5. Holes: no systems/fit_table.json yet, the "
+              "repo's values (M5 Ø5.5, insert Ø6.4). The engine setups (parts/box_stand2_*/part.py) stay for OPTIMISE after Spark's test.")
 
 
 def stand_rows():
-    """the stand v2's pieces (status of each run) and its bought parts, for the appendix"""
+    """the stand v2 prototype: per piece its hand check, mass, solid check and print line; the bought parts"""
     from html import escape as e
     rows = ""
-    for pid, name in STAND_PIECES:
-        rj = os.path.join(ROOT, "parts", pid, "result.json"); r = json.load(open(rj)) if os.path.exists(rj) else {}
-        st = r.get("strength") or {}; w = st.get("worst") if isinstance(st, dict) else None
-        sc = r.get("solid_ok")
-        rel = (r.get("print_stl") or {}).get("url", "") if isinstance(r.get("print_stl"), dict) else ""
-        rows += (f"<tr><td>{e(name)}</td><td>{e(str(r.get('status', 'not run yet')))}</td><td>{e(str(r.get('mass_g', '')))}</td><td>{e(str(w if w is not None else ''))}</td>"
-                 f"<td>{e(str(sc if sc is not None else ''))}</td><td>{('<a href=' + chr(34) + rel + chr(34) + '>' + e(pid) + '.stl</a>') if rel else ''}</td></tr>")
+    for pid, name, n in STAND_PIECES:
+        mj = os.path.join(ROOT, "parts", pid, "make.json"); r = json.load(open(mj)) if os.path.exists(mj) else {}
+        idx = json.load(open(os.path.join(ROOT, "print", "index.json"))).get(f"{pid}.stl", {}) if os.path.exists(os.path.join(ROOT, "print", "index.json")) else {}
+        rel = idx.get("url", "")
+        rows += (f"<tr><td>{e(name)}</td><td>{n}</td><td>{e(str(r.get('g', '')))}</td><td>{e(str(r.get('worst', '')))}</td><td>{e(str(r.get('solid_check', '')))}</td>"
+                 f"<td>{e(STAND_PRINT.get(pid, ''))}</td><td>{('<a href=' + chr(34) + rel + chr(34) + '>print-' + e(pid) + '.stl</a>') if rel else e('print/' + pid + '.stl')}</td></tr>")
     bought = "".join(f"<tr><td><a href=\"{u}\">{e(n)}</a></td><td>{q}</td></tr>" for n, q, u in STAND_BOUGHT)
-    return ("<table><tr><th>piece</th><th>run</th><th>g</th><th>worst</th><th>solid check</th><th>print file</th></tr>" + rows + "</table>"
-            "<p>Also: four TPU 95A feet (parts/box_stand2_foot, Ø36 x 5 with a Ø8 x 2.8 stud).</p>"
+    return ("<table><tr><th>piece</th><th>n</th><th>g (solid)</th><th>hand-check index</th><th>solid check</th><th>print</th><th>file</th></tr>" + rows + "</table>"
             "<h3>Stand bought</h3><table><tr><th>part</th><th>qty</th></tr>" + bought + "</table>")
 
 
 def stand_parts():
-    """the stand v2: the five engine pieces (their result once CI has run them, else their drawn faces and room) and the four TPU feet"""
+    """the stand v2 prototype: the drawn pieces (parts/box_stand2p_*/make.py, part.stl in W) and the four TPU feet"""
     import importlib
-    import box_check as bc
     sys.path.insert(0, ROOT)
     L = importlib.import_module("parts.box_stand2_lib")
-    base = dict(role="structure", group="stand", material="PCTG", tag="C", owner="box stand v2", source="parts/box_stand2_lib.py")
+    base = dict(role="structure", group="stand", material="PCTG", tag="C", owner="box stand v2", source="parts/box_stand2p_lib.py", version="v2 prototype 15 Nov")
     out = []
-    for pid, name in STAND_PIECES:
-        p = importlib.import_module(f"parts.{pid}.part").setup(importlib.import_module(f"parts.{pid}.part").SPEC["h"])
-        drawn, cuts, env = p.drawn_m, p.cuts_m, p.env0_m
-        rj = os.path.join(ROOT, "parts", pid, "result.json")
-        done = os.path.exists(rj) and bool(json.load(open(rj)).get("print_stl"))
-        e = dict(base, id=pid, name=name, color="#b7bfc9", pose=np.eye(4).tolist(), version="v2 setup 14 Nov",
-                 note=f"engine part (parts/{pid}/part.py)")
-        if done:
-            e["mesh"] = f"parts/{pid}/part.stl"; out.append(e); continue
-        for suf, m, col, op, what in (("drawn", drawn - cuts, "#7f8a96", None, "drawn faces (what the stub, a bolt or the floor touches)"),
-                                      ("room", (env + drawn) - cuts, "#d5dbe2", 0.25, "room the engine may fill (what every clearance check uses)")):
-            out.append(dict(base, id=f"{pid}_{suf}", name=f"{name}: {what}", color=col, opacity=op, mesh=view(m, f"{pid}_{suf}", f"{pid}_{suf}"),
-                            pose=np.eye(4).tolist(), part=f"{pid}_{suf}", version="v2 14 Nov", note="shown until the run's mesh is in"))
-    fm = L.foot_mesh()
-    fv = view(fm, "box_stand2_foot", "box_stand2_foot")
+    for pid, name, n in STAND_PIECES:
+        if pid == "box_stand2p_foot":
+            continue
+        out.append(dict(base, id=pid, name=name, color="#b7bfc9", mesh=f"parts/{pid}/part.stl", pose=np.eye(4).tolist(), part=pid,
+                        note=f"drawn prototype (parts/{pid}/make.py): {STAND_PRINT[pid]}"))
     for s in (1, -1):
         for k, y in L.FEET.items():
             P = np.eye(4); P[:3, 3] = [s * L.FOOT_X, y, L.FLOOR]
-            out.append(dict(base, id=f"box_stand2_foot_{'r' if s > 0 else 'l'}_{k}", name=f"stand v2: TPU 95A foot, {'right' if s > 0 else 'left'} {k}", color="#3a3a3a",
-                            material="TPU", mesh=fv, part="box_stand2_foot", pose=P.tolist(), version="v2 14 Nov",
-                            note="Ø36 x 5 pad, its Ø8 x 2.8 stud pressed into the piece's foot pad"))
+            out.append(dict(base, id=f"box_stand2p_foot_{'r' if s > 0 else 'l'}_{k}", name=f"stand v2: TPU 95A foot, {'right' if s > 0 else 'left'} {k}", color="#3a3a3a",
+                            material="TPU", mesh="parts/box_stand2p_foot/part.stl", part="box_stand2p_foot", pose=P.tolist(),
+                            note="Ø36 x 5 pad, its Ø7.8 x 2.8 stud pressed into the piece's foot pad"))
     return out
 
 
@@ -316,7 +309,7 @@ def main(nox=None):
                    "In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are "
                    "engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, "
                    + ("the swap arm from systems/swap_arm.assembly.json, " if os.path.exists(new_arm) else "the swap arm v7 at park with 11 bay receivers and two packs (3 Nov import, SUPERSEDED: the arm stream's new arm replaces it when pushed), ")
-                   + "the stand v2 (mast, two base halves, two rails: engine parts, shown as their drawn faces and room until their runs; four TPU feet), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. "
+                   + "the stand v2 prototype (drawn: mast, two base halves, two front rails, four TPU feet), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. "
                    "Compatibility between the streams: tools/box_check.py, its result under the viewer."))
     import box_check
     json.dump(a, open(out, "w"), indent=0, ensure_ascii=False)

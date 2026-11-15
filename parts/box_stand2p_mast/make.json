@@ -1,0 +1,55 @@
+{
+ "name": "box_stand2p_mast",
+ "cm3": 360.09,
+ "g": 457.3,
+ "as_printed_mm": [
+  179.0,
+  64.0,
+  85.0
+ ],
+ "bed_mm2": 11096,
+ "solid_check": "PASS",
+ "note": "on its +X side",
+ "for_the_arm_stream": {
+  "section": "for the arm stream, not this part:   the same pull on the stub flange's inserts (arm stream) (532 N)",
+  "index": 0.887,
+  "case": "box handling 3 g down + 2 g side (+X)"
+ },
+ "hand_check": [
+  {
+   "section": "column above the foot (W Z -124)",
+   "A_mm2": 1648,
+   "Wx": 26570,
+   "Wy": 33894,
+   "index": 0.198,
+   "case": "box handling 3 g down + 2 g side (+X)"
+  },
+  {
+   "section": "column through the nut windows (W Z -112)",
+   "A_mm2": 1468,
+   "Wx": 23628,
+   "Wy": 27358,
+   "index": 0.2,
+   "case": "standing: arm v8, 11 bays with packs, the ring at its worst unbalance"
+  },
+  {
+   "section": "column at the face's foot (W Z -40)",
+   "A_mm2": 1935,
+   "Wx": 27801,
+   "Wy": 34757,
+   "index": 0.173,
+   "case": "box handling 3 g down + 2 g side (+X)"
+  },
+  {
+   "section": "mast foot: front row inserts (1500 N, E), rear row through (354 N)",
+   "index": 0.16,
+   "case": "box handling 3 g down + 2 g side (+X)"
+  },
+  {
+   "section": "stub on the face: \u00d815 washer through 10 of face (532 N)",
+   "index": 0.144,
+   "case": "box handling 3 g down + 2 g side (+X)"
+  }
+ ],
+ "worst": 0.2
+}
