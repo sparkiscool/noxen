@@ -1673,9 +1673,11 @@ def _arms_part(arms=((45, 1), (-45, 1), (135, 1), (-135, 1)), h=2.0, sockets=(16
 
 
 def t_built_hold():
-    """the built hold (layout.py Settings.nominal_hold): inactive rows before it starts; once started every real case's compliance on
-    the build projection (nominal and gate-eroded) reads 1 / (1 + hold_tol) - 1 on the reference design, and its gradient (through the
-    sharp projection, body forces included) matches finite differences"""
+    """the built hold (layout.py Settings.nominal_hold): inactive rows before it starts; once started every real case's strength index on
+    the build projection is held to its own on the reference design, at least hold_floor x the worst (the worst row and every row over
+    the floor read 1 / (1 + hold_tol) - 1 there, the rest under it; the p-norm within its bounds of the true max), and its compliance
+    on the build and the gate-eroded projections to its own (every row at 1 / (1 + hold_tol) - 1); the gradients (the strength's by
+    its adjoint, through the sharp projection, body forces included) match finite differences"""
     try:
         p = _mini_part()
         p.accel_case("grav", (0, 0, -9.81 * 30), cls="crash")
@@ -1690,12 +1692,18 @@ def t_built_hold():
         L.start_hold(f)
         f = L.fields(x, beta)
         comp, (U, _) = L._compliance(f["rho_e"], rho_g=f["rho_g"], rho_b=f["rho_b"], rho_be=f["fb"]["rho_e"])
+        hs = U.hs
         fv, dg = L._hold_constraints(f, comp, U)
+        n1 = L.n_real
+        nk = len(L.stress_keep()[0]) * 2
+        pn_ok = all(hs["T"][k] <= hs["PN"][k] * (1 + 1e-12) <= hs["T"][k] * nk ** (1 / s.hold_p) * (1 + 1e-12)
+                    for k in range(len(fv)) if hs["T"][k] > 0)
+        c = L.hold_c.copy()
 
         def G(xx):
             ff = L.fields(xx, beta)
-            c, _ = L._compliance(ff["rho_e"], need_grad=False, rho_g=ff["rho_g"], rho_b=ff["rho_b"], rho_be=ff["fb"]["rho_e"])
-            return c[len(L.cases):] / ((1 + s.hold_tol) * L.c_hold) - 1
+            _, h_ = L._compliance(ff["rho_e"], need_grad=False, rho_g=ff["rho_g"], rho_b=ff["rho_b"], rho_be=ff["fb"]["rho_e"])
+            return c * h_["PN"] / ((1 + s.hold_tol) * L.c_hold) - 1
         errs = []
         for i in rng.choice(L.nd, 6, replace=False):
             e = 1e-3        # the eroded copies' roundoff (Emin cells) swamps 1e-4 steps; truncation at 1e-3 is ~1e-6 at beta 6
@@ -1704,10 +1712,12 @@ def t_built_hold():
             xm[i] -= e
             fd = (G(xp) - G(xm)) / (2 * e)
             errs += [abs(fd[k] - dg[k][i]) / max(abs(fd[k]), 1e-2 * np.abs(dg[k]).max()) for k in range(len(fv))]
-        ok = (fv0 == [-1.0] * 2 * L.n_real and len(fv) == 2 * L.n_real == 6 and np.allclose(fv, 1 / (1 + s.hold_tol) - 1, atol=1e-9)
-              and max(errs) < 1e-3 and L.mma.m == 3 + 2 * L.n_real)
-        check("built hold: rows inactive before it starts, at the reference after, gradient vs finite differences", ok,
-              f"rows {np.round(fv, 4).tolist()}, max rel err {max(errs):.1e}")
+        Tb = hs["T"][:n1]
+        top = [fv[k] for k in range(n1) if Tb[k] >= s.hold_floor * Tb.max()] + list(fv[n1:])
+        ok = (fv0 == [-1.0] * 3 * L.n_real and len(fv) == 3 * L.n_real == 9 and np.allclose(top, 1 / (1 + s.hold_tol) - 1, atol=1e-9)
+              and max(fv) <= 1 / (1 + s.hold_tol) - 1 + 1e-9 and pn_ok and max(errs) < 1e-3 and L.mma.m == 3 + 3 * L.n_real)
+        check("built hold: rows inactive before it starts, at the reference after (strength as built, compliance both), gradients vs FD",
+              ok, f"rows {np.round(fv, 4).tolist()}, p-norm bounds {pn_ok}, max rel err {max(errs):.1e}")
     except Exception as e:
         traceback.print_exc()
         check("built hold", False, str(e))
@@ -1765,7 +1775,7 @@ def t_no_cavity():
         P = man(trimesh.creation.box((20.0, 20.0, 20.0))) - man(trimesh.creation.box((6.0, 6.0, 6.0)))
         M, rep = export_mesh(P, log=lambda s_: None)
         ok_f, i_f = solid_check(M)
-        ok = (max(opn) < lim and min(sealed) > 4 * lim and max(errs) < 1e-3 and max(lerr) < 1e-3 and L.mma.m == 3 + 2 * L.n_real + 1 and L.cavity_rows == 1
+        ok = (max(opn) < lim and min(sealed) > 4 * lim and max(errs) < 1e-3 and max(lerr) < 1e-3 and L.mma.m == 3 + 3 * L.n_real + 1 and L.cavity_rows == 1
               and not ok_h and ih["sealed_voids"] and ih["inner_shells"] and rep.get("cavities_filled_mm3") == [216.0]
               and abs(M.volume - 8000.0) < 1e-6 and ok_f)
         check("no sealed void: open rooms under the limit, sealed pockets over 4 x it, gradients vs FD, the export fills, the gate refuses", ok,

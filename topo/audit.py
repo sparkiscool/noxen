@@ -140,7 +140,7 @@ def memory_estimate(L):
     sol = L.fe_solver
     g = sol.grid
     real = [c for c in L.cases if not c.tie] if getattr(L.s, "nominal_hold", False) else []   # the nominal-hold copies (layout.py)
-    nc = len(L.cases) + len(real)
+    nc = len(L.cases) + len(real) * (1 + bool(getattr(L.s, "hold_eroded", False)) + bool(getattr(L.s, "hold_stiff", False)))   # their rows' gradients
     n_fe = sum(c.fe is not None for c in L.cases) + sum(c.fe is not None for c in real)
     GB = 1024.0 ** 3
     blk = sol.block_size()
