@@ -41,13 +41,20 @@ printed: 6 walls (2.4 mm), top and bottom 2.4 mm (12 layers at 0.2), 25 % gyroid
       skin:   S down 1394, S level 3154 -> 4.2 + 2.6 = 6.8 MPa -> index 0.69
       the setups' FE on the room filled solid (topo/audit.py room_full, h 2.2): nose 0.384, tail 0.399 at this case: the hand calc
       agrees. Torsion (74 N at |y| 46 about the block's centre |y| 63): 1.3 N m, 0.4 MPa: negligible.
-  HALF, motor front plate, the gearmotor stalled driving in (135 N on the plate, flight class): 3.5 thick x 13 wide, its free span
-    between the floor (z -44.1 on its outer face) and the solid over it (z -32.2): 11.9; fixed both ends, the gearbox face's load
-    spread: M = P L / 12 = 134 N mm at the roots. It spans up the layers (printed upside down): across-layer bending.
-      with the setup's up-slot the top root is 8.4 wide: 7.8 MPa -> index 1.6 across layers. With the side slot (here) both roots are
-      the full 13: S 26.5 mm3 -> 5.0 MPa -> index 1.03, and 3.9 x on the knocked-down 19.6 MPa: the piece's lowest margin. Solid PCTG
-      round it, a 3.5 plate the setups' h 2.2 grid sees as 1.6 cells. Stall it with current limiting (a jam, not a landing).
-  HALF, end-wall landing (106.1 N through the two screws onto two plates, 53 N a plate): half the stall: index 0.52 on the plate.
+  HALF, motor front plate, the gearmotor stalled driving in (135 N on the plate). Class: FLIGHT (SF 4), as the setups have it, not
+    misuse: the box drives the walls unattended at every landing and swap, the inmost position ends with the nut block on this plate
+    and a jam or a lost count stalls the motor there with a drone seated; nobody's hand is in it.
+    With the side slot the plate is two lips, not a span: the slot (4.6 tall, |y| 49.7 out past the room's edge) parts it at the
+    screw. The gearbox face (12 x 10) bears 2.7 high on each lip, half the load a lip by statics (the screw on the centre line):
+    67.5 N. The upper lip hangs from the rib (root z -31.8, the motor's way-in ceiling), load centre z -34.65: lever 2.85,
+    M 192 N mm, bending ACROSS the layers (printed upside down); the lip's inboard edge joins the solid behind the side wall and is
+    ignored. The lower lip stands on the floor, lever 1.45: half of that.
+      3.5 thick (to 15 Nov): S 13 x 3.5^2 / 6 = 26.5 mm3 -> 7.2 MPa -> index 1.48 (the two-ended span of the first calc read 1.03).
+      6.5 thick (now, make.py PLATE_T; grown inboard: the gearmotor sits 3.0 further in, the shaft is cut to 65 not 62, the plate's
+      front face, the nut block's stop, the screw's tip and the walls' travel are where they were): S 91.5 mm3 -> 2.1 MPa ->
+      index 0.43; shear 1.5 x 67.5 / (13 x 6.5) = 1.2 MPa -> 0.24. The up-slot's 1 mm leftovers either side of the plate (notches
+      at the lip's root, to z -26.3) are filled. 3.0 x the plate's thickness in cells at the setups' h 2.2.
+  HALF, end-wall landing (106.1 N through the two screws onto two plates, 53 N a plate, 26.5 N a lip): index 0.17 on the plate.
   HALF, hold-down push (118 N less the drone, up under the nut blocks' roofs, 24 to 28 N a block): the roof over each block, solid over
     |y| 46..59, 3.4 deep minimum under the rib: 28 N on a 12 x 13 roof, M 28 x 12 / 8 = 42 N mm, S 13 x 3.4^2 / 6 = 25 -> 1.7 MPa, 0.17.
   HALF, handling 50 N out on the top edge (misuse): the 3.0 wall with the rim and rib behind it: cantilever of the rib block, 50 N at 28
@@ -94,8 +101,10 @@ def half(sx):
     for sy in (-1, 1):
         Y = lambda a, b: (sy * a, sy * b)
         # the motor plate: up-slot filled, side slot cut
-        add.append(fm.box(mf_, mf_ + sx * 3.5, *Y(fm.SCREW_Y - 2.31, fm.SCREW_Y + 2.31), zc + 2.3, zc + 12.0) ^ pre)
-        rem.append(fm.box(mf_ - sx * 0.5, mf_ + sx * 4.0, *Y(fm.SCREW_Y - 2.3, fm.ROOM_Y + 2.0), zc - 2.3, zc + 2.3))
+        add.append(fm.box(mf_, mf_ + sx * fm.PLATE_T, *Y(fm.SCREW_Y - 2.31, fm.SCREW_Y + 2.31), zc + 2.3, zc + 12.0) ^ pre)
+        add.append(fm.box(mf_ - sx * 1.0, mf_, *Y(fm.SCREW_Y - 2.31, fm.SCREW_Y + 2.31), zc + 6.5, zc + 12.0) ^ pre)                       # the up-slot's 1 mm either side of the plate: notches at the upper lip's root
+        add.append(fm.box(mf_ + sx * fm.PLATE_T, mf_ + sx * (fm.PLATE_T + 1.0), *Y(fm.SCREW_Y - 2.31, fm.SCREW_Y + 2.31), zc + fm.BLOCK[2] + 0.6, zc + 12.0) ^ pre)
+        rem.append(fm.box(mf_ - sx * 0.5, mf_ + sx * (fm.PLATE_T + 0.5), *Y(fm.SCREW_Y - 2.3, fm.ROOM_Y + 2.0), zc - 2.3, zc + 2.3))
         if sx > 0:                                                                             # the nose half: the M3's head pocket left 0.9 of floor under it (room ends at z -56.5): open to the bottom
             (yl, zl, rl) = fm.JOINT["lo"]
             rem.append(fm.box(5.0, 19.0, *Y(yl - 3.4, yl + 3.4), z0 - 20.0, zl))

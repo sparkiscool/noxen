@@ -1,6 +1,6 @@
 {
  "drone": "box",
- "ok": false,
+ "ok": true,
  "gate": true,
  "fit_tol_mm3": 0.5,
  "fit_table": [
@@ -85,15 +85,34 @@
   }
  ],
  "grow_mm": 0.1,
- "parts_checked": 140,
+ "parts_checked": 180,
  "printed": [
-  "box_dome_hoop_0",
-  "box_dome_hoop_1",
-  "box_dome_hoop_2",
-  "box_dome_hoop_3",
-  "box_dome_hoop_4",
-  "box_dome_hubs",
-  "box_dome_ring",
+  "box_dome_hub_l",
+  "box_dome_hub_r",
+  "box_dome_plate_1_l",
+  "box_dome_plate_1_r",
+  "box_dome_plate_2_l",
+  "box_dome_plate_2_r",
+  "box_dome_plate_3_l",
+  "box_dome_plate_3_r",
+  "box_dome_plate_4_l",
+  "box_dome_plate_4_r",
+  "box_dome_ring_00",
+  "box_dome_ring_01",
+  "box_dome_ring_02",
+  "box_dome_ring_03",
+  "box_dome_ring_04",
+  "box_dome_ring_05",
+  "box_dome_ring_06",
+  "box_dome_ring_07",
+  "box_dome_ring_08",
+  "box_dome_ring_09",
+  "box_dome_ring_10",
+  "box_dome_ring_11",
+  "box_dome_ring_12",
+  "box_dome_ring_13",
+  "box_dome_ring_14",
+  "box_dome_ring_15",
   "box_funnel_arm",
   "box_funnel_arm_nm",
   "box_funnel_arm_tm",
@@ -117,8 +136,8 @@
   "box_stand2p_rail_r",
   "box_swaparm_box_arm8_a_blade_n",
   "box_swaparm_box_arm8_a_blade_p",
-  "box_swaparm_box_arm8_a_carriage_run",
-  "box_swaparm_box_arm8_a_lift_run",
+  "box_swaparm_box_arm8_a_carriage",
+  "box_swaparm_box_arm8_a_lift",
   "box_swaparm_box_arm8_a_pads",
   "box_swaparm_box_arm8_a_pilots",
   "box_swaparm_box_arm8_a_rail",
@@ -127,8 +146,8 @@
   "box_swaparm_box_arm8_a_wheels",
   "box_swaparm_box_arm8_b_blade_n",
   "box_swaparm_box_arm8_b_blade_p",
-  "box_swaparm_box_arm8_b_carriage_run",
-  "box_swaparm_box_arm8_b_lift_run",
+  "box_swaparm_box_arm8_b_carriage",
+  "box_swaparm_box_arm8_b_lift",
   "box_swaparm_box_arm8_b_pads",
   "box_swaparm_box_arm8_b_pilots",
   "box_swaparm_box_arm8_b_rail",
@@ -160,7 +179,7 @@
   "box_swaparm_box_arm8_fx_detent_arm",
   "box_swaparm_box_arm8_fx_post",
   "box_swaparm_box_arm8_fx_stub",
-  "box_swaparm_box_arm8_hub_run"
+  "box_swaparm_box_arm8_hub"
  ],
  "skipped": [
   {
@@ -185,200 +204,6 @@
   }
  ],
  "pairs": [
-  {
-   "a": "box_dome_hubs",
-   "b": "box_dome_ring",
-   "mm3": 47466.65,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": false,
-   "pieces": [
-    {
-     "mm3": 23793.56,
-     "at": [
-      275.2,
-      168.0,
-      137.0
-     ],
-     "extent_mm": [
-      43.6,
-      56.0,
-      10.0
-     ],
-     "depth_mm": 10.0
-    },
-    {
-     "mm3": 23673.09,
-     "at": [
-      -275.2,
-      168.0,
-      137.0
-     ],
-     "extent_mm": [
-      43.6,
-      56.0,
-      10.0
-     ],
-     "depth_mm": 10.0
-    }
-   ]
-  },
-  {
-   "a": "box_dome_hoop_0",
-   "b": "box_dome_hubs",
-   "mm3": 24.61,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": false,
-   "pieces": [
-    {
-     "mm3": 10.01,
-     "at": [
-      257.6,
-      117.2,
-      157.0
-     ],
-     "extent_mm": [
-      2.7,
-      2.3,
-      3.0
-     ],
-     "depth_mm": 2.32
-    },
-    {
-     "mm3": 10.01,
-     "at": [
-      -257.6,
-      117.2,
-      157.0
-     ],
-     "extent_mm": [
-      2.7,
-      2.3,
-      3.0
-     ],
-     "depth_mm": 2.32
-    },
-    {
-     "mm3": 2.29,
-     "at": [
-      258.9,
-      118.0,
-      157.0
-     ],
-     "extent_mm": [
-      1.4,
-      3.0,
-      3.0
-     ],
-     "depth_mm": 1.36
-    },
-    {
-     "mm3": 2.29,
-     "at": [
-      -258.9,
-      118.0,
-      157.0
-     ],
-     "extent_mm": [
-      1.4,
-      3.0,
-      3.0
-     ],
-     "depth_mm": 1.36
-    }
-   ]
-  },
-  {
-   "a": "box_swaparm_box_arm8_hub_run",
-   "b": "box_swaparm_box_arm8_fx_detent_roller",
-   "mm3": 5.28,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": false,
-   "pieces": [
-    {
-     "mm3": 5.28,
-     "at": [
-      35.2,
-      21.7,
-      35.1
-     ],
-     "extent_mm": [
-      2.9,
-      4.0,
-      2.9
-     ],
-     "depth_mm": 2.91
-    }
-   ]
-  },
-  {
-   "a": "box_dome_ring",
-   "b": "box_dome_spokes",
-   "mm3": 7782.6,
-   "limit_mm3": 7800.0,
-   "contact": "the eight 6 mm spokes' ends in their sockets in the base ring (the dome's concept mesh does not cut the bores)",
-   "ok": true,
-   "pieces": [
-    {
-     "mm3": 972.83,
-     "at": [
-      -252.2,
-      272.5,
-      138.0
-     ],
-     "extent_mm": [
-      35.6,
-      19.3,
-      6.0
-     ],
-     "depth_mm": 6.0
-    },
-    {
-     "mm3": 972.83,
-     "at": [
-      252.2,
-      272.5,
-      138.0
-     ],
-     "extent_mm": [
-      35.6,
-      19.3,
-      6.0
-     ],
-     "depth_mm": 6.0
-    },
-    {
-     "mm3": 972.83,
-     "at": [
-      252.2,
-      63.5,
-      138.0
-     ],
-     "extent_mm": [
-      35.6,
-      19.3,
-      6.0
-     ],
-     "depth_mm": 6.0
-    },
-    {
-     "mm3": 972.83,
-     "at": [
-      -252.2,
-      63.5,
-      138.0
-     ],
-     "extent_mm": [
-      35.6,
-      19.3,
-      6.0
-     ],
-     "depth_mm": 6.0
-    }
-   ]
-  },
   {
    "a": "box_scout_v4_scout_v4_frame",
    "b": "box_scout_v4_scout_v4_receiver_bolts",
@@ -462,54 +287,6 @@
    "ok": true
   },
   {
-   "a": "box_latch7_scout_receiver",
-   "b": "box_scout_v4_scout_v4_frame",
-   "mm3": 0.08,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": true
-  },
-  {
-   "a": "box_swaparm_box_arm8_hub_run",
-   "b": "box_swaparm_box_arm8_a_rail",
-   "mm3": 0.01,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": true
-  },
-  {
-   "a": "box_swaparm_box_arm8_hub_run",
-   "b": "box_swaparm_box_arm8_b_rail",
-   "mm3": 0.01,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": true
-  },
-  {
-   "a": "box_swaparm_box_arm8_hub_run",
-   "b": "box_swaparm_box_arm8_fx_bearings",
-   "mm3": 0.0,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": true
-  },
-  {
-   "a": "box_swaparm_box_arm8_hub_run",
-   "b": "box_swaparm_box_arm8_a_motor",
-   "mm3": 0.0,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": true
-  },
-  {
-   "a": "box_swaparm_box_arm8_hub_run",
-   "b": "box_swaparm_box_arm8_b_motor",
-   "mm3": 0.0,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": true
-  },
-  {
    "a": "box_swaparm_box_arm8_bay_m60_recv",
    "b": "box_swaparm_box_arm8_bay_m60_saddle",
    "mm3": 0.0,
@@ -572,26 +349,231 @@
    "limit_mm3": 0.5,
    "contact": null,
    "ok": true
+  },
+  {
+   "a": "box_latch7_scout_receiver",
+   "b": "box_scout_v4_scout_v4_frame",
+   "mm3": 0.0,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": true
   }
  ],
  "mates": [],
- "paths": [],
- "not_print_ready": {
-  "box_dome_hoop_0": [
-   "clashes with box_dome_hubs: 24.6 mm3"
-  ],
-  "box_dome_hubs": [
-   "clashes with box_dome_hoop_0: 24.6 mm3",
-   "clashes with box_dome_ring: 47466.6 mm3"
-  ],
-  "box_dome_ring": [
-   "clashes with box_dome_hubs: 47466.6 mm3"
-  ],
-  "box_swaparm_box_arm8_hub_run": [
-   "clashes with box_swaparm_box_arm8_fx_detent_roller: 5.3 mm3"
-  ]
- },
+ "paths": [
+  {
+   "name": "dome ring: the upper-tongue segments onto the spoke segments",
+   "part": "box_dome_ring_00",
+   "order": 5,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 29,
+   "move": {
+    "out": [
+     0,
+     0,
+     1.0
+    ],
+    "length_mm": 14.0
+   },
+   "into": [],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the eight spoke segments sit on the spokes first; the others drop on from above, then the lap pins"
+  },
+  {
+   "name": "dome hubs onto the ring",
+   "part": "box_dome_hub_l",
+   "order": 10,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 41,
+   "move": {
+    "out": [
+     0,
+     0,
+     1.0
+    ],
+    "length_mm": 20.0
+   },
+   "into": [],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "each bracket down onto the ring's top inside the lid's notch, four M3 from below"
+  },
+  {
+   "name": "dome hoop 1 with its plates into the hubs",
+   "part": "box_dome_hoop_1",
+   "order": 21,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 91,
+   "move": {
+    "out": [
+     0,
+     0,
+     1.0
+    ],
+    "length_mm": 45.0
+   },
+   "into": [],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod bonded in its two plates on the bench, the hoop lowered between the hubs' walls"
+  },
+  {
+   "name": "dome hoop 2 with its plates into the hubs",
+   "part": "box_dome_hoop_2",
+   "order": 22,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 91,
+   "move": {
+    "out": [
+     0,
+     0,
+     1.0
+    ],
+    "length_mm": 45.0
+   },
+   "into": [],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod bonded in its two plates on the bench, the hoop lowered between the hubs' walls"
+  },
+  {
+   "name": "dome hoop 3 with its plates into the hubs",
+   "part": "box_dome_hoop_3",
+   "order": 23,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 91,
+   "move": {
+    "out": [
+     0,
+     0,
+     1.0
+    ],
+    "length_mm": 45.0
+   },
+   "into": [],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod bonded in its two plates on the bench, the hoop lowered between the hubs' walls"
+  },
+  {
+   "name": "dome hoop 4 with its plates into the hubs",
+   "part": "box_dome_hoop_4",
+   "order": 24,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 91,
+   "move": {
+    "out": [
+     0,
+     0,
+     1.0
+    ],
+    "length_mm": 45.0
+   },
+   "into": [],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the rod bonded in its two plates on the bench, the hoop lowered between the hubs' walls (the couplings screwed to plate 4 first)"
+  },
+  {
+   "name": "dome pivot tube, l",
+   "part": "box_dome_pivot_l",
+   "order": 30,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 112,
+   "move": {
+    "out": [
+     1.0,
+     -0.0,
+     -0.0
+    ],
+    "length_mm": 55.10000000000002
+   },
+   "into": [],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "pushed in from inside the dome through the wall and plates 1..3 into plate 4"
+  },
+  {
+   "name": "dome pivot tube, r",
+   "part": "box_dome_pivot_r",
+   "order": 30,
+   "fit": "bond",
+   "gap_mm": 0.0,
+   "steps": 112,
+   "move": {
+    "out": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "length_mm": 55.10000000000002
+   },
+   "into": [],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "pushed in from inside the dome through the wall and plates 1..3 into plate 4"
+  },
+  {
+   "name": "dome motor, l",
+   "part": "box_dome_drive_l",
+   "order": 45,
+   "fit": "free",
+   "gap_mm": 0.1,
+   "steps": 33,
+   "move": {
+    "out": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "length_mm": 16.0
+   },
+   "into": [],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "slid in between the side walls from outside, its shaft into the coupling (bought in bought: the coupling's own bore) and plate 4"
+  },
+  {
+   "name": "dome motor, r",
+   "part": "box_dome_drive_r",
+   "order": 45,
+   "fit": "free",
+   "gap_mm": 0.1,
+   "steps": 33,
+   "move": {
+    "out": [
+     1.0,
+     -0.0,
+     -0.0
+    ],
+    "length_mm": 16.0
+   },
+   "into": [],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "slid in between the side walls from outside, its shaft into the coupling (bought in bought: the coupling's own bore) and plate 4"
+  }
+ ],
+ "not_print_ready": {},
  "would_block": {},
- "seconds": 2.1,
+ "seconds": 10.4,
  "placed": {}
 }

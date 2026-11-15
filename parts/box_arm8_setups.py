@@ -11,6 +11,7 @@ from topo.part import Part
 _sp = importlib.util.spec_from_file_location("box_arm8_make", os.path.join(HERE, "box_arm8", "make.py")); M = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(M)
 
 PACKS = ("overseer", "scout")
+L.packs()        # the latch's cartridges are built here, once: their shapes are the latch's, not a setup's (the audit's fit check reads every size drawn while setup(h) runs)
 
 
 def _cases():
@@ -79,14 +80,17 @@ def hub(h):
     w0, t0 = L.MOTOR_WALL, L.THRUST_WALL
     room = [box(w0["x"][0], w0["x"][1], w0["y"][0], 78.0, w0["u"][0] - 0.01, w0["u"][1] + 12.0),             # over each stepper wall, either side of the plate
             box(67.8, 79.0, y1 - 0.1, t0["y"][1], w0["u"][1], 4.0)]                                           # and a rib from it up past the thrust wall's outer end (the screw's lane is inside it)
-    keel = [box(-20.0, 20.0, 27.0, y1, 40.0, R - 0.5)]                                                       # under each rail: the full depth behind the plate (the rail's couple goes down it to the sleeve)
+    keel = [box(-20.0, 20.0, M.FLARE_Y0 + 0.8, y1, 40.0, R - 0.5)]                                                       # under each rail: the full depth behind the plate (the rail's couple goes down it to the sleeve)
     import manifold3d as mf
-    flare = mf.Manifold.cylinder(8.0, 50.2, 58.0, 96).rotate([-90, 0, 0]).translate([0, 26.2, 0])           # the sleeve's wall grows from the belt's lane to its full 58 over 8 mm: no step at the lane's edge
-    env = U(cyl("y", 0, 0, 50.2, 8.0, 26.3, 96), flare, cyl("y", 0, 0, 58.0, 34.1, y1, 96), cyl("y", 0, 0, R, y1 - 8.0, y1, 96) - cyl("y", 0, 0, 58.0, 0, 100, 96), *keel, *[L.rot180(g_) for g_ in keel],
+    hf = 58.0 - M.BAND_R
+    flare = mf.Manifold.cylinder(hf, M.BAND_R, 58.0, 96).rotate([-90, 0, 0]).translate([0, M.FLARE_Y0, 0])  # the sleeve's wall grows from the belt's lane to its full 58 at 45 deg: no step at the lane's edge
+    # 15 Nov: below FLARE_Y0 the room is the drawn band itself (r BAND_R, the detent roller's track; make.py hub_cuts keeps everything outside it clear): it was r 50.2 to Y 26.3,
+    # and the 13 Nov run grew 5.3 mm3 into the 623ZZ. The stub's 12 mm flange (make.py DY) moved bearings, lane and flare 6 along the axle.
+    env = U(cyl("y", 0, 0, M.BAND_R, M.HUB_Y0, M.FLARE_Y0 + 0.1, 96), flare, cyl("y", 0, 0, 58.0, M.FLARE_Y0 + hf - 0.1, y1, 96), cyl("y", 0, 0, R, y1 - 8.0, y1, 96) - cyl("y", 0, 0, 58.0, 0, 100, 96), *keel, *[L.rot180(g_) for g_ in keel],
             *room, *[L.rot180(g_) for g_ in room])                                                             # an 8 mm plate, the sleeve's wall, the two keels: the room is the load's way, not the whole disc
     p = Part("box_arm8_hub", h, drawn, U(*M.hub_cuts()), env, build="+y", material="PCTG")                    # the sleeve's stub end on the bed, the rail seats up
-    p.bed_min_mm2 = 700.0                                                                                     # the drawn sleeve's end ring, 782 mm2 (topo/audit.py bed)
-    p.support("default", cyl("y", 0, 0, 42.5, 8.0, 40.0, 96) - cyl("y", 0, 0, 39.5, 7, 41, 96))
+    p.bed_min_mm2 = 700.0                                                                                     # the drawn sleeve's end ring (topo/audit.py bed)
+    p.support("default", cyl("y", 0, 0, 42.5, M.BRG[0], M.BRG[1], 96) - cyl("y", 0, 0, 39.5, M.BRG[0] - 1, M.BRG[1] + 1, 96))
     x, y = L.SCREW; w = L.THRUST_WALL                         # the screw's force enters the hub at its thrust wall
     for hd, sg in (("A", 1.0), ("B", -1.0)):
         wall = box(w["x"][0], w["x"][1], w["y"][0], w["y"][1], w["u"][0], w["u"][1]); wall = wall if sg > 0 else L.rot180(wall)
@@ -106,7 +110,7 @@ def hub(h):
             seat = lambda q: box(min(0.0, q[0] * 1.9), max(0.0, q[0] * 1.9), y1 - 3.0, y1, q[2] - 9.0 * sg, q[2] + 9.0 * sg) if sg > 0 else box(min(0.0, q[0] * 1.9), max(0.0, q[0] * 1.9), y1 - 3.0, y1, q[2] - 9.0, q[2] + 9.0)
             parts = [(wall, Fu * [sg, 1, sg])] + [(seat(pads[i]), xs[3 * i:3 * i + 3] * [sg, 1, sg]) for i in range(4)]
             p.load_multi(f"head {hd}: {nm}", parts, cls=cls)
-    ring = cyl("y", 0, 0, M.RING_R + 1.5, 9.5, 19.5, 96) - cyl("y", 0, 0, 45.0, 9, 20, 96)
+    ring = cyl("y", 0, 0, M.BAND_R, M.TEETH[0], M.TEETH[1], 96) - cyl("y", 0, 0, 45.0, M.TEETH[0] - 1, M.TEETH[1] + 1, 96)
     p.load("axle belt at the stepper's stall: 2.95 N m at the ring, 62 N across the sleeve", ring, [62.0, 0, 0], cls="misuse")
     for nm, g in (("handling 3 g along the axle", [0, -3, 0]), ("handling 3 g across", [3, 0, 0])):
         w = L.MOTOR_WALL; mw = [box(w["x"][0], w["x"][1], w["y"][0], w["y"][1], w["u"][0], w["u"][1])]; mw.append(L.rot180(mw[0]))

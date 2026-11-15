@@ -1,0 +1,47 @@
+{
+ "name": "box_arm8p_carriage",
+ "g": 96.6,
+ "as_printed_mm": [
+  88.3,
+  103.0,
+  23.6
+ ],
+ "fits_180": true,
+ "solid_check": "PASS",
+ "note": "rail seat's plane down, no supports",
+ "worst": 0.837,
+ "worst_check": "MGN rail on the spine: four M3 heat-set inserts, 900 N (E)",
+ "worst_case": "insert off square, overseer: the limit + 43.5 N across at the mouth",
+ "hand_check": [
+  {
+   "check": "spine and plate under the top wheel, above the rib (u 64); A 569 mm2",
+   "index": 0.531,
+   "case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)"
+  },
+  {
+   "check": "spine and plate over the low wheel, below the rib (u 28); A 552 mm2",
+   "index": 0.535,
+   "case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)"
+  },
+  {
+   "check": "strap to the third wheel, beside the rail (x 0); A 429 mm2",
+   "index": 0.102,
+   "case": "insert off square, overseer: the limit + 43.5 N across at the mouth"
+  },
+  {
+   "check": "wheel axle: the V's contact 11.4 off the axle, pried on the plate through the o 15 washers",
+   "index": 0.65,
+   "case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)"
+  },
+  {
+   "check": "wheel axle: the washers through the plate's 3.15 web",
+   "index": 0.211,
+   "case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)"
+  },
+  {
+   "check": "MGN rail on the spine: four M3 heat-set inserts, 900 N (E)",
+   "index": 0.837,
+   "case": "insert off square, overseer: the limit + 43.5 N across at the mouth"
+  }
+ ]
+}

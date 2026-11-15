@@ -158,6 +158,7 @@ def main(only=(), do_gate=True):
         pic = f"parts/box_funnel/kit/{name}.png"
         picture(t, os.path.join(ROOT, pic), f"{name} on its bed, x {count} ({mat})", f"{ms['bed_mm'][0]} x {ms['bed_mm'][1]} x {ms['bed_mm'][2]} | on the bed {ms['bed_contact_mm2']} mm2 (blue) | overhang {ms['overhang_mm2']} mm2 (red) | solid check {row['solid_check']}")
         row["picture"] = pic
+        row.update({k: v for k, v in (old.get(name) or {}).items() if k in ("stage", "printed_g", "time", "slicer_estimate")})   # the slicer's numbers ride along (set by hand from a slice of this file)
         row["ok"] = bool(ms["fits_180"] and ms["bed_contact_mm2"] >= bed_min and row["solid_check"] == "PASS")
         if not row["ok"]:
             bad.append(name)

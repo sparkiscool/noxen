@@ -19,7 +19,7 @@ landing and sagged over 10 mm, and its wall drive was a placeholder. Now:
                         twice mirrored. The beams are 24 wide and 29 to 42 deep (v4: 12 x 12 and 12 x 8); the tail one moved from
                         seat x -121..-109 to -158..-134, behind the rails' disc (r 151 over W Y 38..73) and over the hub (r 115).
   wall_nose, wall_tail  the sliding end walls: two tabs each out through slots in the side walls to an M4 nut block per side.
-  drive                 per tab one N20 gearmotor with an M4 x 100 screw shaft cut to 62 (4 in all, self-locking: the walls hold a landing
+  drive                 per tab one N20 gearmotor with an M4 x 100 screw shaft cut to 65 (4 in all, self-locking: the walls hold a landing
                         with no power), seated on the half under the side wall's overhang; a roller switch at each wall's two
                         positions (+y side) pressed by a dog on the nut block; hard stops at "out". No opposite-hand screw, no gears.
   strips                TPU, flush in the ledges; four spring probes through them (seat sense, keep-alive).
@@ -63,7 +63,8 @@ PROBES = [(1.5 + dx, sy * 32.6) for dx in (-30.0, 30.0) for sy in (-1, 1)]   # s
 # ---- the drive: per tab an N20 gearmotor with an M4 x 55 screw shaft (dimensions E from the listings: body 12 x 10 x 25 with its gearbox)
 SCREW_Y, SCREW_H = 52.0, 6.0                      # the screws' axes: |y|, h (under the side walls' overhang; the wall's back is at |y| 38.1 + 0.7 h)
 BLOCK = (6.0, 5.5, 5.5)                           # the nut block's half sizes x, y, z round the screw (M4 nut 7.0 AF x 3.2 in a slot from above)
-GEAR_FACE, MOTOR_L, SCREW_L = 39.5, 25.0, 62.0    # the gearbox face this far inboard of the seat end; body length; screw length (the M4 x 100 shaft cut to 62: 48.2 of travel)
+PLATE_T = 6.5                                     # the motor's front plate along x (15 Nov: 3.5 read index 1.03 to 1.5 across the layers under the 135 N stall, parts/box_funnel/proto.py's hand calculation; 6.5 reads 0.43). It grew INBOARD: its front face, where the nut block stops, stays 36.0 inboard of the seat end
+GEAR_FACE, MOTOR_L, SCREW_L = 36.0 + PLATE_T, 25.0, 65.0   # the gearbox face this far inboard of the seat end (42.5; 39.5 with the 3.5 plate); body length; screw length (the M4 x 100 shaft cut to 65: the tip where it was, 48.2 of travel)
 SW = (19.8, 10.2, 6.4)                            # KW12-3 roller switch body (x, y, z as mounted: lying flat, its roller toward the block), E
 DOG = 25.0                                        # the dog: a bar along the +y block's outer side, its tip this far inboard of the block's centre
 SW_H = 4.0                                        # the switches' underside over the seat plane (the 60 / 120 deg bays' saddles reach z -43 under them)
@@ -255,7 +256,7 @@ def wall_sweep(sx):
     c = carriage(sx); m = U([c.translate([-sx * d, 0, 0]) for d in np.linspace(-OPEN, TRAVEL, 26)])
     z0 = SEAT_Z; xm0, xm1 = block_x(sx, "overseer", "open"), block_x(sx, "scout"); bx, by, bz = BLOCK; zc = z0 + SCREW_H
     lo, hi = min(xm0, xm1) - bx - 0.8, max(xm0, xm1) + bx + 0.8
-    pf = motor_x(sx)[1] + sx * 3.5                                # the blocks' lane runs flush to the motor's front plate (a 0.6 mm fin of room stood between them: one hot cell at h 2.2 in the nose half's audit)
+    pf = motor_x(sx)[1] + sx * PLATE_T                                # the blocks' lane runs flush to the motor's front plate (a 0.6 mm fin of room stood between them: one hot cell at h 2.2 in the nose half's audit)
     lo, hi = (min(lo, pf), hi) if sx > 0 else (lo, max(hi, pf))
     b = [box(lo, hi, sy * (SCREW_Y - by - 0.5), sy * (ROOM_Y + 0.5), zc - bz - 0.5, zc + bz + 0.6) for sy in (-1, 1)]   # out past the room's edge: stopped at |y| 58.1 it left a 0.9 fin of room to 59, one cell at h 2.2, the rib's lowest fibre ending on the motor's front plate (the nose half's audit, 0.60)
     hm = (SCREW_Y - by - 0.5 - 3.2 - SEAT[3] - W_H) * TAN          # above this height the room between the side wall's back and the lane is under a member (3.2) wide, to nothing at h 11.3:
@@ -303,12 +304,12 @@ def half_bodies(sx):
                  cyl_x(-sx * 1.0, sx * 19.0, sy * yl, zl, rl), cyl_x(sx * 5.0, sx * 19.0, sy * yl, zl, 3.4)]
         # the motor's seat: a floor under it, a plate its gearbox face pulls on (slot for the screw), a stop behind it
         y0m, y1m = SCREW_Y - 6.5, SCREW_Y + 6.5
-        floor = box(mr - sx * 4.0, mf_ + sx * 3.5, *Y(y0m, y1m), z0 - 3.5, z0 + SCREW_H - 5.1)
-        front = box(mf_, mf_ + sx * 3.5, *Y(y0m, y1m), z0 - 3.5, z0 + SCREW_H + 6.0)
+        floor = box(mr - sx * 4.0, mf_ + sx * PLATE_T, *Y(y0m, y1m), z0 - 3.5, z0 + SCREW_H - 5.1)
+        front = box(mf_, mf_ + sx * PLATE_T, *Y(y0m, y1m), z0 - 3.5, z0 + SCREW_H + 6.0)
         rear = box(mr, mr - sx * 4.0, *Y(y0m, y1m), z0 - 3.5, z0 + SCREW_H + 2.0)
         R[f"motor_front{sy:+d}"], R[f"motor_rear{sy:+d}"] = front, rear; drawn += [floor, front, rear]
         cuts.append(cyl_x(mf_ - sx * 1.0, tip + sx * 6.0, sy * SCREW_Y, zc, 2.3))                                           # the screw, through the plate and the stop
-        cuts.append(box(mf_ - sx * 1.0, mf_ + sx * 4.5, *Y(SCREW_Y - 2.3, SCREW_Y + 2.3), zc, zc + 12.0))                   # the plate's slot: the screw drops in
+        cuts.append(box(mf_ - sx * 1.0, mf_ + sx * (PLATE_T + 1.0), *Y(SCREW_Y - 2.3, SCREW_Y + 2.3), zc, zc + 12.0))                   # the plate's slot: the screw drops in
         cuts.append(box(mr, mf_, *Y(SCREW_Y - 6.1, SCREW_Y + 6.1), z0 + SCREW_H - 5.1, z0 + SCREW_H + 5.2))                # the motor body
         cuts.append(box(mr, mf_, *Y(SCREW_Y, 75.0), z0 + SCREW_H - 5.1, z0 + SCREW_H + 6.5))          # its way in from the side
         xt = (mr + mf_) / 2

@@ -6,7 +6,7 @@ streams (tools/box_check.py). Writes systems/box.assembly.json (box W frame), sy
   enclosure        the v2 sheets and PSU as boxes (from the nox repo, 3 Nov)
   funnel           parts/box_funnel/make.py v5: the two frame halves and the cross arm (engine parts: their result once run, a
                    placeholder and their drawn faces and room until then), the two end walls, strips, drive
-  dome             parts/box_dome (its entries are kept as they stand in the file)
+  dome             parts/box_dome/make.py PROTOTYPE (15 Nov): its lines (lines()) and its part of the assembly check (assembly_block(): order and paths)
   latch            latch v7, both packs, seated: the PROTOTYPE receiver as printed and the cartridge with its pack (tools/box_check.py latch_bodies, in the seat frame)
   drones           the Scout v4 and the Overseer as their own systems stand today, seated (their meshes in place, no copies)
 Run: python tools/import_box.py            everything but the 3 Nov import is rebuilt; the arm and enclosure lines are kept
@@ -144,7 +144,7 @@ def funnel_parts():
             ("box_funnel_wall_tail", f"funnel tail wall (slides {fm.TRAVEL} in for the Scout)", "#3070e0", "PCTG", "structure", "as the nose wall"),
             ("box_funnel_strips", "funnel ledge strips (TPU 95A, landing impact)", "#3a3a3a", "TPU", "structure", "flush in the side ledges; holes for the four probes"),
             ("box_funnel_drive", "funnel wall drive and fasteners (bought)", "#555555", None, "bought",
-             "4 N20 gearmotors with an M4 x 100 screw shaft cut to 62, 4 KW12-3 roller switches (+y), 4 P156 spring probes in R156 sleeves, 16 M4 x 60 lap bolts, 8 M4 x 16 sheet bolts, 4 M4 x 16 and 2 M3 x 16 joint bolts")):
+             "4 N20 gearmotors with an M4 x 100 screw shaft cut to 65, 4 KW12-3 roller switches (+y), 4 P156 spring probes in R156 sleeves, 16 M4 x 60 lap bolts, 8 M4 x 16 sheet bolts, 4 M4 x 16 and 2 M3 x 16 joint bolts")):
         out.append(dict(base, id=pid, name=name, role=role, color=col, material=mat, mesh=f"parts/{pid}/part.stl", pose=SEAT_TO_W, version="v5 drawn 13 Nov", note=note))
     return out
 
@@ -198,8 +198,13 @@ def drone_parts():
 
 GATED_LANDING = "landing: Scout"     # the page seats both drones at the one seat (two states drawn together); the gate checks the Scout's, the dome shut over it
 DRONE_MOUNT = {"scout_v4": ("scout_v4_frame", "scout_v4_receiver_bolts"), "overseer": ("overseer_base",)}   # the drone's lines latch v7's receiver bolts to
-BOX_CONTACTS = [dict(a="box_dome_ring", b="box_dome_spokes", allow_mm3=7800.0,
-                     why="the eight 6 mm spokes' ends in their sockets in the base ring (the dome's concept mesh does not cut the bores)")]
+BOX_CONTACTS = []                      # contacts between the box's own pieces (none: the dome's bores are cut since its prototype, 15 Nov)
+
+
+def _dome():
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("box_dome_make", os.path.join(ROOT, "parts", "box_dome", "make.py")); m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+    return m
 
 
 def assembly(parts):
@@ -223,12 +228,14 @@ def assembly(parts):
             ca, cb = f"box_{sysname}_{c['a']}", f"box_{sysname}_{c['b']}"
             if ca in keep and cb in keep:
                 contacts.append(dict(c, a=ca, b=cb, why=f"{c.get('why', '')} (systems/{sysname}.assembly.json)"))
-    return {"fit_tol_mm3": 0.5, "note": "written by tools/import_box.py (assembly()): " + " ".join(assembly.__doc__.split()), "exclude": ex, "contacts": contacts}
+    dome = _dome().assembly_block()                       # the dome's order and assembly paths (parts/box_dome/make.py)
+    return {"fit_tol_mm3": 0.5, "note": "written by tools/import_box.py (assembly()): " + " ".join(assembly.__doc__.split()), "exclude": ex, "contacts": contacts + dome["contacts"],
+            "paths": dome["paths"], "order": dome["order"]}
 
 
 BOUGHT_LIST = [
     ("N20 gearmotor, M4 x 100 screw shaft, 6 V 100 rpm (12 x 10 x 25 body)", 4, "https://www.amazon.com/Thread-Shaft-100mm-Motor-terminals/dp/B0GDTKHL8T",
-     "one per wall tab; pick the 6 V 100 rpm option (alt B07JD2SY8W); each shaft cut to 62: Amazon lists this motor with a 34, 55 or 100 shaft only (searched 13 Nov), and the wall's travel needs 59.3 (front plate 3.5 + half the nut block 6.0 + 48.2 of travel + half the nut 1.6), so the 55 is 4.3 short; 37.2 mm at 0.7 mm a turn = 32 s"),
+     "one per wall tab; pick the 6 V 100 rpm option (alt B07JD2SY8W); each shaft cut to 65: Amazon lists this motor with a 34, 55 or 100 shaft only (searched 13 Nov), and the wall's travel needs 62.3 (front plate 6.5 + half the nut block 6.0 + 48.2 of travel + half the nut 1.6), so the 55 is 7.3 short; 37.2 mm at 0.7 mm a turn = 32 s"),
     ("KW12-3 roller lever micro switch, 10 pack", 2, "https://www.amazon.com/SDTC-Tech-Momentary-Microswitch-Normally/dp/B0CPYNDYPP", "one home switch a wall (outmost), on the +y side; every other position is timed from it"),
     ("P156-E spring probe, 100 pack", 4, "https://www.amazon.com/Spring-Probes-Accuracy-Testing-Contact/dp/B0CC2GQKL1", "seat sense and keep-alive, in the ledges"),
     ("3 x 3 x 16 steel parallel key, round ended, 10 pack", 4, "https://www.amazon.com/Feather-Stainless-Parallel-Fastening-Connection/dp/B0GC54N5FH",
@@ -263,7 +270,20 @@ def appendix(chk):
 <table><tr><th>file</th><th>count</th><th>on the bed (x, y, z)</th><th>pose</th><th>flat on the bed</th><th>supports</th><th>material</th><th>solid check</th><th>print file</th></tr>{prt}</table>
 <h3>Bought</h3><table><tr><th>part</th><th>qty</th><th>note</th></tr>{bought}</table><p>Fasteners: {e(FASTENERS)}.</p>
 <p>Hold-down: each end wall carries two 3 x 3 x 16 steel keys that enter the notches in the receiver's end faces; the walls land a drone at park, back off to open and drive in to seated (the arm v8 head pushes up to 118 N; the Overseer weighs 21.6 N, the Scout 4.9 N).</p>
-<h2>Stand v2</h2><p>{e(STAND_NOTE)}</p>{stand_rows()}"""
+<h2>Stand v2</h2><p>{e(STAND_NOTE)}</p>{stand_rows()}{dome_rows()}"""
+
+
+def dome_rows():
+    """the rain dome's printed pieces (parts/box_dome/make.json, written by its make.py: each print file in its print pose, solid-checked)"""
+    from html import escape as e
+    mj = os.path.join(ROOT, "parts", "box_dome", "make.json")
+    if not os.path.exists(mj):
+        return ""
+    k = json.load(open(mj))
+    rows = "".join(f"<tr><td>{e(p['file'])}</td><td>{p['count']}</td><td>{p['g']}</td><td>{' x '.join(f'{v:g}' for v in p['bed_mm'])}</td><td>{e(p['solid_check'])}</td>"
+                   f"<td>{e(p['pose'])}; {e(p['settings'])}, ~{e(p['time'])} (E)</td></tr>" for p in k["pieces"])
+    return ("<h2>Rain dome (PROTOTYPE, 15 Nov)</h2><p>Five sprung 3 mm carbon hoops on two printed hubs, a 16-segment base ring, the fabric; hand calculation, fits, "
+            "assembly order and bought parts in parts/box_dome/make.py.</p><table><tr><th>file</th><th>n</th><th>g each</th><th>on the bed</th><th>solid check</th><th>print</th></tr>" + rows + "</table>")
 
 
 STAND_PIECES = [("box_stand2p_mast", "stand v2: mast (the stub's face down to the foot)", 1),
@@ -276,22 +296,20 @@ STAND_PRINT = {"box_stand2p_mast": "on its +X side (W X 40 down), no supports, 0
                "box_stand2p_rail_r": "floor face down, no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~7 h (E)",
                "box_stand2p_rail_l": "floor face down, no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~7 h (E)",
                "box_stand2p_foot": "pad down, four on one plate, TPU 95A, 0.2 layers, 3 walls, 30 % infill, ~1.5 h (E)"}
-STAND_BOUGHT = [("M5 x 16 socket cap, 12.9 (3 stub to mast from behind, 4 mast foot front row from below)", 7, "https://www.amazon.com/dp/B0BLNLH7YY"),
-                ("M5 x 25 socket cap, 12.9 (2 mast foot rear row, 10 rail splices)", 12, "https://www.amazon.com/dp/B0BQJ3DZ34"),
-                ("M5 x 15 x 1.2 washer, 304 (3 stub bolts, both sides of every through bolt)", 27, "https://www.amazon.com/dp/B0DX6TD1Q7"),
-                ("M5 nyloc, 304 (mast foot rear row, splices)", 12, "https://www.amazon.com/dp/B078NNFT93"),
-                ("M5 x D7 x L6 heat-set insert (4 in the mast foot's front row, 3 in the stub flange)", 7, "https://www.amazon.com/dp/B0H142Y3BM")]
+STAND_BOUGHT = [("M5 x 16 socket cap, 12.9 (4 mast foot front row from below)", 4, "https://www.amazon.com/dp/B0BLNLH7YY"),
+                ("M5 x 25 socket cap, 12.9 (3 stub to mast from the front, 2 mast foot rear row, 10 rail splices)", 15, "https://www.amazon.com/dp/B0BQJ3DZ34"),
+                ("M5 x 15 x 1.2 washer, 304 (both sides of every through bolt)", 30, "https://www.amazon.com/dp/B0DX6TD1Q7"),
+                ("M5 nyloc, 304 (stub bolts, mast foot rear row, splices)", 15, "https://www.amazon.com/dp/B078NNFT93"),
+                ("M5 x D7 x L6 heat-set insert (4 in the mast foot's front row)", 4, "https://www.amazon.com/dp/B0H142Y3BM")]
 STAND_NOTE = ("Stand v2, PROTOTYPE (15 Nov, CLAUDE.md stages; parts/box_stand2p_lib.py): five drawn PCTG pieces and four TPU 95A feet, each in the 180 bed "
               "and flat on it, sized by hand against every case of parts/box_stand_mast/check.json (worst index 0.35, the rail just ahead of the yoke in "
               "box handling on an uneven floor; the gate's 0.5). The mast, an 82 x 64 tube, takes the arm v8 stub's flange on a 12 thick face at W Y 0 "
-              "(three M5 x 16 on Ø15 washers from behind, through holes in its back wall, into heat-set inserts in the stub's flange) and stands "
+              "(three M5 x 25 on Ø15 washers from the front through the stub's 12 thick flange to nylocs on the mast's seats; arm v8 prototype, 15 Nov) and stands "
               "on both base halves at W Z -135 (six M5: the front four into inserts, the rear two through to nuts set through windows "
               "in the mast's side walls). Each base half is the yoke (a closed box under the mast out to |X| 120) in one piece with the rear "
               "rail (an open channel |X| 120..177.5 under the ring's sweep and the PSU) with the rear foot at (+-149, -44); the front rail bolts "
               "to it at Y 110 (five M5 x 25 through, reached from under the channels) and runs to the front foot at (+-149, 232). Four feet: every "
-              "floor reaction is known (flat, and each foot lifted). For the arm stream: the stub's 135 deg M5 hole sits 0.5 mm into the axle "
-              "stepper (unused), its holes need M5 heat-set inserts (5.5 to 6.4: nothing fits in front of the flange, 2.0 to the bearings), and "
-              "the top insert pulls 532 N in box handling, 0.89 of an insert's 1500 N (E) at SF 2.5. Holes: no systems/fit_table.json yet, the "
+              "floor reaction is known (flat, and each foot lifted). The stub's 135 deg hole is dropped and its flange no longer takes inserts (arm v8 prototype 8258bcd8: washer pull-through 0.39). Holes: no systems/fit_table.json yet, the "
               "repo's values (M5 Ø5.5, insert Ø6.4). Assembly: bolt the stand together on the bench (the feet leave 5 mm under it), set it "
               "on the floor, then the arm's stub and the arm, then the rear sheet and the PSU (the stub's bolts and the mast's nut windows face "
               "them); parts/box_stand2p_lib.py install_check walks that path, every piece and tool line: PASS. The engine setups (parts/box_stand2_*/part.py) stay for OPTIMISE after Spark's test.")
@@ -348,7 +366,7 @@ def main(nox=None):
         for p in parts:
             if p["id"].startswith("box_arm_"):
                 p["version"] = "v7, superseded (the arm stream's systems/swap_arm.assembly.json replaces it when pushed)"
-    parts += stand_parts() + funnel_parts() + kept("box_dome_") + latch_parts() + drone_parts()
+    parts += stand_parts() + funnel_parts() + _dome().lines() + latch_parts() + drone_parts()
     a = dict(old, parts=parts, appendix="systems/box.appendix.html", fps=8, assembly=assembly(parts),
              note=("Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). "
                    "In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm "

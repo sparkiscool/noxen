@@ -149,8 +149,8 @@
   {
    "step": "3 one head's slide: carriage, lift, rail, three wheels, two ties (proves the reach and the push on the bench before the hub is printed)",
    "files": [
-    "print/box_arm8_carriage.stl",
-    "print/box_arm8_lift.stl",
+    "print/box_arm8p_carriage.stl",
+    "print/box_arm8p_lift.stl",
     "print/box_arm8_rail.stl",
     "print/box_arm8_wheel.stl",
     "print/box_arm8_tie.stl"
@@ -165,12 +165,13 @@
    }
   },
   {
-   "step": "4 stub side and hub (the longest print)",
+   "step": "4 the bearing coupon first, then stub side and hub (the longest print)",
    "files": [
+    "print/box_arm8p_coupon.stl",
     "print/box_arm8_stub.stl",
     "print/box_arm8_post.stl",
     "print/box_arm8_detent_arm.stl",
-    "print/box_arm8_hub.stl"
+    "print/box_arm8p_hub.stl"
    ],
    "waiting": [],
    "counts": null
@@ -184,8 +185,8 @@
     "print/box_arm8_paddle.stl",
     "print/box_arm8_pad_a_24.stl",
     "print/box_arm8_pad_b_24.stl",
-    "print/box_arm8_carriage.stl",
-    "print/box_arm8_lift.stl",
+    "print/box_arm8p_carriage.stl",
+    "print/box_arm8p_lift.stl",
     "print/box_arm8_rail.stl",
     "print/box_arm8_wheel.stl",
     "print/box_arm8_tie.stl"
@@ -225,6 +226,7 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 5827,
+   "low_gap_mm2": 0,
    "overhang_mm2": 7894,
    "support_mm2": 6975,
    "widest_overhang_mm": 51.5,
@@ -234,6 +236,7 @@
     32.5
    ],
    "supports": "yes: 6975 mm2 of overhang wider than 6 mm (the widest 51.5); tree supports from the bed",
+   "bed_note": "",
    "grams_each": 105.7
   },
   {
@@ -256,11 +259,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 136,
-   "overhang_mm2": 139,
+   "low_gap_mm2": 34,
+   "overhang_mm2": 105,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
-   "supports": "none: 139 mm2 past 45 deg, none of it wider than 6 mm",
+   "supports": "none: 105 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "34 mm2 of the underside lies 0.25 to 0.5 above the bed beside the first layer (the engine's surface stops short of the bed plane): it prints as a rough, slightly sagged face; the drawn seats are on the bed",
    "grams_each": 6.92
   },
   {
@@ -283,11 +288,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 96,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.55
   },
   {
@@ -310,11 +317,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 179,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 4.12
   },
   {
@@ -337,11 +346,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 1845,
+   "low_gap_mm2": 0,
    "overhang_mm2": 795,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 795 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 62.36
   },
   {
@@ -364,11 +375,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 510,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 4.45
   },
   {
@@ -391,11 +404,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 833,
+   "low_gap_mm2": 0,
    "overhang_mm2": 96,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 96 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 9.01
   },
   {
@@ -413,17 +428,19 @@
    "size_on_bed_mm": [
     136.0,
     110.0,
-    40.0
+    46.0
    ],
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
-   "first_layer_mm2": 8455,
-   "overhang_mm2": 0,
+   "first_layer_mm2": 8884,
+   "low_gap_mm2": 0,
+   "overhang_mm2": 86,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
-   "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
-   "grams_each": 125.99
+   "supports": "none: 86 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
+   "grams_each": 177.81
   },
   {
    "file": "print/box_arm8_post.stl",
@@ -440,17 +457,19 @@
    "size_on_bed_mm": [
     57.0,
     57.0,
-    22.0
+    16.0
    ],
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
-   "first_layer_mm2": 2486,
+   "first_layer_mm2": 2487,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
-   "grams_each": 16.58
+   "bed_note": "",
+   "grams_each": 15.16
   },
   {
    "file": "print/box_arm8_detent_arm.stl",
@@ -472,12 +491,14 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 121,
-   "overhang_mm2": 70,
+   "low_gap_mm2": 8,
+   "overhang_mm2": 66,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
-   "supports": "none: 70 mm2 past 45 deg, none of it wider than 6 mm",
-   "grams_each": 3.48
+   "supports": "none: 66 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
+   "grams_each": 3.47
   },
   {
    "file": "print/box_arm8_saddle_overseer.stl",
@@ -499,11 +520,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 4772,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 23.61
   },
   {
@@ -526,11 +549,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 3098,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 15.24
   },
   {
@@ -553,11 +578,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 1518,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 7.47
   },
   {
@@ -580,11 +607,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 18,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.04
   },
   {
@@ -607,11 +636,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 18,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.05
   },
   {
@@ -634,11 +665,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 18,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.05
   },
   {
@@ -661,11 +694,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 18,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.06
   },
   {
@@ -688,11 +723,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 18,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.06
   },
   {
@@ -715,11 +752,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 21,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.05
   },
   {
@@ -742,11 +781,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 21,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.06
   },
   {
@@ -769,11 +810,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 21,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.06
   },
   {
@@ -796,11 +839,13 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 21,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.07
   },
   {
@@ -823,109 +868,154 @@
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
    "first_layer_mm2": 21,
+   "low_gap_mm2": 0,
    "overhang_mm2": 0,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
    "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
    "grams_each": 0.07
   },
   {
-   "file": "print/box_arm8_hub.stl",
-   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_hub.stl",
-   "picture": "parts/box_arm8/kit/box_arm8_hub.png",
-   "set": "engine part",
+   "file": "print/box_arm8p_coupon.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8p_coupon.stl",
+   "picture": "parts/box_arm8/kit/box_arm8p_coupon.png",
+   "set": "stub side",
    "material": "PCTG",
    "count": 1,
    "solid_check": "PASS",
    "watertight": true,
    "thin_walls": 0,
-   "pose": "the part's -y side on the bed, turned 121.5 deg on the plate",
-   "pose_why": "the setup's build direction (+y): the layers its strength was checked with",
+   "pose": "as laid in the file",
+   "pose_why": "floor down: set a 6010 on it, report the steps it goes down in the ring and on the plug, before the hub and the stub are printed",
    "size_on_bed_mm": [
-    160.6,
-    144.4,
-    76.0
+    88.0,
+    88.0,
+    17.0
    ],
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
-   "first_layer_mm2": 973,
-   "low_gap_mm2": 1124,
-   "overhang_mm2": 7611,
-   "support_mm2": 6615,
-   "widest_overhang_mm": 25.5,
-   "widest_at": [
-    -43.7,
-    53.1,
-    38.5
-   ],
-   "supports": "yes: 6615 mm2 of overhang wider than 6 mm (the widest 25.5); tree supports from the bed",
-   "bed_note": "1124 mm2 of the underside lies 0.25 to 0.5 above the bed beside the first layer (the engine's surface stops short of the bed plane): it prints as a rough, slightly sagged face; the drawn seats are on the bed",
-   "grams_each": 349.57,
-   "worst": 0.353,
-   "run_mass_g": 349.58
+   "first_layer_mm2": 6080,
+   "low_gap_mm2": 0,
+   "overhang_mm2": 0,
+   "support_mm2": 0,
+   "widest_overhang_mm": 0.0,
+   "widest_at": null,
+   "supports": "none: 0 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
+   "grams_each": 46.36,
+   "stage": "PROTOTYPE (drawn)",
+   "make": "parts/box_arm8p_coupon/make.py",
+   "hand_calc_worst": 0.0,
+   "hand_calc": "fit coupon: no load (None)"
   },
   {
-   "file": "print/box_arm8_carriage.stl",
-   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_carriage.stl",
-   "picture": "parts/box_arm8/kit/box_arm8_carriage.png",
-   "set": "engine part",
+   "file": "print/box_arm8p_hub.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8p_hub.stl",
+   "picture": "parts/box_arm8/kit/box_arm8p_hub.png",
+   "set": "stub side",
+   "material": "PCTG",
+   "count": 1,
+   "solid_check": "PASS",
+   "watertight": true,
+   "thin_walls": 0,
+   "pose": "as laid in the file",
+   "pose_why": "stub end down: the bearing bore upright and round, the ring's 2555 mm2 on the bed",
+   "size_on_bed_mm": [
+    160.3,
+    175.0,
+    70.0
+   ],
+   "fits_bed": true,
+   "brim": "NO room for a 5 mm brim: 2.5 mm to the bed's edge each side, print without brim or skirt",
+   "first_layer_mm2": 2553,
+   "low_gap_mm2": 0,
+   "overhang_mm2": 9914,
+   "support_mm2": 9622,
+   "widest_overhang_mm": 31.5,
+   "widest_at": [
+    80.1,
+    16.2,
+    26.0
+   ],
+   "supports": "yes: 9622 mm2 of overhang wider than 6 mm (the widest 31.5); tree supports from the bed",
+   "bed_note": "",
+   "grams_each": 335.46,
+   "stage": "PROTOTYPE (drawn)",
+   "make": "parts/box_arm8p_hub/make.py",
+   "hand_calc_worst": 0.622,
+   "hand_calc": "rail bolts: M5 heat-set inserts, 1500 N (E) (insert off square, overseer: the limit + 43.5 N across at the mouth)"
+  },
+  {
+   "file": "print/box_arm8p_carriage.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8p_carriage.stl",
+   "picture": "parts/box_arm8/kit/box_arm8p_carriage.png",
+   "set": "carriage",
    "material": "PCTG",
    "count": 2,
    "solid_check": "PASS",
    "watertight": true,
    "thin_walls": 0,
-   "pose": "the part's +y side on the bed",
-   "pose_why": "the setup's build direction (-y): the layers its strength was checked with",
+   "pose": "as laid in the file",
+   "pose_why": "the rail seat's plane down: everything ends on it",
    "size_on_bed_mm": [
-    102.5,
-    86.3,
+    88.3,
+    103.0,
     23.6
    ],
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
-   "first_layer_mm2": 2323,
-   "low_gap_mm2": 2688,
-   "overhang_mm2": 30,
+   "first_layer_mm2": 4943,
+   "low_gap_mm2": 0,
+   "overhang_mm2": 516,
    "support_mm2": 0,
    "widest_overhang_mm": 0.0,
    "widest_at": null,
-   "supports": "none: 30 mm2 past 45 deg, none of it wider than 6 mm",
-   "bed_note": "2688 mm2 of the underside lies 0.25 to 0.5 above the bed beside the first layer (the engine's surface stops short of the bed plane): it prints as a rough, slightly sagged face; the drawn seats are on the bed",
-   "grams_each": 91.77,
-   "worst": 0.373,
-   "run_mass_g": 91.77
+   "supports": "none: 516 mm2 past 45 deg, none of it wider than 6 mm",
+   "bed_note": "",
+   "grams_each": 96.6,
+   "stage": "PROTOTYPE (drawn)",
+   "make": "parts/box_arm8p_carriage/make.py",
+   "hand_calc_worst": 0.837,
+   "hand_calc": "MGN rail on the spine: four M3 heat-set inserts, 900 N (E) (insert off square, overseer: the limit + 43.5 N across at the mouth)"
   },
   {
-   "file": "print/box_arm8_lift.stl",
-   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8_lift.stl",
-   "picture": "parts/box_arm8/kit/box_arm8_lift.png",
-   "set": "engine part",
+   "file": "print/box_arm8p_lift.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-box_arm8p_lift.stl",
+   "picture": "parts/box_arm8/kit/box_arm8p_lift.png",
+   "set": "lift",
    "material": "PCTG",
    "count": 2,
    "solid_check": "PASS",
    "watertight": true,
    "thin_walls": 0,
-   "pose": "the part's +z side on the bed",
-   "pose_why": "the setup's build direction (-z): the layers its strength was checked with",
+   "pose": "as laid in the file",
+   "pose_why": "the yoke's top down: its bending and twist in the layers",
    "size_on_bed_mm": [
     93.2,
     56.6,
-    85.4
+    86.0
    ],
    "fits_bed": true,
    "brim": "a 5 mm brim fits",
-   "first_layer_mm2": 1288,
-   "low_gap_mm2": 691,
-   "overhang_mm2": 820,
-   "support_mm2": 0,
-   "widest_overhang_mm": 0.0,
-   "widest_at": null,
-   "supports": "none: 820 mm2 past 45 deg, none of it wider than 6 mm",
-   "bed_note": "691 mm2 of the underside lies 0.25 to 0.5 above the bed beside the first layer (the engine's surface stops short of the bed plane): it prints as a rough, slightly sagged face; the drawn seats are on the bed",
-   "grams_each": 142.76,
-   "worst": 0.407,
-   "run_mass_g": 142.77
+   "first_layer_mm2": 2090,
+   "low_gap_mm2": 0,
+   "overhang_mm2": 987,
+   "support_mm2": 460,
+   "widest_overhang_mm": 8.5,
+   "widest_at": [
+    88.4,
+    21.8,
+    3.0
+   ],
+   "supports": "yes: 460 mm2 of overhang wider than 6 mm (the widest 8.5); tree supports from the bed",
+   "bed_note": "",
+   "grams_each": 151.9,
+   "stage": "PROTOTYPE (drawn)",
+   "make": "parts/box_arm8p_lift/make.py",
+   "hand_calc_worst": 0.469,
+   "hand_calc": "plate on the MGN block: four M3, each head on an o 9 washer (insert off square, overseer: the limit + 43.5 N across at the mouth)"
   }
  ],
  "waiting": [],
@@ -934,7 +1024,19 @@
    "item": "MGN12H rail hole positions",
    "state": "E until the rail is here",
    "what": "the carriage's four M3 inserts are 25 apart from 12.5 in from the rail's end (a 100 rail with four holes can only be 12.5 / 25 / 25 / 25 / 12.5 if it is cut evenly). Measure the first hole from each end and the pitch before printing the carriage",
-   "if_off": "parts/box_arm8_lib.py MGN first / pitch, and the carriage reruns (its rail seat and loads follow)"
+   "if_off": "parts/box_arm8_lib.py MGN first / pitch, then python parts/box_arm8p_carriage/make.py (a drawn piece, no run)"
+  },
+  {
+   "item": "6010-2RS press fits",
+   "state": "E: the fit table's press allowance comes from a 3 mm shaft",
+   "what": "the coupon (print/box_arm8p_coupon.stl): how many steps a bearing goes down in the ring and on the plug; 2 and 2 = as drawn (o 80.3 bore, o 49.7 spigot)",
+   "if_off": "systems/fit_table.json gets a bearing row (M); parts/box_arm8/make.py BRG_BORE / BRG_SEAT follow it; hub and stub are drawn pieces"
+  },
+  {
+   "item": "GT2 teeth on the hub's ring",
+   "state": "E: 150 grooves o 1.4 x 0.75 deep on the o 94.99 tooth circle, printed",
+   "what": "the belt must seat in the grooves all round and not climb when the hub is turned by hand against the motor",
+   "if_off": "parts/box_arm8/make.py ring_cuts(): groove radius; the hub is a drawn piece"
   },
   {
    "item": "float spring's rate",
@@ -950,12 +1052,14 @@
   }
  ],
  "assembly": [
-  "Stub side: press the two 6010-2RS into the hub's sleeve from the stub end, slide the hub on the stub, screw the post on; axle stepper and 16T pulley on the stub's ear, belt round the hub's ring, detent arm with its 623ZZ on its pivot.",
+  "First the bearing coupon (print/box_arm8p_coupon.stl): set a 6010 on it and report how many steps it goes down in the ring and on the plug.",
+  "Stub on the mast: the M8 nut into the pocket in the flange's back, the stub's flange on the mast's face, three M5 x 25 on o 15 washers from the front through the flange's pockets and the mast's holes, a nyloc on an o 15 washer on each from behind (8 mm socket through the mast's o 18 holes). The 135 deg hole is gone: it sat behind the axle stepper.",
+  "Hub: press the two 6010-2RS into the sleeve from the stub end, slide the hub on the spigot until the inner ring sits on its shoulder, the post on the spigot's end, the M8 x 60 through post and spigot into the nut; axle stepper on the ear (four M3), its 16T pulley hub side toward the motor, belt round the ring's teeth, detent arm with its 623ZZ on an M3 x 30 into the boss.",
   "Each V rail on the hub's plate: two M5 x 10 into the heat-set M5 inserts.",
-  "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench); three V wheels, two 625ZZ in each, on M5 x 20 axles, the third on its eccentric bush; roll it onto the V rail and set the bush until it runs without play. The tab on the spine's side is the pick-up stop: the lift's nut lug meets it as the block's top reaches the rail's end.",
+  "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench). Each V wheel (two 625ZZ in it): M5 x 20 button head through the wheel from behind, an o 10 washer, then through the plate with an o 15 washer in the recess each side and an M5 nut in the front one (3 mm key behind, 8 mm socket in front). Roll it onto the V rail from the tip, slide it to the top (the third wheel is then clear of the hub's plate: key from behind), push the third wheel onto the ridge in its slot until the carriage runs without play, tighten. The tab on the spine's side is the pick-up stop.",
   "Each screw drive: stepper on its face plate (four M3), coupler, inner F8-16M, screw through the thrust wall, outer F8-16M, lock ring; the nut on the screw with its flange's two sides filed to the body.",
   "Each lift: bond the three o 6 x 115 carbon rods in the yoke's sockets (resin through each port until it shows at the mouth), slide the two ties on and bond them at their stations (float bolt centres 45 hub side and 20 far side of the tab line); four M4 inserts in each pair of ties.",
-  "Yoke on the MGN block with four M3 x 12; the nut into its lug (flange in the slot); the return spring from the carriage to the rail's channel.",
+  "Yoke on the MGN block with four M3 x 12, an o 9 washer under each head; the nut into its lug (flange in the slot); the return spring from the carriage to the rail's channel.",
   "Each grab unit (the steps and their sweeps: parts/box_arm8/kit.json test_set): servo in from the open side, two M3 x 8 through its inner ear; paddle onto the spline, M3 x 35 from the hub end; each pilot on two cut o 3 springs, its o 3 x 9 pin in from the blade bay; blades and their four springs, the two o 3 x 66 rods through; an SS49E in each hall post; the eight TPU pads into their seats.",
   "Grab unit on the ties: four M4 shoulder bolts down through the base with a PTFE and a steel washer under each head, a float spring round each bolt between tie and base.",
   "Ring: each bay's receiver on its saddle by the receiver's own mount bolts, the 20 link bars between neighbouring ears.",

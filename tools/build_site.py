@@ -21,7 +21,7 @@ Status is computed, never stored (tools/make_parts.py part_state, the one rule t
            generated part whose line names a "prototype" replaces the drawn prototype on the page only when it is print-ready.
 Nothing here is ever read by Claude; CI runs it.
 """
-import hashlib, json, os, sys, glob, subprocess
+import hashlib, json, os, re, sys, glob, subprocess
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import print_mesh
 import make_parts
@@ -378,8 +378,10 @@ def build(inline=False, offline=False):
                 mesh = cand
             elif st == "placed" and "mesh" in p and os.path.exists(os.path.join(ROOT, p["mesh"])):
                 mesh = os.path.join(ROOT, p["mesh"])
-            if mesh and mesh.startswith(os.path.join(ROOT, "parts", src) + os.sep) and owners.setdefault(src, sysname) != sysname:
-                sys.exit(f"build_site: parts/{src} is placed by both {owners[src]} and {sysname}: a folder belongs to one drone "
+            m_ = re.fullmatch(r"systems/(\w+)\.assembly\.json", p.get("source") or "")   # a line another system's page imports (the box draws the swap arm) is still that system's
+            own = m_.group(1) if m_ else sysname
+            if mesh and mesh.startswith(os.path.join(ROOT, "parts", src) + os.sep) and owners.setdefault(src, own) != own:
+                sys.exit(f"build_site: parts/{src} is placed by both {owners[src]} and {own}: a folder belongs to one drone "
                          f"(3 Nov: the Scout page drew the Overseer's cage, motors and props from shared folders). Give each its own folder.")
             if mesh:
                 m = view_mesh(trimesh.load(mesh, force="mesh"), pid, p.get("max_faces"))

@@ -22,6 +22,8 @@ What changed from v7 and why (C unless tagged; numbers in result.json):
      corners of the recess 5 mm before the blades and take 3.0 across and along; the unit floats on four preloaded springs
      (+-2.5 across and along, tilt and roll give once the push passes the preload share); each heel pad on an M3 jack screw;
      an SS49E in each hall post; both packs' pads on one deck.
+  7. 15 Nov, PROTOTYPE stage: every printed piece is drawn. Hub, carriage and lift are parts/box_arm8p_{hub,carriage,lift}/make.py (hand checks parts/box_arm8p_lib.py); their
+     engine setups stay for OPTIMISE. The detent roller's track is kept clear in both; the stub's flange is 12 thick with through bolts (fixed_parts); wheel axles are drawn.
 python3 parts/box_arm8/make.py [--fast]  -> parts/box_arm8_*/part.stl, parts/box_arm8/view/*.stl, parts/box_arm8/result.json,
                                             systems/swap_arm.assembly.json
 """
@@ -48,35 +50,65 @@ def T34(T): return np.asarray(T, float)[:3, :]
 
 
 # ------------------------------------------------------------------ fixed side: stub, post, axle drive, detent (W frame)
+FIT = L.FIT
 AXLE_M = (-50.0, 40.0)        # the axle stepper beside the mast, behind the stub's ear
-RING_R = 47.75                # GT2 150T pitch radius on the hub's sleeve (teeth drawn as a plain band)
+RING_R = 47.75                # GT2 150T pitch radius on the hub's sleeve
+# 15 Nov (stand v2 report: the flange's M5 insert read 0.89 in handling, nothing fits in front of a 6 mm flange under the bearings). By hand the 6 mm flange
+# itself was worse than its inserts: the top bolt's 532 N (handling) bends it between the spigot and the bolt, 0.5 T per mm of root = 44 MPa. So the flange is
+# FL_T thick, and everything on the stub in front of it (bearings, hub sleeve, belt lane, detent, post) sits DY further along the axle; the hub's plate, the rails
+# and the heads stay where they were. The bolts go in from the front: M5 x 25 socket heads on o 15 washers in pockets in the flange (FL_SKIN under the washer),
+# through the mast's o 5.5 holes to nylocs on o 15 washers on its seats at Y -10 (the stand's own M5 x 25, washers and nylocs: no mast change but the bolts' direction).
+DY = 6.0
+FL_T = 6.0 + DY               # flange
+FL_SKIN = FL_T - (5.0 + 1.2 + 0.2)   # under each bolt's washer: head 5.0, washer 1.2, 0.2 under the flange's face
+BOLT_R, BOLT_A = 38.0, (45.0, 225.0, 315.0)     # the mast's pattern (parts/box_stand2_lib.py STUB_BOLTS); its 135 deg hole is behind the axle stepper: not drawn any more
+HUB_Y0 = 8.0 + DY             # the hub's stub end and the first bearing's face, 2.0 over the flange
+BRG = (HUB_Y0, HUB_Y0 + 32.0) # two 6010-2RS
+BRG_BORE = FIT.bore(80.0, "press") / 2          # the bearings press into the sleeve (fit table; coupon parts/box_arm8p_coupon)
+BRG_SEAT = (50.0 - FIT.FIT["press"]["allow"]) / 2   # and onto the spigot: a printed shaft in a steel bore takes the allowance off
+BAND_R = RING_R + 1.5         # the ring band's surface: the detent roller rides on it
+TOOTH_R = RING_R - 0.254      # GT2 pulley OD = pitch diameter - 0.508
+TEETH = (HUB_Y0 + 2.0, HUB_Y0 + 11.5)           # the belt's lane on the ring (a 2.0 flange under it, the band over it)
+ROLLER_Y = (TEETH[1] + 0.5, TEETH[1] + 4.5)     # the 623ZZ on the band
+ARM_Y = (ROLLER_Y[0] - 2.3, ROLLER_Y[1] + 2.3)  # the detent arm: 2.2 cheeks either side of the roller
+FLARE_Y0 = round(ARM_Y[1] + FIT.gap("clear"), 2)   # below this nothing of the hub stands outside BAND_R: pulley, belt, roller and detent arm pass there (fit table "clear")
+NOTCH = dict(n=12, a0=45.0, depth=1.2, r=5.0 + FIT.FIT["free"]["allow"] / 2)   # twelve notches for the roller (at 45 deg in W with head A at the drone), E
+POST_BOLT = 8.0               # one M8 x 60 through the post and the spigot to a nut in the flange's back
 def fixed_parts():
-    stub = U(cyl("y", 0, 0, 45.0, 0.0, 6.0), cyl("y", 0, 0, 24.95, 6.0, 40.0),
+    hexp = lambda af, t0, t1: mf.Manifold.cylinder(t1 - t0, af / 2 / math.cos(math.pi / 6), af / 2 / math.cos(math.pi / 6), 6).rotate([-90, 0, 0]).translate([0, t0, 0])
+    bolts = [(BOLT_R * math.cos(math.radians(a)), BOLT_R * math.sin(math.radians(a))) for a in BOLT_A]
+    stub = U(cyl("y", 0, 0, 45.0, 0.0, FL_T, 96), cyl("y", 0, 0, BRG_SEAT, FL_T, BRG[1], 96), cyl("y", 0, 0, 29.0, FL_T, HUB_Y0, 96),     # flange, spigot, the inner ring's shoulder
+             *[cyl("y", x, z, 10.5, 0.0, FL_T) for x, z in bolts],                                                                         # 2.7 of wall round each washer pocket
              hullp([[x, y, z] for y in (0.0, 6.0) for x, z in ((-28, 15), (-74, 15), (-74, 65), (-28, 65), (-20, 40))]),      # the motor's ear
              hullp([[x, y, z] for y in (0.0, 6.0) for x, z in ((20, 20), (62, 28), (62, 52), (30, 52))]))                      # the detent's ear
-    stub = stub - cyl("y", 0, 0, 12.0, -1, 41) - cyl("y", *AXLE_M, 11.2, -1, 7)
-    stub = stub - U(*[cyl("y", 38 * math.cos(a), 38 * math.sin(a), 2.75, -1, 7) for a in np.radians([45, 135, 225, 315])])
-    stub = stub - U(*[cyl("y", AXLE_M[0] + sx * 15.5, AXLE_M[1] + sz * 15.5, 1.7, -1, 7) for sx in (-1, 1) for sz in (-1, 1)])
-    piv = (52.0, 40.0)                                                                                                         # detent arm pivot (an M3 shoulder in the ear)
-    stub = stub + cyl("y", *piv, 5.0, 6.0, 17.2) - cyl("y", *piv, 1.5, -1, 18)
-    post = U(cyl("y", 0, 0, 28.5, 40.0, 44.0), cyl("y", 0, 0, 9.0, 44.0, 62.0)) - cyl("y", 0, 0, 4.25, 39, 63)
-    rc = (RING_R + 1.5 + 5.0) / math.sqrt(2)                                                                                   # roller centre on the notch ring, at 45 deg
-    arm = U(hullp([[x, y, z] for y in (17.4, 26.0) for x, z in ((piv[0] - 6, piv[1] - 6), (piv[0] + 6, piv[1] + 6), (rc + 7, rc + 13), (rc - 7, rc + 13), (rc - 7, rc - 2), (rc + 7, rc - 2))]),
-            cyl("y", *piv, 7.0, 17.4, 26.0)) - cyl("y", *piv, 1.6, 16, 27) - box(rc - 8, rc + 8, 19.6, 23.8, rc - 8, rc + 6.5) - cyl("y", rc, rc, 1.5, 16, 27) - cyl("y", 0, 0, RING_R + 3.0, 16, 27, 96)   # 8.6 thick: 2.2 cheeks either side of the 623ZZ
+    stub = stub - cyl("y", 0, 0, 12.0, 20.0, BRG[1] + 1) - cyl("y", 0, 0, FIT.bore(POST_BOLT, "screw") / 2, -1, 21) - hexp(FIT.across(13.0, "nut"), -1.0, 6.8)   # the M8 nut's pocket: shut by the mast's face
+    stub = stub - cyl("y", *AXLE_M, FIT.bore(22.0, "slide") / 2, -1, 7)
+    stub = stub - U(*[U(cyl("y", x, z, FIT.bore(5.0, "screw") / 2, -1, FL_T + 1), cyl("y", x, z, FIT.across(15.0, "slide") / 2, FL_SKIN, FL_T + 1)) for x, z in bolts])
+    stub = stub - U(*[cyl("y", AXLE_M[0] + sx * 15.5, AXLE_M[1] + sz * 15.5, FIT.bore(3.0, "screw") / 2, -1, 7) for sx in (-1, 1) for sz in (-1, 1)])
+    piv = (52.0, 40.0)                                                                                                         # detent arm pivot: an M3 x 30 cutting its thread in the boss (fit table "tap")
+    stub = stub + cyl("y", *piv, 5.0, 6.0, ARM_Y[0] - 0.2) - cyl("y", *piv, FIT.bore(3.0, "tap") / 2, 0.5, ARM_Y[0])
+    post = U(cyl("y", 0, 0, 28.5, BRG[1], BRG[1] + 4.0), cyl("y", 0, 0, 9.0, BRG[1] + 4.0, 62.0)) - cyl("y", 0, 0, FIT.bore(POST_BOLT, "screw") / 2, BRG[1] - 1, 63)
+    rc = (BAND_R + 5.0) / math.sqrt(2)                                                                                         # roller centre on the band, at 45 deg
+    a0, a1 = ARM_Y; r0, r1 = ROLLER_Y
+    arm = U(hullp([[x, y, z] for y in (a0, a1) for x, z in ((piv[0] - 6, piv[1] - 6), (piv[0] + 6, piv[1] + 6), (rc + 7, rc + 13), (rc - 7, rc + 13), (rc - 7, rc - 2), (rc + 7, rc - 2))]),
+            cyl("y", *piv, 7.0, a0, a1)) - cyl("y", *piv, FIT.bore(3.0, "free") / 2, a0 - 1, a1 + 1) - box(rc - 8, rc + 8, r0 - 0.1, r1 + 0.1, rc - 8, rc + 6.5) \
+        - cyl("y", rc, rc, 1.5, a0 - 1, a1 + 1) - cyl("y", 0, 0, RING_R + 3.0, a0 - 1, a1 + 1, 96)   # 8.6 thick: 2.2 cheeks either side of the 623ZZ
+    bh = U(*[U(cyl("y", x, z, 4.25, FL_T - 5.2, FL_T - 0.2), cyl("y", x, z, 2.5, -13.0, FL_T - 5.0), cyl("y", x, z, 7.5, FL_SKIN, FL_SKIN + 1.2) - cyl("y", x, z, 2.6, 0, FL_T)) for x, z in bolts])
     return dict(stub=(stub, "PCTG", "print"), post=(post, "PCTG", "print"), detent_arm=(arm, "PCTG", "print"),
-                detent_roller=(cyl("y", rc, rc, 5.0, 19.7, 23.7) - cyl("y", rc, rc, 1.5, 20, 26), None, "bought"),
+                detent_roller=(cyl("y", rc, rc, 5.0, r0, r1) - cyl("y", rc, rc, 1.5, r0 - 1, r1 + 1), None, "bought"),
                 axle_motor=(U(box(AXLE_M[0] - 21.15, AXLE_M[0] + 21.15, -48.0, 0.0, AXLE_M[1] - 21.15, AXLE_M[1] + 21.15), cyl("y", *AXLE_M, 2.5, 0.0, 24.0)), None, "bought"),
-                axle_pulley=(cyl("y", *AXLE_M, 5.1, 9.0, 19.0) + cyl("y", *AXLE_M, 6.5, 19.0, 24.0), None, "bought"),
-                bearings=(cyl("y", 0, 0, 39.98, 8.0, 40.0) - cyl("y", 0, 0, 25.0, 7, 41), None, "bought"))
+                axle_pulley=(cyl("y", *AXLE_M, 6.5, TEETH[0] - 5.5, TEETH[0] - 0.5) + cyl("y", *AXLE_M, 5.1, TEETH[0] - 0.5, TEETH[1] - 0.5), None, "bought"),   # its hub toward the motor, teeth in the belt's lane
+                bearings=(cyl("y", 0, 0, 39.98, BRG[0], BRG[1], 192) - cyl("y", 0, 0, 25.0, BRG[0] - 1, BRG[1] + 1, 192), None, "bought"),
+                stub_bolts=(bh, None, "bought"),
+                post_bolt=(U(cyl("y", 0, 0, 6.5, 62.0, 67.3), cyl("y", 0, 0, 4.0, 2.0, 62.0), hexp(13.0, 0.0, 6.5) - cyl("y", 0, 0, 4.0, -1, 7)), None, "bought"))
 
 
-# ------------------------------------------------------------------ hub (turns): the setup's drawn bodies, as the placeholder until its run
+# ------------------------------------------------------------------ hub (turns)
 def hub_drawn():
     """what parts/box_arm8_hub/part.py draws (attachments only); the generated body joins them"""
     y0, y1, R = L.PLATE
-    sleeve = U(cyl("y", 0, 0, 43.0, 8.0, 45.0, 96), cyl("y", 0, 0, RING_R + 1.5, 9.5, 25.5, 96))     # a 3 mm seat round the bearings; the body round it is generated                          # the bearings go in from the stub end; a 3 mm shoulder over the outer race at the plate end
-    ring = cyl("y", 0, 0, RING_R + 1.5, 9.5, 25.5, 96)   # flush with the sleeve: no step                    # one band: GT2 teeth (150T) over y 9.5..19.5 and the detent's twelve notches over 20.5..25.5 are cut in it (not modelled)
-    notch = ring
+    sleeve = U(cyl("y", 0, 0, 43.0, HUB_Y0, BRG[1] + 4.0, 96), cyl("y", 0, 0, BAND_R, HUB_Y0, FLARE_Y0, 96))     # a 3 mm seat round the bearings (they go in from the stub end, a shoulder over the outer race
+    #                                at the plate end) and the ring: one band, the GT2 teeth (150T) over TEETH and the detent's twelve notches over it (ring_cuts(): the prototype's; the setup's band is plain)
     bodies = [sleeve]                                                     # no drawn plate: only the rails' seats (below); the plate between them is generated
     for h in (0, 1):
         f = (lambda m: m) if h == 0 else rot180
@@ -84,23 +116,56 @@ def hub_drawn():
             bodies += [f(box(w["x"][0], w["x"][1], w["y"][0], w["y"][1], w["u"][0], w["u"][1]))]
         bodies += [f(cyl("y", 0, u, 7.0, 44.0, y0 + 0.01)) for u in L.RAIL_BOLTS] + [f(box(-9.5, 9.5, y1 - 3.0, y1, L.RAIL[0], R - 0.5))]
     return bodies
-def hub_cuts():
+def hub_cuts(cradle=False):
+    """cradle: the prototype's screw lanes are troughs round the coupler and the thrust bearings below the screw's axis (the thrust wall stands in a cradle)"""
     y0, y1, R = L.PLATE
-    c = [cyl("y", 0, 0, 40.0, 6.0, 40.0, 96), cyl("y", 0, 0, 30.0, 39.9, y0 + 0.01), cyl("y", 0, 0, 15.0, y0, y1 + 1),
-         cyl("y", 0, 0, 78.0, 6.0, 26.2, 96) - cyl("y", 0, 0, RING_R + 2.5, 5, 27, 96)]            # the fixed motor's pulley, the belt and the detent roller pass under the plate
+    c = [cyl("y", 0, 0, BRG_BORE, HUB_Y0 - 2.0, BRG[1], 96), cyl("y", 0, 0, 30.0, BRG[1] - 0.1, y0 + 0.01), cyl("y", 0, 0, 15.0, y0, y1 + 1),
+         cyl("y", 0, 0, 78.0, HUB_Y0 - 2.0, FLARE_Y0, 96) - cyl("y", 0, 0, BAND_R + 0.01, HUB_Y0 - 3, FLARE_Y0 + 1, 96)]
+    # the fixed motor's pulley, the belt, the detent roller and its arm pass under the plate: nothing of the hub outside the band's own surface below FLARE_Y0.
+    # 15 Nov (assembly check: the run's hub stood 5.3 mm3 in the 623ZZ): this kept r 50.25 clear, but the roller rides the band at r 49.25, and the room went to 50.2
     x, y = L.SCREW
     for h in (0, 1):
         f = (lambda m: m) if h == 0 else rot180
         m = L.MOTOR
+        lane_in = box(x - 9.0, x + 9.0, y1 + 0.2, y + 9.0, -41.5, -11.5); lane_out = box(x - 8.2, x + 8.2, y1 + 0.2, y + 9.5, -7.5, 160.0)
+        if cradle:
+            lane_in = U(box(x - 9.0, x + 9.0, y, y + 9.0, -41.5, -11.5), cyl("z", x, y, 9.0, -41.5, -11.5))
+            lane_out = U(box(x - 8.5, x + 8.5, y, y + 9.5, -7.5, CRADLE_U1), cyl("z", x, y, 8.5, -7.5, CRADLE_U1), box(x - 8.2, x + 8.2, y1 + 0.2, y + 9.5, CRADLE_U1 - 0.01, 160.0))
         c += [f(box(m["x"][0] - 0.3, m["x"][1] + 0.3, m["y"][0] - 0.3, m["y"][1] + 0.3, m["u"][0] - 1, m["u"][1])),        # the stepper, through the plate
               f(cyl("z", x, y, 11.3, -45.5, -41)), *[f(cyl("z", x + sx * 15.5, y + sy * 15.5, 1.7, -45.5, -41)) for sx in (-1, 1) for sy in (-1, 1)],
-              f(box(x - 9.0, x + 9.0, y1 + 0.2, y + 9.0, -41.5, -11.5)),                                                   # coupler and the inner thrust bearing, in front of the plate
+              f(lane_in),                                                                                                   # coupler and the inner thrust bearing, in front of the plate
               f(cyl("z", x, y, 4.3, -12.5, -6.5)),
-              f(box(x - 8.2, x + 8.2, y1 + 0.2, y + 9.5, -7.5, 160.0)),                                                    # the lane the screw, the outer bearing, the lock ring and the nut's lug run in
-              *[f(cyl("y", 0, u, 3.2, 43, 60)) for u in L.RAIL_BOLTS],                                                      # M5 heat-set inserts
+              f(lane_out),                                                                                                  # the lane the screw, the outer bearing, the lock ring and the nut's lug run in
+              *[f(cyl("y", 0, u, FIT.insert("M5") / 2, BRG[1], 60)) for u in L.RAIL_BOLTS],                                 # M5 heat-set inserts, 8 deep (fit table)
               f(box(-12.5, 12.5, y1, 82, L.RAIL[0] - 1, 160)),                                                              # rail seat
               f(box(9.0, L.SPINE["x"][1] + 0.8, y1 + 0.5, 82, -45, 160)), f(box(-L.WHEEL_R - 22.8, -9.0, y1 + 0.5, 82, 0.0, 160))]   # the lanes of the wheel pair with the carriage's spine, and of the third wheel
     return c
+CRADLE_U1 = L.LUG["u"][0] - FIT.gap("clear")       # the outer cradle ends under the parked nut lug
+def ring_cuts():
+    """the prototype ring: the belt's lane turned down to the GT2 150T tooth circle with its 150 grooves (o 1.4 at the OD, 0.75 deep: E, the belt test is the print),
+    a 45 deg shoulder up to the band, and the roller's twelve notches in the band, each ending in a 45 deg roof"""
+    t0, t1 = TEETH; s = BAND_R - TOOTH_R
+    lane = cyl("y", 0, 0, BAND_R + 1.0, t0, t1, 96) - cyl("y", 0, 0, TOOTH_R, t0 - 1, t1 - s, 600) - mf.Manifold.cylinder(s + 0.01, TOOTH_R, BAND_R + 0.01, 600).rotate([-90, 0, 0]).translate([0, t1 - s, 0])
+    g = cyl("y", TOOTH_R - 0.05, 0, 0.7, t0, t1 - s + 0.6, 12)
+    grooves = [g.rotate([0, 360.0 / 150 * k, 0]) for k in range(150)]
+    n = NOTCH; rr = BAND_R + 5.0 - n["depth"]
+    one = U(cyl("y", rr, 0, n["r"], t1, FLARE_Y0), mf.Manifold.cylinder(n["r"], n["r"], 0.0, 40).rotate([-90, 0, 0]).translate([rr, FLARE_Y0 - 0.01, 0]))
+    notches = [one.rotate([0, -(n["a0"] + 360.0 / n["n"] * k), 0]) for k in range(n["n"])]            # W angle a (from +x toward +z) = a turn of -a about y
+    return [lane] + grooves + notches
+def hub_proto():
+    """the drawn PROTOTYPE hub (parts/box_arm8p_hub/make.py). The setup's drawn attachments (bearing sleeve and ring, rail seats and their insert bosses, stepper
+    walls, thrust walls) on simple solid sections: the ring to FLARE_Y0, a 45 deg cone from there to the plate's face (r 68 at Y 52 and a 2 mm rim: it prints without supports
+    and is the plate), under each rail a 40 x 14 keel out to r 87.5, under each screw drive an 8 thick slab with the setup's blocks over the stepper wall and
+    the rib behind the thrust wall, and a cradle either side of each thrust wall; less the setup's cuts and the ring's teeth and notches."""
+    y0, y1, R = L.PLATE; x, y = L.SCREW; w0, t0 = L.MOTOR_WALL, L.THRUST_WALL
+    hc = y1 - 2.0 - FLARE_Y0                                                                                        # the cone ends in a 2.0 rim: no knife edge
+    core = U(cyl("y", 0, 0, BAND_R, HUB_Y0, FLARE_Y0 + 0.01, 96), mf.Manifold.cylinder(hc, BAND_R, BAND_R + hc, 96).rotate([-90, 0, 0]).translate([0, FLARE_Y0, 0]), cyl("y", 0, 0, BAND_R + hc, y1 - 2.01, y1, 96))
+    head = [box(-20.0, 20.0, 40.0, y1, 30.0, R - 0.5),                                                              # keel
+            box(w0["x"][0], w0["x"][1], 46.0, y1, w0["u"][0], 4.0),                                                 # slab under the screw drive
+            box(w0["x"][0], w0["x"][1], w0["y"][0], 78.0, w0["u"][0] - 0.01, w0["u"][1] + 12.0),                    # over the stepper wall, either side of the plate (the setup's room)
+            box(67.8, 79.0, y1 - 0.1, t0["y"][1], w0["u"][1], 4.0),                                                 # the rib behind the thrust wall's outer end
+            box(x - 5.0, t0["x"][1], y1 - 0.1, y, t0["u"][0] - 10.0, t0["u"][0] + 0.01), box(x - 5.0, t0["x"][1], y1 - 0.1, y, t0["u"][1] - 0.01, CRADLE_U1)]   # the cradles (from 5 inside the screw's axis: no sliver beside the spine's lane)
+    return U(core, *head, *[rot180(q) for q in head], *hub_drawn()) - U(*hub_cuts(cradle=True)) - U(*ring_cuts())
 
 
 # ------------------------------------------------------------------ the parts of one head, at park, arm frame
@@ -109,11 +174,11 @@ def head_parts(state="grip"):
     f = L.faces()[state]
     P["rail"] = (L.rail(), "PCTG", "print", "hub")
     for k, m in L.screw_drive().items(): P[k] = (m, None, "bought", "hub")
-    car = U(L.carriage_env(), *L.carriage_bodies()) - L.carriage_cuts()
-    P["carriage"] = (car, "PCTG", "run", "carriage")
+    P["carriage"] = (L.carriage_proto(), "PCTG", "proto", "carriage")
     P["wheels"] = (U(*[L.wheel(x, c) for x, c in L.WHEELS]), "PCTG", "print", "carriage")
+    P["axles"] = (U(*[L.axle_stack(x, c) for x, c in L.WHEELS]), None, "bought", "carriage")
     P["mgn_rail"] = (L.mgn_rail(), None, "bought", "carriage")
-    P["lift"] = (L.lift_env() - L.lift_cuts(), "PCTG", "run", "lift")
+    P["lift"] = (L.lift_proto(), "PCTG", "proto", "lift")
     for k, m in L.lift_bought().items(): P[k] = (m, None, "bought", "lift")
     P["ties"] = (U(*L.ties()), "PCTG", "print", "lift")
     T = L.arm_T()
@@ -129,7 +194,7 @@ def head_parts(state="grip"):
 
 def groups(state="grip"):
     """the turning arm as kinematic groups (manifolds, arm frame, park): hub, then per head carriage / lift (with the unit)"""
-    H = head_parts(state); G = {"hub": [U(*hub_drawn()) - U(*hub_cuts())]}
+    H = head_parts(state); G = {"hub": [hub_proto()]}
     for k, (m, mat, kind, grp) in H.items():
         for hd, f in (("A", lambda q: q), ("B", rot180)):
             key = "hub" if grp == "hub" else f"{'lift' if grp == 'unit' else grp} {hd}"
@@ -429,12 +494,14 @@ PRINTED = {  # part folder -> (source key or callable, material, print pose note
 
 
 # poses, supports and the files themselves: parts/box_arm8/kit.py (measured on each print file), parts/box_arm8/kit.json
-ORDER = ["Stub side: press the two 6010-2RS into the hub's sleeve from the stub end, slide the hub on the stub, screw the post on; axle stepper and 16T pulley on the stub's ear, belt round the hub's ring, detent arm with its 623ZZ on its pivot.",
+ORDER = ["First the bearing coupon (print/box_arm8p_coupon.stl): set a 6010 on it and report how many steps it goes down in the ring and on the plug.",
+         "Stub on the mast: the M8 nut into the pocket in the flange's back, the stub's flange on the mast's face, three M5 x 25 on o 15 washers from the front through the flange's pockets and the mast's holes, a nyloc on an o 15 washer on each from behind (8 mm socket through the mast's o 18 holes). The 135 deg hole is gone: it sat behind the axle stepper.",
+         "Hub: press the two 6010-2RS into the sleeve from the stub end, slide the hub on the spigot until the inner ring sits on its shoulder, the post on the spigot's end, the M8 x 60 through post and spigot into the nut; axle stepper on the ear (four M3), its 16T pulley hub side toward the motor, belt round the ring's teeth, detent arm with its 623ZZ on an M3 x 30 into the boss.",
          "Each V rail on the hub's plate: two M5 x 10 into the heat-set M5 inserts.",
-         "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench); three V wheels, two 625ZZ in each, on M5 x 20 axles, the third on its eccentric bush; roll it onto the V rail and set the bush until it runs without play. The tab on the spine's side is the pick-up stop: the lift's nut lug meets it as the block's top reaches the rail's end.",
+         "Each carriage: four M3 inserts in the spine, the MGN12 rail on it with four M3 x 12 (block on the rail, stoppers off only at the bench). Each V wheel (two 625ZZ in it): M5 x 20 button head through the wheel from behind, an o 10 washer, then through the plate with an o 15 washer in the recess each side and an M5 nut in the front one (3 mm key behind, 8 mm socket in front). Roll it onto the V rail from the tip, slide it to the top (the third wheel is then clear of the hub's plate: key from behind), push the third wheel onto the ridge in its slot until the carriage runs without play, tighten. The tab on the spine's side is the pick-up stop.",
          "Each screw drive: stepper on its face plate (four M3), coupler, inner F8-16M, screw through the thrust wall, outer F8-16M, lock ring; the nut on the screw with its flange's two sides filed to the body.",
          "Each lift: bond the three o 6 x 115 carbon rods in the yoke's sockets (resin through each port until it shows at the mouth), slide the two ties on and bond them at their stations (float bolt centres 45 hub side and 20 far side of the tab line); four M4 inserts in each pair of ties.",
-         "Yoke on the MGN block with four M3 x 12; the nut into its lug (flange in the slot); the return spring from the carriage to the rail's channel.",
+         "Yoke on the MGN block with four M3 x 12, an o 9 washer under each head; the nut into its lug (flange in the slot); the return spring from the carriage to the rail's channel.",
          "Each grab unit (the steps and their sweeps: parts/box_arm8/kit.json test_set): servo in from the open side, two M3 x 8 through its inner ear; paddle onto the spline, M3 x 35 from the hub end; each pilot on two cut o 3 springs, its o 3 x 9 pin in from the blade bay; blades and their four springs, the two o 3 x 66 rods through; an SS49E in each hall post; the eight TPU pads into their seats.",
          "Grab unit on the ties: four M4 shoulder bolts down through the base with a PTFE and a steel washer under each head, a float spring round each bolt between tie and base.",
          "Ring: each bay's receiver on its saddle by the receiver's own mount bolts, the 20 link bars between neighbouring ears.",
@@ -453,15 +520,13 @@ def current(k):
 STAMP = {"lift": ("115fe1709a62dfdf", "2fbd2d3c3a2d555d")}
 
 
+PROTO = {"hub": 1, "carriage": 2, "lift": 2}     # drawn prototypes with their own make.py: parts/box_arm8p_<k>; the engine setups parts/box_arm8_<k>/part.py are kept for OPTIMISE
 def print_kit(pr):
-    """the print kit as parts/box_arm8/kit.py measured it (kit.json: files, poses, supports, order, test set), and the three engine parts' state"""
-    gen = {k: json.load(open(os.path.join(ROOT, "parts", "box_arm8_" + k, "result.json"))) for k in ("hub", "carriage", "lift")}
-    cur = {k: current(k) for k in gen}
+    """the print kit as parts/box_arm8/kit.py measured it (kit.json: files, poses, supports, order, test set)"""
     kj = os.path.join(HERE, "kit.json"); kit = json.load(open(kj)) if os.path.exists(kj) else {}
-    return dict(hold=("All three engine parts are of the setups on main and passed." if all(cur.values()) else
-                      "Drawn pieces: print. Engine parts waiting on their runs: " + ", ".join(k for k in cur if not cur[k]) + " (14 Nov: the carriage's bed plane and pick-up stop, the lift's bed, "
-                      "and one load point the latch moved 0.06 mm; the 13 Nov shapes are not to be printed)"),
-                generated=[dict(part="box_arm8_" + k, count=1 if k == "hub" else 2, current=cur[k], worst=g["strength"]["worst"], mass_g=g["mass_g"], solid_check="PASS" if g.get("solid_ok") else "FAIL") for k, g in gen.items()],
+    gen = {k: json.load(open(os.path.join(ROOT, "parts", "box_arm8_" + k, "result.json"))) for k in PROTO}
+    return dict(hold="Every piece is a drawn prototype (15 Nov): print these. The 13 / 14 Nov engine shapes of hub, carriage and lift are not to be printed; their setups wait for OPTIMISE, after the tests.",
+                generated=[dict(part="box_arm8_" + k, count=n, current=False, worst=gen[k]["strength"]["worst"], mass_g=gen[k]["mass_g"], solid_check="PASS" if gen[k].get("solid_ok") else "FAIL") for k, n in PROTO.items()],
                 kit="parts/box_arm8/kit.json", files=kit.get("files", []), print_order=kit.get("order", []), test_set=kit.get("test_set"), open=kit.get("open", []), order=ORDER)
 
 
@@ -488,7 +553,10 @@ def main():
     one("saddle_overseer", saddle(S, "overseer")); one("saddle_scout", saddle(S, "scout"))
     one("link", link_bar(S))
     res["printed"] = pr
-    res["generated"] = {q["part"][9:]: dict(part=q["part"], setup=f"parts/{q['part']}/part.py", state=(f"run {'PASS' if q['solid_check'] == 'PASS' and q['worst'] <= 0.5 else 'FAIL'}: worst {q['worst']}, {q['mass_g']} g" if q["current"] else "setup changed 14 Nov: rerunning")) for q in print_kit(pr)["generated"]}
+    res["generated"] = {k: dict(part="box_arm8_" + k, setup=f"parts/box_arm8_{k}/part.py", prototype=f"parts/box_arm8p_{k}/make.py",
+                                state="kept for OPTIMISE (15 Nov: the drawn prototype is the print; the 13 / 14 Nov run is of an older setup)") for k in PROTO}
+    import box_arm8p_lib as PL
+    res["stub_check"] = PL.stub_check(FX["stub"][0])
     res["bought"] = BOUGHT
     res["print_kit"] = print_kit(pr)
     res["compat"] = compat(S, fast)
@@ -561,11 +629,35 @@ BOUGHT = [
     dict(part="insert M5", spec="heat-set, rail bolts", n=4, url=A + "Threaded-Inserts-M5xD7xL6-Printing-Components/dp/B0H142Y3BM"),
     dict(part="insert M3 / M4", spec="heat-set: stepper faces M3 (16), MGN rail M3 (8); float bolts M4 (8, the next line)", n=24, url=A + "initeq-M3-0-5-Threaded-Inserts-Printing/dp/B077CHDSTR"),
     dict(part="insert M4", spec="heat-set M4-0.7, the float bolts screw into the ties", n=8, url=A + "clp/B07457F9ST", check="20 in the pack; the ties' holes are o 5.6: measure the insert first (M)"),
-    dict(part="wheel axle", spec="M5 x 20 countersunk DIN 7991", n=6, url=A + "Socket-Screws-Countersunk-Stainless-Bright/dp/B0CJV8XJ3Y"),
+    dict(part="wheel axle", spec="M5 x 20 button head ISO 7380 (head o 9.5 x 2.75, 3 mm key), from behind each V wheel", n=6, url=A + "Button-Socket-Screws-Stainless-Threaded/dp/B0CJ919595", check="50 in the pack; a countersunk or socket head does not fit behind the wheel"),
+    dict(part="wheel axle nut", spec="M5 hex nut DIN 934 (8 across, 4.0 thick), sunk in the carriage's front; a drop of threadlocker", n=6, url=A + "BinifiMux-Stainless-Silver-Furniture-Machinery/dp/B07J645J6L"),
+    dict(part="wheel axle washers", spec="M5 x o 15 x 1.2 (the stand's), two per axle sunk in the plate; and one each under the three stub bolts' heads", n=15, url=A + "dp/B0DX6TD1Q7"),
+    dict(part="wheel spacer", spec="M5 x o 10 x 1.0 washer DIN 125, one between each wheel's inner ring and the plate", n=6, url=A + "s?k=M5+flat+washer+DIN+125+10mm+304", check="1.0 thick, 10 OD: it must sit on the 625ZZ's inner ring only"),
+    dict(part="yoke bolt washer", spec="M3 x o 9 x 0.8, under each of the yoke's four M3 heads", n=8, url=A + "clp/B01IZL6G4E"),
+    dict(part="stub bolts", spec="M5 x 25 socket cap on an o 15 washer, from the front through the stub's flange and the mast's face to an M5 nyloc on an o 15 washer behind it (the stand's listings)", n=3, url=A + "dp/B0BQJ3DZ34", check="nylocs: " + A + "dp/B078NNFT93"),
+    dict(part="post bolt", spec="M8 x 60 hex bolt and nut: through the post and the stub's spigot, its nut in the pocket in the flange's back", n=1, url=A + "clp/B08XZRVMD4", check="10 sets in the pack; full thread"),
+    dict(part="detent pivot", spec="M3 x 30 socket head: through the detent arm into the stub's boss (o 2.6, it cuts its thread)", n=1, url=A + "Socket-Screws-Available-Stainless-Machine/dp/B08P6DYH7V", check="the M3 x 12 listing's other lengths"),
     dict(part="carbon rod 3", spec="o 3 x 500: blade rods 66 long, four; pilot pins 9 long, four; on hand", n=1, url=A + "Carbon-Fiber-Length-Diameter-Suitable/dp/B09N91J1FC"),
 ]
 
 COL = dict(hub="#c9d3dc", rail="#9fb4cc", carriage="#e8b04a", lift="#5f9ed1", unit="#7fc97f", bought="#8a8f96", tpu="#333333", fixed="#b7a3c9", bay="#8a94a6", pack="#2f4fbf", box="#d8d8d8")
+
+
+_B = lambda hd: [f"box_arm8_{hd}_{k}" for k in ("motor", "coupler", "thrust", "screw")]
+ASSEMBLY = {
+    "fit_tol_mm3": 0.5,
+    "order": {"box_arm8_fx_post": 20, "box_arm8_fx_post_bolt": 20, "box_arm8_fx_detent_*": 20, "box_arm8_fx_axle_pulley": 20, "box_arm8_?_rail": 30, "box_arm8_?_motor": 30, "box_arm8_?_coupler": 30, "box_arm8_?_thrust": 30, "box_arm8_?_screw": 30,
+              "box_arm8_?_wheels": 40, "box_arm8_?_axles": 40, "box_arm8_?_mgn_rail": 40, "box_arm8_?_mgn_block": 50, "box_arm8_?_nut": 50, "box_arm8_?_booms": 50, "box_arm8_?_*": 60,
+              "box_arm8_bay_*": 90, "box_arm8_drone_*": 90, "box_arm8_funnel": 90},
+    "contacts": [{"a": f"box_arm8_{hd}_carriage", "b": f"box_arm8_{hd}_axles", "allow_mm3": 2.0, "why": "the third wheel's axle is drawn at the middle of its slot; washers seated in their recesses"} for hd in "ab"],
+    "paths": [{"name": "hub onto the stub", "part": "box_arm8_hub", "order": 10, "out": [0, 1, 0], "length_mm": 45, "fit": "press", "with": ["box_arm8_fx_bearings"], "into": ["box_arm8_fx_stub"],
+               "why": "the two 6010 pressed in the sleeve from the stub end, then the hub with them slid on the spigot; the post and its M8 after it"}]
+             + [{"name": f"carriage {hd.upper()} onto its rail", "part": f"box_arm8_{hd}_carriage", "order": 40, "out": [0, 0, sg], "length_mm": 150, "fit": "mate",
+                 "with": [f"box_arm8_{hd}_wheels", f"box_arm8_{hd}_axles", f"box_arm8_{hd}_mgn_rail"], "into": [f"box_arm8_{hd}_rail"], "ignore": _B(hd)[2:],
+                 "why": "wheels and MGN rail on the carriage at the bench, then rolled onto the V rail from its tip; the screw goes in after it (order in parts/box_arm8/make.py ORDER)"} for hd, sg in (("a", 1), ("b", -1))]
+             + [{"name": f"lift {hd.upper()} onto its block", "part": f"box_arm8_{hd}_lift", "order": 50, "out": [0, 1, 0], "length_mm": 40, "fit": "mate", "with": [f"box_arm8_{hd}_booms"],
+                 "into": [f"box_arm8_{hd}_carriage"], "ignore": [f"box_arm8_{hd}_nut", f"box_arm8_{hd}_screw", f"box_arm8_{hd}_thrust"],
+                 "why": "the yoke (booms bonded) onto the MGN block's face along the axle, four M3 from the front; the nut is in its lug and the screw is run through it afterwards"} for hd in "ab"]}
 
 
 def write_assembly(res, S, H, FX, out_dir):
@@ -577,26 +669,24 @@ def write_assembly(res, S, H, FX, out_dir):
         else:
             mesh = f"parts/box_arm8/view/{pid}.stl"; tm(m).export(os.path.join(ROOT, mesh))
         parts.append(dict(id=pid, name=name, role=role, group=group, color=color, opacity=opacity, mesh=mesh, pose=pose, material=material, tag="C", owner="swap arm",
-                          version=version, source="parts/box_arm8/make.py", kin=kin))
-    hub = U(*hub_drawn()) - U(*hub_cuts())
-    ran = {k: current(k) for k in ("hub", "carriage", "lift")}                                  # the run's shape where the result is of the setup on main, else the setup
-    if ran["hub"]: add("box_arm8_hub_run", "hub (generated)", None, "hub (turns)", COL["hub"], "structure", "PCTG", dict(stage="hub"), folder="box_arm8_hub", version="run, arm v8")
-    else: add("box_arm8_hub_setup", "hub (drawn attachments; the body is generated)", hub, "hub (turns)", COL["hub"], "structure", "PCTG", dict(stage="hub"), version="setup, not run")
+                          version=version, source=f"parts/{folder}/make.py" if folder and folder.startswith("box_arm8p_") else "parts/box_arm8/make.py", kin=kin))
+        if folder and folder.startswith("box_arm8p_"): parts[-1]["part"] = folder
+    add("box_arm8_hub", "hub (drawn prototype)", None, "hub (turns)", COL["hub"], "structure", "PCTG", dict(stage="hub"), folder="box_arm8p_hub", version="prototype 15 Nov")
     for k, (m, mat, kind) in FX.items():
         add("box_arm8_fx_" + k, k.replace("_", " "), m, "stub side (fixed)", COL["fixed"] if kind == "print" else COL["bought"], "structure" if kind == "print" else "bought", mat,
             folder=("box_arm8_" + k) if kind == "print" else None)
-    names = dict(carriage="carriage (setup envelope; generated)", lift="lift: yoke on the MGN block, arm to the nut (setup envelope; generated)", mgn_rail="lift rail MGN12 x 100", mgn_block="MGN12H block", booms="booms: three o 6 carbon rods", ties="ties (printed, on the booms)")
+    names = dict(mgn_rail="lift rail MGN12 x 100", mgn_block="MGN12H block", booms="booms: three o 6 carbon rods", ties="ties (printed, on the booms)")
     for hd, f in (("A", lambda q: q), ("B", rot180)):
         for k, (m, mat, kind, grp) in H.items():
             stage = "hub" if grp == "hub" else ("lift" if grp == "unit" else grp)
             col = COL["bought"] if kind == "bought" else COL["tpu"] if mat == "TPU" else COL[grp if grp != "hub" else "rail"]
             kin = dict(stage=stage, head=hd, blade=(1 if k == "blade_p" else -1 if k == "blade_n" else 0) * (1 if hd == "A" else -1))
-            if kind == "run" and ran[k]:
-                add(f"box_arm8_{hd.lower()}_{k}_run", f"head {hd}: {k} (generated)", None, f"head {hd}", col, "structure", mat, kin, folder="box_arm8_" + k, version="run, arm v8",
+            if kind == "proto":
+                add(f"box_arm8_{hd.lower()}_{k}", f"head {hd}: {k} (drawn prototype)", None, f"head {hd}", col, "structure", mat, kin, folder="box_arm8p_" + k, version="prototype 15 Nov",
                     pose=None if hd == "A" else [[-1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, -1.0, 0], [0, 0, 0, 1.0]])
                 continue
             add(f"box_arm8_{hd.lower()}_{k}", f"head {hd}: {names.get(k, k.replace('_', ' '))}", f(m), f"head {hd}", col, "bought" if kind == "bought" else "structure", mat,
-                kin, version="setup, not run" if kind == "run" else "arm v8 (14 Nov)")
+                kin, version="arm v8 (15 Nov)")
     for kind, angs in BAYS.items():
         for a_ in angs:
             add(f"box_arm8_bay_{a_}_recv".replace("-", "m"), f"bay {a_}: {kind} receiver (latch v7)", at_radius(S[kind]["recv_bay"], L.R_BAY, a_), "bays", COL["bay"], "protected", "PCTG", opacity=0.55)
@@ -613,8 +703,8 @@ def write_assembly(res, S, H, FX, out_dir):
            "note": f"The box's swap arm, v8, for latch v7 and both packs. Two heads 180 apart; each is a lift on a bought MGN12H rail driven by a T8 x 2 screw, with three carbon rods out under the grab unit, picking its carriage up for the last "
                    f"{L.T2:g} mm: {nb['travel_mm']['drone']} mm to the drone seat. Push limited by the grab unit's float springs to {L.F_LIMIT:g} N (x{L.F_LIMIT / L.F_INSERT['overseer']:.2f} over the Overseer insert); the screw holds with the power off. "
                    f"Bays at R {L.R_BAY:g}. Swap cycle, both packs, {c['states']} states: {'0 overlaps' if c['zero'] else str(len(c['overlaps'])) + ' overlapping pairs, listed under the viewer'}. "
-                   + ("Hub, carriage and lift are their runs' shapes." if all(ran.values()) else "Shown as their setups (drawn attachments and envelope), their runs pending: " + ", ".join(k for k in ran if not ran[k]) + "."),
-           "cg_ref": None, "timeline": "tools/swap_arm_motion.py:timeline", "appendix": "systems/swap_arm.appendix.html", "parts": parts}
+                   + "Every printed piece is a drawn prototype (15 Nov); hub, carriage and lift are optimised after the tests.",
+           "cg_ref": None, "timeline": "tools/swap_arm_motion.py:timeline", "appendix": "systems/swap_arm.appendix.html", "assembly": ASSEMBLY, "parts": parts}
     json.dump(asm, open(path, "w"), indent=1)
     open(os.path.join(ROOT, "systems", "swap_arm.appendix.html"), "w").write(appendix(res))
 

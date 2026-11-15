@@ -1,0 +1,42 @@
+{
+ "name": "box_arm8p_hub",
+ "g": 335.5,
+ "as_printed_mm": [
+  160.3,
+  175.0,
+  70.0
+ ],
+ "fits_180": true,
+ "solid_check": "PASS",
+ "note": "stub end down, tree supports under keels, slabs and stepper walls",
+ "worst": 0.622,
+ "worst_check": "rail bolts: M5 heat-set inserts, 1500 N (E)",
+ "worst_case": "insert off square, overseer: the limit + 43.5 N across at the mouth",
+ "hand_check": [
+  {
+   "check": "sleeve under the cone (Y 32.2, across the layers; A 2484 mm2, W 50737 mm3)",
+   "index": 0.079,
+   "case": "insert off square, overseer: the limit + 43.5 N across at the mouth"
+  },
+  {
+   "check": "rail bolts: M5 heat-set inserts, 1500 N (E)",
+   "index": 0.622,
+   "case": "insert off square, overseer: the limit + 43.5 N across at the mouth"
+  },
+  {
+   "check": "keel beyond the cone under a rail's outer bolt (u 70.5; W 1330 mm3)",
+   "index": 0.323,
+   "case": "insert off square, overseer: the limit + 43.5 N across at the mouth"
+  },
+  {
+   "check": "thrust wall, 4.0 between the two F8-16M, in its cradle",
+   "index": 0.35,
+   "case": "dropped pack: an Overseer falls 50 onto the head (float springs take 0.38 J)"
+  },
+  {
+   "check": "ring teeth at the axle's stall: 116 N over 37 teeth in mesh (a quarter wrap), 0.6 x 6 of root each",
+   "index": 0.112,
+   "case": "axle stall"
+  }
+ ]
+}

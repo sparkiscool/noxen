@@ -10,7 +10,7 @@
   {
    "name": "box_funnel_proto_half_nose",
    "file": "print/box_funnel_proto_half_nose.stl",
-   "sha256": "5e644b3ffb57f918e0740c0bd76997c362f66636f6558348be5defdd04ac9b31",
+   "sha256": "37f3d4b1cd37ffc7ef7741620b8567eaf57ed5c6f0cf78a360b9c166cf004659",
    "count": 1,
    "material": "PCTG (PETG settings + 10 C)",
    "pose": "upside down: the two rims behind the side walls' top edges and the rib's top on the bed",
@@ -22,8 +22,8 @@
     83.2
    ],
    "bed_contact_mm2": 3833,
-   "overhang_mm2": 17281,
-   "volume_cm3": 384.0,
+   "overhang_mm2": 17337,
+   "volume_cm3": 383.8,
    "contact_extent_mm": [
     90.0,
     157.1
@@ -41,15 +41,23 @@
    },
    "solid_check": "PASS",
    "picture": "parts/box_funnel/kit/box_funnel_proto_half_nose.png",
-   "ok": true,
    "stage": "PROTOTYPE",
    "printed_g": 280.0,
-   "time": "~9 h E (228 cm3 at ~8 mm3/s, plus tree supports)"
+   "time": "16h08 each (slicer estimate)",
+   "ok": true,
+   "filament_g": 366,
+   "slicer_estimate": {
+    "time": "16h08",
+    "filament_cm3": 297.8,
+    "filament_g_with_supports_and_brim": 366,
+    "how": "PrusaSlicer 2.7.2 slice of this file at the kit's settings (0.2 layers, 6 walls, 12 top / bottom, 25 % gyroid, brim 5, organic supports over 45 deg, 8 mm3/s cap, A1 mini limits); Bambu Studio's own estimate will differ"
+   },
+   "published": "the release's file is CI's make of this piece (same solid, its own triangulation), solid check PASS in CI (print.json make.solid)"
   },
   {
    "name": "box_funnel_proto_half_tail",
    "file": "print/box_funnel_proto_half_tail.stl",
-   "sha256": "07e86b1f9946c41deff276a3e0d9607eab9d6d8ef853aba4ab8e9859c32daf45",
+   "sha256": "da2b48928ad4bb1b895677226c527df21d27d57767a835ad6e66be7c0af8d36e",
    "count": 1,
    "material": "PCTG (PETG settings + 10 C)",
    "pose": "upside down: the two rims behind the side walls' top edges and the rib's top on the bed",
@@ -61,8 +69,8 @@
     83.2
    ],
    "bed_contact_mm2": 3577,
-   "overhang_mm2": 11030,
-   "volume_cm3": 378.9,
+   "overhang_mm2": 11086,
+   "volume_cm3": 378.8,
    "contact_extent_mm": [
     90.0,
     157.1
@@ -80,10 +88,18 @@
    },
    "solid_check": "PASS",
    "picture": "parts/box_funnel/kit/box_funnel_proto_half_tail.png",
-   "ok": true,
    "stage": "PROTOTYPE",
    "printed_g": 254.0,
-   "time": "~8 h E (206 cm3 at ~8 mm3/s, plus tree supports)"
+   "time": "13h53 each (slicer estimate)",
+   "ok": true,
+   "filament_g": 318,
+   "slicer_estimate": {
+    "time": "13h53",
+    "filament_cm3": 258.7,
+    "filament_g_with_supports_and_brim": 318,
+    "how": "PrusaSlicer 2.7.2 slice of this file at the kit's settings (0.2 layers, 6 walls, 12 top / bottom, 25 % gyroid, brim 5, organic supports over 45 deg, 8 mm3/s cap, A1 mini limits); Bambu Studio's own estimate will differ"
+   },
+   "published": "the release's file is CI's make of this piece (same solid, its own triangulation), solid check PASS in CI (print.json make.solid)"
   },
   {
    "name": "box_funnel_proto_arm",
@@ -120,10 +136,17 @@
    },
    "solid_check": "PASS",
    "picture": "parts/box_funnel/kit/box_funnel_proto_arm.png",
-   "ok": true,
    "stage": "PROTOTYPE",
    "printed_g": 65.6,
-   "time": "~2 h E each; the two fit one plate side by side, ~4 h"
+   "time": "3h17 each (slicer estimate)",
+   "ok": true,
+   "filament_g": 75,
+   "slicer_estimate": {
+    "time": "3h17",
+    "filament_cm3": 61.2,
+    "filament_g_with_supports_and_brim": 75,
+    "how": "PrusaSlicer 2.7.2 slice of this file at the kit's settings (0.2 layers, 6 walls, 12 top / bottom, 25 % gyroid, brim 5, organic supports over 45 deg, 8 mm3/s cap, A1 mini limits); Bambu Studio's own estimate will differ"
+   }
   },
   {
    "name": "box_funnel_proto_arm_mirrored",
@@ -160,10 +183,17 @@
    },
    "solid_check": "PASS",
    "picture": "parts/box_funnel/kit/box_funnel_proto_arm_mirrored.png",
-   "ok": true,
    "stage": "PROTOTYPE",
    "printed_g": 65.6,
-   "time": "~2 h E each; the two fit one plate side by side, ~4 h"
+   "time": "3h17 each (slicer estimate)",
+   "ok": true,
+   "filament_g": 75,
+   "slicer_estimate": {
+    "time": "3h17",
+    "filament_cm3": 61.2,
+    "filament_g_with_supports_and_brim": 75,
+    "how": "PrusaSlicer 2.7.2 slice of this file at the kit's settings (0.2 layers, 6 walls, 12 top / bottom, 25 % gyroid, brim 5, organic supports over 45 deg, 8 mm3/s cap, A1 mini limits); Bambu Studio's own estimate will differ"
+   }
   },
   {
    "name": "box_funnel_wall_nose",
@@ -232,7 +262,15 @@
    "solid_check": "PASS",
    "picture": "parts/box_funnel/kit/box_funnel_wall_nose.png",
    "ok": true,
-   "stage": "PROTOTYPE"
+   "stage": "PROTOTYPE",
+   "time": "0h56 each (slicer estimate)",
+   "filament_g": 21,
+   "slicer_estimate": {
+    "time": "0h56",
+    "filament_cm3": 17.3,
+    "filament_g_with_supports_and_brim": 21,
+    "how": "PrusaSlicer 2.7.2 slice of this file at the kit's settings (0.2 layers, 6 walls, 12 top / bottom, 25 % gyroid, brim 5, organic supports over 45 deg, 8 mm3/s cap, A1 mini limits); Bambu Studio's own estimate will differ"
+   }
   },
   {
    "name": "box_funnel_wall_tail",
@@ -301,7 +339,15 @@
    "solid_check": "PASS",
    "picture": "parts/box_funnel/kit/box_funnel_wall_tail.png",
    "ok": true,
-   "stage": "PROTOTYPE"
+   "stage": "PROTOTYPE",
+   "time": "0h56 each (slicer estimate)",
+   "filament_g": 21,
+   "slicer_estimate": {
+    "time": "0h56",
+    "filament_cm3": 17.3,
+    "filament_g_with_supports_and_brim": 21,
+    "how": "PrusaSlicer 2.7.2 slice of this file at the kit's settings (0.2 layers, 6 walls, 12 top / bottom, 25 % gyroid, brim 5, organic supports over 45 deg, 8 mm3/s cap, A1 mini limits); Bambu Studio's own estimate will differ"
+   }
   },
   {
    "name": "box_funnel_strips",
@@ -345,7 +391,15 @@
    "solid_check": "PASS",
    "picture": "parts/box_funnel/kit/box_funnel_strips.png",
    "ok": true,
-   "stage": "PROTOTYPE"
+   "stage": "PROTOTYPE",
+   "time": "0h15 each (slicer estimate)",
+   "filament_g": 2.4,
+   "slicer_estimate": {
+    "time": "0h15",
+    "filament_cm3": 1.95,
+    "filament_g_with_supports_and_brim": 2.4,
+    "how": "PrusaSlicer 2.7.2, TPU at 3 mm3/s, 100 % infill, no brim"
+   }
   }
  ]
 }

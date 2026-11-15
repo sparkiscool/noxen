@@ -12,6 +12,9 @@ import numpy as np
 import manifold3d as mf
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import sys
+if ROOT not in sys.path: sys.path.insert(0, ROOT)
+from topo import fit as FIT                                      # every hole, bore, pocket and insert below: systems/fit_table.json
 
 
 def _load(name, rel):
@@ -68,7 +71,7 @@ BLOCK_U = (-7.4, 38.0)         # the MGN block at park: behind the yoke. At the 
 SCREW = (59.0, 62.5)           # screw axis (x, y): in front of the hub's plate (no slot in it), beside the spine; 104.6 along the axle from the tab line
 MOTOR = dict(x=(37.85, 80.15), y=(41.35, 83.65), u=(-92.5, -44.5))    # the head stepper lying through the plate's plane; far corner r 122.4: inside the bay receivers (129)
 NUT_U = (6.0, 21.0)            # the nut in a lug on the lift's arm; flange 3.5 over it, its two sides filed off to the body (15 x 10.4): it holds along the axle side only
-LUG = dict(x=(51.3, 66.7), y=(55.4, 71.5), u=(3.0, 27.5))
+LUG = dict(x=(51.3, 66.7), y=(55.4, 73.5), u=(3.0, 27.5))        # 15 Nov: 3.3 behind the flange slot (was 1.3: under the 2.0 floor beside the arm)
 ARM = dict(x=(58.2, 66.0), y=(71.49, 91.7), u=(-5.0, 40.0))           # from the nut's lug past the MGN block to the yoke's plate: 45 deep along the bar (in a bay the neighbour's cartridge is at 110.6 over x 64: 41.8 at park)
 YOKE = dict(x=(-26.5, 27.6), y=(82.0, 112.0), u=(2.1, 43.0))         # across the head from the far socket to the MGN block's side, behind the Scout bays beside the drone (their receivers start at y 108.5)
 PLATE_L = dict(x=(27.5, 66.0), y=(91.6, 108.0), u=(-43.0, 43.0))      # the yoke's plate on the MGN block's face (four M3), 16.4 thick, and on down past the block
@@ -145,12 +148,21 @@ def wheel(x, c):
     cone = lambda t0, r0, r1: mf.Manifold.cylinder(d, r0, r1, 48).rotate([-90, 0, 0]).translate([x, t0, Z0 + c])
     w = U(cyl("y", x, Z0 + c, R, 57.75, 62.76 - d, 48), cone(62.75 - d, R, 10.25), cone(62.75, 10.25, R), cyl("y", x, Z0 + c, R, 62.74 + d, 67.75, 48))
     return w - cyl("y", x, Z0 + c, 8.0, 57, 62.75) - cyl("y", x, Z0 + c, 2.6, 57, 68)        # two 625ZZ (o 16 x 5) from one side, a 5 mm web behind them
+# 15 Nov (prototype): the wheel axles had no thread to end in, no spacer and no way to set the third wheel (a plain o 5.2 bore each; the "eccentric bush" was
+# never drawn; an M5 insert in the boss reads 1.08 on a swap's prying, the V's contact being 11.4 off the axle). Now each axle is an M5 x 20 button head (ISO 7380)
+# from behind the wheel (head 2.75: 1.0 off the hub's plate), an M5 x o 10 x 1.0 washer on the inner ring (the 1.0 between wheel and plate), an M5 x o 15 x 1.2
+# washer sunk in the plate's back, the plate's 3.15 web, the same washer and an M5 nut sunk in its front (nothing proud of the rail seat's plane, the bed).
+# The third wheel's bore and both its recesses are slots, +-AXLE["slot"] across the rail: slid home on the rail, then tightened (set-up, ORDER in make.py).
+AXLE = dict(bore=FIT.bore(5.0, "close") / 2, washer=FIT.across(15.0, "slide") / 2, back=1.2 + 0.1, front=1.2 + 4.0 + 0.2, slot=1.0, screw_tip=20.0,
+            washer_d=15.0, race_d=10.0, lever=WHEEL_R - 1.6)      # lever: the V's contact on the ridge from the axle (the groove's flank at mid-height)
 def mgn_bolts():
     """the rail's four bolt stations on the spine (u): 25 pitch from 12.5 in"""
     return [MGN_U[0] + MGN["first"] + MGN["pitch"] * k for k in range(4)]
 def carriage_bodies():
     """the drawn attachments: three wheel bosses, then the MGN rail's seat on the spine"""
-    b = [cyl("y", x, Z0 + c, 10.0, PLATE_Y[0], PLATE_Y[1]) for x, c in WHEELS]                 # M5 axle bosses, the plate's full depth
+    b = [cyl("y", x, Z0 + c, 10.0, PLATE_Y[0], PLATE_Y[1]) for x, c in WHEELS[:2]]             # M5 axle bosses, the plate's full depth
+    x3, c3 = WHEELS[2]; sl = AXLE["slot"]                                                      # the third's is o 22 drawn out by its slot: 3.2 round the washers' recesses
+    b += [mf.Manifold.batch_hull([cyl("y", x3 - sl, Z0 + c3, 11.0, PLATE_Y[0], PLATE_Y[1]), cyl("y", x3 + sl, Z0 + c3, 11.0, PLATE_Y[0], PLATE_Y[1])])]
     b += [box(RAIL_X - 6.0, RAIL_X + 6.0, SPINE["y"][1] - 3.0, SPINE["y"][1], MGN_U[0], MGN_U[1])]
     b += [box(SPINE["x"][1] - 0.01, STOP["x1"], LUG["y"][0], SPINE["y"][1], STOP["u"], STOP["u"] + STOP["t"])]   # the pick-up stop: a tab on the spine's side over the lift's nut lug
     return b
@@ -166,9 +178,26 @@ def carriage_env():
              #                                                                                                  (13 Nov run: 0.53 where the plate bends between the low wheel's axle and the spine; it was 2.4 on the front, past the bed plane)
              box(-30.5, 12.01, PLATE_Y[0], PLATE_Y[1], w3 - 22.0, w3 + 22.0),                                 # and a strap across the rail to the third wheel, 44 wide
              box(s["x"][0], s["x"][1], s["y"][0], s["y"][1], MGN_U[0], CAR_TOP))                                 # the spine: the MGN rail on its front, the wheel pair beside it
+def axle_cut(x, c, slot=0.0):
+    """one wheel's axle through the plate: the bore and the two washer recesses (obround by +-slot across the rail for the third wheel)"""
+    a = AXLE; y0, y1 = PLATE_Y
+    def ob(r, t0, t1):
+        if not slot: return cyl("y", x, Z0 + c, r, t0, t1)
+        return mf.Manifold.batch_hull([cyl("y", x - slot, Z0 + c, r, t0, t1), cyl("y", x + slot, Z0 + c, r, t0, t1)])
+    return U(ob(a["bore"], 50, 82), ob(a["washer"], y0 - 0.01, y0 + a["back"]), ob(a["washer"], y1 - a["front"], y1 + 1))
 def carriage_cuts():
-    c = [cyl("y", x, Z0 + cc, 2.6, 50, 82) for x, cc in WHEELS] + [cyl("y", RAIL_X, u, 2.0, SPINE["y"][1] - 7.0, SPINE["y"][1] + 1) for u in mgn_bolts()]    # M3 heat-set inserts under the rail
+    c = [axle_cut(x, cc, AXLE["slot"] if i == 2 else 0.0) for i, (x, cc) in enumerate(WHEELS)]
+    c += [cyl("y", RAIL_X, u, FIT.insert("M3") / 2, SPINE["y"][1] - 7.0, SPINE["y"][1] + 1) for u in mgn_bolts()]    # M3 heat-set inserts under the rail
     return U(*c)
+def carriage_proto():
+    """the drawn PROTOTYPE carriage (parts/box_arm8p_carriage/make.py): the setup's room filled, its drawn attachments, less its cuts"""
+    return U(carriage_env(), *carriage_bodies()) - carriage_cuts()
+def axle_stack(x, c):
+    """bought, one wheel: screw, the three washers and the nut (the page and the assembly check)"""
+    a = AXLE; y0, y1 = PLATE_Y; u = Z0 + c
+    return U(cyl("y", x, u, 4.75, 55.0, 57.75), cyl("y", x, u, 2.5, 57.7, 57.75 + a["screw_tip"]),                       # button head, shank
+             cyl("y", x, u, a["race_d"] / 2, 67.75, y0) - cyl("y", x, u, 2.5, 67, y0 + 1),
+             cyl("y", x, u, 7.5, y0, y0 + 1.2), cyl("y", x, u, 7.5, y1 - a["front"] + 0.0, y1 - a["front"] + 1.2), cyl("y", x, u, 4.6, y1 - 4.2, y1 - 0.2, 6))
 def mgn_rail():
     return box(RAIL_X - 6.0, RAIL_X + 6.0, SPINE["y"][1], SPINE["y"][1] + MGN["rail_h"], MGN_U[0], MGN_U[1])
 def mgn_block():
@@ -209,11 +238,18 @@ def lift_cuts():
     if ROOT not in sys.path: sys.path.insert(0, ROOT)
     from parts import cage_node_lib as cn
     x, y = SCREW
-    c = [cyl("z", x, y, 5.2, LUG["u"][0] - 1, LUG["u"][1] + 1), box(x - 5.2, x + 5.2, LUG["y"][0] - 1, y + 7.7, NUT_U[1], NUT_U[1] + 3.7)]   # the nut's body and its flange slot, in the lug
-    c += [U(cyl("y", bx, bu, 1.7, PLATE_L["y"][0] - 5.0, 120), cyl("y", bx, bu, 3.2, PLATE_L["y"][0] + 6.0, 120)) for bx, bu in mount_bolts()]                # four M3 into the MGN block, heads sunk to 6 from the block
+    rn = FIT.bore(10.2, "slide") / 2                                                                         # the T8 nut's o 10.2 body slides in (fit table)
+    c = [cyl("z", x, y, rn, LUG["u"][0] - 1, LUG["u"][1] + 1), box(x - rn, x + rn, LUG["y"][0] - 1, y + 7.7, NUT_U[1], NUT_U[1] + 3.7)]   # the nut's body and its flange slot, in the lug
+    c += [U(cyl("y", bx, bu, FIT.bore(3.0, "screw") / 2, PLATE_L["y"][0] - 5.0, 120), cyl("y", bx, bu, FIT.across(MOUNT_WASHER, "slide") / 2, PLATE_L["y"][0] + 6.0, 120)) for bx, bu in mount_bolts()]
+    # four M3 into the MGN block, each head on an M3 x o 9 washer sunk to 6 from the block (15 Nov: the bare o 5.5 head read 1.7 on the dropped pack's pitch couple)
     for bx, bu in boom_axes():                                                                              # house sockets: bore 6.2, three resin pockets, the port out of the collar's underside
         c += cn.socket_cuts([bx, SOCKET[0], bu], [0, 1.0, 0], 0.0, SOCKET[1] - SOCKET[0], 3.1, build=(0.0, 0.0, 1.0), pockets=3, pocket_dir=[0, 0, -1.0]) + [cn.port_cut([bx, SOCKET[0], bu], [0, 1.0, 0], 0.0, [0, 0, -1.0], length=8.0)]
     return U(*c)
+MOUNT_WASHER = 9.0
+def lift_proto():
+    """the drawn PROTOTYPE lift (parts/box_arm8p_lift/make.py): the setup's room filled, less its cuts"""
+    skim = U(*[cyl("y", x, u, 3.12, SOCKET[0] - 0.3, SOCKET[1] + 1.0) for x, u in boom_axes()])     # 0.02 off each bore: the resin pockets' edges met the bore's facets on a line
+    return lift_env() - lift_cuts() - skim                                                    # (four faces on one edge: the print file was not a closed surface once its points were merged)
 def lift_env():
     k = PLATE_L
     plate = U(_b(k), box(k["x"][0], 35.4, k["y"][1] - 0.01, YOKE["y"][1], k["u"][0], k["u"][1]))            # inside x 35.5 (the Scout bays beside the drone start there) the plate is 20.4 thick, as the yoke

@@ -21,6 +21,9 @@ h1 { margin: 0; font-size: 17px; font-weight: 600; } h1 small { font-weight: 400
 .pick.recut { left: auto; right: 8px; top: 44px; bottom: auto; border-color: #d62828; } .pick .red { color: #d62828; }
 .pick b { font-size: 14px; } .pick .len { font: 600 15px var(--mono); }
 .pick.lookall { left: auto; right: 8px; bottom: 8px; } .pick .look { margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; } .pick .look input[type=range] { width: 110px; } .pick .look input[type=color] { width: 32px; height: 22px; padding: 0; border: 0; background: none; }
+.pick.lookall .tog { font: 600 13px var(--sans); padding: 0; border: 0; background: none; color: var(--fg); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.pick.lookall .tog::before { content: "\25BE"; font-size: 11px; color: var(--muted); } .pick.lookall.closed .tog::before { content: "\25B8"; }
+.pick.lookall.closed { padding: 4px 8px; border-color: var(--line); } .pick.lookall.closed .tog { font-size: 12px; font-weight: 500; color: var(--muted); } .pick.lookall.closed .look { display: none; }
 .stage canvas { display: block; width: 100%; height: 100%; }
 .views { position: absolute; top: 10px; left: 10px; display: flex; gap: 4px; flex-wrap: wrap; }
 .views button, .bar button { font: 12px var(--mono); padding: 5px 9px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
@@ -72,7 +75,7 @@ body.rec .stage { border: 0; border-radius: 0; }
     <div class="hud" id="hud"></div>
     <div class="pick" id="pick" hidden></div>
     <div class="pick recut" id="recut" hidden></div>
-    <div class="pick lookall" id="lookall" hidden><b>printed parts</b> <span class="look">colour <input type="color" id="lookc" value="#eef2f5"> clear <input type="range" id="looko" min="0.05" max="1" step="0.05" value="1"> <span id="lookv">as designed</span> <button id="lookr">reset</button></span></div>
+    <div class="pick lookall" id="lookall" hidden><button type="button" class="tog" id="lookt" title="show or hide the printed parts colour panel" aria-expanded="true">printed parts</button> <span class="look">colour <input type="color" id="lookc" value="#eef2f5"> clear <input type="range" id="looko" min="0.05" max="1" step="0.05" value="1"> <span id="lookv">as designed</span> <button id="lookr">reset</button></span></div>
   </div>
   <div class="bar">
     <button type="button" id="play">pause</button>
@@ -102,7 +105,7 @@ const D = JSON.parse(document.getElementById('data').textContent);
 const $ = id => document.getElementById(id);
 $('title').innerHTML = D.title + (D.subtitle ? '<small>' + D.subtitle.replace(/</g, '&lt;') + '</small>' : '');
 $('mass').textContent = D.mass_total ? D.mass_total.toFixed(1) + ' g printed (M; ' + D.material + ' density E)' : 'no printed mass';
-$('note').textContent = 'Masses: mesh volume (M) x ' + (D.material === 'TPU' ? '1.21' : '1.27') + ' g/cm3 solid (E). Bought parts are context. Drag to orbit, wheel to zoom, right-drag to pan. Click a part to name it; a rod shows its cut length. Bottom right: one colour and transparency for every printed part.';
+$('note').textContent = 'Masses: mesh volume (M) x ' + (D.material === 'TPU' ? '1.21' : '1.27') + ' g/cm3 solid (E). Bought parts are context. Drag to orbit, wheel to zoom, right-drag to pan. Click a part to name it; a rod shows its cut length. Bottom right: one colour and transparency for every printed part; click its title to fold or open the panel.';
 
 // ---------- meshes
 function b64(s) { const b = atob(s); const u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
@@ -297,6 +300,14 @@ if (printed.length) {
   const go = () => lookAll($('lookc').value, +$('looko').value);
   $('lookc').oninput = go; $('looko').oninput = go; $('lookr').onclick = lookReset;
   try { const v = JSON.parse(localStorage.getItem('look:printed')); if (v) { $('lookc').value = v[0]; $('looko').value = v[1]; lookAll(v[0], v[1]); } } catch (e) {}
+  // the panel folds to its title (Spark 14 Nov: it covered the drone in a small window); starts folded when the stage is small,
+  // a click remembers the choice in this browser (look:open) and a stored choice beats the size rule
+  const small = () => stage.clientWidth < 560 || stage.clientHeight < 320;
+  let stored = null; try { stored = localStorage.getItem('look:open'); } catch (e) {}
+  const fold = open => { $('lookall').classList.toggle('closed', !open); $('lookt').setAttribute('aria-expanded', open ? 'true' : 'false'); };
+  fold(stored != null ? stored === '1' : !small());
+  $('lookt').onclick = () => { const open = $('lookall').classList.contains('closed'); fold(open); try { localStorage.setItem('look:open', open ? '1' : '0'); } catch (e) {} };
+  window.addEventListener('resize', () => { if (stored == null) { try { stored = localStorage.getItem('look:open'); } catch (e) {} } if (stored == null) fold(!small()); });
 }
 // recut members (a 9th seg field, the old length): always drawn red, listed with old and new length
 const redMat = new THREE.MeshBasicMaterial({ color: 0xd62828 }); const recut = [];

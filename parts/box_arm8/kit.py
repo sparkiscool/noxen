@@ -8,8 +8,8 @@ Each file: solid check (tools/solid_check.py, the gate) on the file as exported;
 45 deg and the part of it wider than BRIDGE_MM (that part needs supports: the decision comes from this number, not from words);
 its size on the A1 mini's 180 bed and the brim that still fits. A pose is fixed here only where the layers' direction carries the
 load (said beside it); otherwise it is the pose with the least to support, then the most on the bed.
-The three engine parts (hub, carriage, lift) join from their runs' print meshes (tools/print_mesh.py), turned so their setup's build
-direction is up; one whose result is not of the setup on main is listed as waiting. The install sweeps for one grab unit (every piece
+15 Nov: hub, carriage and lift are drawn prototypes (parts/box_arm8p_*/make.py, each lays its own print file; measured here as laid), with the bearing
+fit coupon; the engine parts' files are not in the kit any more (OPTIMISE comes after Spark's tests). The install sweeps for one grab unit (every piece
 along its way in, against the body and what is already in) run here too: a piece that cannot be put in fails the kit.
 """
 import json, math, os, sys
@@ -144,32 +144,24 @@ def install():
     return dict(steps=steps, working=work, ok=bool(ok))
 
 
-def engine_parts():
-    """hub, carriage, lift: (mesh or None, down, count, why waiting)"""
-    import part_sha, print_mesh
-    out = {}
-    for k, n in (("hub", 1), ("carriage", 2), ("lift", 2)):
-        p = "box_arm8_" + k; d = os.path.join(ROOT, "parts", p); r = json.load(open(os.path.join(d, "result.json")))
-        setup = getattr(__import__("box_arm8_setups"), k)
-        import re
-        build = re.search(r'build="([+-][xyz])"', open(os.path.join(ROOT, "parts", "box_arm8_setups.py")).read().split(f"def {k}(h)")[1]).group(1)
-        down = ("-" if build[0] == "+" else "+") + build[1]
-        now = part_sha.setup_sha(os.path.join(d, "part.py"))
-        cur = M.current(k)
-        why = None if cur else ("its run is not of the setup on main (%s, the result %s): rerunning" % (now, r.get("setup_sha")) if r.get("setup_sha") != now else "its run did not pass")
-        out[k] = dict(part=p, n=n, down=down, build=build, current=cur, why=why, worst=r["strength"]["worst"], mass_g=r["mass_g"],
-                      mesh=(trimesh.load(print_mesh.local(p), force="mesh") if cur else None))
-    return out
+PROTOS = {  # the drawn prototypes with their own make.py (parts/box_arm8p_<k>/make.py writes print/box_arm8p_<k>.stl in its print pose): count, pose, set
+    "coupon": (1, "floor down: set a 6010 on it, report the steps it goes down in the ring and on the plug, before the hub and the stub are printed", "stub side"),
+    "hub": (1, "stub end down: the bearing bore upright and round, the ring's 2555 mm2 on the bed", "stub side"),
+    "carriage": (2, "the rail seat's plane down: everything ends on it", "carriage"),
+    "lift": (2, "the yoke's top down: its bending and twist in the layers", "lift")}
 
 
-def one_file(fn, t0, mat, n, pose, why, group, pd, kd, poses=None, extra=None):
+def one_file(fn, t0, mat, n, pose, why, group, pd, kd, poses=None, extra=None, laid=False):
     import solid_check as sc
     from topo.build import render
-    if pose is None:
+    if laid:                                                                                    # a prototype's own make.py laid the file: measured as it is
+        f = os.path.join(pd, fn + ".stl"); t = t0; th = 0.0; pose = "bed"
+    elif pose is None:
         ps = poses or all_poses(t0); ok = [k for k in ps if ps[k]["fits"]] or list(ps)
         lo = min(ps[k]["support_mm2"] for k in ok)
         pose = max((k for k in ok if ps[k]["support_mm2"] <= lo + 5.0), key=lambda k: ps[k]["first_layer_mm2"]); why = why or "least to support, then most on the bed, of the six flat poses"
-    t, th = on_bed(t0, pose); f = os.path.join(pd, fn + ".stl"); t.export(f)
+    if not laid:
+        t, th = on_bed(t0, pose); f = os.path.join(pd, fn + ".stl"); t.export(f)
     g = trimesh.load(f, force="mesh"); ok, info = sc.solid_check(g)
     ok = bool(ok and g.is_watertight and len(g.split(only_watertight=False)) == 1)                # the file itself: closed, one shell
     ms = measure(g); e = [round(float(v), 1) for v in g.extents]; spare = round((BED - max(e[:2])) / 2, 1)
@@ -178,7 +170,7 @@ def one_file(fn, t0, mat, n, pose, why, group, pd, kd, poses=None, extra=None):
     png = os.path.join(kd, fn + ".png")
     render(g, png, title=f"{fn}.stl on its bed", info=f"{mat} | {e[0]} x {e[1]} x {e[2]} mm | first layer {ms['first_layer_mm2']} mm2 | supports {'YES, ' + str(ms['support_mm2']) + ' mm2' if sup else 'none'} | solid check {'PASS' if ok else 'FAIL'}")
     d = dict(file=f"print/{fn}.stl", release=REL + fn + ".stl", picture=os.path.relpath(png, ROOT), set=group, material=mat, count=n, solid_check="PASS" if ok else "FAIL", watertight=bool(g.is_watertight),
-             thin_walls=len(info.get("thin_walls", [])), pose=f"the part's {pose} side on the bed" + (f", turned {th:g} deg on the plate" if th not in (0.0, 90.0) else ""), pose_why=why,
+             thin_walls=len(info.get("thin_walls", [])), pose=("as laid in the file" if laid else f"the part's {pose} side on the bed" + (f", turned {th:g} deg on the plate" if th not in (0.0, 90.0) else "")), pose_why=why,
              size_on_bed_mm=e, fits_bed=fits, brim=("a 5 mm brim fits" if spare >= 5.0 else f"NO room for a 5 mm brim: {spare} mm to the bed's edge each side, print without brim or skirt") if fits else "DOES NOT FIT",
              first_layer_mm2=ms["first_layer_mm2"], low_gap_mm2=ms["low_gap_mm2"], overhang_mm2=ms["overhang_mm2"], support_mm2=ms["support_mm2"], widest_overhang_mm=ms["widest_overhang_mm"], widest_at=ms["widest_at"],
              supports=("yes: %d mm2 of overhang wider than %g mm (the widest %.1f); tree supports from the bed" % (ms["support_mm2"], BRIDGE_MM, ms["widest_overhang_mm"])) if sup else
@@ -193,7 +185,7 @@ TEST_SET = ["unit_body", "blade", "pilot", "paddle", "pad_a_24", "pad_b_24"]
 ORDER = [("1 grab-unit test set, one head (try it on the Scout cartridge)", TEST_SET, {"unit_body": 1, "blade": 2, "pilot": 2, "paddle": 1, "pad_a_24": 4, "pad_b_24": 4}),
          ("2 pad set-up spares, once (pick per pad at set-up)", [f"pad_{a}_{t}" for a in "ab" for t in (20, 22, 26, 28)], None),
          ("3 one head's slide: carriage, lift, rail, three wheels, two ties (proves the reach and the push on the bench before the hub is printed)", ["carriage", "lift", "rail", "wheel", "tie"], {"carriage": 1, "lift": 1, "rail": 1, "wheel": 3, "tie": 2}),
-         ("4 stub side and hub (the longest print)", ["stub", "post", "detent_arm", "hub"], None),
+         ("4 the bearing coupon first, then stub side and hub (the longest print)", ["coupon", "stub", "post", "detent_arm", "hub"], None),
          ("5 the second head: everything of 1 and 3 again", ["unit_body", "blade", "pilot", "paddle", "pad_a_24", "pad_b_24", "carriage", "lift", "rail", "wheel", "tie"], None),
          ("6 the ring: saddles and links, with the bays", ["saddle_scout", "saddle_overseer", "link"], None)]
 
@@ -219,7 +211,11 @@ TEST_STEPS = ["Trial fit dry first: the servo must slide in from the open side w
               "Report: does the paddle hold on the spline, do the blades reach the tabs' stop (bolts fully in), does the cartridge sit on all four Scout pads with the blades closed (if not, which pad and by how much: that picks the pad thickness)."]
 OPEN = [dict(item="MGN12H rail hole positions", state="E until the rail is here",
              what="the carriage's four M3 inserts are 25 apart from 12.5 in from the rail's end (a 100 rail with four holes can only be 12.5 / 25 / 25 / 25 / 12.5 if it is cut evenly). Measure the first hole from each end and the pitch before printing the carriage",
-             if_off="parts/box_arm8_lib.py MGN first / pitch, and the carriage reruns (its rail seat and loads follow)"),
+             if_off="parts/box_arm8_lib.py MGN first / pitch, then python parts/box_arm8p_carriage/make.py (a drawn piece, no run)"),
+        dict(item="6010-2RS press fits", state="E: the fit table's press allowance comes from a 3 mm shaft", what="the coupon (print/box_arm8p_coupon.stl): how many steps a bearing goes down in the ring and on the plug; 2 and 2 = as drawn (o 80.3 bore, o 49.7 spigot)",
+             if_off="systems/fit_table.json gets a bearing row (M); parts/box_arm8/make.py BRG_BORE / BRG_SEAT follow it; hub and stub are drawn pieces"),
+        dict(item="GT2 teeth on the hub's ring", state="E: 150 grooves o 1.4 x 0.75 deep on the o 94.99 tooth circle, printed", what="the belt must seat in the grooves all round and not climb when the hub is turned by hand against the motor",
+             if_off="parts/box_arm8/make.py ring_cuts(): groove radius; the hub is a drawn piece"),
         dict(item="float spring's rate", state="E 5.8 N/mm from wire and coil count",
              what="on a kitchen scale: 18 N at 11.9 long (the preload), about 32 N at 9.4", if_off="the push limit (118 N) and the float's preload follow the rate: parts/box_arm8_lib.py K_FLOAT, P_FLOAT; no printed part changes unless the limit leaves 97..125 N"),
         dict(item="M4 inserts", state="E: the ties' holes are o 5.6", what="measure the insert's body before printing the ties (o 5.6 suits a 6.0 knurl, 5.0 long)", if_off="parts/box_arm8_lib.py tie(): the hole; the ties are drawn pieces, no run")]
@@ -228,7 +224,7 @@ OPEN = [dict(item="MGN12H rail hole positions", state="E until the rail is here"
 def main():
     only = sys.argv[sys.argv.index("--only") + 1].split(",") if "--only" in sys.argv else None
     pd, kd = os.path.join(ROOT, "print"), os.path.join(HERE, "kit"); os.makedirs(pd, exist_ok=True); os.makedirs(kd, exist_ok=True)
-    kj = os.path.join(HERE, "kit.json"); old = {q["file"].split("box_arm8_")[1][:-4]: q for q in json.load(open(kj)).get("files", [])} if os.path.exists(kj) else {}
+    kj = os.path.join(HERE, "kit.json"); old = {q["file"].split("box_arm8")[1][:-4].lstrip("p").lstrip("_"): q for q in json.load(open(kj)).get("files", [])} if os.path.exists(kj) else {}
     ins = install(); print("install", ins["ok"], [s_["mm3"] for s_ in ins["steps"]], ins["working"])
     files = {}; waiting = []
     for k, (m, mat, n, pose, why, group) in pieces().items():
@@ -236,15 +232,16 @@ def main():
             if k in old: files[k] = old[k]
             continue
         files[k] = one_file("box_arm8_" + k, M.tm(m), mat, n, pose, why, group, pd, kd)
-    for k, e in engine_parts().items():
-        if not e["current"]:
-            waiting.append(dict(part=e["part"], count=e["n"], why=e["why"])); continue
+    for k, (n, why, group) in PROTOS.items():
+        fn = "box_arm8p_" + k; f = os.path.join(pd, fn + ".stl")
         if only and k not in only and k in old:
             files[k] = old[k]; continue
-        files[k] = one_file("box_arm8_" + k, e["mesh"], "PCTG", e["n"], e["down"], f"the setup's build direction ({e['build']}): the layers its strength was checked with", "engine part", pd, kd,
-                            extra=dict(worst=e["worst"], run_mass_g=e["mass_g"]))
+        if not os.path.exists(f): waiting.append(dict(part=fn, count=n, why=f"run python parts/{fn}/make.py first (it writes the print file)")); continue
+        mk = json.load(open(os.path.join(ROOT, "parts", fn, "make.json")))
+        files[k] = one_file(fn, trimesh.load(f, force="mesh"), "PCTG", n, None, why, group, pd, kd, laid=True,
+                            extra=dict(stage="PROTOTYPE (drawn)", make=f"parts/{fn}/make.py", hand_calc_worst=mk["worst"], hand_calc=f"{mk['worst_check']} ({mk['worst_case']})"))
     for k, q in files.items(): print(k, q["solid_check"], q["pose"], q["size_on_bed_mm"], "first", q["first_layer_mm2"], "low", q.get("low_gap_mm2"), "over", q["overhang_mm2"], "sup", q["support_mm2"], q["widest_overhang_mm"], q["widest_at"], q["brim"][:12], q["grams_each"], "thin", q["thin_walls"])
-    order = [dict(step=nm, files=[f"print/box_arm8_{k}.stl" for k in ks if k in files], waiting=[k for k in ks if k not in files], counts=cnt) for nm, ks, cnt in ORDER]
+    order = [dict(step=nm, files=[files[k]["file"] for k in ks if k in files], waiting=[k for k in ks if k not in files], counts=cnt) for nm, ks, cnt in ORDER]
     out = dict(note="Bambu A1 mini, PCTG (PETG settings + 10 C) unless TPU. Counts are for the whole arm (two heads); the test set's own counts are in test_set. Nothing here is handed: "
                     "both blades are one file, both pilots are one file (the second is the first turned half round).",
                ok=bool(ins["ok"] and all(q["solid_check"] == "PASS" and q["fits_bed"] for q in files.values())),

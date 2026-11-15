@@ -1,6 +1,6 @@
 {
  "drone": "swap_arm",
- "ok": false,
+ "ok": true,
  "gate": true,
  "fit_tol_mm3": 0.5,
  "fit_table": [
@@ -85,12 +85,12 @@
   }
  ],
  "grow_mm": 0.1,
- "parts_checked": 94,
+ "parts_checked": 98,
  "printed": [
   "box_arm8_a_blade_n",
   "box_arm8_a_blade_p",
-  "box_arm8_a_carriage_run",
-  "box_arm8_a_lift_run",
+  "box_arm8_a_carriage",
+  "box_arm8_a_lift",
   "box_arm8_a_pads",
   "box_arm8_a_pilots",
   "box_arm8_a_rail",
@@ -99,8 +99,8 @@
   "box_arm8_a_wheels",
   "box_arm8_b_blade_n",
   "box_arm8_b_blade_p",
-  "box_arm8_b_carriage_run",
-  "box_arm8_b_lift_run",
+  "box_arm8_b_carriage",
+  "box_arm8_b_lift",
   "box_arm8_b_pads",
   "box_arm8_b_pilots",
   "box_arm8_b_rail",
@@ -134,34 +134,10 @@
   "box_arm8_fx_detent_arm",
   "box_arm8_fx_post",
   "box_arm8_fx_stub",
-  "box_arm8_hub_run"
+  "box_arm8_hub"
  ],
  "skipped": [],
  "pairs": [
-  {
-   "a": "box_arm8_hub_run",
-   "b": "box_arm8_fx_detent_roller",
-   "mm3": 5.28,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": false,
-   "pieces": [
-    {
-     "mm3": 5.28,
-     "at": [
-      35.2,
-      21.7,
-      35.1
-     ],
-     "extent_mm": [
-      2.9,
-      4.0,
-      2.9
-     ],
-     "depth_mm": 2.91
-    }
-   ]
-  },
   {
    "a": "box_arm8_a_unit_body",
    "b": "box_arm8_a_pads",
@@ -179,43 +155,19 @@
    "ok": true
   },
   {
-   "a": "box_arm8_hub_run",
-   "b": "box_arm8_a_rail",
-   "mm3": 0.01,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": true
-  },
-  {
-   "a": "box_arm8_hub_run",
-   "b": "box_arm8_b_rail",
-   "mm3": 0.01,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": true
-  },
-  {
-   "a": "box_arm8_hub_run",
-   "b": "box_arm8_fx_bearings",
+   "a": "box_arm8_a_carriage",
+   "b": "box_arm8_a_axles",
    "mm3": 0.0,
-   "limit_mm3": 0.5,
-   "contact": null,
+   "limit_mm3": 2.0,
+   "contact": "the third wheel's axle is drawn at the middle of its slot; washers seated in their recesses",
    "ok": true
   },
   {
-   "a": "box_arm8_hub_run",
-   "b": "box_arm8_a_motor",
-   "mm3": 0.0,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": true
-  },
-  {
-   "a": "box_arm8_hub_run",
-   "b": "box_arm8_b_motor",
-   "mm3": 0.0,
-   "limit_mm3": 0.5,
-   "contact": null,
+   "a": "box_arm8_b_carriage",
+   "b": "box_arm8_b_axles",
+   "mm3": -0.0,
+   "limit_mm3": 2.0,
+   "contact": "the third wheel's axle is drawn at the middle of its slot; washers seated in their recesses",
    "ok": true
   },
   {
@@ -284,13 +236,125 @@
   }
  ],
  "mates": [],
- "paths": [],
- "not_print_ready": {
-  "box_arm8_hub_run": [
-   "clashes with box_arm8_fx_detent_roller: 5.3 mm3"
-  ]
- },
+ "paths": [
+  {
+   "name": "hub onto the stub",
+   "part": "box_arm8_hub",
+   "order": 10,
+   "fit": "press",
+   "gap_mm": 0.1,
+   "steps": 91,
+   "move": {
+    "out": [
+     0,
+     1,
+     0
+    ],
+    "length_mm": 45
+   },
+   "into": [
+    "box_arm8_fx_stub"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the two 6010 pressed in the sleeve from the stub end, then the hub with them slid on the spigot; the post and its M8 after it"
+  },
+  {
+   "name": "carriage A onto its rail",
+   "part": "box_arm8_a_carriage",
+   "order": 40,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 301,
+   "move": {
+    "out": [
+     0,
+     0,
+     1
+    ],
+    "length_mm": 150
+   },
+   "into": [
+    "box_arm8_a_rail"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "wheels and MGN rail on the carriage at the bench, then rolled onto the V rail from its tip; the screw goes in after it (order in parts/box_arm8/make.py ORDER)"
+  },
+  {
+   "name": "carriage B onto its rail",
+   "part": "box_arm8_b_carriage",
+   "order": 40,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 301,
+   "move": {
+    "out": [
+     0,
+     0,
+     -1
+    ],
+    "length_mm": 150
+   },
+   "into": [
+    "box_arm8_b_rail"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "wheels and MGN rail on the carriage at the bench, then rolled onto the V rail from its tip; the screw goes in after it (order in parts/box_arm8/make.py ORDER)"
+  },
+  {
+   "name": "lift A onto its block",
+   "part": "box_arm8_a_lift",
+   "order": 50,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 81,
+   "move": {
+    "out": [
+     0,
+     1,
+     0
+    ],
+    "length_mm": 40
+   },
+   "into": [
+    "box_arm8_a_carriage"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the yoke (booms bonded) onto the MGN block's face along the axle, four M3 from the front; the nut is in its lug and the screw is run through it afterwards"
+  },
+  {
+   "name": "lift B onto its block",
+   "part": "box_arm8_b_lift",
+   "order": 50,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 81,
+   "move": {
+    "out": [
+     0,
+     1,
+     0
+    ],
+    "length_mm": 40
+   },
+   "into": [
+    "box_arm8_b_carriage"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the yoke (booms bonded) onto the MGN block's face along the axle, four M3 from the front; the nut is in its lug and the screw is run through it afterwards"
+  }
+ ],
+ "not_print_ready": {},
  "would_block": {},
- "seconds": 1.2,
+ "seconds": 4.0,
  "placed": {}
 }
