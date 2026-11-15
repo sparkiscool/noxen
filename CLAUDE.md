@@ -12,6 +12,7 @@ python tools/solid_check.py $(python tools/print_mesh.py fetch <name>)   # the p
 python -m topo.run parts/<name> --h <SPEC h> --maxit 1 --no-coarse  # OPTIMISE only: the setup audit in a minute (never a full run here)
 python tools/dim.py <section>                                     # one section of systems/dimensions.md, never the whole file
 python tools/sweep.py [--apply]                                   # the Monday sweep (scheduled task, fresh session): the only housekeeping
+python tools/print_queue.py list                                  # print jobs: ready (waiting for Spark), approved, printing, printed
 ```
 
 ## The stages
@@ -20,8 +21,8 @@ python tools/sweep.py [--apply]                                   # the Monday s
 - PROTOTYPE: every new part, or a changed interface, starts as a drawn `make.py` (pattern `parts/scout_v4_probe_bench_turret/make.py`):
   simple generous sections sized by a hand calculation with margin, written in its docstring; every hole, bore, slot, sleeve and press
   fit from the printer fit table (`systems/fit_table.json`, from Spark's coupons); its assembly path declared. It is print-ready when
-  the solid check and the assembly check pass: on the release that hour, with one print line (file, orientation, supports, settings,
-  time). A new interface Spark can't judge by eye gets a small fit coupon first (labelled choices, Spark reports one line, measures nothing).
+  the solid check and the assembly check pass: on the release that hour and queued (`tools/print_queue.py add <part> --orient --supports
+  --settings --time`; Spark's "print <part>" = the design chat's `approve`, the desktop app prints it). A new interface Spark can't judge by eye gets a small fit coupon first (labelled choices, Spark reports one line, measures nothing).
 - TEST: Spark's bench and flight results go to `parts/<part>/feedback.md` and `systems/dimensions.md` (tagged M). A prototype that fails
   goes back to PROTOTYPE at once; a mechanism that works freezes its interfaces.
 - OPTIMISE (only parts Spark's tests froze, and only where mass matters): `parts/<name>/part.py`, `setup(h) -> Part` and `SPEC`; its
