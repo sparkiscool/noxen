@@ -1,5 +1,5 @@
 """Self-test of nox/topo. Run from nox/:  python3 -m topo.test_topo [--quick]
-Each test prints PASS / FAIL with its numbers; exit code 1 if any fails. ~16 min on a 4 vCPU box, ~10 of them the slender-arm run
+Each test prints PASS / FAIL with its numbers; exit code 1 if any fails. ~30 min on a 4 vCPU box, ~25 of them the two slender-arm runs
 (--quick skips the end-to-end runs: ~1.5 min)."""
 import sys
 import time
@@ -1697,9 +1697,11 @@ def _arms_part(arms=((45, 1), (-45, 1), (135, 1), (-135, 1)), h=2.0, sockets=(16
 
 
 def t_built_hold():
-    """the built hold (layout.py Settings.nominal_hold): inactive rows before it starts; once started every real case's compliance on
-    the build projection (nominal and gate-eroded) reads 1 / (1 + hold_tol) - 1 on the reference design, and its gradient (through the
-    sharp projection, body forces included) matches finite differences"""
+    """the built hold (layout.py Settings.nominal_hold): inactive rows before it starts; once started every real case's strength index on
+    the build projection is held to its own on the reference design, at least hold_floor x the worst (the worst row and every row over
+    the floor read 1 / (1 + hold_tol) - 1 there, the rest under it; the p-norm within its bounds of the true max), and its compliance
+    on the build and the gate-eroded projections to its own (every row at 1 / (1 + hold_tol) - 1); the gradients (the strength's by
+    its adjoint, through the sharp projection, body forces included) match finite differences"""
     try:
         p = _mini_part()
         p.accel_case("grav", (0, 0, -9.81 * 30), cls="crash")
@@ -1714,12 +1716,18 @@ def t_built_hold():
         L.start_hold(f)
         f = L.fields(x, beta)
         comp, (U, _) = L._compliance(f["rho_e"], rho_g=f["rho_g"], rho_b=f["rho_b"], rho_be=f["fb"]["rho_e"])
+        hs = U.hs
         fv, dg = L._hold_constraints(f, comp, U)
+        n1 = L.n_real
+        nk = len(L.stress_keep()[0]) * 2
+        pn_ok = all(hs["T"][k] <= hs["PN"][k] * (1 + 1e-12) <= hs["T"][k] * nk ** (1 / s.hold_p) * (1 + 1e-12)
+                    for k in range(len(fv)) if hs["T"][k] > 0)
+        c = L.hold_c.copy()
 
         def G(xx):
             ff = L.fields(xx, beta)
-            c, _ = L._compliance(ff["rho_e"], need_grad=False, rho_g=ff["rho_g"], rho_b=ff["rho_b"], rho_be=ff["fb"]["rho_e"])
-            return c[len(L.cases):] / ((1 + s.hold_tol) * L.c_hold) - 1
+            _, h_ = L._compliance(ff["rho_e"], need_grad=False, rho_g=ff["rho_g"], rho_b=ff["rho_b"], rho_be=ff["fb"]["rho_e"])
+            return c * h_["PN"] / ((1 + s.hold_tol) * L.c_hold) - 1
         errs = []
         for i in rng.choice(L.nd, 6, replace=False):
             e = 1e-3        # the eroded copies' roundoff (Emin cells) swamps 1e-4 steps; truncation at 1e-3 is ~1e-6 at beta 6
@@ -1728,10 +1736,12 @@ def t_built_hold():
             xm[i] -= e
             fd = (G(xp) - G(xm)) / (2 * e)
             errs += [abs(fd[k] - dg[k][i]) / max(abs(fd[k]), 1e-2 * np.abs(dg[k]).max()) for k in range(len(fv))]
-        ok = (fv0 == [-1.0] * 2 * L.n_real and len(fv) == 2 * L.n_real == 6 and np.allclose(fv, 1 / (1 + s.hold_tol) - 1, atol=1e-9)
-              and max(errs) < 1e-3 and L.mma.m == 3 + 2 * L.n_real)
-        check("built hold: rows inactive before it starts, at the reference after, gradient vs finite differences", ok,
-              f"rows {np.round(fv, 4).tolist()}, max rel err {max(errs):.1e}")
+        Tb = hs["T"][:n1]
+        top = [fv[k] for k in range(n1) if Tb[k] >= s.hold_floor * Tb.max()] + list(fv[n1:])
+        ok = (fv0 == [-1.0] * 3 * L.n_real and len(fv) == 3 * L.n_real == 9 and np.allclose(top, 1 / (1 + s.hold_tol) - 1, atol=1e-9)
+              and max(fv) <= 1 / (1 + s.hold_tol) - 1 + 1e-9 and pn_ok and max(errs) < 1e-3 and L.mma.m == 3 + 3 * L.n_real)
+        check("built hold: rows inactive before it starts, at the reference after (strength as built, compliance both), gradients vs FD",
+              ok, f"rows {np.round(fv, 4).tolist()}, p-norm bounds {pn_ok}, max rel err {max(errs):.1e}")
     except Exception as e:
         traceback.print_exc()
         check("built hold", False, str(e))
@@ -1789,7 +1799,7 @@ def t_no_cavity():
         P = man(trimesh.creation.box((20.0, 20.0, 20.0))) - man(trimesh.creation.box((6.0, 6.0, 6.0)))
         M, rep = export_mesh(P, log=lambda s_: None)
         ok_f, i_f = solid_check(M)
-        ok = (max(opn) < lim and min(sealed) > 4 * lim and max(errs) < 1e-3 and max(lerr) < 1e-3 and L.mma.m == 3 + 2 * L.n_real + 1 and L.cavity_rows == 1
+        ok = (max(opn) < lim and min(sealed) > 4 * lim and max(errs) < 1e-3 and max(lerr) < 1e-3 and L.mma.m == 3 + 3 * L.n_real + 1 and L.cavity_rows == 1
               and not ok_h and ih["sealed_voids"] and ih["inner_shells"] and rep.get("cavities_filled_mm3") == [216.0]
               and abs(M.volume - 8000.0) < 1e-6 and ok_f)
         check("no sealed void: open rooms under the limit, sealed pockets over 4 x it, gradients vs FD, the export fills, the gate refuses", ok,
@@ -1801,17 +1811,27 @@ def t_no_cavity():
         check("no sealed void", False, str(e))
 
 
+def _arms_run(gen):
+    import tempfile
+    from .run import optimise
+    out = tempfile.mkdtemp(prefix="topo_arms_")
+    return optimise(lambda h: _arms_part(h=h), 2.0, gen, out, "arms", settings=Settings(backend="direct", time_limit_s=1800),
+                    coarse=False, log=lambda s_: None)
+
+
 def t_slender_arm_gap():
     """the slender-arm gap (12 Nov, scout_v4_frame: arms built at 1.7-1.9x the run's beta-4 index): a deck, four 74 mm diagonal arms
     near the minimum member and two 600 N sockets (frame-lite), run end to end at h 2.0 (~10 min). Without the built hold it reads
     0.87 at the beta-4 check and 1.20 built (1.38x), the arms 15 -> 9 cells across. The as-built index must stay within 10 % of the run's own
-    beta-4 check (early), the final field's within 10 % of the built, and the part must pass the gate."""
-    import tempfile
-    from .run import optimise
+    beta-4 check (early), the final field's within 10 % of the built, and the part must pass the gate.
+    Budget ARMS_GEN (15 Nov, was 14): the hold is on the strength index now, and at 14 cm3 the beta-4 field already holds ~7 % more
+    nominal material than the budget, so the gate and the held strength compete for it and the gate fails (the compliance hold passed
+    it only by thinning the arms, the weakness the hold exists to stop). A real part in that state goes back through the loop for more
+    budget; this test is that part after it: 16 cm3, the smallest half-step that passes in all four of default, no_cavity off, move 0.105
+    and move 0.12 (built / early 0.90, 0.92, 0.99, 1.04, the hold never released; 15.5 passed three, no_cavity off left two socket necks
+    at the gate; 15.0 passed the gate at 1.11x). Geometry, loads, gate and thresholds are unchanged; t_slender_arm_short holds 14."""
     try:
-        out = tempfile.mkdtemp(prefix="topo_arms_")
-        res = optimise(lambda h: _arms_part(h=h), 2.0, ARMS_GEN, out, "arms", settings=Settings(backend="direct", time_limit_s=1800),
-                       coarse=False, log=lambda s_: None)
+        res = _arms_run(ARMS_GEN)
         e, fl, b = (res.get("early") or {}).get("worst"), (res.get("field") or {}).get("worst"), res["strength"]["worst"]
         ok = bool(e and fl and b and b <= 1.10 * e and abs(b - fl) <= 0.10 * fl and res["solid_ok"])
         check("slender arms: built index within 10 % of the beta-4 check and of the final field, gate passes", ok,
@@ -1823,7 +1843,25 @@ def t_slender_arm_gap():
         check("slender arms", False, str(e))
 
 
-ARMS_GEN = 14.0
+def t_slender_arm_short():
+    """the same part at the old 14 cm3 (ARMS_GEN_SHORT), where the budget buys the held strength or the gate's joints, not both: the
+    run must fail loudly (the solid check FAIL in the result, or an early / strength fail), never hand back a part marked passing
+    that was built over 1.05x its beta-4 index (the hold released for the gate, topo/run.py, must not read as a pass)."""
+    try:
+        res = _arms_run(ARMS_GEN_SHORT)
+        e, b = (res.get("early") or {}).get("worst"), (res.get("strength") or {}).get("worst")
+        failed = not res["solid_ok"]
+        weak_pass = bool(res["solid_ok"] and (not e or not b or b > 1.05 * e))
+        check("slender arms, short budget: the run reports FAIL, no part over 1.05x its beta-4 index passes", failed and not weak_pass,
+              f"status {res.get('status')}, solid {'PASS' if res['solid_ok'] else 'FAIL'}, early {e}, built {b} (built / early "
+              f"{b / e if e and b else None}), hold {(res.get('layout') or {}).get('hold')}, {res['total_s']} s")
+    except Exception as e:
+        traceback.print_exc()
+        check("slender arms, short budget", False, str(e))
+
+
+ARMS_GEN = 16.0
+ARMS_GEN_SHORT = 14.0
 
 
 def main():
@@ -1834,6 +1872,7 @@ def main():
     if not quick:
         t_end_to_end()
         t_slender_arm_gap()
+        t_slender_arm_short()
     bad = [n for n, ok in RESULTS if not ok]
     print(f"\n{len(RESULTS) - len(bad)} / {len(RESULTS)} passed in {time.time() - t0:.0f} s" +
           (f"; FAILED: {bad}" if bad else ""))

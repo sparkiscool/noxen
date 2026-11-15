@@ -352,7 +352,7 @@ class Solver:
         data = np.bincount(self.d_pos, weights=vals, minlength=len(self.d_indices))
         return sp.csr_matrix((data, self.d_indices, self.d_indptr), shape=(self.d_n, self.d_n))
 
-    def _solve_direct(self, E, groups, make_F, consume, block):
+    def _solve_direct(self, E, groups, make_F, consume, block, adjoint=None):
         K = self._assemble_direct(E)
         g = self.grid
         for sup, cols in groups.items():
@@ -369,7 +369,12 @@ class Solver:
                     Ub = np.zeros((g.ndof, len(cb)))
                     Ub[gdof] = X
                     del X
-                    consume(cb, Fb, Ub)
+                    G = consume(cb, Fb, Ub)
+                    if adjoint is not None and G is not None:
+                        Lb = np.zeros((g.ndof, len(cb)))
+                        Lb[gdof] = fac.solve(G[gdof])                         # K symmetric: the same factor
+                        adjoint(cb, Ub, Lb)
+                        del Lb, G
                     del Fb, Ub
             finally:
                 fac.free()
@@ -523,7 +528,7 @@ class Solver:
             X += w * Dinv * (B - self._apply(lv, X))
         return X
 
-    def _solve_mg(self, E, groups, keys, make_F, consume, block):
+    def _solve_mg(self, E, groups, keys, make_F, consume, block, adjoint=None):
         g = self.grid
         E = np.where(self.active, np.maximum(E, self.EMIN_MG), 0.0)
         for sup, cols in groups.items():
@@ -546,8 +551,15 @@ class Solver:
                 for q, c in enumerate(cb):
                     self.warm[keys[c]] = X[q].copy()
                 del B
-                consume(cb, Fb, np.ascontiguousarray(g.to_flat(X)))
-                del Fb, X
+                Ub = np.ascontiguousarray(g.to_flat(X))
+                G = consume(cb, Fb, Ub)
+                if adjoint is not None and G is not None:
+                    B = g.to_field(G) * ~fmask
+                    Y = np.zeros_like(B)
+                    self.stats.append((sup + " (adjoint)", self._pcg(levels, B, Y, ~fmask), 0.0))
+                    adjoint(cb, Ub, np.ascontiguousarray(g.to_flat(Y)))
+                    del B, Y, G
+                del Fb, X, Ub
             if "coarse" in levels[-1]:
                 levels[-1]["coarse"].free()
             del levels
@@ -594,19 +606,20 @@ class Solver:
     def block_size(self):
         return int(max(4, min(64, self.BLOCK_MB * 2 ** 20 // (8 * self.grid.ndof))))
 
-    def solve_blocks(self, E, ncase, make_F, consume, supports, keys=None, block=None):
+    def solve_blocks(self, E, ncase, make_F, consume, supports, keys=None, block=None, adjoint=None):
         """streamed solve: make_F(cols) -> (ndof, len(cols)) loads of those case columns, consume(cols, F, U) gets them back
         with their displacements (ndof, len(cols)). Cases are grouped by support (supports: ncase names); one factor
-        (direct) or hierarchy (multigrid) per group, len(cols) <= block."""
+        (direct) or hierarchy (multigrid) per group, len(cols) <= block. With adjoint: when consume returns adjoint loads G
+        (ndof, len(cols)), K L = G is solved on the same factor / hierarchy and adjoint(cols, U, L) gets both."""
         groups = {}
         for c, s in enumerate(supports):
             groups.setdefault(s, []).append(c)
         block = block or self.block_size()
         E = np.asarray(E, float)
         if self.backend == "direct":
-            return self._solve_direct(E, groups, make_F, consume, block)
+            return self._solve_direct(E, groups, make_F, consume, block, adjoint)
         keys = list(range(ncase)) if keys is None else keys
-        return self._solve_mg(E, groups, keys, make_F, consume, block)
+        return self._solve_mg(E, groups, keys, make_F, consume, block, adjoint)
 
     def solve(self, E, F, supports, keys=None):
         """E (nel,) element moduli (relative); F (ndof, k) loads; supports: list of k support names;
