@@ -51,7 +51,9 @@ def camera():
     ring = cyl(0, 0, -4.0, -1.2, 7.0, 24)                                         # focus ring (knurled: 24 sides)
     glass_cut = cyl(0, 0, -0.5, 0.5, 4.0)
     front = cyl(0, 0, -1.2, 0.0, 6.0)
-    plug = cbox(-12, 12, bb - 1.6, 9, 4, 3.2)                                      # USB-C / FPC plug block on the back near a corner
+    plug = cbox(-6, 12, bb - 1.6, 9, 4, 3.2)                                       # USB-C / FPC plug block on the back near a corner, beside its
+    # hole's O5.6 post, not over it (15 Nov, assembly check: drawn at (-12, 12) its edge ran through the M2 hole and stood 4.4 into the
+    # head mount's post; a plug cannot sit where the screw goes; E, the real board's plug place is open, Q3)
     chips = [cbox(0, -11, bb - 0.8, 7, 7, 1.6), cbox(9, 5, bb - 0.6, 5, 4, 1.2), cbox(-9, 6, bb - 0.6, 4, 4, 1.2)]
     cam = union([board, holder, barrel, ring, front, plug] + chips) - union(holes + [glass_cut])
     return cam
@@ -89,8 +91,12 @@ def pi5():
     x0, x1, z0 = -53.5, 31.5, 8.0
     board = box(x0, x1, -28, 28, z0, z0 + PCB)
     holes = [cyl(x, y, z0 - 1, z0 + PCB + 1, 1.35) for x in (-30, 28) for y in (-24.5, 24.5)]
-    ports = [box(x0 - 2.5, x0 + 14.6, 16.0, 29.0, z0 + PCB, z0 + PCB + 15.6), box(x0 - 2.5, x0 + 14.6, 1.0, 14.0, z0 + PCB, z0 + PCB + 15.6),   # USB stacks
-             box(x0 - 2.5, x0 + 19.0, -25.5, -4.0, z0 + PCB, z0 + PCB + 13.5)]                                                         # Ethernet
+    # 15 Nov (assembly check: the outer USB stack drawn at y 16..29, 1 past the board edge, stood 2.2 in arm 2's root): the ports from
+    # the Raspberry Pi 5 mechanical drawing (RP-008347-DS-1): USB centres 29.1 / 47.0 and Ethernet 10.2 from the side-port edge (y -28),
+    # USB 13.1 wide, Ethernet 15.4, 3 past the board end (spec)
+    ports = [box(x0 - 3.0, x0 + 14.6, -28 + 47.0 - 6.55, -28 + 47.0 + 6.55, z0 + PCB, z0 + PCB + 15.6),
+             box(x0 - 3.0, x0 + 14.6, -28 + 29.1 - 6.55, -28 + 29.1 + 6.55, z0 + PCB, z0 + PCB + 15.6),                               # USB stacks
+             box(x0 - 3.0, x0 + 19.0, -28 + 10.2 - 7.7, -28 + 10.2 + 7.7, z0 + PCB, z0 + PCB + 13.5)]                                  # Ethernet
     side = [cbox(x0 + 12, -28 + 1.5, z0 + PCB + 1.6, 9, 7, 3.2), cbox(x0 + 27, -28 + 1.5, z0 + PCB + 1.6, 7, 7, 3.2), cbox(x0 + 41, -28 + 1.5, z0 + PCB + 1.6, 7, 7, 3.2)]  # USB-C, 2 x micro HDMI
     gpio = box(x0 + 27.5, x0 + 78.5, 28 - 6.5, 28 - 1.5, z0 + PCB, z0 + PCB + 8.5)
     soc = cbox(x0 + 47, 3, z0 + PCB + 0.7, 15, 15, 1.4); ram = cbox(x0 + 47, -14, z0 + PCB + 0.6, 12, 12, 1.2); pmic = cbox(x0 + 70, 10, z0 + PCB + 0.5, 6, 6, 1.0)

@@ -133,9 +133,14 @@ class Assembly:
             if "mesh" in p:
                 try: sc._resolve(p["mesh"], self.base)
                 except FileNotFoundError: err.append(f"{nm}: mesh {p['mesh']} not found")
+        renamed = {p["id"]: p["name"] for p in self.parts if p.get("id") and p["id"] != p.get("name")}
         for c in self.data.get("contact_pairs", []) + self.data.get("clearance_pairs", []):
             for n in c[:2]:
-                if n not in names: err.append(f"pair {c}: no part {n!r}")
+                if n not in names:
+                    # 15 Nov: the black leads were renamed "wires" -> "wires (black leads)" (30 Oct); their pairs still named "wires",
+                    # read as gone and were dropped (32600c33). A pair naming a part's id or its old name is renamed, not dropped.
+                    was = renamed.get(n) or next((m for m in names if m.startswith(n + " (")), None)
+                    err.append(f"pair {c}: no part {n!r}" + (f" (renamed: the part is {was!r} now; rename the pair, do not drop it)" if was else ""))
         return err
 
     # ---- geometry

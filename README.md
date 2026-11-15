@@ -20,10 +20,10 @@ Grey parts are placeholders still to be generated, red ones failed their last ru
 ## Nox Ground Unit (the box)
 [![Nox Ground Unit, current assembly](https://sparkiscool.github.io/noxen/box.png)](https://sparkiscool.github.io/noxen/box.html?view=iso&still)
 
-[Open the box viewer](https://sparkiscool.github.io/noxen/box.html?view=iso&still): the swap arm v7 with seven bays, the stand, the
-enclosure, and the landing funnel drawn on the latch footprint so both drones seat at one height, 65 above the arm's grip height
-so the wheel turns clear under them, standing on two beams across the enclosure's side sheets (`tools/import_box.py` brings the
-mechanism's meshes over from the nox repo; `parts/box_funnel/make.py` draws the funnel).
+[Open the box viewer](https://sparkiscool.github.io/noxen/box.html?view=iso&still): the swap arm v8 with eleven bays
+(`systems/swap_arm.assembly.json`), the stand v2, the enclosure, latch v7 for both packs and the landing funnel on the enclosure's
+side sheets with the Scout v4 and the Overseer seated in it (`tools/import_box.py` rebuilds the page from the tree and
+`tools/box_check.py` checks the streams against each other on every change; `parts/box_funnel/make.py` draws the funnel).
 
 ## xswap short lock (the Overseer's battery mechanism)
 [![xswap short lock in the Overseer](https://sparkiscool.github.io/noxen/xswap.png)](https://sparkiscool.github.io/noxen/xswap.html?view=iso&still)
@@ -74,4 +74,4 @@ Status on the page is computed, never stored: `result.json` present and its `par
 ## What came from the old repo (28 Oct)
 `systems/dimensions.md`, `systems/parts-list.md`, both drones' assemblies and every part's mesh then (viewing copies; a run regenerates
 the print file). Paths written `nox/...`, `docs/...` or `runs/...` in those files are in the old `nox` repo, not here.
-Scout v3 (`systems/scout.assembly.json`) is archived: off the page, kept for its tools and the box's v3 checks.
+Scout v3 (`systems/scout.assembly.json`) is archived: off the page, kept for the tools the Scout v4 still imports (archive/README.md).

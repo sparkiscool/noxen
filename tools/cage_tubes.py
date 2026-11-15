@@ -38,7 +38,16 @@ for nm, (p, q) in CAGE["links"].items():
 m = trimesh.util.concatenate(out); m.export(os.path.join(ROOT, "parts", "cage_shell_tubes", "part.stl"))
 # the 3 mm rods with one end off the cage (spokes to the arm nodes, core and bay ties to the hub, head rods): parts/spokes_ties_head_rods
 # (29 Oct: the page still drew the v5 layout model's rods, through tubes that moved in v6). Far end: the rod ends NODE_R into its
-# socket there (the arm lib's rule; the hub and head sockets likewise, E).
+# socket there (the arm lib's rule; the hub and head sockets likewise, E), or at the socket floor of the part it ends in where
+# that part moves it (FAR_R). 15 Nov (assembly check: the tubes and spokes stood 34 / 24 mm deep in the printed front pads, which
+# took their sockets two socket lengths back on the cut rods on 9 Nov): the front pad's own arm (its pad_mouth and node_r) is the
+# one the rods are drawn to.
+_sp = _il.spec_from_file_location("_front_pad", os.path.join(ROOT, "parts", "overseer_arm_front_pad", "part.py")); _fp = _il.module_from_spec(_sp); _sp.loader.exec_module(_fp)
+PAD = _fp.ARM                                                        # arm 1's pad (arm 4 is its y-mirror)
+FAR_R = {}
+for _s in PAD.spokes:
+    FAR_R[_s["name"]] = FAR_R[_s["name"].replace("spoke 1.", "spoke 4.")] = float(PAD.node_r)
+assert all(nm in CAGE["links"] for nm in FAR_R), f"front pad spokes {sorted(FAR_R)} name no cage link: they would be drawn uncut"
 rods = []
 for nm, (p, q) in CAGE["links"].items():
     p, q = np.array(p, float), np.array(q, float)
@@ -48,15 +57,16 @@ for nm, (p, q) in CAGE["links"].items():
     if db.min() < 0.6:
         p, q, da, db = q, p, db, da                                  # p is the cage-node end (if any)
     s0 = SOCKET_START[(int(np.argmin(da)), nm)] if da.min() < 0.6 else float(CAGE["node_r_mm"])
-    s1 = float(CAGE["node_r_mm"]); u = (q - p) / np.linalg.norm(q - p); kind = "link"
+    s1 = FAR_R.get(nm, float(CAGE["node_r_mm"])); u = (q - p) / np.linalg.norm(q - p); kind = "link"
     if nm.startswith("head rod"):
         continue                                                     # 8 Nov (head mount v10): cut off flush at nodes 15 / 16, dropped
     L = float(np.linalg.norm(q - p)) - s0 - s1; cuts[nm] = round(L, 1)
     rods.append(trimesh.creation.cylinder(KIND[kind]["bore_r"] - 0.1, L, sections=16, segment=np.vstack([p + u * s0, q - u * s1])))
-# the arm tubes (29 Oct, tube arms): two 6/4 tubes per arm from the root block's socket floors to the pad's, arms 3 / 4 mirrored in y
-from parts.overseer_tube_arm_lib import TubeArm, TUBE_BORE_R
+# the arm tubes (29 Oct, tube arms): two 6/4 tubes per arm from the root block's socket floors to the pad's (the pad's own arm,
+# PAD: its sockets 34 back since 9 Nov), arms 3 / 4 mirrored in y
+from parts.overseer_tube_arm_lib import TUBE_BORE_R
 # (29 Oct, Spark: the rear arms are one printed piece, no tubes, no spokes: only the front pair has tubes)
-for nm, arm in (("arm 1", TubeArm("front", 45.0, 0, ["spoke 1.1", "spoke 1.3"], [178.94, 146.7, 8.0], "root")),):
+for nm, arm in (("arm 1", PAD),):
     for (p, q), tag in zip(zip(arm.tube_points("root"), arm.tube_points("pad")), ("lo", "hi")):
         for sgn, k in ((1, nm), (-1, {"arm 1": "arm 4", "arm 2": "arm 3"}[nm])):
             pp, qq = p * np.array([1, sgn, 1]), q * np.array([1, sgn, 1]); L = float(np.linalg.norm(qq - pp))

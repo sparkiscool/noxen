@@ -1,0 +1,51 @@
+{
+ "printer": "Bambu A1 mini, PCTG, 0.4 nozzle",
+ "note": "The printer fit table (15 Nov): the only source of hole, bore, slot, sleeve and press-fit sizes for make.py parts and topology setups alike (topo/fit.py reads it; tools/assembly_check.py holds mates and assembly paths to it). allow: what the drawn size adds to the bought part's nominal (total: on the diameter or across two faces). From the Scout v4 probe coupon (14 Nov, tools/scout_v4_shape.COUPON_PICK) and the Overseer coupons v2 (27 Oct, systems/dimensions.md row Carbon rods). A new coupon result changes a row here, tagged M.",
+ "grow_mm": 0.1,
+ "grow_src": "a printed face stands this proud of the drawn one: holes ~0.1-0.2 small on the diameter, outer faces fat (the probe coupon) M",
+ "mesh_mm": 0.05,
+ "mesh_src": "the viewing mesh (parts/<p>/part.stl) may sit off the print mesh (tools/print_mesh.py)",
+ "fits": {
+  "bond": {
+   "allow": 0.2,
+   "min_gap": 0.0,
+   "tag": "M",
+   "src": "carbon rod in a resin socket: the 3.2 / 6.2 bores for 3 / 6 rods (CLAUDE.md), the resin fills the rest: it only has to go in (Overseer coupons v2, Spark 27 Oct: the largest of the coupon bores fit; OD + 0.3 was loose in PETG)"
+  },
+  "press": {
+   "allow": 0.3,
+   "tag": "M",
+   "src": "a D bore pressed on the N20's 3.0 / 2.5 D shaft: 3.3 / 2.8 (coupon D: 3.0..3.2 would not go or not press home)"
+  },
+  "free": {
+   "allow": 0.3,
+   "tag": "M",
+   "src": "a bore turning free on an M3 axle or a 3 mm rod: 3.3 (coupon A1, the snuggest of 3.3 / 3.4 / 3.5, all free)"
+  },
+  "slide": {
+   "allow": 0.6,
+   "tag": "E",
+   "src": "a bought body sliding into a printed pocket, sleeve or slot over its length (camera case, SG90 body): the axle's +0.3 plus 0.3 for the long contact and the case's own tolerance; check on the bench"
+  },
+  "mate": {
+   "allow": 0.5,
+   "tag": "E",
+   "src": "a printed part sliding onto another printed part: both faces print GROW fat (0.2 of it gone) + 0.3 running"
+  },
+  "clear": {
+   "allow": 2.0,
+   "tag": "E",
+   "src": "parts that pass each other and must never touch (an assembly path past a neighbour, a moving part)"
+  },
+  "screw": {
+   "allow": 0.4,
+   "tag": "E",
+   "src": "a screw's shank through a printed clearance hole: M2 2.4, M3 3.4"
+  },
+  "tap": {
+   "allow": -0.4,
+   "tag": "E",
+   "src": "a screw cutting its own thread in a printed pilot: M2 1.6, M3 2.6 (the SG90 tab pilots)"
+  }
+ }
+}

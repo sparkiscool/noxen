@@ -128,7 +128,7 @@ REACH = 150.0                                                     # the mast's r
 HEAD = dict(clip=14.0, plate=3.0, dx=-7.5, ay=-3.8, az=45.0, range=(-20.0, 90.0))   # tilt axis along y at x MAST_X + dx, y ay, z = throat top + az (+ the length out); dx, ay put the head's CG over the mast
 # the probe's turret (9 Nov, Spark: "do the double blade ... make the design for the mast itself fully"): under the roof, where the FC sat
 BLADE_W = 19.0                                                    # tape blade width (9 Nov, Spark: "as safe as possible", 3/4 in; was 10): ~3.5x the fold moment (E)
-SPOOL = dict(c=(PROBE_DX, 41.0), r=pick("M") + 1.9, hub=pick("M"), y0=-11.7, y1=11.7)  # 9 Nov, the mast sims (tools/probe_mast_sim.py): hub O28 (was O20: von Mises 1574 MPa at r 10 opposite sense, 1283 at r 14), 1.6 turns of the stack (A, the 0.6 ribbon, B) to O30.8, O31.8 flanges, 23.4 wide; axis y at x 0, z 41 (its flanges 0.6 over the deck)
+SPOOL = dict(c=(PROBE_DX, 41.0), r=pick("M") + 1.7, hub=pick("M"), y0=-11.7, y1=11.7)  # 9 Nov, the mast sims (tools/probe_mast_sim.py): hub O28 (was O20: von Mises 1574 MPa at r 10 opposite sense, 1283 at r 14), 1.6 turns of the stack (A, the 0.6 ribbon, B) to O30.8, O31.4 flanges (15 Nov: were O31.8, the -y one stood 0.0 off the N20 can's flat at the G2 20.9 centres: 0.2 now; the coil's rim at O31.4 full is 1 clear of them sideways), 23.4 wide; axis y at x 0, z 41 (its flanges 0.6 over the deck)
 ROLLER = dict(ang=-15.0, r=4.0, gap=0.0, w=18.5, mid=4.75, F=(15.4, 9.2), bore=pick("A"), mu=0.25)   # the coil's pressure roller 15 deg before the exit (tools/probe_mast_sim.py blossom: with the mast pushed, nothing but a friction lock holds
                                                   # the outer turn; 8 N locks a 2.4 N push at mu 0.3; an anchor 150 deg or more before the exit lifts the turn to its housing, 90 or less holds). 14 Nov (coupon, no bearings):
                                                   # O8 printed tubes turning on a O3 carbon rod in A1 3.3 bores (2.35 wall), PCTG on carbon mu 0.25 E (roller_drag()). 14 Nov (probe stream): split in two, |y| mid..w/2 (4.75..9.25),
@@ -454,8 +454,8 @@ def probe():
     pinion = gear(GEAR["pinion_t"], GEAR["m"], cx, pz, *GEAR["y"])
     g0 = N20_FACE                                                                     # the gearbox's face, 2.9 short of the pinion (room for the turret's 2.6 face plate)
     motor = [box(cx - 6.0, cx + 6.0, g0 - 10.0, g0, pz - 5.0, pz + 5.0),                        # Augiimor N20 6 V 300 rpm: gearbox 12 x 10 x 10 (37 total - can 17 - shaft 10), facing +y
-             cyl_y(6.0, cx, pz, g0 - 27.0, g0 - 10.0, 24),                             # can O12 x 17, under the spool and the drum
-             cyl_y(1.5, cx, pz, g0, g0 + 10.0, 12)]                                    # 3 mm D shaft: through the pinion, its tip in the +y plate's bearing hole
+             cyl_y(6.0, cx, pz, g0 - 27.0, g0 - 10.0, 24).intersection(box(cx - 6.0, cx + 6.0, g0 - 27.0, g0 - 10.0, pz - 5.0, pz + 5.0)),   # can 12 x 10 (its flats up and down, as the turret's pocket holds it) x 17, under the spool and the drum
+             cyl_y(1.5, cx, pz, g0, g0 + 10.0, 24).intersection(box(cx - 1.5, cx + 1.0, g0, g0 + 10.0, pz - 1.5, pz + 1.5))]   # 3 mm D shaft (2.5 across its flat at +x, as the pinion's bore): through the pinion, its tip in the +y plate's bearing hole
     th = np.linspace(0, 2 * math.pi * 3.5, 400); rr = 4.0 + (DRUM["r"] - 1.5 - 4.0) * th / th[-1]
     spiral = LineString([(cx + a * math.cos(b), cz + a * math.sin(b)) for a, b in zip(rr, th)]).buffer(1.1)
     drum = [_xz(spiral, DRUM["y0"] + 1.0, DRUM["y1"] - 1.0), cyl_y(4.0, cx, cz, DRUM["y0"] + 0.5, DRUM["y1"] + 0.5, 24)]           # the camera's own USB cable in a loose coil (2.5 turns of room, ~1.5 used)
@@ -722,7 +722,7 @@ def entries(meshes):
     add("probe_turret", "probe turret: housing, throat, drum and the roof's middle node RM (PCTG, generated: parts/scout_v4_probe_turret)", "structure", "camera", "#f2b705", 41.2, "C",
         "side plates round the spool and the drum, the N20's cheeks, the roller's rod guides and its leaf pocket, the throat up to the head's seat, RM's rod sockets; TPU lip 1, wires 1 (E); PCTG", "PCTG")
     add("probe_spool", "probe spool with its 40 T gear (drawn: parts/scout_v4_probe_spool/make.py)", "structure", "camera", "#d08a1e", 21.0, "C",
-        f"hub O28 between O31.8 flanges 19.6 apart, the 40 T gear (module 0.8, x -0.35, generated involute) outside the +y one, the drum's hub O8 outside the -y one; the stack (blade A outside, the 0.81 ribbon, blade B on the hub) wound 1.6 turns to O31.4 for the {REACH:.0f} mm; its three ends epoxied in one 1.4 slot at 45 deg into the hub, the ribbon on through the hub to the drum; turns on an M3 x 40; PCTG, gear face down", "PCTG")
+        f"hub O28 between O31.4 flanges 19.6 apart, the 40 T gear (module 0.8, x -0.35, generated involute) outside the +y one, the drum's hub O8 outside the -y one; the stack (blade A outside, the 0.81 ribbon, blade B on the hub) wound 1.6 turns to O31.4 for the {REACH:.0f} mm; its three ends epoxied in one 1.4 slot at 45 deg into the hub, the ribbon on through the hub to the drum; turns on an M3 x 40; PCTG, gear face down", "PCTG")
     add("probe_pinion", "probe pinion, 12 T, on the N20's 3 mm D shaft (drawn: parts/scout_v4_probe_pinion/make.py)", "structure", "camera", "#a85f10", 0.3, "C", f"x +0.35 (no undercut), centres {GEAR['c']} from the spool's (14 Nov: the coupon's G2, untried: check the mesh on the bench); D bore {pick('D')[0]} / {pick('D')[1]} (one past the coupon's D3) pressed on with CA; PCTG", "PCTG")
     add("probe_motor", "N20 6 V 100 rpm gear motor (B07MZH851L; replaces the 300 rpm B0BZDC951L)", "bought", "camera", "#8b8f96", 10.0, "E",
         "the same body: 37 long (can 17 x O12, 3 mm D shaft 10); under the spool and the drum facing +y, in a pocket through the deck; the coil's own unwind is ~100 N mm on the spool and winding in needs up to ~170 (sims): the 300 rpm stalls at ~140 through 40 / 12, the 100 rpm at ~420 (E); ~4.5 s for the 150; parked: the DRV8833 in brake, the head seated (the coil's push is ~35 N mm at the gearbox)")
@@ -786,6 +786,12 @@ if __name__ == "__main__":
                   f"Gemfan 5125 props on a printed frame, a half cage on the new discs; the battery mechanism (receiver, cartridge, pack, {BATTERY_SET[0]:.0f} g) not drawn: it mounts on 4 M3 bolts. {lo[0]:.0f}..{hi[0]:.0f} x {lo[1]:.0f}..{hi[1]:.0f} x {lo[2]:.0f}..{hi[2]:.0f} mm, "
                   f"~{mass:.0f} g (E). tools/scout_v4_shape.py",
              mass_budget_g=None, parts=rows)
+    keep = {r.get("id"): r for r in old.get("parts", [])}            # the assembly check's keys (tools/assembly_check.py) are not this tool's: kept
+    for r in rows:
+        if keep.get(r["id"], {}).get("fit_mesh"):
+            r["fit_mesh"] = keep[r["id"]]["fit_mesh"]
+    if old.get("assembly") is not None:
+        a["assembly"] = old["assembly"]
     open(F, "w").write(json.dumps(a, indent=0, ensure_ascii=False) + "\n")
     print(f"  extents         {hi[0] - lo[0]:.0f} x {hi[1] - lo[1]:.0f} x {hi[2] - lo[2]:.0f} mm; all-up ~{mass:.0f} g (E): drawn {drawn:.0f} + the battery set {BATTERY_SET[0]:.0f} on its 4 bolts")
     print(f"  balance         CG ({cg[0]:+.2f}, {cg[1]:+.2f}, {cg[2]:.1f}) mm; the thrust centre (0, 0): {math.hypot(cg[0], cg[1]):.2f} off (masses E)")

@@ -138,7 +138,9 @@ FASTENERS = {
     "overseer": [dict(part="M3 x 10 socket head cap screw", n=4, spec="DIN 912, 304 stainless; the deck bosses into the base's inserts (5.0 of deck, 5.0 of thread)",
                       url="https://www.amazon.com/Socket-Screws-Washers-Assortment-Stainless/dp/B091N1J6F8"),
                  dict(part="M3 x 5.7 heat-set insert", n=2, spec="ruthex RX-M3x5.7 brass, in the plug cap's o 4.0 holes over the lead-end bolts",
-                      url="https://www.amazon.com/ruthex-M3-Threaded-Inserts-RX-M3x5-7/dp/B08BCRZZS3")],
+                      url="https://www.amazon.com/ruthex-M3-Threaded-Inserts-RX-M3x5-7/dp/B08BCRZZS3"),
+                 dict(part="M3 x 14 socket head cap screw", n=4, spec="DIN 912, 18-8 (304) stainless, full thread; a bay only (tail and tab-line pairs, from the mouth): head in the deck at 4.5 under the mount plane (BAY_HEAD), the saddle's 4.0, 5.5 into the bay's insert; in before the seat strips",
+                      url="https://www.amazon.com/Socket-Screws-Stainless-Thread-Bright/dp/B08GLL3G52")],
     "both": [dict(part="M3 x 8 cup point set screw", n=2, spec="DIN 916, stainless; per cartridge, through the end wall's o 2.5 holes (6.0 of boss and wall) onto the XT60W-F",
                   url="https://www.amazon.com/50-M3-0-50-8mm-Stainless-MonsterBolts/dp/B079541R6D"),
              dict(part="5-minute epoxy", n=1, spec="J-B Weld ClearWeld 50112, 25 ml syringe: the XT60W-M in its collar (after the fit coupon)",
@@ -211,6 +213,23 @@ OV_INSERTS = [(-60.0, 25.0), (-60.0, -25.0), (20.0, 25.0), (20.0, -25.0)]
 DRONE_HEAD = dict(r=3.2, h=2.8, len=10.0)    # 5.0 of deck under the head, 5.0 of an M3 x 10 in the insert (its o 4.0 hole stops 0.3 short of the bottom plate: 5 of thread at most,
 #                                              Overseer design chat 14 Nov); the 3.0 head stands 0.2 out of its seat, 2.2 over the cartridge's rim. Boss o 10: inside the base's o 11 pads
 OV_TOP = dict(y_abs=33.3, depth=8.4)   # the base's own material stands beside the slot at |y| 33.4..34.0 over the top 8 mm: nothing of the receiver past 33.3 there
+# ---- the Overseer's mount-plane bolts from below (15 Nov, design chat: no head seat, no length). The six sit on the side walls' inner face (|x| 27.8 = RF) and the
+#      cartridge fills |x| <= 27.5 up to its rim (y 58.6) along the whole receiver: a head (o 5.5) or even the shank (o 3.0, 26.3..29.3) below y 58.6 stands in it.
+#      A head from below can only seat above the cartridge, in the deck, as the drone's four do. The four of the bay (tail and tab-line pairs): head in a o 6.4 counterbore
+#      from the receiver's mouth up to BAY_HEAD under (4.5) below the mount plane (head 61.3..64.3, 2.7 over the rim, 0.3 over the tab-line seat strips: these four go in
+#      before the strips), M3 x 14: 4.5 of receiver, the saddle's 4.0, 5.5 into the bay's insert. Cut in the PROTOTYPE (receiver_proto); the OPTIMISE setup takes them when it reruns. The lead pair (into the cap's inserts) cannot: the receiver ends at the
+#      ear seat (y 60.1) there and the carrier's ears are above it, so its head has no receiver to bear on above the cartridge (see FASTENERS "open")
+BAY_HEAD = dict(under=4.5, len=14.0)
+OV_OPEN = ("the lead pair (into the cap's M3 x 5.7 inserts, clamping carrier and cap): no head seat from below is possible in the receiver: the cartridge fills |x| <= 27.5 up to y 58.6 "
+           "on the bolt's axis (|x| 27.8) and the receiver ends at the ear seat (y 60.1) under the carrier's ears; it needs the carrier and cap changed (the pair moved out "
+           "beside the cartridge, or the clamp taken another way), not listed")
+
+
+def bay_heads(B):
+    """the Overseer's four bay bolts' head counterbores and driver sweep, from 60 below the mouth to the head's seat (cartridge coords); None for the Scout"""
+    g, r = B["g"], B["r"]
+    if g["pack"] != "overseer": return None
+    return U(*[cyl("y", bx, bz, bl.HEAD_R, -60.0, r["Y_M"] - BAY_HEAD["under"]) for bx, bz in r["MOUNT"] if abs(bz - g["Z_X"]) > 1e-6])
 
 
 def drone_mount(B):
@@ -1285,7 +1304,10 @@ def build_check(B):
         swd = U(*[c for x, z in B["drone_pos"] for c in (cyl("y", x, z, bl.BOLT_D / 2 - 0.05, -60.0, r["Y_M"] + 1), cyl("y", x, z, DRONE_HEAD["r"] - 0.05, -60.0, yh - 0.05))])
         sw = sw + swd; extra = vol(swd ^ B["strips"])           # these four pass beside the seated strips: counted against them too
     else: extra = 0.0
-    v = round(vol(sw ^ U(B["recv"], B["carrier"], B["cap"])) + extra, 3)
+    bh = bay_heads(B); rv = B["recv"]
+    if bh is not None:                                       # the Overseer's four bay bolts: head and driver from below to their seat in the deck (the engine part cuts them)
+        sw = sw + U(*[cyl("y", bx, bz, bl.HEAD_R - 0.05, -60.0, r["Y_M"] - BAY_HEAD["under"] - 0.05) for bx, bz in r["MOUNT"] if abs(bz - g["Z_X"]) > 1e-6]); rv = rv - bh
+    v = round(vol(sw ^ U(rv, B["carrier"], B["cap"])) + extra, 3)
     steps.append(dict(step="7 receiver onto the drone: %d M3 from below through the bosses" % (len(r["MOUNT"]) + len(B.get("drone_pos") or [])), how="each bolt and its driver swept from 60 mm below" + (" up to the head seat" if scout else "") + ", through receiver, carrier and cap", mm3=v, ok=bool(v < 0.05)))
     v = round(vol(_xt60w_male(g, collar=False) ^ U(B["recv"], B["carrier"], B["cap"], B["collar"])), 3)
     steps.append(dict(step="8 XT60W-M glued into its collar, laid in the carrier, cap on", how="the plug's body against collar, carrier, cap and receiver, seated", mm3=v, ok=bool(v < 0.05)))
@@ -1329,7 +1351,11 @@ def write_both():
                    f"Scout {rs['swap_g']} g with its cartridge, Overseer {ro['swap_g']} g. Both fit their landing funnel: clear seated, in 65 landing states and on the swap path; "
                    f"the Scout receiver stands on four landing feet. Worst strength index {rs['audit']['strength']['worst_index']} (Scout), {ro['audit']['strength']['worst_index']} (Overseer). Numbers under the viewer.",
            "cg_ref": None, "timeline": "tools/latch7_both_motion.py:timeline", "appendix": "systems/latch7.appendix.html", "parts": parts}
-    json.dump(asm, open(os.path.join(ROOT, "systems", "latch7_both.assembly.json"), "w"), indent=1)
+    fj = os.path.join(ROOT, "systems", "latch7_both.assembly.json")
+    try: asm["assembly"] = json.load(open(fj)).get("assembly")               # the assembly gate's block (tools/assembly_check.py) stays as its owner wrote it
+    except (OSError, ValueError): pass
+    if asm.get("assembly") is None: asm.pop("assembly", None)
+    json.dump(asm, open(fj, "w"), indent=1)
     print("latch7_both:", len(parts), "parts")
 
 # ------------------------------------------------------------------ the print kit (13 Nov, Spark: "i want to start printing soon")
@@ -1432,7 +1458,7 @@ def kit_receivers():
         if a_ is None: continue
         names = {f_["part"] for k_ in FASTENERS for f_ in FASTENERS[k_]}
         a_["bought"] = [b_ for b_ in a_["bought"] if b_["part"] not in names] + [dict(f_) for f_ in FASTENERS[pack] + FASTENERS["both"]]
-        a_["open"] = "the Overseer's six mount-plane bolts (lead pair into the cap's inserts, four for a bay): no head seat from below, length not listed" if pack == "overseer" else None
+        a_["open"] = OV_OPEN if pack == "overseer" else None
     json.dump(out, open(kj, "w"), indent=1)
     for f_ in out["files"]:
         if f_.get("part"): print(f_["file"], f_["solid_check"], f_["bed_mm2"], "mm2 on the bed", f_["size_on_bed_mm"], f_["supports"][:30], f_["grams_each"], f_["used_by"])
@@ -1440,9 +1466,99 @@ def kit_receivers():
     return out
 
 
+# ---- PROTOTYPE receivers (15 Nov, CLAUDE.md stages: Spark prints drawn parts for the bench and the first tests; the engine receivers are OPTIMISE, not printed).
+#      The drawn receiver build() makes (B["recv"]: 5.0 side walls, 3.0 deck, 6.0 end walls, the ribs, the bosses, the pocket blocks, the hold-down blocks with their
+#      notches; the Scout's feet; the Overseer's four deck bosses into the base's inserts) with the mount bolts' head seats and driver sweeps from below cut through it.
+#      Clearances: systems/fit_table.json is not on main yet, so every hole, slot and press fit is the latch's current one (M3 clearance o 3.4, heads o 6.4, the cartridge's
+#      path 0.3 a side + WALL_RELIEF, the bolt pockets 0.3 off the tip, the strips' recesses 0.05 a side) until it lands.
+#      Hand calculation (PCTG E: Xt 46, Zt = S = 23 MPa, knock-down 0.85; allowables in-layer / across / shear: flight /4 -> 9.8 / 4.9 / 4.9, misuse /2.5 -> 15.6 / 7.8 / 7.8,
+#      crash /1.1 -> 35.5 / 17.8 / 17.8). Printed mount plane down: layers parallel to it, so a side or end wall bending off the deck is ACROSS the layers.
+#        hold-down, every swap 106.6 N (flight) / 118 N (misuse) up on the seats, held at the four end-face notches: (118 - 21.6 N Overseer) / 4 = 24.1 N a notch (Scout 27.7);
+#          the 5.8 x 3.5 lip under each notch, 1.25 lever: 30 Nmm / 19.6 mm3 = 1.5 MPa in-layer (Scout 1.7): margin 10 (misuse), 6 at 106.6 N flight; the walls carry it to the deck
+#          in tension over 2 x 5 x 184 mm2: 0.06 MPa
+#        6 g landing on the four feet: Overseer 130 N (Scout 43 N) up through the walls (compression) to the deck bosses: 32 N a bolt, the head's plug in the 5.0 deck
+#          shears over pi 5.5 x 5.0 = 86 mm2: 0.4 MPa interlayer, margin 13
+#        crash 35 g across: the swap mass 766 g -> 263 N (Scout 222 g -> 76 N) on one side wall at the rails, 6.5 under the deck, over the 74 mm of side pads (Scout 50):
+#          M 1710 Nmm on 74 x 5.0^2 / 6 = 308 mm3: 5.6 MPa across the layers, margin 3.2 (Scout 2.4 MPa, 7.4)
+#        crash 35 g along the pack: 263 N on an end wall's top band, 6 under the deck; the lead wall with its plug window (37.6 of 65.6 left), 6.0 thick: 7.0 MPa across, margin 2.5
+#          (the tail wall 4.0 MPa, 4.4; Scout 3.4 MPa, 5)
+#        crash 35 g out of the mouth: 263 N on the two bolt shelves (3.2 ledge, 4.6 deep, 42 long): 1.4 MPa in-layer, margin 25; the walls in tension to the deck 0.14 MPa
+#      Assembly path: Scout: strips into their recesses, collar/carrier/cap onto the lead bosses, the receiver onto the drone with 4 x M3 x 35 from below (heads on the HEAD_Y seats).
+#      Overseer: (bay only) 4 x M3 x 14 from the mouth to their seats in the deck (bay_heads), BEFORE the seat strips; strips; carrier and cap into the lead notch; the receiver onto
+#      the glued base with 4 x M3 x 10 from the mouth into its inserts (unchanged). OPEN: the lead pair (OV_OPEN).
+PROTO = {"scout": "latch7_receiver", "overseer": "latch7_ov_receiver"}       # print/<name>.stl (meshes.yml publishes it as print-<name>.stl); the engine parts of the same names are OPTIMISE
+
+
+def receiver_proto(B):
+    """the drawn PROTOTYPE receiver, cartridge coords: B["recv"] less the bay bolts' head bores, the side wall padded out to 34.0 round each (5.0 wall - the bore's 3.2
+    would leave 1.8 at the groove; 3.0 now; over the top OV_TOP depth only to OV_TOP y_abs, 2.3 there; the funnel's seat is +-34.4)"""
+    R = B["recv"]; bh = bay_heads(B); g, r = B["g"], B["r"]
+    if bh is None: return R
+    yt = r["Y_M"] - OV_TOP["depth"]
+    pads = U(*[m_ for bx, bz in r["MOUNT"] if abs(bz - g["Z_X"]) > 1e-6 for s in (np.sign(bx),)
+               for m_ in (box(*sorted((s * (r["RF"] + 1.0), s * 34.0)), bl.Y_RB, yt, bz - bl.HEAD_R - 3.0, bz + bl.HEAD_R + 3.0),
+                          box(*sorted((s * (r["RF"] + 1.0), s * OV_TOP["y_abs"])), yt - 0.5, r["Y_M"], bz - bl.HEAD_R - 3.0, bz + bl.HEAD_R + 3.0))])
+    pads = pads ^ box(-50.0, 50.0, bl.Y_RB, r["Y_M"], r["Z_E0"] - r["END_T"], r["Z_E1"] + r["END_T"])        # inside the end faces (the tail pair's pad ran 1.2 past it)
+    shanks = U(*[cyl("y", bx, bz, bl.BOLT_D / 2, -60.0, r["Y_M"] + 1.0) for bx, bz in r["MOUNT"]])
+    return R + (pads - bl.cart_path(r) - B["hold_notch"] - shanks) - bh
+
+
+def proto():
+    """print/<PROTO>.stl for both packs, mount plane on the bed (the Overseer's turned 45 deg about z: 183.6 long, 177.9 square on the 180 bed), solid-checked as
+    exported, a picture in kit/, and their kit.json entries (stage PROTOTYPE, the ones to print); the engine receivers' entries become stage OPTIMISE, not for printing."""
+    sys.path.insert(0, os.path.join(ROOT, "tools")); import solid_check as sc, trimesh
+    from topo.build import render
+    kd = os.path.join(HERE, "kit"); kj = os.path.join(HERE, "kit.json"); out = json.load(open(kj)); pd = os.path.join(ROOT, "print")
+    for pack, name in PROTO.items():
+        B = build(pack); r = B["r"]
+        m = receiver_proto(B).rotate([-90, 0, 0]).translate([0, 0, r["Y_M"]]).to_mesh()      # cartridge -> print: (x, z, Y_M - y), mount plane at z 0
+        t = trimesh.Trimesh(np.asarray(m.vert_properties)[:, :3], np.asarray(m.tri_verts), process=True)
+        a_, b_ = sorted(t.extents[:2], reverse=True); diag = a_ > BED
+        if diag: t.apply_transform(trimesh.transformations.rotation_matrix(math.pi / 4, [0, 0, 1]))
+        t.apply_translation(-t.bounds[0]); f = os.path.join(pd, name + ".stl"); t.export(f)
+        t = trimesh.load(f, force="mesh"); ok, info = sc.solid_check(t)
+        n = t.face_normals; c = t.triangles_center; a = t.area_faces
+        on = (n[:, 2] < -0.999) & (c[:, 2] < 0.05); over = (n[:, 2] < -math.cos(math.radians(45.0))) & ~on
+        ext = [round(float(v), 1) for v in t.extents]; bed = round(float(a[on].sum())); g_ = round(abs(t.volume) / 1000 * 1.23, 1)
+        png = os.path.join(kd, name + "_prototype.png")
+        render(t, png, title=f"print/{name}.stl on its bed (PROTOTYPE, mount plane down)", info=f"PCTG | {ext[0]} x {ext[1]} x {ext[2]} mm | {bed} mm2 on the bed | {g_} g | solid check {'PASS' if ok else 'FAIL'}")
+        hrs = round(g_ / 12.0, 1)                                                              # A1 mini, 0.2 layers, PCTG: ~12 g/h at these walls (E)
+        line = (f"print/{name}.stl, mount plane down" + (", already turned 45 deg on the bed (177.9 square), no brim, glue stick" if diag else "") +
+                f", tree supports (touching the bed only), PCTG at PETG settings + 10 C, 0.2 layers, 4 walls, 30 % gyroid, ~{hrs} h (E)")
+        out["files"] = [f_ for f_ in out["files"] if f_.get("file") != f"print/{name}.stl"]
+        for f_ in out["files"]:
+            if f_.get("part") == name:
+                f_["stage"] = "OPTIMISE"; f_["print"] = False; f_["note"] = "the engine's part: OPTIMISE, not for printing (print/%s.stl is the one to print)" % name
+        out["waiting"] = [w for w in out["waiting"] if w != name]
+        out["files"].append(dict(file=f"print/{name}.stl", release=f"https://github.com/sparkiscool/noxen/releases/download/meshes/print-{name}.stl", picture=os.path.relpath(png, ROOT),
+                                 stage="PROTOTYPE", print=True, solid_check="PASS" if ok else "FAIL", thin_walls=len(info.get("thin_walls", [])),
+                                 pose="mount plane (the drone's face) on the bed, the cartridge's mouth up" + ("; turned 45 deg about z in the file" if diag else ""),
+                                 on_the_diagonal=bool(diag), bed_mm2=bed, size_on_bed_mm=ext, fits_bed=bool(max(ext[:2]) <= BED and ext[2] <= BED),
+                                 supports="yes: %d mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)" % round(float(a[over].sum())),
+                                 material="PCTG", grams_each=g_, print_line=line,
+                                 note="drawn (make.receiver_proto; hand calculation in make.py PROTOTYPE, least margin %s); one per drone" % ("2.5, the lead end wall in a 35 g crash along the pack" if pack == "overseer" else "5, the lead end wall in a 35 g crash along the pack"),
+                                 used_by={pack: 1}))
+        if not ok: out["waiting"].append(name)
+        print(name, "PASS" if ok else "FAIL", g_, "g", ext, bed, "mm2 on the bed", line)
+    for pack in ("scout", "overseer"):
+        a_ = out.get("assembly", {}).get(pack)
+        if a_ is None: continue
+        names = {f_["part"] for k_ in FASTENERS for f_ in FASTENERS[k_]}
+        a_["bought"] = [b_ for b_ in a_["bought"] if b_["part"] not in names] + [dict(f_) for f_ in FASTENERS[pack] + FASTENERS["both"]]
+        a_["open"] = OV_OPEN if pack == "overseer" else None
+        a_["receiver"] = ((["6a (a bay only) 4 x M3 x 14 from the mouth up to their seats in the deck, before the strips"] if pack == "overseer" else []) +
+                          ["6 the two TPU seat strips into their recesses under the deck, between their keys", "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier, cap on",
+                           "8 carrier and cap into the lead-end notch" + ("; the lead pair into the cap's inserts: OPEN (see open)" if pack == "overseer" else ", on the lead-end bosses"),
+                           ("9 the receiver onto the glued base: 4 x M3 x 10 from the mouth into its inserts" if pack == "overseer" else "9 the receiver onto the drone: 4 x M3 x 35 from below, heads on the seats at 24.5 (the lead pair through carrier and cap)")])
+    json.dump(out, open(kj, "w"), indent=1)
+    return out
+
+
 if __name__ == "__main__":
     if "--kit-receivers" in sys.argv:
         kit_receivers(); sys.exit(0)
+    if "--proto" in sys.argv:
+        proto(); sys.exit(0)
     pk = "overseer" if "--overseer" in sys.argv else "scout"
     if "--kit" in sys.argv:
         kit(); sys.exit(0)

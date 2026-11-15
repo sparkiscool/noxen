@@ -21,11 +21,17 @@ from topo.material import MATERIALS                                             
 import print_mesh                                                               # noqa: E402
 
 
+def _paths(mod, part):
+    """the setup's declared assembly paths (SPEC["assembly_paths"], topo/paths.py), cut as the run cuts them: a recut opens a path"""
+    from topo.paths import apply_declared
+    return apply_declared(part, getattr(mod, "SPEC", {}).get("assembly_paths"))
+
+
 def recut(name, log=print):
     d = os.path.join(ROOT, "parts", name); stl = os.path.join(d, "part.stl"); rj = os.path.join(d, "result.json")
     res = json.load(open(rj))
     mod = importlib.import_module(f"parts.{name}.part")
-    part = mod.setup(float(res["h"]))
+    part = _paths(mod, mod.setup(float(res["h"])))
     m0 = trimesh.load(print_mesh.local(name), force="mesh")                     # the full print mesh (the release), never the viewing mesh
     # a big exported STL (the head mount, 500k faces) carries a few duplicate vertices and degenerate faces that make manifold3d
     # read it as NotManifold (empty, volume 0: 29 Oct, the recut then crashed in export_cleanup); merge and drop them first
@@ -69,7 +75,7 @@ def regate(name, log=print):
     d = os.path.join(ROOT, "parts", name); stl = os.path.join(d, "part.stl"); rj = os.path.join(d, "result.json")
     res = json.load(open(rj))
     mod = importlib.import_module(f"parts.{name}.part")
-    part = mod.setup(float(res["h"]))
+    part = _paths(mod, mod.setup(float(res["h"])))
     PT = trimesh.load(print_mesh.local(name), force="mesh")
     ok, solid = B.solid_check(PT, [tm(part.drawn_m - part.cuts_m)], thin_ok=[tm(m - part.cuts_m) for m in getattr(part, "thin_ok", [])])
     res.update(solid_ok=bool(ok and res.get("watertight", True)), solid=solid,

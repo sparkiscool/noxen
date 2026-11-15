@@ -100,6 +100,8 @@ def design_hash(part, h, gen, spec, settings=None):
         hs.update(f"thin_ok {m.volume():.3f} {np.round(np.asarray(m.bounding_box(), float), 3).tolist()}".encode())
     for m in getattr(part, "solid_ok", []):                                # declared-solid bodies change the audit's verdict
         hs.update(f"solid_ok {m.volume():.3f} {np.round(np.asarray(m.bounding_box(), float), 3).tolist()}".encode())
+    for p in getattr(part, "paths", []):                                   # assembly paths (their cells are in the masks; drawn in one changes the audit)
+        hs.update(f"path {p['name']} {p['cells']} {p['drawn_mm3']}".encode())
     return hs.hexdigest()[:16]
 
 
@@ -351,6 +353,10 @@ def load_part_dir(path):
     m.loader.exec_module(mod)
     spec = dict(mod.SPEC)
     spec.setdefault("setup", mod.setup)
+    if spec.get("assembly_paths"):                     # declared assembly paths (topo/paths.py): cut through the part on every build of the setup
+        from .paths import apply_declared
+        raw, refs = spec["setup"], list(spec["assembly_paths"])
+        spec["setup"] = lambda h, _s=raw, _r=refs: apply_declared(_s(h), _r)
     spec.setdefault("name", name)
     spec.setdefault("out", os.path.dirname(f))
     return spec

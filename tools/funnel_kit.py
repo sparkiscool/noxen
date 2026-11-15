@@ -111,17 +111,20 @@ def pieces(only=()):
             note = f"the release's {part}.stl is not the upload result.json names (sha256 {pm.sha256(f)[:12]}, {v:.1f} mm3 against the result's {r['volume_mm3']}): an identical rerun's record; the kit file is gated itself"
         return trimesh.load(f, force="mesh"), dict(part=part, **({"release_note": note} if note else {}), part_sha=r.get("part_sha"), print_stl_sha256=(r.get("print_stl") or {}).get("sha256"),
                                                                  mass_g=r.get("mass_g"), worst=max(max(x["inlayer"], x["across"]) for x in r["strength"]["rows"]), solid_ok=r.get("solid_ok"))
+    import importlib                                                           # 15 Nov: the halves and the arm print as drawn PROTOTYPES (parts/box_funnel/proto.py);
+    sys.path.insert(0, os.path.join(ROOT, "parts", "box_funnel")); proto = importlib.import_module("proto")   # the engine pieces are at OPTIMISE (OPTIMISE below)
     for nm in ("nose", "tail"):
-        m, src = engine(f"box_funnel_half_{nm}") if want(f"box_funnel_half_{nm}") else (None, None)
-        out[f"box_funnel_half_{nm}"] = (m, UP["-z"], False, 1, PCTG, "upside down: the two rims behind the side walls' top edges and the rib's top on the bed",
-                                        f"yes, everywhere over 45 deg: under the beam (about 42 over the bed, to the plate's edge), the motor seats and the ledges. The ledges' plastic "
-                                        f"face stands {F.LIP} under the seat plane, so a scar there never touches a drone; scrape the strips' pocket floors flat before gluing the strips",
-                                        1200.0, src)
-    m, src = engine("box_funnel_arm") if want("box_funnel_arm") or want("box_funnel_arm_mirrored") else (None, {})
-    for nm, mir in (("box_funnel_arm", False), ("box_funnel_arm_mirrored", True)):
-        out[nm] = (m, UP["-x"], mir, 2, PCTG, "on its outer face (the side away from the half's beam), the lap's four bolt heads' face down",
-                   None,
-                   300.0, dict(src, corners="nose +y and tail -y" if not mir else "nose -y and tail +y (the mirror image)"))
+        n = f"box_funnel_proto_half_{nm}"
+        m = proto.tri(proto.half(1 if nm == "nose" else -1)[0]) if want(n) else None
+        out[n] = (m, UP["-z"], False, 1, PCTG, "upside down: the two rims behind the side walls' top edges and the rib's top on the bed",
+                  f"yes (tree), everywhere over 45 deg: under the beam (to 81 over the bed), the motor seats and the ledges. The ledges' plastic face stands {F.LIP} "
+                  f"under the seat plane, so a scar there never touches a drone; scrape the strips' pocket floors flat before gluing the strips", 1200.0,
+                  dict(drawn=f"parts/{n}/make.py (parts/box_funnel/proto.py half({'+1' if nm == 'nose' else '-1'}))", stage="PROTOTYPE", slicer=proto.SLICER))
+    m = proto.tri(proto.arm()[0]) if want("box_funnel_proto_arm") or want("box_funnel_proto_arm_mirrored") else None
+    for nm, mir in (("box_funnel_proto_arm", False), ("box_funnel_proto_arm_mirrored", True)):
+        out[nm] = (m, UP["-x"], mir, 2, PCTG, "on its outer face (the side away from the half's beam), the lap's four bolt heads' face down", None, 300.0,
+                   dict(drawn="parts/box_funnel_proto_arm/make.py (parts/box_funnel/proto.py arm())", stage="PROTOTYPE", slicer=proto.SLICER,
+                        corners="nose +y and tail -y" if not mir else "nose -y and tail +y (the mirror image)"))
     for nm, sx in (("nose", 1), ("tail", -1)):
         m = tri(F.carriage(sx, with_pins=False)); k, R, rows = best_wall_pose(m, F, sx)
         out[f"box_funnel_wall_{nm}"] = (m, R, False, 1, PCTG, k, None, 200.0, dict(drawn="parts/box_funnel/make.py carriage(%+d)" % sx, poses_measured=rows))
@@ -162,7 +165,8 @@ def main(only=(), do_gate=True):
         print(f"{name:28} x{count} {ms['bed_mm']} bed {ms['bed_contact_mm2']} mm2 (min {bed_min:.0f}) overhang {ms['overhang_mm2']} solid {row['solid_check']} {'ok' if row['ok'] else 'NOT READY'}", flush=True)
     json.dump(dict(what="the landing funnel's print kit: each file is in its print pose and was measured and gated as it lies (tools/funnel_kit.py)",
                    printer="Bambu A1 mini, 180 x 180 x 180", bought="tools/import_box.py BOUGHT_LIST and FASTENERS (the page's Bought table): gearmotors, switches, probes and sleeves, the four hold-down keys",
-                   not_in_the_kit="the stand's mast (15 longer): not drawn", ok=not bad and len(rows) == len(P), not_ready=bad, pieces=rows), open(kit_path, "w"), indent=1)
+                   not_in_the_kit="the stand's mast (15 longer): not drawn",
+                   optimise="box_funnel_half_nose, box_funnel_half_tail, box_funnel_arm: engine pieces, stage OPTIMISE (only once Spark's tests freeze the prototypes' interfaces); not printed", ok=not bad and len(rows) == len(P), not_ready=bad, pieces=rows), open(kit_path, "w"), indent=1)
     return not bad
 
 

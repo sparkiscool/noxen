@@ -6,7 +6,7 @@
 <title>Nox assembly</title>
 <style>
   :root { --bg:#111418; --panel:#1b2026; --text:#e6e8eb; --muted:#8a94a0; --line:#2a313a;
-          --done:#3fb950; --stale:#d29922; --failed:#f85149; --pending:#6e7681; --placed:#8b949e; }
+          --done:#3fb950; --unfit:#db6d28; --stale:#d29922; --failed:#f85149; --pending:#6e7681; --placed:#8b949e; }
   html,body { margin:0; height:100%; background:var(--bg); color:var(--text); font:14px/1.4 system-ui, sans-serif; }
   #app { display:grid; grid-template-columns: 300px 1fr; height:100%; }
   #side { background:var(--panel); border-right:1px solid var(--line); overflow:auto; padding:12px; }
@@ -61,6 +61,7 @@
       <span><i class="dot" style="background:var(--done)"></i>done</span>
       <span><i class="dot" style="background:var(--stale)"></i>stale</span>
       <span><i class="dot" style="background:var(--failed)"></i>failed</span>
+      <span><i class="dot" style="background:var(--unfit)"></i>passed, does not assemble</span>
       <span><i class="dot" style="background:var(--pending)"></i>pending</span>
       <span><i class="dot" style="background:var(--placed)"></i>bought / drawn</span>
     </div>
@@ -119,7 +120,7 @@ document.getElementById('c-rerun').onclick = async () => {
     msg.textContent = 'rerun started for ' + current.id + ' (same setup). Check the Actions tab.';
   } catch (e) { msg.textContent = 'rerun failed: ' + e.message; }
 };
-const COLORS = { done:0x3fb950, stale:0xd29922, failed:0xf85149, pending:0x6e7681, placed:0x8b949e };
+const COLORS = { done:0x3fb950, unfit:0xdb6d28, stale:0xd29922, failed:0xf85149, pending:0x6e7681, placed:0x8b949e };
 const view = document.getElementById('view');
 const renderer = new THREE.WebGLRenderer({ antialias:true });
 renderer.setPixelRatio(devicePixelRatio); view.appendChild(renderer.domElement);

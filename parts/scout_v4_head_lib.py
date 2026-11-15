@@ -88,7 +88,7 @@ def camera_local(leds=True):
 def horn_local():
     """the SG90's horn and its centre screw, in the cradle's frame with the arm along +z (E: hub O7, arm 6.6 wide at the root, 1.5 thick, to r 16)"""
     a = WY - CH
-    return (ycyl(0, 0, 3.5, a, YS) + box(-3.3, 3.3, a, a + 1.5, 0, 16.0)
+    return (ycyl(0, 0, 3.5, a, YS - 0.25) + box(-3.3, 3.3, a, a + 1.5, 0, 16.0)                  # the hub on the spline, riding its shoulder 0.25 off the SG90's case (E)
             + ycyl(0, 0, 2.0, a - 1.4, a))                                                    # the centre screw's head proud of the hub
 
 

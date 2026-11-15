@@ -156,7 +156,54 @@ def rod_segments():
     return {k: [(*m, was.get(m[0])) for m in v] for k, v in {"cage_shell_tubes": shell, "spokes_ties_head_rods": off}.items()}
 
 
-def artifact_page(a, S, meshes, commit, path):
+def assembly_report(sysname, a):
+    """the drone's assembly check (tools/assembly_check.py): a part in a failing pair, mate or path is not print-ready"""
+    import assembly_check
+    try:
+        rep = assembly_check.run(sysname)
+    except Exception as e:                              # a check that cannot run is a fail of the check, shown, never a silent pass
+        print(f"site: {sysname}: the assembly check failed to run: {e}")
+        return dict(ok=False, error=str(e)[:300], pairs=[], mates=[], paths=[], not_print_ready={}, parts_checked=0, seconds=0, skipped=[])
+    print(assembly_check.summary(rep))
+    json.dump(rep, open(os.path.join(SITE, f"{sysname}.assembly_check.json"), "w"), indent=1)
+    return rep
+
+
+def assembly_html(rep):
+    """the page's section under the viewer: does the drone go together (failing pairs, mates and paths, where and how much)"""
+    import html as H
+    if rep is None:
+        return ""
+    e = lambda x: H.escape(str(x))
+    rows = []
+    for r in rep.get("pairs", []):
+        if not r["ok"]:
+            pc = (r.get("pieces") or [{}])[0]
+            rows.append(("clash", f"{r['a']} &times; {r['b']}", f"{r['mm3']} mm3 shared (limit {r['limit_mm3']})", f"{pc.get('at')} depth {pc.get('depth_mm')} mm"))
+    for r in rep.get("mates", []):
+        if not r["ok"]:
+            rows.append(("mate", f"{r['a']} &times; {r['b']} ({e(r.get('fit'))})", f"gap {r.get('gap_mm')} mm, needs {r.get('need_mm')}" +
+                         (f", {r['overlap_mm3']} mm3 overlap" if r.get("overlap_mm3") else ""), ((r.get("pieces") or [{}])[0]).get("at", "")))
+    for r in rep.get("paths", []):
+        for b in r.get("blocked_by", []):
+            pc = (b.get("pieces") or [{}])[0]
+            rows.append(("path", f"{e(r['name'])}: blocked by {b['part']}", f"{b['mm3']} mm3 {e(b['along'])}", f"{pc.get('at')} depth {pc.get('depth_mm')} mm"))
+        for b in r.get("tight", []):
+            rows.append(("path", f"{e(r['name'])}: tight on {b['part']}", f"gap {b['gap_mm']} of {r['gap_mm']} mm {e(b['along'])}", ""))
+        if r.get("why", "").startswith("sweep failed"):
+            rows.append(("path", e(r["name"]), e(r["why"]), ""))
+    if rep.get("error"):
+        rows.append(("check", "the check did not run", e(rep["error"]), ""))
+    n_ok = sum(1 for r in rep.get("paths", []) if r["ok"])
+    head = (f"<h2>Assembly check: {'PASS' if rep['ok'] else 'FAIL'}{'' if rep.get('gate', True) else ' (report only: archived)'}</h2><p>{rep.get('parts_checked')} parts, every printed pair and printed / bought pair, "
+            f"{len(rep.get('mates', []))} mates against the printer's fit table (topo/fit.py, the probe coupon), {n_ok} of {len(rep.get('paths', []))} "
+            f"assembly paths clear (tools/assembly_check.py). Not print-ready: {', '.join(rep.get('not_print_ready') or {}) or 'none'}.</p>")
+    body = "".join(f"<tr><td>{k}</td><td>{w}</td><td>{h}</td><td>{at}</td></tr>" for k, w, h, at in rows)
+    tab = f"<table><tr><th></th><th>what</th><th>how much</th><th>where (mm)</th></tr>{body}</table>" if rows else ""
+    return f'<section id="assembly-check" style="max-width:1100px;margin:24px auto;padding:0 16px;font:14px system-ui">{head}{tab}</section>'
+
+
+def artifact_page(a, S, meshes, commit, path, fitrep=None):
     """One self-contained page per drone, the look of the system artifact: parts by group and colour, the overlays, a turntable."""
     import math
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -170,8 +217,11 @@ def artifact_page(a, S, meshes, commit, path):
     by_id = {p["id"]: p for p in S["parts"]}; segs = rod_segments()
     for p in a["parts"]:
         pid = p.get("id") or p["name"]; q = by_id[pid]
+        nt = note(p, q.get("_result"))
+        if q.get("assembly_why"):
+            nt += "; NOT print-ready, assembly: " + "; ".join(q["assembly_why"][:3])
         s.part(p["name"], meshes[pid], group=p.get("group", "part"), color=p.get("color"), opacity=p.get("opacity"),
-               printed=p.get("material") in ("PETG", "PCTG", "TPU") and p.get("role") != "bought", note=note(p, q.get("_result")), segs=segs.get(pid),
+               printed=p.get("material") in ("PETG", "PCTG", "TPU") and p.get("role") != "bought", note=nt, segs=segs.get(pid),
                print_url=q.get("print_url"))
     for nm, m, col, op in overlays(a.get("overlays", {})):
         s.part(nm, m, group="views", color=col, printed=False, opacity=op)
@@ -207,6 +257,9 @@ def artifact_page(a, S, meshes, commit, path):
         eye, at = (v["eye"], v.get("target", (0, 0, 0))) if isinstance(v, dict) else v
         s.view(nm, tuple(eye), tuple(at))
     s.write(path)
+    if fitrep is not None:                          # the drone's assembly check, under the viewer and above any appendix
+        page = open(path).read(); frag = assembly_html(fitrep); i = page.rfind("</body>")
+        open(path, "w").write(page[:i] + frag + "\n" + page[i:] if i >= 0 else page + frag)
     if a.get("appendix"):                          # an HTML fragment shown under the viewer (the Scout v4's ceiling probe, 9 Nov): its styles scoped, its ids its own
         page = open(path).read(); frag = open(os.path.join(ROOT, a["appendix"])).read()
         i = page.rfind("</body>")
@@ -267,11 +320,13 @@ def build(inline=False, offline=False):
             return (50, f)
     for f in sorted(glob.glob(os.path.join(ROOT, "systems", "*.assembly.json")), key=_order):
         a = json.load(open(f))
-        if a.get("archived"):                      # a superseded design stays in the repo for its tools but is off the page (Spark 9 Nov: only the newest Scout)
+        if a.get("archived") or a.get("check_only"):   # a superseded design stays in the repo for its tools but is off the page (Spark 9 Nov: only the newest Scout); a check-only kit (the probe bench) is the assembly check's
             continue
         sysname = os.path.basename(f).split(".")[0]
         S = {"name": a.get("name", sysname), "file": sysname, "title": a.get("title") or a.get("name", sysname),
              "artifact": a.get("artifact"), "note": a.get("note", ""), "mass_budget_g": a.get("mass_budget_g"), "parts": []}
+        fitrep = assembly_report(sysname, a)                # tools/assembly_check.py: a part in a failing pair, mate or path is not print-ready
+        S["assembly"] = None if fitrep is None else dict(ok=fitrep["ok"], not_print_ready=fitrep["not_print_ready"])
         for p in a["parts"]:
             pid = p.get("id") or p["name"]
             src = p.get("part", pid)             # a mirror or a second placing of another part's folder: its mesh and status, this pose
@@ -315,10 +370,15 @@ def build(inline=False, offline=False):
                                    feedback=open(fb).read() if os.path.exists(fb) else "",
                                    has_script=os.path.exists(os.path.join(ROOT, "parts", src, "part.py")),
                                    print_url=print_mesh.print_stl(src).get("url")))   # the full print mesh (tools/print_mesh.py), the page links it
+            fitwhy = (fitrep or {}).get("not_print_ready", {}).get(src) or (fitrep or {}).get("not_print_ready", {}).get(pid)
+            S["parts"][-1]["assembly_ok"] = None if fitrep is None else not fitwhy
+            S["parts"][-1]["assembly_why"] = fitwhy or []
+            if fitwhy and st == "done":
+                S["parts"][-1]["status"] = "unfit"           # passed its own gates, does not go together with the drone: not print-ready
             S["parts"][-1]["_result"] = r
         out["systems"].append(S)
         if inline:
-            artifact_page(a, S, meshes, out["commit"], os.path.join(SITE, f"{sysname}.html"))
+            artifact_page(a, S, meshes, out["commit"], os.path.join(SITE, f"{sysname}.html"), fitrep)
             meshes.clear()
     for s in out["systems"]:
         for p in s["parts"]:

@@ -77,6 +77,11 @@ Checks (hard = raises, soft = logged + in the report):
                        both passed strength and the gate and stood on 40 to 66 mm2, the side walls' top edges being square to their
                        55 deg faces (a line) and the rib's room ending 1.0 short of that plane. Draw a flat rim on the bed plane and end
                        the room on it. Under bed_min_mm2 the run is refused.
+  path           hard  (Part.assembly_path / SPEC["assembly_paths"], topo/paths.py) drawn material in a declared assembly path: the sweep of the
+                       piece that goes in (grown by its fit gap from topo/fit.py) is cut through the envelope, so the engine cannot fill it,
+                       but a drawn wall, lip or post standing in it blocks the piece whatever is generated. 15 Nov, Spark's Scout v4 bench
+                       print: the camera could not slide into the cradle's sleeve, nothing kept its insertion path open. Move the drawn
+                       feature out of the path (or end the path on it: a stop is where the piece seats, not in its way). Over PATH_MM3.
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -87,6 +92,9 @@ from scipy import ndimage as ndi
 
 S6 = ndi.generate_binary_structure(3, 1)
 S26 = np.ones((3, 3, 3), bool)
+
+
+PATH_MM3 = 0.5           # drawn material allowed in an assembly path (mesh noise on a face that only touches it)
 
 
 class SetupError(ValueError):
@@ -647,6 +655,13 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
             fails.append(f"parity: the {nm} mesh has {len(cols)} grid columns with an odd number of crossings (near {[list(c[:2]) for c in cols[:3]]}, "
                          f"crossings {cols[0][2]}): two bodies that only touch on a face (one flush on another) stay two shells, and the "
                          f"voxeliser empties or fills those columns from the shared face up. Overlap them (0.5 mm) instead of stacking them flush.")
+
+    rep["paths"] = [dict(p) for p in getattr(part, "paths", [])]
+    for p in rep["paths"]:
+        if p["drawn_mm3"] > PATH_MM3:
+            fails.append(f"path: {p['drawn_mm3']:.1f} mm3 of drawn material stands in the assembly path '{p['name']}' at {p['at']} (extent "
+                         f"{p.get('extent_mm')} mm): the piece cannot go in past it whatever the engine generates. Move the drawn feature out "
+                         f"of the path (the sweep is the piece grown by its fit gap, topo/fit.py), or end the path where the piece seats.")
 
     rep["cases"] = len(part.cases)
     rep["supports"] = len(part.supports)

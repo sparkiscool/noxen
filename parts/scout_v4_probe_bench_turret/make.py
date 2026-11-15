@@ -30,7 +30,10 @@ plates = [box(cx - 36, cx + 36, yp, yp + 3.0, DZ1, 67.0),                       
           box(cx - 8.0, cx + 8.0, S.N20_FACE + 0.15, yp + 3.0, pz - 5.5, DZ1 + 0.1)]   # from the N20's face plate to the +y wall, below the deck's top, round the pinion (cut) and the shaft's tip bearing
 solid = U(plates) + B["drawn"]
 g0 = S.N20_FACE
-part = solid - B["cuts"] - box(cx - 6.5, cx + 6.5, g0 - 27.5, S.SPOOL["y0"] - 0.6, DZ1 - 1.0, DZ1 + 3.1)   # 12 Nov: the floor open over the N20's can (its top z 26.5 left a 1.0 skin in the 3.0 floor: the solid check)
+from parts.scout_v4_units_lib import TURRET_BOLTS                                               # noqa: E402
+posts = U([mf.Manifold.cylinder(DZ1 - 0.0 + 30.0, 5.0 + 0.5, 5.0 + 0.5, 64).translate([x, y, -30.0]) for x, y in TURRET_BOLTS])   # 15 Nov (assembly check): the bench base's O10 insert posts under the deck's top, 0.5 clear (the N20 cheeks stood 0.5 into the +y pair)
+below = box(-200, 200, -200, 200, -50, 16.0 + 0.3) - box(cx - 8.3, cx + 8.3, g0 - 30.0 + 0.2, g0 + 11.0 - 0.2, -60, 20)   # 15 Nov: what hangs below the base's top (z 16) stays 0.2 inside its opening (the N20 cheeks met its edges at 0)
+part = solid - B["cuts"] - posts - below - box(cx - 6.5, cx + 6.5, g0 - 27.5, S.SPOOL["y0"] - 0.6, DZ1 - 1.0, DZ1 + 3.1)   # 12 Nov: the floor open over the N20's can (its top z 26.5 left a 1.0 skin in the 3.0 floor: the solid check)
 m = part.to_mesh(); tm = trimesh.Trimesh(np.asarray(m.vert_properties)[:, :3], np.asarray(m.tri_verts), process=True)
 parts_ = tm.split(only_watertight=False)
 tm = max(parts_, key=lambda p: abs(p.volume)) if len(parts_) > 1 else tm         # loose RM collar stubs off the plates are dropped

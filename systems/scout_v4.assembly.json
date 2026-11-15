@@ -283,6 +283,20 @@
 "note": "its shaft on the tilt axis facing -y, held by its 32.8 tabs on the head frame's +y pads; the capacitor on its lead covers its > 1 A start"
 },
 {
+"id": "scout_v4_probe_horn",
+"name": "the SG90's single-arm horn and its centre screw (from its bag), screwed to the cradle's +y wall",
+"role": "bought",
+"group": "camera",
+"color": "#2f3b45",
+"mesh": "parts/scout_v4_probe_horn/part.stl",
+"mass_g": 0.5,
+"tag": "E",
+"owner": "scout v4",
+"version": "shape 8 Nov",
+"source": "tools/scout_v4_shape.py",
+"note": "on the SG90's spline, its arm in the cradle's channel (parts/scout_v4_head_lib.py): it turns with the cradle"
+},
+{
 "id": "scout_v4_head_frame",
 "name": "probe head frame: the clip on the blades' tip, the SG90's closed ring, the idler's bracket (drawn prototype, parts/scout_v4_head_frame/make.py)",
 "role": "structure",
@@ -536,7 +550,8 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "32 rods, 3.48 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)"
+"note": "32 rods, 3.48 m, every one 12 from the swept discs and none over or under a disc: ring at z 61 with flats at 155 (310 across), a flat roof (spine on y 0, hoop on x 0, nose / tail triangles), a V at each end and a fan at each side down to the bottom nodes, which hang on rod triangles to the deck's side lugs and tail (NB on the camera's mount)",
+"fit_mesh": "tools/scout_v4_fit.py:rods"
 },
 {
 "id": "scout_v4_node_r0",
@@ -794,5 +809,242 @@
 "material": "PCTG",
 "opacity": 0.9
 }
+],
+"assembly": {
+"fit_tol_mm3": 0.5,
+"note": "15 Nov (engine worker, Spark's bench print): the assembly gate, tools/assembly_check.py; fits from topo/fit.py (the probe coupon). The order: the frame and everything fixed in it; the turret with its spool, gears, N20, drum and roller from above; the rods and nodes; the head frame on the blades' tip (55); the head's steps of parts/scout_v4_head_lib.py (SG90 into the ring, the camera into the cradle in hand, the cradle lowered at nod 0 onto the horn; the M3 idler not drawn); the nod. Mates are running fits; a piece seated on a stop is held to its path's fit gap at every step past the seat. The props go on last.",
+"order": {
+"scout_v4_node_*": 50,
+"scout_v4_head_frame": 55,
+"scout_v4_prop_*": 200,
+"scout_v4_blades_*": 200
+},
+"contacts": [
+{
+"a": "scout_v4_frame",
+"b": "scout_v4_receiver_bolts",
+"allow_mm3": 6.0,
+"why": "the M3 x 5.7 heat-set inserts (drawn with the bolts) melted into the yokes' insert holes"
+},
+{
+"a": "scout_v4_probe_spool",
+"b": "scout_v4_probe_pinion",
+"allow_mm3": 8.0,
+"why": "the 40 / 12 gear mesh: the teeth are drawn at an arbitrary phase"
+},
+{
+"a": "scout_v4_probe_spool",
+"b": "scout_v4_probe_drum",
+"allow_mm3": 320.0,
+"why": "the head's cable coil is drawn as a solid ring over the drum's O8 hub (a loose coil, nothing printed in it)"
+},
+{
+"a": "scout_v4_probe_spool",
+"b": "scout_v4_probe_feed",
+"allow_mm3": 15.0,
+"why": "the blades leave the wound coil at its tangent (the feed drawn from the coil's surface)"
+},
+{
+"a": "scout_v4_probe_horn",
+"b": "scout_v4_probe_servo",
+"allow_mm3": 2.0,
+"why": "the horn's hub on the SG90's spline, 0.25 off the case on the spline's shoulder (the spline itself not drawn)"
+}
+],
+"mates": [
+{
+"a": "scout_v4_cradle",
+"b": "scout_v4_head_frame",
+"fit": "mate",
+"why": "the cradle turns between the head frame's brackets"
+},
+{
+"a": "scout_v4_probe_pinion",
+"b": "scout_v4_probe_motor",
+"fit": "press",
+"why": "the pinion's D bore on the N20's 3.0 / 2.5 D shaft"
+},
+{
+"a": "scout_v4_probe_spool",
+"b": "scout_v4_probe_turret",
+"fit": "mate",
+"why": "the spool turns between the turret's side plates"
+}
+],
+"paths": [
+{
+"name": "turret onto the frame",
+"part": "scout_v4_probe_turret",
+"order": 10,
+"out": [
+0,
+0,
+1
+],
+"length_mm": 90,
+"fit": "mate",
+"with": [
+"scout_v4_probe_spool",
+"scout_v4_probe_pinion",
+"scout_v4_probe_motor",
+"scout_v4_probe_drum",
+"scout_v4_probe_feed",
+"scout_v4_probe_roller"
+],
+"into": [
+"scout_v4_frame"
+],
+"why": "the turret goes on as one unit with its spool, gears, N20 (into the deck's pocket), drum and roller (the DRV8833 is taped under the deck), down from above"
+},
+{
+"name": "blades into the head frame's clip",
+"part": "scout_v4_probe_mast_a",
+"order": 60,
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 16,
+"fit": "slide",
+"body": {
+"box": [
+12.32,
+17.88,
+-9.5,
+9.5,
+73.0,
+87.0
 ]
+},
+"into": [
+"scout_v4_head_frame"
+],
+"ignore": [
+"scout_v4_probe_turret",
+"scout_v4_probe_bench_turret",
+"scout_v4_probe_feed",
+"scout_v4_probe_spool"
+],
+"why": "the two blades' tips (the lens, 2 x 2.78 thick, 19 wide) slide up into the head frame's 14 mm clip"
+},
+{
+"name": "SG90 into the head frame's ring",
+"part": "scout_v4_probe_servo",
+"order": 70,
+"out": [
+0,
+-1,
+0
+],
+"length_mm": 30,
+"fit": "slide",
+"into": [
+"scout_v4_head_frame"
+],
+"why": "step 2 (parts/scout_v4_head_lib.py): the SG90 with its horn slid +y into the frame's closed ring from the cradle's room, its tabs stop on the ring's face",
+"with": [
+"scout_v4_probe_horn"
+]
+},
+{
+"name": "camera into the cradle (in hand)",
+"part": "scout_v4_probe_tilt",
+"order": 75,
+"out": [
+-0.9659,
+0.0,
+-0.2588
+],
+"length_mm": 32,
+"fit": "slide",
+"against": [
+"scout_v4_cradle"
+],
+"into": [
+"scout_v4_cradle"
+],
+"why": "step 3: the case slid into the cradle from behind until its front meets the lip, the cradle still off the head (Spark 15 Nov: it could not)",
+"min_body_mm3": 50
+},
+{
+"name": "cradle lowered onto the horn",
+"part": "scout_v4_cradle",
+"order": 80,
+"with": [
+"scout_v4_probe_tilt",
+"scout_v4_probe_leds",
+"scout_v4_probe_horn"
+],
+"moves": [
+{
+"turn": {
+"axis": [
+0,
+1,
+0
+],
+"at": [
+7.6,
+-3.8,
+118.0
+],
+"deg": 15
+}
+},
+{
+"out": [
+0,
+0,
+1
+],
+"length_mm": 70
+}
+],
+"fit": "mate",
+"into": [
+"scout_v4_head_frame",
+"scout_v4_probe_servo"
+],
+"why": "step 5: the cradle with the camera and LED bars at nod 0 lowered straight down between the bracket and the SG90, the horn's arm, hub and centre screw sliding up its channel from the open bottom edge; with the horn here (shown lifted out together; head_frame/make.py checks the channel over the horn)",
+"min_body_mm3": 50
+},
+{
+"name": "head nods -20..+90 deg",
+"part": "scout_v4_cradle",
+"order": 100,
+"with": [
+"scout_v4_probe_tilt",
+"scout_v4_probe_leds",
+"scout_v4_probe_horn"
+],
+"turn": {
+"axis": [
+0,
+1,
+0
+],
+"at": [
+7.6,
+-3.8,
+118.0
+],
+"deg": [
+-75,
+35
+]
+},
+"fit": "mate",
+"into": [
+"scout_v4_head_frame",
+"scout_v4_probe_servo"
+],
+"why": "the cradle, camera and LED bars about the SG90's axis from 20 down to 90 up (parked 15 up)",
+"min_body_mm3": 50
+}
+],
+"generate": [
+"tools/scout_v4_fit.py:generate"
+]
+}
 }

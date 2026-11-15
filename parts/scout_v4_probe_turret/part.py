@@ -114,6 +114,7 @@ def bodies():
     # the spool, its gear and the pinion swept
     cuts.append(ycyl(cx, cz, r + 1.0, S.SPOOL["y0"] - 0.6, S.SPOOL["y1"] + 0.6))
     cuts.append(ycyl(cx, cz, ra + 0.8, gy0 - 0.5, gy1 + 0.5)); cuts.append(ycyl(cx, pz, rp + 0.8, gy0 - 0.5, gy1 + 0.5))
+    cuts.append(ycyl(cx, pz, 3.5 + 0.3, gy1, gy1 + 0.9))                                            # 15 Nov (assembly check): the pinion's O7 hub boss runs to gy1 + 0.7, the sweep stopped at + 0.5
     cuts += disc_cuts()
     deck = box(-200, 200, -200, 200, -100, DZ1) - box(cx - 8.5, cx + 8.5, g0 - 31.0, yp + 7.0, pz - 8.0, DZ1 + 0.1)
     cuts.append(deck)

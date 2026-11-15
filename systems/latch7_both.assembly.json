@@ -2298,5 +2298,18 @@
    "version": "latch v7 receiver, engine part (13 Nov)",
    "source": "parts/latch7_ov_receiver/part.py"
   }
- ]
+ ],
+ "assembly": {
+  "fit_tol_mm3": 0.5,
+  "note": "15 Nov (engine worker): the latch set's assembly gate (tools/assembly_check.py) on the section view; the generated receivers are drawn twice (whole and cut away), the whole ones are left out. No insertion path yet: the cartridge goes in past the sliders, blades and heel deck only with the latch open (tools/latch7_both_motion.py's states), which a straight path through the closed latch does not model. 15 Nov (latch worker): the guide poles are a second drawing of the pegs printed on the plug carrier (make.build: carrier + pegs), and the Scout receiver's nose skid is gone in v7 (make.build rskids = []): left out.",
+  "exclude": [
+   "latch7_receiver",
+   "latch7_ov_receiver",
+   "latch7_view_guide_pole_p_both",
+   "latch7_view_guide_pole_n_both",
+   "latch7_overseer_view_guide_pole_p_both",
+   "latch7_overseer_view_guide_pole_n_both",
+   "latch7_view_receiver_skid_nose_both"
+  ]
+ }
 }

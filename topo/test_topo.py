@@ -1314,6 +1314,49 @@ def t_audit_bed():
         check("audit bed", False, repr(e)[:200])
 
 
+def t_audit_path():
+    """path (Part.assembly_path, topo/paths.py; 15 Nov, the Scout v4 camera that could not slide into its sleeve): a 10 x 10 x 10 'camera'
+    seated in a drawn sleeve against a front lip, pulled out the back (-x) by 20. Open back: the sweep (grown by the slide gap) is cut,
+    no design cell is left in it, the lip it seats on is not in it, the audit passes the path. A drawn back wall: the audit refuses it.
+    The same path declared in a drone file (SPEC["assembly_paths"] -> paths.apply_declared) cuts the same cells."""
+    try:
+        import json as _j, os, tempfile, trimesh
+        import manifold3d as mf
+        from .audit import audit
+        from .part import Part
+        from . import paths as P, fit
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        cam = box(0, 10, 0, 10, 0, 10)
+        g = 0.4                                                          # drawn clearance per side (>= the slide gap 0.25)
+        sleeve = box(-4, 13, -3 - g, 13 + g, -3 - g, 13 + g) - box(-5, 14, -g, 10 + g, -g, 10 + g)
+        lip = box(10, 13, -3 - g, 13 + g, -3 - g, 13 + g) - box(9, 14, 2, 8, 2, 8)          # the front lip the case seats on (x 10)
+        env = box(-25, 16, -6, 16, -6, 16)
+        path = {"name": "cam", "out": [-1, 0, 0], "length_mm": 20, "fit": "slide"}
+        sw = P.sweep(path, cam, grow=fit.gap("slide"))
+        def mk(back):
+            drawn = sleeve + lip + (box(-8, -6, -3, 13, -3, 13) if back else mf.Manifold())
+            p = Part("mini_path", 1.0, drawn, box(100, 101, 100, 101, 100, 101), env, log=lambda s_: None)
+            p.support("default", box(10, 13, -4, 14, -4, 14)); p.load("down", box(-25, -20, -6, 16, -6, 0), (0, 0, -5.0), cls="flight")
+            return p
+        p_open = mk(False); rec = p_open.assembly_path("cam", sw)
+        sw_cells = p_open.vox(__import__("topo.part", fromlist=["tm"]).tm(sw)).ravel()
+        open_ok = rec["drawn_mm3"] <= 0.5 and not (p_open.design & sw_cells).any() and p_open.cut[sw_cells].all()
+        f_open = [f for f in audit(p_open, 3.2, log=lambda s_: None, hard=False)["fails"] if f.startswith("path:")]
+        p_back = mk(True); rb = p_back.assembly_path("cam", sw)
+        f_back = [f for f in audit(p_back, 3.2, log=lambda s_: None, hard=False)["fails"] if f.startswith("path:")]
+        d = tempfile.mkdtemp(); os.makedirs(os.path.join(d, "systems")); os.makedirs(os.path.join(d, "parts", "cam"))
+        trimesh.Trimesh(*[__import__("numpy").asarray(x) for x in (cam.to_mesh().vert_properties[:, :3], cam.to_mesh().tri_verts)]).export(os.path.join(d, "parts", "cam", "part.stl"))
+        _j.dump({"parts": [{"id": "cam", "mesh": "parts/cam/part.stl"}], "assembly": {"paths": [dict(path, part="cam")]}}, open(os.path.join(d, "systems", "t.assembly.json"), "w"))
+        p_decl = P.apply_declared(mk(False), ["t:cam"], root=d)
+        same = (p_decl.cut == p_open.cut).all() and (p_decl.design == p_open.design).all()
+        ok = open_ok and not f_open and len(f_back) == 1 and rb["drawn_mm3"] > 20 and same
+        check("audit path: a declared assembly path is cut through the room, the seat stays, a drawn wall in it is refused; the drone file's "
+              "declaration cuts the same", bool(ok), f"open {rec} fails {len(f_open)}; back drawn {rb['drawn_mm3']} mm3 fails {len(f_back)}; declared same {same}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit path", False, repr(e)[:200])
+
+
 def t_audit_room_full():
     """room_full (topo/audit.py room_strength): the room filled solid must pass max_worst, else no layout can and the run is refused
     (9 Nov: the Scout v4 frame's 16 x 8 side lugs read 2.55 after 69 min). The 24 x 10 x 10 bar holds 10 N; at 20 kN it cannot."""
@@ -1683,7 +1726,7 @@ ARMS_GEN = 14.0
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_no_cavity):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_no_cavity, t_audit_path):
         t()
     if not quick:
         t_end_to_end()

@@ -109,7 +109,9 @@ if __name__ == "__main__":
     pr = tm.copy(); pr.apply_translation(-pr.bounds[0])                                         # clip down, as built
     from scout_v4_probe_mech_lib import save                                                    # noqa: E402
     res = save("scout_v4_head_frame", pr, tm, f"clip down, tree supports under the plate, ~2 h; assembly {'PASS' if ok else 'FAIL'}")
-    to_tm(sv + place(horn, tilt)).export(os.path.join(ROOT, "parts", "scout_v4_probe_servo", "part.stl"))   # the page's SG90 at its new seat
+    to_tm(sv).export(os.path.join(ROOT, "parts", "scout_v4_probe_servo", "part.stl"))                 # the page's SG90 at its new seat
+    os.makedirs(os.path.join(ROOT, "parts", "scout_v4_probe_horn"), exist_ok=True)
+    to_tm(place(horn, tilt)).export(os.path.join(ROOT, "parts", "scout_v4_probe_horn", "part.stl"))   # its horn, a part of its own: it turns with the cradle (parked)
     from topo.build import render
     render(pr, os.path.join(HERE, "preview.png"), title="scout_v4_head_frame (drawn prototype)",
            info=f"{pr.volume / 1000 * PCTG:.1f} g | solid check {res} | assembly {'PASS' if ok else 'FAIL'} | as printed: clip down")

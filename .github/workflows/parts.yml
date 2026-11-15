@@ -282,7 +282,11 @@ jobs:
         run: |
           git config user.name nox-ci
           git config user.email ci@users.noreply.github.com
-          git add parts systems/runtimes.json
+          # the drones' assembly gate on the parts now on main (tools/assembly_check.py, 15 Nov): its report per drone and each printed
+          # part's result.json "assembly" verdict go in this same commit; a part in a failing pair, mate or path is not print-ready on the page
+          python3 tools/assembly_check.py --all --write | tee _assembly.txt || true
+          grep -E '^  (CLASH|MATE|PATH)' _assembly.txt | head -40 | sed 's/^/::warning::assembly: /' || true; rm -f _assembly.txt
+          git add parts systems/runtimes.json systems/*.assembly_check.json
           git diff --cached --quiet && { echo "nothing to commit"; exit 0; }
           git commit -m "results: ${{ needs.find.outputs.parts }}"
           for i in 1 2 3 4 5; do

@@ -94,6 +94,94 @@
  ],
  "contact_pairs": [
   [
+   "wires (black leads)",
+   "ESC cap"
+  ],
+  [
+   "wires (black leads)",
+   "FC stack (MicoAir743-Lite on 55A 4-in-1)"
+  ],
+  [
+   "wires (black leads)",
+   "Pi 5 + Active Cooler"
+  ],
+  [
+   "wires (black leads)",
+   "RX XR2"
+  ],
+  [
+   "wires (black leads)",
+   "UBEC 5 V"
+  ],
+  [
+   "wires (black leads)",
+   "bottom plate"
+  ],
+  [
+   "wires (black leads)",
+   "buck 12 V"
+  ],
+  [
+   "wires (black leads)",
+   "flow MTF-02P"
+  ],
+  [
+   "wires (black leads)",
+   "flow clip"
+  ],
+  [
+   "wires (black leads)",
+   "hub deck"
+  ],
+  [
+   "wires (black leads)",
+   "top plate"
+  ],
+  [
+   "wires (red leads)",
+   "ESC cap"
+  ],
+  [
+   "wires (red leads)",
+   "FC stack (MicoAir743-Lite on 55A 4-in-1)"
+  ],
+  [
+   "wires (red leads)",
+   "Pi 5 + Active Cooler"
+  ],
+  [
+   "wires (red leads)",
+   "RX XR2"
+  ],
+  [
+   "wires (red leads)",
+   "UBEC 5 V"
+  ],
+  [
+   "wires (red leads)",
+   "bottom plate"
+  ],
+  [
+   "wires (red leads)",
+   "buck 12 V"
+  ],
+  [
+   "wires (red leads)",
+   "flow MTF-02P"
+  ],
+  [
+   "wires (red leads)",
+   "flow clip"
+  ],
+  [
+   "wires (red leads)",
+   "hub deck"
+  ],
+  [
+   "wires (red leads)",
+   "top plate"
+  ],
+  [
    "cage shell tubes",
    "cage node 0"
   ],
@@ -2771,7 +2859,7 @@
    "mass_g": 24.0,
    "tag": "E",
    "owner": "overseer core session",
-   "version": "core v2 30 Oct 9 pm: on the FC mount (overseer_fc_mount), 5 mm higher",
+   "version": "core v2 30 Oct 9 pm: on the FC mount (overseer_fc_mount), 5.45 higher: the ESC board bottom (z 49.55 in its mesh) on the insert bosses' tops at z 55 (15 Nov, assembly check: at +5.0 it stood 0.45 into the 4 bosses)",
    "source": "tools/bought_meshes.py",
    "id": "fc_stack_micoair743_lite_on_55a_4_in_1",
    "group": "bought",
@@ -2780,7 +2868,7 @@
     "t": [
      0,
      0,
-     5.0
+     5.45
     ]
    }
   },
@@ -3515,5 +3603,71 @@
   ],
   "l2_bolt_rot_deg": 45.0
  },
- "clearance_pairs": []
+ "clearance_pairs": [],
+ "assembly": {
+  "fit_tol_mm3": 0.5,
+  "note": "15 Nov (overseer assembly worker): the gate (tools/assembly_check.py), interference only (no paths yet). Contacts: the wire runs, a schematic of flexible leads (see each why); every allowance is the overlap measured 15 Nov rounded up, so a part that grows into a run fails again. The top-level contact_pairs are system_check's, keyed by name, and not read here.",
+  "contacts": [
+   {
+    "a": "overseer_fc_mount",
+    "b": "wires",
+    "allow_mm3": 660,
+    "why": "the ESC power and motor leads drawn at the stack's old pad height (z 51), through the mount's ring, -X boss and tabs; the stack rose 5.45 onto the mount (30 Oct) and its leads go over the ring to the pads. the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
+   },
+   {
+    "a": "overseer_fc_mount",
+    "b": "wires_red",
+    "allow_mm3": 45,
+    "why": "the + leads of the same runs through the mount's tabs (r 30). the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
+   },
+   {
+    "a": "wires_red",
+    "b": "overseer_base",
+    "allow_mm3": 295,
+    "why": "the battery lead's end drawn straight down into the as-printed base's centre beam (x -103, y 0); on the drone it passes beside the glued base (route not drawn). the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
+   },
+   {
+    "a": "wires",
+    "b": "overseer_base",
+    "allow_mm3": 5,
+    "why": "the same run's black lead grazing the base's rear beam. the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
+   },
+   {
+    "a": "wires",
+    "b": "hub_deck",
+    "allow_mm3": 140,
+    "why": "the front runs (flow sensor, UBEC, buck leads) drawn straight through the deck's generated nose (v13, 29 Oct, after the runs). the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
+   },
+   {
+    "a": "wires_red",
+    "b": "hub_deck",
+    "allow_mm3": 76,
+    "why": "the + leads of the front runs through the deck nose. the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
+   },
+   {
+    "a": "wires",
+    "b": "overseer_top_cover",
+    "allow_mm3": 39,
+    "why": "the motor leads drawn straight out along the diagonals through the cover's skirt over the arm roots; the cover's cable exits are the 48 x 18 side windows. the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
+   },
+   {
+    "a": "wires_red",
+    "b": "overseer_top_cover",
+    "allow_mm3": 14,
+    "why": "the + motor lead of the same run (-51, +51). the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
+   },
+   {
+    "a": "wires",
+    "b": "flow_clip",
+    "allow_mm3": 20,
+    "why": "the flow sensor's lead drawn into the clip's tail wall beside its 9 wide plug notch. the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
+   },
+   {
+    "a": "wires_red",
+    "b": "flow_clip",
+    "allow_mm3": 13,
+    "why": "the + lead of the same plug. the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts"
+   }
+  ]
+ }
 }

@@ -278,10 +278,12 @@
    "supports": "yes: 3464 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
    "material": "PCTG",
    "grams_each": 94.83,
-   "note": "the engine's part (setup 76fc246d, worst 0.506); one per drone",
+   "note": "the engine's part: OPTIMISE, not for printing (print/latch7_receiver.stl is the one to print)",
    "used_by": {
     "scout": 1
-   }
+   },
+   "stage": "OPTIMISE",
+   "print": false
   },
   {
    "part": "latch7_ov_receiver",
@@ -304,7 +306,61 @@
    "supports": "yes: 6487 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
    "material": "PCTG",
    "grams_each": 142.82,
-   "note": "the engine's part (setup 6394c063, worst 0.447); one per drone",
+   "note": "the engine's part: OPTIMISE, not for printing (print/latch7_ov_receiver.stl is the one to print)",
+   "used_by": {
+    "overseer": 1
+   },
+   "stage": "OPTIMISE",
+   "print": false
+  },
+  {
+   "file": "print/latch7_receiver.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_receiver.stl",
+   "picture": "parts/latch7/kit/latch7_receiver_prototype.png",
+   "stage": "PROTOTYPE",
+   "print": true,
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "mount plane (the drone's face) on the bed, the cartridge's mouth up",
+   "on_the_diagonal": false,
+   "bed_mm2": 1297,
+   "size_on_bed_mm": [
+    68.0,
+    111.4,
+    53.9
+   ],
+   "fits_bed": true,
+   "supports": "yes: 4428 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
+   "material": "PCTG",
+   "grams_each": 107.8,
+   "print_line": "print/latch7_receiver.stl, mount plane down, tree supports (touching the bed only), PCTG at PETG settings + 10 C, 0.2 layers, 4 walls, 30 % gyroid, ~9.0 h (E)",
+   "note": "drawn (make.receiver_proto; hand calculation in make.py PROTOTYPE, least margin 5, the lead end wall in a 35 g crash along the pack); one per drone",
+   "used_by": {
+    "scout": 1
+   }
+  },
+  {
+   "file": "print/latch7_ov_receiver.stl",
+   "release": "https://github.com/sparkiscool/noxen/releases/download/meshes/print-latch7_ov_receiver.stl",
+   "picture": "parts/latch7/kit/latch7_ov_receiver_prototype.png",
+   "stage": "PROTOTYPE",
+   "print": true,
+   "solid_check": "PASS",
+   "thin_walls": 0,
+   "pose": "mount plane (the drone's face) on the bed, the cartridge's mouth up; turned 45 deg about z in the file",
+   "on_the_diagonal": true,
+   "bed_mm2": 2836,
+   "size_on_bed_mm": [
+    177.9,
+    177.9,
+    68.6
+   ],
+   "fits_bed": true,
+   "supports": "yes: 8590 mm2 overhangs past 45 deg (tree supports, touching the bed only where they can)",
+   "material": "PCTG",
+   "grams_each": 209.3,
+   "print_line": "print/latch7_ov_receiver.stl, mount plane down, already turned 45 deg on the bed (177.9 square), no brim, glue stick, tree supports (touching the bed only), PCTG at PETG settings + 10 C, 0.2 layers, 4 walls, 30 % gyroid, ~17.4 h (E)",
+   "note": "drawn (make.receiver_proto; hand calculation in make.py PROTOTYPE, least margin 2.5, the lead end wall in a 35 g crash along the pack); one per drone",
    "used_by": {
     "overseer": 1
    }
@@ -363,9 +419,10 @@
     "5 pack down into the cartridge over them (the keeper lips snap over it); its XT60W-F into the keyed pocket at the lead end, two M3 set screws"
    ],
    "receiver": [
-    "6 (when the receiver's run has passed) the two TPU seat strips into their recesses under the deck, between their keys",
+    "6 the two TPU seat strips into their recesses under the deck, between their keys",
     "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier, cap on",
-    "8 carrier and cap onto the lead-end bosses; the receiver's M3 mount bolts from below clamp them"
+    "8 carrier and cap into the lead-end notch, on the lead-end bosses",
+    "9 the receiver onto the drone: 4 x M3 x 35 from below, heads on the seats at 24.5 (the lead pair through carrier and cap)"
    ],
    "checked": "parts/latch7/result.json build.install: every step swept, 0 mm3",
    "open": null
@@ -405,6 +462,12 @@
      "url": "https://www.amazon.com/ruthex-M3-Threaded-Inserts-RX-M3x5-7/dp/B08BCRZZS3"
     },
     {
+     "part": "M3 x 14 socket head cap screw",
+     "n": 4,
+     "spec": "DIN 912, 18-8 (304) stainless, full thread; a bay only (tail and tab-line pairs, from the mouth): head in the deck at 4.5 under the mount plane (BAY_HEAD), the saddle's 4.0, 5.5 into the bay's insert; in before the seat strips",
+     "url": "https://www.amazon.com/Socket-Screws-Stainless-Thread-Bright/dp/B08GLL3G52"
+    },
+    {
      "part": "M3 x 8 cup point set screw",
      "n": 2,
      "spec": "DIN 916, stainless; per cartridge, through the end wall's o 2.5 holes (6.0 of boss and wall) onto the XT60W-F",
@@ -425,12 +488,14 @@
     "5 pack down into the cartridge over them (the keeper lips snap over it); its XT60W-F into the keyed pocket at the lead end, two M3 set screws"
    ],
    "receiver": [
-    "6 (when the receiver's run has passed) the two TPU seat strips into their recesses under the deck, between their keys",
+    "6a (a bay only) 4 x M3 x 14 from the mouth up to their seats in the deck, before the strips",
+    "6 the two TPU seat strips into their recesses under the deck, between their keys",
     "7 XT60W-M glued into the plug collar (after the measurement), laid in the plug carrier, cap on",
-    "8 carrier and cap onto the lead-end bosses; the receiver's M3 mount bolts from below clamp them"
+    "8 carrier and cap into the lead-end notch; the lead pair into the cap's inserts: OPEN (see open)",
+    "9 the receiver onto the glued base: 4 x M3 x 10 from the mouth into its inserts"
    ],
    "checked": "parts/latch7_overseer/result.json build.install: every step swept, 0 mm3",
-   "open": "the Overseer's six mount-plane bolts (lead pair into the cap's inserts, four for a bay): no head seat from below, length not listed"
+   "open": "the lead pair (into the cap's M3 x 5.7 inserts, clamping carrier and cap): no head seat from below is possible in the receiver: the cartridge fills |x| <= 27.5 up to y 58.6 on the bolt's axis (|x| 27.8) and the receiver ends at the ear seat (y 60.1) under the carrier's ears; it needs the carrier and cap changed (the pair moved out beside the cartridge, or the clamp taken another way), not listed"
   }
  },
  "supersedes": [

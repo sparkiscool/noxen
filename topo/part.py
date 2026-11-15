@@ -114,6 +114,7 @@ class Part:
         self.supports = {}            # name -> bool (nn, 3) fixed dofs
         self.support_cells = {}       # name -> element ids the support region covers
         self.cases = []
+        self.paths = []               # assembly paths cut through the part (assembly_path): name, drawn_mm3 in the way, where, why
         log(f"{name}: grid {self.shape} h {h} = {self.nel:,} cells; design {int(self.design.sum()):,} "
             f"({self.design.sum() * h ** 3 / 1000:.1f} cm3), drawn {int(self.solid.sum()):,}, void {int(self.void.sum()):,}")
 
@@ -152,6 +153,32 @@ class Part:
         ex, ey, ez = np.unravel_index(el, self.shape)
         nid = lambda i, j, k: (i * (ny + 1) + j) * (nz + 1) + k
         return np.unique(np.concatenate([nid(ex + a, ey + b, ez + c) for a in (0, 1) for b in (0, 1) for c in (0, 1)]))
+
+    def assembly_path(self, name, sweep, why=""):
+        """a path a piece goes in by (topo/paths.py; 15 Nov, the Scout v4 camera that could not slide into its sleeve): the sweep (a
+        manifold, the part's frame, already grown by its fit gap) is cut through the envelope like a tool sweep, so no generated
+        material can fill it and the build cuts it from the result. Drawn material in it is not silently removed from the audit's view:
+        its volume and place are recorded and the audit refuses the run (`path`): move the wall, open the slot, or change the path."""
+        inside = self.vox(tm(sweep)).ravel()
+        if not inside.any():                                          # thinner than a cell: the cells it touches
+            inside = self.elems(sweep, what=f"path {name}") if not sweep.is_empty() else np.zeros(0, int)
+            m = np.zeros(self.nel, bool); m[inside] = True; inside = m
+        hit = (self.drawn_m - self.cuts_m) ^ sweep
+        rec = dict(name=name, why=why, cells=int(inside.sum()), drawn_mm3=round(float(hit.volume()), 2), at=None, design_cells=int((inside & self.design).sum()))
+        if rec["drawn_mm3"] > 0:
+            bb = np.asarray(hit.bounding_box(), float)
+            rec["at"] = [round(float((bb[k] + bb[k + 3]) / 2), 1) for k in range(3)]
+            rec["extent_mm"] = [round(float(bb[k + 3] - bb[k]), 1) for k in range(3)]
+        self.paths.append(rec)
+        self.cuts_m = self.cuts_m + sweep
+        self.cuts_t = tm(self.cuts_m)
+        keep = self.insert_cells
+        self.cut |= inside
+        self.solid &= ~(inside & ~keep)
+        self.void |= inside & ~self.solid
+        self.design &= ~inside
+        self.log(f"  path {name}: {rec['cells']} cells cut ({rec['design_cells']} of them design room), drawn in it {rec['drawn_mm3']} mm3")
+        return rec
 
     # ------------------------------------------------------------------------------------- supports and loads
     def insert(self, name, region, e_ratio, area_mm2=None, length_mm=None):

@@ -95,7 +95,9 @@ def main(src):
                    "bottom plate top); the Overseer drawn see-through round it. Readouts: finger stroke, bar swing, rail, flip, and the "
                    "shell's lowest point over the cage feet (z -93.2): -9.5 at rest, the skirt under the shell's bottom plate. "
                    "Copied from the lock's own page by tools/import_xswap.py; the lock's CAD stays in the xswap session."),
-             cg_ref=None, timeline="tools/xswap_motion.py:timeline", parts=parts)
+             cg_ref=None, timeline="tools/xswap_motion.py:timeline", parts=parts, archived=True,
+             retired=("15 Nov: the xswap short lock v5 (3 Nov study) is not the Overseer's battery mechanism any more: latch v7 is "
+                      "(systems/latch7_both.assembly.json, the box's seat); nothing current uses its parts. Off the page, report only in the assembly check."))
     out = os.path.join(ROOT, "systems", "xswap.assembly.json")
     if os.path.exists(out):
         a["artifact"] = json.load(open(out)).get("artifact")

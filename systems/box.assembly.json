@@ -4,7 +4,7 @@
 "readme_view": "iso",
 "artifact": "https://claude.ai/artifact/QyhSnHpskSzztt5kajHG9z",
 "machine": "box",
-"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm are engine parts, shown as their drawn faces and room until their runs), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, the swap arm from systems/swap_arm.assembly.json, the stand v2 (mast, two base halves, two rails: engine parts, shown as their drawn faces and room until their runs; four TPU feet), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. Compatibility between the streams: tools/box_check.py, its result under the viewer.",
+"note": "Box W frame (X across, Y along the axle toward the front, Z up; the swap arm hub at the origin, the drone seat at (0, 167.1, 220.3)). In: the landing funnel v5 (13 Nov: the frame in two halves on four cross arms under the rain lid, each end wall on two lead-screw gearmotors; the halves and the arm print as drawn PROTOTYPES, the setup's room filled solid less its cuts; their engine pieces wait at OPTIMISE), latch v7 for both packs at the seat, the Scout v4 and the Overseer seated as they stand today, the swap arm from systems/swap_arm.assembly.json, the stand v2 prototype (drawn: mast, two base halves, two front rails, four TPU feet), the v2 enclosure sheets to W Z 145 and the PSU as boxes, the Scout's rain dome and the rain lid. Out: the electronics. Compatibility between the streams: tools/box_check.py, its result under the viewer.",
 "cg_ref": null,
 "timeline": "tools/landing_box.py:timeline",
 "parts": [
@@ -2036,10 +2036,12 @@
 "material": "PCTG",
 "tag": "C",
 "owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_mast",
+"source": "parts/box_stand2p_lib.py",
+"version": "v2 prototype 15 Nov",
+"id": "box_stand2p_mast",
 "name": "stand v2: mast (the stub's face down to the foot)",
 "color": "#b7bfc9",
+"mesh": "parts/box_stand2p_mast/part.stl",
 "pose": [
 [
 1.0,
@@ -2066,9 +2068,8 @@
 1.0
 ]
 ],
-"version": "v2 setup 14 Nov",
-"note": "engine part (parts/box_stand2_mast/part.py)",
-"mesh": "parts/box_stand2_mast/part.stl"
+"part": "box_stand2p_mast",
+"note": "drawn prototype (parts/box_stand2p_mast/make.py): on its +X side (W X 40 down), no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~14 h (E)"
 },
 {
 "role": "structure",
@@ -2076,10 +2077,12 @@
 "material": "PCTG",
 "tag": "C",
 "owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_yoke_r",
-"name": "stand v2: yoke, right (+X, under the PSU)",
+"source": "parts/box_stand2p_lib.py",
+"version": "v2 prototype 15 Nov",
+"id": "box_stand2p_base_r",
+"name": "stand v2: base half, right (yoke + rear rail)",
 "color": "#b7bfc9",
+"mesh": "parts/box_stand2p_base_r/part.stl",
 "pose": [
 [
 1.0,
@@ -2106,9 +2109,8 @@
 1.0
 ]
 ],
-"version": "v2 setup 14 Nov",
-"note": "engine part (parts/box_stand2_yoke_r/part.py)",
-"mesh": "parts/box_stand2_yoke_r/part.stl"
+"part": "box_stand2p_base_r",
+"note": "drawn prototype (parts/box_stand2p_base_r/make.py): floor face down, no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~18 h (E)"
 },
 {
 "role": "structure",
@@ -2116,10 +2118,12 @@
 "material": "PCTG",
 "tag": "C",
 "owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_yoke_l",
-"name": "stand v2: yoke, left",
+"source": "parts/box_stand2p_lib.py",
+"version": "v2 prototype 15 Nov",
+"id": "box_stand2p_base_l",
+"name": "stand v2: base half, left (yoke + rear rail)",
 "color": "#b7bfc9",
+"mesh": "parts/box_stand2p_base_l/part.stl",
 "pose": [
 [
 1.0,
@@ -2146,9 +2150,8 @@
 1.0
 ]
 ],
-"version": "v2 setup 14 Nov",
-"note": "engine part (parts/box_stand2_yoke_l/part.py)",
-"mesh": "parts/box_stand2_yoke_l/part.stl"
+"part": "box_stand2p_base_l",
+"note": "drawn prototype (parts/box_stand2p_base_l/make.py): floor face down, no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~18 h (E)"
 },
 {
 "role": "structure",
@@ -2156,178 +2159,12 @@
 "material": "PCTG",
 "tag": "C",
 "owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_rear_r_drawn",
-"name": "stand v2: rear rail, right: drawn faces (what the stub, a bolt or the floor touches)",
-"color": "#7f8a96",
-"opacity": null,
-"mesh": "parts/box_stand2_rear_r_drawn/part.stl",
-"pose": [
-[
-1.0,
-0.0,
-0.0,
-0.0
-],
-[
-0.0,
-1.0,
-0.0,
-0.0
-],
-[
-0.0,
-0.0,
-1.0,
-0.0
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"part": "box_stand2_rear_r_drawn",
-"version": "v2 14 Nov",
-"note": "shown until the run's mesh is in"
-},
-{
-"role": "structure",
-"group": "stand",
-"material": "PCTG",
-"tag": "C",
-"owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_rear_r_room",
-"name": "stand v2: rear rail, right: room the engine may fill (what every clearance check uses)",
-"color": "#d5dbe2",
-"opacity": 0.25,
-"mesh": "parts/box_stand2_rear_r_room/part.stl",
-"pose": [
-[
-1.0,
-0.0,
-0.0,
-0.0
-],
-[
-0.0,
-1.0,
-0.0,
-0.0
-],
-[
-0.0,
-0.0,
-1.0,
-0.0
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"part": "box_stand2_rear_r_room",
-"version": "v2 14 Nov",
-"note": "shown until the run's mesh is in"
-},
-{
-"role": "structure",
-"group": "stand",
-"material": "PCTG",
-"tag": "C",
-"owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_rear_l_drawn",
-"name": "stand v2: rear rail, left: drawn faces (what the stub, a bolt or the floor touches)",
-"color": "#7f8a96",
-"opacity": null,
-"mesh": "parts/box_stand2_rear_l_drawn/part.stl",
-"pose": [
-[
-1.0,
-0.0,
-0.0,
-0.0
-],
-[
-0.0,
-1.0,
-0.0,
-0.0
-],
-[
-0.0,
-0.0,
-1.0,
-0.0
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"part": "box_stand2_rear_l_drawn",
-"version": "v2 14 Nov",
-"note": "shown until the run's mesh is in"
-},
-{
-"role": "structure",
-"group": "stand",
-"material": "PCTG",
-"tag": "C",
-"owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_rear_l_room",
-"name": "stand v2: rear rail, left: room the engine may fill (what every clearance check uses)",
-"color": "#d5dbe2",
-"opacity": 0.25,
-"mesh": "parts/box_stand2_rear_l_room/part.stl",
-"pose": [
-[
-1.0,
-0.0,
-0.0,
-0.0
-],
-[
-0.0,
-1.0,
-0.0,
-0.0
-],
-[
-0.0,
-0.0,
-1.0,
-0.0
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"part": "box_stand2_rear_l_room",
-"version": "v2 14 Nov",
-"note": "shown until the run's mesh is in"
-},
-{
-"role": "structure",
-"group": "stand",
-"material": "PCTG",
-"tag": "C",
-"owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_rail_r",
+"source": "parts/box_stand2p_lib.py",
+"version": "v2 prototype 15 Nov",
+"id": "box_stand2p_rail_r",
 "name": "stand v2: front rail, right",
 "color": "#b7bfc9",
+"mesh": "parts/box_stand2p_rail_r/part.stl",
 "pose": [
 [
 1.0,
@@ -2354,9 +2191,8 @@
 1.0
 ]
 ],
-"version": "v2 setup 14 Nov",
-"note": "engine part (parts/box_stand2_rail_r/part.py)",
-"mesh": "parts/box_stand2_rail_r/part.stl"
+"part": "box_stand2p_rail_r",
+"note": "drawn prototype (parts/box_stand2p_rail_r/make.py): floor face down, no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~7 h (E)"
 },
 {
 "role": "structure",
@@ -2364,10 +2200,12 @@
 "material": "PCTG",
 "tag": "C",
 "owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_rail_l",
+"source": "parts/box_stand2p_lib.py",
+"version": "v2 prototype 15 Nov",
+"id": "box_stand2p_rail_l",
 "name": "stand v2: front rail, left",
 "color": "#b7bfc9",
+"mesh": "parts/box_stand2p_rail_l/part.stl",
 "pose": [
 [
 1.0,
@@ -2394,9 +2232,8 @@
 1.0
 ]
 ],
-"version": "v2 setup 14 Nov",
-"note": "engine part (parts/box_stand2_rail_l/part.py)",
-"mesh": "parts/box_stand2_rail_l/part.stl"
+"part": "box_stand2p_rail_l",
+"note": "drawn prototype (parts/box_stand2p_rail_l/make.py): floor face down, no supports, 0.2 layers, 4 walls, 25 % gyroid, PCTG at PETG + 10 C, ~7 h (E)"
 },
 {
 "role": "structure",
@@ -2404,12 +2241,13 @@
 "material": "TPU",
 "tag": "C",
 "owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_foot_r_rear",
+"source": "parts/box_stand2p_lib.py",
+"version": "v2 prototype 15 Nov",
+"id": "box_stand2p_foot_r_rear",
 "name": "stand v2: TPU 95A foot, right rear",
 "color": "#3a3a3a",
-"mesh": "parts/box_stand2_foot/part.stl",
-"part": "box_stand2_foot",
+"mesh": "parts/box_stand2p_foot/part.stl",
+"part": "box_stand2p_foot",
 "pose": [
 [
 1.0,
@@ -2436,8 +2274,7 @@
 1.0
 ]
 ],
-"version": "v2 14 Nov",
-"note": "Ø36 x 5 pad, its Ø8 x 2.8 stud pressed into the piece's foot pad"
+"note": "Ø36 x 5 pad, its Ø7.8 x 2.8 stud pressed into the piece's foot pad"
 },
 {
 "role": "structure",
@@ -2445,12 +2282,13 @@
 "material": "TPU",
 "tag": "C",
 "owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_foot_r_front",
+"source": "parts/box_stand2p_lib.py",
+"version": "v2 prototype 15 Nov",
+"id": "box_stand2p_foot_r_front",
 "name": "stand v2: TPU 95A foot, right front",
 "color": "#3a3a3a",
-"mesh": "parts/box_stand2_foot/part.stl",
-"part": "box_stand2_foot",
+"mesh": "parts/box_stand2p_foot/part.stl",
+"part": "box_stand2p_foot",
 "pose": [
 [
 1.0,
@@ -2477,8 +2315,7 @@
 1.0
 ]
 ],
-"version": "v2 14 Nov",
-"note": "Ø36 x 5 pad, its Ø8 x 2.8 stud pressed into the piece's foot pad"
+"note": "Ø36 x 5 pad, its Ø7.8 x 2.8 stud pressed into the piece's foot pad"
 },
 {
 "role": "structure",
@@ -2486,12 +2323,13 @@
 "material": "TPU",
 "tag": "C",
 "owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_foot_l_rear",
+"source": "parts/box_stand2p_lib.py",
+"version": "v2 prototype 15 Nov",
+"id": "box_stand2p_foot_l_rear",
 "name": "stand v2: TPU 95A foot, left rear",
 "color": "#3a3a3a",
-"mesh": "parts/box_stand2_foot/part.stl",
-"part": "box_stand2_foot",
+"mesh": "parts/box_stand2p_foot/part.stl",
+"part": "box_stand2p_foot",
 "pose": [
 [
 1.0,
@@ -2518,8 +2356,7 @@
 1.0
 ]
 ],
-"version": "v2 14 Nov",
-"note": "Ø36 x 5 pad, its Ø8 x 2.8 stud pressed into the piece's foot pad"
+"note": "Ø36 x 5 pad, its Ø7.8 x 2.8 stud pressed into the piece's foot pad"
 },
 {
 "role": "structure",
@@ -2527,12 +2364,13 @@
 "material": "TPU",
 "tag": "C",
 "owner": "box stand v2",
-"source": "parts/box_stand2_lib.py",
-"id": "box_stand2_foot_l_front",
+"source": "parts/box_stand2p_lib.py",
+"version": "v2 prototype 15 Nov",
+"id": "box_stand2p_foot_l_front",
 "name": "stand v2: TPU 95A foot, left front",
 "color": "#3a3a3a",
-"mesh": "parts/box_stand2_foot/part.stl",
-"part": "box_stand2_foot",
+"mesh": "parts/box_stand2p_foot/part.stl",
+"part": "box_stand2p_foot",
 "pose": [
 [
 1.0,
@@ -2559,8 +2397,7 @@
 1.0
 ]
 ],
-"version": "v2 14 Nov",
-"note": "Ø36 x 5 pad, its Ø8 x 2.8 stud pressed into the piece's foot pad"
+"note": "Ø36 x 5 pad, its Ø7.8 x 2.8 stud pressed into the piece's foot pad"
 },
 {
 "role": "structure",
@@ -2570,7 +2407,7 @@
 "owner": "box funnel",
 "source": "parts/box_funnel/make.py",
 "id": "box_funnel_half_nose",
-"name": "funnel frame, nose half (generated)",
+"name": "funnel frame, nose half (PROTOTYPE, drawn)",
 "color": "#e07020",
 "pose": [
 [
@@ -2598,17 +2435,10 @@
 1.0
 ]
 ],
-"version": "v5 setup 13 Nov",
-"box": [
-0.0,
-162.0,
--88.0,
-88.0,
--99.5,
--16.299999999999997
-],
-"note": "engine part (parts/box_funnel_half_nose/part.py): the box is its drawn faces' extent until its run commits a mesh",
-"mesh": "parts/box_funnel_half_nose/part.stl"
+"version": "v5 prototype 15 Nov",
+"mesh": "parts/box_funnel_proto_half_nose/part.stl",
+"part": "box_funnel_proto_half_nose",
+"note": "PROTOTYPE: the setup's room filled solid less its cuts (parts/box_funnel_proto_half_nose/make.py); the engine piece parts/box_funnel_half_nose is at OPTIMISE"
 },
 {
 "role": "structure",
@@ -2618,7 +2448,7 @@
 "owner": "box funnel",
 "source": "parts/box_funnel/make.py",
 "id": "box_funnel_half_tail",
-"name": "funnel frame, tail half (generated)",
+"name": "funnel frame, tail half (PROTOTYPE, drawn)",
 "color": "#e07020",
 "pose": [
 [
@@ -2646,17 +2476,10 @@
 1.0
 ]
 ],
-"version": "v5 setup 13 Nov",
-"box": [
--128.0,
-0.0,
--88.0,
-88.0,
--99.5,
--16.299999999999997
-],
-"note": "engine part (parts/box_funnel_half_tail/part.py): the box is its drawn faces' extent until its run commits a mesh",
-"mesh": "parts/box_funnel_half_tail/part.stl"
+"version": "v5 prototype 15 Nov",
+"mesh": "parts/box_funnel_proto_half_tail/part.stl",
+"part": "box_funnel_proto_half_tail",
+"note": "PROTOTYPE: the setup's room filled solid less its cuts (parts/box_funnel_proto_half_tail/make.py); the engine piece parts/box_funnel_half_tail is at OPTIMISE"
 },
 {
 "role": "structure",
@@ -2666,7 +2489,7 @@
 "owner": "box funnel",
 "source": "parts/box_funnel/make.py",
 "id": "box_funnel_arm",
-"name": "funnel cross arm, nose +y (generated)",
+"name": "funnel cross arm, nose +y (PROTOTYPE, drawn)",
 "color": "#e07020",
 "pose": [
 [
@@ -2694,18 +2517,10 @@
 1.0
 ]
 ],
-"version": "v5 setup 13 Nov",
-"box": [
-142.0,
-186.0,
-46.0,
-205.7,
--108.0,
--80.30000000000001
-],
-"note": "engine part (parts/box_funnel_arm/part.py): the box is its drawn faces' extent until its run commits a mesh",
-"part": "box_funnel_arm",
-"mesh": "parts/box_funnel_arm/part.stl"
+"version": "v5 prototype 15 Nov",
+"mesh": "parts/box_funnel_proto_arm/part.stl",
+"part": "box_funnel_proto_arm",
+"note": "PROTOTYPE: the setup's room filled solid less its cuts (parts/box_funnel_proto_arm/make.py); the engine piece parts/box_funnel_arm is at OPTIMISE"
 },
 {
 "role": "structure",
@@ -2715,7 +2530,7 @@
 "owner": "box funnel",
 "source": "parts/box_funnel/make.py",
 "id": "box_funnel_arm_nm",
-"name": "funnel cross arm, nose -y (mirrored print) (generated)",
+"name": "funnel cross arm, nose -y (mirrored print) (PROTOTYPE, drawn)",
 "color": "#e07020",
 "pose": [
 [
@@ -2743,18 +2558,10 @@
 1.0
 ]
 ],
-"version": "v5 setup 13 Nov",
-"box": [
-142.0,
-186.0,
-46.0,
-205.7,
--108.0,
--80.30000000000001
-],
-"note": "engine part (parts/box_funnel_arm/part.py): the box is its drawn faces' extent until its run commits a mesh",
-"part": "box_funnel_arm",
-"mesh": "parts/box_funnel_arm/part.stl"
+"version": "v5 prototype 15 Nov",
+"mesh": "parts/box_funnel_proto_arm/part.stl",
+"part": "box_funnel_proto_arm",
+"note": "PROTOTYPE: the setup's room filled solid less its cuts (parts/box_funnel_proto_arm/make.py); the engine piece parts/box_funnel_arm is at OPTIMISE"
 },
 {
 "role": "structure",
@@ -2764,7 +2571,7 @@
 "owner": "box funnel",
 "source": "parts/box_funnel/make.py",
 "id": "box_funnel_arm_tp",
-"name": "funnel cross arm, tail +y (mirrored print) (generated)",
+"name": "funnel cross arm, tail +y (mirrored print) (PROTOTYPE, drawn)",
 "color": "#e07020",
 "pose": [
 [
@@ -2792,18 +2599,10 @@
 1.0
 ]
 ],
-"version": "v5 setup 13 Nov",
-"box": [
-142.0,
-186.0,
-46.0,
-205.7,
--108.0,
--80.30000000000001
-],
-"note": "engine part (parts/box_funnel_arm/part.py): the box is its drawn faces' extent until its run commits a mesh",
-"part": "box_funnel_arm",
-"mesh": "parts/box_funnel_arm/part.stl"
+"version": "v5 prototype 15 Nov",
+"mesh": "parts/box_funnel_proto_arm/part.stl",
+"part": "box_funnel_proto_arm",
+"note": "PROTOTYPE: the setup's room filled solid less its cuts (parts/box_funnel_proto_arm/make.py); the engine piece parts/box_funnel_arm is at OPTIMISE"
 },
 {
 "role": "structure",
@@ -2813,7 +2612,7 @@
 "owner": "box funnel",
 "source": "parts/box_funnel/make.py",
 "id": "box_funnel_arm_tm",
-"name": "funnel cross arm, tail -y (generated)",
+"name": "funnel cross arm, tail -y (PROTOTYPE, drawn)",
 "color": "#e07020",
 "pose": [
 [
@@ -2841,18 +2640,10 @@
 1.0
 ]
 ],
-"version": "v5 setup 13 Nov",
-"box": [
-142.0,
-186.0,
-46.0,
-205.7,
--108.0,
--80.30000000000001
-],
-"note": "engine part (parts/box_funnel_arm/part.py): the box is its drawn faces' extent until its run commits a mesh",
-"part": "box_funnel_arm",
-"mesh": "parts/box_funnel_arm/part.stl"
+"version": "v5 prototype 15 Nov",
+"mesh": "parts/box_funnel_proto_arm/part.stl",
+"part": "box_funnel_proto_arm",
+"note": "PROTOTYPE: the setup's room filled solid less its cuts (parts/box_funnel_proto_arm/make.py); the engine piece parts/box_funnel_arm is at OPTIMISE"
 },
 {
 "role": "structure",
@@ -4228,7 +4019,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4270,7 +4061,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4311,7 +4102,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4353,7 +4144,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4394,7 +4185,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4435,7 +4226,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4477,7 +4268,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4518,7 +4309,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4559,7 +4350,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4601,7 +4392,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4642,7 +4433,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4683,7 +4474,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4725,7 +4516,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4766,7 +4557,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4807,7 +4598,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4848,7 +4639,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4889,7 +4680,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4914,6 +4705,47 @@
 "max_faces": 1200
 },
 {
+"id": "box_scout_v4_scout_v4_probe_horn",
+"name": "Scout: the SG90's single-arm horn and its centre screw (from its bag), screwed to the cradle's +y wall",
+"role": "bought",
+"group": "landing: Scout",
+"color": "#2f3b45",
+"pose": [
+[
+0.0,
+1.0,
+0.0,
+0.0
+],
+[
+-1.0,
+0.0,
+0.0,
+173.75
+],
+[
+0.0,
+0.0,
+1.0,
+220.3
+],
+[
+0.0,
+0.0,
+0.0,
+1.0
+]
+],
+"material": null,
+"tag": "E",
+"owner": "scout_v4",
+"version": "shape 8 Nov",
+"source": "systems/scout_v4.assembly.json, seated",
+"mesh": "parts/scout_v4_probe_horn/part.stl",
+"part": "box_scout_v4_scout_v4_probe_horn",
+"max_faces": 1200
+},
+{
 "id": "box_scout_v4_scout_v4_head_frame",
 "name": "Scout: probe head frame: the clip on the blades' tip, the SG90's closed ring, the idler's bracket (drawn prototype, parts/scout_v4_head_frame/make.py)",
 "role": "structure",
@@ -4930,7 +4762,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -4971,7 +4803,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5012,7 +4844,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5053,7 +4885,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5094,7 +4926,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5135,7 +4967,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5176,7 +5008,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5217,7 +5049,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5258,7 +5090,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5299,7 +5131,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5340,7 +5172,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5381,7 +5213,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5422,7 +5254,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5463,7 +5295,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5504,7 +5336,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5545,7 +5377,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5586,7 +5418,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5627,7 +5459,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5669,7 +5501,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5711,7 +5543,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5753,7 +5585,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5795,7 +5627,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5837,7 +5669,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5879,7 +5711,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5921,7 +5753,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -5963,7 +5795,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -6005,7 +5837,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -6047,7 +5879,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -6089,7 +5921,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -6131,7 +5963,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -6173,7 +6005,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -6215,7 +6047,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -6257,7 +6089,7 @@
 -1.0,
 0.0,
 0.0,
-167.1
+173.75
 ],
 [
 0.0,
@@ -8138,7 +7970,7 @@
 0.0,
 0.0,
 1.0,
-257.70000000000005
+258.15000000000003
 ],
 [
 0.0,
@@ -8150,7 +7982,7 @@
 "material": "PETG",
 "tag": "E",
 "owner": "overseer",
-"version": "core v2 30 Oct 9 pm: on the FC mount (overseer_fc_mount), 5 mm higher",
+"version": "core v2 30 Oct 9 pm: on the FC mount (overseer_fc_mount), 5.45 higher: the ESC board bottom (z 49.55 in its mesh) on the insert bosses' tops at z 55 (15 Nov, assembly check: at +5.0 it stood 0.45 into the 4 bosses)",
 "source": "systems/overseer.assembly.json, seated",
 "mesh": "parts/fc_stack_micoair743_lite_on_55a_4_in_1/part.stl",
 "part": "box_overseer_fc_stack_micoair743_lite_on_55a_4_in_1",
@@ -8768,5 +8600,135 @@
 }
 },
 "appendix": "systems/box.appendix.html",
-"fps": 8
+"fps": 8,
+"assembly": {
+"fit_tol_mm3": 0.5,
+"note": "written by tools/import_box.py (assembly()): the box's tools/assembly_check.py block, rebuilt with its lines: the other drone's landing set left out (staging: one seat, one drone at a time; the Overseer seated, landing and on the swap path is tools/box_check.py's, with every box part); a drone's own lines are a second drawing of its system (gated in systems/<drone>.assembly.json with its fit meshes, contacts and paths), but for its lines the latch's receiver bolts to; their contacts come with them.",
+"exclude": [
+"box_latch7_overseer_receiver",
+"box_latch7_overseer_cartridge",
+"box_scout_v4_scout_v4_motor_1",
+"box_scout_v4_scout_v4_prop_1",
+"box_scout_v4_scout_v4_blades_1",
+"box_scout_v4_scout_v4_motor_2",
+"box_scout_v4_scout_v4_prop_2",
+"box_scout_v4_scout_v4_blades_2",
+"box_scout_v4_scout_v4_motor_3",
+"box_scout_v4_scout_v4_prop_3",
+"box_scout_v4_scout_v4_blades_3",
+"box_scout_v4_scout_v4_motor_4",
+"box_scout_v4_scout_v4_prop_4",
+"box_scout_v4_scout_v4_blades_4",
+"box_scout_v4_scout_v4_probe_tilt",
+"box_scout_v4_scout_v4_cradle",
+"box_scout_v4_scout_v4_probe_leds",
+"box_scout_v4_scout_v4_probe_servo",
+"box_scout_v4_scout_v4_probe_horn",
+"box_scout_v4_scout_v4_head_frame",
+"box_scout_v4_scout_v4_probe_turret",
+"box_scout_v4_scout_v4_probe_spool",
+"box_scout_v4_scout_v4_probe_pinion",
+"box_scout_v4_scout_v4_probe_motor",
+"box_scout_v4_scout_v4_probe_drum",
+"box_scout_v4_scout_v4_probe_feed",
+"box_scout_v4_scout_v4_probe_roller",
+"box_scout_v4_scout_v4_probe_mast_a",
+"box_scout_v4_scout_v4_probe_mast_b",
+"box_scout_v4_scout_v4_ubec",
+"box_scout_v4_scout_v4_xr2",
+"box_scout_v4_scout_v4_drv8833",
+"box_scout_v4_scout_v4_radxa_zero_3w",
+"box_scout_v4_scout_v4_flow_mtf_02p",
+"box_scout_v4_scout_v4_cage_rods",
+"box_scout_v4_scout_v4_node_r0",
+"box_scout_v4_scout_v4_node_p1",
+"box_scout_v4_scout_v4_node_p2",
+"box_scout_v4_scout_v4_node_p3",
+"box_scout_v4_scout_v4_node_p4",
+"box_scout_v4_scout_v4_node_p5",
+"box_scout_v4_scout_v4_node_p6",
+"box_scout_v4_scout_v4_node_r7",
+"box_scout_v4_scout_v4_node_rf",
+"box_scout_v4_scout_v4_node_rb",
+"box_scout_v4_scout_v4_node_rs0",
+"box_scout_v4_scout_v4_node_rs1",
+"box_scout_v4_scout_v4_node_tb",
+"box_scout_v4_scout_v4_node_s0",
+"box_scout_v4_scout_v4_node_s1",
+"box_scout_v4_scout_v4_node_nb",
+"box_overseer_cage_shell_tubes",
+"box_overseer_overseer_cage_node_0",
+"box_overseer_overseer_cage_node_1",
+"box_overseer_overseer_cage_node_2",
+"box_overseer_overseer_cage_node_3",
+"box_overseer_overseer_cage_node_4",
+"box_overseer_overseer_cage_node_5",
+"box_overseer_overseer_cage_node_6",
+"box_overseer_overseer_cage_node_7",
+"box_overseer_overseer_cage_node_8",
+"box_overseer_overseer_cage_node_9",
+"box_overseer_overseer_cage_node_10",
+"box_overseer_overseer_cage_node_11",
+"box_overseer_overseer_cage_node_12",
+"box_overseer_overseer_cage_node_13",
+"box_overseer_overseer_cage_node_14",
+"box_overseer_overseer_cage_node_15",
+"box_overseer_overseer_cage_node_16",
+"box_overseer_overseer_cage_node_18",
+"box_overseer_overseer_cage_node_19",
+"box_overseer_overseer_cage_node_20",
+"box_overseer_overseer_cage_node_21",
+"box_overseer_spokes_ties_head_rods",
+"box_overseer_overseer_head_mount",
+"box_overseer_unitree_l2",
+"box_overseer_camera_left",
+"box_overseer_camera_right",
+"box_overseer_top_plate",
+"box_overseer_bottom_plate",
+"box_overseer_overseer_arm_front_root",
+"box_overseer_overseer_arm_front_pad",
+"box_overseer_motor_1",
+"box_overseer_prop_1",
+"box_overseer_overseer_arm_rear",
+"box_overseer_motor_2",
+"box_overseer_prop_2",
+"box_overseer_arm_3",
+"box_overseer_motor_3",
+"box_overseer_prop_3",
+"box_overseer_arm_4_root",
+"box_overseer_arm_4_pad",
+"box_overseer_motor_4",
+"box_overseer_prop_4",
+"box_overseer_overseer_fc_mount",
+"box_overseer_fc_stack_micoair743_lite_on_55a_4_in_1",
+"box_overseer_esc_cap",
+"box_overseer_pi_5_active_cooler",
+"box_overseer_pi_5_cooler",
+"box_overseer_ubec_5_v",
+"box_overseer_buck_12_v",
+"box_overseer_rx_xr2",
+"box_overseer_flow_mtf_02p",
+"box_overseer_hub_deck",
+"box_overseer_overseer_base",
+"box_overseer_flow_clip",
+"box_overseer_camera_rear",
+"box_overseer_overseer_top_cover",
+"box_overseer_overseer_battery_tray",
+"box_overseer_overseer_pack"
+],
+"contacts": [
+{
+"a": "box_dome_ring",
+"b": "box_dome_spokes",
+"allow_mm3": 7800.0,
+"why": "the eight 6 mm spokes' ends in their sockets in the base ring (the dome's concept mesh does not cut the bores)"
+},
+{
+"a": "box_scout_v4_scout_v4_frame",
+"b": "box_scout_v4_scout_v4_receiver_bolts",
+"allow_mm3": 6.0,
+"why": "the M3 x 5.7 heat-set inserts (drawn with the bolts) melted into the yokes' insert holes (systems/scout_v4.assembly.json)"
+}
+]
+}
 }
