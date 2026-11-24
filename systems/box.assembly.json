@@ -5712,7 +5712,7 @@
 },
 {
 "id": "box_scout_v4_scout_v4_frame",
-"name": "Scout: frame v4, one body: deck, arms, motor pods, side lugs and the base (yokes, nose block, flow pod, tail tray) (generated, parts/scout_v4_frame)",
+"name": "Scout: frame v4, one body: deck, arms, motor pods, side lugs, the base (yokes, nose block, flow pod, tail tray) and the probe's base (spool bosses, N20 seat, roller guides, drum, throat, the roof's middle node RM) (generated, parts/scout_v4_frame)",
 "role": "structure",
 "group": "landing: Scout",
 "color": "#d9d2c3",
@@ -6492,47 +6492,6 @@
 "source": "systems/scout_v4.assembly.json, seated",
 "mesh": "parts/scout_v4_head_frame/part.stl",
 "part": "box_scout_v4_scout_v4_head_frame",
-"max_faces": 1200
-},
-{
-"id": "box_scout_v4_scout_v4_probe_turret",
-"name": "Scout: probe turret: housing, throat, drum and the roof's middle node RM (PCTG, generated: parts/scout_v4_probe_turret)",
-"role": "structure",
-"group": "landing: Scout",
-"color": "#f2b705",
-"pose": [
-[
-0.0,
-1.0,
-0.0,
-0.0
-],
-[
--1.0,
-0.0,
-0.0,
-173.75
-],
-[
-0.0,
-0.0,
-1.0,
-220.3
-],
-[
-0.0,
-0.0,
-0.0,
-1.0
-]
-],
-"material": "PCTG",
-"tag": "C",
-"owner": "scout_v4",
-"version": "shape 8 Nov",
-"source": "systems/scout_v4.assembly.json, seated",
-"mesh": "parts/scout_v4_probe_turret/part.stl",
-"part": "box_scout_v4_scout_v4_probe_turret",
 "max_faces": 1200
 },
 {
@@ -10333,7 +10292,6 @@
 "box_scout_v4_scout_v4_probe_servo",
 "box_scout_v4_scout_v4_probe_horn",
 "box_scout_v4_scout_v4_head_frame",
-"box_scout_v4_scout_v4_probe_turret",
 "box_scout_v4_scout_v4_probe_spool",
 "box_scout_v4_scout_v4_probe_pinion",
 "box_scout_v4_scout_v4_probe_motor",
