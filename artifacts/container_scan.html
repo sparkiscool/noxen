@@ -1263,6 +1263,11 @@ function rayDist(polys,o,d){let bt=1e9;
   for(const q of polys){const oc=sub(q.c,o),tca=dot(oc,d);if(tca<-q.rad)continue;const d2=dot(oc,oc)-tca*tca;if(d2>q.rad*q.rad||dot(q.n,d)>=0)continue;
     const v=q.v;for(let i=1;i<v.length-1;i++){const t=rayTri(o,d,v[0],v[i],v[i+1]);if(t>0&&t<bt)bt=t}}
   return bt<1e9?bt:-1}
+/* placing an autonomous spot: the orb floats DEP.dist (default 3 m, wheel nudges) along the view ray, stopping short of any surface (centre of the orb) */
+function orbPt(p,x,y){
+  const B=camBasis(),d=rayAt(p,B,x,y),r=DRN[DEP.kind].g*1.4,t=rayDist(p.mode===1?POLY:POLYA,B.eye,d);
+  let s=DEP.dist;if(t>0)s=Math.min(s,t-r-.05);s=Math.max(s,.3);DEP.free=s;
+  const c=add3(B.eye,mul3(d,s));c[1]=clamp(c[1],r+.02,H-.5);return c}
 function surfPt(p,x,y){
   if(p.mode===1&&insp.on)return null;
   if(cut.type&&p.mode<2)return cutUnmap(p,x,y);
@@ -1276,7 +1281,7 @@ $('bGU').onclick=e=>{e.stopPropagation();const on=!$('gu').classList.contains('o
    Overseer arms reach r 110 mm on the diagonals (overseer_wires.py), props and guard sized from that (E). Nothing is sent anywhere. */
 const GU={c:[W/2-.45,0,-L/2+.45],sx:.634,sz:.570,h:.237};
 const DRN={scout:{n:'Scout',m:.0743,pr:.0647,g:.112,col:'#34c46a'},overseer:{n:'Overseer',m:.0778,pr:.075,g:.16,col:'#4c8dff'}};
-const DEP={n:0,aim:null,state:'',mode:'',kind:'',target:null,path:[],len:0,s:0,drone:null,pend:''};
+const DEP={n:0,dist:3,free:3,aim:null,state:'',mode:'',kind:'',target:null,path:[],len:0,s:0,drone:null,pend:''};
 /* cameras from the repo (dimensions.md): Overseer 2 front DECXIN 2633V2 yawed 20 deg out, pitched 10 down, plus 1 rear 2633V2 facing back, pitched 40 down; Scout 1 camera, 30 deg up.
    All 102 deg diagonal, landscape 89 x 73 deg. The feed is the pane's whole view: the camera's axis is the pane's axis. */
 const FEEDS={overseer:[['Front L',-20,-10],['Front R',20,-10],['Rear',180,-40]],scout:[['Front',0,30]]};
@@ -1295,15 +1300,15 @@ function depUI(){
 function depCancel(){if(DEP.state==='manual'){DEP.state='hover';resize()}else if(DEP.state==='fly'){DEP.state='hover'}else{DEP.state='';DEP.target=null;DEP.path=[]}depUI()}
 $('depBtn').onclick=e=>{e.stopPropagation();depCancel()};
 function depBegin(mode,kind){
-  closePops();DEP.mode=mode;DEP.kind=kind;DEP.target=null;DEP.path=[];
+  closePops();DEP.mode=mode;DEP.kind=kind;DEP.target=null;DEP.path=[];DEP.dist=3;
   if(mode==='manual'){
     if(sel>=0)select(-1);
     DEP.drone={p:depStart(),yaw:-Math.PI*.75};cam.p=[GU.c[0],.62,GU.c[2]];cam.yaw=-Math.PI*.75;cam.pitch=-.05;vel[0]=vel[1]=vel[2]=0;collide(cam.p,vel);
     DEP.by=cam.yaw;DEP.state='manual';depFeed(0);hint('Manual flight \u00b7 the video is the drone\u2019s own camera',3500)}
-  else{DEP.state='pick';DEP.drone={p:depStart(),yaw:0};lockMouse(panes[2]);setTimeout(()=>hint('Look mode · aim the crosshair at the spot and click to deploy the '+DRN[kind].n+' there · Esc leaves Look mode, then Cancel',0),150)}
+  else{DEP.state='pick';DEP.drone={p:depStart(),yaw:0};lockMouse(panes[2]);setTimeout(()=>hint('Look mode · aim the crosshair where the spot goes (the orb floats in front of you, wheel = nearer/farther) and click to deploy the '+DRN[kind].n+' there · Esc leaves Look mode, then Cancel',0),150)}
   depUI()}
 function depPlace(pt){
-  const a=depStart(),top=Math.min(H-.5,Math.max(1.6,pt[1]+.9)),hv=[pt[0],Math.min(H-.5,pt[1]+.6),pt[2]];
+  const a=depStart(),hv=[pt[0],Math.min(H-.5,Math.max(.3,pt[1])),pt[2]];   // the drone hovers where the orb was
   // climb out of the box, cruise above the clutter, come down over the marker
   const cr=Math.max(1.8,hv[1]);DEP.path=[a,[a[0],cr,a[2]],[hv[0],cr,hv[2]],hv];
   DEP.len=0;DEP.segs=[];for(let i=1;i<DEP.path.length;i++){const l=Math.hypot(...sub(DEP.path[i],DEP.path[i-1]));DEP.segs.push(l);DEP.len+=l}
@@ -1314,7 +1319,7 @@ function depPos(s){
   let i=0;while(i<DEP.segs.length-1&&s>DEP.segs[i]){s-=DEP.segs[i];i++}
   const l=DEP.segs[i]||1,t=clamp(s/l,0,1),a=DEP.path[i],b=DEP.path[i+1];return{p:[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t],h:Math.atan2(b[0]-a[0],-(b[2]-a[2]))}}
 function stepDep(dt){
-  if(DEP.state==='pick'||DEP.state==='placed'){if(DEP.state==='pick'&&(++DEP.n%3===0)){const v=panes[2],lk=document.pointerLockElement===v.el;let a=null;if(lk)a=surfPt(v,v.W/2,v.H/2);else if(ptr&&ptr.p===v)a=surfPt(v,ptr.x,ptr.y);DEP.aim=a;panes.forEach(q=>q.key='')}return}
+  if(DEP.state==='pick'||DEP.state==='placed'){if(DEP.state==='pick'&&(++DEP.n%3===0)){const v=panes[2],lk=document.pointerLockElement===v.el;let a=null;if(lk)a=orbPt(v,v.W/2,v.H/2);else if(ptr&&ptr.p===v)a=orbPt(v,ptr.x,ptr.y);DEP.aim=a;panes.forEach(q=>q.key='')}return}
   if(DEP.state==='fly'){DEP.s+=1.6*dt;const r=depPos(Math.min(DEP.s,DEP.len)),d=DEP.drone;d.p=r.p;if(r.h===r.h&&DEP.s<DEP.len)DEP.by=r.h;d.yaw=DEP.by;
     if(DEP.s>=DEP.len){DEP.state='hover';depUI()}panes.forEach(q=>q.key='')}
   else if(DEP.state==='manual'){const f=FEEDS[DEP.kind][DEP.feed||0];DEP.by=cam.yaw-f[1]*Math.PI/180;DEP.drone.p=[cam.p[0],cam.p[1]-.03,cam.p[2]];DEP.drone.yaw=DEP.by;
@@ -1335,7 +1340,7 @@ function drawDep(p,mf){
   if(DEP.state==='pick'&&DEP.aim){const k=DRN[DEP.kind],r=k.g*1.4,c=[DEP.aim[0],DEP.aim[1]+r,DEP.aim[2]],A=mf(c),R=mf([c[0]+r,c[1],c[2]]);       // the orb is the drone's size: its guard's corner radius
     if(A&&R){const pr=Math.max(5,Math.hypot(R[0]-A[0],R[1]-A[1])),g=ctx.createRadialGradient(A[0]-pr*.3,A[1]-pr*.3,pr*.1,A[0],A[1],pr);g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(1,k.col);
       ctx.globalAlpha=.85;ctx.fillStyle=g;ctx.beginPath();ctx.arc(A[0],A[1],pr,0,7);ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(A[0],A[1],pr+3,0,7);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(A[0]-pr-12,A[1]);ctx.lineTo(A[0]-pr-4,A[1]);ctx.moveTo(A[0]+pr+4,A[1]);ctx.lineTo(A[0]+pr+12,A[1]);ctx.moveTo(A[0],A[1]-pr-12);ctx.lineTo(A[0],A[1]-pr-4);ctx.moveTo(A[0],A[1]+pr+4);ctx.lineTo(A[0],A[1]+pr+12);ctx.stroke()}}
+      ctx.beginPath();ctx.moveTo(A[0]-pr-12,A[1]);ctx.lineTo(A[0]-pr-4,A[1]);ctx.moveTo(A[0]+pr+4,A[1]);ctx.lineTo(A[0]+pr+12,A[1]);ctx.moveTo(A[0],A[1]-pr-12);ctx.lineTo(A[0],A[1]-pr-4);ctx.moveTo(A[0],A[1]+pr+4);ctx.lineTo(A[0],A[1]+pr+12);ctx.stroke();lab([c[0],c[1]-r,c[2]],DEP.free.toFixed(1)+' m · wheel: nearer / farther','#fff')}}
   // Nox Ground Unit, the drones' start point, true scale in one corner
   {const x0=GU.c[0]-GU.sx/2,x1=GU.c[0]+GU.sx/2,z0=GU.c[2]-GU.sz/2,z1=GU.c[2]+GU.sz/2,y1=GU.h,c=[];
     for(let m=0;m<8;m++)c.push([m&1?x1:x0,m&2?y1:0,m&4?z1:z0]);
@@ -1516,7 +1521,7 @@ for(const p of panes){
   let last=null;
   p.el.addEventListener('pointerdown',e=>{
     if(e.target.closest('.ui'))return;
-    if((DEP.state==='pick'||DEP.state==='placed')&&p===panes[2]&&e.button===0){const lk=document.pointerLockElement===p.el,r0=p.el.getBoundingClientRect(),pt=surfPt(p,lk?p.W/2:e.clientX-r0.left,lk?p.H/2:e.clientY-r0.top);if(pt)depPlace(pt);else hint('No surface there \u00b7 click on the floor, a wall or an object',2500);return}
+    if((DEP.state==='pick'||DEP.state==='placed')&&p===panes[2]&&e.button===0){const lk=document.pointerLockElement===p.el,r0=p.el.getBoundingClientRect();depPlace(orbPt(p,lk?p.W/2:e.clientX-r0.left,lk?p.H/2:e.clientY-r0.top));return}
     if(document.pointerLockElement===p.el){pickAt(p,p.W/2,p.H/2);return}
     const r=p.el.getBoundingClientRect();
     if(e.ctrlKey||e.metaKey){pickAt(p,e.clientX-r.left,e.clientY-r.top);return}
@@ -1534,7 +1539,8 @@ for(const p of panes){
   p.el.addEventListener('pointerup',end);p.el.addEventListener('pointercancel',end);
   p.el.addEventListener('pointerleave',()=>{ptr=null;hov=-1;tipAt(null,'')});
   p.el.addEventListener('wheel',e=>{
-    if(p.mode===1&&insp.on){e.preventDefault();touch();insp.tdist=clamp(insp.tdist*Math.exp(e.deltaY*.0012),.6,150)}
+    if(DEP.state==='pick'&&p===panes[2]){e.preventDefault();touch();DEP.dist=clamp(DEP.free*Math.exp(-e.deltaY*.0015),.5,12)}
+    else if(p.mode===1&&insp.on){e.preventDefault();touch();insp.tdist=clamp(insp.tdist*Math.exp(e.deltaY*.0012),.6,150)}
     else if(p.mode===2){e.preventDefault();touch();const s=Math.sin(cam.yaw),c=Math.cos(cam.yaw),d=-clamp(e.deltaY,-300,300)*.006;cam.p[0]+=s*d;cam.p[2]-=c*d;collide(cam.p,vel)}},{passive:false});
   p.el.addEventListener('contextmenu',e=>e.preventDefault());
 }
