@@ -12,6 +12,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:13px/1.
 .app{position:fixed;inset:0;display:grid;grid-template-rows:46px minmax(0,1fr) 150px}
 .strip{display:flex;gap:10px;padding:0 10px 10px;min-height:0}
 .mmw{position:relative;flex:none;width:min(270px,24vw);background:var(--panel);border-radius:12px;overflow:hidden}
+.mmw .fl{position:absolute;top:5px;right:6px;display:flex;gap:3px;z-index:2}.mmw .fl button{background:rgba(255,255,255,.08);color:#cdd3de;border:1px solid var(--line);border-radius:6px;font:600 10px var(--sans);padding:1px 5px;cursor:pointer}.mmw .fl button:hover:not(:disabled){background:rgba(76,141,255,.3)}.mmw .fl button:disabled{opacity:.35;cursor:default}
 .mmw canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:pointer}
 .mmc{position:absolute;left:9px;top:6px;font:600 10.5px var(--sans);color:#aab2c0;letter-spacing:.05em;text-transform:uppercase;pointer-events:none}
 .tools{flex:1;min-width:0;display:flex;gap:10px}
@@ -54,7 +55,7 @@ header{display:flex;align-items:center;gap:12px;padding:0 14px}
 .panes.insp{grid-template-columns:minmax(0,.7fr) minmax(0,1fr) minmax(0,1.5fr)}
 .lockhint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:6px 14px;border-radius:99px;background:rgba(10,13,18,.62);backdrop-filter:blur(6px);color:#fff;font:600 13.5px var(--sans);pointer-events:none;white-space:nowrap}
 #lookbtn{right:auto;left:50%;top:50%;transform:translate(-50%,-50%);font-size:14px;padding:10px 20px}
-body.locked #lookbtn{display:none}.lockhint{display:none}.lockhint.show{display:block}
+body.locked #lookbtn{display:none}#lookbtn.resume{background:#2f6df0;color:#fff;border-color:#9bbcff;box-shadow:0 6px 24px rgba(47,109,240,.55)}.lockhint{display:none}.lockhint.show{display:block}
 .pane{position:relative;min-height:0;border-radius:12px;overflow:hidden;background:var(--panel);touch-action:none;cursor:default;user-select:none}
 .pane.drag{cursor:grabbing}
 .pane canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -135,21 +136,18 @@ body.locked .pane.lk .xh{display:block}
 <div class="panes" id="panes">
   <div class="pane pt" id="p0"><canvas></canvas><div class="tag">Point map<i>as-built scan</i></div><div class="meta" id="m0"></div>
     <div class="legend" id="legend"><b>Distance to nearest BIM surface</b><div class="bar"></div><div class="tk"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+ mm</span></div></div><div class="xh"></div></div>
-  <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Esc to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg>Look mode</button><div class="lockhint" id="lockhint"></div><div class="xh"></div></div>
+  <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Esc to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg><span id="lookTxt">Look mode</span></button><div class="lockhint" id="lockhint"></div><div class="xh"></div></div>
   <div class="pane bim" id="p1"><canvas></canvas><div class="tag">BIM<i>design model &middot; empty building</i></div>
     <button class="xbtn ui" id="close" hidden title="Close (Esc)">&times;</button>
     <div class="card ui" id="card" hidden></div>
     <div class="views ui" id="views" hidden><button data-v="3d" class="on">3D</button><button data-v="plan">Plan</button><button data-v="front">Front</button><button data-v="side">Side</button></div></div>
 </div>
 <div class="strip" id="strip">
-  <div class="mmw" id="mmw"><canvas id="mm"></canvas><span class="mmc" id="mmc">Level 2 &middot; click to fly there</span></div>
+  <div class="mmw" id="mmw"><canvas id="mm"></canvas><span class="mmc" id="mmc">Level 2 &middot; click to fly</span><div class="fl"><button id="flDn" title="Previous floor">&#9660;</button><button id="flUp" title="Next floor">&#9650;</button><button id="flAdd" title="Add a floor">+ Floor</button></div></div>
   <div class="tools">
     <div class="tg w1"><h5>Plan &amp; section</h5>
       <div class="rw"><div class="seg" id="cutType"><button data-c="" class="on" title="Normal 3D views">Off</button><button data-c="level" title="Top-down plan, cut at a height">Plan</button><button data-c="long" title="Section along the length">Long</button><button data-c="cross" title="Section across the width">Cross</button></div></div>
       <div class="rw"><input type="range" id="cutPos" min="0" max="1" step="0.02" disabled><span class="val" id="cutVal">&mdash;</span></div></div>
-    <div class="tg w2"><h5>Tape measure</h5>
-      <div class="rw"><button class="btn" id="bMeas" title="Click two points (Esc ends)">Measure</button><button class="btn" id="bMClr" title="Clear the tape">Clear</button></div>
-      <div class="out" id="measOut"><i>Press Measure, then click two points</i></div></div>
     <div class="tg w3"><h5>Deviation colour</h5>
       <div class="rw"><button class="btn on" id="bDev" title="Colour the point map by distance to the BIM">Show on point map</button></div>
       <div class="out" id="devOut"></div></div>
@@ -1116,8 +1114,8 @@ function drawPolys2(p,B){ // fallback without WebGL: flat lit painter
 const keys=new Set(),vel=[0,0,0];let lastAct=performance.now(),flying=false;
 let ctlShown=false,movingCls=false,lastLook=0;
 function touch(){lastAct=performance.now();if(ctlShown||!movingCls){ctlShown=false;movingCls=true;document.body.classList.add('moving');$('ctl').classList.remove('show')}}
-const LIM={x:W/2+4,z:L/2+4,y0:-2.5,y1:H+4};
-function collide(q,v){ // no collisions at all: a ghost. Only an outer box a few metres beyond the building keeps the map in reach
+const LIM={x:W/2-.35,z:L/2-.35,y0:.4,y1:H-.4};     // the camera stays inside the floor it is on: walls, floor and slab are its limits
+function collide(q,v){ // no collisions with objects (a ghost), but never out of the floor's own box
   q[0]=clamp(q[0],-LIM.x,LIM.x);q[2]=clamp(q[2],-LIM.z,LIM.z);q[1]=clamp(q[1],LIM.y0,LIM.y1);
 }
 function stepFly(dt){
@@ -1159,7 +1157,7 @@ function easeInsp(dt){
 }
 
 /* ---------- architect tools: plan and section cut, tape measure, minimap ---------- */
-const cut={type:'',pos:0,saved:{}},meas={on:false,a:null,b:null};let mk='';
+const cut={type:'',pos:0,saved:{}},meas={on:false,a:null,b:null,grab:''};let mk='';
 const CUTS={
   level:{ka:1,ks:-1,tv:[0,1,0],ua:0,us:1,va:2,vs:1,cu:0,cv:0,hu:W/2,hv:L/2,lo:.1,hi:H,def:1.5,tag:'plan'},
   long:{ka:0,ks:1,tv:[-1,0,0],ua:2,us:1,va:1,vs:-1,cu:0,cv:-H/2,hu:L/2,hv:H/2,lo:-W/2,hi:W/2,def:0,tag:'long section'},
@@ -1244,34 +1242,62 @@ function rayDist(polys,o,d){let bt=1e9;
 const mtext=()=>{if(!meas.a||!meas.b)return'';const dx=Math.abs(meas.b[0]-meas.a[0]),dy=Math.abs(meas.b[1]-meas.a[1]),dz=Math.abs(meas.b[2]-meas.a[2]);return Math.hypot(dx,dy,dz).toFixed(3)+' m'};
 function measUI(){
   mk=meas.a?meas.a.map(v=>v.toFixed(3))+(meas.b?'|'+meas.b.map(v=>v.toFixed(3)):''):'';
-  const o=$('measOut');
-  if(meas.a&&meas.b){const dx=Math.abs(meas.b[0]-meas.a[0]),dy=Math.abs(meas.b[1]-meas.a[1]),dz=Math.abs(meas.b[2]-meas.a[2]);
-    o.innerHTML='<b>'+mtext()+'</b> <i>&middot; along '+dx.toFixed(2)+' &middot; across '+dz.toFixed(2)+' &middot; up '+dy.toFixed(2)+'</i>'}
-  else o.innerHTML='<i>'+(meas.on?(meas.a?'Click the second point':'Click the first point'):'Press Measure, then click two points')+'</i>';
-  $('bMeas').classList.toggle('on',meas.on);document.body.classList.toggle('measuring',meas.on);panes.forEach(p=>p.key='')}
-function setMeas(on){meas.on=on;if(on&&meas.b){meas.a=meas.b=null}measUI()}
+  document.body.classList.toggle('measuring',meas.on);panes.forEach(p=>p.key='')}
+function setMeas(on){meas.on=on;if(on&&meas.b){meas.a=meas.b=null}meas.grab='';measUI()}
+function surfPt(p,x,y){
+  if(p.mode===1&&insp.on)return null;
+  if(cut.type&&p.mode<2)return cutUnmap(p,x,y);
+  const B=camBasis(),d=rayAt(p,B,x,y),t=rayDist(p.mode===1?POLY:POLYA,B.eye,d);return t>0?add3(B.eye,mul3(d,t)):null}
+/* an existing measurement under (x,y) in a pane: 'a' or 'b' (an end dot), 'line' (its line or label), else '' */
+function measHit(p,x,y){
+  if(!meas.a||(p.mode===1&&insp.on))return'';
+  const mf=cut.type&&p.mode<2?cutMap(p,CUTS[cut.type]).f:(B=>pt=>proj(B,pt,p))(camBasis());
+  const A=mf(meas.a),Bp=meas.b&&mf(meas.b);
+  if(A&&Math.hypot(x-A[0],y-A[1])<=12)return'a';
+  if(Bp&&Math.hypot(x-Bp[0],y-Bp[1])<=12)return'b';
+  if(A&&Bp){const dx=Bp[0]-A[0],dy=Bp[1]-A[1],l2=dx*dx+dy*dy||1,t=clamp(((x-A[0])*dx+(y-A[1])*dy)/l2,0,1);
+    if(Math.hypot(x-(A[0]+t*dx),y-(A[1]+t*dy))<=6)return'line';
+    const mx=(A[0]+Bp[0])/2,my=(A[1]+Bp[1])/2;if(Math.abs(x-mx)<=46&&y>my-26&&y<my-3)return'line'}
+  return''}
+function measClear(){meas.a=meas.b=null;meas.grab='';measUI()}
+function grabTick(){
+  if(!meas.grab)return;let p,x,y;
+  if(document.pointerLockElement){p=panes[2];x=p.W/2;y=p.H/2}else if(ptr){p=ptr.p;x=ptr.x;y=ptr.y}else return;
+  const pt=surfPt(p,x,y);if(!pt)return;const o=meas[meas.grab];
+  if(Math.abs(pt[0]-o[0])+Math.abs(pt[1]-o[1])+Math.abs(pt[2]-o[2])<1e-4)return;
+  meas[meas.grab]=pt;measUI()}
 function measureClick(p,x,y){
-  let pt=null;
-  if(p.mode===1&&insp.on)return;
-  if(cut.type&&p.mode<2)pt=cutUnmap(p,x,y);
-  else{const B=camBasis(),d=rayAt(p,B,x,y),t=rayDist(p.mode===1?POLY:POLYA,B.eye,d);if(t>0)pt=add3(B.eye,mul3(d,t))}
-  if(!pt)return;
+  const pt=surfPt(p,x,y);if(!pt)return;
   if(!meas.a||meas.b){meas.a=pt;meas.b=null}else meas.b=pt;
   measUI()}
 function drawMeasure(p,mf){
   if(!meas.a)return;const ctx=p.ctx,pts=[meas.a,meas.b].map(v=>v&&mf(v));
   ctx.save();ctx.lineCap='round';
   if(pts[0]&&pts[1]){for(const[w,c]of[[5,'#fff'],[2.2,'#e0245e']]){ctx.strokeStyle=c;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);ctx.lineTo(pts[1][0],pts[1][1]);ctx.stroke()}}
-  for(const a of pts)if(a){ctx.fillStyle='#e0245e';ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(a[0],a[1],5,0,7);ctx.fill();ctx.stroke()}
+  for(const[ai,a]of pts.entries())if(a){if(meas.grab===(ai?'b':'a')){ctx.strokeStyle='#e0245e';ctx.lineWidth=2;ctx.beginPath();ctx.arc(a[0],a[1],11,0,7);ctx.stroke()}ctx.fillStyle='#e0245e';ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(a[0],a[1],5,0,7);ctx.fill();ctx.stroke()}
   if(pts[0]&&pts[1]){const t=mtext(),x=(pts[0][0]+pts[1][0])/2,y=(pts[0][1]+pts[1][1])/2;ctx.font='700 13px '+getComputedStyle(document.body).fontFamily;
     const w=ctx.measureText(t).width+14;ctx.fillStyle='#fff';ctx.strokeStyle='#e0245e';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect?ctx.roundRect(x-w/2,y-24,w,20,6):ctx.rect(x-w/2,y-24,w,20);ctx.fill();ctx.stroke();
     ctx.fillStyle='#1a2030';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,x,y-13.5)}
   ctx.restore()}
-$('bMeas').onclick=()=>setMeas(!meas.on);
-$('bMClr').onclick=()=>{meas.a=meas.b=null;measUI()};
 $('bDev').onclick=()=>document.querySelector('#cmode button[data-m="0"]').click();
 /* minimap: the bay from above, one click flies the shared camera there */
 const mm={cv:$('mm'),base:null,w:0,h:0,s:1,dpr:1,key:'',hz:''};
+/* floors: each has its own name, plan and camera; the camera is locked to the floor it is on and only the floor buttons change it */
+const FL={list:[{name:'Level 2',cam:null,plan:null}],cur:0};
+const flName=()=>FL.list[FL.cur].name;
+function mmCap(z){$('mmc').innerHTML=flName()+(z?' &middot; zone '+z:'')+' &middot; click to fly'}
+function setFloor(i){
+  i=clamp(i,0,FL.list.length-1);if(i===FL.cur)return;
+  const f=FL.list[FL.cur];f.cam={p:cam.p.slice(),yaw:cam.yaw,pitch:cam.pitch};
+  FL.cur=i;const g=FL.list[i],c=g.cam||{p:HOME.p.slice(),yaw:HOME.yaw,pitch:HOME.pitch};
+  cam.p=c.p.slice();cam.yaw=c.yaw;cam.pitch=c.pitch;vel[0]=vel[1]=vel[2]=0;mmTween=null;collide(cam.p,vel);
+  mm.base=null;mm.key='';mmCap('');flUI();panes.forEach(p=>p.key='');hint(g.name,1200)}
+function flUI(){$('flDn').disabled=FL.cur<=0;$('flUp').disabled=FL.cur>=FL.list.length-1}
+$('flDn').onclick=e=>{e.stopPropagation();setFloor(FL.cur-1)};
+$('flUp').onclick=e=>{e.stopPropagation();setFloor(FL.cur+1)};
+$('flAdd').onclick=e=>{e.stopPropagation();FL.list.push({name:'Level '+(FL.list.length+2),cam:null,plan:null});setFloor(FL.list.length-1)};
+addEventListener('keydown',e=>{if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(e.code==='PageUp'){setFloor(FL.cur+1);e.preventDefault()}else if(e.code==='PageDown'){setFloor(FL.cur-1);e.preventDefault()}});
+flUI();
 const zoneAt=(x,z)=>(x<-2.33?'A':x<2.33?'B':'C')+(z<-6?1:z<0?2:z<6?3:4);
 function mmP(x,z){return[mm.w/2+mm.s*z,mm.h/2+6-mm.s*x]}
 function mmLayout(){
@@ -1320,8 +1346,8 @@ let mmTween=null;
 function mmPick(e){const r=mm.cv.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
   return[clamp(-(py-mm.h/2-6)/mm.s,-W/2+.8,W/2-.8),clamp((px-mm.w/2)/mm.s,-L/2+.8,L/2-.8)]}
 mm.cv.addEventListener('pointerdown',e=>{const[x,z]=mmPick(e);touch();mmTween={t0:performance.now(),a:[cam.p[0],cam.p[2]],b:[x,z]}});
-mm.cv.addEventListener('pointermove',e=>{const[x,z]=mmPick(e),n=zoneAt(x,z);if(n!==mm.hz){mm.hz=n;$('mmc').innerHTML='Level 2 &middot; zone '+n+' &middot; click to fly there'}});
-mm.cv.addEventListener('pointerleave',()=>{mm.hz='';$('mmc').innerHTML='Level 2 &middot; click to fly there'});
+mm.cv.addEventListener('pointermove',e=>{const[x,z]=mmPick(e),n=zoneAt(x,z);if(n!==mm.hz){mm.hz=n;mmCap(n)}});
+mm.cv.addEventListener('pointerleave',()=>{mm.hz='';mmCap('')});
 function tweenStep(now){if(!mmTween)return;const t=clamp((now-mmTween.t0)/450,0,1),e=t*t*(3-2*t);
   cam.p[0]=mmTween.a[0]+(mmTween.b[0]-mmTween.a[0])*e;cam.p[2]=mmTween.a[1]+(mmTween.b[1]-mmTween.a[1])*e;vel[0]=vel[1]=vel[2]=0;if(t>=1)mmTween=null;lastLook=now}
 function devStats(){const D=PTS.DV;let ok=0,bad=0,n=0;for(let i=0;i<PTS.N;i++){if(PTS.OB[i]<0||!OBJ[PTS.OB[i]].site){n++;if(D[i]<.014)ok++;else if(D[i]>=.04)bad++}}
@@ -1352,7 +1378,7 @@ reqUI();
 let glNext=0,fcount=0,lastDraw=0,qEma=16,qHold=0,QL=0,frames=0;
 function frameBody(now){
   const dt=Math.min(.05,(now-(frame.t||now))/1000);frame.t=now;
-  stepFly(dt);tweenStep(now);hoverTick(now);drawMini();
+  stepFly(dt);tweenStep(now);grabTick();hoverTick(now);drawMini();
   if(insp.on)easeInsp(dt);
   const active=flying||now-lastLook<200;
   if(!active&&!ctlShown&&now-lastAct>3600){ctlShown=true;movingCls=false;$('ctl').classList.add('show');document.body.classList.remove('moving')}
@@ -1397,7 +1423,16 @@ for(const p of panes){
   let last=null;
   p.el.addEventListener('pointerdown',e=>{
     if(e.target.closest('.ui'))return;
-    if(meas.on&&e.button===0){if(p.mode===2&&document.pointerLockElement===p.el)measureClick(p,p.W/2,p.H/2);else{const r=p.el.getBoundingClientRect();measureClick(p,e.clientX-r.left,e.clientY-r.top)}return}
+    if(e.button===0){
+      const lk=document.pointerLockElement===p.el,r0=p.el.getBoundingClientRect(),hx=lk?p.W/2:e.clientX-r0.left,hy=lk?p.H/2:e.clientY-r0.top;
+      if(meas.grab){meas.grab='';measUI();return}                                      // second click: drop the dot where it is
+      const h=measHit(p,hx,hy);
+      if(h&&e.shiftKey){                                                              // Shift+click: on the line or label deletes the whole measurement, on a dot only that dot
+        if(h==='line')meas.a=meas.b=null;else if(h==='a'){meas.a=meas.b;meas.b=null}else meas.b=null;
+        meas.grab='';measUI();return}
+      if(h==='a'||h==='b'){if(!e.ctrlKey&&!e.metaKey){meas.grab=h;measUI();return}}   // click a dot to pick it up
+    }
+    if((meas.on||e.shiftKey)&&e.button===0){if(p.mode===2&&document.pointerLockElement===p.el)measureClick(p,p.W/2,p.H/2);else{const r=p.el.getBoundingClientRect();measureClick(p,e.clientX-r.left,e.clientY-r.top)}return}
     if(document.pointerLockElement===p.el){pickAt(p,p.W/2,p.H/2);return}
     const r=p.el.getBoundingClientRect();
     if(e.ctrlKey||e.metaKey){pickAt(p,e.clientX-r.left,e.clientY-r.top);return}
@@ -1432,7 +1467,7 @@ function pickAt(p,x,y){
   select(b===sel?-1:b);
 }
 function lockMouse(p){try{p=p||panes[2];const r=p.el.requestPointerLock();if(r&&r.catch)r.catch(()=>{})}catch(e){}}
-document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Esc leaves · Ctrl closes the card',0)}else $('lockhint').classList.remove('show')});
+document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){lookReset();touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Esc leaves · Ctrl closes the card',0)}else $('lockhint').classList.remove('show')});
 let lmX=null,lmY=null;
 addEventListener('mousemove',e=>{
   if(!document.pointerLockElement){lmX=null;return}
@@ -1485,15 +1520,20 @@ const stCol={ok:'#34c46a',warn:'#f0b429',bad:'#ef4b4b',na:'#8a93a3',site:'#e0a03
 function fmtM(v){return v.toFixed(3)+' m'}
 function scanBlock(o){const sc=scanInfo(o);
   return '<div class="meta2">Zone <b>'+sc.zone.name+'</b> &middot; '+fmtT(sc.zone.t0)+'\u2013'+fmtT(sc.zone.t1)+'<br>'+(o.missing?'Checked ':'Scanned ')+'<b>'+fmtDT(sc.at)+'</b> &middot; '+sc.passes+' passes<br>Last updated <b>'+fmtDT(sc.updated)+'</b> &middot; '+agoSpan(sc.updated)+'</div>'}
+function lookReset(){$('lookbtn').classList.remove('resume');$('lookTxt').textContent='Look mode'}
 function select(i){
   if(i>=0&&OBJ[i].site)i=-1;
+  const wasLook=!!document.pointerLockElement;
   sel=i;
+  if(i>=0&&wasLook){document.exitPointerLock()}                      // the cursor is free to reach the card (Add note, Request)
+  $('lookbtn').classList.toggle('resume',i>=0&&(wasLook||$('lookbtn').classList.contains('resume')));
+  $('lookTxt').textContent=$('lookbtn').classList.contains('resume')?'Click to resume Look mode':'Look mode';
   document.querySelectorAll('#list .row').forEach(r=>r.classList.toggle('sel',+r.dataset.i===i));
   const card=$('card'),open=i>=0;
   insp.on=open;$('panes').classList.toggle('insp',open);
   $('card').hidden=!open;$('views').hidden=!open;$('close').hidden=!open;
   panes[1].key='';panes[0].key='';
-  if(!open)return;
+  if(!open){lookReset();return}
   const o=OBJ[i],el=o.y0+o.lmin[1];
   const dev=o.missing?'':'Deviation from BIM &nbsp;avg <b>'+Math.round(o.dmean*1000)+' mm</b> &middot; max '+Math.round(o.dmax*1000)+' mm';
   const mm=v=>mmFmt(v)+' mm',sg=d=>(d>=0?'+':'\u2212')+Math.abs(Math.round(d*1000))+' mm',cl=d=>Math.abs(d)<.012?'#17703b':Math.abs(d)<.03?'#8a5a00':'#a3241b';
