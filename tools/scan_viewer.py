@@ -75,7 +75,7 @@ def launch(frag=""):
     url = "file:///" + PAGE.replace("\\", "/") + (("#" + frag) if frag else "")
     subprocess.Popen([exe, "--app=" + url, "--user-data-dir=" + PROFILE, "--no-first-run", "--no-default-browser-check",
                       "--window-position=%d,%d" % (x, y), "--window-size=%d,%d" % (w, h), "--start-fullscreen",
-                      "--disable-features=Translate", "--disable-background-timer-throttling"],
+                      "--lang=en-US", "--disable-features=Translate,TranslateUI", "--disable-background-timer-throttling"],
                      creationflags=0x00000008 | 0x00000200)     # detached
 
 
