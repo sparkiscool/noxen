@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   1806.1
+   1899.4
   ],
   "sealed_voids": [],
   "inner_shells": [],
@@ -15,13 +15,13 @@
   "drawn_not_in_main": [],
   "thin_walls": [],
   "thin_allowed": [],
-  "acute_edges": 1,
+  "acute_edges": 0,
   "ok": true
  },
  "function_check": {
-  "skin_mm3": 610.1,
+  "skin_mm3": 966.8,
   "skin_missing_mm3": 0.0,
-  "in_cuts_mm3": 0.0,
+  "in_cuts_mm3": -0.0,
   "outside_env_mm3": 0.0,
   "ok": true
  },
@@ -30,116 +30,116 @@
    {
     "case": "frame RS1-P5 axial 43 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.02,
-    "across": 0.008,
+    "inlayer": 0.013,
+    "across": 0.007,
     "at": [
      -5.7,
-     -127.1,
+     -136.1,
      62.5
     ]
    },
    {
     "case": "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)",
     "cls": "crash",
-    "inlayer": 0.338,
-    "across": 0.177,
+    "inlayer": 0.245,
+    "across": 0.157,
     "at": [
-     -5.7,
-     -127.1,
-     62.5
+     -6.7,
+     -125.1,
+     61.5
     ]
    },
    {
     "case": "frame RS1-P5 side 23.9 N + end moment 1440 N mm (-)",
     "cls": "crash",
-    "inlayer": 0.338,
-    "across": 0.136,
+    "inlayer": 0.245,
+    "across": 0.158,
     "at": [
-     -5.7,
-     -127.1,
-     62.5
+     -6.7,
+     -125.1,
+     61.5
     ]
    },
    {
     "case": "frame RS1-P6 axial 58 N (pull-out), held at RM-RS1 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.017,
-    "across": 0.008,
+    "inlayer": 0.024,
+    "across": 0.009,
     "at": [
-     7.3,
-     -136.1,
-     61.5
+     6.3,
+     -127.1,
+     60.5
     ]
    },
    {
     "case": "frame RS1-P6 side 7.5 N + end moment 389 N mm (+), held at RM-RS1 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.06,
-    "across": 0.028,
+    "inlayer": 0.102,
+    "across": 0.041,
     "at": [
      6.3,
-     -136.1,
-     61.5
+     -127.1,
+     60.5
     ]
    },
    {
     "case": "frame RS1-P6 side 7.5 N + end moment 389 N mm (-), held at RM-RS1 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.06,
-    "across": 0.023,
+    "inlayer": 0.102,
+    "across": 0.049,
     "at": [
      6.3,
-     -136.1,
-     61.5
+     -127.1,
+     60.5
     ]
    },
    {
     "case": "frame RM-RS1 axial 45 N (pull-out), held at RS1-P6 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.018,
-    "across": 0.008,
+    "inlayer": 0.012,
+    "across": 0.007,
     "at": [
-     -3.7,
+     4.3,
      -125.1,
-     63.5
+     61.5
     ]
    },
    {
     "case": "frame RM-RS1 side 18.7 N + end moment 1055 N mm (+), held at RS1-P6 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.177,
-    "across": 0.099,
+    "inlayer": 0.234,
+    "across": 0.149,
     "at": [
-     -3.7,
-     -125.1,
-     58.5
+     -5.7,
+     -124.1,
+     60.5
     ]
    },
    {
     "case": "frame RM-RS1 side 18.7 N + end moment 1055 N mm (-), held at RS1-P6 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.177,
-    "across": 0.072,
+    "inlayer": 0.234,
+    "across": 0.087,
     "at": [
-     -3.7,
-     -125.1,
-     58.5
+     -5.7,
+     -124.1,
+     60.5
     ]
    }
   ],
-  "worst": 0.338,
+  "worst": 0.245,
   "worst_case": "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)",
   "worst_at": [
-   -5.7,
-   -127.1,
-   62.5
+   -6.7,
+   -125.1,
+   61.5
   ],
   "ok": true
  },
- "mass_g": 3.91,
+ "mass_g": 4.1,
  "watertight": true,
  "export": {
-  "faces_in": 29180,
+  "faces_in": 31298,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -149,7 +149,7 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 29180,
+  "faces": 31298,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -160,12 +160,12 @@
    "caps_split": 6,
    "caps_left": 2,
    "watertight": true,
-   "faces": 41642,
+   "faces": 43364,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 3175.2,
-  "exact_mm3": 3175.2
+  "volume_mm3": 3332.0,
+  "exact_mm3": 3332.0
  },
  "bodies": {
   "bodies_raw": 1,
@@ -173,8 +173,8 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 3175.2,
- "drawn_g": 2.11,
+ "volume_mm3": 3332.0,
+ "drawn_g": 2.75,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
@@ -186,35 +186,35 @@
  },
  "memory_build": [
   {
-   "estimate_gb": 0.58,
+   "estimate_gb": 0.6,
    "parts": {
     "held": 0.33,
     "gate": 0.03,
-    "mesh": 0.23
+    "mesh": 0.24
    },
    "limit_gb": 14.0,
-   "gate_cells": 620136,
+   "gate_cells": 684400,
    "bounds_mm": [
     27.8,
-    23.6,
-    12.3
+    23.8,
+    13.6
    ],
-   "faces": 40596,
+   "faces": 42428,
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 0.36,
+   "estimate_gb": 0.37,
    "parts": {
     "held": 0.34,
     "gate": 0.03,
     "mesh": 0.0
    },
    "limit_gb": 14.0,
-   "gate_cells": 620136,
+   "gate_cells": 684400,
    "bounds_mm": [
     27.8,
-    23.6,
-    12.3
+    23.8,
+    13.6
    ],
    "faces": 0,
    "when": "before the solid check"
@@ -222,7 +222,7 @@
  ],
  "stl": "scout_v4_node_rs1.stl",
  "view_stl": "scout_v4_node_rs1_view.stl",
- "view_faces": 29180,
+ "view_faces": 31298,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -304,55 +304,55 @@
    "rod_input": 1.2608727148268373,
    "plate_input": 0.8849130530977847
   },
-  "volfrac": 0.20491803278688525,
-  "nd": 7076,
+  "volfrac": 0.16755521706016754,
+  "nd": 6565,
   "sym_axes": [],
   "n_real": 9,
   "n_ties": 0,
   "backend": "direct",
-  "iterations": 88,
+  "iterations": 100,
   "stopped": "max_stage",
   "checks": [
    {
-    "it": 16,
+    "it": 17,
     "beta": 4.0,
-    "worst": 0.51,
+    "worst": 0.301,
     "worst_case": "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)"
    },
    {
-    "it": 28,
+    "it": 40,
     "beta": 8.0,
-    "worst": 0.292,
+    "worst": 0.277,
     "worst_case": "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)"
    },
    {
-    "it": 38,
+    "it": 50,
     "beta": 16.0,
-    "worst": 0.286,
+    "worst": 0.274,
     "worst_case": "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)"
    }
   ],
   "hold": {
-   "started_it": 16,
+   "started_it": 17,
    "beta": 4.0,
-   "index": 0.51,
-   "ref_built": 0.433,
+   "index": 0.301,
+   "ref_built": 0.302,
    "cases": {
-    "frame RS1-P5 axial 43 N (pull-out)": 0.019,
-    "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)": 0.51,
-    "frame RS1-P5 side 23.9 N + end moment 1440 N mm (-)": 0.51,
+    "frame RS1-P5 axial 43 N (pull-out)": 0.016,
+    "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)": 0.301,
+    "frame RS1-P5 side 23.9 N + end moment 1440 N mm (-)": 0.301,
     "frame RS1-P6 axial 58 N (pull-out), held at RM-RS1 + RS1-P5": 0.018,
-    "frame RS1-P6 side 7.5 N + end moment 389 N mm (+), held at RM-RS1 + RS1-P5": 0.074,
-    "frame RS1-P6 side 7.5 N + end moment 389 N mm (-), held at RM-RS1 + RS1-P5": 0.074,
-    "frame RM-RS1 axial 45 N (pull-out), held at RS1-P6 + RS1-P5": 0.018,
-    "frame RM-RS1 side 18.7 N + end moment 1055 N mm (+), held at RS1-P6 + RS1-P5": 0.188,
-    "frame RM-RS1 side 18.7 N + end moment 1055 N mm (-), held at RS1-P6 + RS1-P5": 0.188
+    "frame RS1-P6 side 7.5 N + end moment 389 N mm (+), held at RM-RS1 + RS1-P5": 0.083,
+    "frame RS1-P6 side 7.5 N + end moment 389 N mm (-), held at RM-RS1 + RS1-P5": 0.083,
+    "frame RM-RS1 axial 45 N (pull-out), held at RS1-P6 + RS1-P5": 0.015,
+    "frame RM-RS1 side 18.7 N + end moment 1055 N mm (+), held at RS1-P6 + RS1-P5": 0.255,
+    "frame RM-RS1 side 18.7 N + end moment 1055 N mm (-), held at RS1-P6 + RS1-P5": 0.255
    }
   },
   "cavity": {
-   "last": 1.0648027405117844,
+   "last": 0.8079876010377555,
    "ratio": 5.0,
-   "T0": 14.044067818290639,
+   "T0": 15.085859912861485,
    "row": false
   }
  },
@@ -370,8 +370,8 @@
    45.0
   ],
   "cells": 40960,
-  "design": 7076,
-  "drawn": 1729,
+  "design": 6565,
+  "drawn": 2240,
   "cases": [
    "frame RS1-P5 axial 43 N (pull-out)",
    "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)",
@@ -389,13 +389,13 @@
    "hold RM-RS1 at RS1-P6 + RS1-P5"
   ]
  },
- "build_s": 7.1,
- "layout_s": 346,
- "peak_gb": 0.652268,
+ "build_s": 11.5,
+ "layout_s": 396,
+ "peak_gb": 0.647972,
  "memory": {
-  "estimate_gb": 0.89,
+  "estimate_gb": 0.83,
   "parts": {
-   "held": 0.42,
+   "held": 0.36,
    "factor": 0.18,
    "assembly": 0.09,
    "block": 0.19,
@@ -407,9 +407,9 @@
   "backend": "direct",
   "block": 64,
   "build": {
-   "estimate_gb": 0.49,
+   "estimate_gb": 0.43,
    "parts": {
-    "held": 0.42,
+    "held": 0.36,
     "gate": 0.07,
     "mesh": 0.0
    },
@@ -430,150 +430,150 @@
    {
     "case": "frame RS1-P5 axial 43 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.019,
-    "across": 0.011,
+    "inlayer": 0.016,
+    "across": 0.008,
     "at": [
      -4.7,
-     -134.1,
-     64.5
+     -136.1,
+     62.5
     ]
    },
    {
     "case": "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)",
     "cls": "crash",
-    "inlayer": 0.51,
-    "across": 0.208,
+    "inlayer": 0.301,
+    "across": 0.161,
     "at": [
      -5.7,
-     -136.1,
-     61.5
+     -126.1,
+     63.5
     ]
    },
    {
     "case": "frame RS1-P5 side 23.9 N + end moment 1440 N mm (-)",
     "cls": "crash",
-    "inlayer": 0.51,
-    "across": 0.362,
+    "inlayer": 0.301,
+    "across": 0.168,
     "at": [
      -5.7,
-     -136.1,
-     61.5
+     -126.1,
+     63.5
     ]
    },
    {
     "case": "frame RS1-P6 axial 58 N (pull-out), held at RM-RS1 + RS1-P5",
     "cls": "crash",
     "inlayer": 0.018,
-    "across": 0.01,
+    "across": 0.009,
     "at": [
-     5.3,
-     -136.1,
-     61.5
+     4.3,
+     -127.1,
+     58.5
     ]
    },
    {
     "case": "frame RS1-P6 side 7.5 N + end moment 389 N mm (+), held at RM-RS1 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.074,
-    "across": 0.038,
+    "inlayer": 0.083,
+    "across": 0.04,
     "at": [
-     5.3,
-     -136.1,
-     61.5
+     6.3,
+     -135.1,
+     64.5
     ]
    },
    {
     "case": "frame RS1-P6 side 7.5 N + end moment 389 N mm (-), held at RM-RS1 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.074,
-    "across": 0.029,
+    "inlayer": 0.083,
+    "across": 0.032,
     "at": [
-     5.3,
-     -136.1,
-     61.5
+     6.3,
+     -135.1,
+     64.5
     ]
    },
    {
     "case": "frame RM-RS1 axial 45 N (pull-out), held at RS1-P6 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.018,
+    "inlayer": 0.015,
     "across": 0.007,
     "at": [
-     -3.7,
+     4.3,
      -126.1,
-     63.5
+     61.5
     ]
    },
    {
     "case": "frame RM-RS1 side 18.7 N + end moment 1055 N mm (+), held at RS1-P6 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.188,
-    "across": 0.093,
+    "inlayer": 0.255,
+    "across": 0.151,
     "at": [
-     -3.7,
-     -126.1,
-     58.5
+     -4.7,
+     -124.1,
+     60.5
     ]
    },
    {
     "case": "frame RM-RS1 side 18.7 N + end moment 1055 N mm (-), held at RS1-P6 + RS1-P5",
     "cls": "crash",
-    "inlayer": 0.188,
-    "across": 0.07,
+    "inlayer": 0.255,
+    "across": 0.121,
     "at": [
-     -3.7,
-     -126.1,
-     58.5
+     -4.7,
+     -124.1,
+     60.5
     ]
    }
   ],
-  "worst": 0.51,
+  "worst": 0.301,
   "worst_case": "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)",
   "worst_at": [
    -5.7,
-   -136.1,
-   61.5
+   -126.1,
+   63.5
   ],
   "ok": true,
   "beta": 4.0,
-  "iteration": 16,
+  "iteration": 17,
   "max_worst": 0.3,
   "k": 3.0
  },
  "field": {
-  "worst": 0.26,
+  "worst": 0.273,
   "worst_case": "frame RS1-P5 side 23.9 N + end moment 1440 N mm (+)",
   "worst_at": [
    -5.7,
-   -127.1,
-   61.5
+   -126.1,
+   63.5
   ],
   "beta": 32.0,
-  "iteration": 88
+  "iteration": 100
  },
- "gen_cm3": 1.45,
+ "gen_cm3": 1.1,
  "h": 1.0,
  "audit": {
   "solid_ok": [],
-  "drawn_share": 0.196,
+  "drawn_share": 0.254,
   "load_room": [],
   "bodies": [
    {
     "id": 1,
-    "cells": 1729,
-    "inscribed_mm": 3.0,
+    "cells": 2240,
+    "inscribed_mm": 3.5,
     "touches_cut": true,
     "touches_support": true,
     "loaded": true,
-    "room": 0.79,
+    "room": 0.78,
     "room_depth_mm": 25.0,
     "at": [
-     -1.4,
-     -128.3,
+     -2.2,
+     -128.5,
      61.0
     ],
-    "core_mm": 1.8,
-    "free_cells": 1729,
+    "core_mm": 3.5,
+    "free_cells": 2240,
     "share_of_drawn": 1.0
    }
   ],
@@ -648,32 +648,27 @@
     -123.1,
     61.5
    ],
-   "budget_share": 0.205,
-   "thinned": 0.43,
+   "budget_share": 0.168,
+   "thinned": 0.53,
    "max_worst": 0.3,
-   "fin_cells": 78,
+   "fin_cells": 88,
    "worst_in_fin": false
   }
  },
  "baseline": null,
- "total_s": 353,
+ "total_s": 407,
  "part_sha": "c063f8522531",
- "lib_sha": "1b90939a8908",
- "setup_sha": "0540371f056bf092",
+ "lib_sha": "6a872a4bb3fe",
+ "setup_sha": "9c422c667024dc46",
  "max_worst": 0.3,
- "strength_ok": false,
+ "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_rs1.stl",
-  "sha256": "770d6ad69fd536b892a570cc0280e6594c95f817fca428249e3556c8e0c10f05",
-  "bytes": 1459084,
-  "faces": 29180,
-  "view_faces": 29180,
-  "view_sha256": "770d6ad69fd536b892a570cc0280e6594c95f817fca428249e3556c8e0c10f05",
-  "at": "2026-11-24 04:53"
- },
- "assembly": {
-  "drone": "scout_v4",
-  "ok": true,
-  "why": []
+  "sha256": "1e201925a39f03201cce0b6564a817d0cc0a2e4907993703cca2f6e60c6b51ca",
+  "bytes": 1564984,
+  "faces": 31298,
+  "view_faces": 31298,
+  "view_sha256": "1e201925a39f03201cce0b6564a817d0cc0a2e4907993703cca2f6e60c6b51ca",
+  "at": "2026-11-24 06:44"
  }
 }
