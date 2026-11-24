@@ -1551,7 +1551,7 @@ function pickAt(p,x,y){
   select(b===sel?-1:b);
 }
 function lockMouse(p){try{p=p||panes[2];const r=p.el.requestPointerLock();if(r&&r.catch)r.catch(()=>{})}catch(e){}}
-document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){lookReset();touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Esc leaves · Ctrl closes the card',0)}else{$('lockhint').classList.remove('show');if(performance.now()-lastCtrl<700&&!escLeft)setTimeout(()=>lockMouse(panes[2]),0)}escLeft=false});
+document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;keys.clear();document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){lookReset();touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Esc leaves · Ctrl closes the card',0)}else{$('lockhint').classList.remove('show');if(performance.now()-lastCtrl<700&&!escLeft)setTimeout(()=>lockMouse(panes[2]),0)}escLeft=false});
 let lmX=null,lmY=null,lastCtrl=-1e9,escLeft=false;          // Ctrl never leaves Look mode: if the lock drops right after it, it is taken again; only Esc (or F) leaves
 addEventListener('mousemove',e=>{
   if(!document.pointerLockElement){lmX=null;return}
@@ -1709,7 +1709,7 @@ resize();
   if(/bench/.test(h)){const p=panes[0],B=camBasis(),t0=performance.now();for(let i=0;i<20;i++){p.key='';drawPoints(p,B,75000)}const pm=((performance.now()-t0)/20).toFixed(1),t1=performance.now();for(let i=0;i<10;i++)drawBim(panes[1],B);document.querySelector('.sim').textContent='points '+pm+' ms, bim '+((performance.now()-t1)/10).toFixed(1)+' ms, '+POLY.length+'/'+POLYA.length+' polys, N'+PTS.N}
 }
 requestAnimationFrame(frame);
-window.__scan={cam,get frames(){return frames},get drawn(){return ptDrawn},get N(){return PTS.N},get objs(){return OBJ.length},get polys(){return POLY.length},get gl(){return document.body.dataset.gl},room:[W,L,H],setCut,cut,panes,get dev(){return OBJ.map(o=>[o.name,o.status,Math.round(o.dmean*1000)])}};
+window.__scan={cam,vel,DEP,DRN,depBegin,depCancel,get prox(){return proxOn},MAN_V,get frames(){return frames},get drawn(){return ptDrawn},get N(){return PTS.N},get objs(){return OBJ.length},get polys(){return POLY.length},get gl(){return document.body.dataset.gl},room:[W,L,H],setCut,cut,panes,get dev(){return OBJ.map(o=>[o.name,o.status,Math.round(o.dmean*1000)])}};
 })();
 </script>
 </body>
