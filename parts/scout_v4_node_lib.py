@@ -1,8 +1,16 @@
 """Scout v4 cage node setups (9 Nov, Spark: "generate everything with topology"): the Scout's node generator (parts/scout_node_lib.py,
 after the Overseer's parts/cage_node_lib.py) on the v4 cage of tools/scout_v4_shape.py.
 
-Drawn: only the socket collars and floors (3.0 wall, 3.0 floor round each 3.2 x 10 bore, the injection pattern of parts/socket_inject.py);
-everything joining them is generated inside a strut per member and a hub ball. Loads: the v4 frame model's per-member axial and side
+Drawn: only the socket collars and floors (3.0 wall, 3.0 floor round each 3.2 x 10 bore, the injection pattern of parts/socket_inject.py),
+two sockets under TWIN_DEG (45 deg) apart as one twin-bore socket, shared wall and outer walls from the floor to the mouths (24 Nov);
+everything joining them is generated inside a strut per member and a hub ball.
+The shared wall by hand (shared_wall; the whole account at TWIN_DEG below): a rod's end moment and side force at mid-bore,
+Me = M + V d / 2, are the couple Fc = Me / (2 L3) on its lining's thirds (L3 = (d + 3.5) / 3); with the neighbour's rod held the mouth
+third's Fc crosses the wall between the bores in tension across the layers, over A = w Lb less the core pocket (w the twin's height
+between the bores, Lb the mouth third the neighbour stands beside, flanges 3.0-3.5 over and under the pocket that keeps the drawn
+body under the layout's 6 mm): Fc / A <= 0.27 x 17.8 = 4.8 MPa. The worst end moment, BT1-TB 1434 N mm + 53.4 N on 13.0 deep:
+Me 1781 N mm, Fc 162 N, needs 33.7 mm2, has 34.0 (w 9.2, Lb 5.0, flanges 3.4): index 0.268. The worst wall, P3's TB-P3 858 N mm:
+Fc 127 N, 26.4 of 26.4 mm2 with RB-P3 15.5 deep: 0.269. Loads: the v4 frame model's per-member axial and side
 forces (systems/scout_v4.cage_loads.json, written by tools/scout_v4_shape.py: per member the worse of the standard 35 g crash set and
 the head-first crash onto the parked probe head). Supports: the two stiffest members' sockets. The v4 nodes all sit above the funnel's
 top (z -4.3), so the v21 funnel sweep is not cut. The sockets printed into the frame and the base (PRINTED) and RM (printed with the
@@ -68,14 +76,9 @@ def socket_depth(axial, side, moment=0.0):
     return float(np.ceil(d * 2.0) / 2.0)
 
 
-# A backed rider (24 Nov, the held sockets' cases with the near-parallel neighbour held too): P3's TB-P3 rides on RB-P3's collar and ran
-# 4.8 on past RB-P3's mouth; with RB-P3's rod held its end moment peeled it off that collar across the layers at the mouth plane, 0.224
-# with the room filled solid (0.258 before the rider's root room below; no budget passes on that). The neighbour's socket is as deep as
-# brings its mouth to within BACK_REACH of the rider's (0.168 at 2.3 short, 0.115 at 0.8), so its collar backs the rider's whole bore;
-# check_pairs refuses a BACK_DEPTH that no longer reaches. The mirrored pair at P4 the same.
-BACK_DEPTH = {("P3", "RB-P3"): 14.5, ("P4", "RB-P4"): 14.5}
-BACK_RIDER = {("P3", "RB-P3"): "TB-P3", ("P4", "RB-P4"): "TB-P4"}
-BACK_REACH = 1.0
+# The backed socket of a twin (24 Nov): a twin's neighbour is as deep as the shared wall's hand calculation asks (the twin-bore socket
+# below: shared_wall, _back_depths).
+BACK_DEPTH = {}
 _raw0 = L._raw_members
 
 
@@ -232,30 +235,120 @@ RIDER_M = L.STRUT_M
 _GROUP = []
 
 
-# 24 Nov, the notch web (run bd7af5d5: 9 of the 11 fails): two collars 31-41 deg apart (a pushed-out pair, the Ys' forks) touch along a
-# line and part toward their mouths; the notch between them was the worst of every one, across the layers on the rider's skin facing its
-# neighbour at mid-bore (P3 / P4 0.53, P6 0.37, TB 0.34 between its forks, P2 / P5 0.34, R0 / R7 0.305, P1 0.30), 0.07-0.115 with the room
-# filled solid, and the budgets did not reach it (P3 0.41 at 1.4 -> 0.53 at 1.7: the layout's own field read 0.48 there). The notch is
-# drawn now: the hull of the two collars (at their mouth walls) over the bore length they share, as far out as their skins are WEB_GAP
-# apart (past that the engine's member fits). Every pair under WEB_DEG at every node; 0.06-0.26 cm3 each.
-WEB_GAP, WEB_DEG, WEB_MIN = 0.8, 45.0, 3.0
+# 24 Nov, the twin-bore socket (the design chat on the run of 0275b432, 5 fails; it replaces that push's notch web, the hull of the two
+# collars only as far as their skins were 0.8 apart): two sockets under TWIN_DEG apart are 0-3.9 mm apart skin to skin all the way to
+# their mouths, under the engine's 6.25 member, so the compliance objective leaves the notch between them open at any budget, and the
+# audit's solid room cannot tell (run bd7af5d5: 9 of 11 fails in the notch at mid-bore; run 0275b432 with the web: P3 / P4 / TB
+# 0.315-0.317 in generated material 1 mm past the web's end, P2 / P5 0.371 / 0.387 on the rider's skin at RS's mouth plane, where the
+# web ended). Such a pair is one drawn socket with two bores: the hull of the two collars, each at its own hand-calc walls
+# (collar_walls: the outer walls), from the outer socket's floor plane to both mouth planes (each mouth one exact face), every bore
+# with its port and pockets as before. Every pair under TWIN_DEG at every node (12 of the 16; none at RF / RB / RS).
+#   The shared wall, by hand (shared_wall): a rod's end moment with its side force at mid-bore, Me = M + V d / 2, is the couple
+#   Fc = Me / (2 L3) across its lining's thirds (L3 = (d + LINING_BACK) / 3, the way the setup applies it). With the neighbour's rod
+#   held (the held sockets' cases) the mouth third's Fc crosses the shared wall straight into that rod, in tension for one sign,
+#   across the layers at worst. The section it crosses, midway between the bores: the twin's height there, w = the two collars'
+#   mouth radii together, over the length Lb of the mouth third the neighbour's collar stands beside (L3 less what the rod's mouth
+#   runs on past the neighbour's), less the core pocket below: Fc / A <= COLLAR_INDEX x the across-layer crash strength
+#   (0.27 x 17.8 = 4.8 MPa). _back_depths deepens the neighbour 0.5 at a time until every twin passes (BACK_DEPTH; it was P3 / P4
+#   by a table, 0.8 short of the rider's mouth); check_pairs refuses a twin that does not.
+#   The core pocket (_pockets, a cut): a drawn body 6 mm thick anywhere is no longer held whole by the layout, only at its gate core
+#   (topo.layout CORE_MIN_HALF_MM), and every socket's load moves to that core: the solid hull (6.4 between the bores at a P node's
+#   mouths, 9.4 at TB's) made P3 / P4's P-P cases zero compliance and took the third socket's end moment out of every other
+#   node's layout (P2's P2-P3: 831 N mm read as 117). So where the bores are more than two TWIN_WALL walls (2.05, the collar's
+#   least) + POCKET_MIN apart the shared wall is those two walls and a flange over and under (FLANGE 3.0, to FLANGE_MAX where the
+#   section above needs it: twin_flange), a pocket between them open through the face between the mouths; build refuses a node
+#   whose drawn sockets reach the 6 mm at its h.
+#   The worst end moment, BT1-TB 1434 N mm + 53.4 N on 13.0: Me 1781, L3 5.5, Fc 162 N: 33.7 mm2; w 9.2, Lb 5.0 (BT0's mouth 0.5
+#   short), all of it over the pocket (from 17.4), flanges 3.4: 34.0 mm2, index 0.268. The worst wall, P3's TB-P3 858 N mm + 18.6 N
+#   on 7.5: Fc 127 N, 26.4 mm2; RB-P3 15.5 deep (was 14.5: 0.8 short of TB-P3's mouth, 0.317 in its run) stands beside the whole
+#   3.67, w 8.8, pocket from 18.0, flanges 3.15: 26.4 mm2, 0.269. P2 / P5's S0-P2 / S1-P5 693 N mm on 7.0 (Fc 105 N, 21.8 mm2):
+#   RS-P ended 4.3 short of its mouth, no wall beside the mouth third at all (0.371 / 0.387); RS-P 14.0 deep from the hub (was 9.0
+#   from 6.5): 21.9 mm2, 0.269.
+TWIN_DEG = 45.0
+TWIN_WALL, POCKET_MIN, FLANGE, FLANGE_MAX = MIN_WALL - 0.5, 1.0, 3.0, 3.5
+
+
+def _twin_pairs(k):
+    ms = L.members(k)
+    return [(a, b) for i, a in enumerate(ms) for b in ms[i + 1:] if 1e-6 < np.degrees(np.arccos(np.clip(a["u"] @ b["u"], -1.0, 1.0))) <= TWIN_DEG]
+
+
+def _twin_frame(a, b):
+    """a twin's half angle, bisector, in-plane normal to it (a toward b), the pair plane's normal, its height w between the bores
+    and the reach along the bisector where its core pocket starts (POCKET_MIN wide between the two TWIN_WALL walls)"""
+    t2 = 0.5 * float(np.arccos(np.clip(a["u"] @ b["u"], -1.0, 1.0)))
+    bis = a["u"] + b["u"]; bis = bis / np.linalg.norm(bis); n = np.cross(a["u"], b["u"]); n = n / np.linalg.norm(n)
+    w = sum(m["bore_r"] + drawn_wall(m).mouth for m in (a, b))    # midway between the bores, the hull of the two collars
+    lo = (POCKET_MIN + sum(m["bore_r"] + GROOVE_D + TWIN_WALL for m in (a, b)) / np.cos(t2)) / (2.0 * np.tan(t2))
+    return t2, bis, np.cross(n, bis), n, w, lo
+
+
+def _wall_area(x, y, tf):
+    """(the shared wall's section x's end moment needs beside its mouth third, the section the twin has there, mm2) with flanges tf"""
+    t2, _, _, _, w, lo = _twin_frame(x, y)
+    me = abs(x.get("moment") or 0.0) + abs(x.get("side") or 0.0) * x["depth"] / 2.0; l3 = (x["depth"] + L.LINING_BACK) / 3.0
+    end = min(x["s0"] + x["depth"], y["s0"] + y["depth"]); top = x["s0"] + x["depth"] - l3
+    lb, lp = max(0.0, end - top), max(0.0, end - max(top, lo / np.cos(t2)))
+    return me / (2.0 * l3) / (COLLAR_INDEX * ZT_MPA), w * lb - max(0.0, w - 2.0 * tf) * lp
+
+
+def twin_flange(a, b):
+    """the flange over and under a twin's core pocket: FLANGE, or what the shared wall's hand calculation asks, to FLANGE_MAX"""
+    for tf in np.arange(FLANGE, FLANGE_MAX + 1e-9, 0.05):
+        if all(have >= need - 1e-6 for need, have in (_wall_area(a, b, tf), _wall_area(b, a, tf))):
+            break
+    return float(tf)
+
+
+def shared_wall(x, y):
+    """(needed, there): the shared wall's section beside x's mouth third, mm2 (the hand calculation above)"""
+    return _wall_area(x, y, twin_flange(x, y))
+
+
+def _back_depths():
+    """BACK_DEPTH: a twin's shorter-reaching socket 0.5 deeper wherever its neighbour's shared wall is short (to the
+    neighbour's mouth, the next 0.5). True if a depth changed (the socket starts are then worked out again: clear reads the depths)"""
+    moved = False
+    for k in L.KEYS:
+        for a, b in _twin_pairs(k):
+            for x, y in ((a, b), (b, a)):
+                need, have = shared_wall(x, y)
+                if have < need - 1e-6 and y["s0"] + y["depth"] < x["s0"] + x["depth"] - 1e-6:
+                    BACK_DEPTH[(k, y["name"])] = y["depth"] + 0.5; moved = True
+    return moved
 
 
 def _webs(keys):
+    """the twin-bore sockets' bodies between their collars (the collars themselves are the lib's): the hull of the two collars from
+    the outer socket's floor plane to both mouth planes"""
     import manifold3d as mf
     out = []
     for k in keys:
-        ms = L.members(k); c = np.array(L.P[k], float)
-        for i, a in enumerate(ms):
-            for b in ms[i + 1:]:
-                t = float(np.arccos(np.clip(a["u"] @ b["u"], -1.0, 1.0)))
-                if t < 1e-6 or np.degrees(t) > WEB_DEG:
-                    continue
-                r = [x["bore_r"] + getattr(drawn_wall(x), "mouth", L.WALL) for x in (a, b)]
-                lo = max(a["s0"], b["s0"]) - L.FLOOR
-                hi = min(a["s0"] + a["depth"], b["s0"] + b["depth"], (r[0] + r[1] + WEB_GAP) / (2.0 * np.sin(t / 2.0)))
-                if hi - lo >= WEB_MIN:
-                    out.append(mf.Manifold.batch_hull([L.along(c, x["u"], lo, hi, rx, 48) for x, rx in zip((a, b), r)]))
+        c = np.array(L.P[k], float)
+        for a, b in _twin_pairs(k):
+            body = mf.Manifold.batch_hull([L.collar_shape(c, x["u"], x["s0"] - L.FLOOR, x["s0"] + x["depth"], x["bore_r"], drawn_wall(x)) for x in (a, b)])
+            for x in (a, b):
+                body = body.trim_by_plane((-x["u"]).tolist(), -float(x["u"] @ c + x["s0"] + x["depth"]))
+            r = max((a, b), key=lambda x: x["s0"])
+            out.append(body.trim_by_plane(r["u"].tolist(), float(r["u"] @ c + r["s0"] - L.FLOOR)))
+    return out
+
+
+def _pockets(keys):
+    """the twins' core pockets (cuts): between the two bores' TWIN_WALL walls and the two flanges, from where it is POCKET_MIN
+    wide out through the face between the mouths"""
+    from parts.cage_node_lib import _prism
+    out = []
+    for k in keys:
+        c = np.array(L.P[k], float)
+        for a, b in _twin_pairs(k):
+            t2, bis, e2, n, w, lo = _twin_frame(a, b); hh = w / 2.0 - twin_flange(a, b)
+            hi = max(x["s0"] + x["depth"] for x in (a, b)) + 10.0
+            if hh < 1.0 or lo > min(x["s0"] + x["depth"] for x in (a, b)) * np.cos(t2) - 0.5:
+                continue
+            tn = np.tan(t2)
+            wedge = _prism([(lo, -lo * tn), (hi, -hi * tn), (hi, hi * tn), (lo, lo * tn)], c, n, -hh, hh, bis, e2)
+            out.append(wedge - L.U([L.along(c, x["u"], 0.0, hi + 5.0, x["bore_r"] + GROOVE_D + TWIN_WALL, 64) for x in (a, b)]))
     return out
 
 
@@ -287,6 +380,7 @@ def _mouth_cuts():
         slab = L.along(m["c"], m["u"], m["s_end"], m["s_end"] + 60.0, MOUTH_R, 64)
         spare += webs
         cuts.append(slab - L.U(spare) if spare else slab)
+    cuts += _pockets(_GROUP)
     return L.U(cuts) if cuts else mf.Manifold()
 
 
@@ -405,11 +499,12 @@ def check_pairs(k):
                 bad.append(f"{a['name']} ({a['s0']:.1f}) / {b['name']} ({b['s0']:.1f}): {', '.join(why)}")
     if bad:
         raise ValueError(f"node {k}: sockets too close: " + "; ".join(bad))
-    by = {m["name"]: m for m in ms}
-    for (kk, hub), rider in BACK_RIDER.items():
-        if kk == k and by[hub]["s0"] + by[hub]["depth"] < by[rider]["s0"] + by[rider]["depth"] - BACK_REACH - 1e-6:
-            raise ValueError(f"node {k}: {hub}'s mouth ({by[hub]['s0'] + by[hub]['depth']:.1f}) no longer backs its rider {rider} "
-                             f"({by[rider]['s0'] + by[rider]['depth']:.1f}): BACK_DEPTH")
+    for a, b in _twin_pairs(k):
+        for x, y in ((a, b), (b, a)):
+            need, have = shared_wall(x, y)
+            if have < need - 1e-6:
+                raise ValueError(f"node {k}: the twin {x['name']} / {y['name']}: {x['name']}'s end moment needs {need:.1f} mm2 of shared wall beside its "
+                                 f"mouth third, the twin has {have:.1f}: BACK_DEPTH (_back_depths), FLANGE_MAX")
 
 
 _check0 = L.check_members
@@ -422,6 +517,10 @@ def _check_members(k, log=print):
 
 L.check_members = _check_members
 L.SOCKET_START = _socket_starts()
+for _ in range(40):                                       # the twins' backed depths and the starts that read them, to a fixed point
+    if not _back_depths():
+        break
+    L.SOCKET_START = _socket_starts()
 
 # Budgets (10 Nov): the light nodes read 6-40 x under the 0.3 limit at 1.1 x skeleton (P / R 0.017-0.054 at 1.7 cm3, RF / RB / RS
 # 0.005-0.014 at 1.2): their collars now overlap at the hub and carry most of the load drawn. BUDGET_CM3 sets their generated volume
@@ -454,6 +553,8 @@ L.SOCKET_START = _socket_starts()
 # to fix: 9 in the notch between a near-parallel pair (the notch web above, drawn), RB / RS1 at the flat hubs' roots (ROOT_FLAT, drawn).
 # RB 1.2 -> 0.8 and RS0 / RS1 1.45 -> 1.1: the volume added for those roots moved nothing (RB) or little (RS 0.355 -> 0.31) and the
 # drawn roots are 0.3-0.5 cm3; every other budget stays.
+# Run of 24 Nov on those (push 0275b432; 64.31 g): 11 pass, P2 / P5 / P3 / P4 / TB fail at the notch web's end: the twin-bore socket above
+# (drawn 32.3 -> 35.0 cm3). Every budget stays: each room still reads the same 0.04-0.14 filled solid.
 BUDGET_CM3 = {"P3": 1.7, "P4": 1.7, "P1": 1.0, "P2": 1.5, "P5": 1.5, "P6": 0.9, "R0": 0.8, "R7": 0.8,
               "RF": 0.45, "RB": 0.8, "RS0": 1.1, "RS1": 1.1, "S0": 1.3, "S1": 1.55, "NB": 1.0, "TB": 2.9}   # 14 Nov, the bolt forks: their runs read NB / TB 0.051 / 0.052 at 4.0, S0 / S1 0.032 at 3.1; on the fold's loads (core_of) TB-P3 154 N (was 99), S0-P2 109 (was 78): toward ~0.15 by index ~ V^-1.25.   # 13 Nov: NB 5.7 -> 6.9, 0.314 at 5.7 (index ~ V^-1.25 toward 0.25). 12 Nov: NB 4.3 -> 5.7, 0.354 at 4.3 once BS moved to the nose block (NB-R7 pull-out 126 N; index ~ V^-1.25 toward 0.25)   # 12 Nov: TB 4.8 -> 5.6, 0.301 at 4.8 under the heavier frame's TB-P3 108 N (index ~ V^-1.25 toward 0.25)
 
@@ -476,6 +577,14 @@ def build(group, h, log=print):
     Every socket with a frame-model load is declared to the audit (Part.interface_loads -> interface_case)."""
     _GROUP[:] = (group,) if isinstance(group, str) else tuple(group)
     p = _build0(group, h, log)
+    from scipy import ndimage as ndi
+    from topo.layout import CORE_MIN_HALF_MM
+    sol3 = p.solid.reshape(p.shape); din = ndi.distance_transform_edt(sol3) * p.h
+    if h <= L.spec_for(group)["h"] + 1e-9 and din.max() >= CORE_MIN_HALF_MM:   # the layout's own measure (Layout._anchors), at the SPEC h (the coarse stage only warms the start)
+        at = (np.array(np.unravel_index(int(din.argmax()), p.shape)) + 0.5) * p.h + np.asarray(p.origin)
+        raise ValueError(f"node {_GROUP}: the drawn sockets are {2 * din.max():.1f} mm thick at {np.round(at, 1).tolist()} at h {h}: from "
+                         f"{2 * CORE_MIN_HALF_MM:.0f} mm the layout holds a drawn body at its core only and moves every socket's load there "
+                         f"(a twin's shared wall: its core pocket, TWIN_WALL / FLANGE)")
     along, U = L.along, L.U
     lining = lambda m, grow=1.0: along(m["c"], m["u"], m["s0"] - L.LINING_BACK, m["s_end"], m["bore_r"] + grow)
     nodes = lambda reg, what: p.nodes_of(p.elems(reg, p.solid | p.design, what=what))
