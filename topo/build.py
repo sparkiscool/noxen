@@ -748,7 +748,7 @@ def build_and_check(layout, out_dir, name, clip_margin=0.5, pitch=None, log=prin
     os.makedirs(out_dir, exist_ok=True)
     part = layout.part
     t0 = time.time()
-    gm = surface(layout, pitch=pitch, clip_margin=clip_margin, log=log)
+    gm = surface(layout, pitch=pitch or layout.s.build_pitch or None, clip_margin=clip_margin, log=log)
     P, bod = assemble(layout, gm, log=log)
     nf = len(gm.faces) if hasattr(gm, "faces") else 0
     del gm

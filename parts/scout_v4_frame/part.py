@@ -69,7 +69,8 @@ from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, U, unit, socks_of
                                       M25_INS, BOSS_R, DIRS14, FLIGHT, ins_hole)
 import parts.scout_v4_probe_turret_lib as TUR
 
-SPEC = dict(h=2.3, gen_cm3=160.0, max_worst=0.3,   # 24 Nov (one body with the probe base): h 2.0 -> 2.3 (256,000 cells; 442,368 at 2.0), the frame's 130 + the turret's 28 cm3
+SPEC = dict(h=2.3, gen_cm3=160.0, max_worst=0.3, settings=dict(build_pitch=0.38),   # 24 Nov: surface pitch 0.38 (6 x per cell): the build refused 15.2 GB at 0.29 (1.24 M faces, 177 x 176 mm box), ~0.7 M faces now
+              # 24 Nov (one body with the probe base): h 2.0 -> 2.3 (256,000 cells; 442,368 at 2.0), the frame's 130 + the turret's 28 cm3
             assembly_paths=[f"scout_v4:{n}" for n in ("FC up onto its posts", "XR2 up onto its land", "DRV8833 up onto its land", "Radxa up onto its posts",
                                                       "UBEC up into its pod", "flow sensor up into its pod",   # 15 Nov: the boards' ways in, cut (topo/paths.py)
                                                       "pinion up into its bay", "N20 up behind its seat and forward", "N20's shaft down behind its seat", "N20's shaft into the tip bearing",

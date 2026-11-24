@@ -139,6 +139,7 @@ class Settings:
     mg_tol: float = 1e-5
     time_limit_s: float = 5.5 * 3600
     mem_limit_gb: float = 14.0         # memory gate (topo/audit.py memory_fit, build_fit: the solve and the build / gate): the GitHub runner has 16 GB and kills a run over it silently
+    build_pitch: float = 0.0            # surface sampling pitch of the build (0: 0.3); a coarser one cuts the faces (the build's memory is 6000 B a face, topo/audit.py MESH_BYTES): scout_v4_frame, 177 x 176 mm, 1.24 M faces at 0.29 was refused at 15.2 GB
     checkpoint_every: int = 10
 
 
