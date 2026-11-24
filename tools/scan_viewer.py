@@ -60,6 +60,9 @@ def bring_forward():
     if not found:
         return False
     u.ShowWindow(found[0], 9)
+    u.keybd_event(0x12, 0, 0, 0)                      # a tap of Alt lets this process take the foreground from another window
+    u.keybd_event(0x12, 0, 2, 0)
+    u.BringWindowToTop(found[0])
     u.SetForegroundWindow(found[0])
     return True
 

@@ -37,6 +37,14 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:13px/1.
 .notes{margin-top:8px;font-size:11.5px;color:#505a6e;line-height:1.5}.notes b{color:#1a2030}
 .fleet{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:#cdd3de;white-space:nowrap;overflow:hidden}.fleet i{font-style:normal;color:var(--muted)}
 .fleet .d{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:#34c46a}.fleet .d.y{background:#f0b429}
+.tg h5.fh{display:flex;align-items:center;justify-content:space-between;gap:8px}.tg h5.fh .btn{padding:3px 11px;font-size:11.5px;text-transform:none;letter-spacing:0}
+.gub{all:unset;cursor:pointer;color:#cdd3de}.gub:hover{color:#fff;text-decoration:underline}#gu{top:auto;bottom:150px;right:12px}.bt{display:grid;grid-template-columns:78px 1fr 40px;gap:8px;align-items:center;font:12px var(--mono);color:#cdd3de;margin:5px 0}.bt i{display:block;height:8px;border-radius:4px;background:#2a303c;overflow:hidden}.bt i b{display:block;height:100%;background:#34c46a}.bt i b.m{background:#f0b429}.bt h6{margin:8px 0 0;font:600 10.5px var(--sans);color:var(--muted);text-transform:uppercase}
+#dep [hidden]{display:none!important}
+#dep{top:auto;bottom:150px;right:12px}#dep .st{margin:8px 0 5px;font:500 11.5px var(--sans);color:var(--muted)}#dep .seg{margin:0}
+.depbar{position:absolute;left:50%;bottom:58px;transform:translateX(-50%);max-width:calc(100% - 20px);flex-wrap:wrap;justify-content:center;z-index:21;display:flex;align-items:center;gap:10px;padding:7px 8px 7px 14px;border-radius:20px;background:rgba(10,13,18,.82);border:1px solid rgba(255,255,255,.2);color:#e9ecf1;font:500 12.5px var(--sans);backdrop-filter:blur(6px);}
+.fpv{position:absolute;left:10px;bottom:40px;width:300px;z-index:15;border:2px solid #fff;border-radius:8px;overflow:hidden;background:#000;box-shadow:0 6px 22px rgba(0,0,0,.55)}.fpv[hidden]{display:none}.fpv canvas,.pane .fpv canvas{position:static;inset:auto;display:block;width:100%;height:auto}.fpv span{position:absolute;left:6px;top:5px;font:600 11px var(--sans);color:#fff;background:rgba(10,13,18,.7);padding:2px 7px;border-radius:99px}
+.depbar[hidden]{display:none}.depbar button{font:600 12px var(--sans);color:#fff;background:#2f6df0;border:1px solid #9bbcff;border-radius:99px;padding:5px 13px;cursor:pointer}.depbar button.x{background:#3a4252;border-color:#5a6578}
+
 body.measuring .pane.pt,body.measuring .pane.bim,body.measuring .pane.vid{cursor:crosshair}
 @media (max-width:900px){.strip{display:none}.app{grid-template-rows:46px minmax(0,1fr)}}
 header{display:flex;align-items:center;gap:12px;padding:0 14px}
@@ -53,7 +61,7 @@ header{display:flex;align-items:center;gap:12px;padding:0 14px}
 .btn.icon{width:32px;padding:6px 0;text-align:center}
 .panes{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr) minmax(0,.85fr);gap:8px;padding:0 10px 10px;min-height:0;transition:grid-template-columns .35s ease}
 .panes.insp{grid-template-columns:minmax(0,.7fr) minmax(0,1fr) minmax(0,1.5fr)}
-.lockhint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:6px 14px;border-radius:99px;background:rgba(10,13,18,.62);backdrop-filter:blur(6px);color:#fff;font:600 13.5px var(--sans);pointer-events:none;white-space:nowrap}
+.lockhint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:6px 14px;border-radius:99px;background:rgba(10,13,18,.62);backdrop-filter:blur(6px);color:#fff;font:600 13.5px var(--sans);pointer-events:none;max-width:calc(100% - 24px);text-align:center;border-radius:16px}
 #lookbtn{right:auto;left:50%;top:50%;transform:translate(-50%,-50%);font-size:14px;padding:10px 20px}
 body.locked #lookbtn{display:none}#lookbtn.resume{background:#2f6df0;color:#fff;border-color:#9bbcff;box-shadow:0 6px 24px rgba(47,109,240,.55)}.lockhint{display:none}.lockhint.show{display:block}
 .pane{position:relative;min-height:0;border-radius:12px;overflow:hidden;background:var(--panel);touch-action:none;cursor:default;user-select:none}
@@ -120,7 +128,7 @@ body.moving #ctl{transition:opacity .08s;opacity:0}
 .kc{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border:1px solid #4a5568;border-bottom-width:2px;border-radius:6px;font:600 11.5px var(--mono);color:#e9ecf1;background:#1a202b}
 .wasd{display:grid;grid-template-columns:repeat(3,26px);gap:3px;justify-items:center}.wasd .kc{min-width:26px}.wasd .w{grid-column:2;grid-row:1}.wasd .a{grid-column:1;grid-row:2}.wasd .s{grid-column:2;grid-row:2}.wasd .d{grid-column:3;grid-row:2}
 .xh{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;display:none;z-index:20;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg stroke='%230b0e14' stroke-width='4.5' stroke-linecap='butt'%3E%3Cpath d='M22 6v11M22 27v11M6 22h11M27 22h11'/%3E%3C/g%3E%3Cg stroke='%23fff' stroke-width='2' stroke-linecap='butt'%3E%3Cpath d='M22 7.5v8.5M22 28v8.5M7.5 22h8.5M28 22h8.5'/%3E%3C/g%3E%3Ccircle cx='22' cy='22' r='3' fill='%23fff' stroke='%230b0e14' stroke-width='1.5'/%3E%3C/svg%3E") center/44px 44px no-repeat}
-body.locked .pane.lk .xh{display:block}
+body.locked .pane.lk .xh{display:block}body.picking .xh{display:none!important}
 @media (max-width:900px){.panes,.panes.insp{grid-template-columns:1fr;grid-template-rows:repeat(3,minmax(0,1fr))}#ctl{display:none}}
 </style>
 </head>
@@ -136,7 +144,7 @@ body.locked .pane.lk .xh{display:block}
 <div class="panes" id="panes">
   <div class="pane pt" id="p0"><canvas></canvas><div class="tag">Point map<i>as-built scan</i></div><div class="meta" id="m0"></div>
     <div class="legend" id="legend"><b>Distance to nearest BIM surface</b><div class="bar"></div><div class="tk"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+ mm</span></div></div><div class="xh"></div></div>
-  <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Esc to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg><span id="lookTxt">Look mode</span></button><div class="lockhint" id="lockhint"></div><div class="xh"></div></div>
+  <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Esc to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg><span id="lookTxt">Look mode</span></button><div class="lockhint" id="lockhint"></div><div class="fpv ui" id="fpv" hidden><canvas width="320" height="240"></canvas><span id="fpvT"></span></div><div class="depbar ui" id="depbar" hidden><span id="depTxt"></span><span id="depFeeds"></span><button id="depBtn" class="x">Cancel</button></div><div class="xh"></div></div>
   <div class="pane bim" id="p1"><canvas></canvas><div class="tag">BIM<i>design model &middot; empty building</i></div>
     <button class="xbtn ui" id="close" hidden title="Close (Esc)">&times;</button>
     <div class="card ui" id="card" hidden></div>
@@ -154,8 +162,8 @@ body.locked .pane.lk .xh{display:block}
     <div class="tg w3"><h5>Requests</h5>
       <div class="rw"><button class="btn" id="bReq" title="RFI, change request, issue or site instruction">New request</button></div>
       <div class="out" id="reqOut"></div></div>
-    <div class="tg w3"><h5>Fleet <span style="font-weight:400;text-transform:none;letter-spacing:0">(simulated)</span></h5>
-      <div class="fleet"><span><span class="d"></span>Overseer <i>landed &middot; scan 07 done</i></span><span><span class="d"></span>Scout <i>docked &middot; 100%</i></span><span><span class="d y"></span>Nox Ground Unit <i>online &middot; syncing</i></span></div></div>
+    <div class="tg w3"><h5 class="fh"><span>Fleet <span style="font-weight:400;text-transform:none;letter-spacing:0">(simulated)</span></span><button class="btn" id="bDep" title="Deploy the Overseer or the Scout (simulated)">Deploy</button></h5>
+      <div class="fleet"><span><span class="d"></span>Overseer <i>landed &middot; scan 07 done</i></span><span><span class="d"></span>Scout <i>docked &middot; 100%</i></span><span><button class="gub" id="bGU" title="Batteries in the Nox Ground Unit"><span class="d y"></span>Nox Ground Unit <i>online &middot; batteries</i></button></span></div></div>
   </div>
 </div>
 <div class="pop" id="menu">
@@ -165,6 +173,11 @@ body.locked .pane.lk .xh{display:block}
   <div class="opt"><span>Detections (video)</span><input type="checkbox" id="det"></div>
   <details><summary>How it works</summary><ol id="steps"></ol></details>
 </div>
+<div class="pop" id="gu"><h4>Nox Ground Unit &middot; batteries (simulated)</h4><div id="guRows"></div></div>
+<div class="pop" id="dep"><h4>Deploy (simulated)</h4>
+  <div class="st">1. Mode</div><div class="seg" id="depMode"><button data-v="auto">Autonomous</button><button data-v="manual">Manual</button></div>
+  <div class="st" id="depSt2">2. Drone</div><div class="seg" id="depKind"><button data-v="overseer">Overseer</button><button data-v="scout">Scout</button></div>
+  <div class="st" id="depNote" style="margin-bottom:0;min-height:16px"></div></div>
 <div class="pop" id="scan"><h4>Scan record</h4><div class="kv" id="scankv"></div></div>
 <div class="pop" id="help">
   <h4>Controls</h4>
@@ -173,7 +186,7 @@ body.locked .pane.lk .xh{display:block}
   <b>Look mode</b> (button on the video) captures the mouse: move it to turn, click opens an object, <span class="kc">Esc</span> leaves, <span class="kc">Ctrl</span> closes an opened card<br><span class="kc">&larr;</span><span class="kc">&rarr;</span><span class="kc">&uarr;</span><span class="kc">&darr;</span> look with the keyboard<br>
   <span class="kc">Ctrl</span> + click an object in the BIM or video to open it<br>
   <span class="kc">F</span> Look mode on / off &nbsp; <span class="kc">/</span> search objects (<span class="kc">Enter</span> opens the first) &nbsp; <span class="kc">Esc</span> closes the card<br>
-  <b>Bottom bar</b>: the map flies the camera to where you click. <b>Plan / Long / Cross</b> cut the BIM and the point map at a height or position (slider; the 2 m bar gives the scale). <b>Measure</b>: click two points for a distance (in the cut plane on a plan or section; on the surface in 3D); <span class="kc">Esc</span> ends it. <b>Deviation colour</b> shows the point map by distance to the BIM (legend bottom right of it).<br>
+  <b>Bottom bar</b>: the map flies the camera to where you click. <b>Plan / Long / Cross</b> cut the BIM and the point map at a height or position (slider; the 2 m bar gives the scale). <b>Tape</b>: <span class="kc">Shift</span> + click sets a point, a second one draws the distance (video, 3D and plan panes, Look mode too). Click an end dot to pick it up, click again to put it down. Hold <span class="kc">Q</span> and click a line to remove the whole tape, or a dot to remove only that point (the other stays as the next start). <b>Deviation colour</b> shows the point map by distance to the BIM (legend bottom right of it).<br>
   Objects: problems are listed first; tick <b>Issues only</b> to hide the ones within tolerance. Clicking one flies the camera to it.</div>
 </div>
 <div class="pop" id="rq"><h4 id="rqh">New request</h4>
@@ -1067,7 +1080,7 @@ function drawGL(p,B,t,ql){
   gl.uniform3f(g.uEye,e[0],e[1],e[2]);gl.uniform2f(g.uRes,w,h);gl.uniform3fv(g.uLamp,g.lamps);gl.uniform1f(g.uExp,1.0);gl.uniform1i(g.uLampN,[8,6,4][ql]);
   gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,g.ntex);gl.uniform1i(g.uN,0);
   gl.uniform1f(g.uA,1);gl.bindVertexArray(g.vao);gl.drawArrays(gl.TRIANGLES,0,g.count);
-  if(g.count2){ // non-BIM gear: depth only first (so only its nearest face shows, and not through walls), then blended over the solid BIM
+  if(g.count2&&!onboard()&&!PIP){ // non-BIM gear: depth only first (so only its nearest face shows, and not through walls), then blended over the solid BIM
     const mvp=mat4mul(pr,vw);
     gl.useProgram(g.pD);gl.uniformMatrix4fv(g.uVPd,false,mvp);gl.colorMask(false,false,false,false);gl.drawArrays(gl.TRIANGLES,g.count,g.count2);
     gl.colorMask(true,true,true,true);gl.useProgram(g.pM);gl.depthFunc(gl.LEQUAL);gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
@@ -1095,7 +1108,7 @@ function videoOverlay(p,B,tms){
     const t=strong?o.name:CLS[o.cls].n.toLowerCase(),tw=ctx.measureText(t).width+12,ty=y0-12<24?y1+12:y0-12;
     ctx.fillStyle=strong?'rgba(255,255,255,.95)':'rgba(10,13,18,.78)';ctx.fillRect(x0,ty-9,tw,18);ctx.fillStyle=strong?'#10131a':c;ctx.fillText(t,x0+6,ty+.5);
   };
-  if($('det').checked){for(const o of OBJ){if(o.missing)continue;const dd=sub(o.actr,B.eye);if(dot(dd,dd)>70||o.i===sel)continue;box(o,false)}}
+  if($('det').checked&&!onboard()){for(const o of OBJ){if(o.missing)continue;const dd=sub(o.actr,B.eye);if(dot(dd,dd)>70||o.i===sel)continue;box(o,false)}}
   if(sel>=0&&!OBJ[sel].missing)box(OBJ[sel],true);
   drawMeasure(p,pt=>proj(B,pt,p));
 }
@@ -1271,6 +1284,7 @@ function measureClick(p,x,y){
   if(!meas.a||meas.b){meas.a=pt;meas.b=null}else meas.b=pt;
   measUI()}
 function drawMeasure(p,mf){
+  drawDep(p,mf);
   if(!meas.a)return;const ctx=p.ctx,pts=[meas.a,meas.b].map(v=>v&&mf(v));
   ctx.save();ctx.lineCap='round';
   if(pts[0]&&pts[1]){for(const[w,c]of[[5,'#fff'],[2.2,'#e0245e']]){ctx.strokeStyle=c;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);ctx.lineTo(pts[1][0],pts[1][1]);ctx.stroke()}}
@@ -1279,6 +1293,104 @@ function drawMeasure(p,mf){
     const w=ctx.measureText(t).width+14;ctx.fillStyle='#fff';ctx.strokeStyle='#e0245e';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect?ctx.roundRect(x-w/2,y-24,w,20,6):ctx.rect(x-w/2,y-24,w,20);ctx.fill();ctx.stroke();
     ctx.fillStyle='#1a2030';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,x,y-13.5)}
   ctx.restore()}
+
+const BATT=[['Overseer',[['Pack O-1',96],['Pack O-2',81]]],['Scout',[['Pack S-1',100],['Pack S-2',88],['Pack S-3',64]]]];  // two for the Overseer, three for the Scout; charge is simulated (no live data)
+$('guRows').innerHTML=BATT.map(g=>'<h6>'+g[0]+' &middot; '+g[1].length+' batteries</h6>'+g[1].map(b=>'<div class="bt"><span>'+b[0]+'</span><i><b class="'+(b[1]<70?'m':'')+'" style="width:'+b[1]+'%"></b></i><span>'+b[1]+'%</span></div>').join('')).join('');
+$('bGU').onclick=e=>{e.stopPropagation();const on=!$('gu').classList.contains('open');closePops();if(on)$('gu').classList.add('open')};
+/* ---------- deploy (simulated): Autonomous = pick a spot, the path is drawn and the drone flies it; Manual = the video is the drone's own camera ----------
+   Sizes are the repo's: Nox Ground Unit 634 x 570 x 237 mm (dimensions.md, box extents); Scout v4 motors at +-74.3 mm, 5 in props (129.4), guard 224 square (scout_v4_shape.py);
+   Overseer arms reach r 110 mm on the diagonals (overseer_wires.py), props and guard sized from that (E). Nothing is sent anywhere. */
+const GU={c:[W/2-.45,0,-L/2+.45],sx:.634,sz:.570,h:.237};
+const DRN={scout:{n:'Scout',m:.0743,pr:.0647,g:.112,col:'#34c46a'},overseer:{n:'Overseer',m:.0778,pr:.075,g:.16,col:'#4c8dff'}};
+const DEP={n:0,aim:null,state:'',mode:'',kind:'',target:null,path:[],len:0,s:0,drone:null,pend:''};
+/* cameras from the repo (dimensions.md): Overseer 2 front DECXIN 2633V2 yawed 20 deg out, pitched 10 down, plus 1 rear 2633V2 facing back, pitched 40 down; Scout 1 camera, 30 deg up.
+   All 102 deg diagonal, landscape 89 x 73 deg. The feed is the pane's whole view: the camera's axis is the pane's axis. */
+const FEEDS={overseer:[['Front L',-20,-10],['Front R',20,-10],['Rear',180,-40]],scout:[['Front',0,30]]};
+function depFeed(i){DEP.feed=i;const f=FEEDS[DEP.kind][i];cam.yaw=DEP.by+f[1]*Math.PI/180;cam.pitch=f[2]*Math.PI/180;
+  $('depFeeds').innerHTML=FEEDS[DEP.kind].map((q,j)=>'<button class="'+(j===i?'':'x')+'" data-i="'+j+'">'+q[0]+'</button>').join('');
+  $('depFeeds').querySelectorAll('button').forEach(b=>b.onclick=e=>{e.stopPropagation();depFeed(+b.dataset.i)});depUI()}
+const onboard=()=>DEP.state==='manual';let PIP=false;
+const depStart=()=>[GU.c[0],GU.h+.06,GU.c[2]];
+function depUI(){
+  const b=$('depbar'),t=$('depTxt'),k=$('depBtn');b.hidden=!DEP.state||DEP.state==='hover';$('fpv').hidden=DEP.state!=='fly';$('fpvT').textContent=DEP.kind?DRN[DEP.kind].n+' · '+FEEDS[DEP.kind][0][0]+' camera':'';$('depFeeds').hidden=DEP.state!=='manual';
+  if(DEP.state==='pick'){t.textContent='Move the orb ('+DRN[DEP.kind].n+' size) to where it should go, then click to place it';k.textContent='Cancel';k.className='x'}
+  else if(DEP.state==='placed'){t.textContent='Spot set \u00b7 press Q to send the '+DRN[DEP.kind].n+' along the path \u00b7 click again to move the spot';k.textContent='Cancel';k.className='x'}
+  else if(DEP.state==='fly'){t.textContent=DRN[DEP.kind].n+' flying the path \u00b7 its camera in the side panel';k.textContent='Stop';k.className='x'}
+  else if(DEP.state==='manual'){t.textContent='Manual · '+DRN[DEP.kind].n+' · '+FEEDS[DEP.kind][DEP.feed||0][0]+' · 102° (89×73°) · WASD, mouse, Space/Shift';k.textContent='Hand back control';k.className=''}
+  $('bDep').classList.toggle('on',!!DEP.state&&DEP.state!=='hover');document.body.classList.toggle('picking',DEP.state==='pick'||DEP.state==='placed');panes.forEach(p=>p.key='')}
+function depCancel(){if(DEP.state==='manual'){DEP.state='hover';resize()}else if(DEP.state==='fly'){DEP.state='hover'}else{DEP.state='';DEP.target=null;DEP.path=[]}depUI()}
+$('depBtn').onclick=e=>{e.stopPropagation();depCancel()};
+function depBegin(mode,kind){
+  closePops();DEP.mode=mode;DEP.kind=kind;DEP.target=null;DEP.path=[];
+  if(mode==='manual'){
+    if(sel>=0)select(-1);
+    DEP.drone={p:depStart(),yaw:-Math.PI*.75};cam.p=[GU.c[0],.62,GU.c[2]];cam.yaw=-Math.PI*.75;cam.pitch=-.05;vel[0]=vel[1]=vel[2]=0;collide(cam.p,vel);
+    DEP.by=cam.yaw;DEP.state='manual';depFeed(0);hint('Manual flight \u00b7 the video is the drone\u2019s own camera',3500)}
+  else{DEP.state='pick';DEP.drone={p:depStart(),yaw:0};lockMouse(panes[2]);setTimeout(()=>hint('Look mode · aim the crosshair at the spot and click to deploy the '+DRN[kind].n+' there · Esc leaves Look mode, then Cancel',0),150)}
+  depUI()}
+function depPlace(pt){
+  const a=depStart(),top=Math.min(H-.5,Math.max(1.6,pt[1]+.9)),hv=[pt[0],Math.min(H-.5,pt[1]+.6),pt[2]];
+  // climb out of the box, cruise above the clutter, come down over the marker
+  const cr=Math.max(1.8,hv[1]);DEP.path=[a,[a[0],cr,a[2]],[hv[0],cr,hv[2]],hv];
+  DEP.len=0;DEP.segs=[];for(let i=1;i<DEP.path.length;i++){const l=Math.hypot(...sub(DEP.path[i],DEP.path[i-1]));DEP.segs.push(l);DEP.len+=l}
+  DEP.target=pt;DEP.s=0;DEP.state='placed';depUI();hint('Spot placed \u00b7 press Q to send the '+DRN[DEP.kind].n+' \u00b7 click again to move it',0)}
+function depFly(){if(DEP.state!=='placed')return;DEP.by=Math.atan2(DEP.path[1][0]-DEP.path[0][0],-(DEP.path[1][2]-DEP.path[0][2]));DEP.feed=0;DEP.s=0;DEP.state='fly';
+  hint('Sent · the '+DRN[DEP.kind].n+' flies the path; its camera is in the side panel',3500);depUI()}
+function depPos(s){
+  let i=0;while(i<DEP.segs.length-1&&s>DEP.segs[i]){s-=DEP.segs[i];i++}
+  const l=DEP.segs[i]||1,t=clamp(s/l,0,1),a=DEP.path[i],b=DEP.path[i+1];return{p:[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t],h:Math.atan2(b[0]-a[0],-(b[2]-a[2]))}}
+function stepDep(dt){
+  if(DEP.state==='pick'||DEP.state==='placed'){if(DEP.state==='pick'&&(++DEP.n%3===0)){const v=panes[2],lk=document.pointerLockElement===v.el;let a=null;if(lk)a=surfPt(v,v.W/2,v.H/2);else if(ptr&&ptr.p===v)a=surfPt(v,ptr.x,ptr.y);DEP.aim=a;panes.forEach(q=>q.key='')}return}
+  if(DEP.state==='fly'){DEP.s+=1.6*dt;const r=depPos(Math.min(DEP.s,DEP.len)),d=DEP.drone;d.p=r.p;if(r.h===r.h&&DEP.s<DEP.len)DEP.by=r.h;d.yaw=DEP.by;
+    if(DEP.s>=DEP.len){DEP.state='hover';depUI()}panes.forEach(q=>q.key='')}
+  else if(DEP.state==='manual'){const f=FEEDS[DEP.kind][DEP.feed||0];DEP.by=cam.yaw-f[1]*Math.PI/180;DEP.drone.p=[cam.p[0],cam.p[1]-.03,cam.p[2]];DEP.drone.yaw=DEP.by;
+    const v=panes[2];v.tv=Math.max(.74,.983*v.H/v.W);panes.forEach(p=>p.key='')}}
+function drawFpv(now){ // the flying drone's own camera, plain (nothing see-through), in the side panel; the main video stays the user's
+  if(DEP.state!=='fly'||!GL||!DEP.drone)return;
+  const f=FEEDS[DEP.kind][0],yw=DEP.drone.yaw+f[1]*Math.PI/180,pt=f[2]*Math.PI/180,cp=Math.cos(pt),c=$('fpv').querySelector('canvas'),
+    B=basisFrom([DEP.drone.p[0],DEP.drone.p[1]+.03,DEP.drone.p[2]],[Math.sin(yw)*cp,Math.sin(pt),-Math.cos(yw)*cp]),fp={W:320,H:240,tv:Math.max(.74,.983*240/320)};
+  PIP=true;try{drawGL(fp,B,now,2)}finally{PIP=false}
+  c.getContext('2d').drawImage(GL.cv,0,0,c.width,c.height)}
+function drawDep(p,mf){
+  if(FL.cur!==1)return;                                           // the ground unit and its drones are on Level 2
+  if(onboard()&&p===panes[2])return;                   // the video is the drone's own camera: nothing drawn over it
+  const ctx=p.ctx;ctx.save();ctx.lineJoin='round';ctx.lineCap='round';
+  const seg=(a,b)=>{const A=mf(a),B2=mf(b);if(A&&B2){ctx.moveTo(A[0],A[1]);ctx.lineTo(B2[0],B2[1])}};
+  const lab=(pt,t,c)=>{const A=mf(pt);if(!A)return;ctx.font='600 11px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';const w=ctx.measureText(t).width+10;
+    ctx.fillStyle='rgba(10,13,18,.78)';ctx.fillRect(A[0]-w/2,A[1]-17,w,16);ctx.fillStyle=c;ctx.fillText(t,A[0],A[1]-4)};
+  if(DEP.state==='pick'&&DEP.aim){const k=DRN[DEP.kind],r=k.g*1.4,c=[DEP.aim[0],DEP.aim[1]+r,DEP.aim[2]],A=mf(c),R=mf([c[0]+r,c[1],c[2]]);       // the orb is the drone's size: its guard's corner radius
+    if(A&&R){const pr=Math.max(5,Math.hypot(R[0]-A[0],R[1]-A[1])),g=ctx.createRadialGradient(A[0]-pr*.3,A[1]-pr*.3,pr*.1,A[0],A[1],pr);g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(1,k.col);
+      ctx.globalAlpha=.85;ctx.fillStyle=g;ctx.beginPath();ctx.arc(A[0],A[1],pr,0,7);ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(A[0],A[1],pr+3,0,7);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(A[0]-pr-12,A[1]);ctx.lineTo(A[0]-pr-4,A[1]);ctx.moveTo(A[0]+pr+4,A[1]);ctx.lineTo(A[0]+pr+12,A[1]);ctx.moveTo(A[0],A[1]-pr-12);ctx.lineTo(A[0],A[1]-pr-4);ctx.moveTo(A[0],A[1]+pr+4);ctx.lineTo(A[0],A[1]+pr+12);ctx.stroke()}}
+  // Nox Ground Unit, the drones' start point, true scale in one corner
+  {const x0=GU.c[0]-GU.sx/2,x1=GU.c[0]+GU.sx/2,z0=GU.c[2]-GU.sz/2,z1=GU.c[2]+GU.sz/2,y1=GU.h,c=[];
+    for(let m=0;m<8;m++)c.push([m&1?x1:x0,m&2?y1:0,m&4?z1:z0]);
+    ctx.strokeStyle='#8fb8ff';ctx.lineWidth=1.6;ctx.beginPath();
+    for(const[i,j]of[[0,1],[2,3],[4,5],[6,7],[0,2],[1,3],[4,6],[5,7],[0,4],[1,5],[2,6],[3,7]])seg(c[i],c[j]);ctx.stroke();
+    lab([GU.c[0],y1,GU.c[2]],'Nox Ground Unit','#8fb8ff')}
+  if(DEP.target&&DEP.path.length){
+    const upto=DEP.state==='fly'||DEP.state==='hover'?DEP.s:0;
+    ctx.setLineDash([6,5]);ctx.strokeStyle='#f0b429';ctx.lineWidth=2;ctx.beginPath();for(let i=1;i<DEP.path.length;i++)seg(DEP.path[i-1],DEP.path[i]);ctx.stroke();ctx.setLineDash([]);
+    const t=DEP.target,r=.22;ctx.strokeStyle='#e0245e';ctx.lineWidth=2.4;ctx.beginPath();
+    for(let i=0;i<=24;i++){const a=i/24*6.2832,q=[t[0]+Math.cos(a)*r,t[1]+.02,t[2]+Math.sin(a)*r],q2=[t[0]+Math.cos((i+1)/24*6.2832)*r,t[1]+.02,t[2]+Math.sin((i+1)/24*6.2832)*r];if(i<24)seg(q,q2)}
+    seg(t,[t[0],t[1]+.6,t[2]]);ctx.stroke();lab([t[0],t[1]+.6,t[2]],'Deploy '+DRN[DEP.kind].n,'#ff7aa0')}
+  if(DEP.drone&&DEP.state){const d=DEP.drone,k=DRN[DEP.kind],c=Math.cos(d.yaw),sn=Math.sin(d.yaw);
+    ctx.strokeStyle=k.col;ctx.lineWidth=1.5;ctx.beginPath();
+    const m=k.m,g=k.g,B=(x,z,y)=>[d.p[0]+x*c-z*sn,d.p[1]+(y||0),d.p[2]+x*sn+z*c];
+    for(const[mx,mz]of[[m,m],[-m,m],[-m,-m],[m,-m]]){seg(B(0,0,0),B(mx,mz,0));
+      for(let i=0;i<12;i++){const a=i/12*6.2832,b=(i+1)/12*6.2832;seg(B(mx+Math.cos(a)*k.pr,mz+Math.sin(a)*k.pr,.02),B(mx+Math.cos(b)*k.pr,mz+Math.sin(b)*k.pr,.02))}}
+    for(const[[x0,z0],[x1,z1]]of[[[-g,-g],[g,-g]],[[g,-g],[g,g]],[[g,g],[-g,g]],[[-g,g],[-g,-g]]])seg(B(x0,z0,.02),B(x1,z1,.02));
+    seg(B(0,0,0),B(0,-g*1.3,0));                              // nose
+    ctx.stroke();ctx.fillStyle=k.col;const A=mf(d.p);if(A){ctx.beginPath();ctx.arc(A[0],A[1],3,0,7);ctx.fill()}
+    lab([d.p[0],d.p[1]+.12,d.p[2]],k.n,k.col)}
+  ctx.restore()}
+$('bDep').onclick=e=>{e.stopPropagation();if(DEP.state==='manual'||DEP.state==='fly'||DEP.state==='pick'){depCancel();return}
+  const on=!$('dep').classList.contains('open');closePops();if(on){$('dep').classList.add('open');$('bDep').classList.add('on');
+    document.querySelectorAll('#depMode button,#depKind button').forEach(b=>b.classList.remove('on'));DEP.pend=DEP.pk='';
+    $('depNote').textContent=DEP.state==='hover'?'The '+DRN[DEP.kind].n+' is hovering at the last marker.':''}};
+const depChoose=()=>{if(DEP.pend&&DEP.pk)depBegin(DEP.pend,DEP.pk);else $('depNote').textContent='Now choose the '+(DEP.pend?'drone.':'mode.')};
+document.querySelectorAll('#depMode button').forEach(b=>b.onclick=e=>{e.stopPropagation();DEP.pend=b.dataset.v;document.querySelectorAll('#depMode button').forEach(x=>x.classList.toggle('on',x===b));depChoose()});
+document.querySelectorAll('#depKind button').forEach(b=>b.onclick=e=>{e.stopPropagation();DEP.pk=b.dataset.v;document.querySelectorAll('#depKind button').forEach(x=>x.classList.toggle('on',x===b));depChoose()});
 $('bDev').onclick=()=>document.querySelector('#cmode button[data-m="0"]').click();
 /* minimap: the bay from above, one click flies the shared camera there */
 const mm={cv:$('mm'),base:null,w:0,h:0,s:1,dpr:1,key:'',hz:''};
@@ -1334,13 +1446,19 @@ function mmLayout(){
   for(const xx of CXS)for(const zz of CZS){const q=mmP(xx,zz);c.fillRect(q[0]-cs/2,q[1]-cs/2,cs,cs)}
   mm.base=b;mm.key=''}
 function drawMini(){
-  mmLayout();if(!mm.base)return;const k=cam.p[0].toFixed(2)+cam.p[2].toFixed(2)+cam.yaw.toFixed(2)+mm.hz;if(k===mm.key)return;mm.key=k;
+  mmLayout();if(!mm.base)return;const k=cam.p[0].toFixed(2)+cam.p[2].toFixed(2)+cam.yaw.toFixed(2)+mm.hz+(DEP.drone&&DEP.state?DEP.state+DEP.drone.p[0].toFixed(2)+DEP.drone.p[2].toFixed(2)+DEP.drone.yaw.toFixed(2)+(DEP.target?1:0):'');if(k===mm.key)return;mm.key=k;
   const c=mm.cv.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,mm.cv.width,mm.cv.height);c.drawImage(mm.base,0,0);c.setTransform(mm.dpr,0,0,mm.dpr,0,0);
   if(mm.hz){const zi=+mm.hz[1]-1,xi='ABC'.indexOf(mm.hz[0]),xl=[-W/2,-2.33,2.33,W/2],zl=[-L/2,-6,0,6,L/2],a=mmP(xl[xi+1],zl[zi]),b=mmP(xl[xi],zl[zi+1]);
     c.fillStyle='rgba(76,141,255,.22)';c.fillRect(a[0],a[1],b[0]-a[0],b[1]-a[1])}
   const q=mmP(cam.p[0],cam.p[2]),ang=Math.atan2(-Math.sin(cam.yaw),-Math.cos(cam.yaw)),r=34;
   c.fillStyle='rgba(76,141,255,.35)';c.beginPath();c.moveTo(q[0],q[1]);c.arc(q[0],q[1],r,ang-.7,ang+.7);c.closePath();c.fill();
-  c.fillStyle='#1f4fd0';c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.arc(q[0],q[1],5,0,7);c.fill();c.stroke()}
+  c.fillStyle='#1f4fd0';c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.arc(q[0],q[1],5,0,7);c.fill();c.stroke();
+  if(DEP.state&&FL.cur===1){ // deploy: ground unit, the path, the spot, and the drone with its heading
+    const g=mmP(GU.c[0],GU.c[2]);c.fillStyle='#4c8dff';c.fillRect(g[0]-4,g[1]-4,8,8);
+    if(DEP.path.length){c.setLineDash([4,3]);c.strokeStyle='#d99a0b';c.lineWidth=1.6;c.beginPath();DEP.path.forEach((v,i)=>{const m=mmP(v[0],v[2]);i?c.lineTo(m[0],m[1]):c.moveTo(m[0],m[1])});c.stroke();c.setLineDash([])}
+    if(DEP.target){const m=mmP(DEP.target[0],DEP.target[2]);c.strokeStyle='#e0245e';c.lineWidth=2;c.beginPath();c.arc(m[0],m[1],5,0,7);c.stroke()}
+    if(DEP.drone&&DEP.state!=='pick'){const d=DEP.drone,m=mmP(d.p[0],d.p[2]),fx=-Math.cos(d.yaw),fy=-Math.sin(d.yaw);          // map: x is up, z is right
+      c.fillStyle=DRN[DEP.kind].col;c.strokeStyle='#fff';c.lineWidth=1.6;c.beginPath();c.moveTo(m[0]+fx*9,m[1]+fy*9);c.lineTo(m[0]-fx*5-fy*5,m[1]-fy*5+fx*5);c.lineTo(m[0]-fx*5+fy*5,m[1]-fy*5-fx*5);c.closePath();c.fill();c.stroke()}}}
 let mmTween=null;
 function mmPick(e){const r=mm.cv.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
   return[clamp(-(py-mm.h/2-6)/mm.s,-W/2+.8,W/2-.8),clamp((px-mm.w/2)/mm.s,-L/2+.8,L/2-.8)]}
@@ -1377,7 +1495,7 @@ reqUI();
 let glNext=0,fcount=0,lastDraw=0,qEma=16,qHold=0,QL=0,frames=0;
 function frameBody(now){
   const dt=Math.min(.05,(now-(frame.t||now))/1000);frame.t=now;
-  stepFly(dt);tweenStep(now);grabTick();hoverTick(now);drawMini();
+  stepFly(dt);stepDep(dt);tweenStep(now);grabTick();hoverTick(now);drawMini();
   if(insp.on)easeInsp(dt);
   const active=flying||now-lastLook<200;
   if(!active&&!ctlShown&&now-lastAct>3600){ctlShown=true;movingCls=false;$('ctl').classList.add('show');document.body.classList.remove('moving')}
@@ -1390,6 +1508,7 @@ function frameBody(now){
     if(qEma>26&&QL<2){QL++;qHold=0;qEma=18}else if(qEma<19&&QL>0&&++qHold>150){QL--;qHold=0}
   }else qHold=0;
   const ql=active?QL:0,B=camBasis(),ck=cam.p[0].toFixed(3)+','+cam.p[1].toFixed(3)+','+cam.p[2].toFixed(3)+','+cam.yaw.toFixed(4)+','+cam.pitch.toFixed(4);
+  drawFpv(now);
   for(const p of panes){
     if(p.W<2)continue;
     if(p.mode===0){
@@ -1422,11 +1541,12 @@ for(const p of panes){
   let last=null;
   p.el.addEventListener('pointerdown',e=>{
     if(e.target.closest('.ui'))return;
+    if((DEP.state==='pick'||DEP.state==='placed')&&p===panes[2]&&e.button===0){const lk=document.pointerLockElement===p.el,r0=p.el.getBoundingClientRect(),pt=surfPt(p,lk?p.W/2:e.clientX-r0.left,lk?p.H/2:e.clientY-r0.top);if(pt)depPlace(pt);else hint('No surface there \u00b7 click on the floor, a wall or an object',2500);return}
     if(e.button===0){
       const lk=document.pointerLockElement===p.el,r0=p.el.getBoundingClientRect(),hx=lk?p.W/2:e.clientX-r0.left,hy=lk?p.H/2:e.clientY-r0.top;
       if(meas.grab){meas.grab='';measUI();return}                                      // second click: drop the dot where it is
       const h=measHit(p,hx,hy);
-      if(h&&e.shiftKey){                                                              // Shift+click: on the line or label deletes the whole measurement, on a dot only that dot
+      if(h&&keys.has('KeyQ')){                                                              // Q held + click: on the line or label deletes the whole measurement, on a dot only that dot
         if(h==='line')meas.a=meas.b=null;else if(h==='a'){meas.a=meas.b;meas.b=null}else meas.b=null;
         meas.grab='';measUI();return}
       if(h==='a'||h==='b'){if(!e.ctrlKey&&!e.metaKey){meas.grab=h;measUI();return}}   // click a dot to pick it up
@@ -1480,11 +1600,13 @@ document.addEventListener('pointerlockerror',()=>{lockFailed=true;hint('This win
 $('lookbtn').onclick=e=>{e.stopPropagation();lockMouse(panes[2]);setTimeout(()=>{if(!document.pointerLockElement&&!lockFailed)hint('Mouse capture was refused \u00b7 arrow keys look',6000)},700)};
 const MOVE=['KeyW','KeyA','KeyS','KeyD','KeyE','KeyQ','Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','ShiftLeft','ShiftRight'];
 addEventListener('keydown',e=>{
+  if(e.code==='KeyQ'&&DEP.state==='placed'){e.preventDefault();depFly();return}   // Q sends the drone; with no spot placed (and everywhere else) Q is still fly-down / the tape delete key
   if(e.target&&e.target.matches&&e.target.matches('input[type=search],input[type=text],textarea,select'))return;
   if(MOVE.includes(e.code)){const a=document.activeElement;if(a&&a.matches&&a.matches('button,select,input'))a.blur();e.preventDefault();keys.add(e.code);touch();return}
   if(e.code==='ControlLeft'||e.code==='ControlRight'){if(!e.repeat)ctrlAlone=true;return}
   if(e.key==='/'&&!document.pointerLockElement){e.preventDefault();closePops();toggle('drawer',$('bObj'));$('q').focus();$('q').select();return}
   if(e.code==='KeyF'){if(document.pointerLockElement)document.exitPointerLock();else lockMouse(panes[2])}
+  if(e.code==='Escape'&&(DEP.state==='pick'||DEP.state==='placed')&&!document.pointerLockElement){depCancel();return}
   if(e.code==='Escape'){if(document.pointerLockElement){document.exitPointerLock();return}if(openPop()){closePops();return}if(meas.on){setMeas(false);return}if(sel>=0)select(-1)}
 });
 let ctrlAlone=false;addEventListener('pointerdown',()=>{ctrlAlone=false},true);
@@ -1564,7 +1686,7 @@ function buildLists(){
     d.onclick=()=>{const on=sel!==i;select(on?i:-1);if(on)lookAt(o)};list.appendChild(d)});
   $('ocount').textContent=B.length;
 }
-const POPS=['menu','help','scan','rq'];
+const POPS=['menu','help','scan','rq','dep','gu'];
 const openPop=()=>POPS.some(id=>$(id).classList.contains('open'))||$('drawer').classList.contains('open');
 function closePops(){POPS.forEach(id=>$(id).classList.remove('open'));$('drawer').classList.remove('open');$('bObj').classList.remove('on');$('bMenu').classList.remove('on');$('bScan').classList.remove('on')}
 function toggle(id,btn){const on=!$(id).classList.contains('open');closePops();if(on){$(id).classList.add('open');btn.classList.add('on')}}
