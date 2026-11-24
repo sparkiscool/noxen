@@ -143,7 +143,7 @@ body.locked .pane.lk .xh{display:block}
     <div class="views ui" id="views" hidden><button data-v="3d" class="on">3D</button><button data-v="plan">Plan</button><button data-v="front">Front</button><button data-v="side">Side</button></div></div>
 </div>
 <div class="strip" id="strip">
-  <div class="mmw" id="mmw"><canvas id="mm"></canvas><span class="mmc" id="mmc">Level 2 &middot; click to fly</span><div class="fl"><button id="flDn" title="Previous floor">&#9660;</button><button id="flUp" title="Next floor">&#9650;</button><button id="flAdd" title="Add a floor">+ Floor</button></div></div>
+  <div class="mmw" id="mmw"><canvas id="mm"></canvas><span class="mmc" id="mmc">Level 2 &middot; click to fly</span><div class="fl"><button id="flDn" title="Previous floor">&#9660;</button><button id="flUp" title="Next floor">&#9650;</button></div></div>
   <div class="tools">
     <div class="tg w1"><h5>Plan &amp; section</h5>
       <div class="rw"><div class="seg" id="cutType"><button data-c="" class="on" title="Normal 3D views">Off</button><button data-c="level" title="Top-down plan, cut at a height">Plan</button><button data-c="long" title="Section along the length">Long</button><button data-c="cross" title="Section across the width">Cross</button></div></div>
@@ -1295,7 +1295,6 @@ function setFloor(i){
 function flUI(){$('flDn').disabled=FL.cur<=0;$('flUp').disabled=FL.cur>=FL.list.length-1}
 $('flDn').onclick=e=>{e.stopPropagation();setFloor(FL.cur-1)};
 $('flUp').onclick=e=>{e.stopPropagation();setFloor(FL.cur+1)};
-$('flAdd').onclick=e=>{e.stopPropagation();FL.list.push({name:'Level '+(FL.list.length+2),cam:null,plan:null});setFloor(FL.list.length-1)};
 addEventListener('keydown',e=>{if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(e.code==='PageUp'){setFloor(FL.cur+1);e.preventDefault()}else if(e.code==='PageDown'){setFloor(FL.cur-1);e.preventDefault()}});
 flUI();
 const zoneAt=(x,z)=>(x<-2.33?'A':x<2.33?'B':'C')+(z<-6?1:z<0?2:z<6?3:4);
