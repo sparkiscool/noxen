@@ -1,0 +1,154 @@
+"""Scout v4 probe mechanism's drawn interfaces (the lib of the retired parts/scout_v4_probe_turret; 24 Nov, Spark: "merge the probe base
+(tape measure probe mount) and the drone's body into ONE single printed part"): what holds the spool, the N20, the coil's pressure roller,
+the cable drum and the two blades, and the roof's middle node RM. One user: parts/scout_v4_frame/part.py
+(bodies(merged=True): the attachments of the one-body frame, the room between them and the deck generated). The bench turret
+(parts/scout_v4_probe_bench_turret/make.py) still draws from parts/scout_v4_probe_turret/part.py, which this file was copied from.
+Drawn (attachments only): the spool's two axle bosses (an M3 x 50 screw + nyloc is the axle); the pressure roller's rod guides (its O3
+rod's ends in radial slots at |y| 9.8..12) and its leaf pocket on the rod's middle (a saddle and a Keystone-209-type leaf on a fixed end
+wall: tools/probe_mast_sim.py, a pushed coil blossoms unless locked); the N20's face plate (its 2 x M1.6 on 7.7), its two cheeks and its
+shaft's tip bearing; the throat's walls (a flat slot at the spool's height opening to the blades' lens at its top, where the parked head's
+clip seats); the drum's wall round the cable's coil; RM's four rod collars, their mouths at r 26..34 (tools/scout_v4_shape.RM_MOUTH).
+Separate unit only: four O10 floor bosses (M3 down into the base's inserts) and the deck below it cut away.
+Merged only: the N20 between two press rails, no screws, and the pinion's bay open downward (the bench turret's fixes of 24 Nov); the drum's wall is a U open toward -x, its top and bottom running on straight (the spool's way in and out with its drum hub and
+the cable's coil, tools/assembly_check.py: in a closed ring they are caught whichever way the spool moves), and the room starts 0.5 inside
+the deck (audit parity).
+Cuts: the spool, its 40 T gear and the 12 T pinion swept; the tubes' travel, the rod's slots, the leaf's pocket; the N20; the axle; the
+blades' path and the mast above; the drum's cavity; the props' discs + 12.
+Loads (written by the user's setup): the head-first crash (systems/scout_v4.head_load.json); the mast's fold-limited bending at the
+throat (FOLD_NM: the FE's fold moments); the N20's stall through 40 / 12 (S.SPOOL_STALL at the spool); the roller's leaf (S.LEAF F_case)."""
+import numpy as np
+from topo import Part
+from parts.scout_v4_units_lib import (S, ASM, box, cyl, along, hull, U, socks_of, socket_cases, socket_bodies, payload_cases, point_case,
+                                      disc_cuts, region_top, region_bot, check_collars, TURRET_BOLTS, DZ1, M3_CLR, BOSS_R)
+
+import json as _json, os as _os
+HEAD_N = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "systems", "scout_v4.head_load.json")))["head_first_N"]   # the frame model's head-first contact force (tools/scout_v4_shape.py)
+CUP_R, BLADE_T, CABLE_T = S.CUP_R, S.BLADE_T, S.CABLE_T   # 12 Nov: the cup radius is the coupon's T, t 0.13 E, the 30 AWG PTFE ribbon 0.81 (tools/scout_v4_shape.py)
+HUB_RISE = 0.85                                  # the spool's way out rises this much over its first 7 mm (parts/scout_v4_frame/part.py SPOOL_PATH)
+FOLD_NM = (0.6, 1.2)                             # the moment the mast can put on the throat before it folds, +-x and +-y (tools/probe_mast_fe.py: the unbonded lens folds at ~0.50 N m in x, 3.6 in y; x x 1.2, y capped at 2 x x: a bigger y moment is a crash on the head)
+
+
+def lens_half():
+    return S.LENS_HALF                                                     # half the lens's thickness along x, with clearance (tools/scout_v4_shape.py: the coupon's T)
+
+
+def yz_ring(cx, cz, r0, r1, y0, y1):
+    return cyl(0, 0, y0, y1, r1).rotate([-90, 0, 0]).translate([cx, 0, cz]) - cyl(0, 0, y0 - 1, y1 + 1, r0).rotate([-90, 0, 0]).translate([cx, 0, cz]) if r0 > 0 else cyl(0, 0, y0, y1, r1).rotate([-90, 0, 0]).translate([cx, 0, cz])
+
+
+def ycyl(cx, cz, r, y0, y1):
+    """a cylinder along y from y0 to y1 at (cx, cz)"""
+    import manifold3d as mf
+    return mf.Manifold.cylinder(y1 - y0, r, r, 48).rotate([-90, 0, 0]).translate([cx, y0, cz])
+
+
+def bodies(merged=False):
+    """merged: as attachments of the one-body frame (no floor bosses, the deck not cut away, the drum open to the spool's way out)"""
+    cx, cz = S.SPOOL["c"]; r = S.SPOOL["r"]; t = S.THROAT; mx = S.MAST_X; hw = S.BLADE_W / 2 + 0.5
+    gy0, gy1 = S.GEAR["y"]; ra = (S.GEAR["spool_t"] / 2 + 1) * S.GEAR["m"]; rp = (S.GEAR["pinion_t"] / 2 + 1) * S.GEAR["m"]
+    pz = cz - S.GEAR["c"]; g0 = S.N20_FACE
+    dy0, dy1, dr = S.DRUM["y0"], S.DRUM["y1"], S.DRUM["r"]
+    yp, ym = gy1 + 0.8, dy0 - 0.8
+    drawn, cuts, env = [], [], []
+    # room: a drum-shaped housing round the spool from the deck to the roof's ring, the ring node, and the motor's pocket
+    env.append(cyl(cx, 0, DZ1 - (0.5 if merged else 0.0), 67.0, 36.0))
+    env.append(box(cx - 8.0, cx + 8.0, g0 - 30.0, yp + 6.0, pz, DZ1 + 1))   # 10 Nov run 5: from the N20's axis up (below it the can left 1.7 strips: two loose bodies)
+    lh_, hw_ = lens_half(), S.BLADE_W / 2 + 0.5
+    env.append(box(mx - lh_ - 6.0, mx + lh_ + 6.0, -hw_ - 6.0, hw_ + 6.0, 55.0, t["z1"]))   # 10 Nov: room up the throat to its seat (the drum ended at 67, the throat's top 6 stood on drawn 2 mm walls: 0.53 in the 1.2 N m fold)
+    # floor bosses
+    regs = []
+    for x, y in ([] if merged else TURRET_BOLTS):
+        drawn.append(cyl(x, y, DZ1, DZ1 + 4.0, BOSS_R)); regs.append(region_bot(x, y, DZ1))
+        cuts.append(cyl(x, y, DZ1 - 1, DZ1 + 5, M3_CLR)); cuts.append(cyl(x, y, DZ1 + 4.0, 140, 3.3))
+    # the spool's axle bosses (M3 screw axle) in the two side walls
+    axle = []
+    for y0, y1 in ((yp, yp + 3.0), (ym - 3.0, ym)):
+        drawn.append(ycyl(cx, cz, 5.0, y0, y1)); axle.append(ycyl(cx, cz, 5.4, y0 - 0.2, y1 + 0.2))
+    cuts.append(ycyl(cx, cz, 1.6, ym - 10, yp + 10))
+    # the N20: face plate with 2 x M1.6 on 7.7 and the shaft hole; the shaft tip's bearing beyond the pinion
+    face = box(cx - 6.5, cx + 6.5, g0 + 0.15, g0 + 2.75, pz - 5.5, pz + 5.5); drawn.append(face)   # 2.6 thick (the gate's floor 2.5)
+    cuts.append(ycyl(cx, pz, 2.2, g0 - 1, g0 + 3.5)); cuts += [ycyl(cx + s * 3.85, pz, 0.9, g0 - 1, g0 + 3.5) for s in (-1, 1)]
+    drawn.append(ycyl(cx, pz, 3.5, gy1 + 1.0, gy1 + 4.6)); cuts.append(ycyl(cx, pz, 1.6, gy1 + 0.5, gy1 + 5.0))
+    for sx in (-1, 1):                                                                              # 10 Nov run 5: the N20's mount drawn, its two 2.0 cheeks beside the gearbox
+        drawn.append(box(*sorted((cx + sx * 6.5, cx + sx * 8.5)), g0 + 0.15, gy1 + 4.6, pz - 4.5, DZ1))   # from the face plate to the tip bearing (the pocket's room gave only 1.7 strips)   # the shaft's tip (10 from the face) in its bearing
+    rails = []
+    if merged:                                                                                      # 24 Nov (the bench turret's fix, Spark's build: the 2 x M1.6 had no driver line and their heads stood in the
+        from topo import fit as FIT                                                                 # pinion): no screws, the gearbox pressed between two rails 4.0 wide, 12.3 apart (the fit table's press), from the
+        nw = FIT.across(12.0, "press") / 2; nh = FIT.across(10.0, "slide") / 2                      # face plate back along its sides; here they are the deck's own pocket walls (z to its top), the -x one from 18.6:
+        rails = [box(*sorted((cx + sx * nw, cx + sx * (nw + 4.0))), g0 - 10.0, g0 + 0.2, 18.6 if sx < 0 else 16.5, DZ1) for sx in (-1, 1)]   # over the Radxa's front end
+        drawn += rails
+        cuts.append(box(cx - nw, cx + nw, g0 - 10.0 - 0.3, g0 + 0.2, pz - nh, pz + nh))            # the gearbox between them
+        pw, hw_ = (11.42 + FIT.FIT["mate"]["allow"]) / 2, (7.0 + FIT.FIT["mate"]["allow"]) / 2   # (the table's mate allowance; not declared: the pinion is printed, and the drum's 11.8 wall is no fit of it)
+        #                        # the pinion's bay open downward, 11.92 wide (its O11.42 tip circle, its O7 hub boss: parts/scout_v4_probe_pinion/make.py)
+        cuts.append(box(cx - pw, cx + pw, gy0 - 0.5, gy1 + 0.5, pz - 20, pz) + box(cx - hw_, cx + hw_, gy1, gy1 + 0.9, pz - 20, pz))
+    else:
+        cuts.append(box(cx - 6.4, cx + 6.4, g0 - 10.0 - 0.3, g0 + 0.2, pz - 5.3, pz + 5.3))       # the gearbox
+    cuts.append(ycyl(cx, pz, 6.3, g0 - 27.5, g0 - 10.0))                                           # the can
+    # the throat: walls round the blades' path, a flat slot at the spool's height to the lens at its top (the head's clip seats in it)
+    lh = lens_half(); sl = S.STACK / 2 + max(S.MAST_X - S.SPOOL["hub"] - S.STACK / 2, S.SPOOL["hub"] + S.COIL - S.STACK / 2 - S.MAST_X) + 0.3   # the stack's half, the walk of its tangent off the coil (full to empty) from the mast's axis, 0.3
+    path = hull(np.array([[mx + sx * sl, sy * hw, t["z0"]] for sx in (-1, 1) for sy in (-1, 1)] + [[mx + sx * lh, sy * hw, t["z1"] + 0.5] for sx in (-1, 1) for sy in (-1, 1)]))
+    walls = hull(np.array([[mx + sx * (sl + 2.0), sy * (hw + 2.0), t["z0"]] for sx in (-1, 1) for sy in (-1, 1)] + [[mx + sx * (lh + 2.0), sy * (hw + 2.0), t["z1"]] for sx in (-1, 1) for sy in (-1, 1)]))
+    drawn.append(walls - path - ycyl(cx, cz, S.SPOOL["r"] + 3.0, S.SPOOL["y0"] - 3, S.SPOOL["y1"] + 3)); cuts.append(path)   # the -x wall stops 3 short of the spool's sweep (no sliver)
+    cuts.append(box(mx - lh - 6.0, mx + lh + 6.0, -hw - 3.0, hw + 3.0, t["z1"], 400))               # the mast and the head above
+    cuts.append(box(mx - sl - 0.2, mx + sl + 0.2, -hw, hw, cz - 2.0, t["z0"] + 0.5))                 # the blades from the spool's tangent into the throat
+    # the drum round the cable's coil
+    ring = yz_ring(cx, cz, dr + 0.3, dr + 2.8, dy0 - 2.6, dy1)
+    if merged:                                                                                      # a U open to -x: the spool's drum hub and the cable's coil on it (O16.2 drawn, O13.7 wound tight) go in and
+        up = HUB_RISE + 0.3                                                                         # out along -x, rising HUB_RISE (the frame's "spool in from behind" path; with only the O8 hub's slot the coil was
+        ring = ring + box(cx - dr - 2.8, cx, dy0 - 2.6, dy1, cz - dr - 2.8, cz + dr + 2.8 + up)     # caught, 284 mm3). Its end plate stays whole; the wall's top and bottom run on straight to x -11.8
+        ring = ring - box(cx - dr - 4.0, cx, dy0 - 0.05, dy1 + 1.0, cz - dr - 0.3, cz + dr + 0.3 + up)
+    drawn.append(ring)                               # 2.5 wall and a 2.6 end (10 Nov run 6: 4.0 on r 11 still peaked in it; the drum is r 9 now, the room round it generated)
+    cuts.append(ycyl(cx, cz, dr + 0.3, dy0, dy1 + 0.5)); cuts.append(box(cx - 2, cx + 2, ym - 8, dy0 + 1, cz - 2, cz + 2))   # its cavity; the cable's way out to the Radxa
+    if merged:                                                                                      # and the U's channel behind the cavity (the coil's way in leaves 1.2 of room along its walls)
+        cuts.append(box(cx - dr - 4.0, cx, dy0, dy1 + 0.5, cz - dr - 0.3, cz + dr + 0.3 + HUB_RISE + 0.3))
+    # the coil's pressure roller (14 Nov, probe stream): two O8 tubes on a O3 carbon rod 15 deg before the exit, the rod's ends guided in radial
+    # slots of two walls at |y| 9.8..12 (open to the spool: the rod drops in from there); on the rod's middle, between the tubes, a printed saddle
+    # carrying a Keystone-209-type leaf contact (ZCZQC B0C5D3XLBK) that presses the pocket's fixed end wall (no screw: the saddle's set sets the force).
+    # The old pockets at the rod's ends (|y| 12..29, out to r 39.5) stood in the props' keep-out; at |y| < 6.5 the keep-out leaves x to ~31.
+    a = np.radians(S.ROLLER["ang"]); u = np.array([np.cos(a), np.sin(a)]); v = np.array([-u[1], u[0]]); rw = S.ROLLER["w"] / 2
+    r_full = S.SPOOL["hub"] + S.COIL + S.ROLLER["r"]; r_empty = S.SPOOL["hub"] + 0.15 + S.ROLLER["r"]
+    L = S.LEAF; sw = L["s_wall"]; wl = L["wall"]; ht, hy = L["ht"], L["hy"]
+    def radial(s0, s1, t0, t1, y0, y1):                                             # a box along the roller's line: radial s0..s1 from the spool's axis, tangential t0..t1
+        pts = [[cx + q * u[0] + w * v[0], yy, cz + q * u[1] + w * v[1]] for q in (s0, s1) for w in (t0, t1) for yy in (y0, y1)]
+        return hull(np.array(pts))
+    def ucirc(sc, rr, y0, y1, s_in=None):                                            # a circle r rr round the line's point sc (along y), hulled in to s_in
+        th = np.linspace(0, 2 * np.pi, 32, endpoint=False)
+        pts = [[cx + (sc + rr * np.cos(t_)) * u[0] + rr * np.sin(t_) * v[0], yy, cz + (sc + rr * np.cos(t_)) * u[1] + rr * np.sin(t_) * v[1]] for t_ in th for yy in (y0, y1)]
+        if s_in is not None:
+            pts += [[cx + s_in * u[0] + w * v[0], yy, cz + s_in * u[1] + w * v[1]] for w in (-rr, rr) for yy in (y0, y1)]
+        return hull(np.array(pts))
+    s_end = r_full + 0.15                                                            # the rod's centre at its outermost (the full coil) + 0.15 (at + 0.3 the wall's far side met the keep-out)
+    y0s, y1s = L["slot_y"]
+    guides = []
+    for sy in (1, -1):
+        Y = lambda p, q: tuple(sorted((sy * p, sy * q)))
+        guides.append(ucirc(s_end, 1.65 + wl, *Y(y0s, y1s), s_in=17.8))              # the rod's guide wall (2.55 thick: the audit's 2.5): 2.0 round the slot, from r 17.8 (the spool's flanges, r 15.9, sweep 16.9)
+        cuts.append(ucirc(s_end, 1.65, *Y(y0s - 0.5, y1s + 1.0), s_in=15.0))          # the slot (O3.3 wide), open to the spool, through
+    pk = [radial(20.0, sw + wl, ht, ht + wl, -hy - wl, hy + wl),                     # the pocket's two tangential walls (they guide the saddle; clear of the tubes' |t| < 4.8)
+          radial(17.5, sw + wl, -ht - wl, -ht, -hy - wl, hy + wl),
+          radial(sw, sw + wl, -ht - wl, ht + wl, -hy - wl, hy + wl)]                 # its end wall: the leaf presses it
+    for sy in (1, -1):
+        pk.append(radial(L["y_walls"], sw, -ht - wl, ht + wl, *sorted((sy * hy, sy * (hy + wl)))))   # its y walls, beyond the tubes' sweep (s 24.5)
+    drawn += [g ^ box(-200, 200, -200, 200, DZ1, 400) for g in guides] + [U(pk) ^ box(-200, 200, -200, 200, DZ1, 400)]
+    cuts.append(radial(15.0, sw, -ht, ht, -hy, hy))                                   # the pocket: the saddle and the leaf, open to the spool (they go in from there with the rod)
+    seats = [radial(sw + 0.2, sw + 1.8, -4.0, 4.0, -3.5, 3.5)]                        # the end wall where the leaf presses
+    env.append(radial(17.0, sw + wl + 1.0, -ht - wl - 1.0, ht + wl + 1.0, -y1s - 0.5, y1s + 0.5) ^ box(-200, 200, -200, 200, DZ1, 400))   # room round the guides and the pocket
+    cuts.append(radial(r_empty - S.ROLLER["r"] - 0.8, r_full + S.ROLLER["r"] + 0.8, -S.ROLLER["r"] - 0.8, S.ROLLER["r"] + 0.8, -rw - 0.2, rw + 0.2))   # the tubes and their travel
+    cuts.append(box(cx - 13.0, cx + 13.0, S.SPOOL["y0"] - 0.6, g0 - 0.3, DZ1, cz - 10.0))   # 10 Nov run 4: under the spool, between its sweep (down to z 24.1) and the N20's gearbox (up to 25.5), room left only skins 1.1-1.5 thick (the solid check): void
+    # the spool, its gear and the pinion swept
+    cuts.append(ycyl(cx, cz, r + 1.0, S.SPOOL["y0"] - 0.6, S.SPOOL["y1"] + 0.6))
+    cuts.append(ycyl(cx, cz, ra + 0.8, gy0 - 0.5, gy1 + 0.5)); cuts.append(ycyl(cx, pz, rp + 0.8, gy0 - 0.5, gy1 + 0.5))
+    cuts.append(ycyl(cx, pz, 3.5 + 0.3, gy1, gy1 + 0.9))                                            # 15 Nov (assembly check): the pinion's O7 hub boss runs to gy1 + 0.7, the sweep stopped at + 0.5
+    cuts += disc_cuts()
+    if not merged:
+        cuts.append(box(-200, 200, -200, 200, -100, DZ1) - box(cx - 8.5, cx + 8.5, g0 - 31.0, yp + 7.0, pz - 8.0, DZ1 + 0.1))
+    # RM: the roof's middle node, its four rod collars with their mouths at r 34
+    socks = [k for o, r in S.RM_MOUTH.items() for k in socks_of("RM", ring_r=r) if o in k.name.split(" ")[1].split("-")]   # each mouth at its own r (tools/scout_v4_shape.RM_MOUTH)
+    d, c = socket_bodies(socks, lambda s: np.array([0.0, 0.0, 1.0]))
+    drawn += d; cuts += c
+    check_collars(socks, U(cuts) - U([b for s in socks for b in s.bores()]))
+    seat = box(mx - lh - 2.0, mx + lh + 2.0, -hw - 2.0, hw + 2.0, t["z1"] - 1.5, t["z1"] + 0.3)       # the throat's top: the parked head's seat
+    n20 = dict(face=face, tip=ycyl(cx, pz, 3.5, gy1 + 1.0, gy1 + 4.6), cheeks=[box(*sorted((cx + sx * 6.5, cx + sx * 8.5)), g0 + 0.15, gy1 + 4.6, pz - 4.5, DZ1) for sx in (-1, 1)], rails=rails)
+    return dict(drawn=U(drawn), cuts=U(cuts), env=U(env), regs=regs, axle=axle, seat=seat, socks=socks, cz=cz, cx=cx, roller_seats=seats, roller_u=u, n20=n20,
+                axle_y=(S.GEAR["y"][1] + 0.8 + 1.5, S.DRUM["y0"] - 0.8 - 1.5))
+

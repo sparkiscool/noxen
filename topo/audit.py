@@ -82,6 +82,11 @@ Checks (hard = raises, soft = logged + in the report):
                        but a drawn wall, lip or post standing in it blocks the piece whatever is generated. 15 Nov, Spark's Scout v4 bench
                        print: the camera could not slide into the cradle's sleeve, nothing kept its insertion path open. Move the drawn
                        feature out of the path (or end the path on it: a stop is where the piece seats, not in its way). Over PATH_MM3.
+  path_riders    hard  (path_riders) a declared assembly path whose piece carries other parts (`with`: the spool's cable coil and blade ends):
+                       the engine's cut is the piece's own sweep, so room left in the riders' sweep fills and blocks the way in. 24 Nov,
+                       the Scout v4 frame with the probe's base: the spool's path was cut, the cable coil on its drum hub met 288 mm3 of
+                       room behind the drum (the assembly check on the room filled solid). Cut the riders' sweep in the setup too
+                       (topo/paths.sweep of their meshes, grown by the path's fit gap). Over PATH_MM3 of room or drawn material.
   fit            hard  (fit_sizes; systems/fit_table.json the only source of mating sizes, 15 Nov: the Scout v4 bench print, holes drawn
                        at sizes the coupon never proved) every straight round and box width the setup drew (recorded while setup(h)
                        ran, topo/fit.py shapes) within the fit window of a bought part it declared through the table (fit.bore /
@@ -433,6 +438,43 @@ def room_faces(cells, des, r, min_cells=2):
     return out
 
 
+def path_riders(part, root=None):
+    """for each declared assembly path cut through the part ('<drone>:<name>') whose piece carries riders (`with`): the room and drawn
+    material left in the riders' sweep, grown by the path's fit gap -> [dict(name, with, room_mm3, at, extent_mm)]. A generated rider
+    (its mesh is its result) and a rider with no line or mesh are left out"""
+    import os, trimesh
+    from . import paths as PATHS, fit
+    from .part import man
+    root = root or getattr(part, "paths_root", None) or PATHS.ROOT
+    out = []
+    for rec in getattr(part, "paths", []):
+        if ":" not in rec["name"]:
+            continue
+        try:
+            p, a = PATHS.declared(rec["name"], root)
+        except (KeyError, OSError, ValueError):
+            continue
+        ms, names = [], []
+        for rid in p.get("with", []):
+            line = next((q for q in a["parts"] if (q.get("id") or q.get("name")) == rid), None)
+            if line is None or os.path.exists(os.path.join(root, "parts", rid, "part.py")) or not os.path.exists(os.path.join(root, line.get("mesh", ""))):
+                continue
+            ms.append(man(trimesh.load(os.path.join(root, line["mesh"]), force="mesh"))); names.append(rid)
+        if not ms:
+            continue
+        g = max(0.0, fit.gap(p.get("fit", "slide")))
+        hit = ((part.env_m + part.drawn_m) - part.cuts_m) ^ U_(*[PATHS.sweep(p, m, grow=g) for m in ms])
+        v = float(hit.volume()); bb = np.asarray(hit.bounding_box(), float) if v > 0 else np.zeros(6)
+        out.append(dict(name=rec["name"], **{"with": names}, room_mm3=round(v, 2), at=[round(float((bb[k] + bb[k + 3]) / 2), 1) for k in range(3)],
+                        extent_mm=[round(float(bb[k + 3] - bb[k]), 1) for k in range(3)]))
+    return out
+
+
+def U_(*ms):
+    import manifold3d as mf
+    return mf.Manifold.batch_boolean(list(ms), mf.OpType.Add) if len(ms) > 1 else ms[0]
+
+
 def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
     sh, h = part.shape, part.h
     sol = (part.solid & ~part.insert_cells).reshape(sh)
@@ -671,6 +713,13 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
             fails.append(f"path: {p['drawn_mm3']:.1f} mm3 of drawn material stands in the assembly path '{p['name']}' at {p['at']} (extent "
                          f"{p.get('extent_mm')} mm): the piece cannot go in past it whatever the engine generates. Move the drawn feature out "
                          f"of the path (the sweep is the piece grown by its fit gap, topo/fit.py), or end the path where the piece seats.")
+
+    rep["path_riders"] = path_riders(part)
+    for r in rep["path_riders"]:
+        if r["room_mm3"] > PATH_MM3:
+            fails.append(f"path_riders: {r['room_mm3']:.1f} mm3 of room or drawn material stands in the way of {', '.join(r['with'])}, carried by the piece "
+                         f"of the assembly path '{r['name']}', at {r['at']} (extent {r['extent_mm']} mm): the path's cut is the piece's own sweep. Cut the "
+                         f"riders' sweep in the setup too (topo/paths.sweep of their meshes, grown by the path's fit gap).")
 
     fs = fit_sizes(part)
     rep["fit_sizes"] = fs

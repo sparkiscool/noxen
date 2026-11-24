@@ -3,7 +3,7 @@
                end on the bore floor, s0 to s0"); the page's rods mesh runs 3 mm short of the node centres and stood 8.5 mm into every node.
   generate(a)  one assembly path per rod end: the rod's end (O3, from its bore floor to the mouth) pulled out of its socket along the rod,
                the socket's depth + 1: every bore open from its floor out past its mouth (the node's own generated material, a
-               neighbour's collar, another rod, the frame). The rods go on after the turret and before the head (order 50).
+               neighbour's collar, another rod, the frame). The rods go on after the probe's mechanism and before the head (order 50).
 """
 import os, sys
 import numpy as np
@@ -59,7 +59,7 @@ def generate(a):
         f0, f1 = P[k] + u * s0, P[k] + u * (s0 + d)
         into = node_of[k]
         if not os.path.exists(os.path.join(ROOT, "parts", into)):
-            into = "scout_v4_probe_turret" if k == "RM" else "scout_v4_frame"
+            into = "scout_v4_frame"                                # RM's sockets too (24 Nov: the probe's base is the frame)
         paths.append(dict(name=f"rod {nm} out of {k}", part="scout_v4_cage_rods", order=50, fit="bond",
                           body={"cylinder": {"p0": f0.round(3).tolist(), "p1": f1.round(3).tolist(), "r": 1.5}},
                           out=u.round(5).tolist(), length_mm=round(d + 1.0, 2), into=[into],

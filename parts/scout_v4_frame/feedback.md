@@ -1,0 +1,1 @@
+- 24 Nov (Spark): "merge the probe base (tape measure probe mount) and the drone's body into ONE single printed part. Keep every part installable and serviceable (probe, arms, cage, battery mechanism, electronics); optimise the merged part for the loads of the arms, half cage and probe; PCTG on the A1 mini (180 mm cube)."
