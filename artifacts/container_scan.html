@@ -127,7 +127,8 @@ body.moving #ctl{transition:opacity .08s;opacity:0}
 .kc{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border:1px solid #4a5568;border-bottom-width:2px;border-radius:6px;font:600 11.5px var(--mono);color:#e9ecf1;background:#1a202b}
 .wasd{display:grid;grid-template-columns:repeat(3,26px);gap:3px;justify-items:center}.wasd .kc{min-width:26px}.wasd .w{grid-column:2;grid-row:1}.wasd .a{grid-column:1;grid-row:2}.wasd .s{grid-column:2;grid-row:2}.wasd .d{grid-column:3;grid-row:2}
 .xh{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;display:none;z-index:20;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg stroke='%230b0e14' stroke-width='4.5' stroke-linecap='butt'%3E%3Cpath d='M22 6v11M22 27v11M6 22h11M27 22h11'/%3E%3C/g%3E%3Cg stroke='%23fff' stroke-width='2' stroke-linecap='butt'%3E%3Cpath d='M22 7.5v8.5M22 28v8.5M7.5 22h8.5M28 22h8.5'/%3E%3C/g%3E%3Ccircle cx='22' cy='22' r='3' fill='%23fff' stroke='%230b0e14' stroke-width='1.5'/%3E%3C/svg%3E") center/44px 44px no-repeat}
-body.locked .pane.xon .xh{display:block}body.picking .xh{display:none!important}
+body.locked .pane.xon .xh{display:block}
+.prox{position:absolute;inset:0;pointer-events:none;display:none;z-index:15;border:5px solid #ff3b30;border-radius:12px;box-shadow:inset 0 0 40px rgba(255,59,48,.55);font:700 12px system-ui,sans-serif;color:#fff;text-align:center}.prox{padding-top:8px}.prox.on{display:block}body.picking .xh{display:none!important}
 @media (max-width:900px){.panes,.panes.insp{grid-template-columns:1fr;grid-template-rows:repeat(3,minmax(0,1fr))}#ctl{display:none}}
 </style>
 </head>
@@ -143,7 +144,7 @@ body.locked .pane.xon .xh{display:block}body.picking .xh{display:none!important}
 <div class="panes" id="panes">
   <div class="pane pt" id="p0"><canvas></canvas><div class="tag">Point map<i>as-built scan</i></div><div class="meta" id="m0"></div>
     <div class="legend" id="legend"><b>Distance to nearest BIM surface</b><div class="bar"></div><div class="tk"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+ mm</span></div></div><div class="xh"></div></div>
-  <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Esc to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg><span id="lookTxt">Look mode</span></button><div class="lockhint" id="lockhint"></div><div class="fpv ui" id="fpv" hidden><canvas width="320" height="240"></canvas><span id="fpvT"></span></div><div class="depbar ui" id="depbar" hidden><span id="depTxt"></span><span id="depFeeds"></span><button id="depBtn" class="x">Cancel</button></div><div class="xh"></div></div>
+  <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Esc to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg><span id="lookTxt">Look mode</span></button><div class="lockhint" id="lockhint"></div><div class="prox" id="prox">Too close · blocked that way</div><div class="fpv ui" id="fpv" hidden><canvas width="320" height="240"></canvas><span id="fpvT"></span></div><div class="depbar ui" id="depbar" hidden><span id="depTxt"></span><span id="depFeeds"></span><button id="depBtn" class="x">Cancel</button></div><div class="xh"></div></div>
   <div class="pane bim" id="p1"><canvas></canvas><div class="tag">BIM<i>design model &middot; empty building</i></div>
     <button class="xbtn ui" id="close" hidden title="Close (Esc)">&times;</button>
     <div class="card ui" id="card" hidden></div>
@@ -677,7 +678,7 @@ function resize(){
     const w=p.el.clientWidth,h=p.el.clientHeight;
     if(w<2||h<2)continue;
     const k=Math.max(.4,Math.min(1,Math.sqrt((p.mode===1?.75e6:.5e6)/(w*h))));
-    p.tv=Math.max(TV0,.9*h/w);
+    p.tv=(p.mode===2&&DEP.state==='manual')?Math.max(.74,.983*h/w):Math.max(TV0,.9*h/w);
     if(p.W===w&&p.H===h&&p.k===k)continue;
     p.W=w;p.H=h;p.k=k;p.cv.width=Math.round(w*k);p.cv.height=Math.round(h*k);p.key='';
     if(p.mode===0){p.img=p.ctx.createImageData(p.cv.width,p.cv.height);p.u32=new Uint32Array(p.img.data.buffer);p.depth=new Float32Array(p.cv.width*p.cv.height)}
@@ -1130,6 +1131,16 @@ const LIM={x:W/2-.35,z:L/2-.35,y0:.4,y1:H-.4};     // the camera stays inside th
 function collide(q,v){ // no collisions with objects (a ghost), but never out of the floor's own box
   q[0]=clamp(q[0],-LIM.x,LIM.x);q[2]=clamp(q[2],-LIM.z,LIM.z);q[1]=clamp(q[1],LIM.y0,LIM.y1);
 }
+const MAN_V=2.0;                                   // manual flight speed cap, m/s (every direction, diagonals included)
+const PROX_DIRS=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+let proxOn=false;
+function proxShow(on){if(on!==proxOn){proxOn=on;$('prox').classList.toggle('on',on)}}
+function proxStop(){ // too close to a surface: the speed toward it goes to zero (moving away stays free) and the video pane's red frame shows
+  const sp=Math.hypot(vel[0],vel[1],vel[2]);if(sp>MAN_V)for(let i=0;i<3;i++)vel[i]*=MAN_V/sp;
+  const clear=DRN[DEP.kind].g+.3;let hit=false;
+  const dirs=PROX_DIRS.slice();if(sp>.02)dirs.push(norm(vel.slice()));
+  for(const d of dirs){const t=rayDist(POLYA,cam.p,d);if(t<0||t>=clear+.12)continue;hit=true;const v=dot(vel,d);if(t<clear+.03&&v>0)for(let i=0;i<3;i++)vel[i]-=d[i]*v}   // red a hand's width before the stop, so it never flickers at the limit
+  proxShow(hit)}
 function stepFly(dt){
   let fw=0,st=0,up=0,tr=0;
   if(keys.has('KeyW'))fw++;if(keys.has('KeyS'))fw--;
@@ -1138,12 +1149,13 @@ function stepFly(dt){
   if(keys.has('ArrowRight'))tr++;if(keys.has('ArrowLeft'))tr--;
   let pt=0;if(keys.has('ArrowUp'))pt++;if(keys.has('ArrowDown'))pt--;
   cam.pitch=clamp(cam.pitch+pt*1.1*dt,-1.45,1.45);
-  const s=Math.sin(cam.yaw),c=Math.cos(cam.yaw),V=3.4;
+  const man=DEP.state==='manual',s=Math.sin(cam.yaw),c=Math.cos(cam.yaw),V=man?MAN_V:3.4;
   let l=Math.hypot(fw,st)||1;
   const tgt=[(s*fw+c*st)/l*V*(fw||st?1:0),up*V*.7,(-c*fw+s*st)/l*V*(fw||st?1:0)];
   const k=1-Math.exp(-dt*6);for(let i=0;i<3;i++)vel[i]+=(tgt[i]-vel[i])*k;
   cam.yaw+=tr*1.5*dt;
   if(lookAcc[0]||lookAcc[1]){cam.yaw+=lookAcc[0];cam.pitch=clamp(cam.pitch-lookAcc[1],-1.45,1.45);lookAcc[0]=lookAcc[1]=0;touch()}
+  if(man)proxStop();else proxShow(false);
   const sp=Math.hypot(vel[0],vel[1],vel[2]);
   flying=fw||st||up||tr||pt||sp>.04;
   if(fw||st||up||tr||pt)touch();
@@ -1306,7 +1318,7 @@ function stepDep(dt){
   if(DEP.state==='fly'){DEP.s+=1.6*dt;const r=depPos(Math.min(DEP.s,DEP.len)),d=DEP.drone;d.p=r.p;if(r.h===r.h&&DEP.s<DEP.len)DEP.by=r.h;d.yaw=DEP.by;
     if(DEP.s>=DEP.len){DEP.state='hover';depUI()}panes.forEach(q=>q.key='')}
   else if(DEP.state==='manual'){const f=FEEDS[DEP.kind][DEP.feed||0];DEP.by=cam.yaw-f[1]*Math.PI/180;DEP.drone.p=[cam.p[0],cam.p[1]-.03,cam.p[2]];DEP.drone.yaw=DEP.by;
-    const v=panes[2];v.tv=Math.max(.74,.983*v.H/v.W);panes.forEach(p=>p.key='')}}
+    const v=panes[2],tv=Math.max(.74,.983*v.H/v.W);if(Math.abs(v.tv-tv)>1e-6){v.tv=tv;v.key=''}}}
 function drawFpv(now){ // the flying drone's own camera, plain (nothing see-through), in the side panel; the main video stays the user's
   if(DEP.state!=='fly'||!GL||!DEP.drone)return;
   const f=FEEDS[DEP.kind][0],yw=DEP.drone.yaw+f[1]*Math.PI/180,pt=f[2]*Math.PI/180,cp=Math.cos(pt),c=$('fpv').querySelector('canvas'),
