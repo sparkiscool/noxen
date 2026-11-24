@@ -105,12 +105,10 @@ L.DEPTH = DEPTH_MIN                                       # a socket with no fra
 #   needs from the mouth to d / 6 above the floor (the floor third's centre, where the couple closes), straight from there to the root
 #   wall the bending needs, the root wall back through the floor.
 # The room round every collar stays the 3.0-wall strut + STRUT_M, so the engine still grows a root wherever more than the tube bears.
-# Not sized by a load case (the design chat's: a missing case, not a collar): a socket the setup holds as a support never sees its own
-# rod's moment (a force on a fixed region is nothing). Its collar is sized here by the same hand calculation, but the generated root
-# behind it is not: by the bending line above (root_index, logged by check_members as NO CASE) the bare 3.0 roots read 0.68 / 0.69
-# (BT0-TB / BT1-TB, 1.4 N m), 0.51 / 0.52 (SB0-S0 / SB1-S1), 0.44 (RB-P3 / RB-P4 at RB), 0.43 (RM-RS0 / RM-RS1), 0.42 (S0-P1 / S1-P6
-# at P1 / P6), 0.40 (RB-P3 / TB-P3 at P3, P4 the same), 0.30-0.32 (P2-P3 / S0-P2 at P2, P5 the same); a loaded socket's bare root reads
-# as much (TB-P3 0.67) where its run, with the generated root, read 0.18.
+# The sockets held as the support (24 Nov, was the missing case: a force on a fixed region is nothing, so no case sized the generated
+# root behind them for their own rod; by the bending line above the bare 3.0 roots read 0.40-0.69, BT0 / BT1-TB 1.4 N m the worst): each
+# gets its own cases (build, below) on a support of its own, the node held at its other sockets. The audit's interface_case refuses a
+# setup where a socket with a frame-model load is loaded in no case.
 ROOT_MAX = 3.0
 MIN_WALL, COLLAR_INDEX, TAPER_FROM, SHEAR_K = 2.55, 0.27, 1.0 / 6.0, 1.1   # MIN_WALL: 2.05 at the 0.5 annulus (the audit's drawn_wall floor 2.0, the 0.05 the 40-gon's flats)
 XT_MPA, ZT_MPA = 46.0 * 0.85 / 1.1, 23.0 * 0.85 / 1.1    # topo/material.py PCTG Xt / Zt, KNOCKDOWN, SAFETY["crash"]
@@ -332,20 +330,8 @@ def check_pairs(k):
 _check0 = L.check_members
 
 
-def root_index(m, wall=ROOT_MAX):
-    """the bending line of the hand calculation at a collar's root, as an index: the rod's end moment on the bare tube of that wall"""
-    di, D = 2.0 * (m["bore_r"] + GROOVE_D), 2.0 * (m["bore_r"] + wall); me = abs(m.get("moment") or 0.0) + abs(m.get("side") or 0.0) * m["depth"] / 2.0
-    return me * 32.0 * D / (np.pi * (D ** 4 - di ** 4)) / (XT_MPA + (ZT_MPA - XT_MPA) * float(m["u"][2]) ** 2)
-
-
 def _check_members(k, log=print):
     ms = _check0(k, log); check_pairs(k)
-    # the missing case, said in every log until the setup has it: the two sockets held as the support (the stiffest by axial load,
-    # L.build) get no case of their own, so nothing sizes the generated root behind them for their own rod's end moment
-    held = [m for m in sorted(ms, key=lambda m: -m["axial"])[:2] if root_index(m) > COLLAR_INDEX]
-    if held:
-        log("  NO CASE (held as the support, its own rod's end moment in no case; the bare 3.0 collar's root by hand calculation): "
-            + ", ".join(f"{m['name']} {abs(m['moment']):.0f} N mm reads {root_index(m):.2f}" for m in held))
     return ms
 
 
@@ -375,6 +361,57 @@ BUDGET_CM3 = {"P3": 1.4, "P4": 1.4, "P1": 0.9, "P2": 1.2, "P5": 1.2, "P6": 0.9, 
               "RF": 0.3, "RB": 0.8, "RS0": 1.1, "RS1": 1.1, "S0": 1.3, "S1": 1.55, "NB": 1.0, "TB": 2.2}   # 14 Nov, the bolt forks: their runs read NB / TB 0.051 / 0.052 at 4.0, S0 / S1 0.032 at 3.1; on the fold's loads (core_of) TB-P3 154 N (was 99), S0-P2 109 (was 78): toward ~0.15 by index ~ V^-1.25.   # 13 Nov: NB 5.7 -> 6.9, 0.314 at 5.7 (index ~ V^-1.25 toward 0.25). 12 Nov: NB 4.3 -> 5.7, 0.354 at 4.3 once BS moved to the nose block (NB-R7 pull-out 126 N; index ~ V^-1.25 toward 0.25)   # 12 Nov: TB 4.8 -> 5.6, 0.301 at 4.8 under the heavier frame's TB-P3 108 N (index ~ V^-1.25 toward 0.25)
 
 
+_build0 = L.build
+
+
+def _beside(a, b):
+    """two sockets of one node near-parallel enough to push each other out from the hub (the pair rule of _socket_starts)"""
+    t = np.arccos(np.clip(a["u"] @ b["u"], -1.0, 1.0))
+    return t < 1e-6 or (a["bore_r"] + b["bore_r"] + 2 * L.GROOVE_D + BETWEEN_HUB) / (2.0 * np.sin(t / 2.0)) > L.NODE_R + 1e-6
+
+
+def build(group, h, log=print):
+    """L.build + the cases it leaves out: the two sockets it holds as the support (the stiffest by axial load) each get their own rod's
+    pull-out and side force + end moment (the same couple across the lining's thirds, both signs), the node held for them at its other
+    sockets: the two stiffest of the rest (support 'hold <rod>'), a near-parallel neighbour left out (_beside: P3's TB-P3 rides on RB-P3's
+    collar, and with RB-P3 fixed its couple went straight across the 2.4 wall between the two bores, 0.258 with the room filled solid,
+    sizing that wall and not the root to the hub). Every socket with a frame-model load is declared to the audit (Part.interface_loads
+    -> interface_case)."""
+    p = _build0(group, h, log)
+    along, U = L.along, L.U
+    lining = lambda m, grow=1.0: along(m["c"], m["u"], m["s0"] - L.LINING_BACK, m["s_end"], m["bore_r"] + grow)
+    nodes = lambda reg, what: p.nodes_of(p.elems(reg, p.solid | p.design, what=what))
+    p.interface_loads = []
+    for k in ((group,) if isinstance(group, str) else tuple(group)):
+        ms = L.members(k); c = np.array(L.P[k], float)
+        for m in ms:
+            m["c"], m["s_end"] = c, m["s0"] + m["depth"]
+        by = sorted(ms, key=lambda m: -m["axial"])
+        for m in by[:2]:
+            apart = [o for o in by if o is not m and not _beside(m, o)]
+            rest = (apart or [o for o in by if o is not m])[:2]; sup = f"hold {m['name']}"
+            p.support(sup, U([lining(o, 1.4) for o in rest]))
+            log(f"  {m['name']} (held in the other cases): its own cases held at {sorted(o['name'] for o in rest)}")
+            p.load_multi(f"frame {m['name']} axial {m['axial']:.0f} N (pull-out), held at the other sockets", [(lining(m), m["axial"] * m["u"])], cls="crash", support=sup)
+            side = np.cross(m["u"], [0, 0, 1.0] if abs(m["u"][2]) < 0.9 else [1.0, 0, 0]); side /= np.linalg.norm(side)
+            if not m.get("moment"):
+                p.load_multi(f"frame {m['name']} side {m['side']:.1f} N, held at the other sockets", [(lining(m), m["side"] * side)], cls="crash", support=sup)
+                continue
+            a0, a1 = m["s0"] - L.LINING_BACK, m["s_end"]; L3 = (a1 - a0) / 3.0
+            th = [along(c, m["u"], a0 + i * L3, a0 + (i + 1) * L3, m["bore_r"] + 1.0) for i in range(3)]
+            Fc = np.cross(m["moment"] * np.asarray(m["moment_axis"], float), m["u"]) / (2.0 * L3)
+            w = Fc / np.linalg.norm(Fc) if np.linalg.norm(Fc) > 1e-6 else side
+            for sg, lab in ((1, "+"), (-1, "-")):
+                F = sg * m["side"] * w; c_ = sg * Fc
+                p.load_multi(f"frame {m['name']} side {m['side']:.1f} N + end moment {m['moment']:.0f} N mm ({lab}), held at the other sockets",
+                             [(th[0], F / 3 - c_), (th[1], F / 3), (th[2], F / 3 + c_)], cls="crash", support=sup)
+        p.interface_loads += [dict(name=m["name"], nodes=nodes(lining(m), f"socket {m['name']}")) for m in ms if m["axial"] is not None]
+    return p
+
+
+L.build = build
+
+
 def spec_for(group):
     s = L.spec_for(group)
     key = group if isinstance(group, str) else group[0]
@@ -383,4 +420,4 @@ def spec_for(group):
 
 
 KEYS = L.KEYS
-make, build, members, check_members = L.make, L.build, L.members, L.check_members
+make, members, check_members = L.make, L.members, L.check_members

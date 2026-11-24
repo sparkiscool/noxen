@@ -87,6 +87,10 @@ Checks (hard = raises, soft = logged + in the report):
                        ran, topo/fit.py shapes) within the fit window of a bought part it declared through the table (fit.bore /
                        across / insert: within 0.15 of a declared kind's drawn size) must be a size the table gives for a declared part,
                        or the part's nominal itself (the body as a keep-out or a stand-in). A 3.25 hole by a declared 3 mm rod is refused.
+  interface_case hard (Part.interface_loads, set by the setup: name + node ids of each interface the system's model loads) an interface no load
+                       case loads on nodes its support leaves free. 24 Nov, the Scout v4 nodes: the two sockets held as the support never
+                       saw their own rod's end moment (a force on a fixed region is nothing); the generated roots behind them read 0.40-0.69
+                       by hand calculation and nothing in a run said so. Give the interface its own cases on a support that leaves it free.
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -690,6 +694,21 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
         fails.append(f"held_load: {len(rep['held_load'])} cases load only nodes their own support fixes ({', '.join(rep['held_load'][:4])}"
                      f"{' ...' if len(rep['held_load']) > 4 else ''}): they load nothing. A handling feature (topo/handling.py) on a face the "
                      f"part's support holds is that support: draw it without the declaration there, or move the load off the support.")
+    # interface_case: every interface the system's model loads (Part.interface_loads) is loaded, on nodes its case's support leaves free,
+    # in at least one case (24 Nov, the Scout v4 nodes' held sockets: sized by no case)
+    rep["interface_case"] = []
+    for it in getattr(part, "interface_loads", None) or ():
+        nd = np.asarray(it["nodes"], int); hit = False
+        for c in part.cases:
+            fx = part.supports.get(c.support)
+            F = np.abs(np.asarray(c.F, float)).reshape(-1, 3)
+            if fx is not None and F.max() > 0 and (F[nd] * ~fx[nd]).max(initial=0.0) > 1e-9 * F.max():
+                hit = True; break
+        if not hit:
+            rep["interface_case"].append(it["name"])
+    if rep["interface_case"]:
+        fails.append(f"interface_case: {', '.join(rep['interface_case'])}: the system's model loads this interface and no case does (held as the support "
+                     f"in every case, a force on a fixed region is nothing): add its own cases on a support that leaves it free (the part held at its other interfaces).")
     rep["cases"] = len(part.cases)
     rep["supports"] = len(part.supports)
     if not part.cases or not part.supports:

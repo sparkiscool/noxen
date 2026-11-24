@@ -1187,6 +1187,32 @@ def t_audit_held_load():
         check("audit held_load", False, str(e))
 
 
+def t_audit_interface_case():
+    """audit: interface_case (24 Nov: the Scout v4 nodes' two held sockets had no case for their own rod's end moment). Two pads, both
+    declared as loaded interfaces (Part.interface_loads): with one held as the only support and the other loaded, the held one is refused;
+    with its own case on a second support (the part held at the other pad) the setup passes."""
+    try:
+        import manifold3d as mf
+        from topo.audit import audit
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        A, B = box(-1, 4, 5, 15, 5, 15), box(30, 35, 5, 15, 5, 15)
+        def fails(own_case):
+            p = Part("ifacemini", 1.0, box(0, 4, 6, 14, 6, 14) + box(30, 34, 6, 14, 6, 14), box(100, 101, 100, 101, 100, 101),
+                     box(0, 34, 0, 20, 0, 20), log=lambda s_: None)
+            p.support("default", A); p.load("B down", B, (0, 0, -10.0))
+            if own_case:
+                p.support("hold A", B); p.load("A down", A, (0, 0, -10.0), support="hold A")
+            p.interface_loads = [dict(name=n, nodes=p.nodes_of(p.elems(r, p.solid | p.design, what=n))) for n, r in (("A", A), ("B", B))]
+            return [f for f in audit(p, 4.0, log=lambda s_: None, hard=False)["fails"] if f.startswith("interface_case")]
+        a, b = fails(False), fails(True)
+        check("audit interface_case: a loaded interface held in every case is refused; with its own case on another support it passes",
+              len(a) == 1 and a[0].startswith("interface_case: A:") and not b, f"held only {a}, own case {b}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit interface_case", False, repr(e)[:200])
+
+
 def t_design_hash():
     """the design hash (topo/run.py) is the same for the same setup built twice and differs when a load, a cut or the budget
     changes (29 Oct: parts.yml stops a running part whose design main has since changed)."""
@@ -1959,7 +1985,7 @@ def t_assembly_riders():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_released_check, t_no_cavity, t_audit_path, t_audit_fit, t_path_sweep_gap):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_interface_case, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_released_check, t_no_cavity, t_audit_path, t_audit_fit, t_path_sweep_gap):
         t()
     t_assembly_riders()
     if not quick:
