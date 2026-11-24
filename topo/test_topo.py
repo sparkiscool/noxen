@@ -1213,6 +1213,29 @@ def t_audit_interface_case():
         check("audit interface_case", False, repr(e)[:200])
 
 
+def t_audit_cell_thick():
+    """audit: cell_thick (24 Nov: the Scout v4 frame's 6.0 deck was 3 cells of 2.3 = 6.9, its indices read 0.76 of the print's). A 24 x 24
+    plate on the h 1.0 grid (cell faces on the integers): 2.6 thick it is 3 cells (15 % over) and refused; 3.0 thick (3 cells, exact) and
+    2.4 thick (2 cells: the model thinner than the print) pass."""
+    try:
+        import manifold3d as mf
+        from topo.audit import audit, cell_thickness
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        def flagged(t):
+            p = Part("thickmini", 1.0, box(0, 3, 8, 16, 0, t), box(-1, 25, -1, 25, t, 9), box(0, 24, 0, 24, 0, 8), log=lambda s_: None)
+            p.support("default", box(-1, 3, 7, 17, -1, t)); p.load("down", box(20, 24, 8, 16, 0, t), (0, 0, -10.0))
+            f = [f_ for f_ in audit(p, 2.0, log=lambda s_: None, hard=False)["fails"] if f_.startswith("cell_thick")]
+            return cell_thickness(p), f
+        (a, fa), (b, fb), (c, fc) = flagged(2.6), flagged(3.0), flagged(2.4)
+        check("audit cell_thick: a 2.6 plate as 3 cells of 1.0 is refused (reads 0.75); 3.0 (exact) and 2.4 (2 cells, thinner) pass",
+              len(a) == 1 and len(fa) == 1 and a[0]["axis"] == "z" and a[0]["cells_mm"] == 3.0 and abs(a[0]["drawn_mm"] - 2.6) < 0.01 and a[0]["reads"] == 0.75
+              and not b and not fb and not c and not fc, f"2.6: {a}; 3.0: {b}; 2.4: {c}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit cell_thick", False, repr(e)[:200])
+
+
 def t_design_hash():
     """the design hash (topo/run.py) is the same for the same setup built twice and differs when a load, a cut or the budget
     changes (29 Oct: parts.yml stops a running part whose design main has since changed)."""
@@ -2021,7 +2044,7 @@ def t_assembly_riders():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_interface_case, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_released_check, t_no_cavity, t_audit_path, t_audit_path_riders, t_audit_fit, t_path_sweep_gap):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_interface_case, t_audit_cell_thick, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_released_check, t_no_cavity, t_audit_path, t_audit_path_riders, t_audit_fit, t_path_sweep_gap):
         t()
     t_assembly_riders()
     if not quick:

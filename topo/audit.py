@@ -96,6 +96,14 @@ Checks (hard = raises, soft = logged + in the report):
                        case loads on nodes its support leaves free. 24 Nov, the Scout v4 nodes: the two sockets held as the support never
                        saw their own rod's end moment (a force on a fixed region is nothing); the generated roots behind them read 0.40-0.69
                        by hand calculation and nothing in a run said so. Give the interface its own cases on a support that leaves it free.
+  cell_thick     hard  (cell_thickness; the model must never be thicker than the print, the design chat 24 Nov) a flat plate or wall of the
+                       setup's exact geometry (room and drawn less the cuts) that the grid rounds up: along x, y and z, every run of
+                       material cells on a column's centre line against the exact material it stands for on the same line. A flat patch
+                       (3 x 3 columns and at least (2 x its thickness)^2, the exact thickness the same over it) whose cells are over 5 %
+                       thicker than the exact plate is refused: bending stress goes as 1 / t^2, so the run and room_full read (t / cells)^2 of what the print carries.
+                       24 Nov, the Scout v4 frame: its 6.0 deck was 3 cells of 2.3 = 6.9, every deck index read 0.76 of the print's.
+                       Draw the plate a whole number of cells thick (the print then is what the run sized) or move the grid so the
+                       cells round down (a model thinner than the print is safe). Axis-aligned flats only: a sloped wall is not measured.
   cases          soft  no load cases, or no support: the run would be meaningless (raised by Layout anyway).
   min_member     soft  the gate-adjusted min member > 2 x the floor: the drawn bodies are so thick that every strut
                        must be very fat; usually a drawn block again.
@@ -108,6 +116,9 @@ S6 = ndi.generate_binary_structure(3, 1)
 S26 = np.ones((3, 3, 3), bool)
 
 
+THICK_TOL = 0.05         # cell_thick: a flat plate's cells may be this much thicker than the exact plate (5 % thicker reads 9 % low in bending)
+THICK_WIDE = 2.0         # cell_thick: a plate or wall = a flat patch of at least (this x its thickness)^2; a block's length is not a thickness
+THICK_FLAT = 0.1         # cell_thick: "flat" = the exact thickness within this share of a cell over a 3 x 3 patch of columns
 PATH_MM3 = 0.5           # drawn material allowed in an assembly path (mesh noise on a face that only touches it)
 
 
@@ -470,6 +481,74 @@ def path_riders(part, root=None):
     return out
 
 
+def cell_thickness(part, tol=THICK_TOL, flat=THICK_FLAT, wide=THICK_WIDE):
+    """cell_thick: the flat plates and walls the grid models thicker than they are drawn. For each axis, one ray per column of cells
+    through the exact material (env + drawn - cuts; the voxeliser's rays and offsets); each run of material cells on the column is
+    measured against the exact material overlapping it on that ray (an exact stretch reaches at most half a cell past the run: beyond
+    that the next centre is inside it). Flagged: runs over (1 + tol) x the exact thickness, in a 3 x 3 patch of columns where every run
+    is flagged, has the same number of cells and the exact thickness is flat within `flat` cells, the connected patch at least
+    (`wide` x its thickness)^2 in area (a plate or a wall, not a block's length). Returns [dict(axis, at, cells_mm, drawn_mm, over, reads, area_mm2)],
+    one per connected patch, the worst first; reads = (drawn / cells)^2, the share of the print's bending stress the model reports."""
+    from .part import tm
+    sh, h = part.shape, part.h
+    mat = ~np.asarray(part.void).reshape(sh)
+    mesh = tm(part.env_m - part.cuts_m)
+    out = []
+    if len(mesh.faces) == 0:
+        return out
+    eps = (1.234e-5, 2.345e-5, 3.4e-5)
+    for ax in range(3):
+        o1, o2 = [k for k in range(3) if k != ax]
+        A, B = np.meshgrid(part.axes[o1], part.axes[o2], indexing="ij")
+        org = np.zeros((A.size, 3)); org[:, o1] = A.ravel() + eps[o1]; org[:, o2] = B.ravel() + eps[o2]
+        org[:, ax] = min(part.origin[ax], float(mesh.bounds[0][ax])) - 5.0
+        d = np.zeros(3); d[ax] = 1.0
+        M = np.moveaxis(mat, ax, 2).reshape(A.size, sh[ax])
+        over = np.zeros(M.shape, bool); T = np.zeros(M.shape); N = np.zeros(M.shape, int)
+        for c0 in range(0, len(org), 20000):
+            o = org[c0:c0 + 20000]
+            loc, ray, _ = mesh.ray.intersects_location(o, np.tile(d, (len(o), 1)), multiple_hits=True)
+            if not len(ray):
+                continue
+            order = np.argsort(ray, kind="stable"); ray = np.asarray(ray)[order] + c0; z = loc[order][:, ax]
+            st = np.r_[0, np.where(np.diff(ray))[0] + 1, len(ray)]
+            for a, b in zip(st[:-1], st[1:]):
+                col = M[ray[a]]
+                if not col.any():
+                    continue
+                zz = np.sort(z[a:b]); zz = zz[np.r_[True, np.diff(zz) > 1e-6]]
+                p, q = zz[0::2][:len(zz) // 2], zz[1::2]
+                e = np.diff(np.r_[0, col.astype(np.int8), 0]); i0s, i1s = np.where(e == 1)[0], np.where(e == -1)[0]
+                for i0, i1 in zip(i0s, i1s):
+                    za, zb = part.origin[ax] + i0 * h, part.origin[ax] + i1 * h
+                    t = float((q - p)[(q > za) & (p < zb)].sum())
+                    if t > 0:
+                        T[ray[a], i0:i1] = t; N[ray[a], i0:i1] = i1 - i0
+                        over[ray[a], i0:i1] = (zb - za) > (1.0 + tol) * t
+        n1, n2 = sh[o1], sh[o2]
+        over, T, N = over.reshape(n1, n2, -1), T.reshape(n1, n2, -1), N.reshape(n1, n2, -1)
+        k = (3, 3, 1)
+        for nc in np.unique(N[over]):                                  # plates of the same cell count together: a patch is one plate
+            ov = over & (N == nc)
+            spread = ndi.maximum_filter(np.where(ov, T, -1e9), size=k, mode="constant", cval=-1e9) - \
+                ndi.minimum_filter(np.where(ov, T, 1e9), size=k, mode="constant", cval=1e9)
+            core = ndi.binary_erosion(ov, np.ones(k, bool)) & (np.abs(spread) <= flat * h)
+            lab, n = ndi.label(ndi.binary_dilation(core, np.ones(k, bool)) & ov, S26)
+            for i in range(1, n + 1):
+                m = lab == i
+                ii = np.argwhere(m)
+                td, tc = float(T[m].max()), float(nc * h)              # the thickest exact stretch in the patch: the least over
+                area = float(m.any(2).sum()) * h * h
+                if area < (wide * td) ** 2 or tc <= (1.0 + tol) * td:
+                    continue
+                at = [0.0, 0.0, 0.0]
+                at[o1] = float(part.axes[o1][ii[:, 0]].mean()); at[o2] = float(part.axes[o2][ii[:, 1]].mean()); at[ax] = float(part.axes[ax][ii[:, 2]].mean())
+                out.append(dict(axis="xyz"[ax], at=[round(v, 1) for v in at], cells_mm=round(tc, 2), drawn_mm=round(td, 2), over=round(tc / td - 1.0, 3),
+                                reads=round((td / tc) ** 2, 2), area_mm2=round(area, 0)))
+    out.sort(key=lambda r: r["reads"])
+    return out
+
+
 def U_(*ms):
     import manifold3d as mf
     return mf.Manifold.batch_boolean(list(ms), mf.OpType.Add) if len(ms) > 1 else ms[0]
@@ -758,6 +837,14 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
     if rep["interface_case"]:
         fails.append(f"interface_case: {', '.join(rep['interface_case'])}: the system's model loads this interface and no case does (held as the support "
                      f"in every case, a force on a fixed region is nothing): add its own cases on a support that leaves it free (the part held at its other interfaces).")
+    # cell_thick: a flat plate the grid rounds up reads low (24 Nov, the Scout v4 frame's 6.0 deck as 3 cells of 2.3)
+    rep["cell_thick"] = cell_thickness(part)
+    if rep["cell_thick"]:
+        w = rep["cell_thick"][0]
+        fails.append(f"cell_thick: {len(rep['cell_thick'])} flat plates or walls are thicker in the grid than drawn, the worst {w['drawn_mm']} mm along {w['axis']} "
+                     f"at {w['at']} as {w['cells_mm']} mm of cells over {w['area_mm2']:.0f} mm2: the run reads {w['reads']:.2f} of the print's bending stress there. "
+                     f"Draw it a whole number of cells thick ({w['cells_mm']} at this h) or move the grid so its cells round down; the model is never thicker than the print. "
+                     + "; ".join(f"{r['drawn_mm']} -> {r['cells_mm']} along {r['axis']} at {r['at']}" for r in rep["cell_thick"][1:6]))
     rep["cases"] = len(part.cases)
     rep["supports"] = len(part.supports)
     if not part.cases or not part.supports:

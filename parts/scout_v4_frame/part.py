@@ -17,6 +17,9 @@ the bed, the part stands on the nose and tail blocks' bottoms (z -13) and on sup
 178.6 x 178.6 x 86.0 in the A1 mini's 180 cube, one piece. The layers are the deck's as before (thrust, torque and the arms' bending
 in-layer); the sockets' crowns point +z (SockUp).
 Grid: h 2.3 (was 2.0): 80 x 80 x 40 = 256,000 cells; at 2.0 the 86 tall box is 96 x 96 x 48 = 442,368, over the engine's 300,000.
+The deck as the run models it (24 Nov, the design chat: the model is never thicker than the print; audit cell_thick): its underside is
+DECK_Z 17.6 over the Radxa and the leads (6.9 = 3 cells, was 6.0 and 6.5 drawn and 6.9 in the run), and every ceiling that cannot come
+down (the FC's window, the Radxa's USB-C and HDMI pockets) is raised until its cells round down (deck_ceiling: 22.0 and 19.7).
 Probe loads (each its own case): the head-first crash on the throat's seat (systems/scout_v4.head_load.json); the mast's fold moments
 there (probe lib FOLD_NM); the parked head's 35 g side crash with its CG's moment up to the fold; the N20's shaft pressed through the
 pinion (50 N on the tip bearing); the N20's stall both ways (S.SPOOL_STALL 611 N mm at the spool: the tape's 44 N at the hub's tangent, the
@@ -76,8 +79,9 @@ SPEC = dict(h=2.3, gen_cm3=160.0, max_worst=0.3, settings=dict(build_pitch=0.38)
                                                       "pinion up into its bay", "N20 up behind its seat and forward", "N20's shaft down behind its seat", "N20's shaft into the tip bearing",
                                                       "roller in from behind", "spool in from behind")])   # 24 Nov: the probe's (the spool's M3 x 50 axle and its tools are drawn cuts)
 BLK_Z0 = -13.0                                     # 24 Nov: the nose and tail blocks' room 1 deeper (was -12): the room is then 86 tall and the h 2.3 grid, centred on it, has a
-                                                   # cell face on the deck's bottom (18.5): the 6.0 deck is 3 cells (modelled 6.9, built 6.0). At -12 it was 2 cells (4.6) and the
+                                                   # cell face at 18.5: the deck 18.5..24.5 was 3 cells (modelled 6.9, built 6.0: DECK_Z since). At -12 it was 2 cells (4.6) and the
                                                    # room filled solid read 0.42 in the Radxa front post's tighten case beside the N20's pocket (0.292 at h 2.0, 3 cells)
+DECK_Z = round(DZ1 - 3 * SPEC["h"], 3)               # 24 Nov: 17.6, the deck's underside where a ceiling can come down to it: 3 cells of the run's grid (6.9), the print as modelled
 BOARD_PATHS = 6                                    # the first of them are the boards' (ways_in: swept out the fit gap round each)
 # 14 Nov, the fold of the bolt forks (rounds 7 / 7b, run of 8f97d87, scout_v4_frame_vl): 189.3 g, solid PASS, worst 0.211 (6 g landing on the
 # nose bolts only), every motor case <= 0.20 in-layer / 0.17 across; latch v7's keep-out cut, the flow sensor forward, the boards on the grid.
@@ -188,6 +192,16 @@ def grid_snap(lo, hi, bb, h):
     return o + np.floor((np.asarray(lo) - o) / h) * h, o + np.ceil((np.asarray(hi) - o) / h) * h
 
 
+def deck_ceiling(z, bb, h, tol=0.02):
+    """a ceiling at z under the deck top (DZ1), raised if the run's grid (grid_snap's) would model the plate over it thicker than it is
+    drawn: to just over the lowest cell centre the plate holds, so the cells round down (24 Nov, audit cell_thick: the model is never
+    thicker than the print; the 3.5 over the FC's window was 2 cells of 2.3 = 4.6, read 0.58 of the print's bending stress)"""
+    n = int(np.ceil((bb[5] - bb[2]) / h)) + 2; n = int(np.ceil(n / 8) * 8)
+    c = 0.5 * (bb[2] + bb[5]) - n * h / 2.0 + (np.arange(n) + 0.5) * h
+    c = c[(c > z) & (c < DZ1)]
+    return float(z) if len(c) * h <= (1.0 + tol) * (DZ1 - z) else float(c[0] + 0.05)
+
+
 def board_keepout(pid, g=None):
     """a bought board's body as the assembly check reads it (its placed mesh), grown by the fit table's slide gap: moved +-g along x and y
     and +g up (its way in, below it, is the declared assembly path's sweep)"""
@@ -286,7 +300,7 @@ def bodies():
     if LATCH_V7:                                                                      # latch v7's whole Scout set and the paths it needs
         cuts.append(ko)
         lx1, lz0, lz1 = leads["hi"][0], leads["lo"][2], leads["hi"][2]               # its 12 AWG pair leaves at x 75 (leads_out_E's end): forward,
-        cuts += [box(lx1 - 6.0, lx1 + 0.5, -6.0, 6.0, lz0, 18.0), box(rx1 - 9.0, lx1 + 0.5, -6.0, 6.0, 13.0, 18.0)]   # up and back over the receiver's top to the FC stack, unclamped
+        cuts += [box(lx1 - 6.0, lx1 + 0.5, -6.0, 6.0, lz0, DECK_Z), box(rx1 - 9.0, lx1 + 0.5, -6.0, 6.0, DECK_Z - 5.0, DECK_Z)]   # 24 Nov (audit cell_thick): 12.6..17.6, was 13..18 (the 6.5 over it was 3 cells, 6.9; the 3.4 under it 2 cells, 4.6)   # up and back over the receiver's top to the FC stack, unclamped
     else:
         cuts.append(box(rx0 - 0.1, rx1, -33.3, 33.3, -60.0, -2.6))                   # the battery mechanism (the receiver's box) under the yokes; above
         rr = 5.0                                                                      # z -2.6 its vertical corners round r 5 (10 Nov, run 188: 0.785 at the box's
@@ -348,7 +362,7 @@ def bodies():
     drawn += posts; bposts = list(posts)
     fc_rings = U([cyl(x, y, ftop - 1, DZ1 + 1, 7.5) for x, y, _ in pts])
     board_cuts = [((fb[0][0] - 0.5, fb[0][1] - 0.5, fb[0][2] - 0.5), (fb[1][0] + 0.5, fb[1][1] + 0.5, ftop), None),   # the FC, under it and its grommets,
-                  ((fb[0][0] - 0.5, fb[0][1] - 0.5, ftop), (fb[1][0] + 0.5, fb[1][1] + 0.5, fb[1][2] + 0.5), fc_rings)]   # its top components but not within 6.5
+                  ((fb[0][0] - 0.5, fb[0][1] - 0.5, ftop), (fb[1][0] + 0.5, fb[1][1] + 0.5, ("ceiling", fb[1][2] + 0.5)), fc_rings)]   # its top components but not within 6.5
     # of a hole (E: the grommets' zone): each post's room runs out past the board's edge; their y faces on the grid (grid_snap, at the end)
     cuts.append(Kf - U(posts))                                                        # and in those rings its body + the gap (the USB-C, the FETs)
     for x, y in REC_BOLTS:                                                            # 15 Nov (audit room_full, the FC posts' tighten cases: 0.40 in a
@@ -366,7 +380,16 @@ def bodies():
         p_, ins = board_post(x, y, rtop, 3.75, M25_INS[0], M25_INS[1], Kr)          # 3.75: 2.0 round the insert; by USB-C 2 the foot half a ring
         posts.append(p_); pts.append((x, y, rtop)); regs.append(region_bot(x, y, rtop, 3.75) ^ p_); cuts.append(ins)
     drawn += posts; bposts += posts
-    board_cuts.append(((rb[0][0] - 0.2, rb[0][1] - 0.5, rb[0][2] - 0.5), (rb[1][0] + 2.4, rb[1][1] + 0.5, rb[1][2] + 0.5), U(posts + T["n20"]["cheeks"] + T["n20"]["rails"] + [T["n20"]["face"]])))   # 0.2 at its tail end; its front end
+    rminus = U(posts + T["n20"]["cheeks"] + T["n20"]["rails"] + [T["n20"]["face"]])
+    # 24 Nov (the design chat: the model must never be thicker than the print; audit cell_thick): the bay's ceiling was the board's top + 0.5 (18.5),
+    # the 6.0 deck over it 3 cells of 2.3 = 6.9 in the run. The ceiling is DECK_Z now (17.6: the deck 3 cells thick, drawn as the run models it; the
+    # board's chips reach 16.1), with a pocket over each part of the board taller than that (its two USB-C and its micro HDMI, 18.0) whose ceiling the
+    # grid rounds down (deck_ceiling: 19.7, the deck 4.8 there as 2 cells, 4.6)
+    assert (Kr ^ box(-200, 200, -200, 200, DECK_Z, 200)).volume() > 1.0 and rtop + 1.3 + GAP < DECK_Z
+    for c_ in (Kr ^ box(-200, 200, -200, 200, DECK_Z - 0.01, 200)).decompose():
+        b_ = np.asarray(c_.bounding_box(), float)
+        board_cuts.append(((b_[0] - 1.1, b_[1] - 0.5, DECK_Z - 0.5), (b_[3] + 1.1, min(b_[4], rb[1][1]) + 0.5, ("ceiling", b_[5])), rminus))
+    board_cuts.append(((rb[0][0] - 0.2, rb[0][1] - 0.5, rb[0][2] - 0.5), (rb[1][0] + 2.4, rb[1][1] + 0.5, DECK_Z), rminus))   # 0.2 at its tail end; its front end
     # 2.4 on, into the turret's cut (13 Nov round 5: at gen 185 / 200 the engine filled the 1.9 gap between the two cuts, a 1.5-1.7 wall the gate refused)
     cuts.append(Kr - U(posts))
     cx_, g0_ = S.SPOOL["c"][0], S.N20_FACE                                         # 15 Nov (audit room_full, the Radxa front posts' tighten cases: 0.30
@@ -375,7 +398,7 @@ def bodies():
     # in a fin): over the N20's pocket and this strip the room up to the drum wall's bottom (z 29.2) was one cell thin: void, 0.1 short of the wall
     cuts.append(box(cx_ - 6.6, cx_ + 6.6, g0_ - 0.1, S.GEAR["y"][0] - 0.1, S.REC_TOP - 1.0, S.SPOOL["c"][1] - S.GEAR["c"] - 5.6))   # and under the N20's face plate,
     # between the N20's way in and the pinion's (2.6 of room, one cell): void, 0.1 short of the plate
-    cuts.append(box(xl_, cx_ - 6.5, g0_ - 27.6, g0_ - 10.0, rb[1][2] + 0.4, DZ1 + 1))   # (behind the N20's -x rail, 24 Nov) in a fin of room one
+    cuts.append(box(xl_, cx_ - 6.5, g0_ - 27.6, g0_ - 10.0, DECK_Z - 0.1, DZ1 + 1))   # (behind the N20's -x rail, 24 Nov) in a fin of room one
     # cell thin between the posts' faces and the N20's pocket, over the board's cut): the pocket runs out to the posts, 0.1 short
     xc, zc = rb[1][0] - 41.55, rtop + 1.58                                           # one USB-C plug out the +y edge (its ports' edge), the camera's on
     cuts.append(box(xc - 6.2, xc + 6.2, rb[1][1] - 1.5, 41.0, zc - 3.3, zc + 3.3))   # USB-C 1 (X 37.1..46; 12 Nov: the board runs on the UBEC through its 5 V
@@ -396,6 +419,8 @@ def bodies():
     cuts += [box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[0][1] - 4, ub[0][1], ub[0][2] - 0.5, ub[1][2]), box(ub[:, 0].mean() - 4, ub[:, 0].mean() + 4, ub[1][1], ub[1][1] + 3, ub[0][2] - 0.5, ub[1][2])]   # its leads out its ends, in the pod's height only (11 Nov: up to the deck they cut the tray's sides through BT's path)
     drawn.append(box(lb[0][0] - 1.5, lb[1][0] + 1.5, lb[0][1] - 1.5, lb[1][1] + 1.5, lb[1][2], lb[1][2] + 2.6))   # the flow sensor's tape land over it
     cuts.append(box(lb[0][0] - 0.3, lb[1][0] + 0.3, lb[0][1] - 0.3, lb[1][1] + 0.3, lb[0][2] - 5, lb[1][2]))      # its body and window, open below
+    if 0.0 < lb[0][0] - 0.3 - rx1 < 2.0:                                              # 24 Nov (audit cell_thick): 0.6 of room between the receiver's nose face and the
+        cuts.append(box(rx1 - 0.6, lb[0][0] - 0.2, lb[0][1] - 0.3, lb[1][1] + 0.3, lb[0][2] - 5, lb[1][2]))   # sensor's cut was one cell (2.3) in the run: void
     cuts.append(box(lb[0][0] - 0.3, lb[0][0] + 4, -3, 3, lb[1][2] - 3, S.REC_TOP + 0.3))                          # its cable up the receiver's nose face
     reg = box(lb[0][0], lb[1][0], lb[0][1], lb[1][1], lb[1][2], lb[1][2] + 2.6)   # (the whole land: h 2.25)
     boards.append(("flow MTF-02P", [tuple(lb.mean(0))], [reg], ASM["scout_v4_flow_mtf_02p"]["mass_g"], tuple(lb.mean(0))))
@@ -432,6 +457,8 @@ def bodies():
     socks = socks + T["socks"]                                                        # RM's four (their collars, bores and ports are the probe lib's)
     bb = np.asarray((env + U(drawn)).bounding_box(), float)                          # the boards' cuts with their long (y) faces on the run's grid
     for lo, hi, minus in board_cuts:
+        if isinstance(hi[2], tuple):                                                  # a ceiling under the deck: never modelled thicker than drawn
+            hi = (hi[0], hi[1], deck_ceiling(hi[2][1], bb, SPEC["h"]))
         (sl, sh) = grid_snap(lo, hi, bb, SPEC["h"]); lo2 = (lo[0], sl[1], lo[2]); hi2 = (hi[0], sh[1], hi[2])
         c_ = box(lo2[0], hi2[0], lo2[1], hi2[1], lo2[2], hi2[2]); cuts.append(c_ - minus if minus is not None else c_)
     cuts.append(ways_in() - U(bposts))                                                # the boards' ways in (SPEC assembly_paths), 0.08 over the gap
