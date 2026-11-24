@@ -84,6 +84,7 @@ def _raw_members(k, bridges=False):
     for m in out:
         f = L.LOADS.get(k, {}).get(m["name"]) or {}
         m["depth"] = max(socket_depth(f.get("axial", 0.0), f.get("side", 0.0), f.get("moment", 0.0)) if f else L.DEPTH, BACK_DEPTH.get((k, m["name"]), 0.0))
+        m["root_max"] = ROOT_FLAT if all(abs(o["u"][2]) < 0.1 for o in out) else ROOT_MAX
     return out
 
 
@@ -111,12 +112,17 @@ L.DEPTH = DEPTH_MIN                                       # a socket with no fra
 # root behind them for their own rod; by the bending line above the bare 3.0 roots read 0.40-0.69, BT0 / BT1-TB 1.4 N m the worst): each
 # gets its own cases (build, below), the node held at its other sockets, with and without a near-parallel neighbour. The audit's
 # interface_case refuses a setup where a socket with a frame-model load is loaded in no case.
-ROOT_MAX = 3.0
+# 24 Nov, the flat hubs' roots (run bd7af5d5: RB 0.394 at 1.2 cm3 where it read 0.40 at 0.8, RS1 0.338 / RS0 0.287 at 1.45): RF / RB / RS
+# lie flat, every socket in the layer plane and every end moment about z, so nothing braces a socket's root but its own tube; the worst
+# sat in-layer on the collar's side at the floor plane, in the corner to the next collar (the bending line above reads 0.53 on RM-RB's
+# bare 3.0 tube), and no budget moved it: a 1 mm thickening round a collar is under the engine's 6.25 member. A flat hub's sockets take
+# the root wall the bending line asks, to ROOT_FLAT (RM-RB 4.15, RS-P2 / RS-P5 4.4, RB-P 3.85; RF's stay 3.0), tapered to the mouth wall.
+ROOT_MAX, ROOT_FLAT = 3.0, 4.5
 MIN_WALL, COLLAR_INDEX, TAPER_FROM, SHEAR_K = 2.55, 0.27, 1.0 / 6.0, 1.1   # MIN_WALL: 2.05 at the 0.5 annulus (the audit's drawn_wall floor 2.0, the 0.05 the 40-gon's flats)
 XT_MPA, ZT_MPA = 46.0 * 0.85 / 1.1, 23.0 * 0.85 / 1.1    # topo/material.py PCTG Xt / Zt, KNOCKDOWN, SAFETY["crash"]
 
 
-def collar_walls(moment, side, depth, bore_r, rise=0.0):
+def collar_walls(moment, side, depth, bore_r, rise=0.0, root_max=None):
     """(root wall, mouth wall) of a socket's collar for its rod's end moment (the hand calculation above), each MIN_WALL to ROOT_MAX,
     up to the next 0.05; rise = the socket axis's component along the build direction"""
     di = 2.0 * (bore_r + GROOVE_D); me = abs(moment) + abs(side) * depth / 2.0
@@ -127,7 +133,8 @@ def collar_walls(moment, side, depth, bore_r, rise=0.0):
     for _ in range(60):
         D = 0.5 * (lo + hi)
         lo, hi = (D, hi) if np.pi * (D ** 4 - di ** 4) / (32.0 * D) < z else (lo, D)
-    return max(up(hi), mouth), mouth
+    root = float(np.ceil((hi / 2.0 - bore_r) * 20.0 - 1e-9) / 20.0)
+    return max(min(max(root_max or ROOT_MAX, ROOT_MAX), max(root, MIN_WALL)), mouth), mouth
 
 
 class Wall(float):
@@ -142,7 +149,7 @@ class Wall(float):
 
 
 def drawn_wall(m):
-    root, mouth = collar_walls(m.get("moment") or 0.0, m.get("side") or 0.0, m["depth"], m["bore_r"], float(m["u"][2]))
+    root, mouth = collar_walls(m.get("moment") or 0.0, m.get("side") or 0.0, m["depth"], m["bore_r"], float(m["u"][2]), m.get("root_max"))
     return Wall(root, mouth, m["s0"] + TAPER_FROM * m["depth"], m["s0"] + m["depth"])
 
 
@@ -225,9 +232,46 @@ RIDER_M = L.STRUT_M
 _GROUP = []
 
 
+# 24 Nov, the notch web (run bd7af5d5: 9 of the 11 fails): two collars 31-41 deg apart (a pushed-out pair, the Ys' forks) touch along a
+# line and part toward their mouths; the notch between them was the worst of every one, across the layers on the rider's skin facing its
+# neighbour at mid-bore (P3 / P4 0.53, P6 0.37, TB 0.34 between its forks, P2 / P5 0.34, R0 / R7 0.305, P1 0.30), 0.07-0.115 with the room
+# filled solid, and the budgets did not reach it (P3 0.41 at 1.4 -> 0.53 at 1.7: the layout's own field read 0.48 there). The notch is
+# drawn now: the hull of the two collars (at their mouth walls) over the bore length they share, as far out as their skins are WEB_GAP
+# apart (past that the engine's member fits). Every pair under WEB_DEG at every node; 0.06-0.26 cm3 each.
+WEB_GAP, WEB_DEG, WEB_MIN = 0.8, 45.0, 3.0
+
+
+def _webs(keys):
+    import manifold3d as mf
+    out = []
+    for k in keys:
+        ms = L.members(k); c = np.array(L.P[k], float)
+        for i, a in enumerate(ms):
+            for b in ms[i + 1:]:
+                t = float(np.arccos(np.clip(a["u"] @ b["u"], -1.0, 1.0)))
+                if t < 1e-6 or np.degrees(t) > WEB_DEG:
+                    continue
+                r = [x["bore_r"] + getattr(drawn_wall(x), "mouth", L.WALL) for x in (a, b)]
+                lo = max(a["s0"], b["s0"]) - L.FLOOR
+                hi = min(a["s0"] + a["depth"], b["s0"] + b["depth"], (r[0] + r[1] + WEB_GAP) / (2.0 * np.sin(t / 2.0)))
+                if hi - lo >= WEB_MIN:
+                    out.append(mf.Manifold.batch_hull([L.along(c, x["u"], lo, hi, rx, 48) for x, rx in zip((a, b), r)]))
+    return out
+
+
+_Part0 = L.Part
+
+
+def _part(name, h, drawn, cuts, env, **kw):
+    return _Part0(name, h, L.U([drawn] + _webs(_GROUP)), cuts, env, **kw)
+
+
+L.Part = _part
+
+
 def _mouth_cuts():
     import manifold3d as mf
-    allm = []
+    allm = []; webs = _webs(_GROUP)
     for k in _GROUP:
         c = np.array(L.P[k], float)
         for m in L.members(k):
@@ -241,6 +285,7 @@ def _mouth_cuts():
         if riders:
             spare.append(L.U(riders) - L.along(m["c"], m["u"], m["s_end"] - 1.0, m["s_end"] + 61.0, m["ro"] + 0.5, 64))
         slab = L.along(m["c"], m["u"], m["s_end"], m["s_end"] + 60.0, MOUTH_R, 64)
+        spare += webs
         cuts.append(slab - L.U(spare) if spare else slab)
     return L.U(cuts) if cuts else mf.Manifold()
 
@@ -405,8 +450,12 @@ L.SOCKET_START = _socket_starts()
 # P3 / P4 1.4 -> 1.7 (0.32: the backed rider, solid 0.115 where the old support read 0.148 and built 0.411), P2 / P5 1.2 -> 1.5 (0.33: S0-P2 /
 # S1-P5 with RS held, solid 0.096 on 0.298 built), R0 / R7 0.7 -> 0.8 (0.29, NB-R with RF-R held), P1 0.9 -> 1.0, RB 0.8 -> 1.2,
 # RF 0.3 -> 0.45, RS0 / RS1 1.1 -> 1.45, TB 2.2 -> 2.9. P6, S0, S1, NB read under 0.25 on both supports and keep theirs. 17.75 -> 21.2 cm3.
+# Run of 24 Nov on those (push bd7af5d5; 62.3 g): 5 pass (NB 0.205, RF 0.218, S0 0.215, S1 0.219, RS0 0.287), 11 fail, none of them a budget's
+# to fix: 9 in the notch between a near-parallel pair (the notch web above, drawn), RB / RS1 at the flat hubs' roots (ROOT_FLAT, drawn).
+# RB 1.2 -> 0.8 and RS0 / RS1 1.45 -> 1.1: the volume added for those roots moved nothing (RB) or little (RS 0.355 -> 0.31) and the
+# drawn roots are 0.3-0.5 cm3; every other budget stays.
 BUDGET_CM3 = {"P3": 1.7, "P4": 1.7, "P1": 1.0, "P2": 1.5, "P5": 1.5, "P6": 0.9, "R0": 0.8, "R7": 0.8,
-              "RF": 0.45, "RB": 1.2, "RS0": 1.45, "RS1": 1.45, "S0": 1.3, "S1": 1.55, "NB": 1.0, "TB": 2.9}   # 14 Nov, the bolt forks: their runs read NB / TB 0.051 / 0.052 at 4.0, S0 / S1 0.032 at 3.1; on the fold's loads (core_of) TB-P3 154 N (was 99), S0-P2 109 (was 78): toward ~0.15 by index ~ V^-1.25.   # 13 Nov: NB 5.7 -> 6.9, 0.314 at 5.7 (index ~ V^-1.25 toward 0.25). 12 Nov: NB 4.3 -> 5.7, 0.354 at 4.3 once BS moved to the nose block (NB-R7 pull-out 126 N; index ~ V^-1.25 toward 0.25)   # 12 Nov: TB 4.8 -> 5.6, 0.301 at 4.8 under the heavier frame's TB-P3 108 N (index ~ V^-1.25 toward 0.25)
+              "RF": 0.45, "RB": 0.8, "RS0": 1.1, "RS1": 1.1, "S0": 1.3, "S1": 1.55, "NB": 1.0, "TB": 2.9}   # 14 Nov, the bolt forks: their runs read NB / TB 0.051 / 0.052 at 4.0, S0 / S1 0.032 at 3.1; on the fold's loads (core_of) TB-P3 154 N (was 99), S0-P2 109 (was 78): toward ~0.15 by index ~ V^-1.25.   # 13 Nov: NB 5.7 -> 6.9, 0.314 at 5.7 (index ~ V^-1.25 toward 0.25). 12 Nov: NB 4.3 -> 5.7, 0.354 at 4.3 once BS moved to the nose block (NB-R7 pull-out 126 N; index ~ V^-1.25 toward 0.25)   # 12 Nov: TB 4.8 -> 5.6, 0.301 at 4.8 under the heavier frame's TB-P3 108 N (index ~ V^-1.25 toward 0.25)
 
 
 _build0 = L.build
