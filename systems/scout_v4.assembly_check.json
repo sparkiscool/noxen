@@ -85,7 +85,7 @@
   }
  ],
  "grow_mm": 0.1,
- "parts_checked": 50,
+ "parts_checked": 49,
  "printed": [
   "scout_v4_cradle",
   "scout_v4_frame",
@@ -107,11 +107,34 @@
   "scout_v4_node_s1",
   "scout_v4_node_tb",
   "scout_v4_probe_pinion",
-  "scout_v4_probe_spool",
-  "scout_v4_probe_turret"
+  "scout_v4_probe_spool"
  ],
  "skipped": [],
  "pairs": [
+  {
+   "a": "scout_v4_frame",
+   "b": "scout_v4_drv8833",
+   "mm3": 11.88,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 11.88,
+     "at": [
+      24.2,
+      -27.6,
+      12.3
+     ],
+     "extent_mm": [
+      2.5,
+      6.9,
+      1.5
+     ],
+     "depth_mm": 1.5
+    }
+   ]
+  },
   {
    "a": "scout_v4_frame",
    "b": "scout_v4_probe_pinion",
@@ -185,30 +208,6 @@
       8.0
      ],
      "depth_mm": 4.0
-    }
-   ]
-  },
-  {
-   "a": "scout_v4_probe_spool",
-   "b": "scout_v4_probe_feed",
-   "mm3": 11.4,
-   "limit_mm3": 15.0,
-   "contact": "the blades leave the wound coil at its tangent (the feed drawn from the coil's surface)",
-   "ok": true,
-   "pieces": [
-    {
-     "mm3": 11.4,
-     "at": [
-      13.5,
-      0.0,
-      42.1
-     ],
-     "extent_mm": [
-      0.4,
-      19.0,
-      1.7
-     ],
-     "depth_mm": 0.4
     }
    ]
   },
@@ -318,14 +317,6 @@
   },
   {
    "a": "scout_v4_frame",
-   "b": "scout_v4_probe_turret",
-   "mm3": 0.05,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": true
-  },
-  {
-   "a": "scout_v4_frame",
    "b": "scout_v4_flow_mtf_02p",
    "mm3": 0.01,
    "limit_mm3": 0.5,
@@ -338,6 +329,14 @@
    "mm3": 0.0,
    "limit_mm3": 0.5,
    "contact": null,
+   "ok": true
+  },
+  {
+   "a": "scout_v4_probe_spool",
+   "b": "scout_v4_probe_feed",
+   "mm3": 0.0,
+   "limit_mm3": 15.0,
+   "contact": "the blades leave the wound coil at its tangent (the feed drawn from the coil's surface)",
    "ok": true
   },
   {
@@ -372,13 +371,13 @@
   },
   {
    "a": "scout_v4_probe_spool",
-   "b": "scout_v4_probe_turret",
+   "b": "scout_v4_frame",
    "fit": "mate",
    "need_mm": 0.2,
-   "gap_mm": 0.499,
+   "gap_mm": 2.0,
    "overlap_mm3": 0.0,
    "ok": true,
-   "why": "the spool turns between the turret's side plates"
+   "why": "the spool turns between the frame's two axle bosses (the probe's base is the frame, 24 Nov)"
   }
  ],
  "paths": [
@@ -521,19 +520,125 @@
    "why": "the MTF-02P taped up under its land in the nose pod, open below"
   },
   {
-   "name": "turret onto the frame",
-   "part": "scout_v4_probe_turret",
-   "order": 10,
+   "name": "pinion up into its bay",
+   "part": "scout_v4_probe_pinion",
+   "order": 6.2,
    "fit": "mate",
    "gap_mm": 0.2,
-   "steps": 181,
+   "steps": 65,
    "move": {
     "out": [
      0,
      0,
-     1
+     -1
     ],
-    "length_mm": 90
+    "length_mm": 32
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [
+    {
+     "part": "scout_v4_frame",
+     "mm3": 57.02,
+     "at_step": 15,
+     "of_steps": 65,
+     "along": "7.5 mm out",
+     "pieces": [
+      {
+       "mm3": 64.45,
+       "at": [
+        1.6,
+        13.5,
+        13.8
+       ],
+       "extent_mm": [
+        8.2,
+        3.7,
+        6.7
+       ],
+       "depth_mm": 3.7
+      }
+     ]
+    }
+   ],
+   "tight": [],
+   "ok": false,
+   "why": "the 12 T pinion (O11.42, its O7 hub boss toward the tip bearing) up from below into its bay, open downward 11.92 wide, the receiver off; it waits there, its hub on the tip bearing's boss, for the N20's shaft"
+  },
+  {
+   "name": "N20 up behind its seat and forward",
+   "part": "scout_v4_probe_motor",
+   "order": 6.4,
+   "fit": "press",
+   "gap_mm": 0.1,
+   "steps": 86,
+   "move": {
+    "moves": [
+     {
+      "out": [
+       0,
+       -1,
+       0
+      ],
+      "length_mm": 10.5
+     },
+     {
+      "out": [
+       0,
+       0,
+       -1
+      ],
+      "length_mm": 32
+     }
+    ]
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [
+    {
+     "part": "scout_v4_frame",
+     "mm3": 1042.73,
+     "at_step": 28,
+     "of_steps": 86,
+     "along": "11.1 mm out",
+     "pieces": [
+      {
+       "mm3": 1042.73,
+       "at": [
+        0.0,
+        -21.2,
+        16.6
+       ],
+       "extent_mm": [
+        12.0,
+        15.0,
+        10.0
+       ],
+       "depth_mm": 10.0
+      }
+     ]
+    }
+   ],
+   "tight": [],
+   "ok": false,
+   "why": "the N20's gearbox and can (their 12 x 10 x 27 box) up from below 10.5 behind the seat, then forward: the gearbox pressed between the two rails 12.3 apart (the fit table's press, a hand push) onto the face plate; no screws (24 Nov, the bench: the 2 x M1.6 had no driver line and their heads stood in the pinion): the rails take its torque, the plate and the pressed pinion hold it along y; out the same way with every board in place (the DRV8833 3 forward of its drop)"
+  },
+  {
+   "name": "N20's shaft down behind its seat",
+   "part": "scout_v4_probe_motor",
+   "order": 6.4,
+   "fit": "slide",
+   "gap_mm": 0.25,
+   "steps": 65,
+   "move": {
+    "out": [
+     0,
+     0,
+     -1
+    ],
+    "length_mm": 32
    },
    "into": [
     "scout_v4_frame"
@@ -541,7 +646,123 @@
    "blocked_by": [],
    "tight": [],
    "ok": true,
-   "why": "the turret goes on as one unit with its spool, gears, N20 (into the deck's pocket), drum and roller (the DRV8833 is taped under the deck), down from above"
+   "why": "the N20's 3 mm shaft, drawn where it is with the motor 10.5 behind its seat, down with it through the pocket's front"
+  },
+  {
+   "name": "N20's shaft into the tip bearing",
+   "part": "scout_v4_probe_motor",
+   "order": 6.4,
+   "fit": "close",
+   "gap_mm": 0.05,
+   "steps": 22,
+   "move": {
+    "out": [
+     0,
+     -1,
+     0
+    ],
+    "length_mm": 10.5
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the N20's 3 mm D shaft forward through the face plate's hole, pressed through the pinion's D bore (the pinion against the tip bearing's boss) and into the tip bearing's 3.2 bore (the fit table's close fit: its seat)"
+  },
+  {
+   "name": "roller in from behind",
+   "part": "scout_v4_probe_roller",
+   "order": 7,
+   "fit": "free",
+   "gap_mm": 0.1,
+   "steps": 146,
+   "move": {
+    "moves": [
+     {
+      "out": [
+       -0.9659,
+       0,
+       0.2588
+      ],
+      "length_mm": 10.5
+     },
+     {
+      "out": [
+       -1,
+       0,
+       0
+      ],
+      "length_mm": 62
+     }
+    ]
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the pressure roller (rod, two tubes, saddle and leaf) in through the spool's bay from behind, before the spool, then out along its radial guides and into the leaf's pocket (the rod in its 3.3 slots: the fit table's free fit)"
+  },
+  {
+   "name": "spool in from behind",
+   "part": "scout_v4_probe_spool",
+   "order": 8,
+   "fit": "mate",
+   "gap_mm": 0.2,
+   "steps": 136,
+   "move": {
+    "moves": [
+     {
+      "out": [
+       -7,
+       0,
+       0.85
+      ],
+      "length_mm": 7.05
+     },
+     {
+      "out": [
+       -1,
+       0,
+       0
+      ],
+      "length_mm": 60
+     }
+    ]
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the spool with its gear, drum hub, cable coil and the blades' ends in from behind (-x) between the two axle bosses, level under RM-RB's collar, then down 0.85 over its last 7 mm onto the pinion and against the roller (the gear mesh and the roller's leaf are its seats)"
+  },
+  {
+   "name": "spool axle M3 x 50 in from -y",
+   "part": "scout_v4_probe_spool",
+   "order": 9,
+   "fit": "close",
+   "gap_mm": 0.05,
+   "steps": 113,
+   "move": {
+    "out": [
+     0,
+     -1,
+     0
+    ],
+    "length_mm": 56
+   },
+   "into": [
+    "scout_v4_frame"
+   ],
+   "blocked_by": [],
+   "tight": [],
+   "ok": true,
+   "why": "the spool's axle, an M3 x 50 screw (its head at the -y boss, the nyloc at the +y one), in from -y through both bosses and the spool's bore"
   },
   {
    "name": "rod R0-P1 out of R0",
@@ -858,7 +1079,7 @@
     "length_mm": 8.0
    },
    "into": [
-    "scout_v4_probe_turret"
+    "scout_v4_frame"
    ],
    "blocked_by": [],
    "tight": [],
@@ -881,7 +1102,7 @@
     "length_mm": 10.5
    },
    "into": [
-    "scout_v4_probe_turret"
+    "scout_v4_frame"
    ],
    "blocked_by": [],
    "tight": [],
@@ -1019,7 +1240,7 @@
     "length_mm": 11.0
    },
    "into": [
-    "scout_v4_probe_turret"
+    "scout_v4_frame"
    ],
    "blocked_by": [],
    "tight": [],
@@ -1065,7 +1286,7 @@
     "length_mm": 11.0
    },
    "into": [
-    "scout_v4_probe_turret"
+    "scout_v4_frame"
    ],
    "blocked_by": [],
    "tight": [],
@@ -2164,53 +2385,11 @@
  ],
  "riders": [
   {
-   "part": "scout_v4_probe_spool",
-   "on": "scout_v4_probe_turret",
-   "path": "turret onto the frame",
-   "ok": false,
-   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
-  },
-  {
-   "part": "scout_v4_probe_pinion",
-   "on": "scout_v4_probe_turret",
-   "path": "turret onto the frame",
-   "ok": false,
-   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
-  },
-  {
-   "part": "scout_v4_probe_motor",
-   "on": "scout_v4_probe_turret",
-   "path": "turret onto the frame",
-   "ok": false,
-   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
-  },
-  {
-   "part": "scout_v4_probe_drum",
-   "on": "scout_v4_probe_turret",
-   "path": "turret onto the frame",
-   "ok": false,
-   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
-  },
-  {
-   "part": "scout_v4_probe_feed",
-   "on": "scout_v4_probe_turret",
-   "path": "turret onto the frame",
-   "ok": false,
-   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
-  },
-  {
-   "part": "scout_v4_probe_roller",
-   "on": "scout_v4_probe_turret",
-   "path": "turret onto the frame",
-   "ok": false,
-   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
-  },
-  {
    "part": "scout_v4_probe_horn",
    "on": "scout_v4_probe_servo",
    "path": "SG90 into the head frame's ring",
-   "ok": false,
-   "why": "rides with scout_v4_probe_servo on the path 'SG90 into the head frame's ring' with no path of its own onto it and no fixed-in-place reason"
+   "ok": true,
+   "by": "fixed: pressed on the SG90's spline with its centre screw, on the bench"
   },
   {
    "part": "scout_v4_probe_tilt",
@@ -2223,15 +2402,15 @@
    "part": "scout_v4_probe_leds",
    "on": "scout_v4_cradle",
    "path": "cradle lowered onto the horn",
-   "ok": false,
-   "why": "rides with scout_v4_cradle on the path 'cradle lowered onto the horn' with no path of its own onto it and no fixed-in-place reason"
+   "ok": true,
+   "by": "fixed: stuck on (their own adhesive)"
   },
   {
    "part": "scout_v4_probe_horn",
    "on": "scout_v4_cradle",
    "path": "cradle lowered onto the horn",
-   "ok": false,
-   "why": "rides with scout_v4_cradle on the path 'cradle lowered onto the horn' with no path of its own onto it and no fixed-in-place reason"
+   "ok": true,
+   "by": "fixed: pressed on the SG90's spline with its centre screw, on the bench"
   },
   {
    "part": "scout_v4_probe_tilt",
@@ -2244,44 +2423,44 @@
    "part": "scout_v4_probe_leds",
    "on": "scout_v4_cradle",
    "path": "head nods -20..+90 deg",
-   "ok": false,
-   "why": "rides with scout_v4_cradle on the path 'head nods -20..+90 deg' with no path of its own onto it and no fixed-in-place reason"
+   "ok": true,
+   "by": "fixed: stuck on (their own adhesive)"
   },
   {
    "part": "scout_v4_probe_horn",
    "on": "scout_v4_cradle",
    "path": "head nods -20..+90 deg",
-   "ok": false,
-   "why": "rides with scout_v4_cradle on the path 'head nods -20..+90 deg' with no path of its own onto it and no fixed-in-place reason"
+   "ok": true,
+   "by": "fixed: pressed on the SG90's spline with its centre screw, on the bench"
+  },
+  {
+   "part": "scout_v4_probe_drum",
+   "on": "scout_v4_probe_spool",
+   "path": "spool in from behind",
+   "ok": true,
+   "by": "fixed: wound on in hand"
+  },
+  {
+   "part": "scout_v4_probe_feed",
+   "on": "scout_v4_probe_spool",
+   "path": "spool in from behind",
+   "ok": true,
+   "by": "fixed: fixed to the hub and wound on in hand"
   }
  ],
  "not_print_ready": {
-  "scout_v4_cradle": [
-   "scout_v4_probe_leds: rides with scout_v4_cradle on the path 'cradle lowered onto the horn' with no path of its own onto it and no fixed-in-place reason",
-   "scout_v4_probe_horn: rides with scout_v4_cradle on the path 'cradle lowered onto the horn' with no path of its own onto it and no fixed-in-place reason",
-   "scout_v4_probe_leds: rides with scout_v4_cradle on the path 'head nods -20..+90 deg' with no path of its own onto it and no fixed-in-place reason",
-   "scout_v4_probe_horn: rides with scout_v4_cradle on the path 'head nods -20..+90 deg' with no path of its own onto it and no fixed-in-place reason"
-  ],
   "scout_v4_frame": [
-   "clashes with scout_v4_probe_pinion: 7.4 mm3"
+   "clashes with scout_v4_probe_pinion: 7.4 mm3",
+   "clashes with scout_v4_drv8833: 11.9 mm3",
+   "blocks the path 'pinion up into its bay' (57.0 mm3 7.5 mm out)",
+   "blocks the path 'N20 up behind its seat and forward' (1042.7 mm3 11.1 mm out)"
   ],
   "scout_v4_probe_pinion": [
    "clashes with scout_v4_frame: 7.4 mm3",
-   "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
-  ],
-  "scout_v4_probe_spool": [
-   "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
-  ],
-  "scout_v4_probe_turret": [
-   "scout_v4_probe_spool: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason",
-   "scout_v4_probe_pinion: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason",
-   "scout_v4_probe_motor: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason",
-   "scout_v4_probe_drum: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason",
-   "scout_v4_probe_feed: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason",
-   "scout_v4_probe_roller: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
+   "path 'pinion up into its bay' blocked by scout_v4_frame (57.0 mm3 7.5 mm out)"
   ]
  },
  "would_block": {},
- "seconds": 6.5,
+ "seconds": 3.8,
  "placed": {}
 }
