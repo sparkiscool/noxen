@@ -1,0 +1,153 @@
+{
+ "part": "np_bar_pair",
+ "checks": [
+  [
+   "slice ran without error",
+   true,
+   ""
+  ],
+  [
+   "extrusions (supports, brim, skirt included) inside the 5 mm safe area",
+   true,
+   "x 40.2..139.8 y 59.2..120.8 z max 10.0"
+  ],
+  [
+   "every printing/travel move inside the safe area (plate_safe)",
+   true,
+   "inside the safe area: x 40.2..139.8, y 59.2..120.8 mm (5 mm margin)"
+  ],
+  [
+   "plate centred on the bed",
+   true,
+   "toolpath centre 90.0, 90.0 (bed 90)"
+  ],
+  [
+   "no empty layers",
+   true,
+   "50 layers"
+  ],
+  [
+   "objects stayed where laid out",
+   true,
+   "offset [0.0, 0.0]"
+  ],
+  [
+   "supports are in the g-code",
+   true,
+   "0 support moves"
+  ],
+  [
+   "non-planar: the hotend clears the print everywhere (replayed against the A1 mini hotend)",
+   true,
+   "closest 0.109 mm, block and ducts None mm, tip rides 0.13 mm into the slope (0.27 allowed), steepest move 7.4 deg"
+  ],
+  [
+   "non-planar: every layer inside the nozzle's 0.08-0.28 mm",
+   "True",
+   "0.131 to 0.269 mm"
+  ]
+ ],
+ "stats": {
+  "layer_steps": [
+   0.2
+  ],
+  "offset_xy": [
+   0.0,
+   0.0
+  ],
+  "time": "1h 45m 38s",
+  "grams": 60.35
+ },
+ "ready": true,
+ "gcode_3mf": "E:\\repos\\noxen\\print\\nonplanar\\np_bar_pair\\np_bar_pair.gcode.3mf",
+ "objects": [
+  {
+   "label": "np_bar",
+   "opts": {
+    "layer_height": 0.2,
+    "wall_loops": 4,
+    "sparse_infill_density": "100%",
+    "enable_support": 0
+   },
+   "xy": [
+    40.0,
+    59.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    -1.0
+   ]
+  },
+  {
+   "label": "np_bar",
+   "opts": {
+    "layer_height": 0.2,
+    "wall_loops": 4,
+    "sparse_infill_density": "100%",
+    "enable_support": 0
+   },
+   "xy": [
+    40.0,
+    96.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    -1.0
+   ]
+  }
+ ],
+ "nonplanar": {
+  "ok": true,
+  "bend": {
+   "pieces": 777384,
+   "bent": 426829,
+   "t_min": 0.131,
+   "t_max": 0.269,
+   "vz": 6.5,
+   "zmax": 10.616,
+   "slope_deg": 7.36
+  },
+  "gate": {
+   "layers": 50,
+   "bent_layers": 43,
+   "plough_mm": 0.129,
+   "clear_mm": 0.109,
+   "far_clear_mm": null,
+   "worst": [
+    125.09,
+    108.24,
+    4.729,
+    23
+   ],
+   "slope_deg": 7.36,
+   "plough_allowed_mm": 0.271,
+   "ok": true,
+   "why": ""
+  },
+  "fields": [
+   {
+    "mode": "wave",
+    "slope_deg": 10.0,
+    "amp_mm": 1.0,
+    "cell_mm": 0.5,
+    "layer_mm": 0.2,
+    "wavelength_mm": 47.51,
+    "skin_mm": 0.6,
+    "max_slope_deg": 7.53,
+    "tau": [
+     0.654,
+     1.346
+    ],
+    "bend_mm": [
+     -1.0,
+     1.0
+    ],
+    "bent_share": 0.274,
+    "piece_mm": 0.75
+   }
+  ],
+  "preview": "E:\\repos\\noxen\\print\\nonplanar\\np_bar_pair\\np_bar_pair.preview.png"
+ }
+}
