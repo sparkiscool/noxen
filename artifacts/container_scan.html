@@ -25,6 +25,7 @@ header{display:flex;align-items:center;gap:12px;padding:0 14px}
 .panes{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr) minmax(0,.85fr);gap:8px;padding:0 10px 10px;min-height:0;transition:grid-template-columns .35s ease}
 .panes.insp{grid-template-columns:minmax(0,.7fr) minmax(0,1fr) minmax(0,1.5fr)}
 .lockhint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:6px 14px;border-radius:99px;background:rgba(10,13,18,.62);backdrop-filter:blur(6px);color:#dfe4ed;font:500 12px var(--sans);pointer-events:none;white-space:nowrap}
+#lookbtn{right:auto;left:50%;top:50%;transform:translate(-50%,-50%);font-size:14px;padding:10px 20px}
 body.locked #lookbtn{display:none}.lockhint{display:none}.lockhint.show{display:block}
 .pane{position:relative;min-height:0;border-radius:12px;overflow:hidden;background:var(--panel);touch-action:none;cursor:default;user-select:none}
 .pane.drag{cursor:grabbing}
@@ -105,8 +106,8 @@ body.locked .pane.lk .xh{display:block}
 </header>
 <div class="panes" id="panes">
   <div class="pane pt" id="p0"><canvas></canvas><div class="tag">Point map<i>as-built scan</i></div><button class="pill ui" id="bo" title="Hide everything that is not part of the BIM">Building only</button><div class="meta" id="m0"></div>
-    <div class="legend" id="legend"><b>Deviation from BIM</b><div class="bar"></div><div class="tk"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+ mm</span></div></div><div class="xh"></div></div>
-  <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Esc to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg>Look mode</button><div class="lockhint" id="lockhint"></div><div class="xh"></div></div>
+    <div class="legend" id="legend"><b>Deviation from BIM<span style="font-weight:400;color:#aab2c0"> &middot; grey = not in BIM</span></b><div class="bar"></div><div class="tk"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+ mm</span></div></div><div class="xh"></div></div>
+  <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Ctrl to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg>Look mode</button><div class="lockhint" id="lockhint"></div><div class="xh"></div></div>
   <div class="pane bim" id="p1"><canvas></canvas><div class="tag">BIM<i>design model &middot; empty building</i></div>
     <button class="xbtn ui" id="close" hidden title="Close (Esc)">&times;</button>
     <div class="card ui" id="card" hidden></div>
@@ -124,7 +125,7 @@ body.locked .pane.lk .xh{display:block}
   <h4>Controls</h4>
   <div style="line-height:1.9"><span class="kc">W</span><span class="kc">A</span><span class="kc">S</span><span class="kc">D</span> fly<br>
   <span class="kc">Space</span> / <span class="kc">E</span> up &nbsp; <span class="kc">Shift</span> / <span class="kc">Q</span> down<br>
-  <b>Look mode</b> (button on the video) captures the mouse: move it to turn, <span class="kc">Esc</span> leaves<br><span class="kc">&larr;</span><span class="kc">&rarr;</span><span class="kc">&uarr;</span><span class="kc">&darr;</span> look with the keyboard<br>
+  <b>Look mode</b> (button on the video) captures the mouse: move it to turn, click opens an object, <span class="kc">Ctrl</span> leaves<br><span class="kc">&larr;</span><span class="kc">&rarr;</span><span class="kc">&uarr;</span><span class="kc">&darr;</span> look with the keyboard<br>
   <span class="kc">Ctrl</span> + click an object in the BIM or video to open it</div>
 </div>
 <aside class="drawer" id="drawer"><input type="search" id="q" placeholder="Search objects"><div class="sum" id="sum"></div><div class="list" id="list"></div></aside>
@@ -544,7 +545,7 @@ function genPoints(objs,polys,R,bimPolys){
       for(let i=1;i<v.length-1;i++){const d=ptTri2(x,y,z,v[0],v[i],v[i+1]);if(d<best2)best2=d}
     }
     const dd=Math.sqrt(best2);DV[k]=dd;
-    const dc=devCol(dd);COLd[k*3]=dc[0];COLd[k*3+1]=dc[1];COLd[k*3+2]=dc[2];
+    const oo=objA[s],dc=oo>=0&&objs[oo].site?[150,156,168]:devCol(dd);COLd[k*3]=dc[0];COLd[k*3+1]=dc[1];COLd[k*3+2]=dc[2];
   }
   const ccx=new Float32Array(NC*3),crad=new Float32Array(NC);
   for(let c=0;c<NC;c++){if(cstart[c]===cstart[c+1])continue;let r=0;for(let a=0;a<3;a++){ccx[c*3+a]=(cmin[c*3+a]+cmax[c*3+a])/2;r+=Math.pow((cmax[c*3+a]-cmin[c*3+a])/2,2)}crad[c]=Math.sqrt(r)}
@@ -1132,7 +1133,7 @@ for(const p of panes){
   let last=null;
   p.el.addEventListener('pointerdown',e=>{
     if(e.target.closest('.ui'))return;
-    if(document.pointerLockElement===p.el){if(e.ctrlKey||e.metaKey)pickAt(p,p.W/2,p.H/2);return}
+    if(document.pointerLockElement===p.el){pickAt(p,p.W/2,p.H/2);return}
     const r=p.el.getBoundingClientRect();
     if(e.ctrlKey||e.metaKey){pickAt(p,e.clientX-r.left,e.clientY-r.top);return}
     if(p.mode===1&&insp.on){p.el.setPointerCapture(e.pointerId);last=[e.clientX,e.clientY];p.el.classList.add('drag')}});
@@ -1165,7 +1166,7 @@ function pickAt(p,x,y){
   select(b===sel?-1:b);
 }
 function lockMouse(p){try{p=p||panes[2];const r=p.el.requestPointerLock();if(r&&r.catch)r.catch(()=>{})}catch(e){}}
-document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){touch();tipAt(null,'');hint('Look mode \u00b7 move the mouse to turn \u00b7 Esc to leave',3500)}else $('lockhint').classList.remove('show')});
+document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Ctrl leaves',4500);try{navigator.keyboard&&navigator.keyboard.lock(['Escape'])}catch(x){}}else $('lockhint').classList.remove('show')});
 let lmX=null,lmY=null;
 addEventListener('mousemove',e=>{
   if(!document.pointerLockElement){lmX=null;return}
@@ -1181,6 +1182,7 @@ const MOVE=['KeyW','KeyA','KeyS','KeyD','KeyE','KeyQ','Space','ArrowUp','ArrowDo
 addEventListener('keydown',e=>{
   if(e.target&&e.target.matches&&e.target.matches('input[type=search]'))return;
   if(MOVE.includes(e.code)){const a=document.activeElement;if(a&&a.matches&&a.matches('button,select,input'))a.blur();e.preventDefault();keys.add(e.code);touch();return}
+  if((e.code==='ControlLeft'||e.code==='ControlRight')&&document.pointerLockElement){document.exitPointerLock();return}
   if(e.code==='KeyF'){if(document.pointerLockElement)document.exitPointerLock();else lockMouse(panes[2])}
   if(e.code==='Escape'){if(document.pointerLockElement)return;if(openPop()){closePops();return}if(sel>=0)select(-1)}
 });
