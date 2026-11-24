@@ -34,22 +34,22 @@
 ]
 ]
 },
-"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, a half cage on the new discs; the battery mechanism (receiver, cartridge, pack, 266 g) not drawn: it mounts on 4 M3 bolts. -160..160 x -163..163 x -11..143 mm, ~842 g (E). tools/scout_v4_shape.py",
+"note": "Scout v4 shape design (8 Nov, Spark: new props, no Bee35, everything printed in PCTG, still seats in the landing funnel for the battery swapper): Gemfan 5125 props on a printed frame, a half cage on the new discs; the battery mechanism (receiver, cartridge, pack, 266 g) not drawn: it mounts on 4 M3 bolts. -160..160 x -163..163 x -11..143 mm, ~835 g (E). tools/scout_v4_shape.py",
 "mass_budget_g": null,
 "parts": [
 {
 "id": "scout_v4_frame",
-"name": "frame v4, one body: deck, arms, motor pods, side lugs and the base (yokes, nose block, flow pod, tail tray) (generated, parts/scout_v4_frame)",
+"name": "frame v4, one body: deck, arms, motor pods, side lugs, the base (yokes, nose block, flow pod, tail tray) and the probe's base (spool bosses, N20 seat, roller guides, drum, throat, the roof's middle node RM) (generated, parts/scout_v4_frame)",
 "role": "structure",
 "group": "frame",
 "color": "#d9d2c3",
 "mesh": "parts/scout_v4_frame/part.stl",
-"mass_g": 193.2,
+"mass_g": 227.6,
 "tag": "E",
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "one print inside |x|, |y| 89.3 (the A1 mini's 180), deck-top down on the bed: deck z 18.5..24.5 and the yokes over the receiver down to its top 9.6, arms to O28 motor pads at (+-74.3, +-74.3), the battery mechanism's 4 M3 inserts, the FC's and the Radxa's posts, the XR2's, DRV8833's, UBEC's and flow sensor's lands, the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1), the turret's four insert bosses; the room until the run lands; PCTG",
+"note": "one print inside |x|, |y| 89.3 (the A1 mini's 180), printed the right way up (178.6 x 178.6 x 85.0: nose and tail blocks on the bed, supports under the deck and arms): deck z 18.5..24.5 and the yokes over the receiver down to its top 9.6, arms to O28 motor pads at (+-74.3, +-74.3), the battery mechanism's 4 M3 inserts, the FC's and the Radxa's posts, the XR2's, DRV8833's, UBEC's and flow sensor's lands, the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1); 24 Nov (Spark: one printed part with the probe base): the probe's drawn attachments over the deck to the throat's seat at z 73 and RM's four rod sockets, the old turret's 4 M3 and inserts gone; TPU lip 1, wires 1 (E); the last run's shape until the new one lands; PCTG",
 "material": "PCTG",
 "opacity": 0.85
 },
@@ -312,21 +312,6 @@
 "material": "PCTG"
 },
 {
-"id": "scout_v4_probe_turret",
-"name": "probe turret: housing, throat, drum and the roof's middle node RM (PCTG, generated: parts/scout_v4_probe_turret)",
-"role": "structure",
-"group": "camera",
-"color": "#f2b705",
-"mesh": "parts/scout_v4_probe_turret/part.stl",
-"mass_g": 41.2,
-"tag": "C",
-"owner": "scout v4",
-"version": "shape 8 Nov",
-"source": "tools/scout_v4_shape.py",
-"note": "side plates round the spool and the drum, the N20's cheeks, the roller's rod guides and its leaf pocket, the throat up to the head's seat, RM's rod sockets; TPU lip 1, wires 1 (E); PCTG",
-"material": "PCTG"
-},
-{
 "id": "scout_v4_probe_spool",
 "name": "probe spool with its 40 T gear (drawn: parts/scout_v4_probe_spool/make.py)",
 "role": "structure",
@@ -508,7 +493,7 @@
 "owner": "scout v4",
 "version": "shape 8 Nov",
 "source": "tools/scout_v4_shape.py",
-"note": "under the deck behind the turret's N20 on four M2.5 posts (inserts in the deck), 65 along x, its USB-C plugs out the -y edge"
+"note": "under the deck behind the probe's N20 on four M2.5 posts (inserts in the deck), 65 along x, its USB-C plugs out the -y edge"
 },
 {
 "id": "scout_v4_flow_mtf_02p",
@@ -812,7 +797,7 @@
 ],
 "assembly": {
 "fit_tol_mm3": 0.5,
-"note": "15 Nov (engine worker, Spark's bench print): the assembly gate, tools/assembly_check.py; fits from topo/fit.py (the probe coupon). The order: the frame and everything fixed in it; the turret with its spool, gears, N20, drum and roller from above; the rods and nodes; the head frame on the blades' tip (55); the head's steps of parts/scout_v4_head_lib.py (SG90 into the ring, the camera into the cradle in hand, the cradle lowered at nod 0 onto the horn; the M3 idler not drawn); the nod. Mates are running fits; a piece seated on a stop is held to its path's fit gap at every step past the seat. The props go on last.",
+"note": "15 Nov (engine worker, Spark's bench print): the assembly gate, tools/assembly_check.py; fits from topo/fit.py (the probe coupon). The order: the frame and everything fixed in it; the probe's mechanism into the frame's own base (24 Nov, one body: the pinion and the N20 up from below, the roller, the spool and its M3 x 50 axle from above and behind); the rods and nodes; the head frame on the blades' tip (55); the head's steps of parts/scout_v4_head_lib.py (SG90 into the ring, the camera into the cradle in hand, the cradle lowered at nod 0 onto the horn; the M3 idler not drawn); the nod. Mates are running fits; a piece seated on a stop is held to its path's fit gap at every step past the seat. The props go on last.",
 "order": {
 "scout_v4_node_*": 50,
 "scout_v4_head_frame": 55,
@@ -866,36 +851,12 @@
 },
 {
 "a": "scout_v4_probe_spool",
-"b": "scout_v4_probe_turret",
+"b": "scout_v4_frame",
 "fit": "mate",
-"why": "the spool turns between the turret's side plates"
+"why": "the spool turns between the frame's two axle bosses (the probe's base is the frame, 24 Nov)"
 }
 ],
 "paths": [
-{
-"name": "turret onto the frame",
-"part": "scout_v4_probe_turret",
-"order": 10,
-"out": [
-0,
-0,
-1
-],
-"length_mm": 90,
-"fit": "mate",
-"with": [
-"scout_v4_probe_spool",
-"scout_v4_probe_pinion",
-"scout_v4_probe_motor",
-"scout_v4_probe_drum",
-"scout_v4_probe_feed",
-"scout_v4_probe_roller"
-],
-"into": [
-"scout_v4_frame"
-],
-"why": "the turret goes on as one unit with its spool, gears, N20 (into the deck's pocket), drum and roller (the DRV8833 is taped under the deck), down from above"
-},
 {
 "name": "blades into the head frame's clip",
 "part": "scout_v4_probe_mast_a",
@@ -921,10 +882,10 @@
 "scout_v4_head_frame"
 ],
 "ignore": [
-"scout_v4_probe_turret",
 "scout_v4_probe_bench_turret",
 "scout_v4_probe_feed",
-"scout_v4_probe_spool"
+"scout_v4_probe_spool",
+"scout_v4_frame"
 ],
 "why": "the two blades' tips (the lens, 2 x 2.78 thick, 19 wide) slide up into the head frame's 14 mm clip"
 },
@@ -1137,6 +1098,226 @@
 "scout_v4_frame"
 ],
 "why": "the MTF-02P taped up under its land in the nose pod, open below"
+},
+{
+"name": "pinion up into its bay",
+"part": "scout_v4_probe_pinion",
+"order": 6.2,
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 32,
+"fit": "mate",
+"into": [
+"scout_v4_frame"
+],
+"ignore": [
+"scout_v4_probe_motor"
+],
+"why": "the 12 T pinion up from below into its bay under the spool's gear, the receiver off (24 Nov, one body with the probe base); it waits there, its hub on the tip bearing's boss, for the N20's shaft"
+},
+{
+"name": "N20 up behind its seat and forward",
+"part": "scout_v4_probe_motor",
+"order": 6.4,
+"body": {
+"box": [
+-6.0,
+6.0,
+-18.2,
+8.8,
+15.1,
+25.1
+]
+},
+"moves": [
+{
+"out": [
+0,
+-1,
+0
+],
+"length_mm": 10.5
+},
+{
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 32
+}
+],
+"fit": "slide",
+"into": [
+"scout_v4_frame"
+],
+"why": "the N20's gearbox and can (their 12 x 10 x 27 box) up from below 10.5 behind the seat, then forward onto the face plate (its 2 x M1.6); out the same way with every board in place (the DRV8833 3 forward of its drop)"
+},
+{
+"name": "N20's shaft down behind its seat",
+"part": "scout_v4_probe_motor",
+"order": 6.4,
+"body": {
+"cylinder": {
+"p0": [
+0.0,
+-1.7,
+20.1
+],
+"p1": [
+0.0,
+8.3,
+20.1
+],
+"r": 1.5
+}
+},
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 32,
+"fit": "slide",
+"into": [
+"scout_v4_frame"
+],
+"why": "the N20's 3 mm shaft, drawn where it is with the motor 10.5 behind its seat, down with it through the pocket's front"
+},
+{
+"name": "N20's shaft into the tip bearing",
+"part": "scout_v4_probe_motor",
+"order": 6.4,
+"body": {
+"cylinder": {
+"p0": [
+0.0,
+8.8,
+20.1
+],
+"p1": [
+0.0,
+18.8,
+20.1
+],
+"r": 1.5
+}
+},
+"out": [
+0,
+-1,
+0
+],
+"length_mm": 10.5,
+"fit": "close",
+"into": [
+"scout_v4_frame"
+],
+"ignore": [
+"scout_v4_probe_pinion"
+],
+"why": "the N20's 3 mm D shaft forward through the face plate's hole, pressed through the pinion's D bore (the pinion against the tip bearing's boss) and into the tip bearing's 3.2 bore (the fit table's close fit: its seat)"
+},
+{
+"name": "roller in from behind",
+"part": "scout_v4_probe_roller",
+"order": 7,
+"moves": [
+{
+"out": [
+-0.9659,
+0,
+0.2588
+],
+"length_mm": 10.5
+},
+{
+"out": [
+-1,
+0,
+0
+],
+"length_mm": 62
+}
+],
+"fit": "free",
+"into": [
+"scout_v4_frame"
+],
+"why": "the pressure roller (rod, two tubes, saddle and leaf) in through the spool's bay from behind, before the spool, then out along its radial guides and into the leaf's pocket (the rod in its 3.3 slots: the fit table's free fit)"
+},
+{
+"name": "spool in from behind",
+"part": "scout_v4_probe_spool",
+"order": 8,
+"with": [
+"scout_v4_probe_drum",
+"scout_v4_probe_feed"
+],
+"moves": [
+{
+"out": [
+-7,
+0,
+0.85
+],
+"length_mm": 7.05
+},
+{
+"out": [
+-1,
+0,
+0
+],
+"length_mm": 60
+}
+],
+"fit": "mate",
+"into": [
+"scout_v4_frame"
+],
+"ignore": [
+"scout_v4_probe_pinion",
+"scout_v4_probe_roller"
+],
+"why": "the spool with its gear, drum hub, cable coil and the blades' ends in from behind (-x) between the two axle bosses, level under RM-RB's collar, then down 0.85 over its last 7 mm onto the pinion and against the roller (the gear mesh and the roller's leaf are its seats)"
+},
+{
+"name": "spool axle M3 x 50 in from -y",
+"part": "scout_v4_probe_spool",
+"order": 9,
+"body": {
+"cylinder": {
+"p0": [
+0.0,
+-24.5,
+41.0
+],
+"p1": [
+0.0,
+28.5,
+41.0
+],
+"r": 1.5
+}
+},
+"out": [
+0,
+-1,
+0
+],
+"length_mm": 56,
+"fit": "close",
+"into": [
+"scout_v4_frame"
+],
+"ignore": [
+"scout_v4_probe_drum"
+],
+"why": "the spool's axle, an M3 x 50 screw (its head at the -y boss, the nyloc at the +y one), in from -y through both bosses and the spool's bore"
 }
 ],
 "generate": [

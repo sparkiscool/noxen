@@ -1187,6 +1187,32 @@ def t_audit_held_load():
         check("audit held_load", False, str(e))
 
 
+def t_audit_interface_case():
+    """audit: interface_case (24 Nov: the Scout v4 nodes' two held sockets had no case for their own rod's end moment). Two pads, both
+    declared as loaded interfaces (Part.interface_loads): with one held as the only support and the other loaded, the held one is refused;
+    with its own case on a second support (the part held at the other pad) the setup passes."""
+    try:
+        import manifold3d as mf
+        from topo.audit import audit
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        A, B = box(-1, 4, 5, 15, 5, 15), box(30, 35, 5, 15, 5, 15)
+        def fails(own_case):
+            p = Part("ifacemini", 1.0, box(0, 4, 6, 14, 6, 14) + box(30, 34, 6, 14, 6, 14), box(100, 101, 100, 101, 100, 101),
+                     box(0, 34, 0, 20, 0, 20), log=lambda s_: None)
+            p.support("default", A); p.load("B down", B, (0, 0, -10.0))
+            if own_case:
+                p.support("hold A", B); p.load("A down", A, (0, 0, -10.0), support="hold A")
+            p.interface_loads = [dict(name=n, nodes=p.nodes_of(p.elems(r, p.solid | p.design, what=n))) for n, r in (("A", A), ("B", B))]
+            return [f for f in audit(p, 4.0, log=lambda s_: None, hard=False)["fails"] if f.startswith("interface_case")]
+        a, b = fails(False), fails(True)
+        check("audit interface_case: a loaded interface held in every case is refused; with its own case on another support it passes",
+              len(a) == 1 and a[0].startswith("interface_case: A:") and not b, f"held only {a}, own case {b}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit interface_case", False, repr(e)[:200])
+
+
 def t_design_hash():
     """the design hash (topo/run.py) is the same for the same setup built twice and differs when a load, a cut or the budget
     changes (29 Oct: parts.yml stops a running part whose design main has since changed)."""
@@ -1379,6 +1405,42 @@ def t_audit_path():
     except Exception as e:
         traceback.print_exc()
         check("audit path", False, repr(e)[:200])
+
+
+def t_audit_path_riders():
+    """path_riders (topo/audit.py; 24 Nov, the Scout v4 frame with the probe's base: the spool's declared path was cut, the cable coil that
+    rides on its drum hub met 288 mm3 of room). A 10 mm 'camera' pulled out -x by 20 with a 4 x 4 x 3 knob riding on its top (`with`):
+    the declared path cuts the camera's sweep only, the knob's sweep stays room and the audit refuses it; with the knob's sweep cut in
+    the setup too, nothing is left in it and the audit passes."""
+    try:
+        import json as _j, os, tempfile, trimesh
+        import manifold3d as mf
+        from .audit import audit, path_riders
+        from .part import Part
+        from . import paths as P, fit
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        cam, knob = box(0, 10, 0, 10, 0, 10), box(3, 7, 3, 7, 10, 13)
+        path = {"name": "cam", "part": "cam", "with": ["knob"], "out": [-1, 0, 0], "length_mm": 20, "fit": "slide"}
+        d = tempfile.mkdtemp(); os.makedirs(os.path.join(d, "systems"))
+        for nm, m in (("cam", cam), ("knob", knob)):
+            os.makedirs(os.path.join(d, "parts", nm))
+            trimesh.Trimesh(np.asarray(m.to_mesh().vert_properties)[:, :3], np.asarray(m.to_mesh().tri_verts)).export(os.path.join(d, "parts", nm, "part.stl"))
+        _j.dump({"parts": [{"id": k, "mesh": f"parts/{k}/part.stl"} for k in ("cam", "knob")], "assembly": {"paths": [path]}}, open(os.path.join(d, "systems", "t.assembly.json"), "w"))
+        def mk(cut_knob):
+            cuts = P.sweep(path, knob, grow=fit.gap("slide")) if cut_knob else box(100, 101, 100, 101, 100, 101)
+            p = Part("mini_riders", 1.0, box(10, 13, -4, 14, -4, 16), cuts, box(-25, 16, -6, 16, -6, 16), log=lambda s_: None)
+            p.support("default", box(10, 13, -4, 14, -4, 14)); p.load("down", box(-25, -20, -6, 16, -6, 0), (0, 0, -5.0), cls="flight")
+            p.paths_root = d
+            return P.apply_declared(p, ["t:cam"], root=d)
+        r0 = path_riders(mk(False)); r1 = path_riders(mk(True))
+        f0 = [f for f in audit(mk(False), 3.2, log=lambda s_: None, hard=False)["fails"] if f.startswith("path_riders:")]
+        f1 = [f for f in audit(mk(True), 3.2, log=lambda s_: None, hard=False)["fails"] if f.startswith("path_riders:")]
+        ok = len(r0) == 1 and r0[0]["room_mm3"] > 200 and r0[0]["with"] == ["knob"] and len(f0) == 1 and r1[0]["room_mm3"] <= 0.5 and not f1
+        check("audit path_riders: room left in the sweep of a part that rides on a declared path's piece is refused; cut in the setup, it passes",
+              bool(ok), f"left {r0}; cut {r1}; fails {len(f0)} / {len(f1)}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit path_riders", False, repr(e)[:200])
 
 
 def t_audit_fit():
@@ -1918,7 +1980,7 @@ ARMS_GEN_SHORT = 14.0
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_released_check, t_no_cavity, t_audit_path, t_audit_fit, t_path_sweep_gap):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_interface_case, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_released_check, t_no_cavity, t_audit_path, t_audit_path_riders, t_audit_fit, t_path_sweep_gap):
         t()
     if not quick:
         t_end_to_end()

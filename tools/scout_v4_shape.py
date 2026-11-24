@@ -444,7 +444,8 @@ def tilt_sweep():
 def probe():
     """the ceiling probe (9 Nov). Turret, under the roof's middle node where the FC sat: the spool (axis y) with its 40 T gear, the 15 T
     pinion on the N20 in a pocket in the deck, the clock-spring spiral that carries the flat cable to the fixed side, the 30 mm throat
-    the two blades leave through (forming their lens) and the housing's two side plates; M3 screws are the spool's and the idler's axles. Returns {name: mesh}"""
+    the two blades leave through (forming their lens); an M3 x 50 screw is the spool's axle. 24 Nov: no housing here, what holds the mechanism
+    is the frame (one body, parts/scout_v4_frame with parts/scout_v4_probe_turret_lib.py). Returns {name: mesh}"""
     from shapely.geometry import Point, LineString, Polygon
     (cx, cz), r = SPOOL["c"], SPOOL["r"]; t = THROAT
     y0, y1 = SPOOL["y0"], SPOOL["y1"]
@@ -460,16 +461,8 @@ def probe():
     th = np.linspace(0, 2 * math.pi * 3.5, 400); rr = 4.0 + (DRUM["r"] - 1.5 - 4.0) * th / th[-1]
     spiral = LineString([(cx + a * math.cos(b), cz + a * math.sin(b)) for a, b in zip(rr, th)]).buffer(1.1)
     drum = [_xz(spiral, DRUM["y0"] + 1.0, DRUM["y1"] - 1.0), cyl_y(4.0, cx, cz, DRUM["y0"] + 0.5, DRUM["y1"] + 0.5, 24)]           # the camera's own USB cable in a loose coil (2.5 turns of room, ~1.5 used)
-    feed = [box(MAST_X + sg * 1.6 - 0.2, MAST_X + sg * 1.6 + 0.2, -BLADE_W / 2, BLADE_W / 2, cz, t["z0"] + 2.0) for sg in (1, -1)]   # the blades from the spool up into the throat
-    yp, ym = GEAR["y"][1] + 0.8, DRUM["y0"] - 0.8
-    rd = DRUM["r"] + 1.0; rg = max(r, (GEAR["spool_t"] / 2 + 1) * GEAR["m"]) + 0.5
-    side_d = Polygon([(cx - rd, 24.5), (cx + rd, 24.5), (cx + rd, cz), (cx - rd, cz)]).union(Point(cx, cz).buffer(rd, 64))   # the -y plate: only the drum is there
-    side_g = Polygon([(cx - rg, 24.5), (cx + rg, 24.5), (cx + rg, cz), (cx - rg, cz)]).union(Point(cx, cz).buffer(rg, 64))   # the +y plate: carries the axle
-    housing = [_xz(side_g, yp, yp + 1.2), _xz(side_d, ym - 1.2, ym),
-               box(cx - rg, t["x1"], ym - 1.2, yp + 1.2, 24.5, 26.0),                        # floor on the deck
-               cyl_y(DRUM["r"] + 1.0, cx, cz, ym, DRUM["y0"], 48),                      # the drum's cover
-               box(t["x0"], t["x1"], -t["y"], t["y"], t["z0"], t["z1"]),                 # the throat
-               trimesh.creation.annulus(r_min=t["x1"] - cx + 1.0, r_max=22.0, height=8.0).apply_translation([cx, 0, ZR])]   # its top collar out to RM's ring: one print with the node
+    feed = [box(MAST_X + sg * 0.9 - 0.2, MAST_X + sg * 0.9 + 0.2, -BLADE_W / 2, BLADE_W / 2, cz, t["z0"] + 2.0) for sg in (1, -1)]   # 24 Nov: at +-0.9 (was +-1.6, 0.3 outside the slot the stack's walk leaves: +-1.4, probe turret lib)
+      # the blades from the spool up into the throat
     rr = SPOOL["hub"] + COIL + ROLLER["r"]; a = math.radians(ROLLER["ang"])                         # the pressure roller on the full coil: two tubes, the rod, the saddle and leaf between them
     ca, sa = math.cos(a), math.sin(a); rx, rz = cx + rr * ca, cz + rr * sa
     roller = [cyl_y(ROLLER["r"], rx, rz, sy * ROLLER["mid"], sy * ROLLER["w"] / 2, 24) if sy > 0 else cyl_y(ROLLER["r"], rx, rz, -ROLLER["w"] / 2, -ROLLER["mid"], 24) for sy in (1, -1)]
@@ -478,7 +471,7 @@ def probe():
     blk = trimesh.creation.box(extents=[sh, LEAF["saddle"]["y"], LEAF["saddle"]["t"]])
     M = np.eye(4); M[:3, 0] = [ca, 0, sa]; M[:3, 1] = [0, 1, 0]; M[:3, 2] = [-sa, 0, ca]; M[:3, 3] = [rx + ca * sh / 2, 0, rz + sa * sh / 2]
     blk.apply_transform(M); roller.append(blk)
-    return dict(probe_turret=trimesh.util.concatenate(housing), probe_spool=trimesh.util.concatenate(spool), probe_pinion=pinion, probe_roller=trimesh.util.concatenate(roller),
+    return dict(probe_spool=trimesh.util.concatenate(spool), probe_pinion=pinion, probe_roller=trimesh.util.concatenate(roller),
                 probe_motor=trimesh.util.concatenate(motor), probe_drum=trimesh.util.concatenate(drum), probe_feed=trimesh.util.concatenate(feed),
                 **head_parts(split=True))
 
@@ -593,14 +586,13 @@ def checks(meshes):
     out["camera view"] = ("clear" if not blk else "BLOCKED by " + ", ".join(blk), f"the probe head parked: {math.degrees(2 * HFOV):.0f} x {math.degrees(2 * VFOV):.0f} deg from lens ({LENS[0]:.0f}, 0, {LENS[2]:.0f}), {math.degrees(TILT):.0f} deg up")
     disc_pts = [np.array([mx + PROP_R * math.cos(a), my + PROP_R * math.sin(a), Z_PROP]) for mx, my in MOTORS for a in np.linspace(0, 2 * math.pi, 90)]
     out["props in view"] = ("none" if not any(in_view(p) for p in disc_pts) else "IN VIEW", "the disc rims")
-    for nm, ids in (("probe head", ("head_frame", "probe_servo", "cradle", "probe_tilt", "probe_leds")), ("probe turret", ("probe_turret", "probe_spool", "probe_pinion", "probe_motor", "probe_drum", "probe_feed", "probe_roller"))):
+    for nm, ids in (("probe head", ("head_frame", "probe_servo", "cradle", "probe_tilt", "probe_leds")), ("probe mechanism", ("probe_spool", "probe_pinion", "probe_motor", "probe_drum", "probe_feed", "probe_roller"))):
         v = np.vstack([np.asarray(meshes[k].vertices) for k in ids])
         out[f"{nm} to discs"] = (round(min(disc_dist(p) for p in v), 1), "need 12")
     rods_m, nodes_m = cage()
-    nodes_x = trimesh.util.concatenate([trimesh.creation.icosphere(subdivisions=1, radius=7.0 if k in PRINTED else 5.0).apply_translation(P(k)) for k in NODES if k not in TIED])
     clash = []
-    for k in ("probe_turret", "probe_spool", "probe_pinion", "probe_motor", "probe_drum", "probe_feed", "probe_roller", "head_frame", "probe_servo", "cradle", "probe_tilt", "probe_leds"):
-        for nm, o in (("nodes", nodes_x if k == "probe_turret" else nodes_m), ("rods", rods_m)):   # the turret's collar and RM's ring are one print
+    for k in ("probe_spool", "probe_pinion", "probe_motor", "probe_drum", "probe_feed", "probe_roller", "head_frame", "probe_servo", "cradle", "probe_tilt", "probe_leds"):
+        for nm, o in (("nodes", nodes_m), ("rods", rods_m)):
             if o.contains(meshes[k].vertices).any() or (meshes[k].is_watertight and meshes[k].contains(o.vertices).any()):
                 clash.append(f"{k} x cage {nm}")
     out["probe vs cage"] = ("clear" if not clash else "CLASH: " + ", ".join(clash), "every probe part against the cage's nodes, sockets and rods (parked)")
@@ -634,7 +626,8 @@ def write():
     meshes["xr2"] = place("xr2", rot=([0, 0, 1], 90), lo=(4.0, 10.0), yc=28.5)        # flat, 34.5 x 13 x 4, under its land at +y
     meshes["xr2"].apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [1, 0, 0], meshes["xr2"].bounds.mean(0)))
     meshes["xr2"].apply_translation([0, 0, 10.0 - meshes["xr2"].bounds[0][2]])
-    meshes["drv8833"] = box(4.0, 22.5, -38.8, -22.8, 10.0, 13.0)                     # KOOBOOK DRV8833 18.5 x 16 (listing), ~3 thick E, flat under its land at -y
+    meshes["drv8833"] = box(7.0, 25.5, -38.8, -22.8, 10.0, 13.0)   # 24 Nov: 3 forward (was x 4..22.5), off the N20's way in and out (x +-6, pulled 10.5 back to y -28.7 before it drops)
+                      # KOOBOOK DRV8833 18.5 x 16 (listing), ~3 thick E, flat under its land at -y
     # the battery mechanism (receiver, cartridge, pack, its feet and pads) is not part of this design: it mounts on receiver_bolts
     meshes["receiver_bolts"] = receiver_bolts()
     meshes["cage_rods"], _ = cage()
@@ -702,9 +695,9 @@ def entries(meshes):
             e["opacity"] = opacity
         rows.append(e)
     fv = abs(meshes["frame"].volume)
-    add("frame", "frame v4, one body: deck, arms, motor pods, side lugs and the base (yokes, nose block, flow pod, tail tray) (generated, parts/scout_v4_frame)", "structure", "frame", "#d9d2c3", setup_mass("scout_v4_frame", 190.0), "E",
-        f"one print inside |x|, |y| {BED} (the A1 mini's 180), deck-top down on the bed: deck z {DECK_Z0}..{DECK_TOP} and the yokes over the receiver down to its top 9.6, arms to O28 motor pads at (+-{HUB}, +-{HUB}), "
-        "the battery mechanism's 4 M3 inserts, the FC's and the Radxa's posts, the XR2's, DRV8833's, UBEC's and flow sensor's lands, the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1), the turret's four insert bosses; the room until the run lands; PCTG", "PCTG", 0.85)
+    add("frame", "frame v4, one body: deck, arms, motor pods, side lugs, the base (yokes, nose block, flow pod, tail tray) and the probe's base (spool bosses, N20 seat, roller guides, drum, throat, the roof's middle node RM) (generated, parts/scout_v4_frame)", "structure", "frame", "#d9d2c3", setup_mass("scout_v4_frame", 190.0), "E",
+        f"one print inside |x|, |y| {BED} (the A1 mini's 180), printed the right way up (178.6 x 178.6 x 85.0: nose and tail blocks on the bed, supports under the deck and arms): deck z {DECK_Z0}..{DECK_TOP} and the yokes over the receiver down to its top 9.6, arms to O28 motor pads at (+-{HUB}, +-{HUB}), "
+        "the battery mechanism's 4 M3 inserts, the FC's and the Radxa's posts, the XR2's, DRV8833's, UBEC's and flow sensor's lands, the 8 rod sockets (DN BN DT BT DS0 BS0 DS1 BS1); 24 Nov (Spark: one printed part with the probe base): the probe's drawn attachments over the deck to the throat's seat at z 73 and RM's four rod sockets, the old turret's 4 M3 and inserts gone; TPU lip 1, wires 1 (E); the last run's shape until the new one lands; PCTG", "PCTG", 0.85)
     for k in range(1, 5):
         add(f"motor_{k}", f"motor {k} (EMAX ECO II 2004)", "bought", "motors", "#8b8f96", 18.0, "listing", f"on its pod at (+-{HUB}, +-{HUB}), base z {DECK_TOP}")
         add(f"prop_{k}", f"prop {k} disc (Gemfan 5125, O{PROP_D}, swept)", "bought", "props", "#9fd3ff", 0.0, "listing", f"prop plane z {Z_PROP:.1f}", opacity=0.18)
@@ -720,8 +713,6 @@ def entries(meshes):
         "its shaft on the tilt axis facing -y, held by its 32.8 tabs on the head frame's +y pads; the capacitor on its lead covers its > 1 A start")
     add("head_frame", "probe head frame: the clip on the blades' tip, the SG90's pads, the idler's boss (generated, parts/scout_v4_head_frame)", "structure", "camera", "#56606a", 2.5, "E",
         "a 14 mm sleeve round the lens: blade A held by an M2 at its top, blade B's M2 in a 12 mm slot (10 of travel: on one spool B pays out 9.5 mm less than A over the 150, the 0.81 ribbon between them, tools/probe_mast_sim.py), the ribbon's loop; the SG90's M2s in oval pilots (holes 27.7 +-0.4); an M3 screw is the idler; PCTG", "PCTG")
-    add("probe_turret", "probe turret: housing, throat, drum and the roof's middle node RM (PCTG, generated: parts/scout_v4_probe_turret)", "structure", "camera", "#f2b705", 41.2, "C",
-        "side plates round the spool and the drum, the N20's cheeks, the roller's rod guides and its leaf pocket, the throat up to the head's seat, RM's rod sockets; TPU lip 1, wires 1 (E); PCTG", "PCTG")
     add("probe_spool", "probe spool with its 40 T gear (drawn: parts/scout_v4_probe_spool/make.py)", "structure", "camera", "#d08a1e", 21.0, "C",
         f"hub O28 between O31.4 flanges 19.6 apart, the 40 T gear (module 0.8, x -0.35, generated involute) outside the +y one, the drum's hub O8 outside the -y one; the stack (blade A outside, the 0.81 ribbon, blade B on the hub) wound 1.6 turns to O31.4 for the {REACH:.0f} mm; its three ends epoxied in one 1.4 slot at 45 deg into the hub, the ribbon on through the hub to the drum; turns on an M3 x 50 + nyloc; PCTG, gear face down", "PCTG")
     add("probe_pinion", "probe pinion, 12 T, on the N20's 3 mm D shaft (drawn: parts/scout_v4_probe_pinion/make.py)", "structure", "camera", "#a85f10", 0.3, "C", f"x +0.35 (no undercut), centres {GEAR['c']} from the spool's (14 Nov: the coupon's G2, untried: check the mesh on the bench); D bore {pick('D')[0]} / {pick('D')[1]} (one past the coupon's D3) pressed on with CA; PCTG", "PCTG")
@@ -739,7 +730,7 @@ def entries(meshes):
     add("fc", "FC MicoAir743 AIO (under the deck, over the receiver)", "bought", "electronics", "#1f6f3f", 10.0, "P", f"36 x 36 at x {FC_X[0]}..{FC_X[1]}, z {FC_Z0}..{FC_Z0 + 10.5}, component side up on 4 M3 posts down from the deck (grommets; heads from below with the receiver off); set its IMU offset in PX4 (EKF2_IMU_POS_X ~ +{(FC_X[0] + FC_X[1]) / 2000:.3f} m)")
     for src, nm, g, note in (("ubec", "UBEC", 15.0, "under its tape land in a pod below the tail tray, across the drone (x -70.5..-53.5, |y| 30.5, z -11..-3), open below"), ("xr2", "XR2", 1.0, "flat under its tape land beside the FC (+y)"),
                              ("drv8833", "DRV8833 (KOOBOOK, B07S7Z8CFL)", 1.0, "flat under its tape land beside the FC (-y): channel A the probe's N20, B its LED bars"),
-                             ("radxa_zero_3w", "Radxa Zero 3W", 10.0, "under the deck behind the turret's N20 on four M2.5 posts (inserts in the deck), 65 along x, its USB-C plugs out the -y edge"),
+                             ("radxa_zero_3w", "Radxa Zero 3W", 10.0, "under the deck behind the probe's N20 on four M2.5 posts (inserts in the deck), 65 along x, its USB-C plugs out the -y edge"),
                              ("scout_flow_mtf_02p", "flow MTF-02P", 1.5, "the nose pod, turned 90 deg (outer edge x 70.5, bottom -19.1): set SENS_FLOW_ROT for the turn")):
         add(src, nm, "bought", "electronics", "#2b5d8a", g, "P", note)
     add("receiver_bolts", "battery mount: 4 x M3 x 35 up from below into M3 x 5.7 heat-set inserts in the base's yokes (as the Overseer's)", "bought", "battery", "#5a5f66", 4.0, "E",
