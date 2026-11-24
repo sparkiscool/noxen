@@ -41,7 +41,32 @@ def big_monitor():
     return min(left, key=lambda x: x[0]) if left else next((x for x in m if x[0] == 0 and x[1] == 0), m[0])
 
 
+def bring_forward():
+    """The viewer is one window: when it is already open, bring it forward and return True."""
+    u = ctypes.windll.user32
+    found = []
+    enum = ctypes.WINFUNCTYPE(ctypes.c_int, ctypes.c_void_p, ctypes.c_void_p)
+
+    def f(h, _):
+        if u.IsWindowVisible(h):
+            n = u.GetWindowTextLengthW(h)
+            if n:
+                b = ctypes.create_unicode_buffer(n + 1)
+                u.GetWindowTextW(h, b, n + 1)
+                if b.value.startswith("Noxen scan to BIM"):
+                    found.append(h)
+        return 1
+    u.EnumWindows(enum(f), 0)
+    if not found:
+        return False
+    u.ShowWindow(found[0], 9)
+    u.SetForegroundWindow(found[0])
+    return True
+
+
 def launch(frag=""):
+    if bring_forward():
+        return
     exe = next((b for b in BROWSERS if os.path.exists(b)), None)
     if not exe:
         raise SystemExit("no Chrome or Edge found")

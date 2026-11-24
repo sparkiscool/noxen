@@ -105,8 +105,8 @@ body.locked .pane.lk .xh{display:block}
   <button class="btn icon" id="bHelp" title="Controls">?</button>
 </header>
 <div class="panes" id="panes">
-  <div class="pane pt" id="p0"><canvas></canvas><div class="tag">Point map<i>as-built scan</i></div><button class="pill ui" id="bo" title="Hide everything that is not part of the BIM">Building only</button><div class="meta" id="m0"></div>
-    <div class="legend" id="legend"><b>Deviation from BIM<span style="font-weight:400;color:#aab2c0"> &middot; grey = not in BIM</span></b><div class="bar"></div><div class="tk"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+ mm</span></div></div><div class="xh"></div></div>
+  <div class="pane pt" id="p0"><canvas></canvas><div class="tag">Point map<i>as-built scan</i></div><div class="meta" id="m0"></div>
+    <div class="legend" id="legend"><b>Deviation from BIM</b><div class="bar"></div><div class="tk"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+ mm</span></div></div><div class="xh"></div></div>
   <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Ctrl to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg>Look mode</button><div class="lockhint" id="lockhint"></div><div class="xh"></div></div>
   <div class="pane bim" id="p1"><canvas></canvas><div class="tag">BIM<i>design model &middot; empty building</i></div>
     <button class="xbtn ui" id="close" hidden title="Close (Esc)">&times;</button>
@@ -454,7 +454,7 @@ function shellDev(wl,x,y,z){
 }
 
 /* distance of every as-built point to the nearest BIM surface (search 60 mm, beyond that it saturates) */
-const SR=.06,GC=.2,DENS_SHELL=109,DENS_OBJ=243;
+const SR=.06,GC=.2,DENS_SHELL=158,DENS_OBJ=352;
 function bimGrid(polys){
   const nx=Math.ceil((W+.6)/GC),ny=Math.ceil((H+.6)/GC),nz=Math.ceil((L+.6)/GC),cells=new Array(nx*ny*nz);
   const ix=(v,o)=>clamp(Math.floor((v+o+.3)/GC),0,0x7fffffff);
@@ -484,6 +484,7 @@ function genPoints(objs,polys,R,bimPolys){
   const gauss=()=>(R()+R()+R()-1.5)*1.15;
   const xs=[],ys=[],zs=[],cr=[],cg=[],cb=[],clsA=[],objA=[],wallA=[],nxA=[],nyA=[],nzA=[];
   for(const p of polys){
+    if(p.obj>=0&&objs[p.obj].site)continue;      // the point map holds only what the BIM holds
     const v=p.v,dens=p.obj<0?DENS_SHELL:(objs[p.obj].cls===C.worker?DENS_OBJ*4:DENS_OBJ);
     let area;
     if(p.quad){area=Math.hypot(...cross(sub(v[1],v[0]),sub(v[3],v[0])))}
@@ -1268,7 +1269,7 @@ $('bScan').onclick=e=>{e.stopPropagation();toggle('scan',$('bScan'))};
 addEventListener('pointerdown',e=>{if(!e.target.closest('.pop,.drawer,header'))closePops()});
 $('q').oninput=buildLists;
 $('close').onclick=()=>select(-1);
-$('bo').onclick=()=>{bldgOnly=!bldgOnly;$('bo').classList.toggle('on',bldgOnly);$('bo').textContent=bldgOnly?'Building only ✓':'Building only';panes[0].key=''};
+if($('bo'))$('bo').onclick=()=>{bldgOnly=!bldgOnly;$('bo').classList.toggle('on',bldgOnly);$('bo').textContent=bldgOnly?'Building only ✓':'Building only';panes[0].key=''};
 document.querySelectorAll('#views button').forEach(b=>b.onclick=()=>setView(b.dataset.v));
 document.querySelectorAll('#cmode button').forEach(b=>b.onclick=()=>{cmode=+b.dataset.m;document.querySelectorAll('#cmode button').forEach(x=>x.classList.toggle('on',x===b));$('legend').style.display=cmode===0?'':'none';panes[0].key=''});
 const STEPS=['Capture: the drone flies the bay with LiDAR and video','Register: the scan is aligned to the BIM','Colourise: points take their colour from the video','Segment: points grouped into objects and classes','Compare: each point is measured to the nearest BIM surface'];
@@ -1296,7 +1297,6 @@ resize();
       if(now-t0<6000)requestAnimationFrame(tick);
       else{keys.delete('KeyW');keys.delete('ArrowLeft');document.querySelector('.sim').textContent='perf '+(n/((now-t0)/1000)).toFixed(0)+' fps, worst frame '+worst.toFixed(0)+' ms, quality '+QL+', '+ptDrawn.toLocaleString()+' points shown, gl '+document.body.dataset.gl}};
     requestAnimationFrame(tick)},1500);
-  if(/bldg/.test(h))$('bo').click();
   if(/testlook/.test(h))setTimeout(()=>{
     const el=panes[2].el,out=[];let y=cam.yaw,pt=cam.pitch;
     Object.defineProperty(document,'pointerLockElement',{configurable:true,get:()=>el});
