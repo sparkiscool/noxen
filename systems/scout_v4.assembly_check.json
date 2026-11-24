@@ -112,6 +112,54 @@
  "skipped": [],
  "pairs": [
   {
+   "a": "scout_v4_cage_rods",
+   "b": "scout_v4_node_p3",
+   "mm3": 13.98,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 13.98,
+     "at": [
+      -153.6,
+      101.9,
+      61.0
+     ],
+     "extent_mm": [
+      3.4,
+      2.6,
+      3.0
+     ],
+     "depth_mm": 2.63
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_cage_rods",
+   "b": "scout_v4_node_p4",
+   "mm3": 13.98,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 13.98,
+     "at": [
+      -153.6,
+      -101.9,
+      61.0
+     ],
+     "extent_mm": [
+      3.4,
+      2.6,
+      3.0
+     ],
+     "depth_mm": 2.63
+    }
+   ]
+  },
+  {
    "a": "scout_v4_frame",
    "b": "scout_v4_drv8833",
    "mm3": 11.88,
@@ -1161,14 +1209,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 19,
+   "steps": 32,
    "move": {
     "out": [
      0.22606,
      -0.97411,
      -0.0
     ],
-    "length_mm": 9.0
+    "length_mm": 15.5
    },
    "into": [
     "scout_v4_node_p3"
@@ -1207,14 +1255,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 19,
+   "steps": 32,
    "move": {
     "out": [
      0.22606,
      0.97411,
      -0.0
     ],
-    "length_mm": 9.0
+    "length_mm": 15.5
    },
    "into": [
     "scout_v4_node_p4"
@@ -2455,12 +2503,18 @@
    "blocks the path 'pinion up into its bay' (57.0 mm3 7.5 mm out)",
    "blocks the path 'N20 up behind its seat and forward' (1042.7 mm3 11.1 mm out)"
   ],
+  "scout_v4_node_p3": [
+   "clashes with scout_v4_cage_rods: 14.0 mm3"
+  ],
+  "scout_v4_node_p4": [
+   "clashes with scout_v4_cage_rods: 14.0 mm3"
+  ],
   "scout_v4_probe_pinion": [
    "clashes with scout_v4_frame: 7.4 mm3",
    "path 'pinion up into its bay' blocked by scout_v4_frame (57.0 mm3 7.5 mm out)"
   ]
  },
  "would_block": {},
- "seconds": 3.8,
+ "seconds": 5.1,
  "placed": {}
 }
