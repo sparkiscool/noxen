@@ -21,9 +21,9 @@ Modes ("nonplanar": {"mode": ...} on a plate part; they combine with "+"):
            as continuous lines along the surface (no stair steps on the face that carries the bending); flat faces stay flat, the
            bend blends out towards the bed through thicker / thinner layers.
   zaa      OrcaSlicer's own Z anti-aliasing of top surfaces (inside one layer; surface finish only), checked by the same gate.
-Options: amp (mm), wavelength (mm), skin (mm), slope (deg, never above the profile's limit).
+Options: amp (mm; default: the tallest the hotend clearance allows, auto_wave), wavelength (mm), skin (mm, 0.6), slope (deg, never above the profile's limit).
 
-State on 22 Nov 2026: wave is proven on three parts (print/nonplanar/np_spool, np_turret, np_cradle: sliced, gate passed, nothing
+State on 23 Nov 2026: the wave now takes its height from the hotend clearance (auto_wave, clearance()) and holds the slope over the supports too; np_cradle_deep is its test (1.0 mm wave every 47.5 mm, gate passed, nothing printed). Before: wave is proven on three parts (print/nonplanar/np_spool, np_turret, np_cradle: sliced, gate passed, nothing
 printed). conform has NOT yet bent a part (the cradle had no shallow curved top) and zaa has NEVER been sliced (its setting names
 are unconfirmed on the CLI): treat both as untested. The hotend shape is other people's measurement, not Spark's.
 The gate counts what runs before a layer's first printed line (the wipe at the old height, the lift, the travel in) against the
@@ -250,6 +250,48 @@ def conform_relief(T, Tn, c, lim, o):
     return r, curved, has
 
 
+def clearance(th):
+    """The A1 mini's clearance from its measured geometry: the steepest straight slope the hotend clears at each distance from the
+    tip (both axes, margin kept), the height it clears at the block's edge, and the single-layer relief the ceiling allows."""
+    lim = th["limits"]; mg = lim["margin_mm"]
+    d = np.linspace(1.0, th["ceiling"]["radius"], 400)
+    out = {}
+    for name, DX, DY in (("x", d, 0 * d), ("y", 0 * d, d)):
+        e = env_height(th, DX, DY) - mg
+        out[name] = np.degrees(np.arctan(e / d))
+    asym = float(min(out["x"][d >= 12].min(), out["y"][d >= 12].min()))             # far from the block: the flank decides
+    edge = float(min(np.degrees(np.arctan((th["block"]["h"] - mg) / th["block"]["x"][1])), np.degrees(np.arctan((th["block"]["h"] - mg) / th["block"]["y"][1]))))
+    return dict(tip_half_angle_deg=round(math.degrees(math.atan((th["nozzle"]["cone"][-1][0] - th["nozzle"]["cone"][0][0]) / th["nozzle"]["cone"][-1][1])), 1),
+                block_clear_mm=th["block"]["h"], block_edge_mm=th["block"]["x"][1], slope_at_block_edge_deg=round(edge, 1),
+                flank_slope_deg=th["flank"]["deg"], slope_far_deg=round(asym, 1), ceiling_mm=th["ceiling"]["h"],
+                design_slope_deg=lim["slope_deg"], hard_slope_deg=lim["slope_hard_deg"], relief_mm=lim["relief_mm"])
+
+
+def auto_wave(mesh, o, th, layer_h, tau_hi, tau_lo, tslope):
+    """The tallest wave the clearance allows for this part, and its wavelength: the amplitude is raised until the layer's peak-to-peak
+    relief meets the hotend's relief limit (relief_ok, the same replay maths as the gate), the thickness range, or the wavelength the
+    slope needs outgrows the part. Returns (amp, wavelength)."""
+    lim = th["limits"]; b = mesh.bounds
+    ext = float(max(b[1][0] - b[0][0], b[1][1] - b[0][1])); zt = float(b[1][2] - b[0][2])
+    c = 0.5
+    best = (0.4, 2 * math.pi * 0.4 / (tslope * 0.75))
+    X = np.arange(b[0][0], b[1][0] + c, c); Y = np.arange(b[0][1], b[1][1] + c, c)
+    has = np.ones((len(X), len(Y)), bool)
+    for amp in np.arange(0.4, 3.01, 0.1):
+        lam = 2 * math.pi * amp / (tslope * 0.75)
+        if lam > 1.1 * ext:                                  # at least one whole wave across the part
+            break
+        Dv = 1.5 * amp / min(tau_hi - 1, 1 - tau_lo) * 1.15  # the wave must grow gently enough to hold the layer thickness
+        if Dv > 0.45 * zt or 2 * amp > lim["relief_mm"] - 1.0:
+            break
+        kx = 2 * math.pi / lam
+        d2 = amp * np.cos(kx * (X - X.mean()))[:, None] * np.cos(kx * (Y - Y.mean()))[None, :]
+        if not relief_ok(d2, has, c, th, lim["margin_mm"]):
+            break
+        best = (round(float(amp), 2), round(lam, 2))
+    return best
+
+
 def build_field(mesh, o, th, layer_h=0.2):
     """The height field for one part posed on the bed. o: its "nonplanar" options. Returns a Field (None if nothing bends)."""
     from scipy import ndimage
@@ -258,12 +300,18 @@ def build_field(mesh, o, th, layer_h=0.2):
         return None
     slope = min(float(o.get("slope", lim["slope_deg"])), lim["slope_deg"])
     tslope = math.tan(math.radians(slope))
-    amp = float(o.get("amp", 0.4)) if "wave" in md else 0.0
-    skin = float(o.get("skin", 1.0))
+    skin = float(o.get("skin", 0.6))
     tau_hi = min(1.4, lim["layer_max_mm"] / layer_h); tau_lo = max(0.6, lim["layer_min_mm"] / layer_h)
+    auto_lam = None
+    if "wave" in md and "amp" not in o:                      # as deep as the clearance allows, unless the plate says otherwise
+        amp, auto_lam = auto_wave(mesh, o, th, layer_h, tau_hi, tau_lo, tslope)
+    else:
+        amp = float(o.get("amp", 0.4)) if "wave" in md else 0.0
     b = mesh.bounds
     c, du = 0.5, 0.25
-    margin0 = 8.0
+    near_mm = 6.0                                        # limits held over the part and this far around it: its supports and brim stand there
+    fade_mm = max(5.0, 3.0 * amp / tslope)               # the wave dies away outside the part over this distance, gently enough for the slope
+    margin0 = near_mm + fade_mm
     while True:
         nx = int(math.ceil((b[1][0] - b[0][0] + 2 * margin0) / c)) + 1; ny = int(math.ceil((b[1][1] - b[0][1] + 2 * margin0) / c)) + 1
         nu = int(math.ceil((b[1][2] + 2.0) / du)) + 1
@@ -273,10 +321,10 @@ def build_field(mesh, o, th, layer_h=0.2):
     x0, y0 = b[0][0] - margin0, b[0][1] - margin0
     occ, T, Tn = columns(mesh, x0, y0, c, nx, ny, du, nu)
     has = np.isfinite(T)
-    near = ndimage.binary_dilation(has, iterations=max(1, int(round(3.0 / c))))       # where the limits are held: the part and 3 mm around
+    near = ndimage.binary_dilation(has, iterations=max(1, int(round(near_mm / c))))       # where the limits are held: the part and near_mm around
     X = x0 + np.arange(nx) * c; Y = y0 + np.arange(ny) * c; U = np.arange(nu) * du
     rim = np.minimum.reduce(np.meshgrid(np.minimum(np.arange(nx), nx - 1 - np.arange(nx)) * c, np.minimum(np.arange(ny), ny - 1 - np.arange(ny)) * c, indexing="ij"))
-    win = smooth(rim / (margin0 - 3.0)).astype(np.float32)                                # 1 over the part, 0 at the rim
+    win = smooth(rim / (margin0 - near_mm)).astype(np.float32)                                # 1 over the part, 0 at the rim
     info = dict(mode="+".join(sorted(md)), slope_deg=slope, amp_mm=amp, cell_mm=round(c, 3), layer_mm=layer_h)
 
     conf = np.zeros((nx, ny, nu), np.float32)
@@ -330,7 +378,7 @@ def build_field(mesh, o, th, layer_h=0.2):
         cap[:, :, 0] = True                                  # and the bed
         n = ndimage.distance_transform_edt(~cap, sampling=(c / Dh, c / Dh, du / Dv)).astype(np.float32)
         w = smooth(n - skin / Dv).astype(np.float32) * win[:, :, None]
-        lam = float(o.get("wavelength", 0)) or 2 * math.pi * amp / (tslope * 0.9)
+        lam = float(o.get("wavelength", 0)) or auto_lam or 2 * math.pi * amp / (tslope * 0.75)
         lam = max(lam, 2 * math.pi * amp / (tslope * 0.97))
         kx = 2 * math.pi / lam
         xc, yc = (b[0][0] + b[1][0]) / 2, (b[0][1] + b[1][1]) / 2

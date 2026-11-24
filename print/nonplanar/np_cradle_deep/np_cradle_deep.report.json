@@ -1,0 +1,141 @@
+{
+ "part": "np_cradle_deep",
+ "checks": [
+  [
+   "slice ran without error",
+   true,
+   ""
+  ],
+  [
+   "extrusions (supports, brim, skirt included) inside the 5 mm safe area",
+   true,
+   "x 64.9..117.1 y 59.2..122.0 z max 30.6"
+  ],
+  [
+   "every printing/travel move inside the safe area (plate_safe)",
+   true,
+   "inside the safe area: x 64.9..117.1, y 59.2..122.0 mm (5 mm margin)"
+  ],
+  [
+   "plate centred on the bed",
+   true,
+   "toolpath centre 91.0, 90.6 (bed 90)"
+  ],
+  [
+   "no empty layers",
+   true,
+   "153 layers"
+  ],
+  [
+   "objects stayed where laid out",
+   true,
+   "offset [0.0, 0.0]"
+  ],
+  [
+   "scout_v4_cradle: overhang has material under it",
+   true,
+   "0 of 303 mm2 unsupported"
+  ],
+  [
+   "supports are in the g-code",
+   true,
+   "66695 support moves"
+  ],
+  [
+   "non-planar: the hotend clears the print everywhere (replayed against the A1 mini hotend)",
+   true,
+   "closest 0.107 mm, block and ducts None mm, tip rides 0.12 mm into the slope (0.27 allowed), steepest move 7.4 deg"
+  ],
+  [
+   "non-planar: every layer inside the nozzle's 0.08-0.28 mm",
+   "True",
+   "0.132 to 0.268 mm"
+  ]
+ ],
+ "stats": {
+  "layer_steps": [
+   0.2
+  ],
+  "offset_xy": [
+   0.0,
+   0.0
+  ],
+  "time": "52m 38s",
+  "grams": 11.8
+ },
+ "ready": true,
+ "gcode_3mf": "E:\\repos\\noxen\\print\\nonplanar\\np_cradle_deep\\np_cradle_deep.gcode.3mf",
+ "objects": [
+  {
+   "label": "scout_v4_cradle",
+   "opts": {
+    "layer_height": 0.2,
+    "wall_loops": 3,
+    "sparse_infill_density": "100%",
+    "enable_support": 1
+   },
+   "xy": [
+    69.34999541618828,
+    67.60000038146973
+   ],
+   "normal": [
+    0.9659,
+    0.0,
+    0.2588
+   ]
+  }
+ ],
+ "nonplanar": {
+  "ok": true,
+  "bend": {
+   "pieces": 293058,
+   "bent": 156977,
+   "t_min": 0.132,
+   "t_max": 0.268,
+   "vz": 6.5,
+   "zmax": 30.6,
+   "slope_deg": 7.36
+  },
+  "gate": {
+   "layers": 153,
+   "bent_layers": 124,
+   "plough_mm": 0.124,
+   "clear_mm": 0.107,
+   "far_clear_mm": null,
+   "worst": [
+    106.51,
+    69.44,
+    23.226,
+    113
+   ],
+   "slope_deg": 7.41,
+   "plough_allowed_mm": 0.271,
+   "ok": true,
+   "why": ""
+  },
+  "fields": [
+   {
+    "mode": "conform+wave",
+    "slope_deg": 10.0,
+    "amp_mm": 1.0,
+    "cell_mm": 0.5,
+    "layer_mm": 0.2,
+    "conform": "no shallow curved top to follow",
+    "wavelength_mm": 47.51,
+    "skin_mm": 0.6,
+    "max_slope_deg": 7.87,
+    "tau": [
+     0.654,
+     1.338
+    ],
+    "bend_mm": [
+     -1.0,
+     1.0
+    ],
+    "bent_share": 0.141,
+    "piece_mm": 0.53
+   }
+  ],
+  "preview": "E:\\repos\\noxen\\print\\nonplanar\\np_cradle_deep\\np_cradle_deep.preview.png"
+ }
+}
