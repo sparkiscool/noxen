@@ -45,7 +45,6 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:13px/1.
 .fpv{position:absolute;left:10px;bottom:40px;width:300px;z-index:15;border:2px solid #fff;border-radius:8px;overflow:hidden;background:#000;box-shadow:0 6px 22px rgba(0,0,0,.55)}.fpv[hidden]{display:none}.fpv canvas,.pane .fpv canvas{position:static;inset:auto;display:block;width:100%;height:auto}.fpv span{position:absolute;left:6px;top:5px;font:600 11px var(--sans);color:#fff;background:rgba(10,13,18,.7);padding:2px 7px;border-radius:99px}
 .depbar[hidden]{display:none}.depbar button{font:600 12px var(--sans);color:#fff;background:#2f6df0;border:1px solid #9bbcff;border-radius:99px;padding:5px 13px;cursor:pointer}.depbar button.x{background:#3a4252;border-color:#5a6578}
 
-body.measuring .pane.pt,body.measuring .pane.bim,body.measuring .pane.vid{cursor:crosshair}
 @media (max-width:900px){.strip{display:none}.app{grid-template-rows:46px minmax(0,1fr)}}
 header{display:flex;align-items:center;gap:12px;padding:0 14px}
 .brand{font-weight:650;font-size:14px;letter-spacing:.01em}
@@ -186,7 +185,7 @@ body.locked .pane.lk .xh{display:block}body.picking .xh{display:none!important}
   <b>Look mode</b> (button on the video) captures the mouse: move it to turn, click opens an object, <span class="kc">Esc</span> leaves, <span class="kc">Ctrl</span> closes an opened card<br><span class="kc">&larr;</span><span class="kc">&rarr;</span><span class="kc">&uarr;</span><span class="kc">&darr;</span> look with the keyboard<br>
   <span class="kc">Ctrl</span> + click an object in the BIM or video to open it<br>
   <span class="kc">F</span> Look mode on / off &nbsp; <span class="kc">/</span> search objects (<span class="kc">Enter</span> opens the first) &nbsp; <span class="kc">Esc</span> closes the card<br>
-  <b>Bottom bar</b>: the map flies the camera to where you click. <b>Plan / Long / Cross</b> cut the BIM and the point map at a height or position (slider; the 2 m bar gives the scale). <b>Tape</b>: <span class="kc">Shift</span> + click sets a point, a second one draws the distance (video, 3D and plan panes, Look mode too). Click an end dot to pick it up, click again to put it down. Hold <span class="kc">Q</span> and click a line to remove the whole tape, or a dot to remove only that point (the other stays as the next start). <b>Deviation colour</b> shows the point map by distance to the BIM (legend bottom right of it).<br>
+  <b>Bottom bar</b>: the map flies the camera to where you click. <b>Plan / Long / Cross</b> cut the BIM and the point map at a height or position (slider; the 2 m bar gives the scale). <b>Deviation colour</b> shows the point map by distance to the BIM (legend bottom right of it).<br>
   Objects: problems are listed first; tick <b>Issues only</b> to hide the ones within tolerance. Clicking one flies the camera to it.</div>
 </div>
 <div class="pop" id="rq"><h4 id="rqh">New request</h4>
@@ -726,7 +725,7 @@ function drawPoints(p,B,budget){
     }
   }
   ctx.setTransform(1,0,0,1,0,0);ctx.putImageData(img,0,0);
-  ptDrawn=drawn;ctx.setTransform(p.k,0,0,p.k,0,0);drawMeasure(p,pt=>proj(B,pt,p));
+  ptDrawn=drawn;ctx.setTransform(p.k,0,0,p.k,0,0);drawDep(p,pt=>proj(B,pt,p));
   $('m0').textContent=PTS.N.toLocaleString()+' points \u00b7 '+drawn.toLocaleString()+' shown';
 }
 
@@ -813,7 +812,7 @@ function drawBim(p,B){
       ctx.fillStyle='rgba(255,255,255,.9)';ctx.fillRect(a[0]-w/2,y-8,w,16);ctx.fillStyle='#1a2030';ctx.fillText(o.name,a[0],y+.5);
     }
   }
-  drawMeasure(p,pt=>proj(B,pt,p));
+  drawDep(p,pt=>proj(B,pt,p));
 }
 
 const ODm_={15:.0213,20:.0269,25:.0337,32:.0424,40:.0483,50:.0603,65:.0761,80:.0889,100:.1143,125:.1397,150:.1683,200:.2191};
@@ -1110,7 +1109,7 @@ function videoOverlay(p,B,tms){
   };
   if($('det').checked&&!onboard()){for(const o of OBJ){if(o.missing)continue;const dd=sub(o.actr,B.eye);if(dot(dd,dd)>70||o.i===sel)continue;box(o,false)}}
   if(sel>=0&&!OBJ[sel].missing)box(OBJ[sel],true);
-  drawMeasure(p,pt=>proj(B,pt,p));
+  drawDep(p,pt=>proj(B,pt,p));
 }
 function drawPolys2(p,B){ // fallback without WebGL: flat lit painter
   const ctx=p.ctx,g=ctx.createLinearGradient(0,0,0,p.H);g.addColorStop(0,'#1a2029');g.addColorStop(1,'#0c0e12');ctx.fillStyle=g;ctx.fillRect(0,0,p.W,p.H);
@@ -1169,8 +1168,8 @@ function easeInsp(dt){
   const k=1-Math.exp(-dt*9);insp.az+=(insp.taz-insp.az)*k;insp.el+=(insp.tel-insp.el)*k;insp.dist+=(insp.tdist-insp.dist)*k;
 }
 
-/* ---------- architect tools: plan and section cut, tape measure, minimap ---------- */
-const cut={type:'',pos:0,saved:{}},meas={on:false,a:null,b:null,grab:''};let mk='';
+/* ---------- architect tools: plan and section cut, minimap ---------- */
+const cut={type:'',pos:0,saved:{}};
 const CUTS={
   level:{ka:1,ks:-1,tv:[0,1,0],ua:0,us:1,va:2,vs:1,cu:0,cv:0,hu:W/2,hv:L/2,lo:.1,hi:H,def:1.5,tag:'plan'},
   long:{ka:0,ks:1,tv:[-1,0,0],ua:2,us:1,va:1,vs:-1,cu:0,cv:-H/2,hu:L/2,hv:H/2,lo:-W/2,hi:W/2,def:0,tag:'long section'},
@@ -1215,7 +1214,7 @@ function drawBimCut(p){
   if(cut.type==='level'){ctx.strokeStyle='rgba(30,45,80,.09)';ctx.lineWidth=1;ctx.beginPath();
     for(let x=-W/2;x<=W/2+.01;x++){const a=m.f([x,0,-L/2]),b=m.f([x,0,L/2]);ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1])}
     for(let z=-L/2;z<=L/2+.01;z++){const a=m.f([-W/2,0,z]),b=m.f([W/2,0,z]);ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1])}ctx.stroke()}
-  renderCutBim(ctx,sp,cut.pos,m.f,false);cutDecor(ctx,p,sp,m,false);drawMeasure(p,m.f)}
+  renderCutBim(ctx,sp,cut.pos,m.f,false);cutDecor(ctx,p,sp,m,false);drawDep(p,m.f)}
 const SLAB=.3;
 function drawPointsCut(p){
   const sp=CUTS[cut.type],pos=cut.pos,m=cutMap(p,sp),k=p.k,w=p.cv.width,h=p.cv.height,{u32,depth,ctx}=p;
@@ -1231,7 +1230,7 @@ function drawPointsCut(p){
     const px=(0xff<<24)|(b<<16)|(g<<8)|r;drawn++;
     for(let yy=0;yy<sz;yy++){const row=(sy+yy)*w+sx;for(let xx=0;xx<sz;xx++){const q=row+xx;if(dp>depth[q]){depth[q]=dp;u32[q]=px}}}}
   ctx.setTransform(1,0,0,1,0,0);ctx.putImageData(p.img,0,0);ctx.setTransform(k,0,0,k,0,0);
-  cutDecor(ctx,p,sp,m,true);drawMeasure(p,m.f);
+  cutDecor(ctx,p,sp,m,true);drawDep(p,m.f);
   $('m0').textContent=N.toLocaleString()+' points · '+drawn.toLocaleString()+' in the 30 cm slice'}
 function setCut(type){
   if(cut.type)cut.saved[cut.type]=cut.pos;
@@ -1247,52 +1246,15 @@ function cutLabel(){if(!cut.type)return;const v=cut.pos,t=cut.type;
   $('cutVal').textContent=(t==='level'?'height ':t==='long'?'x = ':'z = ')+(v<0?'−':'')+Math.abs(v).toFixed(2)+' m'}
 document.querySelectorAll('#cutType button').forEach(b=>b.onclick=()=>setCut(b.dataset.c));
 $('cutPos').oninput=e=>{cut.pos=+e.target.value;cutLabel()};
-/* tape measure: two clicks, in the cut plane on a plan or section, else on the surface under the pointer */
+/* ray to the nearest surface under a pane point (used by Deploy) */
 function rayDist(polys,o,d){let bt=1e9;
   for(const q of polys){const oc=sub(q.c,o),tca=dot(oc,d);if(tca<-q.rad)continue;const d2=dot(oc,oc)-tca*tca;if(d2>q.rad*q.rad||dot(q.n,d)>=0)continue;
     const v=q.v;for(let i=1;i<v.length-1;i++){const t=rayTri(o,d,v[0],v[i],v[i+1]);if(t>0&&t<bt)bt=t}}
   return bt<1e9?bt:-1}
-const mtext=()=>{if(!meas.a||!meas.b)return'';const dx=Math.abs(meas.b[0]-meas.a[0]),dy=Math.abs(meas.b[1]-meas.a[1]),dz=Math.abs(meas.b[2]-meas.a[2]);return Math.hypot(dx,dy,dz).toFixed(3)+' m'};
-function measUI(){
-  mk=meas.a?meas.a.map(v=>v.toFixed(3))+(meas.b?'|'+meas.b.map(v=>v.toFixed(3)):''):'';
-  document.body.classList.toggle('measuring',meas.on);panes.forEach(p=>p.key='')}
-function setMeas(on){meas.on=on;if(on&&meas.b){meas.a=meas.b=null}meas.grab='';measUI()}
 function surfPt(p,x,y){
   if(p.mode===1&&insp.on)return null;
   if(cut.type&&p.mode<2)return cutUnmap(p,x,y);
   const B=camBasis(),d=rayAt(p,B,x,y),t=rayDist(p.mode===1?POLY:POLYA,B.eye,d);return t>0?add3(B.eye,mul3(d,t)):null}
-/* an existing measurement under (x,y) in a pane: 'a' or 'b' (an end dot), 'line' (its line or label), else '' */
-function measHit(p,x,y){
-  if(!meas.a||(p.mode===1&&insp.on))return'';
-  const mf=cut.type&&p.mode<2?cutMap(p,CUTS[cut.type]).f:(B=>pt=>proj(B,pt,p))(camBasis());
-  const A=mf(meas.a),Bp=meas.b&&mf(meas.b);
-  if(A&&Math.hypot(x-A[0],y-A[1])<=12)return'a';
-  if(Bp&&Math.hypot(x-Bp[0],y-Bp[1])<=12)return'b';
-  if(A&&Bp){const dx=Bp[0]-A[0],dy=Bp[1]-A[1],l2=dx*dx+dy*dy||1,t=clamp(((x-A[0])*dx+(y-A[1])*dy)/l2,0,1);
-    if(Math.hypot(x-(A[0]+t*dx),y-(A[1]+t*dy))<=6)return'line';
-    const mx=(A[0]+Bp[0])/2,my=(A[1]+Bp[1])/2;if(Math.abs(x-mx)<=46&&y>my-26&&y<my-3)return'line'}
-  return''}
-function measClear(){meas.a=meas.b=null;meas.grab='';measUI()}
-function grabTick(){
-  if(!meas.grab)return;let p,x,y;
-  if(document.pointerLockElement){p=panes[2];x=p.W/2;y=p.H/2}else if(ptr){p=ptr.p;x=ptr.x;y=ptr.y}else return;
-  const pt=surfPt(p,x,y);if(!pt)return;const o=meas[meas.grab];
-  if(Math.abs(pt[0]-o[0])+Math.abs(pt[1]-o[1])+Math.abs(pt[2]-o[2])<1e-4)return;
-  meas[meas.grab]=pt;measUI()}
-function measureClick(p,x,y){
-  const pt=surfPt(p,x,y);if(!pt)return;
-  if(!meas.a||meas.b){meas.a=pt;meas.b=null}else meas.b=pt;
-  measUI()}
-function drawMeasure(p,mf){
-  drawDep(p,mf);
-  if(!meas.a)return;const ctx=p.ctx,pts=[meas.a,meas.b].map(v=>v&&mf(v));
-  ctx.save();ctx.lineCap='round';
-  if(pts[0]&&pts[1]){for(const[w,c]of[[5,'#fff'],[2.2,'#e0245e']]){ctx.strokeStyle=c;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);ctx.lineTo(pts[1][0],pts[1][1]);ctx.stroke()}}
-  for(const[ai,a]of pts.entries())if(a){if(meas.grab===(ai?'b':'a')){ctx.strokeStyle='#e0245e';ctx.lineWidth=2;ctx.beginPath();ctx.arc(a[0],a[1],11,0,7);ctx.stroke()}ctx.fillStyle='#e0245e';ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(a[0],a[1],5,0,7);ctx.fill();ctx.stroke()}
-  if(pts[0]&&pts[1]){const t=mtext(),x=(pts[0][0]+pts[1][0])/2,y=(pts[0][1]+pts[1][1])/2;ctx.font='700 13px '+getComputedStyle(document.body).fontFamily;
-    const w=ctx.measureText(t).width+14;ctx.fillStyle='#fff';ctx.strokeStyle='#e0245e';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect?ctx.roundRect(x-w/2,y-24,w,20,6):ctx.rect(x-w/2,y-24,w,20);ctx.fill();ctx.stroke();
-    ctx.fillStyle='#1a2030';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,x,y-13.5)}
-  ctx.restore()}
 
 const BATT=[['Overseer',[['Pack O-1',96],['Pack O-2',81]]],['Scout',[['Pack S-1',100],['Pack S-2',88],['Pack S-3',64]]]];  // two for the Overseer, three for the Scout; charge is simulated (no live data)
 $('guRows').innerHTML=BATT.map(g=>'<h6>'+g[0]+' &middot; '+g[1].length+' batteries</h6>'+g[1].map(b=>'<div class="bt"><span>'+b[0]+'</span><i><b class="'+(b[1]<70?'m':'')+'" style="width:'+b[1]+'%"></b></i><span>'+b[1]+'%</span></div>').join('')).join('');
@@ -1495,7 +1457,7 @@ reqUI();
 let glNext=0,fcount=0,lastDraw=0,qEma=16,qHold=0,QL=0,frames=0;
 function frameBody(now){
   const dt=Math.min(.05,(now-(frame.t||now))/1000);frame.t=now;
-  stepFly(dt);stepDep(dt);tweenStep(now);grabTick();hoverTick(now);drawMini();
+  stepFly(dt);stepDep(dt);tweenStep(now);hoverTick(now);drawMini();
   if(insp.on)easeInsp(dt);
   const active=flying||now-lastLook<200;
   if(!active&&!ctlShown&&now-lastAct>3600){ctlShown=true;movingCls=false;$('ctl').classList.add('show');document.body.classList.remove('moving')}
@@ -1512,15 +1474,15 @@ function frameBody(now){
   for(const p of panes){
     if(p.W<2)continue;
     if(p.mode===0){
-      if(cut.type){const key='c'+cutK()+'|'+sel+'|'+cmode+'|'+mk+'|'+p.W+'x'+p.H;if(key!==p.key){p.key=key;drawPointsCut(p);frames++}}
-      else{const bud=[75000,50000,32000][ql],key=ck+'|'+sel+'|'+hov+'|'+cmode+'|'+bldgOnly+'|'+p.W+'x'+p.H+'|'+bud+'|'+mk;if(key!==p.key){p.key=key;drawPoints(p,B,bud);frames++}}}
+      if(cut.type){const key='c'+cutK()+'|'+sel+'|'+cmode+'|'+p.W+'x'+p.H;if(key!==p.key){p.key=key;drawPointsCut(p);frames++}}
+      else{const bud=[75000,50000,32000][ql],key=ck+'|'+sel+'|'+hov+'|'+cmode+'|'+bldgOnly+'|'+p.W+'x'+p.H+'|'+bud;if(key!==p.key){p.key=key;drawPoints(p,B,bud);frames++}}}
     else if(p.mode===1){
       let key;if(insp.on)key='i'+sel+'|'+insp.az.toFixed(4)+insp.el.toFixed(4)+insp.dist.toFixed(3)+'|'+p.W+'x'+p.H;
-      else if(cut.type)key='c'+cutK()+'|'+mk+'|'+p.W+'x'+p.H;
-      else key=ck+'|'+hov+'|'+$('lab').checked+'|'+p.W+'x'+p.H+'|'+(ql>1)+'|'+mk;
+      else if(cut.type)key='c'+cutK()+'|'+p.W+'x'+p.H;
+      else key=ck+'|'+hov+'|'+$('lab').checked+'|'+p.W+'x'+p.H+'|'+(ql>1);
       if(key!==p.key){p.key=key;if(insp.on)drawInspect(p,inspBasis(),OBJ[sel]);else if(cut.type)drawBimCut(p);else drawBim(p,B)}
     }else{
-      const vk=ck+'|'+sel+'|'+ql+'|'+mk;
+      const vk=ck+'|'+sel+'|'+ql;
       if(p.key!==vk){if(GL)drawGL(p,B,now,ql);videoOverlay(p,B,now);p.key=vk}   // nothing moves: nothing is redrawn
     }
   }
@@ -1542,16 +1504,6 @@ for(const p of panes){
   p.el.addEventListener('pointerdown',e=>{
     if(e.target.closest('.ui'))return;
     if((DEP.state==='pick'||DEP.state==='placed')&&p===panes[2]&&e.button===0){const lk=document.pointerLockElement===p.el,r0=p.el.getBoundingClientRect(),pt=surfPt(p,lk?p.W/2:e.clientX-r0.left,lk?p.H/2:e.clientY-r0.top);if(pt)depPlace(pt);else hint('No surface there \u00b7 click on the floor, a wall or an object',2500);return}
-    if(e.button===0){
-      const lk=document.pointerLockElement===p.el,r0=p.el.getBoundingClientRect(),hx=lk?p.W/2:e.clientX-r0.left,hy=lk?p.H/2:e.clientY-r0.top;
-      if(meas.grab){meas.grab='';measUI();return}                                      // second click: drop the dot where it is
-      const h=measHit(p,hx,hy);
-      if(h&&keys.has('KeyQ')){                                                              // Q held + click: on the line or label deletes the whole measurement, on a dot only that dot
-        if(h==='line')meas.a=meas.b=null;else if(h==='a'){meas.a=meas.b;meas.b=null}else meas.b=null;
-        meas.grab='';measUI();return}
-      if(h==='a'||h==='b'){if(!e.ctrlKey&&!e.metaKey){meas.grab=h;measUI();return}}   // click a dot to pick it up
-    }
-    if((meas.on||e.shiftKey)&&e.button===0){if(p.mode===2&&document.pointerLockElement===p.el)measureClick(p,p.W/2,p.H/2);else{const r=p.el.getBoundingClientRect();measureClick(p,e.clientX-r.left,e.clientY-r.top)}return}
     if(document.pointerLockElement===p.el){pickAt(p,p.W/2,p.H/2);return}
     const r=p.el.getBoundingClientRect();
     if(e.ctrlKey||e.metaKey){pickAt(p,e.clientX-r.left,e.clientY-r.top);return}
@@ -1577,7 +1529,7 @@ function hoverTick(now){
   if(now<hovNext||flying||now-lastLook<300)return;hovNext=now+110;
   const l=document.pointerLockElement;
   if(l){const p=panes[2];if(l===p.el){const b=objAt(p,p.W/2,p.H/2),r=p.el.getBoundingClientRect();hov=b;tipAt(b>=0?{clientX:r.left+p.W/2+16,clientY:r.top+p.H/2+16}:null,b>=0?hoverText(b):'')}return}
-  if(ptr&&!(cut.type&&ptr.p.mode<2)&&!meas.on)setHover(objAt(ptr.p,ptr.x,ptr.y),{clientX:ptr.cx,clientY:ptr.cy});
+  if(ptr&&!(cut.type&&ptr.p.mode<2))setHover(objAt(ptr.p,ptr.x,ptr.y),{clientX:ptr.cx,clientY:ptr.cy});
 }
 function pickAt(p,x,y){
   if(cut.type&&p.mode<2)return;
@@ -1600,14 +1552,14 @@ document.addEventListener('pointerlockerror',()=>{lockFailed=true;hint('This win
 $('lookbtn').onclick=e=>{e.stopPropagation();lockMouse(panes[2]);setTimeout(()=>{if(!document.pointerLockElement&&!lockFailed)hint('Mouse capture was refused \u00b7 arrow keys look',6000)},700)};
 const MOVE=['KeyW','KeyA','KeyS','KeyD','KeyE','KeyQ','Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','ShiftLeft','ShiftRight'];
 addEventListener('keydown',e=>{
-  if(e.code==='KeyQ'&&DEP.state==='placed'){e.preventDefault();depFly();return}   // Q sends the drone; with no spot placed (and everywhere else) Q is still fly-down / the tape delete key
+  if(e.code==='KeyQ'&&DEP.state==='placed'){e.preventDefault();depFly();return}   // Q sends the drone; with no spot placed (and everywhere else) Q is still fly-down
   if(e.target&&e.target.matches&&e.target.matches('input[type=search],input[type=text],textarea,select'))return;
   if(MOVE.includes(e.code)){const a=document.activeElement;if(a&&a.matches&&a.matches('button,select,input'))a.blur();e.preventDefault();keys.add(e.code);touch();return}
   if(e.code==='ControlLeft'||e.code==='ControlRight'){if(!e.repeat)ctrlAlone=true;return}
   if(e.key==='/'&&!document.pointerLockElement){e.preventDefault();closePops();toggle('drawer',$('bObj'));$('q').focus();$('q').select();return}
   if(e.code==='KeyF'){if(document.pointerLockElement)document.exitPointerLock();else lockMouse(panes[2])}
   if(e.code==='Escape'&&(DEP.state==='pick'||DEP.state==='placed')&&!document.pointerLockElement){depCancel();return}
-  if(e.code==='Escape'){if(document.pointerLockElement){document.exitPointerLock();return}if(openPop()){closePops();return}if(meas.on){setMeas(false);return}if(sel>=0)select(-1)}
+  if(e.code==='Escape'){if(document.pointerLockElement){document.exitPointerLock();return}if(openPop()){closePops();return}if(sel>=0)select(-1)}
 });
 let ctrlAlone=false;addEventListener('pointerdown',()=>{ctrlAlone=false},true);
 addEventListener('keyup',e=>{keys.delete(e.code);if((e.code==='ControlLeft'||e.code==='ControlRight')&&ctrlAlone&&sel>=0)select(-1);ctrlAlone=false});addEventListener('blur',()=>keys.clear());
@@ -1720,7 +1672,6 @@ resize();
   if(/menu/.test(h))toggle('menu',$('bMenu'));
   if(/objs/.test(h))toggle('drawer',$('bObj'));
   if(m=h.match(/cut=(level|long|cross)/)){setCut(m[1]);if(m=h.match(/cp=(-?[\d.]+)/)){cut.pos=+m[1];$('cutPos').value=cut.pos;cutLabel()}}
-  if(/meas/.test(h)){setMeas(true)}
   if(/idle/.test(h))lastAct-=9000;
   if(/perf/.test(h))setTimeout(()=>{ // flies forward while turning for 6 s and reports the real frame rate
     const t0=performance.now();let n=0,worst=0,last=t0;keys.add('KeyW');keys.add('ArrowLeft');
@@ -1742,16 +1693,10 @@ resize();
     out.push('plain drag turns '+(Math.abs(cam.yaw-y)>1e-6?'YES (wrong)':'no (right)'));
     document.querySelector('.sim').textContent=out.join(' | ');
   },1500);
-  if(/testmeas/.test(h))setTimeout(()=>{ // plan: two clicks 100 px apart on the BIM pane, then a note saved through the dialog
-    setCut('level');setMeas(true);const p=panes[1],mp=cutMap(p,CUTS.level),a=cutUnmap(p,p.W/2-50,p.H/2),b=cutUnmap(p,p.W/2+50,p.H/2);
-    measureClick(p,p.W/2-50,p.H/2);measureClick(p,p.W/2+50,p.H/2);
-    openReq('Note');$('rqText').value='test';$('rqSave').click();
-    document.querySelector('.sim').textContent='tape '+mtext()+' expected '+(100/mp.s).toFixed(3)+' m | saved '+REQS.length+' | '+$('rqMsg').textContent;localStorage.removeItem('noxenScanReqs');REQS=[];reqUI();
-  },1500);
   if(/bench/.test(h)){const p=panes[0],B=camBasis(),t0=performance.now();for(let i=0;i<20;i++){p.key='';drawPoints(p,B,75000)}const pm=((performance.now()-t0)/20).toFixed(1),t1=performance.now();for(let i=0;i<10;i++)drawBim(panes[1],B);document.querySelector('.sim').textContent='points '+pm+' ms, bim '+((performance.now()-t1)/10).toFixed(1)+' ms, '+POLY.length+'/'+POLYA.length+' polys, N'+PTS.N}
 }
 requestAnimationFrame(frame);
-window.__scan={cam,get frames(){return frames},get drawn(){return ptDrawn},get N(){return PTS.N},get objs(){return OBJ.length},get polys(){return POLY.length},get gl(){return document.body.dataset.gl},room:[W,L,H],setCut,cut,meas,measureClick,panes,setMeas,measUI,get dev(){return OBJ.map(o=>[o.name,o.status,Math.round(o.dmean*1000)])}};
+window.__scan={cam,get frames(){return frames},get drawn(){return ptDrawn},get N(){return PTS.N},get objs(){return OBJ.length},get polys(){return POLY.length},get gl(){return document.body.dataset.gl},room:[W,L,H],setCut,cut,panes,get dev(){return OBJ.map(o=>[o.name,o.status,Math.round(o.dmean*1000)])}};
 })();
 </script>
 </body>
