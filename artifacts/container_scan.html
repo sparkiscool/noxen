@@ -24,7 +24,7 @@ header{display:flex;align-items:center;gap:12px;padding:0 14px}
 .btn.icon{width:32px;padding:6px 0;text-align:center}
 .panes{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr) minmax(0,.85fr);gap:8px;padding:0 10px 10px;min-height:0;transition:grid-template-columns .35s ease}
 .panes.insp{grid-template-columns:minmax(0,.7fr) minmax(0,1fr) minmax(0,1.5fr)}
-.lockhint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:6px 14px;border-radius:99px;background:rgba(10,13,18,.62);backdrop-filter:blur(6px);color:#dfe4ed;font:500 12px var(--sans);pointer-events:none;white-space:nowrap}
+.lockhint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:6px 14px;border-radius:99px;background:rgba(10,13,18,.62);backdrop-filter:blur(6px);color:#fff;font:600 13.5px var(--sans);pointer-events:none;white-space:nowrap}
 #lookbtn{right:auto;left:50%;top:50%;transform:translate(-50%,-50%);font-size:14px;padding:10px 20px}
 body.locked #lookbtn{display:none}.lockhint{display:none}.lockhint.show{display:block}
 .pane{position:relative;min-height:0;border-radius:12px;overflow:hidden;background:var(--panel);touch-action:none;cursor:default;user-select:none}
@@ -78,7 +78,7 @@ body.locked #lookbtn{display:none}.lockhint{display:none}.lockhint.show{display:
 .list{overflow:auto;flex:1;margin:0 -6px;padding:0 6px}
 .row{display:flex;align-items:center;gap:8px;padding:5px 7px;border-radius:7px;cursor:pointer;font-size:12.5px}
 .row:hover{background:#1a2029}.row.sel{background:#1f2b42}
-.dot{width:8px;height:8px;border-radius:50%;margin-left:auto;flex:none}
+.dot{width:8px;height:8px;border-radius:50%;flex:none}.rs{margin-left:auto;color:var(--muted);font-size:10.5px}.iss{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11.5px;margin:0 0 8px;cursor:pointer}
 @keyframes bl{50%{opacity:.15}}
 .tc{position:absolute;left:12px;bottom:10px;font:500 11px var(--mono);color:#e6eaf1;opacity:.8;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.7)}
 .tc .rec{display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff4b3e;margin-right:7px;animation:bl 1.4s steps(2) infinite}
@@ -130,9 +130,11 @@ body.locked .pane.lk .xh{display:block}
   <div style="line-height:1.9"><span class="kc">W</span><span class="kc">A</span><span class="kc">S</span><span class="kc">D</span> fly<br>
   <span class="kc">Space</span> / <span class="kc">E</span> up &nbsp; <span class="kc">Shift</span> / <span class="kc">Q</span> down<br>
   <b>Look mode</b> (button on the video) captures the mouse: move it to turn, click opens an object, <span class="kc">Ctrl</span> leaves<br><span class="kc">&larr;</span><span class="kc">&rarr;</span><span class="kc">&uarr;</span><span class="kc">&darr;</span> look with the keyboard<br>
-  <span class="kc">Ctrl</span> + click an object in the BIM or video to open it</div>
+  <span class="kc">Ctrl</span> + click an object in the BIM or video to open it<br>
+  <span class="kc">F</span> Look mode on / off &nbsp; <span class="kc">/</span> search objects (<span class="kc">Enter</span> opens the first) &nbsp; <span class="kc">Esc</span> closes the card<br>
+  Objects: problems are listed first; tick <b>Issues only</b> to hide the ones within tolerance. Clicking one flies the camera to it.</div>
 </div>
-<aside class="drawer" id="drawer"><input type="search" id="q" placeholder="Search objects"><div class="sum" id="sum"></div><div class="list" id="list"></div></aside>
+<aside class="drawer" id="drawer"><input type="search" id="q" placeholder="Search objects"><label class="iss"><input type="checkbox" id="iss">Issues only</label><div class="sum" id="sum"></div><div class="list" id="list"></div></aside>
 <div id="tip"></div><div id="err"></div>
 <div id="ctl"><div class="g"><div class="wasd"><span class="kc w">W</span><span class="kc a">A</span><span class="kc s">S</span><span class="kc d">D</span></div><small>fly</small></div>
   <div class="g"><svg width="22" height="30" viewBox="0 0 22 30" fill="none" stroke="#e9ecf1" stroke-width="1.6"><rect x="1.5" y="1.5" width="19" height="27" rx="9.5"/><path d="M11 1.5v10M1.5 11.5h19"/><rect x="8.8" y="4.6" width="4.4" height="4.4" rx="2.2" fill="#e9ecf1" stroke="none"/></svg><small>look</small></div>
@@ -1171,7 +1173,7 @@ function pickAt(p,x,y){
   select(b===sel?-1:b);
 }
 function lockMouse(p){try{p=p||panes[2];const r=p.el.requestPointerLock();if(r&&r.catch)r.catch(()=>{})}catch(e){}}
-document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Ctrl leaves',4500);try{navigator.keyboard&&navigator.keyboard.lock(['Escape'])}catch(x){}}else $('lockhint').classList.remove('show')});
+document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Ctrl leaves',0);try{navigator.keyboard&&navigator.keyboard.lock(['Escape'])}catch(x){}}else $('lockhint').classList.remove('show')});
 let lmX=null,lmY=null;
 addEventListener('mousemove',e=>{
   if(!document.pointerLockElement){lmX=null;return}
@@ -1188,6 +1190,7 @@ addEventListener('keydown',e=>{
   if(e.target&&e.target.matches&&e.target.matches('input[type=search]'))return;
   if(MOVE.includes(e.code)){const a=document.activeElement;if(a&&a.matches&&a.matches('button,select,input'))a.blur();e.preventDefault();keys.add(e.code);touch();return}
   if((e.code==='ControlLeft'||e.code==='ControlRight')&&document.pointerLockElement){document.exitPointerLock();return}
+  if(e.key==='/'&&!document.pointerLockElement){e.preventDefault();closePops();toggle('drawer',$('bObj'));$('q').focus();$('q').select();return}
   if(e.code==='KeyF'){if(document.pointerLockElement)document.exitPointerLock();else lockMouse(panes[2])}
   if(e.code==='Escape'){if(document.pointerLockElement)return;if(openPop()){closePops();return}if(sel>=0)select(-1)}
 });
@@ -1236,7 +1239,7 @@ function select(i){
   const mm=v=>mmFmt(v)+' mm',sg=d=>(d>=0?'+':'\u2212')+Math.abs(Math.round(d*1000))+' mm',cl=d=>Math.abs(d)<.012?'#17703b':Math.abs(d)<.03?'#8a5a00':'#a3241b';
   const row=(n,bim,scan)=>'<span>'+n+'</span><span class="b">'+mm(bim)+'</span><span>'+(o.missing?'\u2014':mm(scan))+'</span><span style="color:'+(o.missing?'#8a93a3':cl(scan-bim))+';font-weight:600">'+(o.missing?'':sg(scan-bim))+'</span>';
   card.innerHTML='<h3><span class="sw" style="background:rgb('+CLS[o.cls].bim+')"></span>'+o.name+'</h3><div class="cl">'+CLS[o.cls].n+' &middot; design model</div>'+
-   '<div class="dims"><span class="h"></span><span class="h">BIM</span><span class="h">Scan</span><span class="h">Off</span>'+
+   '<div class="dims"><span class="h"></span><span class="h">BIM</span><span class="h">Scan</span><span class="h">Diff</span>'+
    row('Width',o.dim[0],o.sdim&&o.sdim[0])+row('Depth',o.dim[2],o.sdim&&o.sdim[2])+row('Height',o.dim[1],o.sdim&&o.sdim[1])+
    (el>.02?row('Above floor',el,o.selev):'')+'</div>'+
    (o.missing?'':'<div class="cmp">Position off <b>'+Math.round(o.soff*1000)+' mm</b> &middot; rotated <b>'+Math.abs(o.srot).toFixed(1)+'\u00b0</b></div>')+
@@ -1249,16 +1252,16 @@ function lookAt(o){
   if(d>want+.5||d<1.4){cam.p[0]=c[0]-dx/d*want;cam.p[2]=c[2]-dz/d*want;cam.p[1]=clamp(c[1]+.9,1.1,3.6);vel[0]=vel[1]=vel[2]=0;collide(cam.p,vel)}
   const e=sub(c,cam.p);cam.yaw=Math.atan2(e[0],-e[2]);cam.pitch=clamp(Math.atan2(e[1],Math.hypot(e[0],e[2])),-1.2,1.2);
 }
-let filterIssues=false;
+let filterIssues=false;const RANK={bad:0,warn:2,ok:3,na:4};const rank=o=>o.missing?1:(RANK[o.status]??3);
 function buildLists(){
   const list=$('list');list.innerHTML='';
   const B=OBJ.filter(o=>!o.site),miss=B.filter(o=>o.missing).length,bad=B.filter(o=>!o.missing&&o.status==='bad').length,warn=B.filter(o=>!o.missing&&o.status==='warn').length,extra=OBJ.length-B.length;
   $('sum').innerHTML='<span style="color:#ef4b4b">'+bad+' out of position</span> &middot; <span style="color:#a0a8b6">'+miss+' not built</span> &middot; <span style="color:#f0b429">'+warn+' minor</span><br><span style="color:#e0a030">'+extra+' items in the scan are not in the BIM</span>';
   const q=($('q').value||'').toLowerCase();
-  OBJ.forEach((o,i)=>{
-    if(o.site||(q&&o.name.toLowerCase().indexOf(q)<0))return;
+  OBJ.map((o,i)=>i).sort((a,b)=>rank(OBJ[a])-rank(OBJ[b])||a-b).forEach(i=>{const o=OBJ[i];
+    if(o.site||(q&&o.name.toLowerCase().indexOf(q)<0)||(filterIssues&&!o.missing&&o.status==='ok'))return;
     const d=document.createElement('div');d.className='row'+(i===sel?' sel':'');d.dataset.i=i;
-    d.innerHTML='<span class="sw" style="background:rgb('+CLS[o.cls].bim+')"></span>'+o.name+'<span class="dot" style="background:'+stCol[o.status]+'" title="'+o.statusText+'"></span>';
+    d.innerHTML='<span class="sw" style="background:rgb('+CLS[o.cls].bim+')"></span>'+o.name+'<small class="rs">'+(o.status==='ok'&&!o.missing?'':o.statusText)+'</small><span class="dot" style="background:'+stCol[o.status]+'" title="'+o.statusText+'"></span>';
     d.onclick=()=>{const on=sel!==i;select(on?i:-1);if(on)lookAt(o)};list.appendChild(d)});
   $('ocount').textContent=B.length;
 }
@@ -1271,7 +1274,8 @@ $('bMenu').onclick=e=>{e.stopPropagation();toggle('menu',$('bMenu'))};
 $('bHelp').onclick=e=>{e.stopPropagation();toggle('help',$('bHelp'))};
 $('bScan').onclick=e=>{e.stopPropagation();toggle('scan',$('bScan'))};
 addEventListener('pointerdown',e=>{if(!e.target.closest('.pop,.drawer,header'))closePops()});
-$('q').oninput=buildLists;
+$('q').oninput=buildLists;$('iss').onchange=e=>{filterIssues=e.target.checked;buildLists()};
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter'){const r=document.querySelector('#list .row');if(r)r.click()}});
 $('close').onclick=()=>select(-1);
 if($('bo'))$('bo').onclick=()=>{bldgOnly=!bldgOnly;$('bo').classList.toggle('on',bldgOnly);$('bo').textContent=bldgOnly?'Building only ✓':'Building only';panes[0].key=''};
 document.querySelectorAll('#views button').forEach(b=>b.onclick=()=>setView(b.dataset.v));
