@@ -1279,13 +1279,34 @@ function mmLayout(){
   if(w===mm.w&&h===mm.h&&dpr===mm.dpr&&mm.base)return;
   mm.w=w;mm.h=h;mm.dpr=dpr;mm.s=Math.min((w-16)/L,(h-30)/W);mm.cv.width=Math.round(w*dpr);mm.cv.height=Math.round(h*dpr);
   const b=document.createElement('canvas');b.width=mm.cv.width;b.height=mm.cv.height;const c=b.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);
-  const a=mmP(W/2,-L/2),z=mmP(-W/2,L/2);c.fillStyle='#e9ecf2';c.fillRect(a[0],a[1],z[0]-a[0],z[1]-a[1]);
-  renderCutBim(c,CUTS.level,1.5,pt=>mmP(pt[0],pt[2]),true);
-  c.strokeStyle='rgba(20,30,50,.35)';c.lineWidth=1;c.setLineDash([3,3]);c.beginPath();
+  const a=mmP(W/2,-L/2),z=mmP(-W/2,L/2),fw=z[0]-a[0],fh=z[1]-a[1],ff=getComputedStyle(document.body).fontFamily;
+  c.fillStyle='#f6f7fa';c.fillRect(a[0],a[1],fw,fh);
+  // zones: pale tint in a chequer, hairline outline, name in the corner
+  const xl=[-W/2,-2.33,2.33,W/2],zl=[-L/2,-6,0,6,L/2];
+  for(let xi=0;xi<3;xi++)for(let zi=0;zi<4;zi++){const p1=mmP(xl[xi+1],zl[zi]),p2=mmP(xl[xi],zl[zi+1]);
+    c.fillStyle=(xi+zi)&1?'rgba(60,90,150,.06)':'rgba(255,255,255,.55)';c.fillRect(p1[0],p1[1],p2[0]-p1[0],p2[1]-p1[1])}
+  c.strokeStyle='rgba(60,80,120,.28)';c.lineWidth=.8;c.setLineDash([2,3]);c.beginPath();
   for(const zz of[-6,0,6]){const p1=mmP(W/2,zz),p2=mmP(-W/2,zz);c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1])}
   for(const xx of[-2.33,2.33]){const p1=mmP(xx,-L/2),p2=mmP(xx,L/2);c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1])}c.stroke();c.setLineDash([]);
-  c.font='600 10px '+getComputedStyle(document.body).fontFamily;c.fillStyle='rgba(20,30,50,.55)';c.textAlign='center';c.textBaseline='middle';
-  for(const zi of[0,1,2,3])for(const xi of[0,1,2]){const q=mmP([-4.67,0,4.67][xi],CZS[zi]);c.fillText('ABC'[xi]+(zi+1),q[0],q[1])}
+  // beams overhead, faint centrelines on the column grid
+  c.strokeStyle='rgba(120,128,150,.35)';c.lineWidth=Math.max(1.5,.4*mm.s);c.beginPath();
+  for(const xx of CXS){const p1=mmP(xx,-L/2),p2=mmP(xx,L/2);c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1])}
+  for(const zz of CZS){const p1=mmP(W/2,zz),p2=mmP(-W/2,zz);c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1])}c.stroke();
+  // zone names
+  c.font='600 10px '+ff;c.fillStyle='rgba(30,45,80,.5)';c.textAlign='left';c.textBaseline='top';
+  for(let xi=0;xi<3;xi++)for(let zi=0;zi<4;zi++){const q=mmP(xl[xi+1],zl[zi]);c.fillText('ABC'[xi]+(zi+1),q[0]+4,q[1]+3)}
+  // walls: thick dark outline, a gap for the door in the end wall (|x| < 2.33 at z = +L/2)
+  const wt=Math.max(4,.3*mm.s),h2=wt/2,dr=2.33*mm.s,dy=(a[1]+z[1])/2;
+  c.strokeStyle='#27304a';c.lineWidth=wt;c.lineCap='butt';c.lineJoin='miter';c.beginPath();
+  c.moveTo(a[0]+h2,a[1]+h2);c.lineTo(z[0]-h2,a[1]+h2);c.lineTo(z[0]-h2,dy-dr);
+  c.moveTo(z[0]-h2,dy+dr);c.lineTo(z[0]-h2,z[1]-h2);c.lineTo(a[0]+h2,z[1]-h2);c.lineTo(a[0]+h2,a[1]+h2);c.stroke();
+  // door: jambs, an open leaf and its swing
+  c.lineWidth=1.4;c.strokeStyle='#27304a';c.beginPath();c.moveTo(z[0]-wt,dy-dr);c.lineTo(z[0],dy-dr);c.moveTo(z[0]-wt,dy+dr);c.lineTo(z[0],dy+dr);c.stroke();
+  c.strokeStyle='rgba(39,48,74,.55)';c.lineWidth=1;c.beginPath();c.moveTo(z[0]-wt,dy-dr);c.lineTo(z[0]-wt-dr,dy-dr);c.stroke();
+  c.setLineDash([2,2]);c.beginPath();c.arc(z[0]-wt,dy-dr,dr*.98,0,Math.PI/2);c.stroke();c.setLineDash([]);
+  // columns
+  const cs=Math.max(5,.45*mm.s);c.fillStyle='#3a4560';
+  for(const xx of CXS)for(const zz of CZS){const q=mmP(xx,zz);c.fillRect(q[0]-cs/2,q[1]-cs/2,cs,cs)}
   mm.base=b;mm.key=''}
 function drawMini(){
   mmLayout();if(!mm.base)return;const k=cam.p[0].toFixed(2)+cam.p[2].toFixed(2)+cam.yaw.toFixed(2)+mm.hz;if(k===mm.key)return;mm.key=k;
