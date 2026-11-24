@@ -31,12 +31,6 @@ L.KEYS = [k for k in sc.NODES if k not in sc.PRINTED]
 L.SOCKET_START = L._socket_starts()
 
 
-def _no_funnel():
-    import manifold3d as mf
-    return mf.Manifold()
-
-
-L.funnel_sweep = _no_funnel
 
 # 10 Nov, round 2 (Spark 9 Nov: "the nodes on this seem very bulky, we are using pctg ... why does the node opening have to be the same
 # thickness ... this isnt optimal"): the light nodes' mass was mostly their drawn collars (2.2 g drawn of 4.3), each 10 deep whatever its
@@ -74,6 +68,14 @@ def socket_depth(axial, side, moment=0.0):
     return float(np.ceil(d * 2.0) / 2.0)
 
 
+# A backed rider (24 Nov, the held sockets' cases with the near-parallel neighbour held too): P3's TB-P3 rides on RB-P3's collar and ran
+# 4.8 on past RB-P3's mouth; with RB-P3's rod held its end moment peeled it off that collar across the layers at the mouth plane, 0.224
+# with the room filled solid (0.258 before the rider's root room below; no budget passes on that). The neighbour's socket is as deep as
+# brings its mouth to within BACK_REACH of the rider's (0.168 at 2.3 short, 0.115 at 0.8), so its collar backs the rider's whole bore;
+# check_pairs refuses a BACK_DEPTH that no longer reaches. The mirrored pair at P4 the same.
+BACK_DEPTH = {("P3", "RB-P3"): 14.5, ("P4", "RB-P4"): 14.5}
+BACK_RIDER = {("P3", "RB-P3"): "TB-P3", ("P4", "RB-P4"): "TB-P4"}
+BACK_REACH = 1.0
 _raw0 = L._raw_members
 
 
@@ -81,7 +83,7 @@ def _raw_members(k, bridges=False):
     out = _raw0(k, bridges)
     for m in out:
         f = L.LOADS.get(k, {}).get(m["name"]) or {}
-        m["depth"] = socket_depth(f.get("axial", 0.0), f.get("side", 0.0), f.get("moment", 0.0)) if f else L.DEPTH
+        m["depth"] = max(socket_depth(f.get("axial", 0.0), f.get("side", 0.0), f.get("moment", 0.0)) if f else L.DEPTH, BACK_DEPTH.get((k, m["name"]), 0.0))
     return out
 
 
@@ -107,8 +109,8 @@ L.DEPTH = DEPTH_MIN                                       # a socket with no fra
 # The room round every collar stays the 3.0-wall strut + STRUT_M, so the engine still grows a root wherever more than the tube bears.
 # The sockets held as the support (24 Nov, was the missing case: a force on a fixed region is nothing, so no case sized the generated
 # root behind them for their own rod; by the bending line above the bare 3.0 roots read 0.40-0.69, BT0 / BT1-TB 1.4 N m the worst): each
-# gets its own cases (build, below) on a support of its own, the node held at its other sockets. The audit's interface_case refuses a
-# setup where a socket with a frame-model load is loaded in no case.
+# gets its own cases (build, below), the node held at its other sockets, with and without a near-parallel neighbour. The audit's
+# interface_case refuses a setup where a socket with a frame-model load is loaded in no case.
 ROOT_MAX = 3.0
 MIN_WALL, COLLAR_INDEX, TAPER_FROM, SHEAR_K = 2.55, 0.27, 1.0 / 6.0, 1.1   # MIN_WALL: 2.05 at the 0.5 annulus (the audit's drawn_wall floor 2.0, the 0.05 the 40-gon's flats)
 XT_MPA, ZT_MPA = 46.0 * 0.85 / 1.1, 23.0 * 0.85 / 1.1    # topo/material.py PCTG Xt / Zt, KNOCKDOWN, SAFETY["crash"]
@@ -209,8 +211,41 @@ L.STRUT_BACK, L.KEEP_OFF = 1.0, 0.5
 # room runs 2.0 past the mouth into the cut, so the mouth is one exact cut face, the barrel meeting the collar on it (no room face on
 # the plane: round 2's sliver sheets). The collar ends on the plane (drawn 0.5 into the cut, the Ys' shorter fork collar kept a stub
 # beside its neighbour, inside the 0.5 its cut spares).
+# 24 Nov, the rider's root: where a collar rides on a near-parallel neighbour's (_beside) and runs on past that neighbour's mouth plane, the
+# neighbour's mouth cut left it bare from that plane out (its own wall + 0.5), and the rider's end moment met the neighbour's rod there:
+# P3's TB-P3 beside RB-P3 read 0.258 across the layers with the room filled solid, on the rider's skin at RB-P3's mouth plane (the bare
+# 3.0 tube is 0.30 there by the collar's shear line below: no layout could pass). A neighbour's mouth cut now spares the rider's whole
+# strut (RIDER_M of room round its collar) outside a tunnel round the neighbour's own rod (its collar's radius + 0.5: the mouth stays
+# one exact face, its lead-in and keep-out carve nothing grown). The cuts are made here (the lib's own MOUTH_R is off; the v4 nodes sit
+# above the funnel, so the lib's funnel hook carries them).
 L.STRUT_BACK, L.COLLAR_PAST = -2.0, 0.0
-L.MOUTH_R = L.BORE_R + L.WALL + L.STRUT_M + 0.5
+L.MOUTH_R = None
+MOUTH_R = L.BORE_R + L.WALL + L.STRUT_M + 0.5
+RIDER_M = L.STRUT_M
+_GROUP = []
+
+
+def _mouth_cuts():
+    import manifold3d as mf
+    allm = []
+    for k in _GROUP:
+        c = np.array(L.P[k], float)
+        for m in L.members(k):
+            m["c"], m["s_end"], m["ro"], m["wall_d"] = c, m["s0"] + m["depth"], m["bore_r"] + L.WALL, drawn_wall(m)
+            allm.append(m)
+    cuts = []
+    for m in allm:
+        spare = [L.collar_shape(o["c"], o["u"], o["s0"] - L.FLOOR - 0.5, o["s_end"] + 0.5, o["bore_r"], o["wall_d"] + 0.5) for o in allm if o is not m]
+        riders = [L.along(o["c"], o["u"], 0.0, o["s_end"] + 0.5, o["ro"] + RIDER_M) for o in allm
+                  if o is not m and np.allclose(o["c"], m["c"]) and _beside(m, o) and o["s_end"] > m["s_end"]]
+        if riders:
+            spare.append(L.U(riders) - L.along(m["c"], m["u"], m["s_end"] - 1.0, m["s_end"] + 61.0, m["ro"] + 0.5, 64))
+        slab = L.along(m["c"], m["u"], m["s_end"], m["s_end"] + 60.0, MOUTH_R, 64)
+        cuts.append(slab - L.U(spare) if spare else slab)
+    return L.U(cuts) if cuts else mf.Manifold()
+
+
+L.funnel_sweep = _mouth_cuts
 
 # The Ys' forks (9 Nov): their bores side by side need only the audit's wall between the grooves (2.1). A hub's pair of near-parallel
 # bores (P1's RS0-P1 / S0-P1 13 mm out) at 2.1 put each groove 0.05 off its neighbour's 2.55 collar face: near-coincident faces,
@@ -325,6 +360,11 @@ def check_pairs(k):
                 bad.append(f"{a['name']} ({a['s0']:.1f}) / {b['name']} ({b['s0']:.1f}): {', '.join(why)}")
     if bad:
         raise ValueError(f"node {k}: sockets too close: " + "; ".join(bad))
+    by = {m["name"]: m for m in ms}
+    for (kk, hub), rider in BACK_RIDER.items():
+        if kk == k and by[hub]["s0"] + by[hub]["depth"] < by[rider]["s0"] + by[rider]["depth"] - BACK_REACH - 1e-6:
+            raise ValueError(f"node {k}: {hub}'s mouth ({by[hub]['s0'] + by[hub]['depth']:.1f}) no longer backs its rider {rider} "
+                             f"({by[rider]['s0'] + by[rider]['depth']:.1f}): BACK_DEPTH")
 
 
 _check0 = L.check_members
@@ -357,8 +397,16 @@ L.SOCKET_START = _socket_starts()
 # P2 / P5 5.0 -> 1.2 (the staggered starts: RS0-P2 / RS1-P5 now start 6.5 from the hub, as RS0 holds the same rod's 1.43 N m at 0.28 on
 # 1.1; the pushed-out S0-P2 0.69 N m is P1's RS0-P1, 0.21 on 0.9), NB 1.8 -> 1.0 (0.093), TB 2.4 -> 2.2 (0.216), S0 1.6 -> 1.3 (0.184),
 # S1 1.8 -> 1.55 (0.203), R0 / R7 0.85 -> 0.7 (0.175). The rest read 0.21-0.28 and keep theirs. 27.2 -> 17.75 cm3 (33.5 -> 21.8 g).
-BUDGET_CM3 = {"P3": 1.4, "P4": 1.4, "P1": 0.9, "P2": 1.2, "P5": 1.2, "P6": 0.9, "R0": 0.7, "R7": 0.7,
-              "RF": 0.3, "RB": 0.8, "RS0": 1.1, "RS1": 1.1, "S0": 1.3, "S1": 1.55, "NB": 1.0, "TB": 2.2}   # 14 Nov, the bolt forks: their runs read NB / TB 0.051 / 0.052 at 4.0, S0 / S1 0.032 at 3.1; on the fold's loads (core_of) TB-P3 154 N (was 99), S0-P2 109 (was 78): toward ~0.15 by index ~ V^-1.25.   # 13 Nov: NB 5.7 -> 6.9, 0.314 at 5.7 (index ~ V^-1.25 toward 0.25). 12 Nov: NB 4.3 -> 5.7, 0.354 at 4.3 once BS moved to the nose block (NB-R7 pull-out 126 N; index ~ V^-1.25 toward 0.25)   # 12 Nov: TB 4.8 -> 5.6, 0.301 at 4.8 under the heavier frame's TB-P3 108 N (index ~ V^-1.25 toward 0.25)
+# Run of 24 Nov on those, with the held sockets' own cases (push 427c3eaa; 57.07 g): 8 pass, 8 fail, every worst an end-moment case in the
+# generated root: P3 / P4 0.41 (TB-P3 / TB-P4), RB 0.40 (RM-RB), RF 0.385, RS0 / RS1 0.36 / 0.35 (RM-RS), TB 0.35 (BT0 / BT1-TB), P1 0.305.
+# The held sockets' cases now run on both supports (build: the two stiffest other sockets, and those with the near-parallel neighbour
+# left out), the worse governs. Each toward 0.25 by index ~ V^-1.25 from its built worst, a case on the new support read from its
+# socket's built case x the two supports' readings with the room filled solid (the audit's room_full, per case):
+# P3 / P4 1.4 -> 1.7 (0.32: the backed rider, solid 0.115 where the old support read 0.148 and built 0.411), P2 / P5 1.2 -> 1.5 (0.33: S0-P2 /
+# S1-P5 with RS held, solid 0.096 on 0.298 built), R0 / R7 0.7 -> 0.8 (0.29, NB-R with RF-R held), P1 0.9 -> 1.0, RB 0.8 -> 1.2,
+# RF 0.3 -> 0.45, RS0 / RS1 1.1 -> 1.45, TB 2.2 -> 2.9. P6, S0, S1, NB read under 0.25 on both supports and keep theirs. 17.75 -> 21.2 cm3.
+BUDGET_CM3 = {"P3": 1.7, "P4": 1.7, "P1": 1.0, "P2": 1.5, "P5": 1.5, "P6": 0.9, "R0": 0.8, "R7": 0.8,
+              "RF": 0.45, "RB": 1.2, "RS0": 1.45, "RS1": 1.45, "S0": 1.3, "S1": 1.55, "NB": 1.0, "TB": 2.9}   # 14 Nov, the bolt forks: their runs read NB / TB 0.051 / 0.052 at 4.0, S0 / S1 0.032 at 3.1; on the fold's loads (core_of) TB-P3 154 N (was 99), S0-P2 109 (was 78): toward ~0.15 by index ~ V^-1.25.   # 13 Nov: NB 5.7 -> 6.9, 0.314 at 5.7 (index ~ V^-1.25 toward 0.25). 12 Nov: NB 4.3 -> 5.7, 0.354 at 4.3 once BS moved to the nose block (NB-R7 pull-out 126 N; index ~ V^-1.25 toward 0.25)   # 12 Nov: TB 4.8 -> 5.6, 0.301 at 4.8 under the heavier frame's TB-P3 108 N (index ~ V^-1.25 toward 0.25)
 
 
 _build0 = L.build
@@ -373,10 +421,11 @@ def _beside(a, b):
 def build(group, h, log=print):
     """L.build + the cases it leaves out: the two sockets it holds as the support (the stiffest by axial load) each get their own rod's
     pull-out and side force + end moment (the same couple across the lining's thirds, both signs), the node held for them at its other
-    sockets: the two stiffest of the rest (support 'hold <rod>'), a near-parallel neighbour left out (_beside: P3's TB-P3 rides on RB-P3's
-    collar, and with RB-P3 fixed its couple went straight across the 2.4 wall between the two bores, 0.258 with the room filled solid,
-    sizing that wall and not the root to the hub). Every socket with a frame-model load is declared to the audit (Part.interface_loads
-    -> interface_case)."""
+    sockets, on two supports and the worse governs (24 Nov: never the favourable one): the two stiffest of the rest, and the two
+    stiffest with a near-parallel neighbour left out (_beside). With the neighbour held its rod carries the couple straight across the
+    wall between the two bores (P3's TB-P3 on RB-P3: the backed rider, BACK_DEPTH); without it the root to the hub carries it all.
+    Every socket with a frame-model load is declared to the audit (Part.interface_loads -> interface_case)."""
+    _GROUP[:] = (group,) if isinstance(group, str) else tuple(group)
     p = _build0(group, h, log)
     along, U = L.along, L.U
     lining = lambda m, grow=1.0: along(m["c"], m["u"], m["s0"] - L.LINING_BACK, m["s_end"], m["bore_r"] + grow)
@@ -388,23 +437,27 @@ def build(group, h, log=print):
             m["c"], m["s_end"] = c, m["s0"] + m["depth"]
         by = sorted(ms, key=lambda m: -m["axial"])
         for m in by[:2]:
-            apart = [o for o in by if o is not m and not _beside(m, o)]
-            rest = (apart or [o for o in by if o is not m])[:2]; sup = f"hold {m['name']}"
-            p.support(sup, U([lining(o, 1.4) for o in rest]))
-            log(f"  {m['name']} (held in the other cases): its own cases held at {sorted(o['name'] for o in rest)}")
-            p.load_multi(f"frame {m['name']} axial {m['axial']:.0f} N (pull-out), held at the other sockets", [(lining(m), m["axial"] * m["u"])], cls="crash", support=sup)
+            rest = [o for o in by if o is not m]; sets = []
+            for cand in (rest[:2], ([o for o in rest if not _beside(m, o)] or rest)[:2]):
+                if not any(cand == s_ for s_ in sets):
+                    sets.append(cand)
             side = np.cross(m["u"], [0, 0, 1.0] if abs(m["u"][2]) < 0.9 else [1.0, 0, 0]); side /= np.linalg.norm(side)
-            if not m.get("moment"):
-                p.load_multi(f"frame {m['name']} side {m['side']:.1f} N, held at the other sockets", [(lining(m), m["side"] * side)], cls="crash", support=sup)
-                continue
             a0, a1 = m["s0"] - L.LINING_BACK, m["s_end"]; L3 = (a1 - a0) / 3.0
             th = [along(c, m["u"], a0 + i * L3, a0 + (i + 1) * L3, m["bore_r"] + 1.0) for i in range(3)]
-            Fc = np.cross(m["moment"] * np.asarray(m["moment_axis"], float), m["u"]) / (2.0 * L3)
-            w = Fc / np.linalg.norm(Fc) if np.linalg.norm(Fc) > 1e-6 else side
-            for sg, lab in ((1, "+"), (-1, "-")):
-                F = sg * m["side"] * w; c_ = sg * Fc
-                p.load_multi(f"frame {m['name']} side {m['side']:.1f} N + end moment {m['moment']:.0f} N mm ({lab}), held at the other sockets",
-                             [(th[0], F / 3 - c_), (th[1], F / 3), (th[2], F / 3 + c_)], cls="crash", support=sup)
+            for held in sets:
+                at = " + ".join(o["name"] for o in held); sup = f"hold {m['name']} at {at}"
+                p.support(sup, U([lining(o, 1.4) for o in held]))
+                log(f"  {m['name']} (held in the other cases): its own cases held at {at}")
+                p.load_multi(f"frame {m['name']} axial {m['axial']:.0f} N (pull-out), held at {at}", [(lining(m), m["axial"] * m["u"])], cls="crash", support=sup)
+                if not m.get("moment"):
+                    p.load_multi(f"frame {m['name']} side {m['side']:.1f} N, held at {at}", [(lining(m), m["side"] * side)], cls="crash", support=sup)
+                    continue
+                Fc = np.cross(m["moment"] * np.asarray(m["moment_axis"], float), m["u"]) / (2.0 * L3)
+                w = Fc / np.linalg.norm(Fc) if np.linalg.norm(Fc) > 1e-6 else side
+                for sg, lab in ((1, "+"), (-1, "-")):
+                    F = sg * m["side"] * w; c_ = sg * Fc
+                    p.load_multi(f"frame {m['name']} side {m['side']:.1f} N + end moment {m['moment']:.0f} N mm ({lab}), held at {at}",
+                                 [(th[0], F / 3 - c_), (th[1], F / 3), (th[2], F / 3 + c_)], cls="crash", support=sup)
         p.interface_loads += [dict(name=m["name"], nodes=nodes(lining(m), f"socket {m['name']}")) for m in ms if m["axial"] is not None]
     return p
 
