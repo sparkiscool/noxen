@@ -2162,15 +2162,126 @@
    "why": "the cradle, camera and LED bars about the SG90's axis from 20 down to 90 up (parked 15 up)"
   }
  ],
+ "riders": [
+  {
+   "part": "scout_v4_probe_spool",
+   "on": "scout_v4_probe_turret",
+   "path": "turret onto the frame",
+   "ok": false,
+   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "scout_v4_probe_pinion",
+   "on": "scout_v4_probe_turret",
+   "path": "turret onto the frame",
+   "ok": false,
+   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "scout_v4_probe_motor",
+   "on": "scout_v4_probe_turret",
+   "path": "turret onto the frame",
+   "ok": false,
+   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "scout_v4_probe_drum",
+   "on": "scout_v4_probe_turret",
+   "path": "turret onto the frame",
+   "ok": false,
+   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "scout_v4_probe_feed",
+   "on": "scout_v4_probe_turret",
+   "path": "turret onto the frame",
+   "ok": false,
+   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "scout_v4_probe_roller",
+   "on": "scout_v4_probe_turret",
+   "path": "turret onto the frame",
+   "ok": false,
+   "why": "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "scout_v4_probe_horn",
+   "on": "scout_v4_probe_servo",
+   "path": "SG90 into the head frame's ring",
+   "ok": false,
+   "why": "rides with scout_v4_probe_servo on the path 'SG90 into the head frame's ring' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "scout_v4_probe_tilt",
+   "on": "scout_v4_cradle",
+   "path": "cradle lowered onto the horn",
+   "ok": true,
+   "by": "its own path 'camera into the cradle (in hand)'"
+  },
+  {
+   "part": "scout_v4_probe_leds",
+   "on": "scout_v4_cradle",
+   "path": "cradle lowered onto the horn",
+   "ok": false,
+   "why": "rides with scout_v4_cradle on the path 'cradle lowered onto the horn' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "scout_v4_probe_horn",
+   "on": "scout_v4_cradle",
+   "path": "cradle lowered onto the horn",
+   "ok": false,
+   "why": "rides with scout_v4_cradle on the path 'cradle lowered onto the horn' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "scout_v4_probe_tilt",
+   "on": "scout_v4_cradle",
+   "path": "head nods -20..+90 deg",
+   "ok": true,
+   "by": "its own path 'camera into the cradle (in hand)'"
+  },
+  {
+   "part": "scout_v4_probe_leds",
+   "on": "scout_v4_cradle",
+   "path": "head nods -20..+90 deg",
+   "ok": false,
+   "why": "rides with scout_v4_cradle on the path 'head nods -20..+90 deg' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "scout_v4_probe_horn",
+   "on": "scout_v4_cradle",
+   "path": "head nods -20..+90 deg",
+   "ok": false,
+   "why": "rides with scout_v4_cradle on the path 'head nods -20..+90 deg' with no path of its own onto it and no fixed-in-place reason"
+  }
+ ],
  "not_print_ready": {
+  "scout_v4_cradle": [
+   "scout_v4_probe_leds: rides with scout_v4_cradle on the path 'cradle lowered onto the horn' with no path of its own onto it and no fixed-in-place reason",
+   "scout_v4_probe_horn: rides with scout_v4_cradle on the path 'cradle lowered onto the horn' with no path of its own onto it and no fixed-in-place reason",
+   "scout_v4_probe_leds: rides with scout_v4_cradle on the path 'head nods -20..+90 deg' with no path of its own onto it and no fixed-in-place reason",
+   "scout_v4_probe_horn: rides with scout_v4_cradle on the path 'head nods -20..+90 deg' with no path of its own onto it and no fixed-in-place reason"
+  ],
   "scout_v4_frame": [
    "clashes with scout_v4_probe_pinion: 7.4 mm3"
   ],
   "scout_v4_probe_pinion": [
-   "clashes with scout_v4_frame: 7.4 mm3"
+   "clashes with scout_v4_frame: 7.4 mm3",
+   "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
+  ],
+  "scout_v4_probe_spool": [
+   "rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
+  ],
+  "scout_v4_probe_turret": [
+   "scout_v4_probe_spool: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason",
+   "scout_v4_probe_pinion: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason",
+   "scout_v4_probe_motor: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason",
+   "scout_v4_probe_drum: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason",
+   "scout_v4_probe_feed: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason",
+   "scout_v4_probe_roller: rides with scout_v4_probe_turret on the path 'turret onto the frame' with no path of its own onto it and no fixed-in-place reason"
   ]
  },
  "would_block": {},
- "seconds": 5.9,
+ "seconds": 6.5,
  "placed": {}
 }

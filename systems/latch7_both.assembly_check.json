@@ -1,6 +1,6 @@
 {
  "drone": "latch7_both",
- "ok": true,
+ "ok": false,
  "gate": true,
  "fit_tol_mm3": 0.5,
  "fit_table": [
@@ -269,7 +269,20 @@
    "why": "2 x M3 x 10 through the cap's lugs into the receiver lugs' inserts, on the bench before the receiver goes on the base (its heads then stand 2.4 under the base)"
   }
  ],
- "not_print_ready": {},
+ "riders": [
+  {
+   "part": "latch7_overseer_view_xt60_male_both",
+   "on": "latch7_overseer_view_carrier_both",
+   "path": "overseer: carrier into the lead notch",
+   "ok": false,
+   "why": "rides with latch7_overseer_view_carrier_both on the path 'overseer: carrier into the lead notch' with no path of its own onto it and no fixed-in-place reason"
+  }
+ ],
+ "not_print_ready": {
+  "latch7_overseer_view_carrier_both": [
+   "latch7_overseer_view_xt60_male_both: rides with latch7_overseer_view_carrier_both on the path 'overseer: carrier into the lead notch' with no path of its own onto it and no fixed-in-place reason"
+  ]
+ },
  "would_block": {},
  "seconds": 0.5,
  "placed": {}

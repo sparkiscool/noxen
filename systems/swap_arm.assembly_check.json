@@ -1,6 +1,6 @@
 {
  "drone": "swap_arm",
- "ok": true,
+ "ok": false,
  "gate": true,
  "fit_tol_mm3": 0.5,
  "fit_table": [
@@ -353,8 +353,115 @@
    "why": "the yoke (booms bonded) onto the MGN block's face along the axle, four M3 from the front; the nut is in its lug and the screw is run through it afterwards"
   }
  ],
- "not_print_ready": {},
+ "riders": [
+  {
+   "part": "box_arm8_fx_bearings",
+   "on": "box_arm8_hub",
+   "path": "hub onto the stub",
+   "ok": false,
+   "why": "rides with box_arm8_hub on the path 'hub onto the stub' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "box_arm8_a_wheels",
+   "on": "box_arm8_a_carriage",
+   "path": "carriage A onto its rail",
+   "ok": false,
+   "why": "rides with box_arm8_a_carriage on the path 'carriage A onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "box_arm8_a_axles",
+   "on": "box_arm8_a_carriage",
+   "path": "carriage A onto its rail",
+   "ok": false,
+   "why": "rides with box_arm8_a_carriage on the path 'carriage A onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "box_arm8_a_mgn_rail",
+   "on": "box_arm8_a_carriage",
+   "path": "carriage A onto its rail",
+   "ok": false,
+   "why": "rides with box_arm8_a_carriage on the path 'carriage A onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "box_arm8_a_mgn_bolts",
+   "on": "box_arm8_a_carriage",
+   "path": "carriage A onto its rail",
+   "ok": false,
+   "why": "rides with box_arm8_a_carriage on the path 'carriage A onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "box_arm8_b_wheels",
+   "on": "box_arm8_b_carriage",
+   "path": "carriage B onto its rail",
+   "ok": false,
+   "why": "rides with box_arm8_b_carriage on the path 'carriage B onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "box_arm8_b_axles",
+   "on": "box_arm8_b_carriage",
+   "path": "carriage B onto its rail",
+   "ok": false,
+   "why": "rides with box_arm8_b_carriage on the path 'carriage B onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "box_arm8_b_mgn_rail",
+   "on": "box_arm8_b_carriage",
+   "path": "carriage B onto its rail",
+   "ok": false,
+   "why": "rides with box_arm8_b_carriage on the path 'carriage B onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "box_arm8_b_mgn_bolts",
+   "on": "box_arm8_b_carriage",
+   "path": "carriage B onto its rail",
+   "ok": false,
+   "why": "rides with box_arm8_b_carriage on the path 'carriage B onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "box_arm8_a_booms",
+   "on": "box_arm8_a_lift",
+   "path": "lift A onto its block",
+   "ok": false,
+   "why": "rides with box_arm8_a_lift on the path 'lift A onto its block' with no path of its own onto it and no fixed-in-place reason"
+  },
+  {
+   "part": "box_arm8_b_booms",
+   "on": "box_arm8_b_lift",
+   "path": "lift B onto its block",
+   "ok": false,
+   "why": "rides with box_arm8_b_lift on the path 'lift B onto its block' with no path of its own onto it and no fixed-in-place reason"
+  }
+ ],
+ "not_print_ready": {
+  "box_arm8_a_carriage": [
+   "box_arm8_a_wheels: rides with box_arm8_a_carriage on the path 'carriage A onto its rail' with no path of its own onto it and no fixed-in-place reason",
+   "box_arm8_a_axles: rides with box_arm8_a_carriage on the path 'carriage A onto its rail' with no path of its own onto it and no fixed-in-place reason",
+   "box_arm8_a_mgn_rail: rides with box_arm8_a_carriage on the path 'carriage A onto its rail' with no path of its own onto it and no fixed-in-place reason",
+   "box_arm8_a_mgn_bolts: rides with box_arm8_a_carriage on the path 'carriage A onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  ],
+  "box_arm8_a_lift": [
+   "box_arm8_a_booms: rides with box_arm8_a_lift on the path 'lift A onto its block' with no path of its own onto it and no fixed-in-place reason"
+  ],
+  "box_arm8_a_wheels": [
+   "rides with box_arm8_a_carriage on the path 'carriage A onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  ],
+  "box_arm8_b_carriage": [
+   "box_arm8_b_wheels: rides with box_arm8_b_carriage on the path 'carriage B onto its rail' with no path of its own onto it and no fixed-in-place reason",
+   "box_arm8_b_axles: rides with box_arm8_b_carriage on the path 'carriage B onto its rail' with no path of its own onto it and no fixed-in-place reason",
+   "box_arm8_b_mgn_rail: rides with box_arm8_b_carriage on the path 'carriage B onto its rail' with no path of its own onto it and no fixed-in-place reason",
+   "box_arm8_b_mgn_bolts: rides with box_arm8_b_carriage on the path 'carriage B onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  ],
+  "box_arm8_b_lift": [
+   "box_arm8_b_booms: rides with box_arm8_b_lift on the path 'lift B onto its block' with no path of its own onto it and no fixed-in-place reason"
+  ],
+  "box_arm8_b_wheels": [
+   "rides with box_arm8_b_carriage on the path 'carriage B onto its rail' with no path of its own onto it and no fixed-in-place reason"
+  ],
+  "box_arm8_hub": [
+   "box_arm8_fx_bearings: rides with box_arm8_hub on the path 'hub onto the stub' with no path of its own onto it and no fixed-in-place reason"
+  ]
+ },
  "would_block": {},
- "seconds": 3.9,
+ "seconds": 5.7,
  "placed": {}
 }

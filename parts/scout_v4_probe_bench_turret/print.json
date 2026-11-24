@@ -1,24 +1,43 @@
 {
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_probe_bench_turret.stl",
-  "sha256": "885171ed72e6bd7fa22575250842ce81f157cae43bdc54cab08447b2a9816e08",
-  "bytes": 263684,
-  "faces": 5272,
-  "view_faces": 5272,
-  "view_sha256": "885171ed72e6bd7fa22575250842ce81f157cae43bdc54cab08447b2a9816e08",
-  "at": "2026-11-24 00:44"
+  "sha256": "f21af2a2df99ca1587c13c70204ae4f369a2fd26d6ea7a01fa7aacc76977fd86",
+  "bytes": 277984,
+  "faces": 5558,
+  "view_faces": 5558,
+  "view_sha256": "f21af2a2df99ca1587c13c70204ae4f369a2fd26d6ea7a01fa7aacc76977fd86",
+  "at": "2026-11-24 02:59"
  },
  "make": {
   "sha": {
-   "parts/scout_v4_probe_bench_turret/make.py": "4eceadfaebb1"
+   "parts/cage_node_lib.py": "bad3d25f2b60",
+   "parts/scout_units_lib.py": "edbb61c2b9c7",
+   "parts/scout_v4_probe_bench_turret/make.py": "fa9f4a67178a",
+   "parts/scout_v4_probe_mech_lib.py": "f805e5f929a4",
+   "parts/scout_v4_probe_turret/part.py": "9d896992a52b",
+   "parts/scout_v4_units_lib.py": "f5b138d4c6b6",
+   "parts/socket_inject.py": "6613a0572d9f",
+   "systems/fit_table.json": "8d560ff6f55b",
+   "systems/overseer.cage.json": "298700a6d756",
+   "systems/scout.cage_loads.json": "f4f45404daae",
+   "systems/scout_v4.assembly.json": "f4a0ecc5d98a",
+   "systems/scout_v4.cage_loads.json": "0249fb2a400f",
+   "systems/scout_v4.head_load.json": "60882f276c0d",
+   "tools/scout_v4_shape.py": "38a1679e0e6c"
   },
-  "rc": 1,
-  "s": 0.7,
-  "at": "2026-11-24 01:30",
-  "commit": "08687a62",
+  "rc": 0,
+  "s": 20.4,
+  "at": "2026-11-24 02:58",
+  "commit": "7203a318",
   "solid": {
-   "ok": false,
-   "why": "make.py failed (exit 1): ImportError: cannot import name 'part' from 'parts.scout_v4_probe_turret' (unknown location)"
+   "ok": true,
+   "file": "print/scout_v4_probe_bench_turret.stl",
+   "sha256": "2d78cf4469ed5043f85ad7fd2b4165375e8a97675a2121483c5d4ecc855df74d",
+   "cm3": 44.55,
+   "bodies_plain": 1,
+   "specks_plain": 0,
+   "bodies_eroded": 1,
+   "acute_edges": 17
   }
  },
  "assembly": {

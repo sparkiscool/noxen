@@ -136,6 +136,30 @@
   },
   {
    "a": "scout_v4_probe_spool",
+   "b": "scout_v4_probe_feed",
+   "mm3": 11.4,
+   "limit_mm3": 15.0,
+   "contact": "the blades leave the wound coil at its tangent (the feed drawn from the coil's surface)",
+   "ok": true,
+   "pieces": [
+    {
+     "mm3": 11.4,
+     "at": [
+      13.5,
+      0.0,
+      42.1
+     ],
+     "extent_mm": [
+      0.4,
+      19.0,
+      1.7
+     ],
+     "depth_mm": 0.4
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_probe_spool",
    "b": "scout_v4_probe_pinion",
    "mm3": 5.66,
    "limit_mm3": 8.0,
@@ -171,14 +195,6 @@
      "depth_mm": 1.06
     }
    ]
-  },
-  {
-   "a": "scout_v4_probe_spool",
-   "b": "scout_v4_probe_feed",
-   "mm3": 0.0,
-   "limit_mm3": 15.0,
-   "contact": "the blades leave the wound coil at its tangent (the feed drawn from the coil's surface)",
-   "ok": true
   },
   {
    "a": "scout_v4_probe_horn",
@@ -661,6 +677,6 @@
  ],
  "not_print_ready": {},
  "would_block": {},
- "seconds": 3.4,
+ "seconds": 3.1,
  "placed": {}
 }
