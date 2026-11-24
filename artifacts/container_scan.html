@@ -143,7 +143,7 @@ body.locked .pane.lk .xh{display:block}
     <div class="views ui" id="views" hidden><button data-v="3d" class="on">3D</button><button data-v="plan">Plan</button><button data-v="front">Front</button><button data-v="side">Side</button></div></div>
 </div>
 <div class="strip" id="strip">
-  <div class="mmw" id="mmw"><canvas id="mm"></canvas><span class="mmc" id="mmc">Level 2 &middot; click to fly</span><div class="fl"><button id="flDn" title="Previous floor">&#9660;</button><button id="flUp" title="Next floor">&#9650;</button></div></div>
+  <div class="mmw" id="mmw"><canvas id="mm"></canvas><span class="mmc" id="mmc">Level 2 of 3 &middot; click to fly</span><div class="fl"><button id="flDn" title="Previous floor">&#9660;</button><button id="flUp" title="Next floor">&#9650;</button></div></div>
   <div class="tools">
     <div class="tg w1"><h5>Plan &amp; section</h5>
       <div class="rw"><div class="seg" id="cutType"><button data-c="" class="on" title="Normal 3D views">Off</button><button data-c="level" title="Top-down plan, cut at a height">Plan</button><button data-c="long" title="Section along the length">Long</button><button data-c="cross" title="Section across the width">Cross</button></div></div>
@@ -1283,9 +1283,9 @@ $('bDev').onclick=()=>document.querySelector('#cmode button[data-m="0"]').click(
 /* minimap: the bay from above, one click flies the shared camera there */
 const mm={cv:$('mm'),base:null,w:0,h:0,s:1,dpr:1,key:'',hz:''};
 /* floors: each has its own name, plan and camera; the camera is locked to the floor it is on and only the floor buttons change it */
-const FL={list:[{name:'Level 2',cam:null,plan:null}],cur:0};
+const FL={list:[1,2,3].map(n=>({name:'Level '+n,cam:null})),cur:1};      // the count is fixed by the model: three levels, Level 2 is the scanned one
 const flName=()=>FL.list[FL.cur].name;
-function mmCap(z){$('mmc').innerHTML=flName()+(z?' &middot; zone '+z:'')+' &middot; click to fly'}
+function mmCap(z){$('mmc').innerHTML=flName()+' of '+FL.list.length+(z?' &middot; zone '+z:' &middot; click to fly')}
 function setFloor(i){
   i=clamp(i,0,FL.list.length-1);if(i===FL.cur)return;
   const f=FL.list[FL.cur];f.cam={p:cam.p.slice(),yaw:cam.yaw,pitch:cam.pitch};
