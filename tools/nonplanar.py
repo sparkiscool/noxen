@@ -23,7 +23,9 @@ Modes ("nonplanar": {"mode": ...} on a plate part; they combine with "+"):
   zaa      OrcaSlicer's own Z anti-aliasing of top surfaces (inside one layer; surface finish only), checked by the same gate.
 Options: amp (mm; default: the tallest the hotend clearance allows, auto_wave), wavelength (mm), skin (mm, 0.6), slope (deg, never above the profile's limit).
 
-State on 23 Nov 2026: the wave now takes its height from the hotend clearance (auto_wave, clearance()) and holds the slope over the supports too; np_cradle_deep is its test (1.0 mm wave every 47.5 mm, gate passed, nothing printed). Before: wave is proven on three parts (print/nonplanar/np_spool, np_turret, np_cradle: sliced, gate passed, nothing
+State on 23 Nov 2026 (later): conform HAS now bent a part (parts/np_arch_coupon, 99% of its arched top, gate passed, nothing printed). Changes: slopes and layer thickness are
+checked node to node (_fwd; the central gradient hid steps: 13.5 deg moves under a 9.7 deg field), the conform solve caps both axes together, layers may thin to x0.5 ("tau_min"),
+and with conform the wave gives up amplitude (down to none) so the curved top is followed in full. Before that: the wave now takes its height from the hotend clearance (auto_wave, clearance()) and holds the slope over the supports too; np_cradle_deep is its test (1.0 mm wave every 47.5 mm, gate passed, nothing printed). Before: wave is proven on three parts (print/nonplanar/np_spool, np_turret, np_cradle: sliced, gate passed, nothing
 printed). conform has NOT yet bent a part (the cradle had no shallow curved top) and zaa has NEVER been sliced (its setting names
 are unconfirmed on the CLI): treat both as untested. The hotend shape is other people's measurement, not Spark's.
 The gate counts what runs before a layer's first printed line (the wipe at the old height, the lift, the travel in) against the
@@ -232,15 +234,19 @@ def conform_relief(T, Tn, c, lim, o):
     ne, n = len(A), nx * ny
     cap = c * math.tan(tc)
     r = None
-    for _ in range(6):
+    for _ in range(10):
         sw = np.sqrt(w)
         M = sparse.csr_matrix((np.concatenate([-sw, sw]), (np.concatenate([np.arange(ne)] * 2), np.concatenate([A, B]))), shape=(ne, n))
         r = spsolve((M.T @ M + 1e-7 * sparse.identity(n)).tocsc(), M.T @ (sw * t))
         diff = r[B] - r[A]
         over = np.abs(diff) > cap * 1.02
-        if not over.any():
+        sn = np.hypot(_fwd(r.reshape(nx, ny), c, 0), _fwd(r.reshape(nx, ny), c, 1)).ravel()      # both axes together (a corner node saw 12.6 deg)
+        sE = np.maximum(sn[A], sn[B]); over2 = sE > math.tan(tc) * 1.02
+        if not (over.any() or over2.any()):
             break
-        t = np.where(over, np.clip(diff, -cap * 0.95, cap * 0.95), t); w = np.where(over, np.maximum(w, 4.0), w)
+        t = np.where(over, np.clip(diff, -cap * 0.95, cap * 0.95), t)
+        t = np.where(over2 & ~over, diff * 0.95 * math.tan(tc) / np.maximum(sE, 1e-9), t)
+        w = np.where(over | over2, np.maximum(w, 4.0), w)
     r = r.reshape(nx, ny)
     if flat.any():                                          # the biggest flat level keeps exactly planar layers
         v = r[flat]; hist, edges = np.histogram(v, bins=max(1, int((v.max() - v.min()) / 0.02) + 1))
@@ -301,7 +307,7 @@ def build_field(mesh, o, th, layer_h=0.2):
     slope = min(float(o.get("slope", lim["slope_deg"])), lim["slope_deg"])
     tslope = math.tan(math.radians(slope))
     skin = float(o.get("skin", 0.6))
-    tau_hi = min(1.4, lim["layer_max_mm"] / layer_h); tau_lo = max(0.6, lim["layer_min_mm"] / layer_h)
+    tau_hi = min(1.4, lim["layer_max_mm"] / layer_h); tau_lo = max(float(o.get("tau_min", 0.5)), lim["layer_min_mm"] / layer_h)
     auto_lam = None
     if "wave" in md and "amp" not in o:                      # as deep as the clearance allows, unless the plate says otherwise
         amp, auto_lam = auto_wave(mesh, o, th, layer_h, tau_hi, tau_lo, tslope)
@@ -342,20 +348,32 @@ def build_field(mesh, o, th, layer_h=0.2):
                 if U1 - u0 < 1.0:
                     return None
                 dz = rk[has] / (U1 - u0)
-                gx, gy = np.gradient(rk, c)
-                if dz.max() > tau_hi - 1 or dz.min() < tau_lo - 1 or np.hypot(gx, gy)[near].max() > tslope * 1.001:
+                if dz.max() > tau_hi - 1 or dz.min() < tau_lo - 1 or np.hypot(_fwd(rk, c, 0), _fwd(rk, c, 1))[near].max() > tslope * 1.001:
                     return None
                 if rk[has].max() - rk[has].min() > lim["relief_mm"] - 2 * amp or not relief_ok(rk + amp, has, c, th, lim["margin_mm"] + amp):
                     return None
                 return U1
-            k, U1 = 1.0, fit(1.0)
-            if U1 is None:
-                lo_k, hi_k = 0.0, 1.0
-                for _ in range(12):
-                    mid = (lo_k + hi_k) / 2
-                    if fit(mid) is None: hi_k = mid
-                    else: lo_k = mid
-                k = lo_k; U1 = fit(k) if k > 0.02 else None
+            def solve():
+                k, U1 = 1.0, fit(1.0)
+                if U1 is None:
+                    lo_k, hi_k = 0.0, 1.0
+                    for _ in range(12):
+                        mid = (lo_k + hi_k) / 2
+                        if fit(mid) is None: hi_k = mid
+                        else: lo_k = mid
+                    k = lo_k; U1 = fit(k) if k > 0.02 else None
+                return k, U1
+            k, U1 = solve()
+            if "amp" not in o and "wave" in md and (U1 is None or k < 0.99):     # the curved top is what the part is for: the wave gives its relief up
+                for amp_try in (0.8, 0.6, 0.4, 0.0):
+                    if amp_try >= amp:
+                        continue
+                    amp = amp_try; info["amp_mm"] = amp
+                    k, U1 = solve()
+                    if U1 is not None and k >= 0.99:
+                        break
+                if amp == 0.0:
+                    md = md - {"wave"}; info["mode"] = "+".join(sorted(md))
             if U1 is None:
                 info["conform"] = "the part is too thin or too steep under its curved top: left planar"
             else:
@@ -401,20 +419,33 @@ def build_field(mesh, o, th, layer_h=0.2):
         info["note"] = "nothing to bend"
         return None
     gx, gy = np.gradient(d, c, axis=(0, 1)); gu = np.gradient(d, du, axis=2)
-    sl = np.hypot(gx, gy)[near]
+    sl = np.hypot(_fwd(d, c, 0), _fwd(d, c, 1))[near]
+    gdu = np.diff(d, axis=2) / du
     d2 = np.abs(np.gradient(gx, c, axis=0)) + np.abs(np.gradient(gy, c, axis=1)) + 2 * np.abs(np.gradient(gx, c, axis=1))
     kappa = float(d2[near].max())
     inside = occ & near[:, :, None]
     bent = float((np.abs(d)[inside] > 0.25 * max(amp, 0.1)).mean()) if inside.any() else 0.0
-    info.update(max_slope_deg=round(math.degrees(math.atan(float(sl.max()))), 2), tau=[round(1 + float(gu[near].min()), 3), round(1 + float(gu[near].max()), 3)],
+    info.update(max_slope_deg=round(math.degrees(math.atan(float(sl.max()))), 2), tau=[round(1 + float(gdu[near].min()), 3), round(1 + float(gdu[near].max()), 3)],
                 bend_mm=[round(float(d.min()), 3), round(float(d.max()), 3)], bent_share=round(bent, 3),
                 piece_mm=round(float(np.clip(math.sqrt(8 * 0.01 / max(kappa, 1e-6)), 0.4, 1.2)), 2))
     return Field(x0, y0, c, du, d, info)
 
 
+def _fwd(d, c, axis):
+    """The steepest difference to either neighbour along an axis, per node (a central np.gradient hides a sharp step by half: the
+    sliced path walks node to node and saw 13.5 deg where the field's gradient said 9.7)."""
+    a = np.abs(np.diff(d, axis=axis)) / c
+    pad = [(0, 0)] * d.ndim
+    lo = list(pad); lo[axis] = (1, 0); hi = list(pad); hi[axis] = (0, 1)
+    return np.maximum(np.pad(a, lo), np.pad(a, hi))
+
+
 def _violation(d, c, du, tslope, tau_hi, tau_lo, near):
-    gx, gy = np.gradient(d, c, axis=(0, 1)); gu = np.gradient(d, du, axis=2)
-    v = np.maximum(np.hypot(gx, gy) / tslope, np.where(gu > 0, gu / (tau_hi - 1), -gu / (1 - tau_lo)))
+    gxy = np.hypot(_fwd(d, c, 0), _fwd(d, c, 1))
+    gu = np.diff(d, axis=2) / du
+    pu = np.pad(gu, ((0, 0), (0, 0), (1, 0))); pn = np.pad(gu, ((0, 0), (0, 0), (0, 1)))
+    gup = np.maximum(pu, pn); gdn = np.maximum(-pu, -pn)
+    v = np.maximum(gxy / tslope, np.maximum(gup / (tau_hi - 1), gdn / (1 - tau_lo)))
     v[~near] = 0.0
     return v
 
