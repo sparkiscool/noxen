@@ -112,6 +112,102 @@
  "skipped": [],
  "pairs": [
   {
+   "a": "scout_v4_cage_rods",
+   "b": "scout_v4_node_r0",
+   "mm3": 20.96,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 20.96,
+     "at": [
+      153.5,
+      101.4,
+      61.0
+     ],
+     "extent_mm": [
+      3.6,
+      3.6,
+      3.0
+     ],
+     "depth_mm": 3.0
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_cage_rods",
+   "b": "scout_v4_node_r7",
+   "mm3": 20.96,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 20.96,
+     "at": [
+      153.5,
+      -101.4,
+      61.0
+     ],
+     "extent_mm": [
+      3.6,
+      3.6,
+      3.0
+     ],
+     "depth_mm": 3.0
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_cage_rods",
+   "b": "scout_v4_node_p1",
+   "mm3": 17.47,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 17.47,
+     "at": [
+      102.2,
+      155.0,
+      58.0
+     ],
+     "extent_mm": [
+      3.6,
+      3.0,
+      3.8
+     ],
+     "depth_mm": 3.0
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_cage_rods",
+   "b": "scout_v4_node_p6",
+   "mm3": 17.47,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 17.47,
+     "at": [
+      102.2,
+      -155.0,
+      58.0
+     ],
+     "extent_mm": [
+      3.6,
+      3.0,
+      3.8
+     ],
+     "depth_mm": 3.0
+    }
+   ]
+  },
+  {
    "a": "scout_v4_frame",
    "b": "scout_v4_drv8833",
    "mm3": 11.88,
@@ -170,6 +266,54 @@
       1.6
      ],
      "depth_mm": 0.36
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_cage_rods",
+   "b": "scout_v4_node_p2",
+   "mm3": 6.99,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 6.99,
+     "at": [
+      -102.4,
+      153.8,
+      61.0
+     ],
+     "extent_mm": [
+      1.7,
+      3.1,
+      3.0
+     ],
+     "depth_mm": 1.65
+    }
+   ]
+  },
+  {
+   "a": "scout_v4_cage_rods",
+   "b": "scout_v4_node_p5",
+   "mm3": 6.99,
+   "limit_mm3": 0.5,
+   "contact": null,
+   "ok": false,
+   "pieces": [
+    {
+     "mm3": 6.99,
+     "at": [
+      -102.4,
+      -153.8,
+      61.0
+     ],
+     "extent_mm": [
+      1.7,
+      3.1,
+      3.0
+     ],
+     "depth_mm": 1.65
     }
    ]
   },
@@ -977,14 +1121,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 17,
+   "steps": 29,
    "move": {
     "out": [
      -0.22606,
      -0.97411,
      -0.0
     ],
-    "length_mm": 8.0
+    "length_mm": 14.0
    },
    "into": [
     "scout_v4_node_r0"
@@ -1023,14 +1167,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 17,
+   "steps": 29,
    "move": {
     "out": [
      -0.22606,
      0.97411,
      -0.0
     ],
-    "length_mm": 8.0
+    "length_mm": 14.0
    },
    "into": [
     "scout_v4_node_r7"
@@ -1161,14 +1305,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 32,
+   "steps": 34,
    "move": {
     "out": [
      0.22606,
      -0.97411,
      -0.0
     ],
-    "length_mm": 15.5
+    "length_mm": 16.5
    },
    "into": [
     "scout_v4_node_p3"
@@ -1207,14 +1351,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 32,
+   "steps": 34,
    "move": {
     "out": [
      0.22606,
      0.97411,
      -0.0
     ],
-    "length_mm": 15.5
+    "length_mm": 16.5
    },
    "into": [
     "scout_v4_node_p4"
@@ -1391,14 +1535,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 21,
+   "steps": 31,
    "move": {
     "out": [
      0.97411,
      -0.22606,
      -0.0
     ],
-    "length_mm": 10.0
+    "length_mm": 15.0
    },
    "into": [
     "scout_v4_node_p2"
@@ -1437,14 +1581,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 21,
+   "steps": 31,
    "move": {
     "out": [
      0.97411,
      0.22606,
      -0.0
     ],
-    "length_mm": 10.0
+    "length_mm": 15.0
    },
    "into": [
     "scout_v4_node_p5"
@@ -1713,14 +1857,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 18,
+   "steps": 31,
    "move": {
     "out": [
      -0.87947,
      -0.0,
      -0.47595
     ],
-    "length_mm": 8.5
+    "length_mm": 15.0
    },
    "into": [
     "scout_v4_node_p1"
@@ -1805,14 +1949,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 18,
+   "steps": 30,
    "move": {
     "out": [
      -0.87947,
      -0.0,
      -0.47595
     ],
-    "length_mm": 8.5
+    "length_mm": 14.5
    },
    "into": [
     "scout_v4_node_p6"
@@ -2127,14 +2271,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 21,
+   "steps": 24,
    "move": {
     "out": [
      -0.30068,
      -0.95125,
      0.06866
     ],
-    "length_mm": 10.0
+    "length_mm": 11.5
    },
    "into": [
     "scout_v4_node_s0"
@@ -2219,14 +2363,14 @@
    "order": 50,
    "fit": "bond",
    "gap_mm": 0.0,
-   "steps": 21,
+   "steps": 23,
    "move": {
     "out": [
      -0.30068,
      0.95125,
      0.06866
     ],
-    "length_mm": 10.0
+    "length_mm": 11.0
    },
    "into": [
     "scout_v4_node_s1"
@@ -2455,12 +2599,30 @@
    "blocks the path 'pinion up into its bay' (57.0 mm3 7.5 mm out)",
    "blocks the path 'N20 up behind its seat and forward' (1042.7 mm3 11.1 mm out)"
   ],
+  "scout_v4_node_p1": [
+   "clashes with scout_v4_cage_rods: 17.5 mm3"
+  ],
+  "scout_v4_node_p2": [
+   "clashes with scout_v4_cage_rods: 7.0 mm3"
+  ],
+  "scout_v4_node_p5": [
+   "clashes with scout_v4_cage_rods: 7.0 mm3"
+  ],
+  "scout_v4_node_p6": [
+   "clashes with scout_v4_cage_rods: 17.5 mm3"
+  ],
+  "scout_v4_node_r0": [
+   "clashes with scout_v4_cage_rods: 21.0 mm3"
+  ],
+  "scout_v4_node_r7": [
+   "clashes with scout_v4_cage_rods: 21.0 mm3"
+  ],
   "scout_v4_probe_pinion": [
    "clashes with scout_v4_frame: 7.4 mm3",
    "path 'pinion up into its bay' blocked by scout_v4_frame (57.0 mm3 7.5 mm out)"
   ]
  },
  "would_block": {},
- "seconds": 5.1,
+ "seconds": 5.0,
  "placed": {}
 }
