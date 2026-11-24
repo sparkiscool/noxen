@@ -9,7 +9,35 @@
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:13px/1.4 var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
-.app{position:fixed;inset:0;display:grid;grid-template-rows:46px minmax(0,1fr)}
+.app{position:fixed;inset:0;display:grid;grid-template-rows:46px minmax(0,1fr) 150px}
+.strip{display:flex;gap:10px;padding:0 10px 10px;min-height:0}
+.mmw{position:relative;flex:none;width:min(270px,24vw);background:var(--panel);border-radius:12px;overflow:hidden}
+.mmw canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:pointer}
+.mmc{position:absolute;left:9px;top:6px;font:600 10.5px var(--sans);color:#aab2c0;letter-spacing:.05em;text-transform:uppercase;pointer-events:none}
+.tools{flex:1;min-width:0;display:flex;gap:10px}
+.tg{background:var(--panel);border-radius:12px;padding:8px 12px;display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:0}
+.tg.w1{flex:1.5}.tg.w2{flex:1.1}.tg.w3{flex:.9}
+.tg h5{margin:0;font:600 10.5px var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.tg .rw{display:flex;align-items:center;gap:9px;min-width:0}
+.tg .seg{margin:0}.tg .seg button{padding:6px 11px}
+.tg input[type=range]{flex:1;min-width:90px;accent-color:var(--accent)}
+.tg .val{font:12px var(--mono);color:#cdd3de;min-width:76px;text-align:right}
+.tg .out{font:12px var(--mono);color:#e9ecf1;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tg .out i{font-style:normal;color:var(--muted)}
+.legend .ds{margin-top:5px;font:10.5px var(--sans);color:#aab2c0;line-height:1.35}
+#rq{left:50%;top:50%;right:auto;transform:translate(-50%,-50%);width:380px}
+#rq label{display:block;margin:9px 0 3px;font:600 10.5px var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+#rq input,#rq select,#rq textarea{width:100%;background:#0c0f14;border:1px solid var(--line);border-radius:8px;color:var(--fg);padding:7px 10px;font:12.5px var(--sans);outline:none}
+#rq textarea{min-height:84px;resize:vertical}#rq .acts{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
+#rq .hist{margin-top:12px;border-top:1px solid var(--line);padding-top:8px;font-size:11.5px;color:#b4bcc9;max-height:96px;overflow:auto}#rq .hist div{padding:2px 0}#rq .hist i{font-style:normal;color:var(--muted)}
+#rq .msg{margin-top:8px;font-size:12px;color:#7be0a0;min-height:16px}
+.act{display:flex;gap:7px;margin-top:9px;padding-top:8px;border-top:1px solid #e6e9ef}
+.act button{font:500 12px var(--sans);border:1px solid #cfd5e0;background:#fff;color:#1a2030;border-radius:8px;padding:5px 11px;cursor:pointer}.act button:hover{background:#eef1f6}
+.notes{margin-top:8px;font-size:11.5px;color:#505a6e;line-height:1.5}.notes b{color:#1a2030}
+.fleet{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:#cdd3de;white-space:nowrap;overflow:hidden}.fleet i{font-style:normal;color:var(--muted)}
+.fleet .d{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:#34c46a}.fleet .d.y{background:#f0b429}
+body.measuring .pane.pt,body.measuring .pane.bim,body.measuring .pane.vid{cursor:crosshair}
+@media (max-width:900px){.strip{display:none}.app{grid-template-rows:46px minmax(0,1fr)}}
 header{display:flex;align-items:center;gap:12px;padding:0 14px}
 .brand{font-weight:650;font-size:14px;letter-spacing:.01em}
 .sub{color:var(--muted)}
@@ -106,12 +134,31 @@ body.locked .pane.lk .xh{display:block}
 </header>
 <div class="panes" id="panes">
   <div class="pane pt" id="p0"><canvas></canvas><div class="tag">Point map<i>as-built scan</i></div><div class="meta" id="m0"></div>
-    <div class="legend" id="legend"><b>Deviation from BIM</b><div class="bar"></div><div class="tk"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+ mm</span></div></div><div class="xh"></div></div>
+    <div class="legend" id="legend"><b>Distance to nearest BIM surface</b><div class="bar"></div><div class="tk"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+ mm</span></div></div><div class="xh"></div></div>
   <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Esc to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg>Look mode</button><div class="lockhint" id="lockhint"></div><div class="xh"></div></div>
   <div class="pane bim" id="p1"><canvas></canvas><div class="tag">BIM<i>design model &middot; empty building</i></div>
     <button class="xbtn ui" id="close" hidden title="Close (Esc)">&times;</button>
     <div class="card ui" id="card" hidden></div>
     <div class="views ui" id="views" hidden><button data-v="3d" class="on">3D</button><button data-v="plan">Plan</button><button data-v="front">Front</button><button data-v="side">Side</button></div></div>
+</div>
+<div class="strip" id="strip">
+  <div class="mmw" id="mmw"><canvas id="mm"></canvas><span class="mmc" id="mmc">Level 2 &middot; click to fly there</span></div>
+  <div class="tools">
+    <div class="tg w1"><h5>Plan &amp; section</h5>
+      <div class="rw"><div class="seg" id="cutType"><button data-c="" class="on" title="Normal 3D views">Off</button><button data-c="level" title="Top-down plan, cut at a height">Plan</button><button data-c="long" title="Section along the length">Long</button><button data-c="cross" title="Section across the width">Cross</button></div></div>
+      <div class="rw"><input type="range" id="cutPos" min="0" max="1" step="0.02" disabled><span class="val" id="cutVal">&mdash;</span></div></div>
+    <div class="tg w2"><h5>Tape measure</h5>
+      <div class="rw"><button class="btn" id="bMeas" title="Click two points (Esc ends)">Measure</button><button class="btn" id="bMClr" title="Clear the tape">Clear</button></div>
+      <div class="out" id="measOut"><i>Press Measure, then click two points</i></div></div>
+    <div class="tg w3"><h5>Deviation colour</h5>
+      <div class="rw"><button class="btn on" id="bDev" title="Colour the point map by distance to the BIM">Show on point map</button></div>
+      <div class="out" id="devOut"></div></div>
+    <div class="tg w3"><h5>Requests</h5>
+      <div class="rw"><button class="btn" id="bReq" title="RFI, change request, issue or site instruction">New request</button></div>
+      <div class="out" id="reqOut"></div></div>
+    <div class="tg w3"><h5>Fleet <span style="font-weight:400;text-transform:none;letter-spacing:0">(simulated)</span></h5>
+      <div class="fleet"><span><span class="d"></span>Overseer <i>landed &middot; scan 07 done</i></span><span><span class="d"></span>Scout <i>docked &middot; 100%</i></span><span><span class="d y"></span>Nox Ground Unit <i>online &middot; syncing</i></span></div></div>
+  </div>
 </div>
 <div class="pop" id="menu">
   <h4>Point colour</h4>
@@ -128,8 +175,16 @@ body.locked .pane.lk .xh{display:block}
   <b>Look mode</b> (button on the video) captures the mouse: move it to turn, click opens an object, <span class="kc">Esc</span> leaves, <span class="kc">Ctrl</span> closes an opened card<br><span class="kc">&larr;</span><span class="kc">&rarr;</span><span class="kc">&uarr;</span><span class="kc">&darr;</span> look with the keyboard<br>
   <span class="kc">Ctrl</span> + click an object in the BIM or video to open it<br>
   <span class="kc">F</span> Look mode on / off &nbsp; <span class="kc">/</span> search objects (<span class="kc">Enter</span> opens the first) &nbsp; <span class="kc">Esc</span> closes the card<br>
+  <b>Bottom bar</b>: the map flies the camera to where you click. <b>Plan / Long / Cross</b> cut the BIM and the point map at a height or position (slider; the 2 m bar gives the scale). <b>Measure</b>: click two points for a distance (in the cut plane on a plan or section; on the surface in 3D); <span class="kc">Esc</span> ends it. <b>Deviation colour</b> shows the point map by distance to the BIM (legend bottom right of it).<br>
   Objects: problems are listed first; tick <b>Issues only</b> to hide the ones within tolerance. Clicking one flies the camera to it.</div>
 </div>
+<div class="pop" id="rq"><h4 id="rqh">New request</h4>
+  <label>Type</label><select id="rqType"><option>RFI</option><option>Change request</option><option>Issue / defect</option><option>Site instruction</option><option>Note</option></select>
+  <label>About</label><input id="rqAbout" type="text" placeholder="General (no item)">
+  <label>Title</label><input id="rqTitle" type="text" placeholder="One line">
+  <label>Details</label><textarea id="rqText" placeholder="What is needed, where, by when"></textarea>
+  <div class="acts"><button class="btn" id="rqCancel">Cancel</button><button class="btn on" id="rqSave" title="Saves it in this viewer and copies the text so it can be pasted into an email or a tracker">Save &amp; copy</button></div>
+  <div class="msg" id="rqMsg"></div><div class="hist" id="rqHist"></div></div>
 <aside class="drawer" id="drawer"><input type="search" id="q" placeholder="Search objects"><label class="iss"><input type="checkbox" id="iss">Issues only</label><div class="sum" id="sum"></div><div class="list" id="list"></div></aside>
 <div id="tip"></div><div id="err"></div>
 <div id="ctl"><div class="g"><div class="wasd"><span class="kc w">W</span><span class="kc a">A</span><span class="kc s">S</span><span class="kc d">D</span></div><small>fly</small></div>
@@ -660,7 +715,7 @@ function drawPoints(p,B,budget){
     }
   }
   ctx.setTransform(1,0,0,1,0,0);ctx.putImageData(img,0,0);
-  ptDrawn=drawn;
+  ptDrawn=drawn;ctx.setTransform(p.k,0,0,p.k,0,0);drawMeasure(p,pt=>proj(B,pt,p));
   $('m0').textContent=PTS.N.toLocaleString()+' points \u00b7 '+drawn.toLocaleString()+' shown';
 }
 
@@ -747,6 +802,7 @@ function drawBim(p,B){
       ctx.fillStyle='rgba(255,255,255,.9)';ctx.fillRect(a[0]-w/2,y-8,w,16);ctx.fillStyle='#1a2030';ctx.fillText(o.name,a[0],y+.5);
     }
   }
+  drawMeasure(p,pt=>proj(B,pt,p));
 }
 
 const ODm_={15:.0213,20:.0269,25:.0337,32:.0424,40:.0483,50:.0603,65:.0761,80:.0889,100:.1143,125:.1397,150:.1683,200:.2191};
@@ -849,7 +905,7 @@ void main(){vP=aP;vN=aN;vC=aC;vUV=aUV;vM=aM;gl_Position=uVP*vec4(aP,1.0);}`;
 const FS_M=`#version 300 es
 precision highp float;
 in vec3 vP;in vec3 vN;in vec3 vC;in vec2 vUV;flat in float vM;
-uniform vec3 uEye;uniform sampler2D uN;uniform vec2 uRes;uniform vec3 uLamp[8];uniform float uExp;uniform int uLampN;
+uniform vec3 uEye;uniform sampler2D uN;uniform vec2 uRes;uniform vec3 uLamp[8];uniform float uExp;uniform int uLampN;uniform float uA;
 out vec4 oC;
 float stripe(float c,float mid,float hw){return 1.0-smoothstep(hw-.012,hw+.012,abs(c-mid));}
 float h1(float x){return fract(sin(x*12.9898)*43758.5453);}
@@ -931,8 +987,10 @@ void main(){
   Lo*=uExp;
   vec3 c=clamp((Lo*(2.51*Lo+.03))/(Lo*(2.43*Lo+.59)+.14),0.0,1.0);c=pow(c,vec3(1.0/2.2));
   vec2 sc=gl_FragCoord.xy/uRes;c*=1.0-.4*pow(length(sc-.5)*1.3,2.4);
-  oC=vec4(c,1.0);
+  oC=vec4(c,uA);
 }`;
+const FS_D=`#version 300 es
+precision lowp float;out vec4 oC;void main(){oC=vec4(0.0);}`;
 const LAMPS=[];for(const z of[-6,0,6,11])for(const x of[-1.6,1.6])LAMPS.push([x,4.1,z]);
 function mat4mul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++){let s=0;for(let k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s}return o}
 const boxP=(cx,cy,cz,sx,sy,sz,mat,col)=>{const out=[],h=[sx/2,sy/2,sz/2];
@@ -942,7 +1000,7 @@ const EXTRA=[];
 { // temporary work lamps hung from the beams on their cables
   for(const l of LAMPS)EXTRA.push(...boxP(l[0],4.1,l[2],.2,.24,.2,11,[255,250,230]),...boxP(l[0],4.26,l[2],.3,.04,.3,12,[60,64,72]),...boxP(l[0],3.94,l[2],.3,.04,.3,12,[60,64,72]),...boxP(l[0],4.65,l[2],.02,.8,.02,12,[30,30,34]));
 }
-let GL=null;
+let GL=null;const SITE_ALPHA=.4;
 function tileNoise(size,grids,weights,R){ // tileable value noise, several octaves
   const out=new Float32Array(size*size);let ws=0;
   for(let gi=0;gi<grids.length;gi++){const g=grids[gi],lat=new Float32Array(g*g);for(let i=0;i<g*g;i++)lat[i]=R();ws+=weights[gi];
@@ -960,8 +1018,8 @@ function initGL(){
     if(!gl)throw new Error('no webgl2');
     const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw new Error((t===gl.VERTEX_SHADER?'VS ':'FS ')+gl.getShaderInfoLog(o));return o};
     const prog=(vs,fs)=>{const p=gl.createProgram();gl.attachShader(p,sh(gl.VERTEX_SHADER,vs));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error('link '+gl.getProgramInfoLog(p));return p};
-    const pM=prog(VS_M,FS_M),U=n=>gl.getUniformLocation(pM,n);
-    const g={cv,gl,pM,uVP:U('uVP'),uEye:U('uEye'),uN:U('uN'),uRes:U('uRes'),uLamp:U('uLamp'),uExp:U('uExp'),uLampN:U('uLampN'),vao:gl.createVertexArray(),vbo:gl.createBuffer(),count:0};
+    const pM=prog(VS_M,FS_M),pD=prog(VS_M,FS_D),U=n=>gl.getUniformLocation(pM,n);
+    const g={cv,gl,pM,pD,uVPd:gl.getUniformLocation(pD,'uVP'),uA:U('uA'),count2:0,uVP:U('uVP'),uEye:U('uEye'),uN:U('uN'),uRes:U('uRes'),uLamp:U('uLamp'),uExp:U('uExp'),uLampN:U('uLampN'),vao:gl.createVertexArray(),vbo:gl.createBuffer(),count:0};
     gl.bindVertexArray(g.vao);gl.bindBuffer(gl.ARRAY_BUFFER,g.vbo);
     const S=48;[[0,3,0],[1,3,12],[2,3,24],[3,2,36],[4,1,44]].forEach(([i,n,o])=>{gl.enableVertexAttribArray(i);gl.vertexAttribPointer(i,n,gl.FLOAT,false,S,o)});
     const R=mulberry(77),N=256,nd=new Uint8Array(N*N*4),ch=[tileNoise(N,[4,8,16],[.5,.3,.2],R),tileNoise(N,[8,16,32],[.45,.35,.2],R),tileNoise(N,[2,4,8],[.6,.3,.1],R),tileNoise(N,[32,64,128],[.3,.3,.4],R)];
@@ -990,9 +1048,11 @@ function glUpload(){
       data.push(p[0],p[1],p[2],nn[0],nn[1],nn[2],c[0]/255,c[1]/255,c[2]/255,dot(d,t1),dot(d,t2),m)};
     for(let i=1;i<n-1;i++){vtx(0);vtx(i);vtx(i+1)}
   };
-  for(const q of POLYA)push(q);
+  for(const q of POLYA)if(!(q.obj>=0&&OBJ[q.obj].site))push(q);       // the BIM: solid
   for(const q of EXTRA)push(q);
   g.count=data.length/12;
+  for(const q of POLYA)if(q.obj>=0&&OBJ[q.obj].site)push(q);           // everything not in the BIM: drawn see-through after it
+  g.count2=data.length/12-g.count;
   gl.bindVertexArray(g.vao);gl.bindBuffer(gl.ARRAY_BUFFER,g.vbo);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);
 }
 function drawGL(p,B,t,ql){
@@ -1008,7 +1068,14 @@ function drawGL(p,B,t,ql){
   gl.useProgram(g.pM);gl.uniformMatrix4fv(g.uVP,false,mat4mul(pr,vw));
   gl.uniform3f(g.uEye,e[0],e[1],e[2]);gl.uniform2f(g.uRes,w,h);gl.uniform3fv(g.uLamp,g.lamps);gl.uniform1f(g.uExp,1.0);gl.uniform1i(g.uLampN,[8,6,4][ql]);
   gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,g.ntex);gl.uniform1i(g.uN,0);
-  gl.bindVertexArray(g.vao);gl.drawArrays(gl.TRIANGLES,0,g.count);
+  gl.uniform1f(g.uA,1);gl.bindVertexArray(g.vao);gl.drawArrays(gl.TRIANGLES,0,g.count);
+  if(g.count2){ // non-BIM gear: depth only first (so only its nearest face shows, and not through walls), then blended over the solid BIM
+    const mvp=mat4mul(pr,vw);
+    gl.useProgram(g.pD);gl.uniformMatrix4fv(g.uVPd,false,mvp);gl.colorMask(false,false,false,false);gl.drawArrays(gl.TRIANGLES,g.count,g.count2);
+    gl.colorMask(true,true,true,true);gl.useProgram(g.pM);gl.depthFunc(gl.LEQUAL);gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+    gl.uniform1f(g.uA,SITE_ALPHA);gl.drawArrays(gl.TRIANGLES,g.count,g.count2);
+    gl.disable(gl.BLEND);gl.depthMask(true);gl.depthFunc(gl.LESS);
+  }
 }
 function orientedCorners(o){ // as-built box corners
   const c=[];
@@ -1032,6 +1099,7 @@ function videoOverlay(p,B,tms){
   };
   if($('det').checked){for(const o of OBJ){if(o.missing)continue;const dd=sub(o.actr,B.eye);if(dot(dd,dd)>70||o.i===sel)continue;box(o,false)}}
   if(sel>=0&&!OBJ[sel].missing)box(OBJ[sel],true);
+  drawMeasure(p,pt=>proj(B,pt,p));
 }
 function drawPolys2(p,B){ // fallback without WebGL: flat lit painter
   const ctx=p.ctx,g=ctx.createLinearGradient(0,0,0,p.H);g.addColorStop(0,'#1a2029');g.addColorStop(1,'#0c0e12');ctx.fillStyle=g;ctx.fillRect(0,0,p.W,p.H);
@@ -1039,8 +1107,9 @@ function drawPolys2(p,B){ // fallback without WebGL: flat lit painter
   for(const arr of[shell,items])for(const q of arr){
     const dl=Math.sqrt(q.d2)||1,nd=(q.n[0]*(B.eye[0]-q.c[0])+q.n[1]*(B.eye[1]-q.c[1])+q.n[2]*(B.eye[2]-q.c[2]))/dl;
     const I=Math.pow(clamp(.32+.08*Math.max(0,q.n[1])+2.8*Math.max(0,nd)/(1+.1*q.d2),0,1.1),.8),c=rgb(q.col[0]*I,q.col[1]*I,q.col[2]*I);
-    paintPoly(ctx,p,B,q,c,c,.7);
+    ctx.globalAlpha=q.obj>=0&&OBJ[q.obj].site?.4:1;paintPoly(ctx,p,B,q,c,c,.7);
   }
+  ctx.globalAlpha=1;
 }
 
 /* ---------- drone flight ---------- */
@@ -1089,11 +1158,180 @@ function easeInsp(dt){
   const k=1-Math.exp(-dt*9);insp.az+=(insp.taz-insp.az)*k;insp.el+=(insp.tel-insp.el)*k;insp.dist+=(insp.tdist-insp.dist)*k;
 }
 
+/* ---------- architect tools: plan and section cut, tape measure, minimap ---------- */
+const cut={type:'',pos:0,saved:{}},meas={on:false,a:null,b:null};let mk='';
+const CUTS={
+  level:{ka:1,ks:-1,tv:[0,1,0],ua:0,us:1,va:2,vs:1,cu:0,cv:0,hu:W/2,hv:L/2,lo:.1,hi:H,def:1.5,tag:'plan'},
+  long:{ka:0,ks:1,tv:[-1,0,0],ua:2,us:1,va:1,vs:-1,cu:0,cv:-H/2,hu:L/2,hv:H/2,lo:-W/2,hi:W/2,def:0,tag:'long section'},
+  cross:{ka:2,ks:-1,tv:[0,0,1],ua:0,us:1,va:1,vs:-1,cu:0,cv:-H/2,hu:W/2,hv:H/2,lo:-L/2,hi:L/2,def:0,tag:'cross section'}};
+const cutK=()=>cut.type?cut.type+cut.pos.toFixed(3):'';
+function cutMap(p,sp){const m=24,s=Math.min((p.W-2*m)/(2*sp.hu),(p.H-2*m-16)/(2*sp.hv)),cx=p.W/2,cy=p.H/2+8;
+  return{s,cx,cy,f:pt=>[cx+s*(pt[sp.ua]*sp.us-sp.cu),cy+s*(pt[sp.va]*sp.vs-sp.cv)]}}
+function cutUnmap(p,x,y){const sp=CUTS[cut.type],m=cutMap(p,sp),pt=[0,0,0];
+  pt[sp.ua]=((x-m.cx)/m.s+sp.cu)*sp.us;pt[sp.va]=((y-m.cy)/m.s+sp.cv)*sp.vs;pt[sp.ka]=cut.pos;return pt}
+function cutPolys(sp,pos,polys){const keep=[],edges=[],ka=sp.ka,ks=sp.ks,tv=sp.tv;
+  for(const q of polys){
+    const sc=ks*(q.c[ka]-pos);if(sc<-q.rad)continue;
+    let vs=q.v;
+    if(sc<=q.rad){const o=[],ed=[],n=vs.length;
+      for(let i=0;i<n;i++){const a=vs[i],b=vs[(i+1)%n],da=ks*(a[ka]-pos),db=ks*(b[ka]-pos);
+        if(da>=0)o.push(a);
+        if((da>=0)!==(db>=0)){const t=da/(da-db),pt=[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];pt[ka]=pos;o.push(pt);ed.push(pt)}}
+      if(ed.length>=2)edges.push(ed[0],ed[1]);
+      vs=o}
+    if(vs.length<3||q.n[0]*tv[0]+q.n[1]*tv[1]+q.n[2]*tv[2]<=.02)continue;
+    keep.push({q,v:vs,d:q.c[0]*tv[0]+q.c[1]*tv[1]+q.c[2]*tv[2]})}
+  keep.sort((a,b)=>a.d-b.d);return{keep,edges}}
+const STRGB={ok:[52,196,106],warn:[240,180,41],bad:[239,75,75],na:[168,175,188],site:[224,160,48]};
+function renderCutBim(ctx,sp,pos,mp,mini){
+  const{keep,edges}=cutPolys(sp,pos,POLY);
+  for(const{q,v}of keep){
+    let fill;
+    if(q.obj<0){const s=.62+.38*Math.max(0,dot(q.n,LD)),c=q.wall===3?228:q.wall===4?236:238*s;fill=rgb(c,c+1,c+4)}
+    else{const o=OBJ[q.obj],s=.62+.38*Math.max(0,dot(q.n,LD)),b=mini?STRGB[o.status]||STRGB.ok:MUTE(o.cls===C.pipe?q.col:CLS[o.cls].bim);fill=rgb(b[0]*s,b[1]*s,b[2]*s);ctx.globalAlpha=o.missing&&!mini?.34:1}
+    ctx.beginPath();for(let i=0;i<v.length;i++){const a=mp(v[i]);i?ctx.lineTo(a[0],a[1]):ctx.moveTo(a[0],a[1])}ctx.closePath();
+    ctx.fillStyle=fill;ctx.fill();if(!mini&&q.obj>=0){ctx.strokeStyle='rgba(18,28,50,.4)';ctx.lineWidth=.7;ctx.stroke()}else if(q.obj<0||mini){ctx.strokeStyle=fill;ctx.lineWidth=.6;ctx.stroke()}
+    ctx.globalAlpha=1}
+  ctx.strokeStyle='#101828';ctx.lineWidth=mini?1:2.2;ctx.lineCap='round';ctx.beginPath();
+  for(let i=0;i<edges.length;i+=2){const a=mp(edges[i]),b=mp(edges[i+1]);ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1])}ctx.stroke()}
+function cutDecor(ctx,p,sp,m,dark){
+  const len=2*m.s,x0=14,y=p.H-34;ctx.strokeStyle=dark?'#cdd3de':'#2a3144';ctx.fillStyle=ctx.strokeStyle;ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(x0,y-4);ctx.lineTo(x0,y);ctx.lineTo(x0+len,y);ctx.lineTo(x0+len,y-4);ctx.stroke();
+  ctx.font='600 11px '+getComputedStyle(document.body).fontFamily;ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('2 m',x0+len+7,y-2)}
+function drawBimCut(p){
+  const sp=CUTS[cut.type],ctx=p.ctx,m=cutMap(p,sp);ctx.setTransform(p.k,0,0,p.k,0,0);
+  ctx.fillStyle='#f4f5f8';ctx.fillRect(0,0,p.W,p.H);
+  if(cut.type==='level'){ctx.strokeStyle='rgba(30,45,80,.09)';ctx.lineWidth=1;ctx.beginPath();
+    for(let x=-W/2;x<=W/2+.01;x++){const a=m.f([x,0,-L/2]),b=m.f([x,0,L/2]);ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1])}
+    for(let z=-L/2;z<=L/2+.01;z++){const a=m.f([-W/2,0,z]),b=m.f([W/2,0,z]);ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1])}ctx.stroke()}
+  renderCutBim(ctx,sp,cut.pos,m.f,false);cutDecor(ctx,p,sp,m,false);drawMeasure(p,m.f)}
+const SLAB=.3;
+function drawPointsCut(p){
+  const sp=CUTS[cut.type],pos=cut.pos,m=cutMap(p,sp),k=p.k,w=p.cv.width,h=p.cv.height,{u32,depth,ctx}=p;
+  u32.fill(0xff1a1510);depth.fill(-1e9);
+  const{P,OB,N}=PTS,col=[PTS.COLd,PTS.COLv,PTS.COLc,PTS.COLh][cmode],ka=sp.ka,ks=sp.ks,ua=sp.ua,va=sp.va,us=sp.us,vs=sp.vs,tv=sp.tv,cu=sp.cu,cv=sp.cv;
+  const sk=m.s*k,ox=m.cx*k,oy=m.cy*k,sz=Math.max(1,Math.min(3,Math.round(sk*.06)));let drawn=0;
+  for(let i=0;i<N;i++){const i3=i*3;
+    const sd=ks*(P[i3+ka]-pos);if(sd<0||sd>SLAB)continue;       // a thin slice behind the cut plane: crisp outlines, and much less to draw
+    const sx=(ox+sk*(P[i3+ua]*us-cu))|0,sy=(oy+sk*(P[i3+va]*vs-cv))|0;
+    if(sx<0||sy<0||sx>=w-sz||sy>=h-sz)continue;
+    const dp=P[i3]*tv[0]+P[i3+1]*tv[1]+P[i3+2]*tv[2];
+    let r=col[i3],g=col[i3+1],b=col[i3+2];if(OB[i]===sel&&sel>=0)r=g=b=255;
+    const px=(0xff<<24)|(b<<16)|(g<<8)|r;drawn++;
+    for(let yy=0;yy<sz;yy++){const row=(sy+yy)*w+sx;for(let xx=0;xx<sz;xx++){const q=row+xx;if(dp>depth[q]){depth[q]=dp;u32[q]=px}}}}
+  ctx.setTransform(1,0,0,1,0,0);ctx.putImageData(p.img,0,0);ctx.setTransform(k,0,0,k,0,0);
+  cutDecor(ctx,p,sp,m,true);drawMeasure(p,m.f);
+  $('m0').textContent=N.toLocaleString()+' points · '+drawn.toLocaleString()+' in the 30 cm slice'}
+function setCut(type){
+  if(cut.type)cut.saved[cut.type]=cut.pos;
+  cut.type=type;const sl=$('cutPos');
+  if(type){const sp=CUTS[type];sl.disabled=false;sl.min=sp.lo;sl.max=sp.hi;cut.pos=cut.saved[type]!==undefined?cut.saved[type]:sp.def;sl.value=cut.pos}
+  else{sl.disabled=true;$('cutVal').textContent='—'}
+  document.querySelectorAll('#cutType button').forEach(b=>b.classList.toggle('on',b.dataset.c===type));
+  cutLabel();panes.forEach(p=>p.key='');
+  $('p0').querySelector('.tag i').textContent=type?CUTS[type].tag+' · as-built scan':'as-built scan';
+  $('p1').querySelector('.tag i').textContent=type?CUTS[type].tag+' · design model':'design model · empty building';
+  document.body.classList.toggle('cutting',!!type)}
+function cutLabel(){if(!cut.type)return;const v=cut.pos,t=cut.type;
+  $('cutVal').textContent=(t==='level'?'height ':t==='long'?'x = ':'z = ')+(v<0?'−':'')+Math.abs(v).toFixed(2)+' m'}
+document.querySelectorAll('#cutType button').forEach(b=>b.onclick=()=>setCut(b.dataset.c));
+$('cutPos').oninput=e=>{cut.pos=+e.target.value;cutLabel()};
+/* tape measure: two clicks, in the cut plane on a plan or section, else on the surface under the pointer */
+function rayDist(polys,o,d){let bt=1e9;
+  for(const q of polys){const oc=sub(q.c,o),tca=dot(oc,d);if(tca<-q.rad)continue;const d2=dot(oc,oc)-tca*tca;if(d2>q.rad*q.rad||dot(q.n,d)>=0)continue;
+    const v=q.v;for(let i=1;i<v.length-1;i++){const t=rayTri(o,d,v[0],v[i],v[i+1]);if(t>0&&t<bt)bt=t}}
+  return bt<1e9?bt:-1}
+const mtext=()=>{if(!meas.a||!meas.b)return'';const dx=Math.abs(meas.b[0]-meas.a[0]),dy=Math.abs(meas.b[1]-meas.a[1]),dz=Math.abs(meas.b[2]-meas.a[2]);return Math.hypot(dx,dy,dz).toFixed(3)+' m'};
+function measUI(){
+  mk=meas.a?meas.a.map(v=>v.toFixed(3))+(meas.b?'|'+meas.b.map(v=>v.toFixed(3)):''):'';
+  const o=$('measOut');
+  if(meas.a&&meas.b){const dx=Math.abs(meas.b[0]-meas.a[0]),dy=Math.abs(meas.b[1]-meas.a[1]),dz=Math.abs(meas.b[2]-meas.a[2]);
+    o.innerHTML='<b>'+mtext()+'</b> <i>&middot; along '+dx.toFixed(2)+' &middot; across '+dz.toFixed(2)+' &middot; up '+dy.toFixed(2)+'</i>'}
+  else o.innerHTML='<i>'+(meas.on?(meas.a?'Click the second point':'Click the first point'):'Press Measure, then click two points')+'</i>';
+  $('bMeas').classList.toggle('on',meas.on);document.body.classList.toggle('measuring',meas.on);panes.forEach(p=>p.key='')}
+function setMeas(on){meas.on=on;if(on&&meas.b){meas.a=meas.b=null}measUI()}
+function measureClick(p,x,y){
+  let pt=null;
+  if(p.mode===1&&insp.on)return;
+  if(cut.type&&p.mode<2)pt=cutUnmap(p,x,y);
+  else{const B=camBasis(),d=rayAt(p,B,x,y),t=rayDist(p.mode===1?POLY:POLYA,B.eye,d);if(t>0)pt=add3(B.eye,mul3(d,t))}
+  if(!pt)return;
+  if(!meas.a||meas.b){meas.a=pt;meas.b=null}else meas.b=pt;
+  measUI()}
+function drawMeasure(p,mf){
+  if(!meas.a)return;const ctx=p.ctx,pts=[meas.a,meas.b].map(v=>v&&mf(v));
+  ctx.save();ctx.lineCap='round';
+  if(pts[0]&&pts[1]){for(const[w,c]of[[5,'#fff'],[2.2,'#e0245e']]){ctx.strokeStyle=c;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);ctx.lineTo(pts[1][0],pts[1][1]);ctx.stroke()}}
+  for(const a of pts)if(a){ctx.fillStyle='#e0245e';ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(a[0],a[1],5,0,7);ctx.fill();ctx.stroke()}
+  if(pts[0]&&pts[1]){const t=mtext(),x=(pts[0][0]+pts[1][0])/2,y=(pts[0][1]+pts[1][1])/2;ctx.font='700 13px '+getComputedStyle(document.body).fontFamily;
+    const w=ctx.measureText(t).width+14;ctx.fillStyle='#fff';ctx.strokeStyle='#e0245e';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect?ctx.roundRect(x-w/2,y-24,w,20,6):ctx.rect(x-w/2,y-24,w,20);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#1a2030';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,x,y-13.5)}
+  ctx.restore()}
+$('bMeas').onclick=()=>setMeas(!meas.on);
+$('bMClr').onclick=()=>{meas.a=meas.b=null;measUI()};
+$('bDev').onclick=()=>document.querySelector('#cmode button[data-m="0"]').click();
+/* minimap: the bay from above, one click flies the shared camera there */
+const mm={cv:$('mm'),base:null,w:0,h:0,s:1,dpr:1,key:'',hz:''};
+const zoneAt=(x,z)=>(x<-2.33?'A':x<2.33?'B':'C')+(z<-6?1:z<0?2:z<6?3:4);
+function mmP(x,z){return[mm.w/2+mm.s*z,mm.h/2+6-mm.s*x]}
+function mmLayout(){
+  const w=mm.cv.clientWidth,h=mm.cv.clientHeight;if(w<2||h<2)return;const dpr=Math.min(2,devicePixelRatio||1);
+  if(w===mm.w&&h===mm.h&&dpr===mm.dpr&&mm.base)return;
+  mm.w=w;mm.h=h;mm.dpr=dpr;mm.s=Math.min((w-16)/L,(h-30)/W);mm.cv.width=Math.round(w*dpr);mm.cv.height=Math.round(h*dpr);
+  const b=document.createElement('canvas');b.width=mm.cv.width;b.height=mm.cv.height;const c=b.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);
+  const a=mmP(W/2,-L/2),z=mmP(-W/2,L/2);c.fillStyle='#e9ecf2';c.fillRect(a[0],a[1],z[0]-a[0],z[1]-a[1]);
+  renderCutBim(c,CUTS.level,1.5,pt=>mmP(pt[0],pt[2]),true);
+  c.strokeStyle='rgba(20,30,50,.35)';c.lineWidth=1;c.setLineDash([3,3]);c.beginPath();
+  for(const zz of[-6,0,6]){const p1=mmP(W/2,zz),p2=mmP(-W/2,zz);c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1])}
+  for(const xx of[-2.33,2.33]){const p1=mmP(xx,-L/2),p2=mmP(xx,L/2);c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1])}c.stroke();c.setLineDash([]);
+  c.font='600 10px '+getComputedStyle(document.body).fontFamily;c.fillStyle='rgba(20,30,50,.55)';c.textAlign='center';c.textBaseline='middle';
+  for(const zi of[0,1,2,3])for(const xi of[0,1,2]){const q=mmP([-4.67,0,4.67][xi],CZS[zi]);c.fillText('ABC'[xi]+(zi+1),q[0],q[1])}
+  mm.base=b;mm.key=''}
+function drawMini(){
+  mmLayout();if(!mm.base)return;const k=cam.p[0].toFixed(2)+cam.p[2].toFixed(2)+cam.yaw.toFixed(2)+mm.hz;if(k===mm.key)return;mm.key=k;
+  const c=mm.cv.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,mm.cv.width,mm.cv.height);c.drawImage(mm.base,0,0);c.setTransform(mm.dpr,0,0,mm.dpr,0,0);
+  if(mm.hz){const zi=+mm.hz[1]-1,xi='ABC'.indexOf(mm.hz[0]),xl=[-W/2,-2.33,2.33,W/2],zl=[-L/2,-6,0,6,L/2],a=mmP(xl[xi+1],zl[zi]),b=mmP(xl[xi],zl[zi+1]);
+    c.fillStyle='rgba(76,141,255,.22)';c.fillRect(a[0],a[1],b[0]-a[0],b[1]-a[1])}
+  const q=mmP(cam.p[0],cam.p[2]),ang=Math.atan2(-Math.sin(cam.yaw),-Math.cos(cam.yaw)),r=34;
+  c.fillStyle='rgba(76,141,255,.35)';c.beginPath();c.moveTo(q[0],q[1]);c.arc(q[0],q[1],r,ang-.7,ang+.7);c.closePath();c.fill();
+  c.fillStyle='#1f4fd0';c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.arc(q[0],q[1],5,0,7);c.fill();c.stroke()}
+let mmTween=null;
+function mmPick(e){const r=mm.cv.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
+  return[clamp(-(py-mm.h/2-6)/mm.s,-W/2+.8,W/2-.8),clamp((px-mm.w/2)/mm.s,-L/2+.8,L/2-.8)]}
+mm.cv.addEventListener('pointerdown',e=>{const[x,z]=mmPick(e);touch();mmTween={t0:performance.now(),a:[cam.p[0],cam.p[2]],b:[x,z]}});
+mm.cv.addEventListener('pointermove',e=>{const[x,z]=mmPick(e),n=zoneAt(x,z);if(n!==mm.hz){mm.hz=n;$('mmc').innerHTML='Level 2 &middot; zone '+n+' &middot; click to fly there'}});
+mm.cv.addEventListener('pointerleave',()=>{mm.hz='';$('mmc').innerHTML='Level 2 &middot; click to fly there'});
+function tweenStep(now){if(!mmTween)return;const t=clamp((now-mmTween.t0)/450,0,1),e=t*t*(3-2*t);
+  cam.p[0]=mmTween.a[0]+(mmTween.b[0]-mmTween.a[0])*e;cam.p[2]=mmTween.a[1]+(mmTween.b[1]-mmTween.a[1])*e;vel[0]=vel[1]=vel[2]=0;if(t>=1)mmTween=null;lastLook=now}
+function devStats(){const D=PTS.DV;let ok=0,bad=0,n=0;for(let i=0;i<PTS.N;i++){if(PTS.OB[i]<0||!OBJ[PTS.OB[i]].site){n++;if(D[i]<.014)ok++;else if(D[i]>=.04)bad++}}
+  $('devOut').innerHTML='<b>'+Math.round(ok/n*100)+'%</b> within 14 mm<br><b>'+(bad/n*100).toFixed(1)+'%</b> over 40 mm'}
+
+/* ---------- notes and requests (kept in this browser; copied out as text, nothing is sent) ---------- */
+let REQS=[];try{REQS=JSON.parse(localStorage.getItem('noxenScanReqs')||'[]')}catch(e){}
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function notesBlock(o){const n=REQS.filter(r=>r.about===o.name);return n.length?'<div class="notes">'+n.slice(-3).map(r=>'<b>'+esc(r.type)+'</b> '+esc(r.title||r.text).slice(0,70)).join('<br>')+'</div>':''}
+function reqUI(){$('reqOut').innerHTML=REQS.length?'<b>'+REQS.length+'</b> saved':'<i>None yet</i>';
+  $('rqHist').innerHTML=REQS.length?REQS.slice(-4).reverse().map(r=>'<div>'+esc(r.type)+' <i>&middot; '+esc(r.about||'General')+' &middot; '+esc(r.title||r.text).slice(0,40)+'</i></div>').join(''):'<i>Nothing saved yet</i>'}
+function openReq(type){
+  closePops();$('rq').classList.add('open');$('rqType').value=type||'RFI';$('rqAbout').value=sel>=0?OBJ[sel].name:'';$('rqTitle').value='';$('rqText').value='';$('rqMsg').textContent='';
+  $('rqh').textContent=type==='Note'?'Add note':'New request';reqUI();setTimeout(()=>$(type==='Note'?'rqText':'rqTitle').focus(),30)}
+$('bReq').onclick=e=>{e.stopPropagation();openReq('RFI')};
+$('rqCancel').onclick=()=>$('rq').classList.remove('open');
+$('rqSave').onclick=()=>{
+  const r={id:'R'+String(REQS.length+1).padStart(3,'0'),type:$('rqType').value,about:$('rqAbout').value.trim(),title:$('rqTitle').value.trim(),text:$('rqText').value.trim(),scan:SCAN.id,at:Date.now()};
+  if(!r.title&&!r.text){$('rqMsg').style.color='#f0b429';$('rqMsg').textContent='Add a title or some details first';return}
+  REQS.push(r);try{localStorage.setItem('noxenScanReqs',JSON.stringify(REQS))}catch(e){}
+  const o=OBJ.find(x=>x.name===r.about),txt=r.id+' \u00b7 '+r.type+'\n'+(r.title||'')+'\nAbout: '+(r.about||'General')+(o&&!o.missing&&!o.site?' (avg '+Math.round(o.dmean*1000)+' mm, '+o.statusText+')':'')+'\nScan: '+r.scan+' \u00b7 '+fmtDT(r.at)+'\n\n'+r.text;
+  let ok=false;try{navigator.clipboard.writeText(txt);ok=true}catch(e){}
+  $('rqMsg').style.color='#7be0a0';$('rqMsg').textContent=r.id+' saved'+(ok?' \u00b7 text copied, ready to paste into an email':'');reqUI();if(sel>=0)select(sel)};
+$('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b)openReq(b.dataset.a==='note'?'Note':'RFI')});
+reqUI();
+
 /* ---------- frame ---------- */
 let glNext=0,fcount=0,lastDraw=0,qEma=16,qHold=0,QL=0,frames=0;
 function frameBody(now){
   const dt=Math.min(.05,(now-(frame.t||now))/1000);frame.t=now;
-  stepFly(dt);hoverTick(now);
+  stepFly(dt);tweenStep(now);hoverTick(now);drawMini();
   if(insp.on)easeInsp(dt);
   const active=flying||now-lastLook<200;
   if(!active&&!ctlShown&&now-lastAct>3600){ctlShown=true;movingCls=false;$('ctl').classList.add('show');document.body.classList.remove('moving')}
@@ -1108,13 +1346,16 @@ function frameBody(now){
   const ql=active?QL:0,B=camBasis(),ck=cam.p[0].toFixed(3)+','+cam.p[1].toFixed(3)+','+cam.p[2].toFixed(3)+','+cam.yaw.toFixed(4)+','+cam.pitch.toFixed(4);
   for(const p of panes){
     if(p.W<2)continue;
-    if(p.mode===0){const bud=[75000,50000,32000][ql],key=ck+'|'+sel+'|'+hov+'|'+cmode+'|'+bldgOnly+'|'+p.W+'x'+p.H+'|'+bud;if(key!==p.key){p.key=key;drawPoints(p,B,bud);frames++}}
+    if(p.mode===0){
+      if(cut.type){const key='c'+cutK()+'|'+sel+'|'+cmode+'|'+mk+'|'+p.W+'x'+p.H;if(key!==p.key){p.key=key;drawPointsCut(p);frames++}}
+      else{const bud=[75000,50000,32000][ql],key=ck+'|'+sel+'|'+hov+'|'+cmode+'|'+bldgOnly+'|'+p.W+'x'+p.H+'|'+bud+'|'+mk;if(key!==p.key){p.key=key;drawPoints(p,B,bud);frames++}}}
     else if(p.mode===1){
       let key;if(insp.on)key='i'+sel+'|'+insp.az.toFixed(4)+insp.el.toFixed(4)+insp.dist.toFixed(3)+'|'+p.W+'x'+p.H;
-      else key=ck+'|'+hov+'|'+$('lab').checked+'|'+p.W+'x'+p.H+'|'+(ql>1);
-      if(key!==p.key){p.key=key;if(insp.on)drawInspect(p,inspBasis(),OBJ[sel]);else drawBim(p,B)}
+      else if(cut.type)key='c'+cutK()+'|'+mk+'|'+p.W+'x'+p.H;
+      else key=ck+'|'+hov+'|'+$('lab').checked+'|'+p.W+'x'+p.H+'|'+(ql>1)+'|'+mk;
+      if(key!==p.key){p.key=key;if(insp.on)drawInspect(p,inspBasis(),OBJ[sel]);else if(cut.type)drawBimCut(p);else drawBim(p,B)}
     }else{
-      const vk=ck+'|'+sel+'|'+ql;
+      const vk=ck+'|'+sel+'|'+ql+'|'+mk;
       if(p.key!==vk){if(GL)drawGL(p,B,now,ql);videoOverlay(p,B,now);p.key=vk}   // nothing moves: nothing is redrawn
     }
   }
@@ -1135,6 +1376,7 @@ for(const p of panes){
   let last=null;
   p.el.addEventListener('pointerdown',e=>{
     if(e.target.closest('.ui'))return;
+    if(meas.on&&e.button===0){if(p.mode===2&&document.pointerLockElement===p.el)measureClick(p,p.W/2,p.H/2);else{const r=p.el.getBoundingClientRect();measureClick(p,e.clientX-r.left,e.clientY-r.top)}return}
     if(document.pointerLockElement===p.el){pickAt(p,p.W/2,p.H/2);return}
     const r=p.el.getBoundingClientRect();
     if(e.ctrlKey||e.metaKey){pickAt(p,e.clientX-r.left,e.clientY-r.top);return}
@@ -1160,9 +1402,10 @@ function hoverTick(now){
   if(now<hovNext||flying||now-lastLook<300)return;hovNext=now+110;
   const l=document.pointerLockElement;
   if(l){const p=panes[2];if(l===p.el){const b=objAt(p,p.W/2,p.H/2),r=p.el.getBoundingClientRect();hov=b;tipAt(b>=0?{clientX:r.left+p.W/2+16,clientY:r.top+p.H/2+16}:null,b>=0?hoverText(b):'')}return}
-  if(ptr)setHover(objAt(ptr.p,ptr.x,ptr.y),{clientX:ptr.cx,clientY:ptr.cy});
+  if(ptr&&!(cut.type&&ptr.p.mode<2)&&!meas.on)setHover(objAt(ptr.p,ptr.x,ptr.y),{clientX:ptr.cx,clientY:ptr.cy});
 }
 function pickAt(p,x,y){
+  if(cut.type&&p.mode<2)return;
   if(p.mode===1&&insp.on)return;
   const b=objAt(p,x,y);if(b>=0&&OBJ[b].site)return;      // site gear and people are not in the BIM: nothing to open
   select(b===sel?-1:b);
@@ -1182,12 +1425,12 @@ document.addEventListener('pointerlockerror',()=>{lockFailed=true;hint('This win
 $('lookbtn').onclick=e=>{e.stopPropagation();lockMouse(panes[2]);setTimeout(()=>{if(!document.pointerLockElement&&!lockFailed)hint('Mouse capture was refused \u00b7 arrow keys look',6000)},700)};
 const MOVE=['KeyW','KeyA','KeyS','KeyD','KeyE','KeyQ','Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','ShiftLeft','ShiftRight'];
 addEventListener('keydown',e=>{
-  if(e.target&&e.target.matches&&e.target.matches('input[type=search]'))return;
+  if(e.target&&e.target.matches&&e.target.matches('input[type=search],input[type=text],textarea,select'))return;
   if(MOVE.includes(e.code)){const a=document.activeElement;if(a&&a.matches&&a.matches('button,select,input'))a.blur();e.preventDefault();keys.add(e.code);touch();return}
   if(e.code==='ControlLeft'||e.code==='ControlRight'){if(!e.repeat)ctrlAlone=true;return}
   if(e.key==='/'&&!document.pointerLockElement){e.preventDefault();closePops();toggle('drawer',$('bObj'));$('q').focus();$('q').select();return}
   if(e.code==='KeyF'){if(document.pointerLockElement)document.exitPointerLock();else lockMouse(panes[2])}
-  if(e.code==='Escape'){if(document.pointerLockElement){document.exitPointerLock();return}if(openPop()){closePops();return}if(sel>=0)select(-1)}
+  if(e.code==='Escape'){if(document.pointerLockElement){document.exitPointerLock();return}if(openPop()){closePops();return}if(meas.on){setMeas(false);return}if(sel>=0)select(-1)}
 });
 let ctrlAlone=false;addEventListener('pointerdown',()=>{ctrlAlone=false},true);
 addEventListener('keyup',e=>{keys.delete(e.code);if((e.code==='ControlLeft'||e.code==='ControlRight')&&ctrlAlone&&sel>=0)select(-1);ctrlAlone=false});addEventListener('blur',()=>keys.clear());
@@ -1240,7 +1483,7 @@ function select(i){
    (el>.02?row('Above floor',el,o.selev):'')+'</div>'+
    (o.missing?'':'<div class="cmp">Position off <b>'+Math.round(o.soff*1000)+' mm</b> &middot; rotated <b>'+Math.abs(o.srot).toFixed(1)+'\u00b0</b></div>')+
    (o.sizes?'<div class="cmp">Nominal sizes <b>'+o.sizes.map(d=>'DN'+d).join(' \u00b7 ')+'</b> &middot; OD '+o.sizes.map(d=>(ODm_[d]*1000).toFixed(1)).join(' / ')+' mm</div>':'')+
-   '<div class="st"><span class="chipst '+o.status+'">'+o.statusText+'</span><small>'+(o.missing?'designed, not found in the scan':'avg '+Math.round(o.dmean*1000)+' mm &middot; max '+Math.round(o.dmax*1000)+' mm from the BIM')+'</small></div>'+scanBlock(o);
+   '<div class="st"><span class="chipst '+o.status+'">'+o.statusText+'</span><small>'+(o.missing?'designed, not found in the scan':'avg '+Math.round(o.dmean*1000)+' mm &middot; max '+Math.round(o.dmax*1000)+' mm from the BIM')+'</small></div>'+scanBlock(o)+notesBlock(o)+'<div class="act"><button data-a="note">Add note</button><button data-a="req">Request\u2026</button></div>';
   setView('3d');insp.az=insp.taz;insp.el=insp.tel;insp.dist=insp.tdist;
 }
 function lookAt(o){
@@ -1261,7 +1504,7 @@ function buildLists(){
     d.onclick=()=>{const on=sel!==i;select(on?i:-1);if(on)lookAt(o)};list.appendChild(d)});
   $('ocount').textContent=B.length;
 }
-const POPS=['menu','help','scan'];
+const POPS=['menu','help','scan','rq'];
 const openPop=()=>POPS.some(id=>$(id).classList.contains('open'))||$('drawer').classList.contains('open');
 function closePops(){POPS.forEach(id=>$(id).classList.remove('open'));$('drawer').classList.remove('open');$('bObj').classList.remove('on');$('bMenu').classList.remove('on');$('bScan').classList.remove('on')}
 function toggle(id,btn){const on=!$(id).classList.contains('open');closePops();if(on){$(id).classList.add('open');btn.classList.add('on')}}
@@ -1275,12 +1518,12 @@ $('q').addEventListener('keydown',e=>{if(e.key==='Enter'){const r=document.query
 $('close').onclick=()=>select(-1);
 if($('bo'))$('bo').onclick=()=>{bldgOnly=!bldgOnly;$('bo').classList.toggle('on',bldgOnly);$('bo').textContent=bldgOnly?'Building only ✓':'Building only';panes[0].key=''};
 document.querySelectorAll('#views button').forEach(b=>b.onclick=()=>setView(b.dataset.v));
-document.querySelectorAll('#cmode button').forEach(b=>b.onclick=()=>{cmode=+b.dataset.m;document.querySelectorAll('#cmode button').forEach(x=>x.classList.toggle('on',x===b));$('legend').style.display=cmode===0?'':'none';panes[0].key=''});
+document.querySelectorAll('#cmode button').forEach(b=>b.onclick=()=>{cmode=+b.dataset.m;document.querySelectorAll('#cmode button').forEach(x=>x.classList.toggle('on',x===b));$('legend').style.display=cmode===0?'':'none';$('bDev').classList.toggle('on',cmode===0);panes[0].key=''});
 const STEPS=['Capture: the drone flies the bay with LiDAR and video','Register: the scan is aligned to the BIM','Colourise: points take their colour from the video','Segment: points grouped into objects and classes','Compare: each point is measured to the nearest BIM surface'];
 $('steps').innerHTML=STEPS.map(s=>'<li>'+s+'</li>').join('');
 
 const t00=Date.now();setInterval(()=>{const s=Math.floor((Date.now()-t00)/1000);$('tc').textContent='CAM 01 \u00b7 '+pad2(Math.floor(s/60)%60)+':'+pad2(s%60)},1000);
-build(seed);
+build(seed);devStats();
 buildScanPop();refreshScanText();setInterval(refreshScanText,20000);
 GL=initGL();if(GL)glUpload();
 {const glc=document.querySelector('#p2 canvas.gl');
@@ -1294,6 +1537,8 @@ resize();
   if(m=h.match(/sel=(\d+)/)){select(+m[1]);if(m=h.match(/view=(\w+)/)){setView(m[1]);insp.az=insp.taz;insp.el=insp.tel}}
   if(/menu/.test(h))toggle('menu',$('bMenu'));
   if(/objs/.test(h))toggle('drawer',$('bObj'));
+  if(m=h.match(/cut=(level|long|cross)/)){setCut(m[1]);if(m=h.match(/cp=(-?[\d.]+)/)){cut.pos=+m[1];$('cutPos').value=cut.pos;cutLabel()}}
+  if(/meas/.test(h)){setMeas(true)}
   if(/idle/.test(h))lastAct-=9000;
   if(/perf/.test(h))setTimeout(()=>{ // flies forward while turning for 6 s and reports the real frame rate
     const t0=performance.now();let n=0,worst=0,last=t0;keys.add('KeyW');keys.add('ArrowLeft');
@@ -1315,10 +1560,16 @@ resize();
     out.push('plain drag turns '+(Math.abs(cam.yaw-y)>1e-6?'YES (wrong)':'no (right)'));
     document.querySelector('.sim').textContent=out.join(' | ');
   },1500);
+  if(/testmeas/.test(h))setTimeout(()=>{ // plan: two clicks 100 px apart on the BIM pane, then a note saved through the dialog
+    setCut('level');setMeas(true);const p=panes[1],mp=cutMap(p,CUTS.level),a=cutUnmap(p,p.W/2-50,p.H/2),b=cutUnmap(p,p.W/2+50,p.H/2);
+    measureClick(p,p.W/2-50,p.H/2);measureClick(p,p.W/2+50,p.H/2);
+    openReq('Note');$('rqText').value='test';$('rqSave').click();
+    document.querySelector('.sim').textContent='tape '+mtext()+' expected '+(100/mp.s).toFixed(3)+' m | saved '+REQS.length+' | '+$('rqMsg').textContent;localStorage.removeItem('noxenScanReqs');REQS=[];reqUI();
+  },1500);
   if(/bench/.test(h)){const p=panes[0],B=camBasis(),t0=performance.now();for(let i=0;i<20;i++){p.key='';drawPoints(p,B,75000)}const pm=((performance.now()-t0)/20).toFixed(1),t1=performance.now();for(let i=0;i<10;i++)drawBim(panes[1],B);document.querySelector('.sim').textContent='points '+pm+' ms, bim '+((performance.now()-t1)/10).toFixed(1)+' ms, '+POLY.length+'/'+POLYA.length+' polys, N'+PTS.N}
 }
 requestAnimationFrame(frame);
-window.__scan={cam,get frames(){return frames},get drawn(){return ptDrawn},get N(){return PTS.N},get objs(){return OBJ.length},get polys(){return POLY.length},get gl(){return document.body.dataset.gl},room:[W,L,H],get dev(){return OBJ.map(o=>[o.name,o.status,Math.round(o.dmean*1000)])}};
+window.__scan={cam,get frames(){return frames},get drawn(){return ptDrawn},get N(){return PTS.N},get objs(){return OBJ.length},get polys(){return POLY.length},get gl(){return document.body.dataset.gl},room:[W,L,H],setCut,cut,meas,measureClick,panes,setMeas,measUI,get dev(){return OBJ.map(o=>[o.name,o.status,Math.round(o.dmean*1000)])}};
 })();
 </script>
 </body>
