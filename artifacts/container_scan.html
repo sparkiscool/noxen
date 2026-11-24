@@ -127,7 +127,7 @@ body.moving #ctl{transition:opacity .08s;opacity:0}
 .kc{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border:1px solid #4a5568;border-bottom-width:2px;border-radius:6px;font:600 11.5px var(--mono);color:#e9ecf1;background:#1a202b}
 .wasd{display:grid;grid-template-columns:repeat(3,26px);gap:3px;justify-items:center}.wasd .kc{min-width:26px}.wasd .w{grid-column:2;grid-row:1}.wasd .a{grid-column:1;grid-row:2}.wasd .s{grid-column:2;grid-row:2}.wasd .d{grid-column:3;grid-row:2}
 .xh{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;display:none;z-index:20;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg stroke='%230b0e14' stroke-width='4.5' stroke-linecap='butt'%3E%3Cpath d='M22 6v11M22 27v11M6 22h11M27 22h11'/%3E%3C/g%3E%3Cg stroke='%23fff' stroke-width='2' stroke-linecap='butt'%3E%3Cpath d='M22 7.5v8.5M22 28v8.5M7.5 22h8.5M28 22h8.5'/%3E%3C/g%3E%3Ccircle cx='22' cy='22' r='3' fill='%23fff' stroke='%230b0e14' stroke-width='1.5'/%3E%3C/svg%3E") center/44px 44px no-repeat}
-body.locked .pane.lk .xh{display:block}body.picking .xh{display:none!important}
+body.locked .pane.xon .xh{display:block}body.picking .xh{display:none!important}
 @media (max-width:900px){.panes,.panes.insp{grid-template-columns:1fr;grid-template-rows:repeat(3,minmax(0,1fr))}#ctl{display:none}}
 </style>
 </head>
@@ -147,7 +147,7 @@ body.locked .pane.lk .xh{display:block}body.picking .xh{display:none!important}
   <div class="pane bim" id="p1"><canvas></canvas><div class="tag">BIM<i>design model &middot; empty building</i></div>
     <button class="xbtn ui" id="close" hidden title="Close (Esc)">&times;</button>
     <div class="card ui" id="card" hidden></div>
-    <div class="views ui" id="views" hidden><button data-v="3d" class="on">3D</button><button data-v="plan">Plan</button><button data-v="front">Front</button><button data-v="side">Side</button></div></div>
+    <div class="xh"></div><div class="views ui" id="views" hidden><button data-v="3d" class="on">3D</button><button data-v="plan">Plan</button><button data-v="front">Front</button><button data-v="side">Side</button></div></div>
 </div>
 <div class="strip" id="strip">
   <div class="mmw" id="mmw"><canvas id="mm"></canvas><span class="mmc" id="mmc">Level 2 of 3 &middot; click to fly</span><div class="fl"><button id="flDn" title="Previous floor">&#9660;</button><button id="flUp" title="Next floor">&#9650;</button></div></div>
@@ -1471,6 +1471,7 @@ function frameBody(now){
   }else qHold=0;
   const ql=active?QL:0,B=camBasis(),ck=cam.p[0].toFixed(3)+','+cam.p[1].toFixed(3)+','+cam.p[2].toFixed(3)+','+cam.yaw.toFixed(4)+','+cam.pitch.toFixed(4);
   drawFpv(now);
+  {const lk=!!document.pointerLockElement;for(const p of panes)p.el.classList.toggle('xon',lk&&!(p.mode<2&&cut.type)&&!(p.mode===1&&insp.on))}   // the aimed point is the centre of all three views
   for(const p of panes){
     if(p.W<2)continue;
     if(p.mode===0){
@@ -1538,8 +1539,8 @@ function pickAt(p,x,y){
   select(b===sel?-1:b);
 }
 function lockMouse(p){try{p=p||panes[2];const r=p.el.requestPointerLock();if(r&&r.catch)r.catch(()=>{})}catch(e){}}
-document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){lookReset();touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Esc leaves · Ctrl closes the card',0)}else $('lockhint').classList.remove('show')});
-let lmX=null,lmY=null;
+document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){lookReset();touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Esc leaves · Ctrl closes the card',0)}else{$('lockhint').classList.remove('show');if(performance.now()-lastCtrl<700&&!escLeft)setTimeout(()=>lockMouse(panes[2]),0)}escLeft=false});
+let lmX=null,lmY=null,lastCtrl=-1e9,escLeft=false;          // Ctrl never leaves Look mode: if the lock drops right after it, it is taken again; only Esc (or F) leaves
 addEventListener('mousemove',e=>{
   if(!document.pointerLockElement){lmX=null;return}
   let dx=e.movementX||0,dy=e.movementY||0;
@@ -1555,14 +1556,14 @@ addEventListener('keydown',e=>{
   if(e.code==='KeyQ'&&DEP.state==='placed'){e.preventDefault();depFly();return}   // Q sends the drone; with no spot placed (and everywhere else) Q is still fly-down
   if(e.target&&e.target.matches&&e.target.matches('input[type=search],input[type=text],textarea,select'))return;
   if(MOVE.includes(e.code)){const a=document.activeElement;if(a&&a.matches&&a.matches('button,select,input'))a.blur();e.preventDefault();keys.add(e.code);touch();return}
-  if(e.code==='ControlLeft'||e.code==='ControlRight'){if(!e.repeat)ctrlAlone=true;return}
+  if(e.code==='ControlLeft'||e.code==='ControlRight'){lastCtrl=performance.now();if(!e.repeat)ctrlAlone=true;return}
   if(e.key==='/'&&!document.pointerLockElement){e.preventDefault();closePops();toggle('drawer',$('bObj'));$('q').focus();$('q').select();return}
-  if(e.code==='KeyF'){if(document.pointerLockElement)document.exitPointerLock();else lockMouse(panes[2])}
+  if(e.code==='KeyF'){if(document.pointerLockElement){escLeft=true;document.exitPointerLock()}else lockMouse(panes[2])}
   if(e.code==='Escape'&&(DEP.state==='pick'||DEP.state==='placed')&&!document.pointerLockElement){depCancel();return}
-  if(e.code==='Escape'){if(document.pointerLockElement){document.exitPointerLock();return}if(openPop()){closePops();return}if(sel>=0)select(-1)}
+  if(e.code==='Escape'){if(document.pointerLockElement){escLeft=true;document.exitPointerLock();return}if(openPop()){closePops();return}if(sel>=0)select(-1)}
 });
 let ctrlAlone=false;addEventListener('pointerdown',()=>{ctrlAlone=false},true);
-addEventListener('keyup',e=>{keys.delete(e.code);if((e.code==='ControlLeft'||e.code==='ControlRight')&&ctrlAlone&&sel>=0)select(-1);ctrlAlone=false});addEventListener('blur',()=>keys.clear());
+addEventListener('keyup',e=>{keys.delete(e.code);if(e.code==='ControlLeft'||e.code==='ControlRight'){lastCtrl=performance.now();if(ctrlAlone&&sel>=0)select(-1)}ctrlAlone=false});addEventListener('blur',()=>keys.clear());
 
 /* ---------- scan record (simulated) ---------- */
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],pad2=n=>String(n).padStart(2,'0');
@@ -1598,7 +1599,7 @@ function select(i){
   if(i>=0&&OBJ[i].site)i=-1;
   const wasLook=!!document.pointerLockElement;
   sel=i;
-  if(i>=0&&wasLook){document.exitPointerLock()}                      // the cursor is free to reach the card (Add note, Request)
+  if(i>=0&&wasLook){escLeft=true;document.exitPointerLock()}                      // the cursor is free to reach the card (Add note, Request)
   $('lookbtn').classList.toggle('resume',i>=0&&(wasLook||$('lookbtn').classList.contains('resume')));
   $('lookTxt').textContent=$('lookbtn').classList.contains('resume')?'Click to resume Look mode':'Look mode';
   document.querySelectorAll('#list .row').forEach(r=>r.classList.toggle('sel',+r.dataset.i===i));
