@@ -90,11 +90,7 @@ body.moving #ctl{transition:opacity .08s;opacity:0}
 #ctl .g{display:flex;align-items:center;gap:10px}#ctl .g small{color:#98a2b3;font-size:11.5px}
 .kc{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border:1px solid #4a5568;border-bottom-width:2px;border-radius:6px;font:600 11.5px var(--mono);color:#e9ecf1;background:#1a202b}
 .wasd{display:grid;grid-template-columns:repeat(3,26px);gap:3px;justify-items:center}.wasd .kc{min-width:26px}.wasd .w{grid-column:2;grid-row:1}.wasd .a{grid-column:1;grid-row:2}.wasd .s{grid-column:2;grid-row:2}.wasd .d{grid-column:3;grid-row:2}
-.xh{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 2px #0b0e14,inset 0 0 0 2px #0b0e14;pointer-events:none;display:none;
-background:radial-gradient(circle,#fff 0 3px,#0b0e14 3px 6px,transparent 6px)}
-.xh::before,.xh::after{content:"";position:absolute;background:#fff;box-shadow:0 0 0 2px #0b0e14}
-.xh::before{left:-14px;width:9px;top:calc(50% - 1.5px);height:3px;box-shadow:0 0 0 2px #0b0e14,31px 0 0 0 #fff,31px 0 0 2px #0b0e14}
-.xh::after{top:-14px;height:9px;left:calc(50% - 1.5px);width:3px;box-shadow:0 0 0 2px #0b0e14,0 31px 0 0 #fff,0 31px 0 2px #0b0e14}
+.xh{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;display:none;z-index:20;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg stroke='%230b0e14' stroke-width='4.5' stroke-linecap='butt'%3E%3Cpath d='M22 6v11M22 27v11M6 22h11M27 22h11'/%3E%3C/g%3E%3Cg stroke='%23fff' stroke-width='2' stroke-linecap='butt'%3E%3Cpath d='M22 7.5v8.5M22 28v8.5M7.5 22h8.5M28 22h8.5'/%3E%3C/g%3E%3Ccircle cx='22' cy='22' r='3' fill='%23fff' stroke='%230b0e14' stroke-width='1.5'/%3E%3C/svg%3E") center/44px 44px no-repeat}
 body.locked .pane.lk .xh{display:block}
 @media (max-width:900px){.panes,.panes.insp{grid-template-columns:1fr;grid-template-rows:repeat(3,minmax(0,1fr))}#ctl{display:none}}
 </style>
@@ -111,7 +107,7 @@ body.locked .pane.lk .xh{display:block}
 <div class="panes" id="panes">
   <div class="pane pt" id="p0"><canvas></canvas><div class="tag">Point map<i>as-built scan</i></div><div class="meta" id="m0"></div>
     <div class="legend" id="legend"><b>Deviation from BIM</b><div class="bar"></div><div class="tk"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50+ mm</span></div></div><div class="xh"></div></div>
-  <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Ctrl to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg>Look mode</button><div class="lockhint" id="lockhint"></div><div class="xh"></div></div>
+  <div class="pane vid" id="p2"><canvas class="gl"></canvas><canvas class="ov"></canvas><div class="tag">Video<i>drone camera</i></div><div class="tc"><i class="rec"></i><span id="tc">CAM 01 \u00b7 00:00</span></div><button class="pill ui" id="lookbtn" title="Capture the mouse inside this pane and look around with it (Esc to leave)"><svg width="11" height="15" viewBox="0 0 22 30" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px;margin-right:6px"><rect x="2" y="2" width="18" height="26" rx="9"/><path d="M11 2v9"/></svg>Look mode</button><div class="lockhint" id="lockhint"></div><div class="xh"></div></div>
   <div class="pane bim" id="p1"><canvas></canvas><div class="tag">BIM<i>design model &middot; empty building</i></div>
     <button class="xbtn ui" id="close" hidden title="Close (Esc)">&times;</button>
     <div class="card ui" id="card" hidden></div>
@@ -129,7 +125,7 @@ body.locked .pane.lk .xh{display:block}
   <h4>Controls</h4>
   <div style="line-height:1.9"><span class="kc">W</span><span class="kc">A</span><span class="kc">S</span><span class="kc">D</span> fly<br>
   <span class="kc">Space</span> / <span class="kc">E</span> up &nbsp; <span class="kc">Shift</span> / <span class="kc">Q</span> down<br>
-  <b>Look mode</b> (button on the video) captures the mouse: move it to turn, click opens an object, <span class="kc">Ctrl</span> leaves<br><span class="kc">&larr;</span><span class="kc">&rarr;</span><span class="kc">&uarr;</span><span class="kc">&darr;</span> look with the keyboard<br>
+  <b>Look mode</b> (button on the video) captures the mouse: move it to turn, click opens an object, <span class="kc">Esc</span> leaves, <span class="kc">Ctrl</span> closes an opened card<br><span class="kc">&larr;</span><span class="kc">&rarr;</span><span class="kc">&uarr;</span><span class="kc">&darr;</span> look with the keyboard<br>
   <span class="kc">Ctrl</span> + click an object in the BIM or video to open it<br>
   <span class="kc">F</span> Look mode on / off &nbsp; <span class="kc">/</span> search objects (<span class="kc">Enter</span> opens the first) &nbsp; <span class="kc">Esc</span> closes the card<br>
   Objects: problems are listed first; tick <b>Issues only</b> to hide the ones within tolerance. Clicking one flies the camera to it.</div>
@@ -1173,7 +1169,7 @@ function pickAt(p,x,y){
   select(b===sel?-1:b);
 }
 function lockMouse(p){try{p=p||panes[2];const r=p.el.requestPointerLock();if(r&&r.catch)r.catch(()=>{})}catch(e){}}
-document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Ctrl leaves',0);try{navigator.keyboard&&navigator.keyboard.lock(['Escape'])}catch(x){}}else $('lockhint').classList.remove('show')});
+document.addEventListener('pointerlockchange',()=>{const l=document.pointerLockElement;document.body.classList.toggle('locked',!!l);panes.forEach(p=>p.el.classList.toggle('lk',p.el===l));if(l){touch();tipAt(null,'');hint('Look mode · move the mouse to turn · click opens an object · Esc leaves · Ctrl closes the card',0)}else $('lockhint').classList.remove('show')});
 let lmX=null,lmY=null;
 addEventListener('mousemove',e=>{
   if(!document.pointerLockElement){lmX=null;return}
@@ -1189,12 +1185,13 @@ const MOVE=['KeyW','KeyA','KeyS','KeyD','KeyE','KeyQ','Space','ArrowUp','ArrowDo
 addEventListener('keydown',e=>{
   if(e.target&&e.target.matches&&e.target.matches('input[type=search]'))return;
   if(MOVE.includes(e.code)){const a=document.activeElement;if(a&&a.matches&&a.matches('button,select,input'))a.blur();e.preventDefault();keys.add(e.code);touch();return}
-  if((e.code==='ControlLeft'||e.code==='ControlRight')&&document.pointerLockElement){document.exitPointerLock();return}
+  if(e.code==='ControlLeft'||e.code==='ControlRight'){if(!e.repeat)ctrlAlone=true;return}
   if(e.key==='/'&&!document.pointerLockElement){e.preventDefault();closePops();toggle('drawer',$('bObj'));$('q').focus();$('q').select();return}
   if(e.code==='KeyF'){if(document.pointerLockElement)document.exitPointerLock();else lockMouse(panes[2])}
-  if(e.code==='Escape'){if(document.pointerLockElement)return;if(openPop()){closePops();return}if(sel>=0)select(-1)}
+  if(e.code==='Escape'){if(document.pointerLockElement){document.exitPointerLock();return}if(openPop()){closePops();return}if(sel>=0)select(-1)}
 });
-addEventListener('keyup',e=>keys.delete(e.code));addEventListener('blur',()=>keys.clear());
+let ctrlAlone=false;addEventListener('pointerdown',()=>{ctrlAlone=false},true);
+addEventListener('keyup',e=>{keys.delete(e.code);if((e.code==='ControlLeft'||e.code==='ControlRight')&&ctrlAlone&&sel>=0)select(-1);ctrlAlone=false});addEventListener('blur',()=>keys.clear());
 
 /* ---------- scan record (simulated) ---------- */
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],pad2=n=>String(n).padStart(2,'0');
