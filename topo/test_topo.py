@@ -1915,11 +1915,53 @@ ARMS_GEN = 16.0
 ARMS_GEN_SHORT = 14.0
 
 
+def t_assembly_riders():
+    """riders (tools/assembly_check.py; 24 Nov, Spark's bench turret: the spool could not enter the closed drum ring; the kit's one path
+    moved the turret `with` the spool onto the base, so nothing ever moved the spool into the turret). A closed ring (the carrier) with a
+    knob in it, the ring lowered onto nothing `with` the knob: the path is clear but the knob has no way of its own: FAILS. With the
+    knob's own path along the ring's axis: passes; with its own path through the ring's wall: blocked by the ring, though the path names
+    no `against`. A `fixed` entry (pressed on in place) passes; one that must come before a part whose path is not later fails."""
+    try:
+        import json as _j, os, tempfile, trimesh
+        import manifold3d as mf
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
+        import assembly_check as AC
+        d = tempfile.mkdtemp(); os.makedirs(os.path.join(d, "systems"))
+        ring = mf.Manifold.cylinder(10, 12, 12, 64) - mf.Manifold.cylinder(12, 9.5, 9.5, 64).translate([0, 0, -1])
+        knob = mf.Manifold.cylinder(8, 9, 9, 64).translate([0, 0, 1])
+        for nm, m in (("ring", ring), ("knob", knob)):
+            os.makedirs(os.path.join(d, "parts", nm))
+            trimesh.Trimesh(np.asarray(m.to_mesh().vert_properties)[:, :3], np.asarray(m.to_mesh().tri_verts)).export(os.path.join(d, "parts", nm, "part.stl"))
+        group = {"name": "ring down", "part": "ring", "with": ["knob"], "order": 10, "out": [0, 0, 1], "length_mm": 30, "fit": "mate"}
+        own = lambda out: {"name": "knob in", "part": "knob", "order": 5, "out": out, "length_mm": 30, "fit": "mate", "into": ["ring"]}
+        root, AC.ROOT = AC.ROOT, d
+        try:
+            def go(paths, fixed=()):
+                _j.dump({"parts": [{"id": k, "mesh": f"parts/{k}/part.stl", "role": "structure"} for k in ("ring", "knob")],
+                         "assembly": {"paths": paths, "fixed": list(fixed)}}, open(os.path.join(d, "systems", "t.assembly.json"), "w"))
+                return AC.run("t", log=lambda s_: None)
+            r0 = go([group]); r1 = go([group, own([0, 0, 1])]); r2 = go([group, own([1, 0, 0])])
+            fx = {"part": "knob", "to": "ring", "how": "pressed in place", "why": "test"}
+            r3 = go([group], [fx]); r4 = go([group], [dict(fx, order=20, before=["ring"])]); r5 = go([group], [dict(fx, order=3, before=["ring"])])
+        finally:
+            AC.ROOT = root
+        blocked = [b["part"] for p_ in r2["paths"] for b in p_.get("blocked_by", [])]
+        ok = (not r0["ok"] and all(p_["ok"] for p_ in r0["paths"]) and "knob" in r0["not_print_ready"] and r1["ok"] and not r2["ok"] and blocked == ["ring"]
+              and r3["ok"] and not r4["ok"] and r5["ok"])
+        check("assembly riders: a part that rides on a path with no path of its own and no fixed-in-place reason fails; its own path is swept "
+              "through its carrier; a fixed entry passes, one before a part whose path is not later fails",
+              bool(ok), f"{[r['ok'] for r in (r0, r1, r2, r3, r4, r5)]} blocked by {blocked}; {[r_.get('why') for r_ in r0['riders']]}")
+    except Exception as e:
+        traceback.print_exc()
+        check("assembly riders", False, repr(e)[:200])
+
+
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
     for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_released_check, t_no_cavity, t_audit_path, t_audit_fit, t_path_sweep_gap):
         t()
+    t_assembly_riders()
     if not quick:
         t_end_to_end()
         t_slender_arm_gap()

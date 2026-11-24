@@ -2,7 +2,7 @@
 "name": "Scout v4 probe bench kit",
 "machine": "scout_v4",
 "check_only": true,
-"note": "15 Nov (engine worker, for the design chat): the probe bench kit as Spark assembles it, for tools/assembly_check.py only (off the page: check_only). The bench base and bench turret in place of the flight frame and turret, the drawn spool, pinion, roller, head frame and cradle, the bought N20, SG90, camera and LED bars; the 209 leaf, the M3 idler and the inserts are not drawn.",
+"note": "15 Nov (engine worker, for the design chat): the probe bench kit as Spark assembles it, for tools/assembly_check.py only (off the page: check_only). The bench base and bench turret in place of the flight frame and turret, the drawn spool, pinion, roller, head frame and cradle, the bought N20, SG90, camera and LED bars; the 209 leaf, the M3 idler and the inserts are not drawn. 24 Nov (probe bench worker, Spark's build): every part of the kit has its own path in the build's order (pinion, N20, roller, spool, axle, then the turret onto the base); the one path that moved the turret with all of them had hidden a closed drum ring, a pinion with no way in and N20 screws with no driver line.",
 "parts": [
 {
 "id": "scout_v4_probe_bench_base",
@@ -159,13 +159,199 @@
 "b": "scout_v4_probe_bench_turret",
 "fit": "mate",
 "why": "the spool turns between the bench turret's side plates"
+},
+{
+"a": "scout_v4_probe_motor",
+"b": "scout_v4_probe_bench_turret",
+"fit": "close",
+"why": "the N20's shaft in the tip bearing's 3.2 bore (the fit table's close fit, its tightest joint), its gearbox between the bench turret's rails (press, 0.15 a side) and on the face plate; no screws"
 }
 ],
 "paths": [
 {
+"name": "pinion up into its bay",
+"part": "scout_v4_probe_pinion",
+"order": 10,
+"out": [
+0,
+0,
+-1
+],
+"length_mm": 32,
+"fit": "mate",
+"against": [
+"scout_v4_probe_bench_turret"
+],
+"into": [
+"scout_v4_probe_bench_turret"
+],
+"why": "in hand, the turret off the base and upside down: the 12 T pinion (O11.42, its O7 hub boss toward the tip bearing) into its bay through the bay's open bottom (11.92 wide, 24 Nov: it had no way in); it waits there for the N20's shaft"
+},
+{
+"name": "N20 in along +y between its rails",
+"part": "scout_v4_probe_motor",
+"order": 12,
+"body": {
+"box": [
+-6.0,
+6.0,
+-18.2,
+8.8,
+15.1,
+25.1
+]
+},
+"out": [
+0,
+-1,
+0
+],
+"length_mm": 40,
+"fit": "press",
+"against": [
+"scout_v4_probe_bench_turret"
+],
+"into": [
+"scout_v4_probe_bench_turret"
+],
+"why": "the N20's gearbox and can (their 12 x 10 x 27 box) straight in along +y, under the -y wall's notched foot, the gearbox between the two rails 12.3 apart (the fit table's press: a hand push), onto the face plate; no screws (24 Nov: the 2 x M1.6 had no driver line past the tip bearing and their heads stood in the pinion): the rails take its torque, the plate, the pressed pinion and the base's opening hold it along y"
+},
+{
+"name": "N20's shaft through the pinion into the tip bearing",
+"part": "scout_v4_probe_motor",
+"order": 12,
+"body": {
+"cylinder": {
+"p0": [
+0.0,
+8.8,
+20.1
+],
+"p1": [
+0.0,
+18.8,
+20.1
+],
+"r": 1.5
+}
+},
+"out": [
+0,
+-1,
+0
+],
+"length_mm": 10.5,
+"fit": "close",
+"against": [
+"scout_v4_probe_bench_turret"
+],
+"into": [
+"scout_v4_probe_bench_turret"
+],
+"ignore": [
+"scout_v4_probe_pinion"
+],
+"why": "the N20's 3 mm D shaft through the face plate's O4.4 hole, pressed through the pinion's D bore (the pinion held against the tip bearing's block) and into the tip bearing's 3.2 bore: the pinion is pressed on in place, it cannot pass the plate's hole"
+},
+{
+"name": "roller in from behind",
+"part": "scout_v4_probe_roller",
+"order": 20,
+"moves": [
+{
+"out": [
+-0.9659,
+0,
+0.2588
+],
+"length_mm": 10.5
+},
+{
+"out": [
+-1,
+0,
+0
+],
+"length_mm": 62
+}
+],
+"fit": "free",
+"against": [
+"scout_v4_probe_bench_turret"
+],
+"into": [
+"scout_v4_probe_bench_turret"
+],
+"why": "the pressure roller (rod, two tubes, saddle and leaf) in through the spool's bay from behind (-x), before the spool, then out along its radial guides, the saddle and leaf into their pocket (the rod in its 3.3 slots: the fit table's free fit)"
+},
+{
+"name": "spool in from behind and above",
+"part": "scout_v4_probe_spool",
+"order": 30,
+"with": [
+"scout_v4_probe_drum",
+"scout_v4_probe_feed"
+],
+"out": [
+-1,
+0,
+0.6
+],
+"length_mm": 70,
+"fit": "mate",
+"against": [
+"scout_v4_probe_bench_turret"
+],
+"into": [
+"scout_v4_probe_bench_turret"
+],
+"ignore": [
+"scout_v4_probe_pinion",
+"scout_v4_probe_roller"
+],
+"why": "the spool with its gear, drum hub, cable coil and the blades' ends down and forward (+x, 0.6 down per mm) between the two side walls, its drum hub and coil along the drum's U (24 Nov: the ring was closed), its gear over the floor, onto the pinion and against the roller (it turns as the teeth meet; the gear mesh and the roller's leaf are its seats)"
+},
+{
+"name": "spool axle M3 x 50 in from -y",
+"part": "scout_v4_probe_spool",
+"order": 32,
+"body": {
+"cylinder": {
+"p0": [
+0.0,
+-26.0,
+41.0
+],
+"p1": [
+0.0,
+24.0,
+41.0
+],
+"r": 1.5
+}
+},
+"out": [
+0,
+-1,
+0
+],
+"length_mm": 52,
+"fit": "close",
+"against": [
+"scout_v4_probe_bench_turret"
+],
+"into": [
+"scout_v4_probe_bench_turret"
+],
+"ignore": [
+"scout_v4_probe_drum"
+],
+"why": "the spool's axle, an M3 x 50 screw (its head at the -y wall, the nyloc at the +y one), in from -y through both bosses and the spool's bore"
+},
+{
 "name": "bench turret onto the bench base",
 "part": "scout_v4_probe_bench_turret",
-"order": 10,
+"order": 50,
 "out": [
 0,
 0,
@@ -184,7 +370,7 @@
 "into": [
 "scout_v4_probe_bench_base"
 ],
-"why": "the bench turret with its spool, gears, N20, drum, roller and feed down onto the base (its floor bosses on the base's inserts)"
+"why": "last of the kit: the bench turret with its pinion, N20, roller, spool (cable coil, blades) and axle in it, down onto the base (its floor bosses on the base's inserts, 4 x M3 x 8 from above); the N20 hangs in the base's opening, which leaves it 3.0 of the 9.85 its shaft needs, so it is in before this"
 },
 {
 "name": "blades into the head frame's clip",
@@ -331,6 +517,35 @@
 ],
 "why": "the cradle, camera and LED bars about the SG90's axis from 20 down to 90 up (parked 15 up)",
 "min_body_mm3": 50
+}
+],
+"fixed": [
+{
+"part": "scout_v4_probe_drum",
+"to": "scout_v4_probe_spool",
+"how": "wound on in hand",
+"why": "the head's cable, coiled loosely on the spool's drum hub before the spool goes in; it rides in with it"
+},
+{
+"part": "scout_v4_probe_feed",
+"to": "scout_v4_probe_spool",
+"how": "fixed to the hub and wound on in hand",
+"why": "the two blades' ends on the spool's hub, wound on before the spool goes in; their free ends go up the throat as it seats"
+},
+{
+"part": "scout_v4_probe_horn",
+"to": [
+"scout_v4_probe_servo",
+"scout_v4_cradle"
+],
+"how": "pressed on the SG90's spline with its centre screw, on the bench",
+"why": "step 1 (parts/scout_v4_head_lib.py): the horn is on the SG90 before the SG90 goes into the head frame; the cradle is lowered onto it and two of its small screws tie its arm to the cradle's wall"
+},
+{
+"part": "scout_v4_probe_leds",
+"to": "scout_v4_probe_tilt",
+"how": "stuck on (their own adhesive)",
+"why": "step 3: the two LED bars on the camera case's top and bottom fronts through the cradle's windows, the camera in the cradle"
 }
 ]
 }

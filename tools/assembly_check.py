@@ -13,6 +13,13 @@ caught only by hand. Every part had passed its own gates.) The gate on the parts
                 lower order; `ignore` lists what it may pass). Blocked: at some step it stands in a part over the tolerance more than it
                 does seated: FAILS (how much, where, how far along). Tight: at some step past the seat its gap to a part is under the
                 path's fit gap (topo/fit.py): FAILS. A pair touching seated (a horn on its spline) is held to the volume rule only.
+  riders        (24 Nov, Spark's bench turret: the spool could not enter the closed drum ring, the pinion had no way into its bay, the
+                N20's screws no driver line; the kit's one path moved the turret `with` all of them onto the base.) A part that rides
+                on a path (`with`) must have got onto its carrier: a path of its own, of the same or a lower order, whose `into` or
+                `against` names the carrier or another rider of that path, or a `fixed` entry (it is made fast in place: pressed on,
+                bonded, wound on, screwed on) to one of them, with how and why, and after it the parts it must come `before`.
+                Neither: FAILS. A rider's own path is swept through its carrier and the riders that went in before it, whatever
+                its `against` says.
   print-ready   a printed part named in any failing pair, mate or path is not print-ready (the page says so on its line and in the
                 drone's assembly report; tools/build_site.py), whatever its own gates say.
 
@@ -21,6 +28,7 @@ Format (systems/<drone>.assembly.json, top level):
                "contacts": [{"a": id, "b": id, "allow_mm3": 5, "why": "..."}],
                "mates":    [{"a": id, "b": id, "fit": "slide", "why": "..."}],
                "paths":    [ see topo/paths.py ],
+               "fixed":    [{"part": id, "to": id | [ids], "how": "pressed on in place", "why": "...", "order": n, "before": [ids]}],
                "order":    {"<id or fnmatch pattern>": n}       # when a part with no path of its own goes in (default 0: placed first)
                "generate": ["tools/<file>.py:<function>"]     # function(assembly dict) -> {"paths": [...], "contacts": [...], "mates": [...]}
               }
@@ -113,6 +121,40 @@ def pieces(I, n=4):
         out.append(dict(mm3=round(float(p.volume()), 2), at=[round(float(v), 1) for v in (bb[:3] + bb[3:]) / 2],
                         extent_mm=[round(float(v), 1) for v in ext], depth_mm=round(float(ext.min()), 2)))
     return out
+
+
+def riders(A):
+    """the riders rule on an "assembly" block (no meshes): (rows, own) with a row per part that rides on a path, ok or not and why;
+    own: each part's first own path's order (when it goes onto its carrier)"""
+    paths = list(A.get("paths", []))
+    own = {}
+    for q in paths:
+        own[q["part"]] = min(own.get(q["part"], 1e9), q.get("order", 0))
+    fixed = {}
+    for f in A.get("fixed", []):
+        fixed.setdefault(f["part"], []).append(f)
+    rows = []
+    for p in paths:
+        grp = [p["part"]] + list(p.get("with", []))
+        for x in p.get("with", []):
+            others = set(grp) - {x}
+            q = next((q for q in paths if q is not p and q["part"] == x and q.get("order", 0) <= p.get("order", 0)
+                      and others & (set(q.get("into", [])) | set(q.get("against", []) or []))), None)
+            f = next((f for f in fixed.get(x, []) if others & set([f["to"]] if isinstance(f.get("to"), str) else f.get("to") or [])), None)
+            r = dict(part=x, on=p["part"], path=p["name"], ok=True)
+            if q is not None:
+                r["by"] = f"its own path '{q['name']}'"
+            elif f is not None:
+                r["by"] = f"fixed: {f.get('how')}"
+                if not f.get("how") or not f.get("why"):
+                    r.update(ok=False, why="its fixed entry gives no how or why")
+                late = [b for b in f.get("before", []) if own.get(b, 1e9) <= f.get("order", -1e9) or b not in own]
+                if f.get("before") and ("order" not in f or late):
+                    r.update(ok=False, why=f"fixed before {f['before']}, but " + ("it gives no order" if "order" not in f else f"{late} have no later path of their own"))
+            else:
+                r.update(ok=False, why=f"rides with {p['part']} on the path '{p['name']}' with no path of its own onto it and no fixed-in-place reason")
+            rows.append(r)
+    return rows, own
 
 
 def run(drone, log=print, _proto=None):
@@ -214,6 +256,13 @@ def run(drone, log=print, _proto=None):
     for p in plist:
         for r in [p["part"]] + list(p.get("with", [])):
             movers[r] = p.get("order", 0)
+    rrows, own = riders(A)
+    for f in A.get("fixed", []):                                   # a part made fast in place is there from its order on
+        if "order" in f:
+            own[f["part"]] = min(own.get(f["part"], 1e9), f["order"])
+    for r in rrows:
+        if not r["ok"]:
+            bad(r["part"], f"{r['why']}"); bad(r["on"], f"{r['part']}: {r['why']}")
     for p in plist:
         nm = p["name"]; mv = p["part"]
         ride = [mv] + list(p.get("with", []))
@@ -234,6 +283,10 @@ def run(drone, log=print, _proto=None):
         placed = [i for i in M if i not in ride and i not in p.get("ignore", []) and movers.get(i, -1e9) < order]
         if p.get("against") is not None:                       # a step done in hand off the drone: only these are in its way
             placed = [i for i in p["against"] if i in M]
+        for P in plist:                                        # a rider's own path: its carrier and the riders that went in before it are in its way
+            if P is not p and mv in P.get("with", []) and order <= P.get("order", 0):
+                placed += [i for i in [P["part"]] + list(P["with"]) if i in M and i not in ride and i not in placed and i not in p.get("ignore", [])
+                           and (i == P["part"] or own.get(i, 1e9) < order)]
         into = set(p.get("into", []))
         Ps = [piece.transform(T[:3, :].tolist()) for T in Ts]
         BB = [np.asarray(q.bounding_box(), float) for q in Ps]
@@ -274,10 +327,10 @@ def run(drone, log=print, _proto=None):
         for b_ in tight:
             bad(b_["part"], f"tight on the path '{nm}' (gap {b_['gap_mm']:.2f} of {g:.2f} {b_['along']})"); bad(mv, f"path '{nm}' tight on {b_['part']} (gap {b_['gap_mm']:.2f} of {g:.2f} {b_['along']})")
 
-    ok = all(r["ok"] for r in pairs) and all(r["ok"] for r in mrows) and all(r["ok"] for r in prow)
+    ok = all(r["ok"] for r in pairs) and all(r["ok"] for r in mrows) and all(r["ok"] for r in prow) and all(r["ok"] for r in rrows)
     gate = not a.get("archived")                              # every live drone gates (design chat 15 Nov: project-wide); archived ones only report
     rep = dict(drone=drone, ok=bool(ok), gate=gate, fit_tol_mm3=tol, fit_table=FIT.table(), grow_mm=FIT.GROW, parts_checked=len(M), printed=sorted(printed),
-               skipped=skipped, pairs=sorted(pairs, key=lambda r: (r["ok"], -r["mm3"])), mates=mrows, paths=prow,
+               skipped=skipped, pairs=sorted(pairs, key=lambda r: (r["ok"], -r["mm3"])), mates=mrows, paths=prow, riders=rrows,
                not_print_ready={k: v for k, v in sorted(blame.items())} if gate else {},
                would_block={} if gate else {k: v for k, v in sorted(blame.items())}, seconds=round(time.time() - t0, 1), placed=stage_of)
     back = {i: blame[i] for i, v in stage_of.items() if v["stage"] == "optimised" and i in blame}
@@ -307,6 +360,9 @@ def summary(rep):
                 L.append(f"  PATH  '{r['name']}' ({r['part']}) tight on {b['part']}: gap {b['gap_mm']} of {r['gap_mm']} {b['along']}")
             if r.get("why", "").startswith("sweep failed"):
                 L.append(f"  PATH  '{r['name']}': {r['why']}")
+    for r in rep.get("riders", []):
+        if not r["ok"]:
+            L.append(f"  RIDER {r['part']}: {r['why']}")
     n = sum(1 for r in rep["paths"] if r["ok"])
     L.append(f"  paths {n} / {len(rep['paths'])} clear, mates {sum(1 for r in rep['mates'] if r['ok'])} / {len(rep['mates'])}, "
              f"not print-ready: {', '.join(rep['not_print_ready']) or 'none'}")

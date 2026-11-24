@@ -89,7 +89,7 @@ pre#out{font:400 .85rem/1.5 var(--mono);background:var(--panel);border:1px solid
   <div class="cols">
     <div class="box"><h3>Printed</h3><ul class="plain">
       <li><span class="qty">1×</span>bench base</li>
-      <li><span class="qty">1×</span>bench turret</li>
+      <li><span class="qty">1×</span>bench turret (the 24 Nov file: open drum, motor rails)</li>
       <li><span class="qty">1×</span>spool (with the 40-tooth gear)</li>
       <li><span class="qty">2×</span>pinion (one spare)</li>
       <li><span class="qty">2×</span>roller tube (the roller file, printed twice)</li>
@@ -106,13 +106,13 @@ pre#out{font:400 .85rem/1.5 var(--mono);background:var(--panel);border:1px solid
       <li><span class="qty">1×</span>Arducam camera in its metal case (bracket off) + its own 2 side screws</li>
     </ul></div>
     <div class="box"><h3>Hardware</h3><ul class="plain">
-      <li><span class="qty">1×</span>M3 × 40 + nyloc (spool axle)</li>
+      <li><span class="qty">1×</span>M3 × 50 + nyloc (spool axle)</li>
       <li><span class="qty">1×</span>3 mm carbon rod, cut to 23.8 mm (roller axle)</li>
-      <li><span class="qty">5×</span>M3 × 10 (4 turret to base, 1 camera idler)</li>
+      <li><span class="qty">4×</span>M3 × 8 (turret to base)</li>
+      <li><span class="qty">1×</span>M3 × 10 (camera idler)</li>
       <li><span class="qty">5×</span>M3 heat-set inserts, 5.7 long (4 bench base, 1 head frame)</li>
       <li><span class="qty">1×</span>M2 × 4 (blade A)</li>
       <li><span class="qty">1×</span>M2 × 6 + nut (blade B)</li>
-      <li><span class="qty">2×</span>M1.6 × 4 (motor face)</li>
       <li><span class="qty">—</span>5-min epoxy, CA, kapton, light oil</li>
       <li><span class="qty">tool</span>PH1 screwdriver, shaft 75 mm or longer</li>
     </ul></div>
@@ -146,7 +146,7 @@ pre#out{font:400 .85rem/1.5 var(--mono);background:var(--panel);border:1px solid
       <text x="352" y="86">lens at the top</text>
       <line x1="331" y1="40" x2="331" y2="14" stroke="var(--tape)" stroke-width="7"/>
       <text x="352" y="22">mast up to the head frame</text>
-      <text x="420" y="196" fill="var(--muted)">spool axle: M3 × 40</text>
+      <text x="420" y="196" fill="var(--muted)">spool axle: M3 × 50</text>
       <text x="420" y="210" fill="var(--muted)">through both walls</text>
     </svg>
     <figcaption>Side view, schematic, not to scale. The motor sits under the spool; its pinion drives the spool's gear.</figcaption>
@@ -157,11 +157,10 @@ pre#out{font:400 .85rem/1.5 var(--mono);background:var(--panel);border:1px solid
   <h2>Assembly</h2>
   <ol class="steps" id="steps">
     <li class="step"><span class="n"></span>
-      <label><input type="checkbox" id="s1"><h3>Base</h3></label>
+      <label><input type="checkbox" id="s1"><h3>Base inserts</h3></label>
       <ul><li>Heat-set the 4 inserts into the bench base's four posts.</li>
-      <li>Bolt the bench turret on top with 4 × M3 × 10.</li>
-      <li>Clamp the base to the table by its end tabs.</li></ul>
-      <span class="uses">bench base · bench turret · 4 inserts · 4 × M3 × 10</span></li>
+      <li>Set the base aside. The turret goes on last (step 7): the motor needs 10 mm of travel to go in, and the base leaves it 3.</li></ul>
+      <span class="uses">bench base · 4 inserts</span></li>
 
     <li class="step"><span class="n"></span>
       <label><input type="checkbox" id="s2"><h3>Blades and ribbon</h3></label>
@@ -178,21 +177,36 @@ pre#out{font:400 .85rem/1.5 var(--mono);background:var(--panel);border:1px solid
       <span class="uses">spool · 5-min epoxy</span></li>
 
     <li class="step"><span class="n"></span>
-      <label><input type="checkbox" id="s4"><h3>Roller, then the spool</h3></label>
+      <label><input type="checkbox" id="s5"><h3>Motor and pinion</h3></label>
+      <ul><li>Hold the turret upside down, off the base. The pinion's pocket is the slot between the motor plate and the block behind it, open toward you.</li>
+      <li>Slide the N20 in from the side of the wall the turret printed on, shaft first, flats up and down, between the two rails, until the shaft's tip just shows through the motor plate.</li>
+      <li>Drop a pinion into its pocket, its round boss away from the motor. Hold it against the block with a fingertip, line up the flat, and push the motor home: the shaft goes through the pinion into the block's hole, the gearbox stops on the plate.</li>
+      <li>No screws: the rails hold the motor (a firm hand push), the pinion and the base keep it in. The plate's two small holes stay empty.</li>
+      <li>A drop of CA on the shaft's tip side of the pinion only if the pinion slips on the shaft later.</li></ul>
+      <span class="uses">bench turret · N20 · pinion</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s4"><h3>Roller</h3></label>
       <ul><li>Cut the 3 mm carbon rod to 23.8 mm, sand the ends square, and put a drop of light oil on it.</li>
       <li>Clip the battery contact onto the S2 saddle's thin tab, from the slit end: the contact's flat back goes into the slit, the curved leaf sits on the tab's open face.</li>
       <li>Slide a tube, the saddle (groove down) and the second tube onto the rod, saddle in the middle.</li>
-      <li>From the spool's side, push the saddle into the turret's middle pocket, leaf first, and drop the rod's ends into the two slots. The leaf presses on the pocket's far wall.</li>
-      <li>Set the spool between the turret's side walls, gear on the side with the motor plate. Its coil holds the roller in place.</li>
-      <li>Push an M3 × 40 through the walls and the spool. Nyloc on the far side, snug, not tight: the spool must spin freely.</li></ul>
-      <span class="uses">2 roller tubes · saddle S2 · 1 contact · carbon rod 23.8 mm · spool · M3 × 40 + nyloc</span></li>
+      <li>Turret upright. From the open back (the side away from the throat), push the saddle into the turret's middle pocket, leaf first, and drop the rod's ends into the two slots. The leaf presses on the pocket's far wall.</li></ul>
+      <span class="uses">2 roller tubes · saddle S2 · 1 contact · carbon rod 23.8 mm</span></li>
 
     <li class="step"><span class="n"></span>
-      <label><input type="checkbox" id="s5"><h3>Motor</h3></label>
-      <ul><li>Press a pinion onto the N20 shaft, flat to flat, all the way on. A drop of CA.</li>
-      <li>Screw the motor's face to the turret's motor plate with 2 × M1.6 × 4, so the pinion meshes with the spool's gear.</li>
+      <label><input type="checkbox" id="s13"><h3>Spool and axle</h3></label>
+      <ul><li>Wind the blade stack onto the spool by hand and hold it wound.</li>
+      <li>Bring the spool in from the open back and above, sloping down toward the throat (about 30°), gear on the motor plate's side. Its small hub and the ribbon slide down the drum's open U on the other wall.</li>
+      <li>Let the spool turn as its gear meets the pinion. Its coil holds the roller in place.</li>
+      <li>Push the M3 × 50 through the walls and the spool, head on the U's side. Nyloc on the far side, snug, not tight: the spool must spin freely.</li>
       <li>Turn the spool by hand: the gears should roll with no tight spot.</li></ul>
-      <span class="uses">N20 · pinion · 2 × M1.6 × 4 · CA</span></li>
+      <span class="uses">spool · M3 × 50 + nyloc</span></li>
+
+    <li class="step"><span class="n"></span>
+      <label><input type="checkbox" id="s14"><h3>Turret onto the base</h3></label>
+      <ul><li>Lower the turret straight down onto the base's four posts, the motor into the base's opening.</li>
+      <li>Bolt it down with 4 × M3 × 8 from above. Clamp the base to the table by its end tabs.</li></ul>
+      <span class="uses">bench base · 4 × M3 × 8</span></li>
 
     <li class="step"><span class="n"></span>
       <label><input type="checkbox" id="s6"><h3>Check the roller</h3></label>
@@ -202,7 +216,7 @@ pre#out{font:400 .85rem/1.5 var(--mono);background:var(--panel);border:1px solid
 
     <li class="step"><span class="n"></span>
       <label><input type="checkbox" id="s7"><h3>Wind and feed</h3></label>
-      <ul><li>Turn the spool by hand to wind the stack on, leaving about 160 mm free.</li>
+      <ul><li>Unwind the stack until about 160 mm is free.</li>
       <li>Feed the free ends up through the throat: in at the flat slot at the bottom, out of the curved opening at the top.</li>
       <li>Test the roller: run the mast fully out, then push it back down by hand. If the coil's outer turn lifts anywhere, swap S2 for S3. If it holds and the mast runs freely, try S1 too; keep the lightest saddle that holds.</li></ul>
       <span class="uses">—</span></li>
@@ -245,6 +259,10 @@ pre#out{font:400 .85rem/1.5 var(--mono);background:var(--panel);border:1px solid
       <li>The driver board is not needed on the bench. Leave the SG90 unplugged and tilt the camera by hand.</li></ul>
       <span class="uses">5 V USB supply · 2 leads</span></li>
   </ol>
+  <div class="note"><strong>If you build on the turret printed before 24 Nov:</strong> reprint it if you can (3 h); it has a closed drum ring, a closed pinion pocket and no motor rails. To use it for a first run, three cuts and glue:
+    <ul><li>Drum ring (the 2.5 mm ring standing 6.2 mm off the inside of the wall it printed on). Look at it from the gear side with the throat on your left. Cut the ring away flush with the wall from 11 o'clock clockwise round to 5 o'clock (flush cutters, then a knife). Keep the throat-side half.</li>
+    <li>Pinion pocket (between the motor plate and the block behind it, under the spool's gear). Its mouth on top is 10.4 mm wide. Pare both lips straight down until it is 12.0 wide (0.8 off each side, 4.5 deep), and notch the 0.7 mm lip of the block the same way, 7.6 wide, for the pinion's boss. The pinion then drops in from above, before the spool.</li>
+    <li>Motor: tip its back end down about 1° to start it under the wall, then push it home through the pinion. With no rails it needs glue: a thick bead of 5-min epoxy along the top and bottom edges of the gearbox's front plate against the motor plate. Keep it off the shaft and out of the gears. It will not come out again.</li></ul></div>
   <div class="note warn"><strong>Careful:</strong> cut tape edges are sharp. Wear gloves for steps 2 and 8, and keep fingers clear of the gears when the motor runs.</div>
 </section>
 
