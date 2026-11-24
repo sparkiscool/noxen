@@ -7,7 +7,7 @@
   "specks_plain": 0,
   "bodies_eroded": 1,
   "eroded_volumes_mm3": [
-   1494.8
+   1494.6
   ],
   "sealed_voids": [],
   "inner_shells": [],
@@ -30,8 +30,8 @@
    {
     "case": "frame NB-R0 axial 86 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.083,
-    "across": 0.052,
+    "inlayer": 0.08,
+    "across": 0.051,
     "at": [
      147.2,
      5.5,
@@ -41,30 +41,30 @@
    {
     "case": "frame NB-R0 side 7.0 N + end moment 566 N mm (+)",
     "cls": "crash",
-    "inlayer": 0.18,
-    "across": 0.12,
+    "inlayer": 0.2,
+    "across": 0.123,
     "at": [
-     150.2,
-     7.5,
-     7.5
+     149.2,
+     6.5,
+     6.5
     ]
    },
    {
     "case": "frame NB-R0 side 7.0 N + end moment 566 N mm (-)",
     "cls": "crash",
-    "inlayer": 0.18,
-    "across": 0.094,
+    "inlayer": 0.2,
+    "across": 0.103,
     "at": [
-     150.2,
-     7.5,
-     7.5
+     149.2,
+     6.5,
+     6.5
     ]
    },
    {
     "case": "frame NB-R7 axial 86 N (pull-out)",
     "cls": "crash",
-    "inlayer": 0.083,
-    "across": 0.053,
+    "inlayer": 0.08,
+    "across": 0.052,
     "at": [
      147.2,
      -5.5,
@@ -74,30 +74,30 @@
    {
     "case": "frame NB-R7 side 7.0 N + end moment 565 N mm (+)",
     "cls": "crash",
-    "inlayer": 0.184,
-    "across": 0.1,
+    "inlayer": 0.205,
+    "across": 0.114,
     "at": [
-     150.2,
-     -7.5,
-     7.5
+     149.2,
+     -6.5,
+     6.5
     ]
    },
    {
     "case": "frame NB-R7 side 7.0 N + end moment 565 N mm (-)",
     "cls": "crash",
-    "inlayer": 0.184,
-    "across": 0.08,
+    "inlayer": 0.205,
+    "across": 0.105,
     "at": [
-     150.2,
-     -7.5,
-     7.5
+     149.2,
+     -6.5,
+     6.5
     ]
    },
    {
     "case": "crash 35 g through the longest rod NB-R0 (122 mm), axial + side",
     "cls": "crash",
-    "inlayer": 0.089,
-    "across": 0.055,
+    "inlayer": 0.086,
+    "across": 0.054,
     "at": [
      147.2,
      5.5,
@@ -105,10 +105,43 @@
     ]
    },
    {
-    "case": "frame BN0-NB axial 170 N (pull-out), held at the other sockets",
+    "case": "frame BN0-NB axial 170 N (pull-out), held at BN1-NB + NB-R0",
     "cls": "crash",
-    "inlayer": 0.12,
-    "across": 0.067,
+    "inlayer": 0.066,
+    "across": 0.026,
+    "at": [
+     148.2,
+     6.5,
+     2.5
+    ]
+   },
+   {
+    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at BN1-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.145,
+    "across": 0.086,
+    "at": [
+     143.2,
+     3.5,
+     8.5
+    ]
+   },
+   {
+    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at BN1-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.145,
+    "across": 0.083,
+    "at": [
+     143.2,
+     3.5,
+     8.5
+    ]
+   },
+   {
+    "case": "frame BN0-NB axial 170 N (pull-out), held at NB-R7",
+    "cls": "crash",
+    "inlayer": 0.119,
+    "across": 0.068,
     "at": [
      150.2,
      -0.5,
@@ -116,32 +149,65 @@
     ]
    },
    {
-    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at the other sockets",
+    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at NB-R7",
     "cls": "crash",
-    "inlayer": 0.17,
-    "across": 0.101,
-    "at": [
-     144.2,
-     2.5,
-     8.5
-    ]
-   },
-   {
-    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at the other sockets",
-    "cls": "crash",
-    "inlayer": 0.17,
+    "inlayer": 0.18,
     "across": 0.102,
     "at": [
-     144.2,
-     2.5,
+     143.2,
+     3.5,
      8.5
     ]
    },
    {
-    "case": "frame BN1-NB axial 170 N (pull-out), held at the other sockets",
+    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at NB-R7",
     "cls": "crash",
-    "inlayer": 0.12,
-    "across": 0.068,
+    "inlayer": 0.18,
+    "across": 0.101,
+    "at": [
+     143.2,
+     3.5,
+     8.5
+    ]
+   },
+   {
+    "case": "frame BN1-NB axial 170 N (pull-out), held at BN0-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.058,
+    "across": 0.032,
+    "at": [
+     148.2,
+     -0.5,
+     2.5
+    ]
+   },
+   {
+    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at BN0-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.145,
+    "across": 0.085,
+    "at": [
+     143.2,
+     -3.5,
+     8.5
+    ]
+   },
+   {
+    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at BN0-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.145,
+    "across": 0.082,
+    "at": [
+     143.2,
+     -3.5,
+     8.5
+    ]
+   },
+   {
+    "case": "frame BN1-NB axial 170 N (pull-out), held at NB-R0",
+    "cls": "crash",
+    "inlayer": 0.119,
+    "across": 0.069,
     "at": [
      150.2,
      0.5,
@@ -149,41 +215,41 @@
     ]
    },
    {
-    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at the other sockets",
+    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at NB-R0",
     "cls": "crash",
-    "inlayer": 0.17,
-    "across": 0.101,
+    "inlayer": 0.179,
+    "across": 0.102,
     "at": [
-     144.2,
-     -2.5,
+     143.2,
+     -3.5,
      8.5
     ]
    },
    {
-    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at the other sockets",
+    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at NB-R0",
     "cls": "crash",
-    "inlayer": 0.17,
-    "across": 0.102,
+    "inlayer": 0.179,
+    "across": 0.1,
     "at": [
-     144.2,
-     -2.5,
+     143.2,
+     -3.5,
      8.5
     ]
    }
   ],
-  "worst": 0.184,
+  "worst": 0.205,
   "worst_case": "frame NB-R7 side 7.0 N + end moment 565 N mm (+)",
   "worst_at": [
-   150.2,
-   -7.5,
-   7.5
+   149.2,
+   -6.5,
+   6.5
   ],
   "ok": true
  },
  "mass_g": 3.57,
  "watertight": true,
  "export": {
-  "faces_in": 32644,
+  "faces_in": 32986,
   "degenerate": 0,
   "folded": 0,
   "caps_split": 0,
@@ -193,7 +259,7 @@
   "n_dropped_shells": 0,
   "bodies": 1,
   "open_kept": [],
-  "faces": 32644,
+  "faces": 32986,
   "boundary_edges": 0,
   "nonmanifold_edges": 0,
   "watertight": true,
@@ -204,12 +270,12 @@
    "caps_split": 26,
    "caps_left": 0,
    "watertight": true,
-   "faces": 47234,
+   "faces": 47520,
    "n_dropped_shells": 0,
    "dropped_shells": []
   },
-  "volume_mm3": 2905.3,
-  "exact_mm3": 2905.2
+  "volume_mm3": 2904.1,
+  "exact_mm3": 2904.1
  },
  "bodies": {
   "bodies_raw": 1,
@@ -217,48 +283,51 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 2905.2,
+ "volume_mm3": 2904.1,
  "drawn_g": 2.31,
  "export_cleanup": {
   "pitch": 0.25,
   "erode_mm": 0.9,
   "core_limit_mm3": 10.0,
-  "specks_mm3": [],
+  "specks_mm3": [
+   0.016
+  ],
   "slivers": [],
   "kept_walls": [],
-  "removed_mm3": 0.0
+  "removed_mm3": 0.01,
+  "specks": 1
  },
  "memory_build": [
   {
-   "estimate_gb": 0.63,
+   "estimate_gb": 0.65,
    "parts": {
-    "held": 0.37,
+    "held": 0.38,
     "gate": 0.03,
     "mesh": 0.24
    },
    "limit_gb": 14.0,
-   "gate_cells": 649531,
+   "gate_cells": 671549,
    "bounds_mm": [
     24.1,
     26.1,
-    13.7
+    14.1
    ],
-   "faces": 42736,
+   "faces": 42984,
    "when": "before the export cleanup"
   },
   {
-   "estimate_gb": 0.4,
+   "estimate_gb": 0.42,
    "parts": {
-    "held": 0.37,
+    "held": 0.39,
     "gate": 0.03,
     "mesh": 0.0
    },
    "limit_gb": 14.0,
-   "gate_cells": 649531,
+   "gate_cells": 671549,
    "bounds_mm": [
     24.1,
     26.1,
-    13.7
+    14.1
    ],
    "faces": 0,
    "when": "before the solid check"
@@ -266,7 +335,7 @@
  ],
  "stl": "scout_v4_node_nb.stl",
  "view_stl": "scout_v4_node_nb_view.stl",
- "view_faces": 32644,
+ "view_faces": 32986,
  "preview": "preview.png",
  "layout": {
   "settings": {
@@ -351,10 +420,10 @@
   "volfrac": 0.1192947215712532,
   "nd": 8961,
   "sym_axes": [],
-  "n_real": 13,
+  "n_real": 19,
   "n_ties": 18,
   "backend": "direct",
-  "iterations": 122,
+  "iterations": 112,
   "stopped": "max_stage",
   "checks": [
    {
@@ -364,16 +433,16 @@
     "worst_case": "frame NB-R7 side 7.0 N + end moment 565 N mm (+)"
    },
    {
-    "it": 46,
+    "it": 41,
     "beta": 8.0,
-    "worst": 0.211,
-    "worst_case": "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at the other sockets"
+    "worst": 0.213,
+    "worst_case": "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at NB-R7"
    },
    {
-    "it": 72,
+    "it": 62,
     "beta": 16.0,
-    "worst": 0.206,
-    "worst_case": "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at the other sockets"
+    "worst": 0.204,
+    "worst_case": "frame NB-R0 side 7.0 N + end moment 566 N mm (+)"
    }
   ],
   "hold": {
@@ -389,18 +458,24 @@
     "frame NB-R7 side 7.0 N + end moment 565 N mm (+)": 0.247,
     "frame NB-R7 side 7.0 N + end moment 565 N mm (-)": 0.247,
     "crash 35 g through the longest rod NB-R0 (122 mm), axial + side": 0.113,
-    "frame BN0-NB axial 170 N (pull-out), held at the other sockets": 0.164,
-    "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at the other sockets": 0.234,
-    "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at the other sockets": 0.234,
-    "frame BN1-NB axial 170 N (pull-out), held at the other sockets": 0.164,
-    "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at the other sockets": 0.234,
-    "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at the other sockets": 0.234
+    "frame BN0-NB axial 170 N (pull-out), held at BN1-NB + NB-R0": 0.093,
+    "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at BN1-NB + NB-R0": 0.156,
+    "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at BN1-NB + NB-R0": 0.156,
+    "frame BN0-NB axial 170 N (pull-out), held at NB-R7": 0.164,
+    "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at NB-R7": 0.234,
+    "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at NB-R7": 0.234,
+    "frame BN1-NB axial 170 N (pull-out), held at BN0-NB + NB-R0": 0.092,
+    "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at BN0-NB + NB-R0": 0.158,
+    "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at BN0-NB + NB-R0": 0.158,
+    "frame BN1-NB axial 170 N (pull-out), held at NB-R0": 0.164,
+    "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at NB-R0": 0.234,
+    "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at NB-R0": 0.234
    }
   },
   "cavity": {
-   "last": 1.1338923284077251,
+   "last": 0.9478071889150792,
    "ratio": 5.0,
-   "T0": 16.91691847300489,
+   "T0": 16.916918473004884,
    "row": false
   }
  },
@@ -428,40 +503,48 @@
    "frame NB-R7 side 7.0 N + end moment 565 N mm (+)",
    "frame NB-R7 side 7.0 N + end moment 565 N mm (-)",
    "crash 35 g through the longest rod NB-R0 (122 mm), axial + side",
-   "frame BN0-NB axial 170 N (pull-out), held at the other sockets",
-   "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at the other sockets",
-   "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at the other sockets",
-   "frame BN1-NB axial 170 N (pull-out), held at the other sockets",
-   "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at the other sockets",
-   "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at the other sockets"
+   "frame BN0-NB axial 170 N (pull-out), held at BN1-NB + NB-R0",
+   "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at BN1-NB + NB-R0",
+   "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at BN1-NB + NB-R0",
+   "frame BN0-NB axial 170 N (pull-out), held at NB-R7",
+   "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at NB-R7",
+   "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at NB-R7",
+   "frame BN1-NB axial 170 N (pull-out), held at BN0-NB + NB-R0",
+   "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at BN0-NB + NB-R0",
+   "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at BN0-NB + NB-R0",
+   "frame BN1-NB axial 170 N (pull-out), held at NB-R0",
+   "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at NB-R0",
+   "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at NB-R0"
   ],
   "supports": [
    "default",
-   "hold BN0-NB",
-   "hold BN1-NB"
+   "hold BN0-NB at BN1-NB + NB-R0",
+   "hold BN0-NB at NB-R7",
+   "hold BN1-NB at BN0-NB + NB-R0",
+   "hold BN1-NB at NB-R0"
   ]
  },
- "build_s": 16.2,
- "layout_s": 1384,
- "peak_gb": 0.799988,
+ "build_s": 16.0,
+ "layout_s": 1439,
+ "peak_gb": 0.835444,
  "memory": {
-  "estimate_gb": 0.95,
+  "estimate_gb": 1.0,
   "parts": {
-   "held": 0.34,
+   "held": 0.39,
    "factor": 0.24,
    "assembly": 0.11,
    "block": 0.23,
-   "energies": 0.03
+   "energies": 0.04
   },
   "limit_gb": 14.0,
-  "cases": 31,
+  "cases": 37,
   "active_dofs": 39921,
   "backend": "direct",
   "block": 64,
   "build": {
-   "estimate_gb": 0.43,
+   "estimate_gb": 0.48,
    "parts": {
-    "held": 0.34,
+    "held": 0.39,
     "gate": 0.09,
     "mesh": 0.0
    },
@@ -475,7 +558,7 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 0.76
+  "peak_it1_gb": 0.8
  },
  "early": {
   "rows": [
@@ -557,7 +640,40 @@
     ]
    },
    {
-    "case": "frame BN0-NB axial 170 N (pull-out), held at the other sockets",
+    "case": "frame BN0-NB axial 170 N (pull-out), held at BN1-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.093,
+    "across": 0.024,
+    "at": [
+     149.2,
+     5.5,
+     3.5
+    ]
+   },
+   {
+    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at BN1-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.156,
+    "across": 0.07,
+    "at": [
+     145.2,
+     2.5,
+     8.5
+    ]
+   },
+   {
+    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at BN1-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.156,
+    "across": 0.082,
+    "at": [
+     145.2,
+     2.5,
+     8.5
+    ]
+   },
+   {
+    "case": "frame BN0-NB axial 170 N (pull-out), held at NB-R7",
     "cls": "crash",
     "inlayer": 0.164,
     "across": 0.097,
@@ -568,7 +684,7 @@
     ]
    },
    {
-    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at the other sockets",
+    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (+), held at NB-R7",
     "cls": "crash",
     "inlayer": 0.234,
     "across": 0.115,
@@ -579,7 +695,7 @@
     ]
    },
    {
-    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at the other sockets",
+    "case": "frame BN0-NB side 16.2 N + end moment 449 N mm (-), held at NB-R7",
     "cls": "crash",
     "inlayer": 0.234,
     "across": 0.141,
@@ -590,7 +706,40 @@
     ]
    },
    {
-    "case": "frame BN1-NB axial 170 N (pull-out), held at the other sockets",
+    "case": "frame BN1-NB axial 170 N (pull-out), held at BN0-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.092,
+    "across": 0.029,
+    "at": [
+     148.2,
+     -2.5,
+     1.5
+    ]
+   },
+   {
+    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at BN0-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.158,
+    "across": 0.07,
+    "at": [
+     145.2,
+     -2.5,
+     8.5
+    ]
+   },
+   {
+    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at BN0-NB + NB-R0",
+    "cls": "crash",
+    "inlayer": 0.158,
+    "across": 0.082,
+    "at": [
+     145.2,
+     -2.5,
+     8.5
+    ]
+   },
+   {
+    "case": "frame BN1-NB axial 170 N (pull-out), held at NB-R0",
     "cls": "crash",
     "inlayer": 0.164,
     "across": 0.097,
@@ -601,7 +750,7 @@
     ]
    },
    {
-    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at the other sockets",
+    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (+), held at NB-R0",
     "cls": "crash",
     "inlayer": 0.234,
     "across": 0.115,
@@ -612,7 +761,7 @@
     ]
    },
    {
-    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at the other sockets",
+    "case": "frame BN1-NB side 16.2 N + end moment 449 N mm (-), held at NB-R0",
     "cls": "crash",
     "inlayer": 0.234,
     "across": 0.141,
@@ -637,7 +786,7 @@
   "k": 3.0
  },
  "field": {
-  "worst": 0.211,
+  "worst": 0.213,
   "worst_case": "frame NB-R0 side 7.0 N + end moment 566 N mm (+)",
   "worst_at": [
    150.2,
@@ -645,7 +794,7 @@
    6.5
   ],
   "beta": 32.0,
-  "iteration": 122
+  "iteration": 112
  },
  "gen_cm3": 1.0,
  "h": 1.0,
@@ -708,6 +857,7 @@
   },
   "parity": [],
   "paths": [],
+  "path_riders": [],
   "fit_sizes": {
    "recorded": true,
    "declared": [
@@ -749,12 +899,12 @@
   },
   "held_load": [],
   "interface_case": [],
-  "cases": 13,
-  "supports": 3,
+  "cases": 19,
+  "supports": 5,
   "fails": [],
   "room_full": {
    "worst": 0.079,
-   "worst_case": "frame BN1-NB axial 170 N (pull-out), held at the other sockets",
+   "worst_case": "frame BN1-NB axial 170 N (pull-out), held at NB-R0",
    "worst_at": [
     150.2,
     0.5,
@@ -768,24 +918,19 @@
   }
  },
  "baseline": null,
- "total_s": 1400,
+ "total_s": 1455,
  "part_sha": "47df4d46b39c",
- "lib_sha": "3550e99a9566",
- "setup_sha": "15b63dce143a71ff",
+ "lib_sha": "1b90939a8908",
+ "setup_sha": "75b1c20c83feb348",
  "max_worst": 0.3,
  "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/scout_v4_node_nb.stl",
-  "sha256": "8b91d209fcbf172a705ec1d3063b9bbe99e91c4137bca78d96c156f924708655",
-  "bytes": 1632284,
-  "faces": 32644,
-  "view_faces": 32644,
-  "view_sha256": "8b91d209fcbf172a705ec1d3063b9bbe99e91c4137bca78d96c156f924708655",
-  "at": "2026-11-24 03:31"
- },
- "assembly": {
-  "drone": "scout_v4",
-  "ok": true,
-  "why": []
+  "sha256": "53042790fdae4906e763ba66d1b243b9027bd4911c243f3f64d21078c437671d",
+  "bytes": 1649384,
+  "faces": 32986,
+  "view_faces": 32986,
+  "view_sha256": "53042790fdae4906e763ba66d1b243b9027bd4911c243f3f64d21078c437671d",
+  "at": "2026-11-24 05:12"
  }
 }
