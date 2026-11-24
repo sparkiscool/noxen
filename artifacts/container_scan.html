@@ -239,7 +239,7 @@ function buildScene(sd){
    for(const dz of[-.1,0,.1])pr.push(cyl([0,4.42,dz],.025,12,'x',pick([[20,20,22],[200,60,40],[40,80,200]]),'',8));
    add(C.tray,0,0,z,0,pr)}
   occ.push({x:2.25,z:10.9,hw:1.6,hd:1.1});   // the drone's start stays clear
-  // ---- people on site (scan and video only)
+  // ---- worker model kept but not placed
   const rotv=(v,tx,tz)=>{let[x,y,z]=v;const c1=Math.cos(tx),s1=Math.sin(tx);[y,z]=[y*c1-z*s1,y*s1+z*c1];const c2=Math.cos(tz),s2=Math.sin(tz);[x,y]=[x*c2-y*s2,x*s2+y*c2];return[x,y,z]};
   const worker=(walk,vest,hat,shirt)=>{ // an adult, 1.78 m, hi-vis vest with reflective bands, hard hat, boots; standing easy or mid-stride
     const pr=[],pants=[46,54,70],skin=[208,160,130],refl=[215,215,220],A=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]];
@@ -260,8 +260,7 @@ function buildScene(sd){
       cyl([0,1.52,0],.05,.1,'y',skin,'skin',8),E([0,1.64,0],[.085,.11,.1],skin,'skin'),box([0,1.625,.1],[.025,.035,.03],skin,'skin'),
       E([0,1.7,0],[.115,.085,.125],hat,'hat'),cyl([0,1.672,0],.155,.014,'y',hat,'hat',14),box([0,1.672,.13],[.2,.014,.07],hat,'hat'));
     return pr};
-  for(const[cx,cz,walk,yaw,vest,hat,shirt]of[[1.6,6.2,0,.5,[235,240,40],[245,245,240],[60,70,92]],[-1.8,2.5,1,-1.3,[255,125,10],[250,210,20],[72,72,76]]]){
-    const pl=placeNear(cx,cz,.4,.4,1.4);if(pl)add(C.worker,pl.x,0,pl.z,yaw,worker(walk,vest,hat,shirt))}
+  // (no people in the scene)
   // ---- site gear on the slab (not in the BIM)
   for(let k=0;k<3;k++){
     const len=3.6,yaw=pick([0,PI/2]),pl=placeFP(len,.25,yaw);if(!pl)continue;const pr=[];
