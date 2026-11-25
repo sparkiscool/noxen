@@ -717,7 +717,7 @@ function drawPoints(p,B,budget){
       const o=OB[i];if(bldgOnly&&o>=0&&OBJ[o].site)continue;
       const isSel=o===sel&&sel>=0;
       let r=col[i*3],g=col[i*3+1],b=col[i*3+2];
-      if(isSel){r=g=b=255}else if(o===hov&&hov>=0){r=r*.5+130;g=g*.5+130;b=b*.5+130}
+      if(isSel){r=g=b=255}else if(o===hov&&hov>=0){if(OBJ[o].site){r=r*.5+130;g=g*.5+130;b=b*.5+130}else{r=r*.4+30;g=g*.4+85;b=b*.4+160}}
       else{const sh=clamp(1.2-zc*.03,.55,1.1);r*=sh;g*=sh;b*=sh}
       const px=(0xff<<24)|((b>255?255:b)<<16)|((g>255?255:g)<<8)|(r>255?255:r);
       const sz=clamp(Math.round(f*.02*inv/zc)+(isSel?1:0),1,4),x0=sx|0,y0=sy|0;
@@ -780,6 +780,7 @@ function paintPoly(ctx,p,B,q,fill,stroke,lw){
   ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.stroke();return true;
 }
 const rgb=(r,g,b)=>'rgb('+(r|0)+','+(g|0)+','+(b|0)+')';
+const HLFILL='rgba(40,110,255,.42)';
 function drawBim(p,B){
   const ctx=p.ctx;ctx.setTransform(p.k,0,0,p.k,0,0);ctx.lineJoin='round';
   ctx.fillStyle='#f4f5f8';ctx.fillRect(0,0,p.W,p.H);
@@ -798,6 +799,7 @@ function drawBim(p,B){
     const isH=q.obj===hov;
     ctx.globalAlpha=o.missing?.34:1;
     paintPoly(ctx,p,B,q,rgb(base[0]*s,base[1]*s,base[2]*s),isH?'#1f4fd0':'rgba(18,28,50,.42)',isH?1.5:.7);
+    if(isH&&!o.site)paintPoly(ctx,p,B,q,HLFILL,'#1f4fd0',1.5);
   }
   ctx.globalAlpha=1;
   pipeLabels(ctx,p,B,null);
@@ -1110,6 +1112,12 @@ function videoOverlay(p,B,tms){
   };
   if($('det').checked&&!onboard()){for(const o of OBJ){if(o.missing)continue;const dd=sub(o.actr,B.eye);if(dot(dd,dd)>70||o.i===sel)continue;box(o,false)}}
   if(sel>=0&&!OBJ[sel].missing)box(OBJ[sel],true);
+  if(hov>=0&&hov!==sel&&!OBJ[hov].site&&!onboard()){   // the object under the view lights up in transparent blue (only the faces the eye reaches)
+    ctx.save();
+    for(const q of POLYA){if(q.obj!==hov)continue;const dd=sub(q.c,B.eye),dl=Math.sqrt(dot(dd,dd))||1;if(dot(q.n,dd)>=0)continue;
+      const dir=[dd[0]/dl,dd[1]/dl,dd[2]/dl];if(castRay(POLYA,B.eye,dir)!==hov)continue;
+      paintPoly(ctx,p,B,q,HLFILL,'rgba(40,110,255,.7)',1)}
+    ctx.restore()}
   drawDep(p,pt=>proj(B,pt,p));
 }
 function drawPolys2(p,B){ // fallback without WebGL: flat lit painter
@@ -1500,7 +1508,7 @@ function frameBody(now){
       else key=ck+'|'+hov+'|'+$('lab').checked+'|'+p.W+'x'+p.H+'|'+(ql>1);
       if(key!==p.key){p.key=key;if(insp.on)drawInspect(p,inspBasis(),OBJ[sel]);else if(cut.type)drawBimCut(p);else drawBim(p,B)}
     }else{
-      const vk=ck+'|'+sel+'|'+ql;
+      const vk=ck+'|'+sel+'|'+ql+'|'+hov;
       if(p.key!==vk){if(GL)drawGL(p,B,now,ql);videoOverlay(p,B,now);p.key=vk}   // nothing moves: nothing is redrawn
     }
   }
