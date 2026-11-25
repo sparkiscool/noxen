@@ -90,7 +90,7 @@ details { margin-top: 38px; } details summary { font-size: 21px; font-weight: 70
 <div class="card">
 <p style="margin-top:0"><b>The answer.</b> Open the case to {{gap}} mm between the boards' cooler faces ({{travel}} mm of travel on each side) and stand the pad 30 mm off the desk. That puts about {{open_cfm}} CFM of the pad's air between the boards, against {{closed_cfm}} CFM with the case closed, and {{flat_cfm}} CFM if the pad lies flat on the desk under the closed case. Each board's own cooler still does the real work; the pad's job is to hand it cool air from below and carry its hot air out of the top.</p>
 <div class="tiles">
-  <div class="tile"><div class="k">Open spacing</div><div class="v">{{gap}} mm</div><div class="l">between the cooler faces; anything from 120 to 160 mm is within 5 %, so it can be a number in the firmware</div></div>
+  <div class="tile"><div class="k">Open spacing</div><div class="v">{{gap}} mm</div><div class="l">between the cooler faces; two ways of scoring it agree here, and the firmware can tune it between 100 and 160</div></div>
   <div class="tile"><div class="k">Air between the boards</div><div class="v">{{closed_cfm}} to {{open_cfm}} CFM</div><div class="l">closed to open; {{open_lo}} to {{open_hi}} CFM open for weak to strong fans, which the listing does not tell us</div></div>
   <div class="tile"><div class="k">Clear space under the pad</div><div class="v">30 mm</div><div class="l">at 5 mm the pad gives only {{clear5}} % of its air; 20 mm is the least ({{clear20}} %)</div></div>
 </div>
@@ -108,7 +108,7 @@ details { margin-top: 38px; } details summary { font-size: 21px; font-weight: 70
 <ol class="notes do">
   <li><b class="n">1</b><b>Pad level, with 30 mm clear under it all round:</b> a printed dock of four corner risers. A pad lying flat on a desk cannot breathe. A filter sleeve round that gap is possible and costs about {{filter_loss}} % of the air.</li>
   <li><b class="n">2</b><b>The case bridges the pad, it does not stand on the mesh.</b> It lands on two saddles at the ends of the dock. Its bottom is an open frame: no floor plate, no base, no fan decks. Board bottom edges 25 mm above the mesh. Centre it on the big fan, which looks about 25 mm behind the pad's centre in the listing photo.</li>
-  <li><b class="n">3</b><b>Open to {{gap}} mm:</b> {{travel}} mm on each side from the closed 54 mm. Give each side 63 mm of screw travel (a 180 mm gap) so the number can be tuned. The rule behind it: each cooler face stands over the outer third of its two small fans, so all five fans blow between the boards.</li>
+  <li><b class="n">3</b><b>Open to {{gap}} mm:</b> {{travel}} mm on each side from the closed 54 mm. Give each side 53 mm of screw travel (a 160 mm gap) so the number can be tuned: try 100, 120 and 140 under load and keep the coolest. The rule behind it: each cooler face stands at the rim of the big fan, so the big fan blows straight up both cooler faces and the small fans sit under the boards' edges.</li>
   <li><b class="n">4</b><b>Boards: cooler sides facing in, fin outlets up.</b> Stand each board so the edge its fin stacks blow out of is the top edge. Outer walls solid, 13 mm outside each board: at {{gap}} mm they stand outside all five fans, so no air is wasted.</li>
   <li><b class="n">5</b><b>Lid: each half an open grille, no lid fan.</b> The {{slot}} mm slot that opens down the middle is the main way out. Leave 150 mm clear above.</li>
   <li><b class="n">6</b><b>Spine: two end posts and the handle beam, 30 mm wide at most.</b> Nothing standing in the middle of the gap; if a centre post is needed, one up to 40 mm wide straight over the big fan's hub, where the air is dead anyway. Fixed end plates 150 wide on the posts keep the ends shut when the sides are out.</li>
@@ -123,10 +123,10 @@ details { margin-top: 38px; } details summary { font-size: 21px; font-weight: 70
 <p class="small" style="margin-top:0">Air from the pad that goes between the boards, against the gap. Line: the middle guess for the fans. Band: weak to strong fans. Point at a dot for its numbers.</p>
 <div style="overflow-x:auto">{{gapchart}}</div>
 <div style="overflow-x:auto; margin-top:10px">{{gaptable}}</div>
-<p class="small">Up to 120 mm every millimetre brings more fan under the gap. Past 160 mm nothing more comes and the air only slows down. {{gap}} mm takes {{g140}} % of the most air there is while it still moves at two thirds of a metre a second (120 mm takes {{g120}} %).</p>
+<p class="small">Up to 120 mm every millimetre brings more fan under the gap. Wider than that, the extra air rises up the middle, more than 30 mm from either board, where it does little, and it all slows down. At {{gap}} mm the gap takes {{g120}} % of all the air there is, nearly all of it close to a cooler face, and a little still reaches the outer faces.</p>
 <h3>If the small fans are not where the photo shows them: CFM between the boards</h3>
 {{shifttable}}
-<p class="small">The listing gives the fans' sizes, not their places; I read the places off its photo, good to about 15 mm. The highlighted cell is the smallest gap within 7 % of the best in each row. Measure from the big fan's centre to a small fan's centre across the pad when it arrives: 45 means set 120, 55 means {{gap}}, 70 means 170.</p>
+<p class="small">The listing gives the fans' sizes, not their places; I read the places off its photo, good to about 15 mm. The highlighted cell is the smallest gap that brings 85 % of the pad's air between the boards. Measure from the big fan's centre to a small fan's centre across the pad when it arrives: 45 means set 100, 55 means {{gap}}, 70 means 160.</p>
 <h3>Clear height under the pad, mm: CFM the whole pad delivers</h3>
 {{cleartable}}
 </div>
@@ -171,7 +171,7 @@ details { margin-top: 38px; } details summary { font-size: 21px; font-weight: 70
 <h2>What is not confirmed, and how much it matters</h2>
 <div class="card">
 <ol style="margin:0; padding-left:20px">
-<li><b>Where the pad's small fans sit.</b> It moves the best gap between 120 and 170 mm. One ruler measurement when the pad arrives settles it, and the screw travel above covers the whole range.</li>
+<li><b>Where the pad's small fans sit.</b> It moves the best gap between 100 and 160 mm. One ruler measurement when the pad arrives settles it, and the screw travel above covers the whole range.</li>
 <li><b>How strong the Kootek fans are.</b> It moves the air between {{open_lo}} and {{open_hi}} CFM open. The spacing and the layout are the same across that range.</li>
 <li><b>How much room the pad has under it lying flat.</b> I assumed 5 mm. Whatever it is, the 30 mm dock makes it not matter.</li>
 <li><b>Where each board breathes in and blows out, and the board size.</b> They decide which edge stands up and where the port windows go. The spacing does not depend on them.</li>

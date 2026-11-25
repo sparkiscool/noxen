@@ -151,7 +151,7 @@ PAD_FANS = [(120, 0.0, 0.0)] + [(70, sx * 108.0, sy * 55.0) for sx in (-1, 1) fo
 BOARD_T, BOARD_L, OUTER = 20.0, 340.0, 13.0                   # board thickness (E), length (E), the channel between a board and its outer wall
 K_MESH = 1.5                                                  # the pad's perforated top, velocity heads on the fan bore (E)
 GAPS = [54, 80, 100, 120, 140, 160, 180, 220]
-OPEN_GAP = 140                                                # the open spacing to set first (see the study)
+OPEN_GAP = 120                                                # the open spacing to set first (see the study)
 
 
 def disc_part(r, yc, a, b):

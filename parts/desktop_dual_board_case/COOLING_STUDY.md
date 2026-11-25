@@ -4,21 +4,21 @@ STATUS: FINAL (25 Nov 03:30). Build section 0: it is for the layout Spark asked 
 
 ## 0. The layout to build: whole pad under the case, sides opening
 
-THE OPEN SPACING: 140 mm between the boards' cooler faces (closed 54, so 43 mm of travel per side). Anything from 120 to 160 is within 5 %. Give each side 63 mm of screw travel (a 180 mm gap) so the number can be tuned in firmware.
+THE OPEN SPACING: 120 mm between the boards' cooler faces (closed 54, so 33 mm of travel per side). Give each side 53 mm of screw travel (a 160 mm gap) so the number can be tuned in firmware: try 100, 120 and 140 under load and keep the coolest. Two independent scores agree on 120: the air rising within 30 mm of a cooler face peaks at 110 to 120; all the air between the boards keeps rising to 160; 120 is within 5 % of best on both.
 
 Air from the pad that goes between the boards (middle fan guess; pad raised 30 mm): closed 54 mm: 30 CFM (14.1 L/s). Open 100: 54. 120: 62. 140: 68 (31.9 L/s). 160: 71. 180: 72. The air speed there is 0.77 m/s closed, 0.72 at 120, 0.67 at 140, 0.56 at 180. With the pad flat on the desk (5 mm under it, E) and the case closed: 13 CFM.
 
 1. PAD: level, 30 mm clear under it all round (a printed dock: four corner risers). 20 mm is the least (94 % of the air); at 5 mm it gives 50 %. A filter sleeve round that gap costs about 11 %.
 2. CASE OVER THE PAD: the case bridges the pad on two saddles at the ends of the dock; it does not stand on the mesh. Bottom an open frame: no floor plate, no base, no D0 / D1 fan decks, no feet rails. Board bottom edges 25 mm above the mesh. Centre the case on the big fan (it looks about 25 mm behind the pad's centre in the listing photo; check on arrival). The case is 412 long, the pad 380.
-3. FAN POSITIONS (E, read off the listing photo, good to 15 mm): 120 mm fan at the centre of the fan field; the four 70 mm fans at (x, y) = (+-108, +-55) from it. Rule for the spacing: each cooler face stands over the outer third of its two small fans. If the measured y offset is 45 set 120; 55 set 140; 70 set 170.
-4. BOARDS: cooler sides facing in, each stood so its fin-outlet edge is the TOP edge. Outer walls solid, 13 mm outside each board; at 140 they stand outside all five fans, so nothing is wasted. Open outer depth 140 + 2 x 36 = 212 (252 at the 180 limit); the pad is 300 deep.
-5. LID: each half an open grille (slots 10 wide, 3 mm ribs, lid 4 thick: rib hand calc in section 3 item 7), no lid fan. The 86 mm slot that opens down the middle is the main way out. 150 mm clear above.
+3. FAN POSITIONS (E, read off the listing photo, good to 15 mm): 120 mm fan at the centre of the fan field; the four 70 mm fans at (x, y) = (+-108, +-55) from it. Rule for the spacing: each cooler face stands at the rim of the big fan. If the measured y offset of the small fans is 45 set 100; 55 set 120; 70 set 160.
+4. BOARDS: cooler sides facing in, each stood so its fin-outlet edge is the TOP edge. Outer walls solid, 13 mm outside each board; at 120 they stand outside all five fans, so nothing is wasted. Open outer depth 120 + 2 x 36 = 192 (232 at the 160 limit); the pad is 300 deep.
+5. LID: each half an open grille (slots 10 wide, 3 mm ribs, lid 4 thick: rib hand calc in section 3 item 7), no lid fan. The 66 mm slot that opens down the middle is the main way out. 150 mm clear above.
 6. SPINE: two end posts and the handle beam, 30 wide at most. Nothing standing in the middle of the gap; if a centre post is needed, one up to 40 mm wide straight over the big fan's hub. No full-length plate thicker than 6 mm. Fixed end plates 150 wide on the posts keep the two ends shut when the sides are out.
 7. MOTORS AND ELECTRONICS: lead screws, steppers, ESP32, driver and MOSFET boards in the two end spaces beyond the boards (|x| > 170), low down, never over the mesh. Lock both positions so the steppers hold with no current.
-8. CLOSED POSE: light work only, about 170 W for both boards at a 10 C air rise (the four small fans are then mostly outside the box). Open carries about 380 W. Pad at full speed for heavy work.
+8. CLOSED POSE: light work only, about 170 W for both boards at a 10 C air rise (the four small fans are then mostly outside the box). Open carries about 350 W. Pad at full speed for heavy work.
 9. PORT WINDOWS cut to the real connectors once the boards are measured. Projector 60 mm or more from the nearest fin outlet. Hub pad: both hubs are 104.9 x 30.0 x 8.9.
 
-Second, independent run (a Fable 5.2 agent given only the sizes): for the earlier closed-box layout it found 4 to 14 CFM as drawn and about 54 CFM reshaped, the intake as the choke and no lid fan, the same picture as sections 2 and 3. A second such run on the open spacing had not come back when this was written.
+Second, independent run (a Fable 5.2 agent given only the sizes): for the earlier closed-box layout it found 4 to 14 CFM as drawn and about 54 CFM reshaped, the intake as the choke and no lid fan, the same picture as sections 2 and 3. A third run on the open spacing, scoring the air close to the cooler faces, put the best at 110 to 120 mm (see the top of this section).
 
 The illustrated version is `cooling_study.html` beside this file. The model is `tools/desktop_case_airflow.py` (`python tools/desktop_case_airflow.py` prints every number below); the page is built by `tools/desktop_case_cooling_page.py`.
 

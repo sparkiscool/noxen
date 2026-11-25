@@ -14,7 +14,8 @@ CLOUD_LINE = ""                # one line under the title: how the second, indep
 CLOUD_METHOD = ("A second Fable 5.2 agent, given only the sizes and none of these conclusions, redid the closed-box sums with its own fan guesses "
                 "and landed in the same place: 4 to 14 CFM as drawn, about 54 CFM reshaped, the intake as the choke, no fan in the lid. "
                 "It prefers the fans hung under the upper deck over a filtered suction box, where this page seats them on the floor; "
-                "both reach the same airflow.")              # the same, in full, for the method section
+                "both reach the same airflow. A third run scored the open spacing by the air rising within 30 mm of a cooler face and put the best at 110 to 120 mm; "
+                "scored by all the air between the boards it keeps rising to 160. At 120 mm both scores are within 5 % of their best, so that is the setting.")              # the same, in full, for the method section
 UP = 37.0                    # the recommended floor deck sits 37 higher (30 feet + 3 filter frame + 15 box - today's 11 feet)... D0 at z 48
 
 
@@ -314,7 +315,7 @@ def shifttable(res):
     for r in rows:
         best = max(r[g] for g in gaps)
         o.append(f'<tr><td style="text-align:left">{r["y70"]:.0f}{" (read off the photo)" if r["y70"] == 55 else ""}</td>'
-                 + "".join(f'<td class="{"pick" if r[g] >= 0.93 * best and all(r[k] < 0.93 * best for k in gaps[:gaps.index(g)]) else ""}">{r[g] * M.CFM:.0f}</td>' for g in gaps) + "</tr>")
+                 + "".join(f'<td class="{"pick" if r[g] >= 0.85 * best and all(r[k] < 0.85 * best for k in gaps[:gaps.index(g)]) else ""}">{r[g] * M.CFM:.0f}</td>' for g in gaps) + "</tr>")
     o.append("</tbody></table>")
     return "".join(o)
 
