@@ -1,12 +1,12 @@
-"""Projector tilt stand: holds the S2-TEK / HOMPOW mini projector (Amazon B0F43Q5B9K; Windows reports the projector's display as "S2-TEK") tilted up 25 deg (Spark 24 Nov).
+"""Projector tilt stand: holds the S2-TEK / HOMPOW mini projector (Amazon B0F43Q5B9K; Windows reports the projector's display as "S2-TEK") tilted up 20 deg (Spark 24 Nov).
 Drawn: python parts/projector_tilt_stand/make.py writes print/projector_tilt_stand.stl (and the viewing mesh and preview).
 Projector (C from the listing, same as parts/projector_stand): 124.5 x 124.5 x 53.3 mm, 640 g, lens ring on one face (the HIGH end here), side vent grille and ports on side faces, speaker grille on top.
-One part, one wedge: a hollow triangular frame (6 mm strips: base, back wall at the high end, 25 deg deck) 130 wide, 130 along the slope.
+One part, one wedge: a hollow triangular frame (6 mm strips: base, back wall at the high end, 20 deg deck) 130 wide, 130 along the slope.
 Everything near the projector stays open: the frame is open at both sides (side vents and ports), the deck has four 14 mm slots (45 deg pointed ends) (a bottom vent or foot is never covered), the stop lip runs the full width
 at the LOW (rear, away from the lens) edge, where the projector would slide (a gap in it would be an unsupported overhang when printed on its side); cables leave through the open sides. The lens end is free.
 Hand calc: deck load 6.4 N spread on four 16 mm bars across 130: bending of a 6 x 16 bar over 90 mm = 6.4/4 N x 90 / 4 = 36 Nmm against 96 mm3 section: 0.4 MPa (PCTG ~45): margin >100x.
-Slide: the 25 deg slope needs mu > tan 25 = 0.47 to hold on friction alone (rubber feet on PCTG ~0.6, but not trusted): the lip, 10 mm tall, takes the whole 2.7 N downslope component.
-Stability: CG 40 mm above the base, 62 mm from the low edge to the CG: tips at atan(60/40) = 56 deg; base 130 x 118 is wider than the projector.
+Slide: the 20 deg slope needs mu > tan 20 = 0.36 to hold on friction alone (rubber feet on PCTG ~0.6, but not trusted): the lip, 10 mm tall, takes the whole 2.2 N downslope component.
+Stability: CG 40 mm above the base, 62 mm from the low edge to the CG: tips at atan(60/40) = 56 deg (lower CG at 20 deg: more stable); base 130 x 118 is wider than the projector.
 Print: ON ITS SIDE (a triangular cheek face down, 130 tall in z): every layer is the same outline, so no supports and no overhangs; the deck slots bridge 14 mm only
 (layer 0.2, 4 walls, 15 % infill, PCTG). Fits the A1 mini plate (118 x 77 footprint x 130)."""
 import math, os, sys
@@ -17,7 +17,7 @@ from shapely import affinity
 import numpy as np
 import trimesh
 
-TILT = math.radians(25.0)
+TILT = math.radians(20.0)
 W = 130.0                      # width (z as printed)
 SL = 130.0                     # deck length along the slope (projector 124.5)
 T = 6.0                        # strip thickness
@@ -48,4 +48,4 @@ for k in range(4):                                  # slot ends are 45 deg point
     solid = boolean(solid, cut, "-")
 view = solid.copy()
 view.apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [1, 0, 0])); view.apply_translation([0, W / 2, 0])
-save("projector_tilt_stand", solid, view, "on its side, no supports; tilt 25 deg, lip at the low edge, deck 4 slots")
+save("projector_tilt_stand", solid, view, "on its side, no supports; tilt 20 deg, lip at the low edge, deck 4 slots")
