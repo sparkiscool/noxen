@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Desktop dual-board case, 3D</title>
+<style>
+:root{--bg:#13161c;--fg:#e7e9ee;--muted:#a3adbd;--panel:#1b1f27;--line:#2d333d;--accent:#6ea0ff;--printed:#2c9a93;--bought:#e08a1e;--hardware:#8d97a5;--tpu:#7a6fd0;--cable:#9aa3b2;--air:#4aa3ff;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--sans:system-ui,-apple-system,"Segoe UI",sans-serif}
+:root[data-theme=light]{--bg:#f3f4f6;--fg:#1b2130;--muted:#667085;--panel:#fff;--line:#d9dde3;--accent:#2f6fde}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:14px/1.4 var(--sans);overflow:hidden}
+.app{height:100%;display:grid;gap:8px;padding:8px 12px;grid-template-columns:1fr 310px;grid-template-rows:auto 1fr auto;grid-template-areas:"head head" "stage side" "bar side"}
+.app.clean{grid-template-columns:1fr;grid-template-rows:1fr;grid-template-areas:"stage";padding:0;gap:0}.app.clean header,.app.clean .bar,.app.clean .side{display:none}
+header{grid-area:head;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:17px;font-weight:600}h1 small{font-weight:400;color:var(--muted);margin-left:8px;font-size:13px}
+.stage{grid-area:stage;position:relative;min-height:200px;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+canvas{display:block;width:100%;height:100%}
+.tip{position:absolute;pointer-events:none;padding:6px 8px;font-size:13px;background:var(--panel);border:1px solid var(--accent);border-radius:5px;display:none;white-space:nowrap;z-index:5}
+.tip span{font-family:var(--mono);color:var(--muted)}
+.lab{position:absolute;pointer-events:none;min-width:22px;height:22px;margin:-11px 0 0 -11px;padding:0 5px;border-radius:11px;background:var(--panel);border:1.5px solid var(--fg);font:600 12px/19px var(--mono);text-align:center;white-space:nowrap}
+.lab.printed{border-color:var(--printed)}.lab.bought{border-color:var(--bought)}.lab.hardware{border-color:var(--hardware)}.lab.tpu{border-color:var(--tpu)}.lab.cable{border-color:var(--cable)}.lab.air{border-color:var(--air)}.lab.sel{background:var(--accent);color:#fff;border-color:var(--accent);z-index:3}
+.bar{grid-area:bar;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 10px}
+.bar label{display:flex;align-items:center;gap:6px;font-size:13px}.bar input[type=range]{width:140px}
+.chip{font:500 12px/1 var(--mono);padding:4px 7px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+button{font:600 12.5px var(--sans);background:var(--panel);color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:5px 9px;cursor:pointer}
+button.on{background:var(--accent);color:#fff}
+.side{grid-area:side;display:flex;flex-direction:column;gap:8px;min-height:0}
+.list{flex:1;min-height:100px;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px}
+.row{display:flex;align-items:center;gap:6px;padding:3px 5px;border-radius:4px;cursor:pointer;font-size:12.5px}
+.row:hover{background:color-mix(in srgb,var(--accent) 12%,transparent)}.row.sel{background:color-mix(in srgb,var(--accent) 25%,transparent)}
+.row .n{font:600 11px var(--mono);min-width:1.7em;color:var(--muted)}.sw{width:10px;height:10px;border-radius:2px;flex:none}
+.row input{margin:0}.row .q{margin-left:auto;font:11px var(--mono);color:var(--muted)}
+.info{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 11px;font-size:12.5px;max-height:42%;overflow:auto}
+.info h2{margin:0 0 4px;font-size:14px}.info .k{font:12px var(--mono);color:var(--muted)}.info p{margin:6px 0 0}
+.leg{display:flex;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap}.leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px}
+@media (max-width:820px){.app{grid-template-columns:1fr;grid-template-rows:auto 60vh auto auto;grid-template-areas:"head" "stage" "bar" "side";height:auto;overflow:auto}html,body{overflow:auto}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header><h1>Desktop dual-board case<small id="sub"></small></h1>
+<div class="leg"><span><i style="background:var(--printed)"></i>printed PCTG</span><span><i style="background:var(--tpu)"></i>TPU</span><span><i style="background:var(--bought)"></i>bought / owned</span><span><i style="background:var(--hardware)"></i>hardware</span><span><i style="background:var(--cable)"></i>cables</span><span><i style="background:var(--air)"></i>airflow</span></div></header>
+<div class="stage" id="stage"><div class="tip" id="tip"></div></div>
+<div class="bar">
+ <label>Explode <input type="range" id="ex" min="0" max="100" value="0"></label>
+ <label>Projector <input type="range" id="pj" min="20" max="90" value="20"><span id="pv" class="chip">projecting</span></label>
+ <button id="lab" class="on">Numbers</button><button id="nm">Names</button><button id="air">Airflow</button><button id="front">Open front</button><button id="glass">See through</button><button id="bb">Size box</button><button id="iso">Isolate</button><button id="spin">Spin</button>
+ <button data-v="iso">Iso</button><button data-v="front">Front</button><button data-v="side">Side</button><button data-v="top">Top</button><button id="reset">Reset</button><button id="th">Light</button><button id="fs">Full screen</button><button id="clean">Clean view</button>
+</div>
+<div class="side"><div class="list" id="list"></div>
+<div class="info" id="info"><h2>Hover or click a part</h2><p>Drag to rotate, wheel to zoom, right-drag to pan. x is the width, y the depth, z up, as it stands; mm.</p></div></div>
+</div>
+<script type="application/json" id="data">__DATA__</script>
+<script>/*__THREE__*/</script>
+<script>/*__ORBIT__*/</script>
+<script>
+(function(){
+const D=JSON.parse(document.getElementById('data').textContent),parts=D.parts,meta=D.meta;
+const COL={printed:0x2c9a93,tpu:0x7a6fd0,bought:0xe08a1e,hardware:0x8d97a5,cable:0x9aa3b2,air:0x4aa3ff};
+const b64=s=>{const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a.buffer};
+const $=id=>document.getElementById(id);
+$('sub').textContent=`upright suitcase, ${meta.ext[0]} x ${meta.ext[1]} x ${meta.ext[2]} mm as drawn, ${meta.tiles} flat tiles, printed mass about ${Math.round(meta.mass)} g`;
+const stage=$('stage'),tip=$('tip');
+const R=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});R.setPixelRatio(Math.min(devicePixelRatio,2));stage.insertBefore(R.domElement,tip);
+const scene=new THREE.Scene();const cam=new THREE.PerspectiveCamera(32,1,5,6000);cam.up.set(0,0,1);
+scene.add(new THREE.HemisphereLight(0xffffff,0x667088,0.9));
+const dl=new THREE.DirectionalLight(0xffffff,0.8);dl.position.set(300,-500,700);scene.add(dl);
+const dl2=new THREE.DirectionalLight(0xffffff,0.35);dl2.position.set(-400,300,-100);scene.add(dl2);
+const ctl=new THREE.OrbitControls(cam,R.domElement);ctl.enableDamping=true;
+const grid=new THREE.GridHelper(1200,60,0x8892a0,0x4a5160);grid.rotation.x=Math.PI/2;grid.position.set(meta.X/2,60,0);grid.material.transparent=true;grid.material.opacity=.35;scene.add(grid);
+const axes=new THREE.AxesHelper(60);axes.position.set(-60,-40,0);scene.add(axes);
+const items=[];let sel=null,hov=null,isolate=false,bbOn=false,labOn=true,namesOn=false,airOn=true,frontOpen=false;
+parts.forEach((p,i)=>{
+  const m=p.mesh,V=new Uint16Array(b64(m.v)),F=m.w==='H'?new Uint16Array(b64(m.f)):new Uint32Array(b64(m.f));
+  const pos=new Float32Array(V.length);for(let k=0;k<V.length;k++)pos[k]=m.lo[k%3]+V[k]/65535*m.span[k%3];
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setIndex(new THREE.BufferAttribute(F,1));g.computeBoundingBox();g.computeVertexNormals();
+  const air=p.kind==='air';
+  const mat=new THREE.MeshStandardMaterial({color:COL[p.kind],roughness:.55,metalness:p.kind==='hardware'?.6:.05,flatShading:true,side:THREE.DoubleSide,transparent:true,opacity:air?.35:1,depthWrite:!air});
+  if(p.kind==='cable')mat.color.set(0xc8cfdb);
+  const mesh=new THREE.Mesh(g,mat);mesh.userData.i=i;
+  const o=new THREE.Group();o.add(mesh);scene.add(o);
+  const c=new THREE.Vector3();g.boundingBox.getCenter(c);
+  const lab=document.createElement('div');lab.className='lab '+p.kind;stage.appendChild(lab);
+  const it={p,mesh,o,mat,c,lab,vis:true,base:air?.35:1};items.push(it);
+});
+const bbox=new THREE.Box3Helper(new THREE.Box3(),0x6ea0ff);bbox.visible=false;scene.add(bbox);
+const list=$('list');
+items.forEach((it,i)=>{const r=document.createElement('div');r.className='row';
+  r.innerHTML=`<input type="checkbox" checked><span class="n">${i+1}</span><span class="sw" style="background:#${COL[it.p.kind].toString(16).padStart(6,'0')}"></span><span>${it.p.name}</span><span class="q">${it.p.qty>1?'x'+it.p.qty:''}</span>`;
+  r.querySelector('input').onchange=e=>{it.vis=e.target.checked;e.stopPropagation()};r.querySelector('input').onclick=e=>e.stopPropagation();
+  r.onclick=()=>select(i);r.onmouseenter=()=>{hov=i};r.onmouseleave=()=>{hov=null};it.row=r;list.appendChild(r)});
+const kindName={printed:'printed, PCTG',tpu:'printed, TPU 95A',bought:'bought / owned',hardware:'hardware',cable:'cable (estimated route)',air:'airflow'};
+function info(i){const p=items[i].p,b=p.bbox;
+  return `<h2>${i+1}. ${p.name}</h2><div class="k">${kindName[p.kind]}${p.qty>1?', qty '+p.qty:''} &middot; bounding box ${b[0]} x ${b[1]} x ${b[2]} mm${p.mass!=null?' &middot; mass about '+p.mass+' g':''}</div><p>${p.dims}</p><p class="k">${p.src}</p>`}
+function select(i){sel=sel===i?null:i;items.forEach((it,k)=>{it.row.classList.toggle('sel',k===sel);it.lab.classList.toggle('sel',k===sel)});
+  $('info').innerHTML=sel==null?'<h2>Hover or click a part</h2><p>Drag to rotate, wheel to zoom, right-drag to pan.</p>':info(sel)}
+const tog=(id,fn)=>{$(id).onclick=e=>{const v=fn();e.target.classList.toggle('on',v)}};
+tog('lab',()=>labOn=!labOn);tog('nm',()=>namesOn=!namesOn);tog('air',()=>airOn=!airOn);$('air').classList.add('on');tog('bb',()=>bbOn=!bbOn);tog('iso',()=>isolate=!isolate);
+let spin=false;tog('spin',()=>spin=!spin);let glass=false;tog('glass',()=>glass=!glass);const SHELL=new Set(['d0','d1','lid','base_front','base_rear','base_end','base_endp','bay_front','bay_rear','bay_end','bay_endh']);
+tog('front',()=>frontOpen=!frontOpen);
+$('th').onclick=()=>{const l=document.documentElement.dataset.theme!=='light';document.documentElement.dataset.theme=l?'light':'';$('th').textContent=l?'Dark':'Light'};
+$('fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()};
+$('clean').onclick=()=>{$('app').classList.toggle('clean');size()};
+addEventListener('keydown',e=>{if(e.key==='f'||e.key==='F')$('fs').click();if(e.key==='c'||e.key==='C')$('clean').click()});
+const ang=()=>+$('pj').value;
+$('pj').oninput=()=>{const a=ang();$('pv').textContent=a<=20?'projecting':a>=90?'stowed':a+'°'};
+const P=meta,CEN=new THREE.Vector3(272,63,165);
+const VIEW={iso:[1,-1.25,.55],front:[0,-1,.12],side:[1,0,.12],top:[0,-.001,1]};
+function fit(dir,gr){gr=gr||0;const d=new THREE.Vector3(...dir).normalize();ctl.target.copy(CEN);
+  let lo=300,hi=4000;for(let k=0;k<24;k++){const m=(lo+hi)/2;cam.position.copy(CEN).addScaledVector(d,m);cam.lookAt(CEN);cam.updateMatrixWorld();cam.updateProjectionMatrix();
+    let ok=true;for(const x of [-10,540])for(const y of [0,150])for(const z of [0,335]){const v=new THREE.Vector3(CEN.x+(x-CEN.x)*(1+.75*gr),CEN.y+(y-CEN.y)*(1+1.4*gr),CEN.z+(z-CEN.z)*(1+1.0*gr)).project(cam);if(Math.abs(v.x)>.86||Math.abs(v.y)>.86)ok=false}
+    if(ok)hi=m;else lo=m}
+  cam.position.copy(CEN).addScaledVector(d,hi*1.03);ctl.update()}
+function home(v){fit(VIEW[v||'iso'],$('ex').value/100)}
+$('ex').addEventListener('change',()=>{const d=cam.position.clone().sub(ctl.target).normalize();fit([d.x,d.y,d.z],$('ex').value/100)})
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>home(b.dataset.v));
+$('reset').onclick=()=>{$('ex').value=0;$('pj').value=20;$('pj').oninput();home('iso')};
+const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();let mx=0,my=0,inside=false;
+R.domElement.addEventListener('pointermove',e=>{const r=R.domElement.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top;mouse.set(mx/r.width*2-1,-(my/r.height)*2+1);inside=true});
+R.domElement.addEventListener('pointerleave',()=>{inside=false;hov=null});
+let down=null;R.domElement.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY]});
+R.domElement.addEventListener('pointerup',e=>{const d=down;down=null;if(!d||Math.hypot(e.clientX-d[0],e.clientY-d[1])>4)return;
+  ray.setFromCamera(mouse,cam);const h=ray.intersectObjects(items.filter(t=>t.o.visible&&t.p.kind!=='air').map(t=>t.mesh))[0];if(h)select(h.object.userData.i)});
+function size(){const w=stage.clientWidth,h=stage.clientHeight;R.setSize(w,h,false);R.domElement.style.width=w+'px';R.domElement.style.height=h+'px';cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener('resize',()=>{size();home()});size();home();
+let fr=0;const occ=new Map();const tmp=new THREE.Vector3(),FRONTS=['base_front','bay_front','usb'];
+function frame(){requestAnimationFrame(frame);
+  const f=$('ex').value/100,a=ang()*Math.PI/180;
+  if(spin){const s=.004,x=cam.position.x-ctl.target.x,y=cam.position.y-ctl.target.y;cam.position.x=ctl.target.x+x*Math.cos(s)-y*Math.sin(s);cam.position.y=ctl.target.y+x*Math.sin(s)+y*Math.cos(s)}
+  if(inside&&!down){ray.setFromCamera(mouse,cam);const h=ray.intersectObjects(items.filter(t=>t.o.visible&&t.p.kind!=='air').map(t=>t.mesh))[0];hov=h?h.object.userData.i:null}
+  const active=hov!=null?hov:sel;
+  if(labOn&&(fr++%10===0)){const bx=items.map(t=>{if(!t.o.visible||t.p.kind==='air'||(glass&&SHELL.has(t.p.id)))return null;t.o.updateMatrixWorld(true);return new THREE.Box3().setFromObject(t.mesh)});
+    const pt=new THREE.Vector3();items.forEach((it,i)=>{if(!it.o.visible)return;const w=it.c.clone().applyMatrix4(it.mesh.matrixWorld);const d=w.clone().sub(cam.position),L=d.length();ray.set(cam.position,d.normalize());
+      let hit=false;for(let k=0;k<bx.length&&!hit;k++){if(k===i||!bx[k])continue;if(bx[k].containsPoint(w))continue;const q=ray.ray.intersectBox(bx[k],pt);if(q&&q.distanceTo(cam.position)<L-3)hit=true}
+      occ.set(i,hit)})}
+  items.forEach((it,i)=>{const p=it.p;
+    it.o.visible=it.vis&&!(frontOpen&&FRONTS.includes(p.id))&&!(p.kind==='air'&&!airOn);
+    const e=p.ex,pv=p.pivot?p.pivot.at:[0,0,0];
+    it.o.position.set(pv[0]+e[0]*f,pv[1]+e[1]*f,pv[2]+e[2]*f);
+    it.mesh.rotation.y=p.pivot?-a:0;
+    const dim=(isolate&&sel!=null&&sel!==i);it.mat.opacity=dim?.1:(glass&&SHELL.has(p.id)?.18:it.base);it.mat.depthWrite=!dim&&p.kind!=='air'&&!(glass&&SHELL.has(p.id));
+    it.mat.emissive.setHex(active===i?0x2a4f9f:0);
+    it.lab.style.display=(labOn&&it.o.visible)?'block':'none';
+    if(labOn&&it.o.visible){it.o.updateMatrixWorld(true);tmp.copy(it.c).applyMatrix4(it.mesh.matrixWorld).project(cam);
+      it.lab.style.left=((tmp.x+1)/2*stage.clientWidth)+'px';it.lab.style.top=((1-tmp.y)/2*stage.clientHeight)+'px';
+      it.lab.style.opacity=(occ.get(i)&&sel!==i&&hov!==i)?.22:1;it.lab.textContent=(namesOn||sel===i||hov===i)?`${i+1} ${p.name}`:`${i+1}`}
+  });
+  if(bbOn&&active!=null&&items[active].o.visible){const t=items[active];t.o.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(t.mesh);bbox.box.copy(b);bbox.visible=true}else bbox.visible=false;
+  if(hov!=null&&inside){const p=items[hov].p,b=p.bbox;tip.style.display='block';tip.innerHTML=`<b>${hov+1}. ${p.name}</b><br><span>${b[0]} x ${b[1]} x ${b[2]} mm &middot; ${p.kind}${p.qty>1?' x'+p.qty:''}</span>`;
+    tip.style.left=Math.min(mx+14,stage.clientWidth-tip.offsetWidth-6)+'px';tip.style.top=Math.max(4,my-8-tip.offsetHeight)+'px'}else tip.style.display='none';
+  ctl.update();R.render(scene,cam)}
+const H=new URLSearchParams(location.hash.slice(1));
+if(H.has('ex')){$('ex').value=H.get('ex');home('iso')}if(H.has('pj')){$('pj').value=H.get('pj');$('pj').oninput()}
+if(H.get('front'))$('front').click();if(H.get('glass'))$('glass').click();if(H.get('names'))$('nm').click();if(H.get('clean'))$('clean').click();if(H.get('view'))home(H.get('view'));if(H.get('sel'))select(+H.get('sel')-1);
+frame();
+window.__case={items,select,home,size};
+})();
+</script>
+</body>
+</html>

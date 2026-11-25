@@ -39,6 +39,7 @@ Each system's `artifact` URL is in its `systems/<name>.assembly.json`; a session
 - xswap short lock (retired): https://claude.ai/artifact/Tiij4hVRdJWVdtLy9JdeQv
 - Probe bench build sheet (no sign-in, served from `artifacts/`): https://sparkiscool.github.io/noxen/artifacts/probe_bench_assembly.html
 - Probe bench 3D (rotate, explode, labelled parts; `python tools/probe_bench_3d.py`): https://sparkiscool.github.io/noxen/artifacts/probe_bench_3d.html
+- Desktop dual-board case 3D (rotate, explode, see-through, flip-out projector, labelled parts; `python tools/desktop_case_3d.py`): https://sparkiscool.github.io/noxen/artifacts/desktop_dual_board_case_3d.html
 - Container scan to BIM (simulated LiDAR + video of one storage container: point map, BIM and video side by side, one shared camera, kept only in the connector folder `E:/Noxen/container_scan.html`, not in this repo)
 
 ## How it works
