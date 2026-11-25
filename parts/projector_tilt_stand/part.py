@@ -88,4 +88,4 @@ def setup(h):
     return p
 
 
-SPEC = dict(h=1.7, gen_cm3=120.0, max_worst=0.5, settings=dict(build_pitch=0.40))   # 24 Nov: 0.3 gave 2.07 M faces, 15.1 GB (over 14); 0.40 is ~1.2 M faces, ~10 GB
+SPEC = dict(h=1.78, gen_cm3=120.0, max_worst=0.5, settings=dict(build_pitch=0.40))   # 24 Nov: 0.3 gave 2.07 M faces, 15.1 GB (over 14); 0.40 is ~1.2 M faces, ~10 GB
