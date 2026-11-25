@@ -135,6 +135,18 @@ FS2 = """#version 330
 in vec3 v; out vec4 c; void main(){ c=vec4(v,1.0); }"""
 
 
+def selftest(ctx, fw, fh, corners, mw, mh):
+    """Pixel check of the warp on the hidden window: the desktop's corners must land on the configured corners."""
+    img = np.frombuffer(ctx.screen.read((0, 0, fw, fh), components=3), np.uint8).reshape(fh, fw, 3)[::-1]
+    ok = True
+    for (cx, cy), n in zip(corners, ("TL", "TR", "BR", "BL")):
+        px, py = int(np.clip(cx * (fw - 1), 0, fw - 1)), int(np.clip(cy * (fh - 1), 0, fh - 1))
+        ix, iy = int(np.clip(px + (3 if cx < .5 else -3), 0, fw - 1)), int(np.clip(py + (3 if cy < .5 else -3), 0, fh - 1))
+        print(n, "corner pixel inside the picture:", img[iy, ix].tolist())
+        ok &= img[iy, ix].sum() > 0
+    print("SELFTEST", "PASS" if ok else "FAIL")
+
+
 def main():
     a = sys.argv[1:]
     if "--autostart" in a:
@@ -150,21 +162,32 @@ def main():
     glfw.window_hint(glfw.FOCUS_ON_SHOW, False); glfw.window_hint(glfw.FOCUSED, False)
     glfw.window_hint(glfw.AUTO_ICONIFY, False); glfw.window_hint(glfw.RESIZABLE, False)
     glfw.window_hint(glfw.MOUSE_PASSTHROUGH, True)
+    glfw.window_hint(glfw.SCALE_TO_MONITOR, False)  # never let a DPI change resize the overlay: it must be exactly the display
+    glfw.window_hint(glfw.VISIBLE, False)  # placed and sized first, shown after: no flash of a wrong-sized window on the projector
     win = glfw.create_window(mw, mh, "Projector Keystone", None, None)
-    glfw.set_window_pos(win, mx, my)
+    glfw.set_window_pos(win, mx, my); glfw.set_window_size(win, mw, mh)
+    SELFTEST = bool(os.environ.get("KEYSTONE_SELFTEST"))  # hidden window, render once, check pixels, exit: nothing reaches any screen
+    if not SELFTEST: glfw.show_window(win)
+    glfw.set_window_pos(win, mx, my); glfw.set_window_size(win, mw, mh)
     glfw.make_context_current(win); glfw.swap_interval(1)
     hwnd = glfw.get_win32_window(win)
     if not os.environ.get("KEYSTONE_SHOWN_IN_CAPTURE"):  # test only: lets a screenshot see the overlay (then it films itself)
         u32.SetWindowDisplayAffinity(hwnd, 0x11)  # exclude from capture: no feedback loop
     ctx = moderngl.create_context()
+    fbw, fbh = glfw.get_framebuffer_size(win)
+    ctx.viewport = (0, 0, fbw, fbh)  # the picture fills the whole display whatever the window/DPI reports
+    print("window", glfw.get_window_size(win), "framebuffer", (fbw, fbh), "display", (mw, mh))
     prog = ctx.program(vertex_shader=VS, fragment_shader=FS)
     prog2 = ctx.program(vertex_shader=VS2, fragment_shader=FS2)
     vbo = ctx.buffer(np.array([-1, -1, 3, -1, -1, 3], "f4"))
     vao = ctx.vertex_array(prog, [(vbo, "2f", "pos")])
     vbo2 = ctx.buffer(reserve=65536)
     vao2 = ctx.vertex_array(prog2, [(vbo2, "2f 3f", "pos", "col")])
-    tex = ctx.texture((mw, mh), 4); tex.swizzle = "BGRA"; tex.filter = (moderngl.LINEAR, moderngl.LINEAR)
-    tex.repeat_x = tex.repeat_y = False
+    def new_tex(tw, th):
+        t = ctx.texture((tw, th), 4); t.swizzle = "BGRA"; t.filter = (moderngl.LINEAR, moderngl.LINEAR)
+        t.repeat_x = t.repeat_y = False
+        return t
+    tex = new_tex(mw, mh)
     cap = Capture(di, oi)
     TEST = None
     if "--test-pattern" in a:  # no capture: a grid, to see the warp in a screenshot
@@ -312,8 +335,9 @@ def main():
         with cap.lock:
             f, sq = (TEST, 1) if TEST is not None else (cap.frame, cap.seq)
         if f is not None and sq != S["seq"]:
-            if f.shape[1] == mw and f.shape[0] == mh:
-                tex.write(np.ascontiguousarray(f).tobytes())
+            if (f.shape[1], f.shape[0]) != tex.size:  # capture size differs from the window (mode change): resize, never drop frames (that froze/blacked the picture)
+                tex.release(); tex = new_tex(f.shape[1], f.shape[0])
+            tex.write(np.ascontiguousarray(f).tobytes())
             S["seq"] = sq
         ctx.clear(0, 0, 0)
         tex.use(0)
@@ -321,6 +345,8 @@ def main():
         prog["Hi"].write(np.ascontiguousarray(Hinv().T, "f4").tobytes())
         vao.render(moderngl.TRIANGLES)
         if S["adjust"]: draw_overlay()
+        if SELFTEST:
+            selftest(ctx, fbw, fbh, corners, mw, mh); sys.stdout.flush(); os._exit(0)
         glfw.swap_buffers(win)
     cfg["corners"] = corners.tolist(); save(cfg)
     cap.run_ = False
