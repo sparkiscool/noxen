@@ -1,35 +1,36 @@
 """Desktop dual-board case, UPRIGHT SUITCASE (Spark 25 Nov: it stands on its end like a standing suitcase the whole time it runs; the Kootek pad's fans
 sit flat in the base blowing UP; both boards stand vertical, side by side and parallel to the airflow with a gap between them (each board's hot
-side facing the gap), so air rises along both like a chimney and leaves through the lid and the upper end walls; the carry handle is on the TOP,
+side facing the gap), so air rises along both like a chimney and leaves through the lid and the upper end walls; the whole TOP is an exhaust grille; the carry handle is on a SHORT END wall (carried hanging lengthwise, like an elongated suitcase);
 the base it stands on is the opposite end; no fold-out legs; the box is fitted to the parts, no wasted space). Flat layers, A1 mini (every tile
 <= 180), PCTG (TPU 95A foot pads), no supports.
-Frame: x right (width), y back (depth), z up. Closed 372 x 126 x 299 (+ 22 door on the front, + 11 feet, + 55 handle on top).
+Frame: x right (width), y back (depth), z up. Closed 372 x 126 x 299 (+ 11 feet, + 55 handle out of the +x end wall).
 Kootek pad (Amazon B01469DJLM, owned; mesh top and clips dropped): 1 x 120x120x25 fan + 4 x 70x70x15 fans, all reused.
 Boards TIMI A7S + second board (E, outlines not published): 330 x 220 board, 27 deep with its cooler, standing on its 330 edge.
-Fit: inner width 366 = the 15.6 in panel's 360 + 6 (the door is as wide as the case); inner depth 120 = the 120 fan; board A at y 6..33, board B at
+Fit: inner width 366 = set by the fan row (120 + three 70 + gaps + walls; the boards are 330, no panel now); inner depth 120 = the 120 fan; board A at y 6..33, board B at
 y 93..120, hot sides facing, gap y 33..93 = 60 (the chimney); inner height 245 = 8 standoff + 220 board + 17 under the lid (70 extractor 15 thick).
 Stack, bottom up (z mm): TPU pad 3 + rail 8 (feet 11) | D0 floor 3 | base 34 (the 120 + three 70 fans stand on D0 and blow up; rear and end walls
 slotted: intake; D0 bores under each fan: intake from below, the feet lift it 11) | D1 deck 3 (fan bores) | bay 245 (two boards; end walls
-slotted over their upper 100: exhaust) | lid 3 (slots, the fifth 70 as an extractor over the gap) | handle on a 3 doubler. Front of the bay: a solid wall, then the door.
-Door (the display, on the FRONT face): bezel 3 + cavity 13 + back plate 6 = 22, 372 x 288, 15.6 in panel 360 x 223 x 3 + driver board in the cavity,
-two friction hinges on its left vertical edge, two toggle latches on the right: it swings out and opens ~175 deg to stand beside the case with the
-screen toward you. Air: intake bottom and rear of the base (hot air never comes back: the exhaust is 250 mm up), exhaust up through the lid and the upper
-end walls; the front (door) and the rear wall of the bay are solid. Exhaust area lid ~7500 + ends 2 x 5600 = 18700 mm2 against the gap 60 x 330 = 19800
+slotted over their upper 100: exhaust) | lid 3 (slots, the fifth 70 as an extractor over the gap) | the whole lid a grille. Handle (grip along y, centred, z 118..174 about the centre of gravity z ~145) on the +x end wall on two 3 doublers. Front of the bay: a solid wall.
+Front: a plain solid wall of 3 mm tiles (no display, no panel, no driver board: Spark plugs into other monitors); the bay front tiles unscrew from their
+L-brackets for the boards' access. Air: intake bottom and rear of the base (hot air never comes back: the exhaust is 250 mm up), exhaust up through the lid and the upper
+end walls; the front and the rear wall of the bay are solid. Exhaust area lid ~19000 + ends 2 x 5600 = 30000 mm2 against the gap 60 x 330 = 19800
 (E); intake D0 bores 16300 + base slots. Keep 100 mm behind and 60 mm beside for the base intake (E, as the tower note).
 Joints: wall tiles screw to M3 L-brackets (bought, 20 x 20) at each corner of each layer, one M3 x 8 + nut through each flange; four M3 x 300 threaded rods
 at (12,12) etc., nuts both sides of D0, D1 and the lid, clamp and hang the stack; the two foot rails are clamped by the rods and two M3 x 12 into inserts.
-Hand calcs (E): carried weight <= 7 kg (tiles 3.3 + two boards + panel + fans, E) x 3 dynamic = 210 N, the case hangs from its handle (the pull is along the legs). Handle bar 24 x 14 on a 110 span:
-M = 210 x 110 / 4 = 5775 N mm, Z = 24 x 14^2 / 6 = 784 mm3: 7.4 MPa (PCTG 45 E, layers flat so the stress is along them): margin 6. Legs 25 x 24 = 600 mm2:
-105 N each = 0.18 MPa. Each foot is held by 2 M3 x 12 into M3 heat-set inserts (fit table: hole 4.0 x 6) in a 12 deep block, the screw heads inside the lid
-through a 3 lid + 3 doubler (washer d7); the bar is 16 off the bolt centre line: insert loads 52 +- 1680 / 40 = 94 / 10 N against ~300 N pull-out: margin 3.2;
-head bearing 94 / 29 mm2 = 3.3 MPa, punching 0.7 MPa: margin > 10. The lid hangs the stack on 4 rods (52 N each, M3 rod 2 kN, nut washer 1.3 MPa),
-each deck on its nut pair. Door 2.2 kg (E) = 22 N on two hinges, four screws of 3 mm tiles with washers: 17 N each, margin > 5. Standing: 7 kg
-with the door open at 175 deg, centre of gravity x 69 (rails reach x -150..372: margin 219), y 35 (front rail edge y 5: margin 30, tips at ~11 deg
-forward: do not lean on the open door). Boards' mounts wait for their measuring (E).
-Panel: 15.6 in laptop panel 360 x 223 x 3 + driver board ~105 x 55 x 8 (E; the chosen panel's model sets the bezel window and cavity).
-Bought (Amazon searches, exact listings picked when the panel is chosen): 15.6 in eDP panel + HDMI/USB-C driver board; M3 L-brackets 20 mm;
-M3 x 300 rods; 2 friction hinges; 2 mini toggle latches; M3 heat-set inserts; M3 nuts and washers.
-Run: python parts/desktop_dual_board_case/make.py -> part.stl (open view), preview.png (open), preview_closed.png, print/desktop_dual_board_case_<tile>.stl"""
+Hand calcs (E): carried weight <= 7 kg (tiles 1.8 + two boards + fans, E) x 3 dynamic = 210 N, carried hanging lengthwise: the +x SHORT end wall is up and the case hangs from
+the handle (the pull is along the legs, through the end wall). Handle bar 24 x 14 on an 80 clear span: M = 210 x 80 / 4 = 4200 N mm, Z = 24 x 14^2 / 6 = 784 mm3:
+5.4 MPa (PCTG 45 E, layers flat so the stress is along them): margin 8. Legs 15 x 24 = 360 mm2: 105 N each = 0.29 MPa. Each foot is held by 2 M3 x 12 into M3
+heat-set inserts (fit table: hole 4.0 x 6) in a 12 deep block, the screw heads (pan head + washer d7, 2.5 high) inside the end wall through 3 wall + 3 doubler, clear of
+the boards (end gap 6): bar 16 off the bolt centre line: insert loads 52 +- 1680 / 40 = 94 / 10 N against ~300 N pull-out: margin 3.2; head bearing 94 / 29 mm2 =
+3.3 MPa, punching 0.7 MPa: margin > 10. Reinforcement: a 120 x 122 x 3 end tile loaded by a leg 105 N, simply supported 100 mm, effective width 60: 3 mm alone M = 2625 N mm,
+Z = 60 x 9 / 6 = 90: 29 MPa (margin 1.5, not enough); with the 3 mm doubler outside (6 mm, Z = 360) 7.3 MPa: margin 6; the tile hangs from its 4 bracket screws (53 N each,
+margin > 10). The handle at z 118..174 is about the centre of gravity (z ~145 E): it hangs level (offset < 15 mm) and sits below the end wall's exhaust slots (z > 186).
+The lid hangs the stack on 4 rods (52 N each, M3 rod 2 kN, nut washer 1.3 MPa), each deck on its nut pair. Standing: 7 kg, centre of gravity y ~63 (rails y 5..45 and
+81..121: margin 58 to the front rail edge); the handle sticks 55 out of the +x end (leave 60 beside). Boards' mounts wait for their measuring (E).
+Cooling (research in NOTE.md): fans low and pushing, exhaust high, the whole lid a grille, hot and cold apart, filter sheet on the base slots.
+Bought (Amazon searches): M3 L-brackets 20 mm;
+M3 x 300 rods; M3 heat-set inserts; M3 nuts and washers.
+Run: python parts/desktop_dual_board_case/make.py -> part.stl, preview.png, preview_closed.png, print/desktop_dual_board_case_<tile>.stl"""
 import os, sys, glob
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scout_v4_probe_mech_lib import extrude, boolean, ROOT  # noqa: E402
@@ -53,9 +54,6 @@ Z_D1 = Z_BW + HB
 Z_B = Z_D1 + T                       # bay walls start
 Z_LID = Z_B + HL
 Z_TOP = Z_LID + T
-D_BEZ, D_CAV, D_BACK = 3.0, 13.0, 6.0
-D_TOT = D_BEZ + D_CAV + D_BACK
-DOOR_H = Z_TOP - FEET
 RODS = [(12.0, 12.0), (X - 12.0, 12.0), (12.0, Y - 12.0), (X - 12.0, Y - 12.0)]
 FANY = Y / 2
 FAN120 = (T + 60.0, FANY)
@@ -103,17 +101,21 @@ decks = {
     "d0": cut(box(0, 0, X, Y), rod_holes() + [Point(*FAN120).buffer(50, 64)] + [Point(*f).buffer(30, 64) for f in FAN70]),   # intake bores
     "d1": cut(box(0, 0, X, Y), rod_holes() + fan_cuts(*FAN120, 120) + sum([fan_cuts(*f, 70) for f in FAN70], [])),          # the fans blow up through here
 }
-# ---- lid: slots over the two sides of the handle, the extractor over the gap; solid under the handle feet
-HAND_X = [X / 2 - 67.5, X / 2 + 67.5]                 # foot centres
-HAND_Y0 = 35.0                                        # foot block y 35..91 (bar y 35..59)
-HOLES_H = [(hx, HAND_Y0 + hz) for hx in HAND_X for hz in (8.0, 48.0)]
-lid_slots = slots_u(24, 100, 16, Y - 16) + slots_u(272, 348, 16, Y - 16)
-lid = cut(box(0, 0, X, Y), rod_holes() + fan_cuts(*FAN70_TOP, 70) + lid_slots + [Point(*p).buffer(M3 / 2, 24) for p in HOLES_H])
+# ---- lid: the whole top is the exhaust (slots across the full width, the fifth 70 as an extractor over the chimney); no handle on it
+FAN_ZONE = (X / 2 - 46, X / 2 + 46)
+lid_slots = [g for g in slots_u(16, X - 12, 16, Y - 16, sw=6.0) if not (g.bounds[2] > FAN_ZONE[0] and g.bounds[0] < FAN_ZONE[1])]
+lid = cut(box(0, 0, X, Y), rod_holes() + fan_cuts(*FAN70_TOP, 70) + lid_slots)
+# ---- the handle sits on the +x SHORT END wall (the smallest face: the case is carried hanging lengthwise, 372 long vertical, like an elongated suitcase):
+# grip along y (centred), feet at y HAND_Y, z Z0H..Z0H+56 (below the end wall's exhaust slots, z < 186, about the centre of gravity)
+HW, LEG = 110.0, 15.0
+HAND_Y = [Y / 2 - HW / 2 + LEG / 2, Y / 2 + HW / 2 - LEG / 2]        # foot centres 15.5, 110.5
+Z0H = 118.0
+HOLES_H = [(hy, Z0H + hz) for hy in HAND_Y for hz in (8.0, 48.0)]      # (y, z) on the end wall
 doublers = []
-for hx in HAND_X:
-    d = box(hx - 20, HAND_Y0 - 4, hx + 20, HAND_Y0 + 60)
-    d = cut(d, [Point(px, py).buffer(M3 / 2, 24) for px, py in HOLES_H if abs(px - hx) < 1])
-    doublers.append(affinity.translate(d, -(hx - 20), -(HAND_Y0 - 4)))
+for hy in HAND_Y:
+    d = box(hy - 12, Z0H - 2, hy + 12, Z0H + 58)
+    d = cut(d, [Point(py, pz).buffer(M3 / 2, 24) for py, pz in HOLES_H if abs(py - hy) < 1])
+    doublers.append(affinity.translate(d, -(hy - 12), -(Z0H - 2)))
 
 # ---- walls: (length, height, lead, extra, slots list)
 def wall(length, height, lead, slots=()):
@@ -128,26 +130,19 @@ WALLS = {
     "base_end": (IY, HB, 10.0, slots_u(18, IY - 18, 8, HB - 8)),
     "bay_front": (X, HL, 13.0, ()), "bay_rear": (X, HL, 13.0, ()),
     "bay_end": (IY, HL, 10.0, slots_u(18, IY - 18, 135.0, HL - 12.0)),
+    "bay_endh": (IY, HL, 10.0, slots_u(18, IY - 18, 135.0, HL - 12.0) + [Point(py - T, pz - Z_B).buffer(M3 / 2, 24) for py, pz in HOLES_H]),
 }
 wall_poly = {k: wall(*v) for k, v in WALLS.items()}
 
-# ---- the door (the display, in its own frame: u along x, v up from the door's bottom)
-PW, PH = 360.0, 223.0
-c = (X / 2, DOOR_H / 2)
-hinge_h = [Point(x, y).buffer(M3 / 2, 24) for x in (8.0,) for y in (40.0, DOOR_H - 40.0)]
-bezel = cut(box(0, 0, X, DOOR_H), [box(c[0] - 173, c[1] - 97, c[0] + 173, c[1] + 97)])
-cavity = cut(box(0, 0, X, DOOR_H), [box(c[0] - PW / 2 - 2, c[1] - PH / 2 - 2, c[0] + PW / 2 + 2, c[1] + PH / 2 + 2)])
-back = box(0, 0, X, DOOR_H)
-
-# ---- the handle: printed flat on its x-y face (hx out of the lid, hy along the bar, hz across the lid); bar 160 x 24 x 14, legs 25 wide
-HW, HX_LEG, HX_BAR0, HX_BAR1 = 160.0, 12.0, 38.0, 52.0
+# ---- the handle: printed flat on its x-y face (hx out of the lid, hy along the bar, hz across the lid); bar 110 x 24 x 14, legs 15 wide
+HX_LEG, HX_BAR0, HX_BAR1 = 12.0, 38.0, 52.0
 HZ_BAR, HZ_FOOT = 24.0, 56.0
-arms = box(HX_LEG, 0, HX_BAR1, 25).union(box(HX_LEG, HW - 25, HX_BAR1, HW)).union(box(HX_BAR0, 0, HX_BAR1, HW))
+arms = box(HX_LEG, 0, HX_BAR1, LEG).union(box(HX_LEG, HW - LEG, HX_BAR1, HW)).union(box(HX_BAR0, 0, HX_BAR1, HW))
 handle = extrude(arms, 0, HZ_BAR)
-for y0 in (0.0, HW - 25):
-    handle = boolean(handle, extrude(box(0, y0, HX_LEG + 1.0, y0 + 25), 0, HZ_FOOT), "+")
+for y0 in (0.0, HW - LEG):
+    handle = boolean(handle, extrude(box(0, y0, HX_LEG + 1.0, y0 + LEG), 0, HZ_FOOT), "+")
 bores = []
-for ly in (12.5, HW - 12.5):
+for ly in (LEG / 2, HW - LEG / 2):
     for lz in (8.0, 48.0):
         cyl = trimesh.creation.cylinder(radius=INS_D / 2, height=INS_DEPTH + 1.0, sections=48)
         cyl.apply_transform(tm.rotation_matrix(np.pi / 2, [0, 1, 0]))
@@ -155,17 +150,17 @@ for ly in (12.5, HW - 12.5):
 for b in bores:
     handle = boolean(handle, b, "-")
 
-# ---- foot rails (along x under D0, y 5..45 and 81..121; the left reaches 150 out as an outrigger for the open door)
+# ---- foot rails (along x under D0, y 5..45 and 81..121)
 RAIL_W = 40.0
-RAIL_Y = [5.0, Y - 5.0 - RAIL_W]
-RAIL_SEGS = [(-150.0, 30.0), (30.0, 192.0), (192.0, X)]
+RAIL_Y = [(5.0, RAIL_W), (Y - 5.0 - RAIL_W, RAIL_W)]
+RAIL_SEGS = [(0.0, 130.0), (130.0, 252.0), (252.0, X)]
 rails = []                                            # (x0, y0, polygon pad/rail) in model coordinates
 for (x0, x1) in RAIL_SEGS:
-    for y0 in RAIL_Y:
-        holes = [(rx, ry) for rx, ry in RODS if x0 <= rx <= x1 and y0 <= ry <= y0 + RAIL_W]
-        if x0 == 30.0:
-            holes += [(x, y0 + 7.0 if y0 == RAIL_Y[0] else y0 + RAIL_W - 7.0) for x in (140.0, 180.0)]
-        rails.append((x0, y0, x1 - x0, holes))
+    for y0, rw in RAIL_Y:
+        holes = [(rx, ry) for rx, ry in RODS if x0 <= rx <= x1 and y0 <= ry <= y0 + rw]
+        if x0 == 130.0:
+            holes += [(x, y0 + 7.0 if y0 < 60 else y0 + rw - 7.0) for x in (140.0, 180.0)]
+        rails.append((x0, y0, x1 - x0, rw, holes))
 
 # ---- tile everything, dedupe, export
 os.makedirs(os.path.join(ROOT, "print"), exist_ok=True)
@@ -198,17 +193,15 @@ tile_of["lid"] = slice_tiles(lid, 3, 1, X, Y)
 for k, p in wall_poly.items():
     length, height = WALLS[k][0], WALLS[k][1]
     tile_of[k] = slice_tiles(p, 3 if length == X else 1, 2 if height > 180 else 1, length, height)
-for k, p in (("bezel", bezel), ("cavity", cavity), ("back", back)):
-    tile_of[k] = slice_tiles(p, 3, 2, X, DOOR_H)
 for k, t in tile_of.items():
-    register(k, t, {"cavity": D_CAV, "back": D_BACK}.get(k, T))
+    register(k, t, T)
 for n, d in enumerate(doublers):
-    register("doubler", [((0, 0), d, (40, 64))], T)
-for x0, y0, w, holes in rails:
-    p = box(0, 0, w, RAIL_W)
+    register("doubler", [((0, 0), d, (24, 60))], T)
+for x0, y0, w, rw, holes in rails:
+    p = box(0, 0, w, rw)
     p = cut(p, [Point(hx - x0, (hy - y0)).buffer(M3 / 2, 24) for hx, hy in holes])
-    register("rail", [((0, 0), p, (w, RAIL_W))], FEET_RAIL)
-    register("tpu_pad", [((0, 0), box(0, 0, w, RAIL_W), (w, RAIL_W))], FEET_TPU)
+    register("rail", [((0, 0), p, (w, rw))], FEET_RAIL)
+    register("tpu_pad", [((0, 0), box(0, 0, w, rw), (w, rw))], FEET_TPU)
 
 total = sum(v[3] for v in unique.values()) + 1
 for sig, (name, p, th, cnt) in unique.items():
@@ -243,10 +236,10 @@ def tiles_of(key, M_of):
     return ms
 
 
-THICK = {"cavity": D_CAV, "back": D_BACK}
+THICK = {}
 
 
-def build(open_state):
+def build():
     ps = []
     for k, z in (("d0", Z_D0), ("d1", Z_D1)):
         ps += tiles_of(k, lambda u, v, z=z: Tr(u, 0, z))
@@ -255,10 +248,11 @@ def build(open_state):
         ps += tiles_of(f"{lay}_front", lambda u, v, z0=z0: Tr(u, T, z0 + v) @ Rx(np.pi / 2))
         ps += tiles_of(f"{lay}_rear", lambda u, v, z0=z0: Tr(u, Y, z0 + v) @ Rx(np.pi / 2))
         for x0 in (0.0, X - T):
-            ps += tiles_of(f"{lay}_end", lambda u, v, z0=z0, x0=x0: Tr(x0, T + u, z0 + v) @ Rz(np.pi / 2) @ Rx(np.pi / 2))
-    for d, hx in zip(doublers, HAND_X):
-        ps.append(place(d, T, Tr(hx - 20, HAND_Y0 - 4, Z_TOP)))
-    h = handle.copy(); h.apply_transform(np.array([[0, 1, 0, X / 2 - HW / 2], [0, 0, 1, HAND_Y0], [1, 0, 0, Z_TOP + T], [0, 0, 0, 1]], float))
+            kk = "bay_endh" if (lay == "bay" and x0 > 0) else f"{lay}_end"
+            ps += tiles_of(kk, lambda u, v, z0=z0, x0=x0: Tr(x0, T + u, z0 + v) @ Rz(np.pi / 2) @ Rx(np.pi / 2))
+    for d, hy in zip(doublers, HAND_Y):
+        ps.append(place(d, T, Tr(X, hy - 12, Z0H - 2) @ Rz(np.pi / 2) @ Rx(np.pi / 2)))
+    h = handle.copy(); h.apply_transform(np.array([[1, 0, 0, X + T], [0, 1, 0, Y / 2 - HW / 2], [0, 0, 1, Z0H], [0, 0, 0, 1]], float))
     ps.append(h)
     # fans (reused Kootek pad), rods
     for fx, fy in [FAN120]:
@@ -273,29 +267,19 @@ def build(open_state):
     for y0 in (6.0, Y - 6.0 - 27.0):
         b = trimesh.creation.box(extents=[330, 27, 220]); b.apply_translation([X / 2, y0 + 13.5, Z_B + 8 + 110]); ps.append(b)
     # foot rails + TPU pads
-    for x0, y0, w, holes in rails:
-        r = trimesh.creation.box(extents=[w, RAIL_W, FEET_RAIL]); r.apply_translation([x0 + w / 2, y0 + RAIL_W / 2, FEET_TPU + FEET_RAIL / 2]); ps.append(r)
-        r = trimesh.creation.box(extents=[w, RAIL_W, FEET_TPU]); r.apply_translation([x0 + w / 2, y0 + RAIL_W / 2, FEET_TPU / 2]); ps.append(r)
-    # door: faces down onto the front (y<0), hinged on its left vertical edge (x 0, y 0)
-    door = []
-    for key, th, y_front in (("bezel", D_BEZ, 0.0), ("cavity", D_CAV, -D_BEZ), ("back", D_BACK, -D_BEZ - D_CAV)):
-        door += tiles_of(key, lambda u, v, yf=y_front: Tr(u, yf, FEET + v) @ Rx(np.pi / 2))
-    pan = trimesh.creation.box(extents=[PW, 3, PH]); pan.apply_translation([c[0], -D_BEZ - 1.5, FEET + c[1]]); door.append(pan)
-    drv = trimesh.creation.box(extents=[105, 8, 55]); drv.apply_translation([c[0] + 100, -D_BEZ - 3 - 4, FEET + c[1] - 80]); door.append(drv)
-    dm = trimesh.util.concatenate(door)
-    if open_state:
-        dm.apply_transform(Rz(np.deg2rad(-175)))
-    ps.append(dm)
+    for x0, y0, w, rw, holes in rails:
+        r = trimesh.creation.box(extents=[w, rw, FEET_RAIL]); r.apply_translation([x0 + w / 2, y0 + rw / 2, FEET_TPU + FEET_RAIL / 2]); ps.append(r)
+        r = trimesh.creation.box(extents=[w, rw, FEET_TPU]); r.apply_translation([x0 + w / 2, y0 + rw / 2, FEET_TPU / 2]); ps.append(r)
     return trimesh.util.concatenate(ps)
 
 
-open_m, closed_m = build(True), build(False)
+closed_m = build()
 d = os.path.join(ROOT, "parts", "desktop_dual_board_case")
-open_m.export(os.path.join(d, "part.stl"))
-print("open", np.round(open_m.extents, 1).tolist(), "closed", np.round(closed_m.extents, 1).tolist())
+closed_m.export(os.path.join(d, "part.stl"))
+print("closed", np.round(closed_m.extents, 1).tolist())
 sys.path.insert(0, ROOT)
 from topo.build import render
-render(open_m, os.path.join(d, "preview.png"), title=f"desktop_dual_board_case upright suitcase, OPEN ({total} flat tiles)",
-       info="STANDING: fans flat in the base blow up | two boards upright, hot sides facing a 60 mm chimney | exhaust lid + upper end walls | handle on top | door (display) open 175 deg")
+render(closed_m, os.path.join(d, "preview.png"), title=f"desktop_dual_board_case upright suitcase, no screen ({total} flat tiles)",
+       info="STANDING: fans flat in the base blow up | two boards upright, hot sides facing a 60 mm chimney | whole top an exhaust grille + upper end walls | handle on a short end wall | plain front, no display")
 render(closed_m, os.path.join(d, "preview_closed.png"), title="desktop_dual_board_case upright suitcase, CLOSED (carry)",
-       info=f"{X:.0f} x {Y:.0f} x {Z_TOP:.0f} mm + {D_TOT:.0f} door + {FEET:.0f} feet + 55 handle on top | rails and TPU pads | door latched on the front")
+       info=f"{X:.0f} x {Y:.0f} x {Z_TOP:.0f} mm + {FEET:.0f} feet + 55 handle on the short end wall | rails and TPU pads | plain front")
