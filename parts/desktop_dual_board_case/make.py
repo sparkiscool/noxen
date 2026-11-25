@@ -1,36 +1,42 @@
 """Desktop dual-board case, UPRIGHT SUITCASE (Spark 25 Nov: it stands on its end like a standing suitcase the whole time it runs; the Kootek pad's fans
 sit flat in the base blowing UP; both boards stand vertical, side by side and parallel to the airflow with a gap between them (each board's hot
-side facing the gap), so air rises along both like a chimney and leaves through the lid and the upper end walls; the whole TOP is an exhaust grille; the carry handle is on a SHORT END wall (carried hanging lengthwise, like an elongated suitcase);
-the base it stands on is the opposite end; no fold-out legs; the box is fitted to the parts, no wasted space). Flat layers, A1 mini (every tile
-<= 180), PCTG (TPU 95A foot pads), no supports.
-Frame: x right (width), y back (depth), z up. Closed 372 x 126 x 299 (+ 11 feet, + 55 handle out of the +x end wall).
+side facing the gap), so air rises along both like a chimney and leaves through the lid and the upper end walls; the whole TOP is an exhaust grille;
+NO display screen (Spark plugs into other monitors); the carry handle is on the +x SHORT END wall with its grip turned to run along z (the case hangs from it
+at his side like a suitcase, its big face against the leg); the S2-TEK mini projector lies in a bay on the same end wall BELOW the handle, lens looking out of that
+end; the base it stands on is the opposite (-x) end, so the projector end stays up when he sets it down; no fold-out legs; the box is fitted to the parts,
+no wasted space). Flat layers, A1 mini (every tile <= 180), PCTG (TPU 95A foot pads), no supports.
+Frame: x right (width), y back (depth), z up. Closed 372 x 126 x 299 (+ 11 feet, + 55 handle out of the +x end wall, + 160 projector bay out of the +x end wall at z 48..113).
 Kootek pad (Amazon B01469DJLM, owned; mesh top and clips dropped): 1 x 120x120x25 fan + 4 x 70x70x15 fans, all reused.
 Boards TIMI A7S + second board (E, outlines not published): 330 x 220 board, 27 deep with its cooler, standing on its 330 edge.
-Fit: inner width 366 = set by the fan row (120 + three 70 + gaps + walls; the boards are 330, no panel now); inner depth 120 = the 120 fan; board A at y 6..33, board B at
+Fit: inner width 366 = the fan row (120 + three 70 + gaps = 357 + walls; the boards are 330); inner depth 120 = the 120 fan; board A at y 6..33, board B at
 y 93..120, hot sides facing, gap y 33..93 = 60 (the chimney); inner height 245 = 8 standoff + 220 board + 17 under the lid (70 extractor 15 thick).
-Stack, bottom up (z mm): TPU pad 3 + rail 8 (feet 11) | D0 floor 3 | base 34 (the 120 + three 70 fans stand on D0 and blow up; rear and end walls
-slotted: intake; D0 bores under each fan: intake from below, the feet lift it 11) | D1 deck 3 (fan bores) | bay 245 (two boards; end walls
-slotted over their upper 100: exhaust) | lid 3 (slots, the fifth 70 as an extractor over the gap) | the whole lid a grille. Handle (grip along y, centred, z 118..174 about the centre of gravity z ~145) on the +x end wall on two 3 doublers. Front of the bay: a solid wall.
-Front: a plain solid wall of 3 mm tiles (no display, no panel, no driver board: Spark plugs into other monitors); the bay front tiles unscrew from their
-L-brackets for the boards' access. Air: intake bottom and rear of the base (hot air never comes back: the exhaust is 250 mm up), exhaust up through the lid and the upper
-end walls; the front and the rear wall of the bay are solid. Exhaust area lid ~19000 + ends 2 x 5600 = 30000 mm2 against the gap 60 x 330 = 19800
-(E); intake D0 bores 16300 + base slots. Keep 100 mm behind and 60 mm beside for the base intake (E, as the tower note).
+Stack, bottom up (z mm): TPU pad 3 + rail 8 (feet 11) | D0 floor 3 | base 34 (the 120 + three 70 fans stand on D0 and blow up; rear and -x end walls
+slotted: intake; the +x end wall carries the projector bay and is solid; D0 bores under each fan: intake from below, the feet lift it 11) | D1 deck 3 (fan bores) | bay 245 (two boards; end walls
+slotted over their upper 63 (z > 221, above the handle): exhaust) | lid 3 (the whole lid slots, the fifth 70 as an extractor over the gap). Front of the bay: a solid wall.
+Projector bay (S2-TEK / HOMPOW, C from the listing: 124.5 x 124.5 x 53.3 mm, 640 g; lens position E): a 3 mm floor flush with the D1 deck (z 48..51) reaching 160 out of the +x end
+wall, 132 wide with two 5 mm side lips; the projector lies flat on it, lens looking out of the end, vents and ports on its side faces and the speaker grille on top all open; set back
+1.5 behind a 12 mm lip frame (132 x 58, an 80 x 36 lens window, 10.5 mm of lip ahead of the lens so nothing touches it when the case is set down). The floor hangs from two M3 L-brackets under it
+(vertical flange on the end wall tile, z 28..48) and the frame sits on it on two L-brackets in front of it into M3 heat-set inserts. The beam: the grip's bottom is z 118, the lens
+axis z ~78 and the picture spreads about +-13 mm per 55 mm of throw (E), so the handle (x 12..55 out of the wall) is 40 mm above the beam's edge and never shades it.
+Handle (bar along z 100, clear 70, bar 24 x 14, legs 15, on the end wall z 118..218 on two 3 doublers, centred on y). Air: intake bottom, rear and -x end of the base (hot air never comes back:
+the exhaust is 250 mm up; the projector's own vents face +-y at z 51..104, far below the exhaust); exhaust up through the lid and the upper end walls; the front and rear walls of the bay are solid.
+Exhaust area lid ~19000 + ends 2 x 3000 = 25000 mm2 against the gap 60 x 330 = 19800 (E); intake D0 bores 16300 + base slots. Keep 100 mm behind and 60 mm beside for the base intake (E, as the tower note).
 Joints: wall tiles screw to M3 L-brackets (bought, 20 x 20) at each corner of each layer, one M3 x 8 + nut through each flange; four M3 x 300 threaded rods
 at (12,12) etc., nuts both sides of D0, D1 and the lid, clamp and hang the stack; the two foot rails are clamped by the rods and two M3 x 12 into inserts.
-Hand calcs (E): carried weight <= 7 kg (tiles 1.8 + two boards + fans, E) x 3 dynamic = 210 N, carried hanging lengthwise: the +x SHORT end wall is up and the case hangs from
-the handle (the pull is along the legs, through the end wall). Handle bar 24 x 14 on an 80 clear span: M = 210 x 80 / 4 = 4200 N mm, Z = 24 x 14^2 / 6 = 784 mm3:
-5.4 MPa (PCTG 45 E, layers flat so the stress is along them): margin 8. Legs 15 x 24 = 360 mm2: 105 N each = 0.29 MPa. Each foot is held by 2 M3 x 12 into M3
+Hand calcs (E): carried weight <= 7 kg (tiles 2.0 + two boards + fans + projector 0.64 + hardware, E) x 3 dynamic = 210 N, carried hanging at his side: the +x SHORT end wall is up and the case hangs from
+the handle (the pull is along x, through the end wall). Handle bar 24 x 14 on an 70 clear span: M = 210 x 70 / 4 = 3675 N mm, Z = 24 x 14^2 / 6 = 784 mm3:
+4.7 MPa (PCTG 45 E, layers flat so the stress is along them): margin 9.6. Legs 15 x 56 = 840 mm2: 105 N each = 0.13 MPa. Each foot is held by 2 M3 x 12 into M3
 heat-set inserts (fit table: hole 4.0 x 6) in a 12 deep block, the screw heads (pan head + washer d7, 2.5 high) inside the end wall through 3 wall + 3 doubler, clear of
-the boards (end gap 6): bar 16 off the bolt centre line: insert loads 52 +- 1680 / 40 = 94 / 10 N against ~300 N pull-out: margin 3.2; head bearing 94 / 29 mm2 =
-3.3 MPa, punching 0.7 MPa: margin > 10. Reinforcement: a 120 x 122 x 3 end tile loaded by a leg 105 N, simply supported 100 mm, effective width 60: 3 mm alone M = 2625 N mm,
-Z = 60 x 9 / 6 = 90: 29 MPa (margin 1.5, not enough); with the 3 mm doubler outside (6 mm, Z = 360) 7.3 MPa: margin 6; the tile hangs from its 4 bracket screws (53 N each,
-margin > 10). The handle at z 118..174 is about the centre of gravity (z ~145 E): it hangs level (offset < 15 mm) and sits below the end wall's exhaust slots (z > 186).
-The lid hangs the stack on 4 rods (52 N each, M3 rod 2 kN, nut washer 1.3 MPa), each deck on its nut pair. Standing: 7 kg, centre of gravity y ~63 (rails y 5..45 and
-81..121: margin 58 to the front rail edge); the handle sticks 55 out of the +x end (leave 60 beside). Boards' mounts wait for their measuring (E).
-Cooling (research in NOTE.md): fans low and pushing, exhaust high, the whole lid a grille, hot and cold apart, filter sheet on the base slots.
-Bought (Amazon searches): M3 L-brackets 20 mm;
-M3 x 300 rods; M3 heat-set inserts; M3 nuts and washers.
-Run: python parts/desktop_dual_board_case/make.py -> part.stl, preview.png, preview_closed.png, print/desktop_dual_board_case_<tile>.stl"""
+the boards (end gap 15; the bolts are at y 43 and 83, in front of the chimney): bar 16 off the bolt centre line: insert loads 52 +- 1680 / 40 = 94 / 10 N against ~300 N pull-out: margin 3.2; head
+bearing 94 / 29 mm2 = 3.3 MPa, punching 0.7 MPa: margin > 10. Reinforcement: a 120 x 122 x 3 end tile loaded by a leg 105 N, simply supported 100 mm, effective width 60: 3 mm alone M = 2625 N mm,
+Z = 60 x 9 / 6 = 90: 29 MPa (margin 1.5, not enough); with the 3 mm doubler outside (6 mm, Z = 360) 7.3 MPa: margin 6; the tile hangs from its 4 bracket screws (53 N each, margin > 10).
+The projector bay (floor 0.2 + frame 0.15 + projector 0.64 = 1.0 kg = 10 N, x 3 dynamic = 30 N, centre 80 out of the wall): moment 2400 N mm on two L-brackets 20 high: 60 N pull on each
+(two M3 each: 30 N a screw, bearing 1.0 MPa, margin > 10); floor strip 132 x 3 under 30 N over 160: 0.4 MPa. Hanging balance: the handle's centre z 168, the centre of gravity z ~135 (E):
+offset 33 mm over ~200 mm to the grip = a 9 deg tilt at the side, accepted (the projector sits below the grip, as asked). The lid hangs the stack on 4 rods (52 N each, M3 rod 2 kN, nut washer
+1.3 MPa), each deck on its nut pair. Standing: 7 kg, centre of gravity y ~63 (rails y 5..45 and 81..121: margin 58 to the front rail edge), x ~215 (the bay hangs 48 above the floor, the rails end at x 372: margin 157 to the +x rail end). The handle sticks 55 out of the +x end, the bay 160 (leave 170 beside it for the picture). Boards' mounts wait for their measuring (E).
+Cooling (research in NOTE.md, searched 25 Nov): positive pressure (4 intake fans, 1 extractor), filters on the intake with area, fans low and pushing, exhaust high, the whole lid a grille, hot and cold apart.
+Bought (Amazon searches): M3 L-brackets 20 mm (6 more for the bay); M3 x 300 rods; M3 heat-set inserts; M3 nuts and washers; fine nylon filter sheet.
+Run: python parts/desktop_dual_board_case/make.py -> part.stl, preview.png, preview_closed.png, preview_orientation.png (layout and airflow only), print/desktop_dual_board_case_<tile>.stl"""
 import os, sys, glob
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scout_v4_probe_mech_lib import extrude, boolean, ROOT  # noqa: E402
@@ -105,17 +111,44 @@ decks = {
 FAN_ZONE = (X / 2 - 46, X / 2 + 46)
 lid_slots = [g for g in slots_u(16, X - 12, 16, Y - 16, sw=6.0) if not (g.bounds[2] > FAN_ZONE[0] and g.bounds[0] < FAN_ZONE[1])]
 lid = cut(box(0, 0, X, Y), rod_holes() + fan_cuts(*FAN70_TOP, 70) + lid_slots)
-# ---- the handle sits on the +x SHORT END wall (the smallest face: the case is carried hanging lengthwise, 372 long vertical, like an elongated suitcase):
-# grip along y (centred), feet at y HAND_Y, z Z0H..Z0H+56 (below the end wall's exhaust slots, z < 186, about the centre of gravity)
-HW, LEG = 110.0, 15.0
-HAND_Y = [Y / 2 - HW / 2 + LEG / 2, Y / 2 + HW / 2 - LEG / 2]        # foot centres 15.5, 110.5
-Z0H = 118.0
-HOLES_H = [(hy, Z0H + hz) for hy in HAND_Y for hz in (8.0, 48.0)]      # (y, z) on the end wall
+# ---- the handle sits on the +x SHORT END wall, grip along z (turned 90 deg: the case hangs from it at the side like a suitcase, its big x-z face
+# against the leg); legs at the ends of the bar, each on two bolts across y; bottom of the handle z ZH0, above the projector bay (z < 113)
+HW, LEG = 100.0, 15.0                    # bar length along z, leg width along z
+ZH0 = 118.0
+YH = Y / 2 + 28.0                        # handle local hz -> global y = YH - hz (foot 56 across y, centred)
+LEGZ = [ZH0 + LEG / 2, ZH0 + HW - LEG / 2]
+HOLES_H = [(YH - hz, lz) for lz in LEGZ for hz in (8.0, 48.0)]      # (y, z) on the end wall
 doublers = []
-for hy in HAND_Y:
-    d = box(hy - 12, Z0H - 2, hy + 12, Z0H + 58)
-    d = cut(d, [Point(py, pz).buffer(M3 / 2, 24) for py, pz in HOLES_H if abs(py - hy) < 1])
-    doublers.append(affinity.translate(d, -(hy - 12), -(Z0H - 2)))
+for lz in LEGZ:
+    d = box(Y / 2 - 33, lz - 13.5, Y / 2 + 33, lz + 13.5)
+    d = cut(d, [Point(py, pz).buffer(M3 / 2, 24) for py, pz in HOLES_H if abs(pz - lz) < 1])
+    doublers.append(affinity.translate(d, -(Y / 2 - 33), -(lz - 13.5)))
+DOUBL_Y0 = Y / 2 - 33
+
+# ---- the projector bay on the same end (S2-TEK / HOMPOW mini projector, C from the listing: 124.5 x 124.5 x 53.3, 640 g, lens ring on one face,
+# vents and ports on the side faces): it lies flat on a floor flush with the D1 deck (z 48..51), lens looking out of the +x end, set back behind a 12 mm lip
+# frame with a lens window; both sides and the top stay open (vents, speaker grille); floor 3 mm + two 5 mm side lips
+PJ_W, PJ_D, PJ_H = 124.5, 124.5, 53.3
+MY0, MW = -3.0, 132.0                    # module spans y -3..129 (lip each side), floor and frame 132 wide
+FL_LEN = 160.0                           # floor length from the end wall (x X..X+160)
+FRAME_X0, FRAME_T, FRAME_H = 127.0, 12.0, 58.0
+Z_FLOOR = Z_D1                           # floor bottom z 48, top 51
+Z_PJ0 = Z_FLOOR + T                      # projector sits z 51..104.3
+BR_Y = [Y / 2 - 40, Y / 2 + 40]          # back L-brackets (under the floor, vertical flange on the end wall tile)
+FR_Y = [Y / 2 - 55, Y / 2 + 55]          # front L-brackets (flat on the floor in front of the frame, vertical flange on the frame's front)
+floor_poly = box(0, 0, FL_LEN, MW)
+floor_poly = cut(floor_poly, [Point(11.0, y - MY0).buffer(M3 / 2, 24) for y in BR_Y] + [Point(FL_LEN - 9.0, y - MY0).buffer(M3 / 2, 24) for y in FR_Y])
+lips_poly = box(15, 0, 115, 3.0).union(box(15, MW - 3.0, 115, MW))
+frame_poly = cut(box(0, 0, MW, FRAME_H), [box(Y / 2 - MY0 - 40, 9.0, Y / 2 - MY0 + 40, 45.0)])   # lens window 80 x 36 (E: lens position unmeasured)
+frame = extrude(frame_poly, 0, FRAME_T)
+for y in FR_Y:                                                    # insert bores from the front face (local z = 12 down 6), at 10 above the floor
+    cyl = trimesh.creation.cylinder(radius=INS_D / 2, height=INS_DEPTH + 1.0, sections=48)
+    cyl.apply_translation([y - MY0, 10.0, FRAME_T - INS_DEPTH / 2 + 0.5])
+    frame = boolean(frame, cyl, "-")
+floor_mesh = extrude(floor_poly, 0, T)
+for lp in lips_poly.geoms:
+    floor_mesh = boolean(floor_mesh, extrude(lp, 0, 8.0), "+")
+BR_HOLES = [Point(y - T, 24.0).buffer(M3 / 2, 24) for y in BR_Y]       # wall tile holes (u = y - T, v = z - Z_BW: z 38, 10 below the floor)
 
 # ---- walls: (length, height, lead, extra, slots list)
 def wall(length, height, lead, slots=()):
@@ -128,9 +161,10 @@ def wall(length, height, lead, slots=()):
 WALLS = {
     "base_front": (X, HB, 13.0, ()), "base_rear": (X, HB, 13.0, slots_u(18, X - 18, 8, HB - 8)),
     "base_end": (IY, HB, 10.0, slots_u(18, IY - 18, 8, HB - 8)),
+    "base_endp": (IY, HB, 10.0, BR_HOLES),
     "bay_front": (X, HL, 13.0, ()), "bay_rear": (X, HL, 13.0, ()),
-    "bay_end": (IY, HL, 10.0, slots_u(18, IY - 18, 135.0, HL - 12.0)),
-    "bay_endh": (IY, HL, 10.0, slots_u(18, IY - 18, 135.0, HL - 12.0) + [Point(py - T, pz - Z_B).buffer(M3 / 2, 24) for py, pz in HOLES_H]),
+    "bay_end": (IY, HL, 10.0, slots_u(18, IY - 18, 170.0, HL - 12.0)),
+    "bay_endh": (IY, HL, 10.0, slots_u(18, IY - 18, 170.0, HL - 12.0) + [Point(py - T, pz - Z_B).buffer(M3 / 2, 24) for py, pz in HOLES_H]),
 }
 wall_poly = {k: wall(*v) for k, v in WALLS.items()}
 
@@ -196,7 +230,7 @@ for k, p in wall_poly.items():
 for k, t in tile_of.items():
     register(k, t, T)
 for n, d in enumerate(doublers):
-    register("doubler", [((0, 0), d, (24, 60))], T)
+    register("doubler", [((0, 0), d, (66, 27))], T)
 for x0, y0, w, rw, holes in rails:
     p = box(0, 0, w, rw)
     p = cut(p, [Point(hx - x0, (hy - y0)).buffer(M3 / 2, 24) for hx, hy in holes])
@@ -213,6 +247,10 @@ for sig, (name, p, th, cnt) in unique.items():
 assert handle.is_watertight and max(handle.extents) <= 180.01, handle.extents
 handle.export(os.path.join(ROOT, "print", "desktop_dual_board_case_handle.stl"))
 mass += handle.volume / 1000 * 1.23
+for nm, mm in (("proj_floor", floor_mesh), ("proj_lip_frame", frame)):
+    assert mm.is_watertight and max(mm.extents) <= 180.01, (nm, mm.extents)
+    mm.export(os.path.join(ROOT, "print", f"desktop_dual_board_case_{nm}.stl")); mass += mm.volume / 1000 * 1.23
+    print(nm, "x 1", np.round(mm.extents, 1).tolist())
 print("handle x 1", np.round(handle.extents, 1).tolist())
 print(f"{total} printed tiles, {mass:.0f} g (PCTG 1.23, TPU 1.21)")
 
@@ -248,12 +286,15 @@ def build():
         ps += tiles_of(f"{lay}_front", lambda u, v, z0=z0: Tr(u, T, z0 + v) @ Rx(np.pi / 2))
         ps += tiles_of(f"{lay}_rear", lambda u, v, z0=z0: Tr(u, Y, z0 + v) @ Rx(np.pi / 2))
         for x0 in (0.0, X - T):
-            kk = "bay_endh" if (lay == "bay" and x0 > 0) else f"{lay}_end"
+            kk = "bay_endh" if (lay == "bay" and x0 > 0) else ("base_endp" if (lay == "base" and x0 > 0) else f"{lay}_end")
             ps += tiles_of(kk, lambda u, v, z0=z0, x0=x0: Tr(x0, T + u, z0 + v) @ Rz(np.pi / 2) @ Rx(np.pi / 2))
-    for d, hy in zip(doublers, HAND_Y):
-        ps.append(place(d, T, Tr(X, hy - 12, Z0H - 2) @ Rz(np.pi / 2) @ Rx(np.pi / 2)))
-    h = handle.copy(); h.apply_transform(np.array([[1, 0, 0, X + T], [0, 1, 0, Y / 2 - HW / 2], [0, 0, 1, Z0H], [0, 0, 0, 1]], float))
+    for d, lz in zip(doublers, LEGZ):
+        ps.append(place(d, T, Tr(X, DOUBL_Y0, lz - 13.5) @ Rz(np.pi / 2) @ Rx(np.pi / 2)))
+    h = handle.copy(); h.apply_transform(np.array([[1, 0, 0, X + T], [0, 0, -1, YH], [0, 1, 0, ZH0], [0, 0, 0, 1]], float))
     ps.append(h)
+    fl = floor_mesh.copy(); fl.apply_transform(Tr(X, MY0, Z_FLOOR) @ np.eye(4)); ps.append(fl)
+    fr = frame.copy(); fr.apply_transform(Tr(X + FRAME_X0, MY0, Z_PJ0) @ Rz(np.pi / 2) @ Rx(np.pi / 2)); ps.append(fr)
+    pj = trimesh.creation.box(extents=[PJ_D, PJ_W, PJ_H]); pj.apply_translation([X + 1.0 + PJ_D / 2, Y / 2, Z_PJ0 + PJ_H / 2]); ps.append(pj)
     # fans (reused Kootek pad), rods
     for fx, fy in [FAN120]:
         f = trimesh.creation.box(extents=[120, 120, 25]); f.apply_translation([fx, fy, Z_BW + 12.5]); ps.append(f)
@@ -279,7 +320,75 @@ closed_m.export(os.path.join(d, "part.stl"))
 print("closed", np.round(closed_m.extents, 1).tolist())
 sys.path.insert(0, ROOT)
 from topo.build import render
-render(closed_m, os.path.join(d, "preview.png"), title=f"desktop_dual_board_case upright suitcase, no screen ({total} flat tiles)",
-       info="STANDING: fans flat in the base blow up | two boards upright, hot sides facing a 60 mm chimney | whole top an exhaust grille + upper end walls | handle on a short end wall | plain front, no display")
-render(closed_m, os.path.join(d, "preview_closed.png"), title="desktop_dual_board_case upright suitcase, CLOSED (carry)",
-       info=f"{X:.0f} x {Y:.0f} x {Z_TOP:.0f} mm + {FEET:.0f} feet + 55 handle on the short end wall | rails and TPU pads | plain front")
+render(closed_m, os.path.join(d, "preview.png"), title=f"desktop_dual_board_case upright suitcase, no screen, projector bay under the handle ({total} flat tiles)",
+       info="STANDING: fans flat in the base blow up | two boards upright, hot sides facing a 60 mm chimney | whole top an exhaust grille + upper end walls | handle (grip along z) + projector bay below it on the +x end | plain front, no display")
+render(closed_m, os.path.join(d, "preview_closed.png"), title="desktop_dual_board_case upright suitcase (carry view)",
+       info=f"{X:.0f} x {Y:.0f} x {Z_TOP:.0f} mm + {FEET:.0f} feet + 55 handle + 160 projector bay on the +x end wall | rails and TPU pads | plain front")
+
+# ---- orientation-only preview: the box, the fans, the boards, the airflow
+import matplotlib; matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
+
+def cube(ax, x0, x1, y0, y1, z0, z1, fc, ec="k", al=0.5, lw=0.6):
+    v = np.array([[x, y, z] for x in (x0, x1) for y in (y0, y1) for z in (z0, z1)])
+    f = [[0, 1, 3, 2], [4, 5, 7, 6], [0, 1, 5, 4], [2, 3, 7, 6], [0, 2, 6, 4], [1, 3, 7, 5]]
+    ax.add_collection3d(Poly3DCollection([v[i] for i in f], facecolors=fc, edgecolors=ec, alpha=al, linewidths=lw))
+
+
+fig = plt.figure(figsize=(16, 9), dpi=110)
+fig.suptitle("Upright suitcase: best layout for one Kootek pad + two boards  (stands on its end, runs standing)", fontsize=15, fontweight="bold")
+ax = fig.add_subplot(1, 2, 1, projection="3d")
+zb = Z_B + 8
+cube(ax, 0, X, 0, Y, FEET, Z_TOP, (0.85, 0.9, 1.0, 0.05), ec="#1f4e9c", al=0.12, lw=1.6)       # the enclosing box
+cube(ax, 0, X, 0, Y, Z_D0, Z_BW + HB, (0.7, 0.8, 0.9, 0.08), ec="#1f4e9c", al=0.12, lw=0.8)   # fan base
+for fx, fy in [FAN120]:
+    cube(ax, fx - 60, fx + 60, fy - 60, fy + 60, Z_BW, Z_BW + 25, "#e0802a", al=0.9)
+for fx, fy in FAN70:
+    cube(ax, fx - 35, fx + 35, fy - 35, fy + 35, Z_BW, Z_BW + 15, "#e0802a", al=0.9)
+for y0, hot in ((6.0, +1), (Y - 6.0 - 27.0, -1)):
+    cube(ax, (X - 330) / 2, (X + 330) / 2, y0, y0 + 27, zb, zb + 220, "#3a9a4a", al=0.55)
+    yf = y0 + 27 if hot > 0 else y0                                                     # the hot face, toward the gap
+    ax.add_collection3d(Poly3DCollection([[[(X - 330) / 2, yf, zb], [(X + 330) / 2, yf, zb], [(X + 330) / 2, yf, zb + 220], [(X - 330) / 2, yf, zb + 220]]],
+                                         facecolors="#d62828", alpha=0.55, edgecolors="#d62828"))
+for xx in np.linspace(60, X - 60, 7):                                                   # the airflow: in at the bottom, up the chimney, out the top
+    ax.plot([xx, xx], [Y / 2, Y / 2], [FEET - 30, Z_TOP + 40], color="#1d6fe0", lw=2, alpha=0.9)
+    ax.plot([xx], [Y / 2], [Z_TOP + 42], marker="^", color="#1d6fe0", ms=7)
+    ax.plot([xx], [Y / 2], [FEET - 28], marker="^", color="#1d6fe0", ms=6, alpha=0.6)
+ax.text(X / 2, Y + 10, Z_TOP + 55, "hot air out: whole lid + upper end walls", ha="center", color="#a01010", fontsize=10)
+ax.text(X / 2, Y + 10, FEET - 52, "cool air in: bottom + rear slots", ha="center", color="#1d6fe0", fontsize=10)
+ax.text(X + 15, Y / 2, zb + 150, "handle (end wall)", color="k", fontsize=9)
+ax.set_xlim(-10, X + 30); ax.set_ylim(-60, Y + 60); ax.set_zlim(-70, Z_TOP + 60)
+ax.set_box_aspect((X + 40, Y + 120, Z_TOP + 100)); ax.view_init(elev=14, azim=-62)
+ax.set_axis_off()
+ax.set_title("3D: blue box = the enclosing case, 372 x 126 x 299 mm, no screen", fontsize=11)
+
+ax2 = fig.add_subplot(1, 2, 2)
+ax2.set_aspect("equal"); ax2.axis("off")
+ax2.set_title("Cut across the case: fans blow UP, boards vertical, red hot sides face the gap", fontsize=11)
+ax2.add_patch(plt.Rectangle((0, FEET), Y, Z_TOP - FEET, fill=False, ec="#1f4e9c", lw=3))
+ax2.add_patch(plt.Rectangle((0, Z_D0), Y, Z_BW + HB - Z_D0, fc="#dde8f5", ec="#1f4e9c"))
+ax2.add_patch(plt.Rectangle((T + 0, Z_BW), 120, 25, fc="#e0802a", ec="k"))
+ax2.text(Y / 2, Z_BW + 12, "fans blow up", ha="center", va="center", fontsize=9, color="w", fontweight="bold")
+for y0, hot in ((6.0, +1), (Y - 6.0 - 27.0, -1)):
+    ax2.add_patch(plt.Rectangle((y0, zb), 27, 220, fc="#3a9a4a", ec="k"))
+    xh = y0 + 27 if hot > 0 else y0
+    ax2.plot([xh, xh], [zb, zb + 220], color="#d62828", lw=5)
+ax2.text(19, zb + 110, "board A", rotation=90, ha="center", va="center", color="w", fontsize=10, fontweight="bold")
+ax2.text(Y - 19, zb + 110, "board B", rotation=90, ha="center", va="center", color="w", fontsize=10, fontweight="bold")
+ax2.text(Y / 2, zb + 110, "60 mm chimney", ha="center", va="center", color="#d62828", fontsize=10, bbox=dict(fc="w", ec="none", pad=1), zorder=5)
+for xx in (Y / 2 - 20, Y / 2, Y / 2 + 20):
+    ax2.annotate("", xy=(xx, Z_TOP + 55), xytext=(xx, Z_BW + 40), arrowprops=dict(arrowstyle="-|>", color="#1d6fe0", lw=2.5))
+for xx in (25, Y - 25):
+    ax2.annotate("", xy=(xx, Z_BW + 15), xytext=(xx - 35 if xx < 60 else xx + 35, Z_BW + 15), arrowprops=dict(arrowstyle="-|>", color="#1d6fe0", lw=2))
+ax2.annotate("", xy=(Y / 2, FEET + 2), xytext=(Y / 2, -35), arrowprops=dict(arrowstyle="-|>", color="#1d6fe0", lw=2))
+ax2.text(Y / 2, Z_TOP + 62, "hot air out the top (lid grille + extractor fan)", ha="center", fontsize=10, color="#a01010")
+ax2.text(Y / 2, -50, "cool air in from below and the rear", ha="center", fontsize=10, color="#1d6fe0")
+ax2.add_patch(plt.Rectangle((-30, FEET - 11), Y + 60, 11, fc="#555", ec="k"))
+ax2.text(Y + 40, FEET - 6, "feet", fontsize=8, va="center")
+ax2.set_xlim(-100, Y + 100); ax2.set_ylim(-70, Z_TOP + 90)
+fig.text(0.5, 0.02, "Stands on its end the whole time; air rises along both boards like a chimney. Box fitted: width = the fan row (120 + three 70), depth = the 120 mm fan, height = board 220 + 8 standoff + 17.",
+         ha="center", fontsize=10)
+fig.savefig(os.path.join(d, "preview_orientation.png"), bbox_inches="tight")
+print("wrote preview_orientation.png")
