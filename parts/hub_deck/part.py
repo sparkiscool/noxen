@@ -16,14 +16,20 @@ the rods do not move): the nose room grows to x 70..104, y +-30, z 0..28 and the
 wide root from the deck into both collars.
 v16 (29 Oct, auto mode): v15 passed the gate, index 0.67 across layers at the same mouth (56.1 g): nose wall 4 -> 5, 28 -> 32 cm3.
 Nose collars 4.0 thick (NOSE_WALL; the 2.5 of the cage nodes sits in 3..7 cm3 of generated material each), the nose room back to
-x 78 (the UBEC bay ends at 82) and out to |y| 26 over both front feet, gen 22 (the v12 deck at 11 ran at index 0.17), h 1.3 for the cells."""
+x 78 (the UBEC bay ends at 82) and out to |y| 26 over both front feet, gen 22 (the v12 deck at 11 ran at index 0.17), h 1.3 for the cells.
+v17 (25 Nov): the assembly check FAILED, the deck 0.79 mm3 into a UBEC wire tail at (83.8, -5, 11). Every keep-out here came from inputs/,
+the 28 Oct copy of the core layout: its UBEC is the bare brick to x 82, the drone's (tools/bought_meshes.py, 15 Nov) has wire tails to
+x 84, and the lead runs moved since too (the result stood 133 / 75 mm3 in them, allowed 140 / 76 as contacts: the next run's luck).
+The keep-outs of every bought part the room reaches now come from systems/overseer.assembly.json's own meshes (live_cuts; the audit's
+neighbours check, topo/audit.py, refuses room left in one); inputs/ stays the source of the loads and the drawn seats only."""
 import json, os
 import numpy as np, trimesh, manifold3d as mf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 INP = os.path.join(HERE, "inputs")
-from topo import Part
+from topo import Part, fit
 from topo.part import man
+from topo.audit import line_pose
 from parts.cage_node_lib import CAGE, socket_cuts, collar_shape, KIND, WALL, FLOOR, NODE_R
 
 SPEC = dict(h=1.3, gen_cm3=32.0, max_worst=0.5)    # v12: h 1.0, 11 cm3; v13: the nose node lifts the grid to z 24 (h 1.0 would be 350k cells, 1.2 307k, limit 300k) and adds its collars + bracing (E)
@@ -33,6 +39,8 @@ R = json.load(open(os.path.join(INP, "core_result.json")))
 C = R["coupon"]
 A = json.load(open(os.path.join(INP, "core.assembly.json")))
 M = {p["name"]: trimesh.load(os.path.join(INP, p["mesh"])) for p in A["parts"]}
+LIVE = json.load(open(os.path.join(HERE, "..", "..", "systems", "overseer.assembly.json")))    # the drone as it is drawn now: the keep-outs (v17)
+CLEAR = fit.gap("clear")                         # parts that must never touch (systems/fit_table.json)
 PI_NM = "Pi 5 + Active Cooler"
 G = 9.81e-3                                     # N per g per g
 DIRS14 = [np.array(v, float) / np.linalg.norm(v) for v in
@@ -55,7 +63,10 @@ def U(ms):
 
 def grown(name, d):
     """an assembly part grown by d (its convex pieces' hulls, offset): a keep-out"""
-    t = M[name]
+    return grown_mesh(M[name], d)
+
+
+def grown_mesh(t, d):
     hulls = [b.convex_hull for b in t.split(only_watertight=False) if len(b.faces) > 3] or [t.convex_hull]
     out = []
     for h_ in hulls:
@@ -72,6 +83,36 @@ def rigid_split(pts, F, P):
         Am[:3, 3 * i:3 * i + 3] = np.eye(3); Am[3:, 3 * i:3 * i + 3] = [[0, -q[2], q[1]], [q[2], 0, -q[0]], [-q[1], q[0], 0]]
     Mc = np.cross(np.asarray(P, float) - c, F)
     return (np.linalg.pinv(Am) @ np.r_[F, Mc]).reshape(n, 3)
+
+
+def live_mesh(pid):
+    q = next(p for p in LIVE["parts"] if p.get("id") == pid)
+    t = trimesh.load(os.path.join(HERE, "..", "..", q["mesh"]), force="mesh")
+    t.apply_transform(line_pose(q.get("pose")))
+    return t
+
+
+def live_cuts(drawn, env):
+    """the keep-out of every bought part the room reaches, from the drone file's own mesh (v17): its body, grown by the fit table's
+    clear gap (its convex pieces' hulls) unless a drawn seat stands within that gap of it (the plate under the feet, the Pi on its
+    posts, the UBEC and buck on their pads: the bay boxes open the way down onto those) or it is a lead run (flexible, drawn as a
+    schematic: the exact tubes)"""
+    eb = np.asarray(env.bounding_box(), float); out = []
+    for q in LIVE["parts"]:
+        pid = q.get("id")
+        if q.get("role") != "bought" or not q.get("mesh") or not os.path.exists(os.path.join(HERE, "..", "..", q["mesh"])):
+            continue
+        t = live_mesh(pid)
+        if np.any(np.minimum(t.bounds[1] + CLEAR, eb[3:]) <= np.maximum(t.bounds[0] - CLEAR, eb[:3])):
+            continue
+        m = U([man(b) for b in t.split(only_watertight=False) if len(b.faces) > 3])    # body by body (the lead runs: 28 tubes that overlap)
+        if m.is_empty():
+            continue                                                       # not a solid (the props, far above the deck)
+        out.append(m)
+        if not pid.startswith("wires") and drawn.min_gap(m, CLEAR) >= CLEAR:
+            out.append(grown_mesh(t, CLEAR))
+    near = box(eb[0] - 2, eb[3] + 2, eb[1] - 2, eb[4] + 2, eb[2] - 2, eb[5] + 2)   # only what reaches the room (the runs climb to z 65: the audit's parity)
+    return [U(out) ^ near] if out else []
 
 
 # ================================================================ hub deck
@@ -151,13 +192,14 @@ def hub_deck_bodies():
     wires = [U([man(b) for b in M["wires"].split(only_watertight=False) if len(b.faces) > 3])]   # the core's wire routes, exact tubes (a hull per
     # route would be a slab across the deck); the flow lead crosses it
     plates = [man(M["top plate"])]
-    bays = [box(m.bounds[0][0] - 1, m.bounds[1][0] + 1, m.bounds[0][1] - 1, m.bounds[1][1] + 1, T, Z_UNDER) for m in (M["UBEC 5 V"], M["buck 12 V"])]
+    # v17: the bays off the drone's own UBEC and buck (the UBEC's wire tails reach x 84; inputs/ has the brick to 82): CLEAR round the plan, the pads' tops up
+    bays = [box(m.bounds[0][0] - CLEAR, m.bounds[1][0] + CLEAR, m.bounds[0][1] - CLEAR, m.bounds[1][1] + CLEAR, T, Z_UNDER) for m in (live_mesh("ubec_5_v"), live_mesh("buck_12_v"))]
     # the insert holes are cut 2.5 above the feet (v13): the nose node may grow over the front feet, and the M3 x 8 from below ends
     # up to 0.2 above a foot
-    cuts = U(plates + bays + [cyl(x, y, -1, T + 2.5, INS[0] / 2) for x, y in feet] + [cyl(x, y, zp - 4.0, zp + 1, 1.1) for x, y in ph] + slots + wires + nose_cuts
+    env = U([box(-75, 100, -42, 42, 0, T), nose_env])                   # -75 (v14; was -76): 179 long with the nose
+    cuts = U(plates + bays + live_cuts(drawn, env) + [cyl(x, y, -1, T + 2.5, INS[0] / 2) for x, y in feet] + [cyl(x, y, zp - 4.0, zp + 1, 1.1) for x, y in ph] + slots + wires + nose_cuts
              + [grown(f"arm {i}", 1.0) for i in (1, 2, 3, 4)]
              + [arm_env(a_) for a_ in (45, -45, 135, -135)])                                   # the arm session's root envelopes (u >= 58, |v| <= 21)
-    env = U([box(-75, 100, -42, 42, 0, T), nose_env])                   # -75 (v14; was -76): 179 long with the nose
     # every nose bore is open and no floor is cut (the wire routes cross the deck): as cage_node_lib.verify_cuts
     for s_ in socks:
         for t in (s_["s0"] + 0.5, s_["s0"] + s_["depth"] - 0.5):

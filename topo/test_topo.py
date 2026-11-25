@@ -1430,6 +1430,53 @@ def t_audit_path():
         check("audit path", False, repr(e)[:200])
 
 
+def t_audit_neighbours():
+    """neighbours (topo/audit.py; 25 Nov, the Overseer hub deck: keep-outs from the setup's own old copy of the layout, the UBEC's wire
+    tails in the drone file never cut, the result 0.79 mm3 into one). A deck with a 'ubec' brick placed above it in a drone file, a wire
+    tail of it reaching down into the room: cut as the brick alone (the stale copy) the audit refuses the room left in the tail; cut
+    from the drone file's mesh it passes; a declared contact's allow_mm3 is the pair's limit; a generated neighbour is left out; a
+    mirrored second line of the part is checked in its own pose."""
+    try:
+        import json as _j, os, tempfile, trimesh
+        import manifold3d as mf
+        from .audit import audit, neighbours
+        from .part import Part
+        box = lambda x0, x1, y0, y1, z0, z1: mf.Manifold.cube([x1 - x0, y1 - y0, z1 - z0]).translate([x0, y0, z0])
+        brick, tail = box(0, 20, 0, 10, 6, 12), box(20, 24, 4, 6, 4, 8)             # the tail dips 2 into the deck's room (z 0..6)
+        d = tempfile.mkdtemp(); os.makedirs(os.path.join(d, "systems"))
+        def stl(nm, m):
+            os.makedirs(os.path.join(d, "parts", nm), exist_ok=True)
+            trimesh.Trimesh(np.asarray(m.to_mesh().vert_properties)[:, :3], np.asarray(m.to_mesh().tri_verts)).export(os.path.join(d, "parts", nm, "part.stl"))
+        stl("ubec", brick + tail); stl("gen", box(-8, -2, 0, 10, 0, 6)); stl("side", box(4, 8, -30, -26, 0, 6))
+        open(os.path.join(d, "parts", "gen", "part.py"), "w").write("")
+        def drone(contacts=(), mirror=False):
+            parts = [{"id": "deck", "mesh": "parts/deck/part.stl"}, {"id": "ubec", "role": "bought", "mesh": "parts/ubec/part.stl"},
+                     {"id": "gen", "mesh": "parts/gen/part.stl"}]
+            if mirror:                                                               # the deck again, mirrored about y: 'side' stands in that one only
+                parts += [{"id": "deck_2", "part": "deck", "pose": [[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]},
+                          {"id": "side", "role": "bought", "mesh": "parts/side/part.stl"}]
+            _j.dump({"parts": parts, "assembly": {"fit_tol_mm3": 0.5, "contacts": list(contacts)}}, open(os.path.join(d, "systems", "t.assembly.json"), "w"))
+        def mk(cut):
+            p = Part("mini_nb", 1.0, box(-10, -6, 0, 10, 0, 6), cut, box(-10, 30, -2, 30, 0, 6), log=lambda s_: None)
+            p.support("default", box(-10, -6, 0, 10, 0, 6)); p.load("down", box(26, 30, -2, 12, 0, 6), (0, 0, -5.0), cls="flight")
+            p.paths_root, p.part_id = d, "deck"
+            return p
+        drone()
+        r0 = neighbours(mk(brick)); r1 = neighbours(mk(brick + tail))
+        f0 = [f for f in audit(mk(brick), 3.2, log=lambda s_: None, hard=False)["fails"] if f.startswith("neighbours:")]
+        f1 = [f for f in audit(mk(brick + tail), 3.2, log=lambda s_: None, hard=False)["fails"] if f.startswith("neighbours:")]
+        drone(contacts=[{"a": "ubec", "b": "deck", "allow_mm3": 20, "why": "test"}]); r2 = neighbours(mk(brick))
+        drone(mirror=True); r3 = neighbours(mk(brick + tail))
+        ok = (len(r0) == 1 and r0[0]["with"] == "ubec" and abs(r0[0]["mm3"] - 16.0) < 0.1 and not r0[0]["ok"] and len(f0) == 1 and not r1 and not f1
+              and len(r2) == 1 and r2[0]["ok"] and r2[0]["limit_mm3"] == 20
+              and len(r3) == 1 and r3[0]["line"] == "deck_2" and r3[0]["with"] == "side" and abs(r3[0]["mm3"] - 96.0) < 0.1 and not r3[0]["ok"])
+        check("audit neighbours: room left in a part the live drone file places beside it is refused; cut from the drone file's mesh, it passes",
+              bool(ok), f"stale {r0}; live {r1}; contact {r2}; mirrored {r3}; fails {len(f0)} / {len(f1)}")
+    except Exception as e:
+        traceback.print_exc()
+        check("audit neighbours", False, repr(e)[:200])
+
+
 def t_audit_path_riders():
     """path_riders (topo/audit.py; 24 Nov, the Scout v4 frame with the probe's base: the spool's declared path was cut, the cable coil that
     rides on its drum hub met 288 mm3 of room). A 10 mm 'camera' pulled out -x by 20 with a 4 x 4 x 3 knob riding on its top (`with`):
@@ -2044,7 +2091,7 @@ def t_assembly_riders():
 def main():
     quick = "--quick" in sys.argv
     t0 = time.time()
-    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_interface_case, t_audit_cell_thick, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_released_check, t_no_cavity, t_audit_path, t_audit_path_riders, t_audit_fit, t_path_sweep_gap):
+    for t in (t_ke, t_voxelise, t_matvec, t_transfer, t_galerkin, t_mg_vs_direct, t_mma, t_calibration, t_gradients, t_masked_neck, t_gate_ties, t_neck, t_skin_core, t_near_symmetry, t_gate_specks, t_export_cleanup, t_organic_drawn_walls, t_audit_drawn_wall_large, t_gate_drawn_body, t_gate_thin_ok, t_export_mesh, t_export_fallback, t_export_pinch, t_setup_sha, t_setup_reads, t_early_check, t_strength_floating, t_floating_load, t_audit_plate, t_audit_block_measure, t_audit_drawn_thin, t_audit_parity, t_audit_env_neck, t_audit_lone_post, t_audit_load_room, t_audit_held_load, t_audit_interface_case, t_audit_cell_thick, t_audit_solid_ok, t_design_hash, t_coarse_setup_fails, t_audit_room_full, t_audit_bed, t_memory_gate, t_gate_memory, t_build_memory_gate, t_built_hold, t_released_check, t_no_cavity, t_audit_path, t_audit_path_riders, t_audit_neighbours, t_audit_fit, t_path_sweep_gap):
         t()
     t_assembly_riders()
     if not quick:

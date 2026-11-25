@@ -417,6 +417,7 @@ def load_part_dir(path):
         with fit.shapes() as rec:
             part = _s(h)
         part.fit_shapes, part.fit_declared = rec, fit.declared(_f)
+        part.part_id = name                              # its line in the drone files (the audit's neighbours check)
         if rec.features or hand:
             handling.apply(part, rec.features, hand_held=hand, log=getattr(part, "log", print))
         return part

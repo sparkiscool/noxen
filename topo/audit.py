@@ -87,6 +87,13 @@ Checks (hard = raises, soft = logged + in the report):
                        the Scout v4 frame with the probe's base: the spool's path was cut, the cable coil on its drum hub met 288 mm3 of
                        room behind the drum (the assembly check on the room filled solid). Cut the riders' sweep in the setup too
                        (topo/paths.sweep of their meshes, grown by the path's fit gap). Over PATH_MM3 of room or drawn material.
+  neighbours     hard  (neighbours; the room against the drone as it is drawn NOW) room or drawn material, less the cuts, standing in a part placed
+                       beside it in a live systems/<drone>.assembly.json (bought and drawn parts as placed; a generated part, a `fit_mesh` line
+                       and a placeholder are left out) over the pair's limit in the assembly check (its `contacts` allow_mm3, else fit_tol_mm3):
+                       the engine is free to fill it, and the result then fails tools/assembly_check.py whenever a run happens to. 25 Nov, the
+                       Overseer hub deck: its keep-outs came from the setup's own 28 Oct copy of the layout (inputs/), the UBEC's wire tails
+                       (tools/bought_meshes.py, 15 Nov, to x 84) were never cut, and the third result since grew 0.79 mm3 into one. Cut every
+                       neighbour from the drone file's own mesh (the body grown by fit.gap("clear") where the part does not seat on it).
   fit            hard  (fit_sizes; systems/fit_table.json the only source of mating sizes, 15 Nov: the Scout v4 bench print, holes drawn
                        at sizes the coupon never proved) every straight round and box width the setup drew (recorded while setup(h)
                        ran, topo/fit.py shapes) within the fit window of a bought part it declared through the table (fit.bore /
@@ -481,6 +488,75 @@ def path_riders(part, root=None):
     return out
 
 
+def line_pose(pose):
+    """a drone line's pose (4 x 4, or {"t", "rpy_deg"}) as a matrix, as tools/assembly_check.py pose_matrix"""
+    if pose is None:
+        return np.eye(4)
+    if isinstance(pose, list):
+        return np.array(pose, float)
+    T = np.eye(4)
+    r, p, y = np.radians(pose.get("rpy_deg", [0, 0, 0]))
+    Rz = np.array([[np.cos(y), -np.sin(y), 0], [np.sin(y), np.cos(y), 0], [0, 0, 1]]); Ry = np.array([[np.cos(p), 0, np.sin(p)], [0, 1, 0], [-np.sin(p), 0, np.cos(p)]])
+    Rx = np.array([[1, 0, 0], [0, np.cos(r), -np.sin(r)], [0, np.sin(r), np.cos(r)]])
+    T[:3, :3] = Rz @ Ry @ Rx; T[:3, 3] = pose.get("t", [0, 0, 0])
+    return T
+
+
+def neighbours(part, part_id=None, root=None):
+    """the room (envelope and drawn, less the cuts) against every bought or drawn part placed beside this one in the live drone files
+    (systems/*.assembly.json, not archived; the part is the line whose `part` or id is part_id, each of its lines in its own pose) ->
+    [dict(drone, line, with, mm3, limit_mm3, at, extent_mm, ok)] for every neighbour the room stands in at all. Left out: generated
+    neighbours (their mesh is a result), `fit_mesh` lines (a rod drawn through its socket), placeholders, the drone's `exclude`."""
+    import json, os, trimesh
+    from . import paths as PATHS
+    from .part import man
+    root = root or getattr(part, "paths_root", None) or PATHS.ROOT
+    pid = part_id or getattr(part, "part_id", None)
+    sysd = os.path.join(root, "systems")
+    if not pid or not os.path.isdir(sysd):
+        return []
+    room = (part.env_m + part.drawn_m) - part.cuts_m
+    rb = np.asarray(room.bounding_box(), float)
+    out = []
+    for f in sorted(os.listdir(sysd)):
+        if not f.endswith(".assembly.json"):
+            continue
+        try:
+            a = json.load(open(os.path.join(sysd, f)))
+        except (OSError, ValueError):
+            continue
+        A = a.get("assembly") or {}
+        lines = [q for q in a.get("parts", []) if q.get("role") != "placeholder" and (q.get("id") or q.get("name")) not in A.get("exclude", [])]
+        mine = [q for q in lines if q.get("part", q.get("id") or q.get("name")) == pid]
+        if a.get("archived") or not mine:
+            continue
+        lim = {tuple(sorted((c["a"], c["b"]))): float(c["allow_mm3"]) for c in A.get("contacts", [])}
+        for me in mine:
+            i = me.get("id") or me.get("name"); Ti = np.linalg.inv(line_pose(me.get("pose")))
+            for q in lines:
+                j = q.get("id") or q.get("name"); src = q.get("part", j)
+                if q is me or src == pid or q.get("fit_mesh") or os.path.exists(os.path.join(root, "parts", src, "part.py")):
+                    continue
+                mp = next((c for c in (q.get("mesh"), f"parts/{src}/part.stl") if c and os.path.exists(os.path.join(root, c))), None)
+                if mp is None:
+                    continue
+                try:
+                    t = trimesh.load(os.path.join(root, mp), force="mesh")
+                    t.apply_transform(Ti @ line_pose(q.get("pose")))
+                    if np.any(np.minimum(t.bounds[1], rb[3:]) <= np.maximum(t.bounds[0], rb[:3])):
+                        continue
+                    hit = room ^ man(t)
+                except Exception:
+                    continue                                        # not a solid (the props): the assembly check skips it too
+                v = float(hit.volume())
+                if v <= 1e-3:
+                    continue
+                bb = np.asarray(hit.bounding_box(), float); L = lim.get(tuple(sorted((i, j))), float(A.get("fit_tol_mm3", 0.5)))
+                out.append(dict(drone=f[:-len(".assembly.json")], line=i, **{"with": j}, mm3=round(v, 2), limit_mm3=L, ok=bool(v <= L),
+                                at=[round(float((bb[k] + bb[k + 3]) / 2), 1) for k in range(3)], extent_mm=[round(float(bb[k + 3] - bb[k]), 1) for k in range(3)]))
+    return out
+
+
 def cell_thickness(part, tol=THICK_TOL, flat=THICK_FLAT, wide=THICK_WIDE):
     """cell_thick: the flat plates and walls the grid models thicker than they are drawn. For each axis, one ray per column of cells
     through the exact material (env + drawn - cuts; the voxeliser's rays and offsets); each run of material cells on the column is
@@ -799,6 +875,13 @@ def audit(part, min_member_mm, log=print, hard=True, floor_mm=3.2):
             fails.append(f"path_riders: {r['room_mm3']:.1f} mm3 of room or drawn material stands in the way of {', '.join(r['with'])}, carried by the piece "
                          f"of the assembly path '{r['name']}', at {r['at']} (extent {r['extent_mm']} mm): the path's cut is the piece's own sweep. Cut the "
                          f"riders' sweep in the setup too (topo/paths.sweep of their meshes, grown by the path's fit gap).")
+
+    rep["neighbours"] = neighbours(part)
+    for r in rep["neighbours"]:
+        if not r["ok"]:
+            fails.append(f"neighbours: {r['mm3']:.1f} mm3 of room or drawn material stands in {r['with']} as systems/{r['drone']}.assembly.json places it "
+                         f"now (limit {r['limit_mm3']}), at {r['at']} (extent {r['extent_mm']} mm): the engine may fill it and the assembly check then fails "
+                         f"the result. Cut the neighbour from the drone file's own mesh (grown by fit.gap('clear') off its seat), not from a copy of the layout.")
 
     fs = fit_sizes(part)
     rep["fit_sizes"] = fs
