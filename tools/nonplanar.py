@@ -41,9 +41,9 @@ VERSION = "1"
 
 
 def slice_overrides(o, th):
-    """What the flat slice must be for the bend to be exact: straight moves only (no arcs), a plain lift, room to hop."""
+    """What the flat slice must be for the bend to be exact: straight moves only (no arcs), a plain lift, room to hop, no infill combining (sparse infill printed every 2nd layer is 0.4 thick: the 24 Nov snap specimen failed the layer gate on it)."""
     hop = "%g" % th["limits"]["hop_mm"]
-    ov = {"p": {"enable_arc_fitting": "0"}, "m": {"z_hop_types": ["Normal Lift"], "z_hop": [hop]},
+    ov = {"p": {"enable_arc_fitting": "0", "infill_combination": "0"}, "m": {"z_hop_types": ["Normal Lift"], "z_hop": [hop]},
           "f": {"filament_z_hop_types": ["Normal Lift"], "filament_z_hop": [hop]}}
     if "zaa" in modes(o):
         ov["p"].update({"zaa_enabled": "1", "zaa_min_z": "0.05"})

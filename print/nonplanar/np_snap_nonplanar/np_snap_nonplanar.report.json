@@ -1,0 +1,140 @@
+{
+ "part": "np_snap_nonplanar",
+ "checks": [
+  [
+   "slice ran without error",
+   true,
+   ""
+  ],
+  [
+   "extrusions (supports, brim, skirt included) inside the 5 mm safe area",
+   true,
+   "x 20.2..159.8 y 79.5..100.8 z max 13.0"
+  ],
+  [
+   "every printing/travel move inside the safe area (plate_safe)",
+   true,
+   "inside the safe area: x 20.2..159.8, y 79.5..100.8 mm (5 mm margin)"
+  ],
+  [
+   "plate centred on the bed",
+   true,
+   "toolpath centre 90.0, 90.1 (bed 90)"
+  ],
+  [
+   "no empty layers",
+   true,
+   "65 layers"
+  ],
+  [
+   "objects stayed where laid out",
+   true,
+   "offset [0.0, 0.0]"
+  ],
+  [
+   "np_arch_snap: overhang has material under it",
+   true,
+   "0 of 1202 mm2 unsupported"
+  ],
+  [
+   "supports are in the g-code",
+   true,
+   "137428 support moves"
+  ],
+  [
+   "non-planar: the hotend clears the print everywhere (replayed against the A1 mini hotend)",
+   true,
+   "closest 0.106 mm, block and ducts 1.374 mm, tip rides 0.13 mm into the slope (0.27 allowed), steepest move 8.6 deg"
+  ],
+  [
+   "non-planar: every layer inside the nozzle's 0.08-0.28 mm",
+   "True",
+   "0.120 to 0.200 mm"
+  ]
+ ],
+ "stats": {
+  "layer_steps": [
+   0.2
+  ],
+  "offset_xy": [
+   0.0,
+   0.0
+  ],
+  "time": "1h 7m 5s",
+  "grams": 17.15
+ },
+ "ready": true,
+ "gcode_3mf": "E:\\repos\\noxen\\print\\nonplanar\\np_snap_nonplanar\\np_snap_nonplanar.gcode.3mf",
+ "objects": [
+  {
+   "label": "np_arch_snap",
+   "opts": {
+    "layer_height": 0.2,
+    "wall_loops": 3,
+    "sparse_infill_density": "100%",
+    "enable_support": 1
+   },
+   "xy": [
+    20.0,
+    84.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    -1.0
+   ]
+  }
+ ],
+ "nonplanar": {
+  "ok": true,
+  "bend": {
+   "pieces": 464659,
+   "bent": 347603,
+   "t_min": 0.12,
+   "t_max": 0.2,
+   "vz": 7.6,
+   "zmax": 13.005,
+   "slope_deg": 8.6
+  },
+  "gate": {
+   "layers": 65,
+   "bent_layers": 59,
+   "plough_mm": 0.127,
+   "clear_mm": 0.106,
+   "far_clear_mm": 1.374,
+   "worst": [
+    155.33,
+    84.63,
+    8.657,
+    62
+   ],
+   "slope_deg": 8.59,
+   "plough_allowed_mm": 0.271,
+   "ok": true,
+   "why": ""
+  },
+  "fields": [
+   {
+    "mode": "conform",
+    "slope_deg": 10.0,
+    "amp_mm": 0.0,
+    "cell_mm": 0.5,
+    "layer_mm": 0.2,
+    "conform": "follows 1584 mm2 of curved top at 98%, relief 4.53 mm, blended between 0.6 and 11.8 mm",
+    "conform_pct": 98,
+    "max_slope_deg": 10.01,
+    "tau": [
+     0.597,
+     1.0
+    ],
+    "bend_mm": [
+     -4.529,
+     0.005
+    ],
+    "bent_share": 0.93,
+    "piece_mm": 0.46
+   }
+  ],
+  "preview": "E:\\repos\\noxen\\print\\nonplanar\\np_snap_nonplanar\\np_snap_nonplanar.preview.png"
+ }
+}
