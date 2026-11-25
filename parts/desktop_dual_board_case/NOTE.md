@@ -1,5 +1,7 @@
 # Desktop dual-board case, upright suitcase (25 Nov)
 
+Cooling and airflow study (job 1116, 25 Nov): `COOLING_STUDY.md` beside this file holds the exact part sizes and the airflow reshape to build (its status line says whether it is final); `cooling_study.html` is the illustrated page; the model is `tools/desktop_case_airflow.py`. The cooling notes further down are older and are superseded by it.
+
 Stands on its -x end the whole time it runs. Closed 372 x 126 x 299 mm plus 11 mm feet. No display screen (Spark plugs into other monitors), no fold-out legs, the front is a plain solid wall.
 
 Carrying: the handle is on the +x short end wall with its grip turned to run along z (the case hangs from it at your side like a suitcase, big face against the leg); bar 100 long (70 clear), z 118..218, on two 3 mm doublers (the tile alone is margin 1.5, with the doubler 6). It hangs about 9 degrees off level because the projector bay sits below it (estimate; the grip centre is z 168, the centre of gravity about z 135).

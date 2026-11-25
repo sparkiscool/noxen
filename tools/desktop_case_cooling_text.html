@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dual-board case: cooling and airflow study</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f9; --surface-1: #ffffff; --text-1: #191919; --text-2: #666666; --grid: #e7e7e7; --axis: #c2c2c2;
+  --border: rgba(11,11,11,0.10); --hover: rgba(11,11,11,0.05);
+  --series-1: #257de0; --cool: #257de0; --hot: #ec4647; --fan: #f47230; --board: #008a17; --struct: #8f8f8f; --struct-dark: #5c5c5c;
+  --critical: #dc3c3d; --good: #0aac23; --pick: #eaf3fe; --padfill: #f1f1f1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0b0b0b; --surface-1: #191919; --text-1: #efefef; --text-2: #9c9c9c; --grid: #303030; --axis: #474747;
+    --border: rgba(255,255,255,0.10); --hover: rgba(255,255,255,0.06);
+    --series-1: #338ced; --cool: #338ced; --hot: #eb6263; --fan: #e76624; --board: #0aac23; --struct: #7a7a7a; --struct-dark: #a8a8a8;
+    --critical: #dc3c3d; --good: #0aac23; --pick: #14304f; --padfill: #242424;
+  }
+}
+html, body { margin: 0; }
+body.viz-root { background: var(--page); color: var(--text-1); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 28px 28px 60px; }
+h1 { font-size: 30px; line-height: 1.2; margin: 0 0 6px; }
+h2 { font-size: 21px; margin: 38px 0 10px; }
+h3 { font-size: 16px; margin: 18px 0 6px; }
+p { margin: 8px 0; max-width: 96ch; }
+.sub { color: var(--text-2); margin: 0 0 20px; }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 18px 0 8px; }
+.tile .v { font-size: 34px; font-weight: 600; line-height: 1.15; }
+.tile .l { color: var(--text-2); font-size: 14px; margin-top: 4px; }
+.tile .k { font-size: 14px; font-weight: 600; }
+.figs { display: flex; flex-wrap: wrap; gap: 14px; }
+.figs .card { flex: 1 1 440px; overflow-x: auto; }
+.figs svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+ol.notes { margin: 10px 0 0; padding-left: 0; list-style: none; font-size: 15px; }
+ol.notes li { margin: 6px 0; padding-left: 34px; position: relative; }
+ol.notes li b.n { position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; color: #fff; font-size: 12px; line-height: 22px; text-align: center; }
+ol.bad li b.n { background: var(--critical); }
+ol.do li b.n { background: var(--cool); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { color: var(--text-2); font-weight: 600; font-size: 13px; }
+table.num td, table.num th { font-variant-numeric: tabular-nums; }
+table.sweep { width: auto; margin: 4px 0 12px; } table.sweep td, table.sweep th { text-align: right; min-width: 52px; }
+.pick { background: var(--pick); font-weight: 700; }
+.tag { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 4px; padding: 0 6px; border: 1px solid var(--border); white-space: nowrap; }
+.tag.ok::before { content: "\2713\00a0"; color: var(--good); } .tag.no::before { content: "?\00a0"; color: var(--critical); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--text-2); margin: 10px 0 0; }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+.small { font-size: 14px; color: var(--text-2); }
+details { margin-top: 38px; } details summary { font-size: 21px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
+/* drawings */
+.wall { fill: var(--struct); } .rail { fill: var(--struct-dark); } .fan { fill: var(--fan); } .fan.ghostfan { opacity: .55; }
+.board { fill: var(--board); } .board.side { opacity: .5; }
+.pad { fill: var(--padfill); stroke: var(--axis); stroke-width: 1.5; } .hub { fill: var(--surface-1); opacity: .55; }
+.dim { stroke: var(--text-1); stroke-width: 1.5; }
+.ghost { fill: none; stroke: var(--text-2); stroke-width: 1; stroke-dasharray: 4 3; }
+.table { stroke: var(--axis); stroke-width: 2; }
+.filter { stroke: var(--good); stroke-width: 3; stroke-dasharray: 2 3; }
+.grille { stroke: var(--struct); stroke-width: 4; stroke-dasharray: 3 9; } .grille.sparse { stroke-dasharray: 12 4; }
+.collar { stroke: var(--hot); stroke-width: 2; } .collarbox { fill: none; stroke: var(--hot); stroke-width: 2; stroke-dasharray: 5 3; }
+.blower { fill: none; stroke: var(--cool); stroke-width: 2; stroke-dasharray: 3 3; }
+.flow { fill: none; stroke-linecap: round; stroke-linejoin: round; } .flow.cool { stroke: var(--cool); } .flow.hot { stroke: var(--hot); } .flow.weak { stroke: var(--text-2); }
+.hd.cool { fill: var(--cool); } .hd.hot { fill: var(--hot); } .hd.weak { fill: var(--text-2); }
+.lb { font-size: 13px; fill: var(--text-1); } .lb.dim { fill: var(--text-2); } .lb.onb { fill: #fff; font-weight: 600; }
+.cap { font-size: 14px; font-weight: 600; fill: var(--text-1); }
+.mk.bad { fill: var(--critical); } .mk.good { fill: var(--cool); } .mk { stroke: var(--surface-1); stroke-width: 2; }
+.mkt { fill: #fff; font-size: 12px; font-weight: 700; }
+.lead { stroke: var(--text-2); stroke-width: 1; }
+/* charts */
+.bar { fill: var(--series-1); } .range { stroke: var(--text-1); stroke-width: 1.5; } .grid { stroke: var(--grid); stroke-width: 1; } .axis { stroke: var(--axis); stroke-width: 1; }
+.band { fill: var(--series-1); opacity: .10; } .ln { fill: none; stroke: var(--series-1); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.dot { fill: var(--series-1); stroke: var(--surface-1); stroke-width: 2; } .pickdot { stroke-width: 2; }
+.tick { font-size: 12px; fill: var(--text-2); font-variant-numeric: tabular-nums; } .rowlb { font-size: 13px; fill: var(--text-1); } .rowlb.strong { font-weight: 700; }
+.val { font-size: 13px; font-weight: 600; fill: var(--text-1); } .hit { fill: transparent; } .row:hover .hit, .row:focus .hit { fill: var(--hover); } .row { outline: none; }
+#tip { position: fixed; pointer-events: none; background: var(--text-1); color: var(--surface-1); font-size: 13px; padding: 6px 9px; border-radius: 6px; max-width: 320px; display: none; z-index: 5; }
+@media (max-width: 760px) { .tiles { grid-template-columns: 1fr; } main { padding: 18px 14px 40px; } }
+</style>
+</head>
+<body class="viz-root">
+<main>
+<h1>Dual-board case: cooling and airflow study</h1>
+<p class="sub">25 November 2026. Worked out on Fable 5.2 from the exact listing sizes, for the layout you asked for tonight: the whole cooling pad under the case, and the two sides opening over it. {{cloud_line}}</p>
+
+<div class="card">
+<p style="margin-top:0"><b>The answer.</b> Open the case to {{gap}} mm between the boards' cooler faces ({{travel}} mm of travel on each side) and stand the pad 30 mm off the desk. That puts about {{open_cfm}} CFM of the pad's air between the boards, against {{closed_cfm}} CFM with the case closed, and {{flat_cfm}} CFM if the pad lies flat on the desk under the closed case. Each board's own cooler still does the real work; the pad's job is to hand it cool air from below and carry its hot air out of the top.</p>
+<div class="tiles">
+  <div class="tile"><div class="k">Open spacing</div><div class="v">{{gap}} mm</div><div class="l">between the cooler faces; anything from 120 to 160 mm is within 5 %, so it can be a number in the firmware</div></div>
+  <div class="tile"><div class="k">Air between the boards</div><div class="v">{{closed_cfm}} to {{open_cfm}} CFM</div><div class="l">closed to open; {{open_lo}} to {{open_hi}} CFM open for weak to strong fans, which the listing does not tell us</div></div>
+  <div class="tile"><div class="k">Clear space under the pad</div><div class="v">30 mm</div><div class="l">at 5 mm the pad gives only {{clear5}} % of its air; 20 mm is the least ({{clear20}} %)</div></div>
+</div>
+</div>
+
+<h2>The layout to build</h2>
+<div class="figs">
+  <div class="card">{{fig_plan_closed}}</div>
+  <div class="card">{{fig_plan_open}}</div>
+  <div class="card">{{fig_end_open}}</div>
+</div>
+<div class="legend"><span style="--c:var(--cool)">cool air</span><span style="--c:var(--hot)">hot air from the boards' own coolers</span><span style="--c:var(--fan)">pad fans</span><span style="--c:var(--board)">boards</span><span style="--c:var(--struct)">case walls</span></div>
+<div class="card" style="margin-top:14px">
+<p style="margin-top:0"><b>The path:</b> in under the raised pad from all four sides, up through its five fans, up between the two boards into their cooler inlets, out of their fin outlets at the top, and the spare air out through the middle that opens when the sides slide apart.</p>
+<ol class="notes do">
+  <li><b class="n">1</b><b>Pad level, with 30 mm clear under it all round:</b> a printed dock of four corner risers. A pad lying flat on a desk cannot breathe. A filter sleeve round that gap is possible and costs about {{filter_loss}} % of the air.</li>
+  <li><b class="n">2</b><b>The case bridges the pad, it does not stand on the mesh.</b> It lands on two saddles at the ends of the dock. Its bottom is an open frame: no floor plate, no base, no fan decks. Board bottom edges 25 mm above the mesh. Centre it on the big fan, which looks about 25 mm behind the pad's centre in the listing photo.</li>
+  <li><b class="n">3</b><b>Open to {{gap}} mm:</b> {{travel}} mm on each side from the closed 54 mm. Give each side 63 mm of screw travel (a 180 mm gap) so the number can be tuned. The rule behind it: each cooler face stands over the outer third of its two small fans, so all five fans blow between the boards.</li>
+  <li><b class="n">4</b><b>Boards: cooler sides facing in, fin outlets up.</b> Stand each board so the edge its fin stacks blow out of is the top edge. Outer walls solid, 13 mm outside each board: at {{gap}} mm they stand outside all five fans, so no air is wasted.</li>
+  <li><b class="n">5</b><b>Lid: each half an open grille, no lid fan.</b> The {{slot}} mm slot that opens down the middle is the main way out. Leave 150 mm clear above.</li>
+  <li><b class="n">6</b><b>Spine: two end posts and the handle beam, 30 mm wide at most.</b> Nothing standing in the middle of the gap; if a centre post is needed, one up to 40 mm wide straight over the big fan's hub, where the air is dead anyway. Fixed end plates 150 wide on the posts keep the ends shut when the sides are out.</li>
+  <li><b class="n">7</b><b>Motors, lead screws, the ESP32, driver and MOSFET boards</b> go in the two end spaces beyond the boards, low down, never over the mesh. Lock both positions so the steppers hold with no current.</li>
+  <li><b class="n">8</b><b>Closed is for light work:</b> about {{closed_w}} W for both boards at a 10 °C air rise, because the four small fans are then mostly outside the box. Open carries about {{open_w}} W. Pad at full speed for heavy work.</li>
+  <li><b class="n">9</b><b>Projector, hubs, webcam</b> hang outside and do not load the cooling. Keep the projector 60 mm or more from the nearest fin outlet.</li>
+</ol>
+</div>
+
+<h2>How far to open</h2>
+<div class="card">
+<p class="small" style="margin-top:0">Air from the pad that goes between the boards, against the gap. Line: the middle guess for the fans. Band: weak to strong fans. Point at a dot for its numbers.</p>
+<div style="overflow-x:auto">{{gapchart}}</div>
+<div style="overflow-x:auto; margin-top:10px">{{gaptable}}</div>
+<p class="small">Up to 120 mm every millimetre brings more fan under the gap. Past 160 mm nothing more comes and the air only slows down. {{gap}} mm takes {{g140}} % of the most air there is while it still moves at two thirds of a metre a second (120 mm takes {{g120}} %).</p>
+<h3>If the small fans are not where the photo shows them: CFM between the boards</h3>
+{{shifttable}}
+<p class="small">The listing gives the fans' sizes, not their places; I read the places off its photo, good to about 15 mm. The highlighted cell is the smallest gap within 7 % of the best in each row. Measure from the big fan's centre to a small fan's centre across the pad when it arrives: 45 means set 120, 55 means {{gap}}, 70 means 170.</p>
+<h3>Clear height under the pad, mm: CFM the whole pad delivers</h3>
+{{cleartable}}
+</div>
+
+<h2>What is wrong with the case as drawn today</h2>
+<div class="figs">
+  <div class="card">{{fig_cross_drawn}}</div>
+  <div class="card">{{fig_side_drawn}}</div>
+</div>
+<div class="card" style="margin-top:14px">
+<p style="margin-top:0">The drawing in make.py still has the fans taken out of the pad and built into the base. As drawn it would move {{now_lo}} to {{now_hi}} CFM past the boards:</p>
+<ol class="notes bad">
+  <li><b class="n">1</b><b>The foot rails sit under the floor holes.</b> The only way in from below is a tunnel 36 × 11 mm between the rails, open at its two far ends: {{a_floor}} mm² for fans that sweep {{a_fans}} mm².</li>
+  <li><b class="n">2</b><b>The fans have no proper seat.</b> They are drawn standing on the floor deck, but their screw holes are in the deck above. Standing on the floor they pull through that tunnel only: about {{now_lo}} CFM, and the three small fans push {{back120}} L/s backwards through the weaker 120 mm fan.</li>
+  <li><b class="n">3</b><b>The base slots are too small either way.</b> With the fans on the floor they are on the pressure side and leak. With the fans hung under the upper deck they are the intake, but at {{a_slots}} mm² they are a fifth of the fan area: about {{now_hi}} CFM.</li>
+  <li><b class="n">4</b><b>Round holes under flat boards.</b> The board edges stand 8 mm over four round holes in the upper deck, so the two outer channels get almost nothing.</li>
+  <li><b class="n">5</b><b>The lid is one fifth open</b> ({{a_lid}} mm²), and the fan under its middle pulls outside air in through the slots beside it instead of pulling air up from the boards.</li>
+  <li><b class="n">6</b><b>The four port windows</b> ({{a_port}} mm² together) let about a third of the air out low at one end, before it has passed the boards.</li>
+  <li><b class="n">7</b><b>The 120 mm fan sits partly under the end space,</b> not under the boards.</li>
+</ol>
+<p class="small">What carries over to the new layout: nothing solid under a fan's mouth, 30 mm of clear height where the air comes in, no fan in the lid, the lid as open as its ribs allow, port windows cut to the real connectors.</p>
+</div>
+
+<h2>The sizes used</h2>
+<div class="card" style="overflow-x:auto">
+<table>
+<thead><tr><th>Part</th><th>Size</th><th>From</th><th></th></tr></thead>
+<tbody>
+<tr><td>Kootek cooling pad LCP04 (B01469DJLM), arriving today</td><td>380 × 300 × 35 mm, 1.16 kg; one 120 mm fan (4.72 in) and four 70 mm fans (2.76 in)</td><td>the Amazon listing</td><td><span class="tag ok">exact</span></td></tr>
+<tr><td>Where the pad's fans sit</td><td>big fan near the middle, about 25 mm behind the pad's centre; small fans about 108 mm left and right and 55 mm front and back of it</td><td>read off the listing photo, good to 15 mm</td><td><span class="tag no">not confirmed</span></td></tr>
+<tr><td>Kootek fans' strength, and the pad's own clear height when it lies flat</td><td>30 to 50 CFM and 5 to 12 Pa for the big fan, 10 to 18 CFM and 8 to 18 Pa for each small one; 5 mm under a flat pad</td><td>not on the listing; my guess from similar 5 V fans</td><td><span class="tag no">not confirmed</span></td></tr>
+<tr><td>HOMPOW mini projector (B0F43Q5B9K)</td><td>124.5 × 124.5 × 53.3 mm (4.9 × 4.9 × 2.1 in), 0.64 kg</td><td>the Amazon listing</td><td><span class="tag ok">exact</span></td></tr>
+<tr><td>Projector wattage and where its vents are</td><td>not published</td><td></td><td><span class="tag no">not confirmed</span></td></tr>
+<tr><td>Two Acer USB hubs ACER-UH501 (B0CN3F9Y1Z), both the same, arriving Saturday</td><td>104.9 × 30.0 × 8.9 mm each (4.13 × 1.18 × 0.35 in), 45 g, ABS; four USB 3.0 ports and a USB-C 5 V power input</td><td>the Amazon listing</td><td><span class="tag ok">exact</span></td></tr>
+<tr><td>Both boards with their coolers</td><td>340 × 230 × 20 mm each</td><td>the case file; an estimate, neither board has been measured</td><td><span class="tag no">not confirmed</span></td></tr>
+<tr><td>Where each board's fan inlets and fin outlets are, and its heat</td><td>unknown; 90 to 180 W each assumed</td><td>my guess for this class of laptop</td><td><span class="tag no">not confirmed</span></td></tr>
+</tbody>
+</table>
+<p class="small">The three bought parts were found in your Amazon orders; the "two USB strips" are two of the same Acer hub. Amazon put up an "I am human" check when I went on to its product pages, so the figures were read from copies of the same listings matched by their Amazon number (Google's index of the Amazon pages, Amazon's EU pages, Desertcart and manuals.plus). The case file had the pad as 381 × 295 × 33; the listing says 380 × 300 × 35.</p>
+</div>
+
+<h2>What is not confirmed, and how much it matters</h2>
+<div class="card">
+<ol style="margin:0; padding-left:20px">
+<li><b>Where the pad's small fans sit.</b> It moves the best gap between 120 and 170 mm. One ruler measurement when the pad arrives settles it, and the screw travel above covers the whole range.</li>
+<li><b>How strong the Kootek fans are.</b> It moves the air between {{open_lo}} and {{open_hi}} CFM open. The spacing and the layout are the same across that range.</li>
+<li><b>How much room the pad has under it lying flat.</b> I assumed 5 mm. Whatever it is, the 30 mm dock makes it not matter.</li>
+<li><b>Where each board breathes in and blows out, and the board size.</b> They decide which edge stands up and where the port windows go. The spacing does not depend on them.</li>
+<li><b>Heat per board.</b> The watt figures above scale with the air rise you accept.</li>
+</ol>
+</div>
+
+<details>
+<summary>The earlier layout: fans taken out of the pad and built into the base</summary>
+<div class="card">
+<p style="margin-top:0">Worked out first, before you asked for the pad to stay whole under the case. Kept here because it is the other way to do it: a closed, filtered box that needs no opening sides. Reshaped (open floor on 30 mm feet, fans seated on the floor deck over a filter box, one long window under the boards, an open lid of 20,000 mm² or more, no lid fan) it moves about {{rec}} CFM past the boards ({{rec_lo}} to {{rec_hi}}), and the air warms by {{rise_rec}} °C at 270 W against {{rise_now}} °C as drawn. The lid fan adds {{lidfan_gain}} %, a fifth fan in the base {{five_gain}} %. Fans off, the open box still draws about {{off_ls}} L/s by itself, enough for roughly {{off_w}} W.</p>
+</div>
+<div class="figs" style="margin-top:14px">
+  <div class="card">{{fig_cross_rec}}</div>
+  <div class="card">{{fig_side_rec}}</div>
+</div>
+<div class="card" style="margin-top:14px">
+<p class="small" style="margin-top:0">Bar: the middle guess for the fans. Line: weak to strong fans.</p>
+<div style="overflow-x:auto">{{chart}}</div>
+<div style="overflow-x:auto; margin-top:10px">{{table}}</div>
+<p class="small">"Open floor only" moves as much air as the full reshape, but {{leak_share}} % of it leaves through the port windows and end slots without passing the boards. The first row's warming figures are not real temperatures.</p>
+<h3>Clear height under the floor, mm: CFM</h3>{{sweep_feet}}
+<h3>Free area of the lid, mm²: CFM</h3>{{sweep_lid}}
+<h3>Depth of the filter box under the fans, mm: CFM</h3>{{sweep_box}}
+<h3>Filter resistance (0 = none, 4 = fine nylon mesh, 12 = dense foam): CFM</h3>{{sweep_filter}}
+</div>
+</details>
+
+<h2>How it was worked out</h2>
+<div class="card">
+<p style="margin-top:0">Every opening is treated as a hole that costs pressure with the square of the air speed through it, every fan as a straight line from its free flow to the pressure where it stalls, and each space as one pressure; the flows are balanced. Where the pad's air goes at each gap is plain geometry: the share of each fan's circle that lies between the boards, under a board edge (split half and half) or outside. This is a first pass, good to about ±30 %: it ranks layouts and sizes openings, it does not predict a chip temperature. The model is tools/desktop_case_airflow.py in the repo and this page is built from it by tools/desktop_case_cooling_page.py. {{cloud_method}}</p>
+</div>
+</main>
+<div id="tip"></div>
+<script>
+(function () {
+  var tip = document.getElementById('tip');
+  function show(e, el) {
+    tip.textContent = el.getAttribute('data-tip'); tip.style.display = 'block';
+    var r = el.getBoundingClientRect();
+    var x = e && e.clientX ? e.clientX + 14 : r.left + 40, y = e && e.clientY ? e.clientY + 14 : r.top + 30;
+    tip.style.left = Math.min(x, window.innerWidth - 340) + 'px'; tip.style.top = y + 'px';
+  }
+  document.querySelectorAll('.row').forEach(function (el) {
+    el.addEventListener('mousemove', function (e) { show(e, el); });
+    el.addEventListener('mouseleave', function () { tip.style.display = 'none'; });
+    el.addEventListener('focus', function () { show(null, el); });
+    el.addEventListener('blur', function () { tip.style.display = 'none'; });
+  });
+})();
+</script>
+</body>
+</html>
