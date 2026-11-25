@@ -1812,7 +1812,7 @@ window.__scan={get OBJ(){return OBJ},cam,vel,DEP,DRN,depBegin,depCancel,get prox
 <script>
 (()=>{
 const $=id=>document.getElementById(id),B=document.body;
-const ops=['Operator 1','Jensen Huang','Operator 3'];let cur=0;
+const ops=['Operator 1','Jensen Huang','China'];let cur=0;
 const ini=n=>n.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
 const mm=document.getElementById('mmw');let showOps=true;
 if(mm){const b=document.createElement('button');b.id='bOps';b.className='mmops on';b.textContent='Show other operators';b.title='Floating faces and name tags of the other operators, in all panes and the minimap';b.onclick=e=>{e.stopPropagation();showOps=!showOps;b.classList.toggle('on',showOps);b.setAttribute('aria-pressed',showOps)};b.setAttribute('aria-pressed','true');b.addEventListener('pointerdown',e=>e.stopPropagation());document.body.appendChild(b)}
