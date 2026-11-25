@@ -9,6 +9,10 @@ parts/overseer_arm_lib.py (flight 4 g + 21 N thrust +-0.5 N m on "tubes+spokes",
   the audit refuses), so the pad slides onto the 4 fixed rod ends and the glue holds it (tape it while curing). Each channelled
   socket gets a thicker collar ring (tubes 3.5, spokes 3.0 wall) so the walls beside the channel stay over 2 mm, and the channel
   widens to full clearance outboard of where they would thin. The grooves and injection pattern stay.
+* 25 Nov (Spark: more generated, only the motor bed thick, the rod joints thinner): the collar rings down to the least the 2 mm floor
+  allows beside a channel (tubes 3.5 -> 2.9 wall, spokes 3.0 -> 2.7), the channel lips cut down to 1.0 / 0.8 past the rod axis for it;
+  bores, grooves, channel widths and socket positions unchanged. The motor bed (pad, cone, ring boss) as on 9 Nov. The budget stays 40:
+  the room filled solid reads 0.121 and thinned to 40 cm3 ~0.5, the 9 Nov layout 0.176 of the 0.2 limit.
 * Printed on its side (build +y): layers along the arm and through the pad, thrust in-layer (the flat prints cracked across layers).
 * Rod windows unchanged from the solid pad: tubes 4 1/8..4 9/16 in out of the root collar, spokes .1 5 1/16..5 3/8 in and .3
   5 1/4..5 9/16 in out of the cage node collar."""
@@ -18,7 +22,8 @@ from parts.overseer_arm_lib import Z_PAD, PAD_T, cyl, NODE_R, SOCK_DEPTH
 
 EXT_TUBE, EXT_SPOKE = 34.0, 24.0                                         # 9 Nov (Spark: replaced once already, cut again: two socket lengths back, was 17 / 12)
 TUBE_GAP, SPOKE_GAP, DROP = 7.6, 4.4, 60.0                             # channel widths: wider than the grooved bore (7.2 / 4.2): a half-pipe, no lip (a lip under 2 mm is drawn material the audit refuses)
-RING_T, RING_S = 3.5, 3.0                                                # collar wall beside a channelled tube / spoke socket (the lib's 2.5 leaves 1.8 above a 7.6 channel)
+RING_T, RING_S = 2.9, 2.7                                                # collar wall beside a channelled tube / spoke socket: 25 Nov (Spark: the rod joints thinner) 3.5 / 3.0 -> the least
+TUBE_LIP, SPOKE_LIP = 1.0, 0.8                                           # that leaves the lips beside the channel 2.0 (the floor) with the lips cut down from 2.6 / 1.9 past the axis: R^2 = (gap/2 + 2.0)^2 + lip^2
 BOSS_R, BOSS_RI, BOSS_D = 16.0, 10.0, 8.0
 
 
@@ -47,11 +52,13 @@ class FrontPad(TubeArm):
         slots, rings = [], []
         for z in TUBE_Z:
             B = self.p(self.pad_mouth + TUBE_DEPTH, 0.0, z)
-            slots.append(trough(B, -self.a3, n3, 0.0, TUBE_DEPTH + 7.0, TUBE_GAP, DROP, 2.6, 18.0))    # from the floor plane (not into the 3 mm floor: a 1 mm sliver of it failed the audit) to past the mouth
+            slots.append(trough(B, -self.a3, n3, 0.0, TUBE_DEPTH + 7.0, TUBE_GAP, DROP, TUBE_LIP, 18.0))    # from the floor plane (not into the 3 mm floor: a 1 mm sliver of it failed the audit) to past the mouth
             rings.append(along(B, -self.a3, 0.0, TUBE_DEPTH + 1.0, 3.1 + RING_T))         # from the floor plane: a ring past it left a 1 mm slab beside the channel's clearance
+        Bm = self.p(self.pad_mouth + TUBE_DEPTH, 0.0, 0.5 * sum(TUBE_Z))     # 25 Nov: the 4.0 fin of room between the two channels' clearances (z 23..27, thinner than a
+        slots.append(trough(Bm, -self.a3, n3, 0.0, TUBE_DEPTH + 7.0, 5.0, DROP, TUBE_LIP, 5.0))   # member; cell_thick: 3 cells for 4.0) closed: one clearance for both tubes
         node = np.asarray(self.node, float)
         for sp in self.spokes:
-            slots.append(trough(node, sp["u"], n3, self.node_r, self.node_r + SOCK_DEPTH + 16.0, SPOKE_GAP, DROP, 1.9, 14.0))   # from the floor plane to past the mouth; walls >= 2.0 to d 1.9
+            slots.append(trough(node, sp["u"], n3, self.node_r, self.node_r + SOCK_DEPTH + 16.0, SPOKE_GAP, DROP, SPOKE_LIP, 14.0))   # from the floor plane to past the mouth; walls >= 2.0 to d 1.9
             rings.append(along(node, sp["u"], self.node_r - 3.0, self.node_r + SOCK_DEPTH + 1.0, 1.6 + RING_S))   # 9 Nov: from behind the floor (two back, the 1.1 collar stands alone and its lib wall was 2.0 at the grooves)
         for sp in self.spokes:                                             # room round the pushed-out spoke collars (they leave z 0..45): a cone from the
             col = along(node, sp["u"], self.node_r - 6.0, self.node_r + SOCK_DEPTH + 4.0, 10.5)          # arm node (r 18) out to the collar (r 10.5)
