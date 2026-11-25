@@ -1,6 +1,6 @@
 {
  "drone": "overseer",
- "ok": false,
+ "ok": true,
  "gate": true,
  "fit_tol_mm3": 0.5,
  "fit_table": [
@@ -125,30 +125,6 @@
  ],
  "pairs": [
   {
-   "a": "ubec_5_v",
-   "b": "hub_deck",
-   "mm3": 0.79,
-   "limit_mm3": 0.5,
-   "contact": null,
-   "ok": false,
-   "pieces": [
-    {
-     "mm3": 0.79,
-     "at": [
-      83.8,
-      -5.0,
-      11.0
-     ],
-     "extent_mm": [
-      0.3,
-      1.8,
-      1.8
-     ],
-     "depth_mm": 0.35
-    }
-   ]
-  },
-  {
    "a": "overseer_fc_mount",
    "b": "wires",
    "mm3": 652.72,
@@ -235,54 +211,6 @@
       8.6
      ],
      "depth_mm": 7.61
-    }
-   ]
-  },
-  {
-   "a": "wires",
-   "b": "hub_deck",
-   "mm3": 133.25,
-   "limit_mm3": 140.0,
-   "contact": "the front runs (flow sensor, UBEC, buck leads) drawn straight through the deck's generated nose (v13, 29 Oct, after the runs). the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts",
-   "ok": true,
-   "pieces": [
-    {
-     "mm3": 133.25,
-     "at": [
-      77.6,
-      3.9,
-      6.6
-     ],
-     "extent_mm": [
-      27.6,
-      10.7,
-      4.1
-     ],
-     "depth_mm": 4.11
-    }
-   ]
-  },
-  {
-   "a": "wires_red",
-   "b": "hub_deck",
-   "mm3": 74.99,
-   "limit_mm3": 76.0,
-   "contact": "the + leads of the front runs through the deck nose. the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts",
-   "ok": true,
-   "pieces": [
-    {
-     "mm3": 74.99,
-     "at": [
-      89.2,
-      -2.0,
-      8.1
-     ],
-     "extent_mm": [
-      11.2,
-      3.0,
-      6.9
-     ],
-     "depth_mm": 3.0
     }
    ]
   },
@@ -479,17 +407,29 @@
    "limit_mm3": 0.5,
    "contact": null,
    "ok": true
+  },
+  {
+   "a": "wires",
+   "b": "hub_deck",
+   "mm3": 0.0,
+   "limit_mm3": 140.0,
+   "contact": "the front runs (flow sensor, UBEC, buck leads) drawn straight through the deck's generated nose (v13, 29 Oct, after the runs). the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts",
+   "ok": true
+  },
+  {
+   "a": "wires_red",
+   "b": "hub_deck",
+   "mm3": 0.0,
+   "limit_mm3": 76.0,
+   "contact": "the + leads of the front runs through the deck nose. the lead runs are a schematic (E): straight 3-8 mm bundles drawn on the core v2 layout (26-30 Oct, its script gone), never re-routed for the parts drawn after them; the real leads are flexible and routed by hand round the printed parts",
+   "ok": true
   }
  ],
  "mates": [],
  "paths": [],
  "riders": [],
- "not_print_ready": {
-  "hub_deck": [
-   "clashes with ubec_5_v: 0.8 mm3"
-  ]
- },
+ "not_print_ready": {},
  "would_block": {},
- "seconds": 4.9,
+ "seconds": 2.9,
  "placed": {}
 }
