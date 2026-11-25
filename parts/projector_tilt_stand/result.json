@@ -1,0 +1,394 @@
+{
+ "name": "projector_tilt_stand",
+ "engine": "nox/topo",
+ "status": "mem_refused",
+ "fail": "memory: build before the export cleanup: estimated peak 15.1 GB (held 0.92, gate 2.61, mesh 11.56) for a 127.9 x 56.5 x 130.0 mm part (62 M gate cells at 0.25 mm, 2,068,868 faces): over the 14 GB limit (the runner has 16 GB and kills a run over it with no result). Split the part (the gate grid grows with its bounding box), or trim the envelope.",
+ "solid_ok": false,
+ "watertight": false,
+ "strength": {
+  "rows": [],
+  "worst": null,
+  "worst_case": null,
+  "worst_at": null,
+  "ok": false,
+  "fail": "memory: build before the export cleanup: estimated peak 15.1 GB (held 0.92, gate 2.61, mesh 11.56) for a 127.9 x 56.5 x 130.0 mm part (62 M gate cells at 0.25 mm, 2,068,868 faces): over the 14 GB limit (the runner has 16 GB and kills a run over it with no result). Split the part (the gate grid grows with its bounding box), or trim the envelope."
+ },
+ "mass_g": null,
+ "memory_build": {
+  "estimate_gb": 15.09,
+  "parts": {
+   "held": 0.92,
+   "gate": 2.61,
+   "mesh": 11.56
+  },
+  "limit_gb": 14.0,
+  "gate_cells": 62188320,
+  "bounds_mm": [
+   127.9,
+   56.5,
+   130.0
+  ],
+  "faces": 2068868,
+  "when": "before the export cleanup",
+  "fail": "memory: build before the export cleanup: estimated peak 15.1 GB (held 0.92, gate 2.61, mesh 11.56) for a 127.9 x 56.5 x 130.0 mm part (62 M gate cells at 0.25 mm, 2,068,868 faces): over the 14 GB limit (the runner has 16 GB and kills a run over it with no result). Split the part (the gate grid grows with its bounding box), or trim the envelope."
+ },
+ "bodies": {
+  "bodies_raw": 1,
+  "dropped_specks_mm3": [],
+  "cavities_mm3": [],
+  "bodies": 1
+ },
+ "volume_mm3": 215137.7,
+ "layout": {
+  "settings": {
+   "min_member_mm": 6.25,
+   "eta": [
+    0.75,
+    0.5,
+    0.25
+   ],
+   "betas": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+   ],
+   "penal": 3.0,
+   "emin": 1e-06,
+   "pmean": 6.0,
+   "tie_weight": 0.5,
+   "tie_moments": true,
+   "tie_min_cells": 4,
+   "move": 0.1,
+   "min_stage": 10,
+   "max_stage": 35,
+   "grey_stop": 0.02,
+   "vol_gain": 0.3,
+   "geometric": false,
+   "geo_margin": 0.05,
+   "geo_beta": 16.0,
+   "geo_eps": 0.0,
+   "erosion": "masked",
+   "gate_ties": true,
+   "gate_thin_mm": 2.0,
+   "case_norm": "solid",
+   "held_ties": true,
+   "gate_member": true,
+   "collar_mm": 0.0,
+   "finish": "organic",
+   "skin_mm": 2.5,
+   "fillet_mm": 2.5,
+   "skin_round_mm": 1.0,
+   "reach_check": "raise",
+   "audit": "raise",
+   "auto_sym": true,
+   "near_sym": false,
+   "backend": "auto",
+   "early_beta": 4,
+   "early_k": 3.0,
+   "nominal_hold": true,
+   "hold_beta": 4.0,
+   "hold_proj_beta": 32.0,
+   "hold_tol": 0.05,
+   "hold_p": 8.0,
+   "hold_q": 3.0,
+   "hold_damp": 0.5,
+   "hold_floor": 0.5,
+   "hold_stiff": true,
+   "hold_eroded": true,
+   "hold_stage": 50,
+   "no_cavity": true,
+   "cavity_ratio": 5.0,
+   "cavity_ks": 0.0001,
+   "cavity_p": 8.0,
+   "cavity_on": 0.5,
+   "mg_tol": 1e-05,
+   "time_limit_s": 16200.0,
+   "mem_limit_gb": 14.0,
+   "build_pitch": 0.0,
+   "checkpoint_every": 10
+  },
+  "R_mm": 6.44256687412536,
+  "R_cells": 3.22128343706268,
+  "calibration": {
+   "rod": 0.9701102250255644,
+   "plate": 0.8809289894691206,
+   "erode": 0.26588526507976606,
+   "dilate": 0.2668852650798993,
+   "rod_input": 1.2608727148268373,
+   "plate_input": 0.8849130530977847
+  },
+  "volfrac": 0.3211510052026463,
+  "nd": 46707,
+  "sym_axes": [],
+  "n_real": 5,
+  "n_ties": 0,
+  "backend": "direct",
+  "iterations": 92,
+  "stopped": "max_stage",
+  "checks": [
+   {
+    "it": 17,
+    "beta": 4.0,
+    "worst": 0.006,
+    "worst_case": "projector slides: 20 N down the slope on the lip"
+   },
+   {
+    "it": 32,
+    "beta": 8.0,
+    "worst": 0.007,
+    "worst_case": "projector slides: 20 N down the slope on the lip"
+   },
+   {
+    "it": 42,
+    "beta": 16.0,
+    "worst": 0.007,
+    "worst_case": "projector slides: 20 N down the slope on the lip"
+   }
+  ],
+  "hold": {
+   "started_it": 17,
+   "beta": 4.0,
+   "index": 0.006,
+   "ref_built": 0.007,
+   "cases": {
+    "projector 640 g on the deck": 0.001,
+    "hand presses the projector 20 N": 0.001,
+    "projector slides: 20 N down the slope on the lip": 0.006,
+    "shove along the width 15 N on the lip": 0.003,
+    "pushed at the high end 15 N toward the low end": 0.002
+   }
+  },
+  "cavity": {
+   "last": 0.9149531095736729,
+   "ratio": 5.0,
+   "T0": 66.17223879659836,
+   "row": true
+  }
+ },
+ "grid": {
+  "name": "projector_tilt_stand",
+  "h": 2.0,
+  "shape": [
+   72,
+   32,
+   72
+  ],
+  "origin": [
+   -12.4159,
+   -3.7687,
+   -7.0
+  ],
+  "cells": 165888,
+  "design": 46707,
+  "drawn": 11898,
+  "cases": [
+   "projector 640 g on the deck",
+   "hand presses the projector 20 N",
+   "projector slides: 20 N down the slope on the lip",
+   "shove along the width 15 N on the lip",
+   "pushed at the high end 15 N toward the low end"
+  ],
+  "supports": [
+   "default"
+  ]
+ },
+ "build_s": 200.3,
+ "layout_s": 1853,
+ "peak_gb": 2.767092,
+ "memory": {
+  "estimate_gb": 4.25,
+  "parts": {
+   "held": 0.68,
+   "factor": 2.1,
+   "assembly": 0.56,
+   "block": 0.88,
+   "energies": 0.02
+  },
+  "limit_gb": 14.0,
+  "cases": 5,
+  "active_dofs": 205011,
+  "backend": "direct",
+  "block": 63,
+  "build": {
+   "estimate_gb": 3.29,
+   "parts": {
+    "held": 0.68,
+    "gate": 2.61,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 62188320,
+   "bounds_mm": [
+    127.9,
+    56.5,
+    130.0
+   ],
+   "faces": 0,
+   "when": "from the envelope"
+  },
+  "peak_it1_gb": 2.64
+ },
+ "early": {
+  "rows": [
+   {
+    "case": "projector 640 g on the deck",
+    "cls": "flight",
+    "inlayer": 0.001,
+    "across": 0.0,
+    "at": [
+     60.6,
+     17.2,
+     8.0
+    ]
+   },
+   {
+    "case": "hand presses the projector 20 N",
+    "cls": "misuse",
+    "inlayer": 0.001,
+    "across": 0.001,
+    "at": [
+     60.6,
+     17.2,
+     8.0
+    ]
+   },
+   {
+    "case": "projector slides: 20 N down the slope on the lip",
+    "cls": "misuse",
+    "inlayer": 0.006,
+    "across": 0.004,
+    "at": [
+     0.6,
+     5.2,
+     34.0
+    ]
+   },
+   {
+    "case": "shove along the width 15 N on the lip",
+    "cls": "misuse",
+    "inlayer": 0.003,
+    "across": 0.003,
+    "at": [
+     0.6,
+     5.2,
+     10.0
+    ]
+   },
+   {
+    "case": "pushed at the high end 15 N toward the low end",
+    "cls": "misuse",
+    "inlayer": 0.002,
+    "across": 0.001,
+    "at": [
+     108.6,
+     5.2,
+     116.0
+    ]
+   }
+  ],
+  "worst": 0.006,
+  "worst_case": "projector slides: 20 N down the slope on the lip",
+  "worst_at": [
+   0.6,
+   5.2,
+   34.0
+  ],
+  "ok": true,
+  "beta": 4.0,
+  "iteration": 17,
+  "max_worst": 0.5,
+  "k": 3.0
+ },
+ "field": {
+  "worst": 0.008,
+  "worst_case": "projector slides: 20 N down the slope on the lip",
+  "worst_at": [
+   0.6,
+   5.2,
+   36.0
+  ],
+  "beta": 32.0,
+  "iteration": 92
+ },
+ "gen_cm3": 120.0,
+ "h": 2.0,
+ "audit": {
+  "solid_ok": [],
+  "drawn_share": 0.203,
+  "load_room": [],
+  "bodies": [
+   {
+    "id": 1,
+    "cells": 11898,
+    "inscribed_mm": 3.7,
+    "touches_cut": true,
+    "touches_support": true,
+    "loaded": true,
+    "room": 0.92,
+    "room_depth_mm": 128.0,
+    "at": [
+     74.1,
+     25.6,
+     63.8
+    ],
+    "core_mm": 3.7,
+    "free_cells": 11898,
+    "share_of_drawn": 1.0
+   }
+  ],
+  "lone_posts": [],
+  "envelope_waste": 0.0,
+  "plate": {
+   "L_mm": 128.0,
+   "W_mm": 56.0,
+   "H_mm": 130.0,
+   "fits": true
+  },
+  "drawn_thin": [],
+  "drawn_walls": [],
+  "bed": {
+   "build": "+z",
+   "drawn_mm2": 1244.5,
+   "room_mm2": 3802.8,
+   "min_mm2": null
+  },
+  "parity": [],
+  "paths": [],
+  "path_riders": [],
+  "fit_sizes": {
+   "recorded": true,
+   "declared": [],
+   "refused": []
+  },
+  "held_load": [],
+  "interface_case": [],
+  "cell_thick": [],
+  "cases": 5,
+  "supports": 1,
+  "fails": [],
+  "room_full": {
+   "worst": 0.002,
+   "worst_case": "projector slides: 20 N down the slope on the lip",
+   "worst_at": [
+    0.6,
+    5.2,
+    122.0
+   ],
+   "budget_share": 0.321,
+   "thinned": 0.01,
+   "max_worst": 0.5,
+   "fin_cells": 42,
+   "worst_in_fin": false
+  }
+ },
+ "baseline": null,
+ "total_s": 2053,
+ "part_sha": "c4cc45d09a4e",
+ "lib_sha": "",
+ "setup_sha": "94e0c9d0958542fc",
+ "max_worst": 0.5,
+ "strength_ok": false
+}
