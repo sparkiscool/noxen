@@ -16,3 +16,8 @@ Applied: 4 pushing intake fans against 1 extractor; the whole lid and the upper 
 Box is fitted: width = the fan row (120 + three 70 + gaps + walls), depth = the 120 mm fan, height = board 220 + 8 standoff + 17 under the lid. Board sizes are estimates (outlines unpublished), so mounts wait for measuring.
 
 48 flat PCTG tiles plus the handle, projector floor and lip frame, rails and TPU pads (about 2.0 kg), none over 180 mm, no supports. Not yet through the assembly check (it has no assembly line file, systems/desktop_dual_board_case.assembly.json), nothing sent to the printers. preview_orientation.png shows only the layout and airflow.
+
+## 25 Nov update (hubs, ports, widening)
+- Case widened to 412 x 126 (33 free each end of the 340 boards for a side port board on its ribbon); boards moved to y 16..36 and 90..110 (chimney 54). -x end wall has a port window over each board (E: ports face -x; +x end is the handle/pad end).
+- Front USB sockets dropped. Access pad below the handle: one printed part `hub_pad` (back wall + webcam shelf z 56..59 + plate tilted 25 deg carrying two hubs, ports up). Acer 4-port B0CN3F9Y1Z = 105 x 30 x 9 (retailer listings); second hub assumed the same (his order email was not found). Camera top 6 under the handle, lens plane 9 in front of it: handle cannot appear in the picture.
+- Board sizes unchanged (340 x 230 x 20, E): no teardown or outline found for the TIMI A7S or the second board. Not done: duct/baffle reshape for the boards' own intakes; held for the cooling research job per Spark. Not yet through assembly_check (no assembly json).

@@ -45,17 +45,17 @@ Run: python parts/desktop_dual_board_case/make.py -> part.stl, preview.png, prev
 import os, sys, glob
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scout_v4_probe_mech_lib import extrude, boolean, ROOT  # noqa: E402
-from shapely.geometry import box, Point, Polygon
+from shapely.geometry import box, Point, Polygon, LineString
 from shapely import affinity
 from shapely.ops import unary_union
 import numpy as np, trimesh
 
 T = 3.0
-X, Y = 372.0, 126.0                  # outer footprint (inner 366 x 120)
+X, Y = 412.0, 126.0                  # outer footprint (inner 406 x 120): 33 free at each end of the 340 boards for a side port board on its ribbon
 IX, IY = X - 2 * T, Y - 2 * T
 # boards (E, outlines unpublished): 15.6" GF65-class, chassis 359 x 254 x 21.7 -> board ~340 x 230, PCB + cooler stack 20 deep (the laptop shell minus keyboard layer)
 BW, BH, BD = 340.0, 230.0, 20.0
-BY = 10.0                            # board A y 10..30; board B y 90..110; chimney 60 between; 10 cold-side clearance for the board fans
+BY = 16.0                            # board A y 16..36; board B y 90..110; chimney 54 between; 16 cold-side clearance; the -x end wall has a port window exactly over each board (u 12.2..33.8, 86.2..107.8)
 STAND, UNDER = 8.0, 12.0             # board standoff above the deck, clearance under the lid
 HB, HL = 34.0, STAND + BH + UNDER    # base wall height, bay wall height (250)
 FEET_RAIL, FEET_TPU = 8.0, 3.0
@@ -186,26 +186,42 @@ for sy in (-1, 1):
 MX = 2 * (CH_IN + CH_T)
 BR_HOLES = [Point(Y / 2 + py - T, ZP + dz - Z_B).buffer(M3H, 24) for py, dz in PL_HOLES]    # bay_endh holes under the plate (u = y - T, v = z - Z_B)
 
-# ---- the webcam bay BELOW the handle (Spark: just the NexiGo N60 mount; its own mic is built in): a shelf flush with the D1 deck (z 48..51) 70 out of the +x end wall, 90 wide,
-# the camera (N60, listing: about 82 wide x 53 high x 50 deep with its clip, 150 g, 1/4-20 tripod thread in the base) stands on it looking out of the end on a 1/4-20 bolt
-# up through a 6.8 hole; its top is z ~104, 14 under the handle (z 118); the handle (x 12..55) is behind its lens plane (x ~58), and its 110 deg view looks away from it
+# ---- the ACCESS PAD below the handle (Spark 25 Nov): ONE printed part, a profile (x out of the +x end wall, z) extruded 115 along y and printed lying with the profile on the bed:
+# back wall (bolted to base_endp, 4 x M3), the webcam shelf on top (z 56..59, 76 out; NexiGo N60, listing about 82 x 53 x 50 with its clip, 1/4-20 base thread, own mic) and, under it, a plate
+# tilted 25 deg down away from the wall carrying the TWO USB hubs (ports up) with a lip at its low end; a strut under the plate closes the triangle. Hubs: Acer 4-port B0CN3F9Y1Z = 105 x 30 x 9
+# (retailer listings, C); the second hub's size is not known (no order email found), assumed the same (E). Camera top z 112, 6 under the handle (z 118); lens plane x 64 out, 9 in front of the handle (55 out):
+# the handle is behind the lens plane so no part of it can be in the picture. Hub cables and the camera cable go in through one slot (z 51..56) above the plate.
 CAM_W, CAM_H, CAM_D = 82.0, 53.0, 50.0
-CAM_X0 = 8.0                             # camera rear 8 from the wall, front x 58
-CAM_BR_Y = [Y / 2 - 35, Y / 2 + 35]
-cam_poly = box(0, 0, 70.0, 90.0)
-cam_poly = cut(cam_poly, [Point(CAM_X0 + CAM_D / 2, 45.0).buffer(6.8 / 2, 32)] + [Point(11.0, 45.0 + y - Y / 2).buffer(M3 / 2, 24) for y in CAM_BR_Y])
-cam_shelf = extrude(cam_poly, 0, T)
-CAM_HOLES = [Point(y - T, 24.0).buffer(M3 / 2, 24) for y in CAM_BR_Y]    # base_endp holes (v = z - Z_BW = 24: z 38, 10 below the shelf)
+CAM_X0 = 14.0                            # camera rear 14 from the wall, front x 64
+HUB_L, HUB_W, HUB_T = 105.0, 30.0, 9.0
+PAD_W, PAD_A = 115.0, np.radians(25.0)
+PAD_S, PAD_T0 = 84.0, 14.0               # plate length along the slope, first hub starts 14 down the slope (clears the shelf)
+PAD_P0 = (4.0, 50.0)                     # top of the plate at the wall (x, z)
+Z_SH = 56.0                              # shelf underside; Z_SH + 3 = shelf top
+PAD_BOLT = [(Y / 2 + sy * 45.0, zb) for sy in (-1, 1) for zb in (30.0, 38.0)]      # (y, z) through base_endp
+d_ = np.array([np.cos(PAD_A), -np.sin(PAD_A)]); n_ = np.array([np.sin(PAD_A), np.cos(PAD_A)])
+P0 = np.array(PAD_P0)
+pt = lambda t, k=0.0: tuple(P0 + t * d_ + k * n_)
+prof = unary_union([
+    box(0, 24, 4, Z_SH + 3), box(0, Z_SH, 76, Z_SH + 3),
+    Polygon([pt(0), pt(PAD_S), pt(PAD_S, -3), pt(0, -3)]),
+    Polygon([pt(PAD_S - 3), pt(PAD_S), pt(PAD_S, 6), pt(PAD_S - 3, 6)]),
+    LineString([(4.0, 26.0), pt(60, -3)]).buffer(1.5)])
+pad_raw = extrude(prof, 0, PAD_W)                                                    # x, z in the x-y plane, depth along +z
+pad_raw.apply_transform(tm.rotation_matrix(np.pi / 2, [1, 0, 0]))                    # (x, y, z) -> (x, -z, y): profile z -> y.. depth to -y
+pad = pad_raw
+pad.apply_translation([0, PAD_W / 2, 0])                                              # y centred on 0
+for yy, zz in PAD_BOLT:
+    pad = boolean(pad, trimesh.creation.cylinder(radius=M3 / 2, height=8, sections=24, transform=tm.rotation_matrix(np.pi / 2, [0, 1, 0]) @ tm.translation_matrix([0, 0, 0])).copy().apply_translation([2.0, yy - Y / 2, zz]) , "-")
+pad = boolean(pad, trimesh.creation.cylinder(radius=6.8 / 2, height=8, sections=32).apply_translation([CAM_X0 + CAM_D / 2, 0, Z_SH + 1.5]), "-")
+pad = boolean(pad, trimesh.creation.box(extents=[7.0, 16.0, 8.0]).apply_translation([8.5, 0, Z_SH + 1.5]), "-")   # camera cable drops through the shelf
+CAM_HOLES = [Point(y - T, zz - Z_BW).buffer(M3 / 2, 24) for y, zz in PAD_BOLT]
+CABLE_SLOT = box(40.0, -1.0, 86.0, 5.0)                                              # in bay_endh (u = y - T, v = z - Z_B): z 51..56, the cables in
 
 # ---- walls: (length, height, lead, extra, slots list)
-# front USB panel: two rows of panel-mount USB-A extension sockets (screw-flange type, E: opening 14 x 7, flange ~ 28 x 13, two M3 at +-12), 3 per row at x 270, 302, 334,
-# the TOP row (z 38) wired to board A, the BOTTOM row (z 24) to board B; short-bodied sockets (~ 20 deep) so they stay inside y 3..25, clear of the 70 fans (y 28..98) and of the +x end
-USB_ROWS = {"A": 24.0, "B": 10.0}         # row centre v (z = v + 14) on the base front tile: A on top (z 38), B below (z 24): v 24 and v 10
-USB_U = [270.0, 302.0, 334.0]
+# port windows on the -x end wall (bay_end): one over each board's edge, so its HDMI and USB (and a side port board on its ribbon, 33 mm free inside) can be plugged in from outside (E: the ports face -x)
+PORT_WIN = [box(u0, v0, u1, v1) for (u0, u1) in ((12.2, 33.8), (86.2, 107.8)) for (v0, v1) in ((16.0, 116.0), (134.0, 234.0))]
 USB_CUTS = []
-for v in (24.0, 10.0):
-    for u in USB_U:
-        USB_CUTS += [box(u - 7.0, v - 3.5, u + 7.0, v + 3.5)] + [Point(u + dx, v).buffer(M3 / 2, 24) for dx in (-12.0, 12.0)]
 
 
 def wall(length, height, lead, slots=()):
@@ -220,8 +236,8 @@ WALLS = {
     "base_end": (IY, HB, 10.0, slots_u(18, IY - 18, 8, HB - 8)),
     "base_endp": (IY, HB, 10.0, CAM_HOLES),
     "bay_front": (X, HL, 13.0, ()), "bay_rear": (X, HL, 13.0, ()),
-    "bay_end": (IY, HL, 10.0, slots_u(18, IY - 18, 170.0, HL - 12.0)),
-    "bay_endh": (IY, HL, 10.0, BR_HOLES + [Point(py - T, pz - Z_B).buffer(M3 / 2, 24) for py, pz in HOLES_H]),
+    "bay_end": (IY, HL, 10.0, slots_u(38, IY - 38, 170.0, HL - 12.0) + PORT_WIN),
+    "bay_endh": (IY, HL, 10.0, BR_HOLES + [CABLE_SLOT] + [Point(py - T, pz - Z_B).buffer(M3 / 2, 24) for py, pz in HOLES_H]),
 }
 wall_poly = {k: wall(*v) for k, v in WALLS.items()}
 
@@ -304,7 +320,8 @@ for sig, (name, p, th, cnt) in unique.items():
 assert handle.is_watertight and max(handle.extents) <= 180.01, handle.extents
 handle.export(os.path.join(ROOT, "print", "desktop_dual_board_case_handle.stl"))
 mass += handle.volume / 1000 * 1.23
-for nm, mm in (("cam_shelf", cam_shelf),):
+pad_flat = pad.copy(); pad_flat.apply_transform(tm.rotation_matrix(-np.pi / 2, [1, 0, 0])); pad_flat.apply_translation(-pad_flat.bounds[0])
+for nm, mm in (("hub_pad", pad_flat),):
     assert mm.is_watertight and max(mm.extents) <= 180.01, (nm, mm.extents)
     mm.export(os.path.join(ROOT, "print", f"desktop_dual_board_case_{nm}.stl")); mass += mm.volume / 1000 * 1.23
     print(nm, "x 1", np.round(mm.extents, 1).tolist())
@@ -355,8 +372,12 @@ def build(pose=POSE_PROJ):
         ps.append(place(d, T, Tr(X, DOUBL_Y0, lz - 13.5) @ Rz(np.pi / 2) @ Rx(np.pi / 2)))
     h = handle.copy(); h.apply_transform(np.array([[1, 0, 0, X + T], [0, 0, -1, YH], [0, 1, 0, ZH0], [0, 0, 0, 1]], float))
     ps.append(h)
-    cs = cam_shelf.copy(); cs.apply_transform(Tr(X, Y / 2 - 45.0, Z_D1)); ps.append(cs)
-    cm = trimesh.creation.box(extents=[CAM_D, CAM_W, CAM_H]); cm.apply_translation([X + CAM_X0 + CAM_D / 2, Y / 2, Z_D1 + T + CAM_H / 2]); ps.append(cm)
+    pd = pad.copy(); pd.apply_translation([X, Y / 2, 0]); ps.append(pd)
+    cm = trimesh.creation.box(extents=[CAM_D, CAM_W, CAM_H]); cm.apply_translation([X + CAM_X0 + CAM_D / 2, Y / 2, Z_SH + 3 + CAM_H / 2]); ps.append(cm)
+    for t0 in (PAD_T0, PAD_T0 + HUB_W + 6.0):
+        hb = trimesh.creation.box(extents=[HUB_W, HUB_L, HUB_T]); hb.apply_translation([HUB_W / 2, 0, HUB_T / 2])
+        Mh = np.eye(4); Mh[:3, 0] = [d_[0], 0, d_[1]]; Mh[:3, 2] = [n_[0], 0, n_[1]]; Mh[:3, 3] = [X + P0[0] + t0 * d_[0], Y / 2, P0[1] + t0 * d_[1]]
+        hb.apply_transform(Mh); ps.append(hb)
     mt = mount.copy(); mt.apply_transform(Tr(X, Y / 2, ZP)); ps.append(mt)
     c_, s_ = np.cos(pose), np.sin(pose)
     Rp = np.array([[c_, 0, -s_, 0], [0, 1, 0, 0], [s_, 0, c_, 0], [0, 0, 0, 1]], float)
