@@ -130,9 +130,82 @@ body.moving #ctl{transition:opacity .08s;opacity:0}
 body.locked .pane.xon .xh{display:block}
 .prox{position:absolute;inset:0;pointer-events:none;display:none;z-index:15;border:5px solid #ff3b30;border-radius:12px;box-shadow:inset 0 0 40px rgba(255,59,48,.55);font:700 12px system-ui,sans-serif;color:#fff;text-align:center}.prox{padding-top:8px}.prox.on{display:block}body.picking .xh{display:none!important}
 @media (max-width:900px){.panes,.panes.insp{grid-template-columns:1fr;grid-template-rows:repeat(3,minmax(0,1fr))}#ctl{display:none}}
+header{padding-left:262px}
+#hm{position:fixed;inset:0;z-index:100;background:radial-gradient(1200px 700px at 70% -10%,#16213a 0,var(--bg) 60%);overflow:auto;display:none;font:14px/1.45 var(--sans)}
+body.home #hm{display:block}body.home .app{visibility:hidden}
+#hm .wrap{max-width:1080px;margin:0 auto;padding:84px 32px 40px}
+#hm h1{margin:0 0 4px;font:650 30px var(--sans);letter-spacing:-.01em}#hm .lead{color:var(--muted);margin:0 0 28px}
+#hm h2{margin:30px 0 12px;font:600 11.5px var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+#hm .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+#hm .pc,#hm .addc{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;cursor:pointer;text-align:left;color:var(--fg);font:inherit;transition:border-color .15s,transform .15s}
+#hm .pc:hover,#hm .addc:hover{border-color:var(--accent);transform:translateY(-2px)}
+#hm .pc .th{height:96px;border-radius:10px;margin-bottom:14px;background:linear-gradient(135deg,#1d2a45,#0f1522);display:flex;align-items:flex-end;gap:5px;padding:10px}
+#hm .pc .th i{flex:1;background:#4c8dff;border-radius:3px 3px 0 0;opacity:.85}
+#hm .pc b{display:block;font-size:17px;margin-bottom:3px}#hm .pc span{color:var(--muted);font-size:12.5px}
+#hm .pc .tags{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}#hm .pc .tags em{font:normal 11px var(--sans);border:1px solid var(--line);border-radius:99px;padding:2px 9px;color:#b9c1cf}
+#hm .addc{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:226px;gap:8px;border-style:dashed;color:#b9c1cf}
+#hm .addc .pl{font:300 44px/1 var(--sans);color:var(--accent)}
+#hm .ops{display:flex;gap:10px;flex-wrap:wrap}
+#hm .op{display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:6px 14px 6px 6px;color:var(--fg);font:inherit;cursor:pointer}
+#hm .op.cur{border-color:var(--accent);background:#1b2536}
+.av{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#2f6df0;color:#fff;font:600 11.5px var(--sans)}
+#hm .op.add{padding:6px 14px;border-style:dashed;color:var(--muted)}
+#hm .sub2{color:var(--muted);font-size:12px;margin-top:8px}
+#hm .scr{display:none}#hm.add .scr{display:block}#hm.add .main{display:none}
+#hm .box{border:2px dashed #34507f;border-radius:16px;padding:44px 20px;text-align:center;color:#b9c1cf;background:rgba(76,141,255,.05);margin-bottom:18px}
+#hm .box b{display:block;font-size:15px;color:var(--fg);margin-bottom:4px}
+#hm .fld{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#hm label{display:block;font:600 10.5px var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}
+#hm input,#hm select{width:100%;background:#0c0f14;border:1px solid var(--line);border-radius:8px;color:var(--fg);padding:8px 10px;font:13px var(--sans);outline:none}
+#hm .acts{display:flex;gap:10px;margin-top:20px}#hm .btn.pri{background:#2f6df0;border-color:#9bbcff;color:#fff}#hm .btn:disabled{opacity:.4;cursor:default}
+#bar{position:fixed;left:10px;top:7px;z-index:120;display:flex;gap:8px;align-items:center}
+#bar .btn{background:#12161d;display:flex;align-items:center;gap:8px;padding:4px 11px 4px 5px}#bar #bHome{padding:5px 11px}#bar .btn[hidden]{display:none}
+#opm{position:fixed;left:10px;top:44px;z-index:121;min-width:230px;background:#12161d;border:1px solid var(--line);border-radius:12px;padding:8px;display:none;box-shadow:0 12px 34px rgba(0,0,0,.5)}
+#opm.show{display:block}#opm h6{margin:4px 6px 6px;font:600 10.5px var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+#opm button{display:flex;align-items:center;gap:9px;width:100%;background:none;border:0;color:var(--fg);padding:6px;border-radius:8px;font:13px var(--sans);cursor:pointer;text-align:left}#opm button:hover{background:#1a2029}
+#opm button.cur{background:#1b2536}
+.mmav{position:absolute;left:9px;bottom:8px;z-index:2;display:flex;align-items:center;gap:7px;padding:3px 10px 3px 3px;border-radius:99px;background:rgba(10,13,18,.7);border:1px solid rgba(255,255,255,.18);font:600 11px var(--sans);color:#e9ecf1;pointer-events:none}
+.mmav .av{width:22px;height:22px;font-size:10px}
+.mmav{pointer-events:auto}.mmav button{margin-left:4px;font:600 10.5px var(--sans);background:rgba(255,255,255,.1);color:#e9ecf1;border:1px solid var(--line);border-radius:99px;padding:2px 8px;cursor:pointer}.mmav button.on{background:#2f6df0}
+#mmlay{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+.mo{position:absolute;left:0;top:0;width:22px;height:22px;font-size:9.5px;border:2px solid rgba(255,255,255,.55)}.mo.me{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.25)}
+.mk{position:absolute;left:0;top:0;width:12px;height:12px;background:#fff;border:3px solid #e0245e;pointer-events:auto}
+.pl{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:12}
+.pin{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;will-change:transform}
+.pin i{position:absolute;left:calc(var(--d)/-2);top:calc(var(--d)/-2);width:var(--d);height:var(--d);border-radius:50%;background:var(--c);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.pin span{position:absolute;left:calc(var(--d)/2 + 4px);top:-10px;white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis;font:600 11.5px var(--sans);color:#fff;background:rgba(10,13,18,.82);border:1px solid var(--c);border-radius:8px;padding:3px 8px}
+.pin.open span{white-space:normal;max-width:260px;width:max-content;z-index:3}.pin.open{z-index:3}
 </style>
 </head>
 <body>
+<div id="bar"><button class="btn" id="bHome" hidden title="Back to home">&#8962; Home</button><button class="btn" id="bOp" title="Switch operator"><span class="av" id="opAv"></span><span id="opNm"></span> <span class="sub">&#9662;</span></button></div>
+<div id="opm"><h6>Operators</h6><div id="opmList"></div><button id="opmAdd"><span class="av" style="background:#2a303c">+</span>Add operator&hellip;</button></div>
+<div id="hm"><div class="wrap">
+ <div class="main">
+  <h1>Noxen</h1><p class="lead">Scan to BIM &middot; your projects</p>
+  <h2>Projects</h2>
+  <div class="grid">
+   <button class="pc" id="pcTest"><div class="th"><i style="height:38%"></i><i style="height:64%"></i><i style="height:48%"></i></div><b>Test Site One</b><span>3 floors &middot; <span id="rmN">12</span> rooms</span><div class="tags"><em>Simulated scene</em><em>Level 2 scanned</em></div></button>
+   <button class="addc" id="bAddP"><span class="pl">+</span><b>Add project</b><span class="sub">Upload a scan and a design model</span></button>
+  </div>
+  <h2>Operators &middot; pick who is working</h2>
+  <div class="ops" id="opList"></div>
+  <div class="sub2">Template only: operators can be picked and added here, nothing is saved or wired up yet.</div>
+ </div>
+ <div class="scr">
+  <h1>Add project</h1><p class="lead">Template only &middot; nothing here is wired up yet</p>
+  <div class="box"><b>Drop the scan here, or click to choose a file</b>Point cloud (.e57, .las, .ply) &middot; design model (.ifc, .rvt)</div>
+  <div class="fld">
+   <div><label>Project name</label><input type="text" placeholder="e.g. Test Site One"></div>
+   <div><label>Site address</label><input type="text" placeholder="Street, city"></div>
+   <div><label>Floors</label><input type="number" min="1" placeholder="3"></div>
+   <div><label>Rooms</label><input type="number" min="1" placeholder="12"></div>
+   <div><label>Operator</label><select id="apOp"></select></div>
+   <div><label>Scan date</label><input type="date"></div>
+  </div>
+  <div class="acts"><button class="btn" id="bBackH">&larr; Back to home</button><button class="btn pri" disabled title="Not wired up yet">Create project</button></div>
+ </div>
+</div></div>
 <div class="app">
 <header>
   <span class="brand">Noxen</span><span class="sub">Storage bay &middot; drone scan vs BIM</span><span class="sim">Simulated scene</span><button class="btn ghost" id="bScan" title="Scan details"><span id="scanShort"></span></button>
@@ -1117,7 +1190,14 @@ function videoOverlay(p,B,tms){
     for(const q of POLYA){if(q.obj!==hov)continue;const dd=sub(q.c,B.eye),dl=Math.sqrt(dot(dd,dd))||1;if(dot(q.n,dd)>=0)continue;
       const dir=[dd[0]/dl,dd[1]/dl,dd[2]/dl];if(castRay(POLYA,B.eye,dir)!==hov)continue;
       paintPoly(ctx,p,B,q,HLFILL,'rgba(40,110,255,.7)',1)}
-    ctx.restore()}
+    ctx.restore()
+    if(document.pointerLockElement===p.el){   // look mode: bright outline and the name
+      const o=OBJ[hov];let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9,ok=0;
+      for(const c of orientedCorners(o)){const q=proj(B,c,p);if(!q)continue;ok++;x0=Math.min(x0,q[0]);y0=Math.min(y0,q[1]);x1=Math.max(x1,q[0]);y1=Math.max(y1,q[1])}
+      if(ok>=8){x0=Math.max(2,x0);y0=Math.max(2,y0);x1=Math.min(p.W-2,x1);y1=Math.min(p.H-2,y1);
+        ctx.save();ctx.shadowColor='rgba(80,160,255,.9)';ctx.shadowBlur=10;ctx.strokeStyle='#7ab8ff';ctx.lineWidth=2.5;ctx.strokeRect(x0,y0,x1-x0,y1-y0);ctx.restore();
+        ctx.font='600 13px system-ui,sans-serif';ctx.textBaseline='middle';const t=o.name,tw=ctx.measureText(t).width+14,ty=y0-14<14?Math.min(p.H-14,y1+14):y0-14,tx=Math.min(Math.max(2,x0),p.W-tw-2);
+        ctx.fillStyle='rgba(20,60,140,.92)';ctx.fillRect(tx,ty-10,tw,20);ctx.fillStyle='#fff';ctx.fillText(t,tx+7,ty+.5)}}}
   drawDep(p,pt=>proj(B,pt,p));
 }
 function drawPolys2(p,B){ // fallback without WebGL: flat lit painter
@@ -1553,9 +1633,11 @@ for(const p of panes){
   p.el.addEventListener('contextmenu',e=>e.preventDefault());
 }
 function hoverTick(now){
-  if(now<hovNext||flying||now-lastLook<300)return;hovNext=now+110;
   const l=document.pointerLockElement;
-  if(l){const p=panes[2];if(l===p.el){const b=objAt(p,p.W/2,p.H/2),r=p.el.getBoundingClientRect();hov=b;tipAt(b>=0?{clientX:r.left+p.W/2+16,clientY:r.top+p.H/2+16}:null,b>=0?hoverText(b):'')}return}
+  if(l){   // look mode: the item under the centre follows the gaze, also while turning (one ray, ~14 a second)
+    if(now<hovNext)return;hovNext=now+70;
+    const p=panes[2];if(l===p.el){const b=objAt(p,p.W/2,p.H/2),r=p.el.getBoundingClientRect();hov=b;tipAt(b>=0?{clientX:r.left+p.W/2+16,clientY:r.top+p.H/2+16}:null,b>=0?hoverText(b):'')}return}
+  if(now<hovNext||flying||now-lastLook<300)return;hovNext=now+110;
   if(ptr&&!(cut.type&&ptr.p.mode<2))setHover(objAt(ptr.p,ptr.x,ptr.y),{clientX:ptr.cx,clientY:ptr.cy});
 }
 function pickAt(p,x,y){
@@ -1723,7 +1805,91 @@ resize();
   if(/bench/.test(h)){const p=panes[0],B=camBasis(),t0=performance.now();for(let i=0;i<20;i++){p.key='';drawPoints(p,B,75000)}const pm=((performance.now()-t0)/20).toFixed(1),t1=performance.now();for(let i=0;i<10;i++)drawBim(panes[1],B);document.querySelector('.sim').textContent='points '+pm+' ms, bim '+((performance.now()-t1)/10).toFixed(1)+' ms, '+POLY.length+'/'+POLYA.length+' polys, N'+PTS.N}
 }
 requestAnimationFrame(frame);
-window.__scan={cam,vel,DEP,DRN,depBegin,depCancel,get prox(){return proxOn},MAN_V,get frames(){return frames},get drawn(){return ptDrawn},get N(){return PTS.N},get objs(){return OBJ.length},get polys(){return POLY.length},get gl(){return document.body.dataset.gl},room:[W,L,H],setCut,cut,panes,get dev(){return OBJ.map(o=>[o.name,o.status,Math.round(o.dmean*1000)])}};
+window.__scan={get OBJ(){return OBJ},cam,vel,DEP,DRN,depBegin,depCancel,get prox(){return proxOn},MAN_V,get frames(){return frames},get drawn(){return ptDrawn},get N(){return PTS.N},get objs(){return OBJ.length},get polys(){return POLY.length},get gl(){return document.body.dataset.gl},room:[W,L,H],setCut,cut,panes,get dev(){return OBJ.map(o=>[o.name,o.status,Math.round(o.dmean*1000)])}};
+})();
+</script>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),B=document.body;
+const ops=['Operator 1','Operator 2','Operator 3'];let cur=0;
+const ini=n=>n.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+const mm=document.getElementById('mmw');
+if(mm){const d=document.createElement('div');d.className='mmav';d.id='mmav';d.innerHTML='<span class="av"></span><span></span><button id="bMark" title="Drop a mark with a note on the map">+ Mark</button>';mm.appendChild(d);const lay=document.createElement('div');lay.id='mmlay';mm.appendChild(lay)}
+/* Operators on the map (demo, simulated locally in this page only): the chosen operator is you and follows the camera; the others
+   walk scripted loops. Marks with notes are kept in this page only. Real multi-user (everyone seeing everyone live, shared marks)
+   would need a shared server; none is built here. */
+const COL=['#2f6df0','#e0245e','#1f9d55','#d99a0b','#8a4fff','#0e9bb0'];
+const PATH=[[[-5,-8],[5,-8],[5,-2],[-5,-2]],[[5,8],[-5,8],[-5,3],[5,3]],[[0,-10],[0,10]]];
+const marks=[],els=[],G=new Map();let markMode=false;
+const lay=()=>$('mmlay');
+/* a mark sticks to the nearest item (within 3 m) so its pin stands on that item in the 3D views; else it stands on the floor point */
+function addMark(x,z,note,op){const O=(window.__scan&&window.__scan.OBJ)||[];let best=null,bd=9;
+  for(const o of O){if(!o.ctr)continue;const d=(o.ctr[0]-x)**2+(o.ctr[2]-z)**2;if(d<bd){bd=d;best=o}}
+  const m={x,z,y:1.2,item:'',note,op,name:ops[op],open:false};
+  if(best){m.o=best;m.x=best.ctr[0];m.z=best.ctr[2];m.y=(best.max?best.max[1]:1)+.25;m.item=String(best.name||'').slice(0,24)}   // the subject is the item itself, 24 characters at most
+  marks.push(m);return m}
+const PL=['p0','p1','p2'].map(id=>{const el=document.getElementById(id),d=document.createElement('div');d.className='pl';el.appendChild(d);return{el,d}});
+function pins(){const sc=window.__scan,c=sc&&sc.cam;if(!c)return;
+  const cp=Math.cos(c.pitch),f=[Math.sin(c.yaw)*cp,Math.sin(c.pitch),-Math.cos(c.yaw)*cp],fl=Math.hypot(f[0],f[2])||1,r=[-f[2]/fl,0,f[0]/fl],u=[r[1]*f[2]-r[2]*f[1],r[2]*f[0]-r[0]*f[2],r[0]*f[1]-r[1]*f[0]];
+  // one dot per item that has notes (none for items without), at the item's centre; click opens its notes
+  // groups persist between frames (their pin elements and open state live on them); only the notes list is refreshed
+  G.forEach(g=>g.notes=[]);marks.forEach(m=>{const k=m.o||m;let g=G.get(k);if(!g)G.set(k,g={o:m.o,m,notes:[],open:false});g.notes.push(m);m.grp=g});
+  const groups=[...G.values()];
+  PL.forEach((P,pi)=>{const w=P.el.clientWidth,h=P.el.clientHeight;if(w<4)return;P.d.style.display=(pi===1&&P.el.parentNode.classList.contains('insp'))?'none':'';
+    const k=.5*h/Math.max(.7,.9*h/w);
+    groups.forEach(g=>{const m=g.m;let e=g.els&&g.els[pi];if(!e){(g.els=g.els||[])[pi]=e=document.createElement('div');e.className='pin';
+        e.innerHTML='<i></i><span></span>';e.onpointerdown=ev=>ev.stopPropagation();e.onclick=ev=>{ev.stopPropagation();g.open=!g.open;g.notes.forEach(n=>n.grp=g)};P.d.appendChild(e)}
+      const ctr=g.o?g.o.ctr:[m.x,m.y,m.z],sz=g.o&&g.o.size?Math.max(...g.o.size):.6;
+      const d=[ctr[0]-c.p[0],ctr[1]-c.p[1],ctr[2]-c.p[2]],z=d[0]*f[0]+d[1]*f[1]+d[2]*f[2];
+      if(z<.1){e.style.display='none';return}
+      const X=w/2+k*(d[0]*r[0]+d[1]*r[1]+d[2]*r[2])/z,Y=h/2-k*(d[0]*u[0]+d[1]*u[1]+d[2]*u[2])/z;
+      if(X<-40||X>w+40||Y<-20||Y>h+20){e.style.display='none';return}
+      const dia=Math.max(9,Math.min(34,k*sz*.3/z));   // the dot grows with the item's size and its nearness
+      e.style.setProperty('--c',COL[g.notes[g.notes.length-1].op%COL.length]);e.style.setProperty('--d',dia.toFixed(1)+'px');
+      const lab=e.lastChild;lab.textContent=g.open?'':(g.o?m.item:'Floor point')+' ('+g.notes.length+')';
+      if(g.open){lab.innerHTML='';g.notes.forEach(n=>{const l=document.createElement('div');l.textContent=(n.item||'Floor point')+' · '+n.name+': '+n.note;lab.appendChild(l)})}
+      e.classList.toggle('open',g.open);e.style.display='';e.style.transform='translate('+X.toFixed(1)+'px,'+Y.toFixed(1)+'px)'})})}
+function pathPos(i,t){const p=PATH[i%PATH.length],n=p.length,legs=[];let tot=0;for(let k=0;k<n;k++){const a=p[k],b=p[(k+1)%n],d=Math.hypot(a[0]-b[0],a[1]-b[1]);legs.push(d);tot+=d}
+  let s=((t*.9+i*7)%tot);for(let k=0;k<n;k++){if(s<=legs[k]){const a=p[k],b=p[(k+1)%n],f=s/legs[k];return[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]}s-=legs[k]}return p[0]}
+function mapXY(x,z){const w=mm.clientWidth,h=mm.clientHeight,s=Math.min((w-16)/24,(h-30)/14);return[w/2+s*z,h/2+6-s*x]}
+function frame(ts){
+  const L=lay();if(L&&mm.clientWidth>2){
+    while(els.length<ops.length){const e=document.createElement('div');e.className='mo av';L.appendChild(e);els.push(e)}
+    ops.forEach((n,i)=>{const e=els[i];e.textContent=ini(n);e.style.background=COL[i%COL.length];e.title=n+(i===cur?' (you)':'');e.classList.toggle('me',i===cur);
+      let x,z;if(i===cur){const c=window.__scan&&window.__scan.cam;if(c&&c.p){x=c.p[0];z=c.p[2]}else{x=0;z=0}}else[x,z]=pathPos(i,ts/1000);
+      const q=mapXY(x,z);e.style.transform='translate('+(q[0]-11)+'px,'+(q[1]-11)+'px)'});
+    marks.forEach(m=>{if(!m.el){m.el=document.createElement('div');m.el.className='mk';m.el.style.borderColor=COL[m.op%COL.length];m.el.title=m.name+': '+m.note;L.appendChild(m.el)}const q=mapXY(m.x,m.z);m.el.style.transform='translate('+(q[0]-6)+'px,'+(q[1]-6)+'px) rotate(45deg)'})}
+  pins();requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+$('bMark').onclick=e=>{e.stopPropagation();markMode=!markMode;$('bMark').classList.toggle('on',markMode);$('bMark').textContent=markMode?'Click the map':'+ Mark'};
+mm.addEventListener('pointerdown',e=>{if(!markMode||e.target.closest('.mmav,.fl'))return;e.stopPropagation();e.preventDefault();
+  const r=mm.getBoundingClientRect(),w=mm.clientWidth,h=mm.clientHeight,s=Math.min((w-16)/24,(h-30)/14),px=e.clientX-r.left,py=e.clientY-r.top;
+  const note=prompt('Note for this mark (by '+ops[cur]+')');markMode=false;$('bMark').classList.remove('on');$('bMark').textContent='+ Mark';
+  if(note&&note.trim())addMark(-(py-h/2-6)/s,(px-w/2)/s,note.trim(),cur)},true);
+function drawOps(){
+  $('opAv').textContent=ini(ops[cur]);$('opNm').textContent=ops[cur];
+  const m=$('mmav');if(m){m.children[0].textContent=ini(ops[cur]);m.children[1].textContent=ops[cur]}
+  const mk=(i,cls)=>{const b=document.createElement('button');b.className=(cls||'')+(i===cur?' cur':'');b.innerHTML='<span class="av"></span><span></span>';b.firstChild.textContent=ini(ops[i]);b.lastChild.textContent=ops[i];b.onclick=()=>{cur=i;drawOps();$('opm').classList.remove('show')};return b};
+  $('opmList').replaceChildren(...ops.map((_,i)=>mk(i)));
+  const l=$('opList');l.replaceChildren(...ops.map((_,i)=>mk(i,'op')));
+  const a=document.createElement('button');a.className='op add';a.textContent='+ Add operator';a.onclick=addOp;l.appendChild(a);
+  $('apOp').replaceChildren(...ops.map(n=>{const o=document.createElement('option');o.textContent=n;return o}));
+}
+function addOp(){const n=prompt('Operator name');if(n&&n.trim()){ops.push(n.trim());cur=ops.length-1;drawOps()}$('opm').classList.remove('show')}
+$('bOp').onclick=e=>{e.stopPropagation();$('opm').classList.toggle('show')};
+$('opmAdd').onclick=addOp;
+document.addEventListener('click',e=>{if(!$('opm').contains(e.target))$('opm').classList.remove('show')});
+function home(on){B.classList.toggle('home',on);$('bHome').hidden=on;if(on)$('hm').classList.remove('add')}
+$('pcTest').onclick=()=>{home(false);window.dispatchEvent(new Event('resize'))};
+$('bHome').onclick=()=>home(true);
+$('bAddP').onclick=()=>$('hm').classList.add('add');
+$('bBackH').onclick=()=>$('hm').classList.remove('add');
+// while home is shown the flying keys must not reach the viewer
+addEventListener('keydown',e=>{if(B.classList.contains('home')&&!/INPUT|SELECT/.test((e.target||{}).tagName))e.stopImmediatePropagation()},true);
+drawOps();
+setTimeout(()=>{const O=(window.__scan&&window.__scan.OBJ)||[];if(O.length>40&&!marks.length){const a=O[12],b=O[33];addMark(a.ctr[0],a.ctr[2],'Check clearance to the beam',1);addMark(b.ctr[0],b.ctr[2],'Moved since last scan',2)}},1200);
+// opened with a #fragment (a deep link such as #nogl): straight into the viewer, as before
+home(!location.hash);
 })();
 </script>
 </body>
