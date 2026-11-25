@@ -175,6 +175,19 @@ body.home #hm{display:block}body.home .mmops{display:none}body.home .app{visibil
 .pin i{position:absolute;left:calc(var(--d)/-2);top:calc(var(--d)/-2);width:var(--d);height:var(--d);border-radius:50%;background:var(--c);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5)}
 .pin span{position:absolute;left:calc(var(--d)/2 + 4px);top:-10px;white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis;font:600 11.5px var(--sans);color:#fff;background:rgba(10,13,18,.82);border:1px solid var(--c);border-radius:8px;padding:3px 8px}
 .opf{position:absolute;left:0;top:0;will-change:transform;pointer-events:none;animation:opIn .9s ease-out both}.opf img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.5)}.opf svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55))}.opf .otg{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);margin-bottom:4px;white-space:nowrap;font:600 12px var(--sans);color:#fff;background:rgba(10,13,18,.86);border:1.5px solid var(--c);border-radius:9px;padding:2px 9px;animation:tagIn .7s .35s ease-out both}@keyframes opIn{from{opacity:0}to{opacity:1}}@keyframes tagIn{from{opacity:0;margin-bottom:-14px}to{opacity:1;margin-bottom:4px}}
+/* note = yellow round pin with a pencil; request = red diamond pin with a flag (same on the map, in the video and BIM panes) */
+.pin i,.mk{display:flex;align-items:center;justify-content:center;font-style:normal;color:#1a1300;font-weight:800;line-height:1}
+.pin.note i,.mk.note,.lg .gn{border-radius:50%;background:#ffd23f}
+.pin.note i::after,.lg .gn::after{content:"\270E";font-size:calc(var(--d)*.62)}
+.pin.req i,.mk.req,.lg .gr{border-radius:3px;background:#ff3b30;color:#fff;transform:none}
+.pin.req i{transform:rotate(45deg)}.pin.req i::after{content:"\2691";font-size:calc(var(--d)*.55);transform:rotate(-45deg)}
+.pin.note span{border-color:#ffd23f}.pin.req span{border-color:#ff3b30}
+.lg .gr{transform:rotate(45deg)}
+.mk.note{width:16px;height:16px;border:2px solid #fff}.mk.req{width:14px;height:14px;border:2px solid #fff}
+.lg{position:fixed;right:230px;top:8px;z-index:60;display:flex;gap:14px;align-items:center;font:600 12px var(--sans);color:#fff;background:rgba(10,13,18,.82);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:4px 12px;pointer-events:none}
+.lg b{display:inline-flex;align-items:center;gap:6px;font-weight:600}.lg i{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border:2px solid #fff;font-style:normal;font-size:11px;color:#1a1300;box-sizing:border-box}
+.lg .gr::after{content:"\2691";color:#fff;transform:rotate(-45deg);font-size:10px}.lg .gn::after{font-size:11px}
+body.home .lg{display:none}
 .pin.open span{white-space:normal;max-width:260px;width:max-content;z-index:3}.pin.open{z-index:3}
 </style>
 </head>
@@ -1553,6 +1566,7 @@ $('rqSave').onclick=()=>{
   const r={id:'R'+String(REQS.length+1).padStart(3,'0'),type:$('rqType').value,about:$('rqAbout').value.trim(),title:$('rqTitle').value.trim(),text:$('rqText').value.trim(),scan:SCAN.id,at:Date.now()};
   if(!r.title&&!r.text){$('rqMsg').style.color='#f0b429';$('rqMsg').textContent='Add a title or some details first';return}
   REQS.push(r);try{localStorage.setItem('noxenScanReqs',JSON.stringify(REQS))}catch(e){}
+  if(window.syncReq)window.syncReq(r);
   const o=OBJ.find(x=>x.name===r.about),txt=r.id+' \u00b7 '+r.type+'\n'+(r.title||'')+'\nAbout: '+(r.about||'General')+(o&&!o.missing&&!o.site?' (avg '+Math.round(o.dmean*1000)+' mm, '+o.statusText+')':'')+'\nScan: '+r.scan+' \u00b7 '+fmtDT(r.at)+'\n\n'+r.text;
   let ok=false;try{navigator.clipboard.writeText(txt);ok=true}catch(e){}
   $('rqMsg').style.color='#7be0a0';$('rqMsg').textContent=r.id+' saved'+(ok?' \u00b7 text copied, ready to paste into an email':'');reqUI();if(sel>=0)select(sel)};
@@ -1816,7 +1830,7 @@ const ops=['Operator 1','Jensen Huang','China'];let cur=0;
 const ini=n=>n.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
 const mm=document.getElementById('mmw');let showOps=true;
 if(mm){const b=document.createElement('button');b.id='bOps';b.className='mmops on';b.textContent='Show other operators';b.title='Floating faces and name tags of the other operators, in all panes and the minimap';b.onclick=e=>{e.stopPropagation();showOps=!showOps;b.classList.toggle('on',showOps);b.setAttribute('aria-pressed',showOps)};b.setAttribute('aria-pressed','true');b.addEventListener('pointerdown',e=>e.stopPropagation());document.body.appendChild(b)}
-if(mm){const d=document.createElement('div');d.className='mmav';d.id='mmav';d.innerHTML='<span class="av"></span><span></span><button id="bMark" title="Drop a mark with a note on the map">+ Mark</button>';mm.appendChild(d);const lay=document.createElement('div');lay.id='mmlay';mm.appendChild(lay)}
+if(mm){const d=document.createElement('div');d.className='mmav';d.id='mmav';d.innerHTML='<span class="av"></span><span></span><button id="bMark" title="Drop a note on the map">+ Note</button><button id="bMarkR" title="Drop a request on the map">+ Request</button>';mm.appendChild(d);const lay=document.createElement('div');lay.id='mmlay';mm.appendChild(lay)}
 /* Operators on the map (demo, simulated locally in this page only): the chosen operator is you and follows the camera; the others
    walk scripted loops. Marks with notes are kept in this page only. Real multi-user (everyone seeing everyone live, shared marks)
    would need a shared server; none is built here. */
@@ -1824,9 +1838,9 @@ const COL=['#2f6df0','#e0245e','#1f9d55','#d99a0b','#8a4fff','#0e9bb0'];
 const marks=[],els=[],G=new Map();let markMode=false;
 const lay=()=>$('mmlay');
 /* a mark sticks to the nearest item (within 3 m) so its pin stands on that item in the 3D views; else it stands on the floor point */
-function addMark(x,z,note,op){const O=(window.__scan&&window.__scan.OBJ)||[];let best=null,bd=9;
+function addMark(x,z,note,op,kind,rid){const O=(window.__scan&&window.__scan.OBJ)||[];let best=null,bd=9;
   for(const o of O){if(!o.ctr)continue;const d=(o.ctr[0]-x)**2+(o.ctr[2]-z)**2;if(d<bd){bd=d;best=o}}
-  const m={x,z,y:1.2,item:'',note,op,name:ops[op],open:false};
+  const m={x,z,y:1.2,item:'',note,op,name:ops[op],open:false,kind:kind==='req'?'req':'note',rid};
   if(best){m.o=best;m.x=best.ctr[0];m.z=best.ctr[2];m.y=(best.max?best.max[1]:1)+.25;m.item=String(best.name||'').slice(0,24)}   // the subject is the item itself, 24 characters at most
   marks.push(m);return m}
 const PL=['p0','p1','p2'].map(id=>{const el=document.getElementById(id),d=document.createElement('div');d.className='pl';el.appendChild(d);return{el,d}});
@@ -1847,8 +1861,9 @@ function pins(){const sc=window.__scan,c=sc&&sc.cam;if(!c)return;
       if(X<-40||X>w+40||Y<-20||Y>h+20){e.style.display='none';return}
       const dia=Math.max(9,Math.min(34,k*sz*.3/z));   // the dot grows with the item's size and its nearness
       e.style.setProperty('--c',COL[g.notes[g.notes.length-1].op%COL.length]);e.style.setProperty('--d',dia.toFixed(1)+'px');
-      const lab=e.lastChild;lab.textContent=g.open?'':(g.o?m.item:'Floor point')+' ('+g.notes.length+')';
-      if(g.open){lab.innerHTML='';g.notes.forEach(n=>{const l=document.createElement('div');l.textContent=(n.item||'Floor point')+' · '+n.name+': '+n.note;lab.appendChild(l)})}
+      const isR=g.notes.some(n=>n.kind==='req');e.classList.toggle('req',isR);e.classList.toggle('note',!isR);
+      const lab=e.lastChild;lab.textContent=g.open?'':(isR?'Request: ':'Note: ')+(g.o?m.item:'Floor point')+' ('+g.notes.length+')';
+      if(g.open){lab.innerHTML='';g.notes.forEach(n=>{const l=document.createElement('div');l.textContent=(n.kind==='req'?'⚑ Request · ':'✎ Note · ')+(n.item||'Floor point')+' · '+n.name+': '+n.note;lab.appendChild(l)})}
       e.classList.toggle('open',g.open);e.style.display='';e.style.transform='translate('+X.toFixed(1)+'px,'+Y.toFixed(1)+'px)'})})}
 /* Walkers: every other operator is a floating face drifting about this one open bay (x +-7, z +-12), wandering between random waypoints,
    pausing now and then; they come in through the door end one after another. Shown in all three views. */
@@ -1888,14 +1903,18 @@ function frame(ts){
     ops.forEach((n,i)=>{const e=els[i];e.textContent=ini(n);e.style.background=COL[i%COL.length];e.title=n+(i===cur?' (you)':'');e.classList.toggle('me',i===cur);
       let x,z;if(i===cur){const c=window.__scan&&window.__scan.cam;if(c&&c.p){x=c.p[0];z=c.p[2]}else{x=0;z=0}}else{const w=walker(i,ts);x=w.x;z=w.z;e.style.opacity=(ts<w.born||!showOps)?0:1}
       const q=mapXY(x,z);e.style.transform='translate('+(q[0]-11)+'px,'+(q[1]-11)+'px)'});
-    marks.forEach(m=>{if(!m.el){m.el=document.createElement('div');m.el.className='mk';m.el.style.borderColor=COL[m.op%COL.length];m.el.title=m.name+': '+m.note;L.appendChild(m.el)}const q=mapXY(m.x,m.z);m.el.style.transform='translate('+(q[0]-6)+'px,'+(q[1]-6)+'px) rotate(45deg)'})}
+    marks.forEach(m=>{if(!m.el){m.el=document.createElement('div');m.el.className='mk '+m.kind;m.el.title=(m.kind==='req'?'Request · ':'Note · ')+m.name+': '+m.note;L.appendChild(m.el)}const q=mapXY(m.x,m.z);m.el.style.transform='translate('+(q[0]-6)+'px,'+(q[1]-6)+'px) rotate(45deg)'})}
   pins();figs(ts,dt);requestAnimationFrame(frame)}
 requestAnimationFrame(frame);
-$('bMark').onclick=e=>{e.stopPropagation();markMode=!markMode;$('bMark').classList.toggle('on',markMode);$('bMark').textContent=markMode?'Click the map':'+ Mark'};
+let markKind='note';
+const markBtns=()=>{$('bMark').classList.toggle('on',markMode&&markKind==='note');$('bMarkR').classList.toggle('on',markMode&&markKind==='req');$('bMark').textContent=markMode&&markKind==='note'?'Click the map':'+ Note';$('bMarkR').textContent=markMode&&markKind==='req'?'Click the map':'+ Request'};
+$('bMark').onclick=e=>{e.stopPropagation();markKind='note';markMode=!markMode||$('bMarkR').classList.contains('on');markBtns()};
+$('bMarkR').onclick=e=>{e.stopPropagation();markKind='req';markMode=!markMode||$('bMark').classList.contains('on');markBtns()};
+$('bMarkR').addEventListener('pointerdown',e=>e.stopPropagation());
 mm.addEventListener('pointerdown',e=>{if(!markMode||e.target.closest('.mmav,.fl'))return;e.stopPropagation();e.preventDefault();
   const r=mm.getBoundingClientRect(),w=mm.clientWidth,h=mm.clientHeight,s=Math.min((w-16)/24,(h-30)/14),px=e.clientX-r.left,py=e.clientY-r.top;
-  const note=prompt('Note for this mark (by '+ops[cur]+')');markMode=false;$('bMark').classList.remove('on');$('bMark').textContent='+ Mark';
-  if(note&&note.trim())addMark(-(py-h/2-6)/s,(px-w/2)/s,note.trim(),cur)},true);
+  const note=prompt((markKind==='req'?'Request':'Note')+' for this mark (by '+ops[cur]+')');markMode=false;markBtns();
+  if(note&&note.trim())addMark(-(py-h/2-6)/s,(px-w/2)/s,note.trim(),cur,markKind)},true);
 function drawOps(){
   $('opAv').textContent=ini(ops[cur]);$('opNm').textContent=ops[cur];
   const m=$('mmav');if(m){m.children[0].textContent=ini(ops[cur]);m.children[1].textContent=ops[cur]}
@@ -1917,7 +1936,9 @@ $('bBackH').onclick=()=>$('hm').classList.remove('add');
 // while home is shown the flying keys must not reach the viewer
 addEventListener('keydown',e=>{if(B.classList.contains('home')&&!/INPUT|SELECT/.test((e.target||{}).tagName))e.stopImmediatePropagation()},true);
 drawOps();
-setTimeout(()=>{const O=(window.__scan&&window.__scan.OBJ)||[];if(O.length>40&&!marks.length){const a=O[12],b=O[33];addMark(a.ctr[0],a.ctr[2],'Check clearance to the beam',1);addMark(b.ctr[0],b.ctr[2],'Moved since last scan',2)}},1200);
+setTimeout(()=>{const O=(window.__scan&&window.__scan.OBJ)||[];if(O.length>40&&!marks.length){const a=O[12],b=O[33];addMark(a.ctr[0],a.ctr[2],'Check clearance to the beam',1,'req');addMark(b.ctr[0],b.ctr[2],'Moved since last scan',2,'note')}
+  let q=[];try{q=JSON.parse(localStorage.getItem('noxenScanReqs')||'[]')}catch(e){}q.forEach(syncReq)},1200);window.syncReq=function syncReq(q){const o=((window.__scan&&window.__scan.OBJ)||[]).find(x=>x.name===q.about);if(!o||!o.ctr||marks.some(m=>m.rid===q.id))return;addMark(o.ctr[0],o.ctr[2],q.title||q.text,cur,q.type==='Note'?'note':'req',q.id)}
+{const g=document.createElement('div');g.className='lg';g.innerHTML='<b><i class="gn"></i>Note: a comment left on an item</b><b><i class="gr"></i>Request: something to be done or answered</b>';document.body.appendChild(g)}
 // opened with a #fragment (a deep link such as #nogl): straight into the viewer, as before
 home(!location.hash);
 })();
