@@ -1,13 +1,9 @@
-# Desktop dual-board case, upright tower (24 Nov)
+# Desktop dual-board case, suitcase (24 Nov)
 
-**Layout:** 549 x 126 x 411 mm, stands on its long edge. Two identical bays side by side (each 270 x 120 x 402 inside), solid divider. 43 flat 3 mm panels, none over 180 mm, about 2.8 kg of PCTG.
+Closed: 400 x 300 x 221 mm plus a 45 mm handle. From the bottom: fold-out legs (the stand), fan base (your Kootek pad's 120 mm and one 70 mm fan blow up into board A), board A bay (one 70 in its front wall), board B bay (two 70s in its front wall), then the display lid (15.6 in laptop panel plus HDMI/USB-C driver board) hinged on the rear edge, handle on its back.
 
-**Cooling:** your Kootek pad is taken apart. Each board stands on its long edge, cooler face to the front, exhaust edge up. The pad's 120 mm and a 70 mm fan sit in the front wall's bottom row and blow straight into the cooler; hot air rises up the chimney and leaves through the slotted lid, helped by a 70 mm extractor in each lid. Bay A: 120 + 70 front, 70 lid. Bay B: 70 front, 70 lid, and its 120 position waits for a bought 120 x 25 mm fan (until then bay B moves about 8 CFM, far less than A: run a light load there). The four pad 70s are all used.
+Open: legs down (29 mm lift for intake from below), display leans 10 degrees back from vertical. Closed: legs fold flat under, display lies on the lid, two latches pull it down, carry by the handle.
 
-**Walls:** the rear and both ends are solid and take the wall or corner. The front stays open and is the only intake; the only exhaust is the lid, so nothing blows toward a wall. Keep 100 mm behind and 60 mm at a side wall: hot air climbs the wall it is near, and under 50 mm some falls forward over the lid edge back toward the intake (estimate E: about 5 % re-ingested at those gaps, inlet under 1 K warmer; about 15 % under 50 mm). Do not put a shelf or ceiling within 300 mm above the lid.
+Cooling: each board has its own fresh air (no board downstream of the other), exhaust out the slotted rear and end walls; keep 100 mm behind. Fans: 5 reused from the pad (E: board outlines unknown, bores centred by estimate).
 
-**Power:** a 14 mm port low in the rear at each outer end. **Feet:** two 180 x 180 base plates (glue TPU pads under).
-
-**Boards:** TIMI A7S and the second board's outline, holes and cooler position are not published; the fan holes are centred and the 385 tall board stack is an estimate (E). Mounts and corner joints wait for measuring.
-
-Print: panels flat, PCTG, no supports: `print/desktop_dual_board_case_<panel>.stl`. Nothing sent to the printers.
+Build: 72 flat 3 mm PCTG tiles (about 3.6 kg), none over 180 mm, no supports; four M3 rods clamp the stack, M3 L-brackets join walls. Bought: panel plus driver board, 2 friction hinges, 2 toggle latches, 4 leg hinges, brackets, rods, inserts (exact listings when the panel is picked). Hand calcs in make.py's docstring. Not yet through the assembly check, nothing sent to the printers.
