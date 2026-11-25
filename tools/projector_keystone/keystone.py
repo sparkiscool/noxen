@@ -26,20 +26,78 @@ u32 = ctypes.windll.user32
 k32 = ctypes.windll.kernel32
 CFG_DIR = os.path.join(os.environ.get("APPDATA", "."), "ProjectorKeystone")
 CFG = os.path.join(CFG_DIR, "config.json")
+AWAY = os.path.join(CFG_DIR, "away.flag")         # (p1265) Noxy's away mode: black, no capture
+AW = {"on": False, "t": 0.0}
 DEFAULT = {"display": None, "corners": [[0, 0], [1, 0], [1, 1], [0, 1]], "fix_clicks": True}
 
 
-def load():
+BAK_DIR = os.path.join(os.environ.get("LOCALAPPDATA", "."), "ProjectorKeystone")
+BAK = os.path.join(BAK_DIR, "corners_backup.json")  # second copy, different folder: survives a wiped or overwritten config
+PROFILE = os.path.join(BAK_DIR, "profile.json")  # (p1262) HIS corners (Spark 24 Nov: "make that the default"): R / --reset come back here
+FPS = 30                                          # (p1262) at most this many pictures a second: the projector needs no more
+
+
+def profile():
     try:
-        c = json.load(open(CFG, encoding="utf-8"))
+        p = json.load(open(PROFILE, encoding="utf-8"))
+        if len(p["corners"]) == 4:
+            return [list(map(float, q)) for q in p["corners"]]
+    except Exception:
+        pass
+    return [list(q) for q in DEFAULT["corners"]]
+
+
+def save_profile(corners):
+    os.makedirs(BAK_DIR, exist_ok=True)
+    json.dump({"corners": [list(map(float, q)) for q in corners], "saved": time.strftime("%Y-%m-%d %H:%M:%S")},
+              open(PROFILE + ".tmp", "w", encoding="utf-8"), indent=1)
+    os.replace(PROFILE + ".tmp", PROFILE)
+
+
+def _is_straight(c):
+    return all(abs(a - b) < 1e-9 for p, q in zip(c["corners"], DEFAULT["corners"]) for a, b in zip(p, q))
+
+
+def _read(path):
+    try:
+        c = json.load(open(path, encoding="utf-8"))
         return {**DEFAULT, **c}
     except Exception:
-        return dict(DEFAULT)
+        return None
+
+
+def load():
+    c = _read(CFG)
+    b = _read(BAK)
+    if c is None:
+        c = b or dict(DEFAULT)
+        if _is_straight(c): c = {**c, "corners": profile()}      # (p1262) nothing saved: his profile
+        return c
+    # the config went straight without an explicit reset (overwritten by something else): bring the saved corners back
+    if b and _is_straight(c) and not c.get("reset") and not _is_straight(b):
+        c["corners"] = b["corners"]
+    if _is_straight(c) and not c.get("reset"):
+        c["corners"] = profile()                                  # (p1262)
+    return c
 
 
 def save(c):
-    os.makedirs(CFG_DIR, exist_ok=True)
-    json.dump(c, open(CFG, "w", encoding="utf-8"), indent=1)
+    c = dict(c)
+    if _is_straight(c): c["reset"] = True   # only an explicit reset (R, --reset) saves straight corners
+    else: c.pop("reset", None)
+    for d, f in ((CFG_DIR, CFG), (BAK_DIR, BAK)):
+        os.makedirs(d, exist_ok=True)
+        json.dump(c, open(f + ".tmp", "w", encoding="utf-8"), indent=1)
+        os.replace(f + ".tmp", f)
+    if not _is_straight(c):  # dated history of every distinct set of corners
+        h = os.path.join(BAK_DIR, "history.jsonl")
+        try:
+            last = open(h, encoding="utf-8").read().splitlines()[-1]
+        except Exception:
+            last = ""
+        line = json.dumps(c["corners"])
+        if not last.endswith(line):
+            open(h, "a", encoding="utf-8").write(time.strftime("%Y-%m-%d %H:%M:%S ") + line + chr(10))
 
 
 def autostart(on):
@@ -107,14 +165,17 @@ class Capture(threading.Thread):
         import dxcam
         cam = None
         while self.run_:
+            if AW["on"]:                              # (p1265) away: no pictures taken
+                time.sleep(0.5); continue
             try:
                 if cam is None:
                     cam = dxcam.create(self.di, self.oi, output_color="BGRA", processor_backend="numpy")
+                t0 = time.perf_counter()
                 f = cam.grab(new_frame_only=True)
-                if f is None:
-                    time.sleep(0.002); continue
-                with self.lock:
-                    self.frame = f; self.seq += 1
+                if f is not None:
+                    with self.lock:
+                        self.frame = f; self.seq += 1
+                time.sleep(max(0.0, 1.0 / FPS - (time.perf_counter() - t0)))   # (p1262) was a 2 ms busy poll
             except Exception as e:
                 print("capture:", e); cam = None; time.sleep(0.5)
 
@@ -152,7 +213,9 @@ def main():
     if "--autostart" in a:
         autostart(a[a.index("--autostart") + 1] == "on"); return
     cfg = load()
-    if "--reset" in a: cfg["corners"] = [list(p) for p in DEFAULT["corners"]]; save(cfg); print("reset"); return
+    if "--straight" in a: cfg["corners"] = [list(p) for p in DEFAULT["corners"]]; save(cfg); print("straight"); return
+    if "--reset" in a: cfg["corners"] = profile(); save(cfg); print("reset to the profile"); return   # (p1262)
+    if "--save-profile" in a: save_profile(cfg["corners"]); print("profile saved", cfg["corners"]); return
     if "--display" in a: cfg["display"] = a[a.index("--display") + 1]
     di, oi, dname, (mx, my, mw, mh) = find_output(cfg["display"])
     print("display", dname, mx, my, mw, mh)
@@ -217,16 +280,17 @@ def main():
         q = Hinv() @ np.array([(px - mx) / mw, (py - my) / mh, 1.0])
         return int(round(mx + q[0] / q[2] * mw)), int(round(my + q[1] / q[2] * mh))
 
+    TEST_INJ = bool(os.environ.get("KEYSTONE_TEST_INJECT"))  # test only: remap injected clicks too
     EV = {0x201: 0x0002, 0x202: 0x0004, 0x204: 0x0008, 0x205: 0x0010, 0x207: 0x0020, 0x208: 0x0040}
 
     def hook(n, wp, lp):
         try:
             if n >= 0 and cfg["fix_clicks"] and not S["adjust"] and wp in EV and not straight():
                 m = ctypes.cast(lp, ctypes.POINTER(MS)).contents
-                if not (m.flags & 1) and mx <= m.x < mx + mw and my <= m.y < my + mh:
+                if (m.extra != 0x4B53) and (not (m.flags & 1) or TEST_INJ) and mx <= m.x < mx + mw and my <= m.y < my + mh:
                     dx, dy = to_desktop(m.x, m.y)
                     u32.SetCursorPos(dx, dy)
-                    u32.mouse_event(EV[wp], 0, 0, 0, 0)  # injected: passes our own hook
+                    u32.mouse_event(EV[wp], 0, 0, 0, 0x4B53)  # injected, marked: passes our own hook
                     u32.SetCursorPos(m.x, m.y)
                     return 1
         except Exception:
@@ -234,8 +298,18 @@ def main():
         return u32.CallNextHookEx(0, n, wp, lp)
     hook_c = HOOK(hook)
 
+    # (p1270) 64-bit handles need explicit types: with ctypes' default int the module handle was cut to 32 bits, the hook never
+    # installed, and clicks landed on the unwarped point (shifted against the picture)
+    u32.SetWindowsHookExW.restype = ctypes.c_void_p
+    u32.SetWindowsHookExW.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_void_p, w.DWORD]
+    u32.CallNextHookEx.restype = ctypes.c_ssize_t
+    u32.CallNextHookEx.argtypes = [ctypes.c_void_p, ctypes.c_int, w.WPARAM, w.LPARAM]
+    k32.GetModuleHandleW.restype = ctypes.c_void_p
+    k32.GetModuleHandleW.argtypes = [w.LPCWSTR]
+
     def hook_thread():
-        u32.SetWindowsHookExW(14, hook_c, k32.GetModuleHandleW(None), 0)
+        h = u32.SetWindowsHookExW(14, hook_c, k32.GetModuleHandleW(None), 0)
+        print("click hook", "installed" if h else "FAILED %d" % ctypes.get_last_error(), flush=True)
         msg = w.MSG()
         while u32.GetMessageW(ctypes.byref(msg), 0, 0, 0) > 0:
             u32.TranslateMessage(ctypes.byref(msg)); u32.DispatchMessageW(ctypes.byref(msg))
@@ -277,8 +351,10 @@ def main():
         elif key == glfw.KEY_RIGHT: nudge(1, 0, step)
         elif key == glfw.KEY_UP: nudge(0, -1, step)
         elif key == glfw.KEY_DOWN: nudge(0, 1, step)
-        elif key == glfw.KEY_R: corners[:] = DEFAULT["corners"]
+        elif key == glfw.KEY_R: corners[:] = profile()                  # (p1262) back to his profile, not straight
+        elif key == glfw.KEY_P: save_profile(corners.tolist()); print("profile saved")
         elif key == glfw.KEY_ESCAPE: set_adjust(False)
+        S["dirty"] = True
     glfw.set_key_callback(win, on_key)
 
     def quad(x0, y0, x1, y1, col, out):
@@ -315,8 +391,13 @@ def main():
     def down(vk): return u32.GetAsyncKeyState(vk) & 0x8000
     prev = {"k": False}
     last_save = time.time()
+    glfw.set_window_refresh_callback(win, lambda w_: S.__setitem__("dirty", True))
     while not glfw.window_should_close(win) and not S["quit"]:
-        glfw.poll_events()
+        glfw.wait_events_timeout(0.5 if AW["on"] else 1.0 / FPS)        # (p1262) waits instead of spinning; (p1265) longer while away
+        if os.path.exists(os.path.join(CFG_DIR, "quit.flag")):   # (p1262) clean quit for a restart
+            try: os.remove(os.path.join(CFG_DIR, "quit.flag"))
+            except OSError: pass
+            break
         hk = down(0x11) and down(0x12) and down(0x4B)
         if hk and not prev["k"]: set_adjust(not S["adjust"])
         prev["k"] = bool(hk)
@@ -327,9 +408,18 @@ def main():
                 try: os.remove(fp)
                 except OSError: pass
                 if S["adjust"] != on: set_adjust(on)
+        if time.time() - AW["t"] > 1.0:               # (p1265) away mode, looked at once a second
+            AW["t"] = time.time(); was = AW["on"]; AW["on"] = os.path.exists(AWAY)
+            if was and not AW["on"]: S["dirty"] = True; S["black"] = False
+        if AW["on"] and not S["adjust"]:
+            if not S.get("black") or S["dirty"]:      # black once, then nothing drawn
+                ctx.clear(0, 0, 0); glfw.swap_buffers(win); S["black"] = True; S["dirty"] = False
+            continue
         if S["adjust"]:
             if S["drag"]:
                 corners[S["sel"]] = np.clip(cursor_norm(), -0.5, 1.5)
+                if time.time() - last_save > 0.5:  # saved as he drags
+                    cfg["corners"] = corners.tolist(); save(cfg); last_save = time.time()
             if not glfw.get_window_attrib(win, glfw.FOCUSED) and not S["drag"]:
                 pass
         with cap.lock:
@@ -339,6 +429,10 @@ def main():
                 tex.release(); tex = new_tex(f.shape[1], f.shape[0])
             tex.write(np.ascontiguousarray(f).tobytes())
             S["seq"] = sq
+            S["dirty"] = True
+        if not (S["dirty"] or S["adjust"] or SELFTEST):   # (p1262) nothing new: the last picture stays up, no draw
+            continue
+        S["dirty"] = False
         ctx.clear(0, 0, 0)
         tex.use(0)
         prog["tex"].value = 0
