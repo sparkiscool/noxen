@@ -1,36 +1,127 @@
 {
  "name": "projector_tilt_stand",
  "engine": "nox/topo",
- "status": "mem_refused",
- "fail": "memory: build before the export cleanup: estimated peak 15.1 GB (held 0.92, gate 2.61, mesh 11.56) for a 127.9 x 56.5 x 130.0 mm part (62 M gate cells at 0.25 mm, 2,068,868 faces): over the 14 GB limit (the runner has 16 GB and kills a run over it with no result). Split the part (the gate grid grows with its bounding box), or trim the envelope.",
- "solid_ok": false,
- "watertight": false,
- "strength": {
-  "rows": [],
-  "worst": null,
-  "worst_case": null,
-  "worst_at": null,
-  "ok": false,
-  "fail": "memory: build before the export cleanup: estimated peak 15.1 GB (held 0.92, gate 2.61, mesh 11.56) for a 127.9 x 56.5 x 130.0 mm part (62 M gate cells at 0.25 mm, 2,068,868 faces): over the 14 GB limit (the runner has 16 GB and kills a run over it with no result). Split the part (the gate grid grows with its bounding box), or trim the envelope."
- },
- "mass_g": null,
- "memory_build": {
-  "estimate_gb": 15.09,
-  "parts": {
-   "held": 0.92,
-   "gate": 2.61,
-   "mesh": 11.56
-  },
-  "limit_gb": 14.0,
-  "gate_cells": 62188320,
-  "bounds_mm": [
-   127.9,
-   56.5,
-   130.0
+ "solid_ok": true,
+ "solid": {
+  "bodies_plain": 1,
+  "specks_plain": 0,
+  "bodies_eroded": 1,
+  "eroded_volumes_mm3": [
+   167492.3
   ],
-  "faces": 2068868,
-  "when": "before the export cleanup",
-  "fail": "memory: build before the export cleanup: estimated peak 15.1 GB (held 0.92, gate 2.61, mesh 11.56) for a 127.9 x 56.5 x 130.0 mm part (62 M gate cells at 0.25 mm, 2,068,868 faces): over the 14 GB limit (the runner has 16 GB and kills a run over it with no result). Split the part (the gate grid grows with its bounding box), or trim the envelope."
+  "sealed_voids": [],
+  "inner_shells": [],
+  "necks": [],
+  "drawn_not_in_main": [],
+  "thin_walls": [],
+  "thin_allowed": [],
+  "acute_edges": 0,
+  "ok": true
+ },
+ "function_check": {
+  "skin_mm3": 67708.5,
+  "skin_missing_mm3": 0.0,
+  "in_cuts_mm3": 0.0,
+  "outside_env_mm3": 0.0,
+  "ok": true
+ },
+ "strength": {
+  "rows": [
+   {
+    "case": "projector 640 g on the deck",
+    "cls": "flight",
+    "inlayer": 0.001,
+    "across": 0.0,
+    "at": [
+     58.6,
+     17.2,
+     112.0
+    ]
+   },
+   {
+    "case": "hand presses the projector 20 N",
+    "cls": "misuse",
+    "inlayer": 0.002,
+    "across": 0.001,
+    "at": [
+     58.6,
+     17.2,
+     112.0
+    ]
+   },
+   {
+    "case": "projector slides: 20 N down the slope on the lip",
+    "cls": "misuse",
+    "inlayer": 0.006,
+    "across": 0.004,
+    "at": [
+     2.6,
+     5.2,
+     34.0
+    ]
+   },
+   {
+    "case": "shove along the width 15 N on the lip",
+    "cls": "misuse",
+    "inlayer": 0.003,
+    "across": 0.003,
+    "at": [
+     0.6,
+     5.2,
+     10.0
+    ]
+   },
+   {
+    "case": "pushed at the high end 15 N toward the low end",
+    "cls": "misuse",
+    "inlayer": 0.002,
+    "across": 0.001,
+    "at": [
+     106.6,
+     5.2,
+     116.0
+    ]
+   }
+  ],
+  "worst": 0.006,
+  "worst_case": "projector slides: 20 N down the slope on the lip",
+  "worst_at": [
+   2.6,
+   5.2,
+   34.0
+  ],
+  "ok": true
+ },
+ "mass_g": 264.9,
+ "watertight": true,
+ "export": {
+  "faces_in": 332266,
+  "degenerate": 0,
+  "folded": 0,
+  "caps_split": 0,
+  "pinch_vertices": 0,
+  "caps_left": 0,
+  "dropped_shells": [],
+  "n_dropped_shells": 0,
+  "bodies": 1,
+  "open_kept": [],
+  "faces": 332266,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "watertight": true,
+  "simplified": true,
+  "first_pass": {
+   "degenerate": 40,
+   "folded": 6,
+   "caps_split": 7,
+   "caps_left": 0,
+   "watertight": true,
+   "faces": 539462,
+   "n_dropped_shells": 0,
+   "dropped_shells": []
+  },
+  "volume_mm3": 215367.5,
+  "exact_mm3": 215366.6
  },
  "bodies": {
   "bodies_raw": 1,
@@ -38,7 +129,57 @@
   "cavities_mm3": [],
   "bodies": 1
  },
- "volume_mm3": 215137.7,
+ "volume_mm3": 215366.6,
+ "drawn_g": 116.82,
+ "export_cleanup": {
+  "pitch": 0.25,
+  "erode_mm": 0.9,
+  "core_limit_mm3": 10.0,
+  "specks_mm3": [],
+  "slivers": [],
+  "kept_walls": [],
+  "removed_mm3": 0.0
+ },
+ "memory_build": [
+  {
+   "estimate_gb": 9.28,
+   "parts": {
+    "held": 0.79,
+    "gate": 2.61,
+    "mesh": 5.89
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 62188320,
+   "bounds_mm": [
+    127.9,
+    56.5,
+    130.0
+   ],
+   "faces": 1053772,
+   "when": "before the export cleanup"
+  },
+  {
+   "estimate_gb": 3.52,
+   "parts": {
+    "held": 0.91,
+    "gate": 2.61,
+    "mesh": 0.0
+   },
+   "limit_gb": 14.0,
+   "gate_cells": 62188320,
+   "bounds_mm": [
+    127.9,
+    56.5,
+    130.0
+   ],
+   "faces": 0,
+   "when": "before the solid check"
+  }
+ ],
+ "stl": "projector_tilt_stand.stl",
+ "view_stl": "projector_tilt_stand_view.stl",
+ "view_faces": 120000,
+ "preview": "preview.png",
  "layout": {
   "settings": {
    "min_member_mm": 6.25,
@@ -107,7 +248,7 @@
    "mg_tol": 1e-05,
    "time_limit_s": 16200.0,
    "mem_limit_gb": 14.0,
-   "build_pitch": 0.0,
+   "build_pitch": 0.4,
    "checkpoint_every": 10
   },
   "R_mm": 6.44256687412536,
@@ -162,7 +303,7 @@
    }
   },
   "cavity": {
-   "last": 0.9149531095736729,
+   "last": 0.9149777440440213,
    "ratio": 5.0,
    "T0": 66.17223879659836,
    "row": true
@@ -195,13 +336,13 @@
    "default"
   ]
  },
- "build_s": 200.3,
- "layout_s": 1853,
- "peak_gb": 2.767092,
+ "build_s": 196.8,
+ "layout_s": 1835,
+ "peak_gb": 2.739228,
  "memory": {
-  "estimate_gb": 4.25,
+  "estimate_gb": 4.18,
   "parts": {
-   "held": 0.68,
+   "held": 0.61,
    "factor": 2.1,
    "assembly": 0.56,
    "block": 0.88,
@@ -213,9 +354,9 @@
   "backend": "direct",
   "block": 63,
   "build": {
-   "estimate_gb": 3.29,
+   "estimate_gb": 3.22,
    "parts": {
-    "held": 0.68,
+    "held": 0.61,
     "gate": 2.61,
     "mesh": 0.0
    },
@@ -229,7 +370,7 @@
    "faces": 0,
    "when": "from the envelope"
   },
-  "peak_it1_gb": 2.64
+  "peak_it1_gb": 2.61
  },
  "early": {
   "rows": [
@@ -385,40 +526,19 @@
   }
  },
  "baseline": null,
- "total_s": 2053,
- "part_sha": "c4cc45d09a4e",
+ "total_s": 2032,
+ "part_sha": "8c1f06f3549a",
  "lib_sha": "",
- "setup_sha": "94e0c9d0958542fc",
+ "setup_sha": "89add6580c69e41e",
  "max_worst": 0.5,
- "strength_ok": false,
+ "strength_ok": true,
  "print_stl": {
   "url": "https://github.com/sparkiscool/noxen/releases/download/meshes/projector_tilt_stand.stl",
-  "sha256": "428c3c6ebde23b2f136ccac43d735db9653ed8f39f389cae99031090bade50aa",
-  "bytes": 10284,
-  "faces": 204,
-  "view_faces": 204,
-  "view_sha256": "d35ce4223c55ceca004bc209f0b2fca1e914219644c240c4cc96b3cdf019b1da",
-  "at": "2026-11-25 02:16"
- },
- "make": {
-  "sha": {
-   "parts/projector_tilt_stand/make.py": "92216d5fe632",
-   "parts/scout_v4_probe_mech_lib.py": "f805e5f929a4",
-   "tools/scout_v4_shape.py": "e4f3e614676c"
-  },
-  "rc": 0,
-  "s": 28.4,
-  "at": "2026-11-25 02:15",
-  "commit": "c41704c3",
-  "solid": {
-   "ok": true,
-   "file": "print/projector_tilt_stand.stl",
-   "sha256": "daa678a5051fc33291d6d42a6165a7581aa58e06db95e13a1017851adece2a55",
-   "cm3": 208.256,
-   "bodies_plain": 1,
-   "specks_plain": 0,
-   "bodies_eroded": 1,
-   "acute_edges": 0
-  }
+  "sha256": "d8096eb64b6b7b8e936f93dad30789f18709781e33c1d1aa0f63af9edc696ceb",
+  "bytes": 16613384,
+  "faces": 332266,
+  "view_faces": 60000,
+  "view_sha256": "631e63f937af164e63d864038a28b9500928187c90c5b4ce7630371b49918321",
+  "at": "2026-11-25 02:50"
  }
 }
