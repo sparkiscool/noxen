@@ -1,4 +1,4 @@
-"""Noxen scan viewer: opens artifacts/container_scan.html as its own full-screen program window.
+"""Noxen scan viewer: opens E:/Noxen/container_scan.html as its own full-screen program window.
 
 A page inside another page (the Noxy window) cannot capture the mouse; a window of its own can. This starts
 Chrome (else Edge) in app mode, with a profile of its own, full screen on the big monitor (the one left of the
@@ -11,7 +11,7 @@ import ctypes, os, subprocess, sys, tempfile
 from ctypes import wintypes
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PAGE = os.path.join(os.path.dirname(HERE), "artifacts", "container_scan.html")
+PAGE = r"E:\Noxen\container_scan.html"   # the viewer lives only in the connector folder (Spark, 24 Nov)
 PROFILE = r"E:\noxen_work\scan_viewer_profile" if os.path.isdir(r"E:\noxen_work") else os.path.join(tempfile.gettempdir(), "noxen_scan_viewer")
 BROWSERS = [r"C:\Program Files\Google\Chrome\Application\chrome.exe", r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
             r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe", r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"]
