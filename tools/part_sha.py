@@ -168,7 +168,7 @@ def affected(changed, pys=None):
     return out
 
 
-def setup_sha(py, log=None, refresh=False):
+def setup_sha(py, log=None, refresh=False, _own=False):
     """the sha of the setup part.py builds now (topo/run.py design_hash: masks, supports, loads, SPEC, thin_ok, solid_ok), cached in
     parts/<name>/setup.json against everything the setup reads: part_sha + lib_sha (the code) + data_sha (the files it read,
     recorded as setup.json "reads", and inputs/: 30 Oct, Spark lowered four hub ends in overseer.cage.json and nodes 3 and 4 read as current from a cache keyed on
@@ -181,6 +181,15 @@ def setup_sha(py, log=None, refresh=False):
         c = _cached(py)
         if c.get("part_sha") == ps and c.get("lib_sha") == ls and c.get("data_sha") == data_sha(py) and c.get("setup_sha") and "reads" in c:
             return c["setup_sha"]
+    if not _own:                                         # one fresh process per setup built: the engine keeps what it read (topo/fit's table) and a
+        import subprocess                                # second part built in the same process recorded no read of it (25 Nov: the root's
+        r = subprocess.run([sys.executable, os.path.abspath(__file__), "--build", os.path.abspath(py)], capture_output=True, text=True)  # reads lost fit_table.json)
+        sh = _cached(py).get("setup_sha") if r.returncode == 0 else None
+        if not sh:
+            raise RuntimeError((r.stderr or r.stdout).strip().splitlines()[-1] if (r.stderr or r.stdout).strip() else "setup did not build")
+        if log:
+            log(f"{os.path.basename(d)}: setup {sh}")
+        return sh
     sys.path.insert(0, ROOT)
     from topo.run import load_part_dir, design_hash
 
@@ -213,6 +222,8 @@ if __name__ == "__main__":
         with contextlib.redirect_stdout(sys.stderr):     # cradle's support warning became the "parts", no run job, the commit step a shell error)
             out = affected(sys.argv[2:] or sys.stdin.read().split())
         print(" ".join(out))
+    elif sys.argv[1:2] == ["--build"]:                   # setup_sha's own fresh process: build one setup, write its setup.json
+        setup_sha(sys.argv[2], refresh=True, _own=True)
     elif sys.argv[1:2] == ["--refresh"]:                   # recompute the setup.json caches: the named parts, or every part with a part.py
         pys = [os.path.join(ROOT, "parts", p, "part.py") for p in sys.argv[2:]] or sorted(glob.glob(os.path.join(ROOT, "parts", "*", "part.py")))
         for py in pys:
